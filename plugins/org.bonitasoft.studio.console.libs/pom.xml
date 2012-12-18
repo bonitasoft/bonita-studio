@@ -409,7 +409,7 @@
 					</execution>
 					<execution>
 						<id>Retrieve bonita-client dependencies</id>
-						<phase>package</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>copy-dependencies</goal>
 						</goals>
@@ -435,7 +435,6 @@
 								<delete dir="${lib.dir}"/>
 								<mkdir dir="${lib.dir}"/>
 								<delete file="javadoc.zip"/>
-						
 							</target>
 						</configuration>
 						<goals>
