@@ -1,0 +1,64 @@
+<!--
+ * Copyright (C) 2009, 2010 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<project name="getSimulationLibs" basedir="." default="getSimulationLibs" xmlns:tigris="tigris:org.tigris.subversion.svnant">
+	
+	<!-- Beware of keeping the namespace for the SVN task, since it may conflict with the one defined in Eclipse -->
+
+	<property name="simulation.group.id" value="org/bonitasoft/simulation"/>
+	<property name="simulation.artifact.id" value="bos-simulation"/>
+	<property name="simulation.distrib.name" value="bos-simulation"/>
+	
+	
+	<target name="getSimulationLibs" depends="clean,copy,generateManifest">
+		<echo>isBranch=${isBranch}</echo>
+	</target>
+		
+	<target name="clean">
+		<delete dir="modules" failonerror="false"/>
+		<delete includeemptydirs="true">
+			<fileset dir="lib"/>
+		</delete>
+		<mkdir dir="lib"/>
+	</target>
+	
+	
+	<target name="copy">
+		<!-- Libs -->
+		<copy todir="lib"  flatten="true">
+			<fileset dir="${maven.repo}/${simulation.group.id}/${simulation.artifact.id}/${artifactVersion}" includes="${simulation.artifact.id}-${artifactVersion}.jar"/>
+		</copy>
+		<unzip dest="lib" >
+			<fileset dir="${maven.repo}/${simulation.group.id}/${simulation.artifact.id}/${artifactVersion}" includes="${simulation.artifact.id}-${artifactVersion}-deps.zip"/>
+		</unzip>
+	</target>
+	
+	<target name="generateManifest" depends="copy">
+		
+		<!-- MANIFEST.MF -->
+		<copy tofile="META-INF/MANIFEST.MF" file="META-INF/MANIFEST.MF.template" overwrite="true"/>
+		<replace token="XXX_VERSION_XXX" value="${artifactVersion}" file="META-INF/MANIFEST.MF" />
+		<!-- build.properties -->
+		<copy tofile="build.properties" file="build.properties.template" overwrite="true"/>
+		<replace token="XXX_VERSION_XXX" value="${artifactVersion}" file="build.properties" />
+		<!-- .classpath -->
+		<copy tofile=".classpath" file=".classpath.template" overwrite="true"/>
+		<replace token="XXX_VERSION_XXX" value="${artifactVersion}" file=".classpath" />
+	
+	</target>
+	
+</project>

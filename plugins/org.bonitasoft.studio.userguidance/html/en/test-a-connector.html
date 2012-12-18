@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Bonita User's Guidance - Test a connector</title>
+<link href="css/template.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<h1>Test a connector</h1>
+<div id="category">(Category: Connectors)</div>
+
+<p style="margin-top:10px;"> </p>
+
+<div id="separator"></div>
+
+<p>You can test the function of some types of connectors while still in design/development mode.</p>
+
+<p>Check external configurations before testing a specific connector. Sometimes the connector test returns an error due to external factors, for example if a database connection is not open.</p>
+
+<p>Not all connectors can be tested before executing the process. For example, some Bonita Connectors may return errors because the Bonita Execution Engine has not been launched (ie the process has not been Run).</p>
+
+<p>Where dynamic values have been used, you will need to replace the Groovy expression with a static value to complete the test as there will be no data to fill the dynamic values.</p>
+
+</body>
+</html>

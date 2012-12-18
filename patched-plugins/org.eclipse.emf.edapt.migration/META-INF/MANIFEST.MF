@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Export-Package: org.eclipse.emf.edapt.migration,org.eclipse.emf.edapt.
+ migration.impl,org.eclipse.emf.edapt.migration.util
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Bundle-Name: %pluginName
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.eclipse.core.runtime,org.eclipse.emf.ecore;visibil
+ ity:=reexport,org.eclipse.ocl.ecore;visibility:=reexport,org.eclipse.
+ emf.ecore.xmi,org.eclipse.emf.edapt.common
+Bundle-Vendor: %providerName
+Bundle-Version: 0.3.1
+Bundle-ManifestVersion: 2
+Bundle-Activator: org.eclipse.emf.edapt.migration.MigrationPlugin$Impl
+ ementation
+Bundle-SymbolicName: org.eclipse.emf.edapt.migration;singleton:=true
+
+

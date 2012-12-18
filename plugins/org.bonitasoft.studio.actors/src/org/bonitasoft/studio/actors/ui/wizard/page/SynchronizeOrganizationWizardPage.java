@@ -1,0 +1,140 @@
+/**
+ * Copyright (C) 2012 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.actors.ui.wizard.page;
+
+import org.bonitasoft.studio.actors.ActorsPlugin;
+import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.preference.ActorsPreferenceConstants;
+import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
+import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.TableColumn;
+
+/**
+ * @author Romain Bioteau
+ *
+ */
+public class SynchronizeOrganizationWizardPage extends WizardPage implements ISelectionChangedListener{
+
+    private IRepositoryFileStore file;
+    private TableViewer viewer;
+    private final OrganizationRepositoryStore organizationStore;
+
+    public SynchronizeOrganizationWizardPage() {
+        super(SynchronizeOrganizationWizardPage.class.getName());
+        setTitle(Messages.synchronizeOrganizationTitle) ;
+        setDescription(Messages.synchronizeOrganizationDesc) ;
+        organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createControl(Composite parent) {
+        Composite mainComposite = new Composite(parent, SWT.NONE) ;
+        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
+        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create()) ;
+
+        viewer = new TableViewer(mainComposite,SWT.BORDER | SWT.FULL_SELECTION | SWT.SINGLE) ;
+        viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).minSize(SWT.DEFAULT, 200).create());
+        TableLayout layout = new TableLayout() ;
+        layout.addColumnData(new ColumnWeightData(30)) ;
+        layout.addColumnData(new ColumnWeightData(70)) ;
+        viewer.getTable().setLayout(layout);
+        viewer.getTable().setLinesVisible(true);
+        viewer.getTable().setHeaderVisible(true);
+        viewer.setContentProvider(new ArrayContentProvider()) ;
+
+        TableViewerColumn column = new TableViewerColumn(viewer, SWT.FILL) ;
+        TableColumn nameColumn = column.getColumn() ;
+        column.getColumn().setText(Messages.name);
+        column.setLabelProvider(new ColumnLabelProvider(){
+            @Override
+            public String getText(Object element) {
+                return ((Organization) ((IRepositoryFileStore) element).getContent()).getName();
+            }
+
+            @Override
+            public Image getImage(Object element) {
+                String activeOrganization = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(ActorsPreferenceConstants.DEFAULT_ORGANIZATION) ;
+                if(((OrganizationFileStore)element).getDisplayName().equals(activeOrganization)){
+                    return Pics.getImage("active.png", ActorsPlugin.getDefault()) ;
+                }
+                return super.getImage(element);
+            }
+        });
+
+
+        column = new TableViewerColumn(viewer, SWT.FILL) ;
+        column.getColumn().setText(Messages.description);
+        column.setLabelProvider(new ColumnLabelProvider(){
+            @Override
+            public String getText(Object element) {
+                return ((Organization) ((IRepositoryFileStore) element).getContent()).getDescription();
+            }
+        });
+
+        TableColumnSorter sorter = new TableColumnSorter(viewer) ;
+        sorter.setColumn(nameColumn) ;
+
+        viewer.setInput(organizationStore.getChildren()) ;
+        viewer.addSelectionChangedListener(this) ;
+
+        setControl(mainComposite) ;
+    }
+
+
+
+    @Override
+    public void selectionChanged(SelectionChangedEvent event) {
+        if(!event.getSelection().isEmpty()){
+            file = (IRepositoryFileStore) ((IStructuredSelection) event.getSelection()).getFirstElement() ;
+        }
+        getContainer().updateButtons() ;
+    }
+
+    public IRepositoryFileStore getFileStore() {
+        return file;
+    }
+
+    @Override
+    public boolean isPageComplete() {
+        return !viewer.getSelection().isEmpty();
+    }
+
+}

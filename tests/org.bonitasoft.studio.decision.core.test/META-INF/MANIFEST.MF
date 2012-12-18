@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test for decision core
+Bundle-SymbolicName: org.bonitasoft.studio.decision.core.test
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: BonitaSoft S.A.
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit,
+ org.bonitasoft.studio.model;bundle-version="1.0.0",
+ org.bonitasoft.studio.decision.core;bundle-version="1.0.0",
+ org.codehaus.groovy
+Export-Package: org.bonitasoft.studio.decision.core.test

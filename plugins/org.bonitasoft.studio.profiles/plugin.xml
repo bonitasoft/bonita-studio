@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         name="Categories"
+         point="org.eclipse.ui.activities">
+      <category
+            id="org.bonitasoft.studio.profiles.processmodeling"
+            name="Process Modeling">
+      </category>
+
+      <category
+            id="org.bonitasoft.studio.profiles.formsmodeling"
+            name="Forms Modeling">
+      </category>
+      <category
+            id="org.bonitasoft.studio.profiles.appearance"
+            name="Appearance Customization">
+      </category>
+      <category
+            id="org.bonitasoft.studio.profiles.validation"
+            name="Validation">
+      </category>
+      <category
+            id="org.bonitasoft.studio.profiles.dependencies"
+            name="Dependencies Management">
+      </category>
+      <category
+            id="org.bonitasoft.studio.profiles.execution"
+            name="Execution/Deployment">
+      </category>
+      <category
+            id="org.bonitasoft.studio.profiles.connectors"
+            name="Connectors">
+      </category>
+      <category
+            id="org.bonitasoft.studio.profiles.datamanagement"
+            name="Data Management">
+      </category>
+      <category
+            id="org.bonitasoft.studio.profiles.looknfeels"
+            name="Look&apos;n&apos;Feels">
+      </category>
+      <category
+            id="org.bonitasoft.studio.profiles.simulation"
+            name="Simulation">
+      </category>
+      <category
+            id="org.bonitasoft.studio.profiles.validators"
+            name="Validators">
+      </category>
+      
+      
+       </extension>
+   <extension
+         name="Activities"
+         point="org.eclipse.ui.activities">
+      <activity
+            id="org.bonitasoft.studio.profiles.application.view"
+            name="Application View">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.application.view"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.application/org.bonitasoft.studio.views.properties.application">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.connector.menu"
+            name="Connector Menu">
+      </activity>
+      <activity
+            id="org.bonitasoft.studio.profiles.genral.view"
+            name="General View">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.genral.view"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.application/org.bonitasoft.studio.views.properties.process.general">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.appearance.view"
+            name="Appearance View">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.appearance.view"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.application/org.bonitasoft.studio.views.properties.process.appearance">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.simulation.view"
+            name="Simulation View">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.simulation.view"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.simulation/org.bonitasoft.studio.views.properties.simulation">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.connector.menu"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.dependencies/org.bonitasoft.studio.development">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.simulation.menu"
+            name="Simulation Menu">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.simulation.menu"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.simulation/org.bonitasoft.studio.menu.simulation">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.run.menu"
+            name="Run Menu">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.run.menu"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.application/org.bonitasoft.studio.menu.run">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.dependencies.menu"
+            name="Dependencies Menu">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.dependencies.menu"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.application/org.bonitasoft.studio.context.manageJars">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.looknfeel.menu"
+            name="Look&apos;n&apos;Feel Menu">
+      </activity>
+      <activity
+            id="org.bonitasoft.studio.profiles.forms.menu"
+            name="Forms Menu">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.forms.menu"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.diagram.form.custom.ex/org.bonitasoft.studio.menu.templates">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.forms.menu"
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.diagram.form.custom.ex/org.bonitasoft.studio.repository.widget.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.forms.menu"
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.diagram.form.custom.ex/org.bonitasoft.studio.repository.form.*">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.validation.activity"
+            name="Validation Activity">
+      </activity>
+      <activity
+            id="org.bonitasoft.studio.profiles.actors.menu"
+            name="Actors Menu">
+      </activity>
+      <activity
+            id="org.bonitasoft.studio.profiles.connector.tab"
+            name="Connectord Tab">
+      </activity>
+      <activity
+            id="org.bonitasoft.studio.profiles.data.tab"
+            name="Data Tab">
+      </activity>
+      <activity
+            id="org.bonitasoft.studio.profiles.menu.looknfeel"
+            name="Look&apos;n&apos;Feel Menu">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.looknfeel.menu"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.themes/org.bonitasoft.studio.menu.themes">
+      </activityPatternBinding>
+   </extension>
+   <extension
+         name="Activities Binding"
+         point="org.eclipse.ui.activities">
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.application.view"
+            categoryId="org.bonitasoft.studio.profiles.formsmodeling">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.connector.tab"
+            categoryId="org.bonitasoft.studio.profiles.connectors">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.genral.view"
+            categoryId="org.bonitasoft.studio.profiles.processmodeling">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.appearance.view"
+            categoryId="org.bonitasoft.studio.profiles.appearance">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.simulation.view"
+            categoryId="org.bonitasoft.studio.profiles.simulation">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.datatypes.menu"
+            categoryId="org.bonitasoft.studio.profiles.datamanagement">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.simulation.menu"
+            categoryId="org.bonitasoft.studio.profiles.simulation">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.language.menu"
+            categoryId="org.bonitasoft.studio.profiles.language">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.run.menu"
+            categoryId="org.bonitasoft.studio.profiles.execution">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.context.menu"
+            categoryId="org.bonitasoft.studio.profiles.contexts">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.bam.menu"
+            categoryId="org.bonitasoft.studio.profiles.bam">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.dependencies.menu"
+            categoryId="org.bonitasoft.studio.profiles.dependencies">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.forms.menu"
+            categoryId="org.bonitasoft.studio.profiles.formstemplates">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.looknfeel.menu"
+            categoryId="org.bonitasoft.studio.profiles.looknfeels">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.validation.activity"
+            categoryId="org.bonitasoft.studio.profiles.validation">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.connector.menu"
+            categoryId="org.bonitasoft.studio.profiles.connectors">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.data.tab"
+            categoryId="org.bonitasoft.studio.profiles.datamanagement">
+      </categoryActivityBinding>
+   </extension>
+     <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.bonitasoft.studio.profiles.ProfilePreferenceInitializer">
+      </initializer>
+   </extension>
+     <extension
+           point="org.bonitasoft.studio.repositoryStore">
+        <repositoryStore
+              class="org.bonitasoft.studio.profiles.repository.ProfileRepositoryStore">
+        </repositoryStore>
+     </extension>
+
+</plugin>

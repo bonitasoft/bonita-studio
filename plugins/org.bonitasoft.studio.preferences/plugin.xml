@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  <extension-point id="prefrenceFieldEditorContribution" name="Field Editor Contributor for Eclipse Preferences" schema="schema/prefrenceFieldEditorContribution.exsd"/>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.bonitasoft.studio.preferences.pages.BonitaAdvancedPreferencePage"
+            id="org.bonitasoft.studio.preferences.advanced"
+            name="advanced preference page">
+         <keywordReference
+               id="org.bonitasoft.studio.repository.ex.keyword.svn">
+         </keywordReference>
+         <keywordReference
+               id="org.bonitasoft.studio.preferences.keyword.advanced">
+         </keywordReference>
+      </page>
+      <page
+            class="org.bonitasoft.studio.preferences.pages.BonitaDatabasePreferencePage"
+            id="org.bonitasoft.studio.preferences.database"
+            name="database preference page">
+         <keywordReference
+               id="org.bonitasoft.studio.preferences.keywordReference.database">
+         </keywordReference>
+      </page>
+      <page
+            class="org.bonitasoft.studio.preferences.pages.BonitaAppearancePreferencePage"
+            id="org.bonitasoft.studio.preferences.appearance"
+            name="appearance preference page">
+         <keywordReference
+               id="org.bonitasoft.studio.preferences.keywords.appearance">
+         </keywordReference>
+      </page>
+      <page
+            class="org.bonitasoft.studio.preferences.pages.BonitaLanguagePreferencePage"
+            id="org.bonitasoft.studio.preferences.language"
+            name="language preference page">
+         <keywordReference
+               id="org.bonitasoft.studio.preferences.keywords.language">
+         </keywordReference>
+      </page>
+      <page
+            class="org.bonitasoft.studio.preferences.pages.BonitaRunPreferencePage"
+            id="org.bonitasoft.studio.preferences.run"
+            name="run preference page">
+         <keywordReference
+               id="org.bonitasoft.studio.preferences.keyword.run">
+         </keywordReference>
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.bonitasoft.studio.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.bonitasoft.studio.preferences.ShowBonitaPreferenceHandler"
+            commandId="org.eclipse.ui.window.preferences">
+         <activeWhen>
+            <reference
+                  definitionId="isBonitaPerspectiveActive">
+            </reference>
+         </activeWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.keywords">
+      <keyword
+            id="org.bonitasoft.studio.preferences.keywordReference.userXP"
+            label="%userXpKeyWords">
+      </keyword>
+      <keyword
+            id="org.bonitasoft.studio.preferences.keywordReference.database"
+            label="%databaseKeywords">
+      </keyword>
+      <keyword
+            id="org.bonitasoft.studio.preferences.keyword.advanced"
+            label="%advancedKeyWords">
+      </keyword>
+      <keyword
+            id="org.bonitasoft.studio.preferences.keywords.appearance"
+            label="%appearanceKeywords">
+      </keyword>
+      <keyword
+            id="org.bonitasoft.studio.preferences.keywords.language"
+            label="%languageKeywords">
+      </keyword>
+      <keyword
+            id="org.bonitasoft.studio.preferences.keyword.run"
+            label="%runKeywords">
+      </keyword>
+   </extension>
+
+</plugin>

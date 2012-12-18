@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Expression Editor Plugin
+Bundle-SymbolicName: org.bonitasoft.studio.expression.editor;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin
+Bundle-Vendor: BonitaSoft S.A.
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.bonitasoft.studio.pics,
+ org.bonitasoft.studio.model.edit,
+ org.eclipse.emf.edit.ui,
+ org.bonitasoft.studio.common,
+ org.eclipse.core.databinding,
+ org.eclipse.emf.databinding.edit,
+ org.eclipse.emf.workspace,
+ org.eclipse.jface.databinding,
+ org.eclipse.ui.views.properties.tabbed,
+ org.eclipse.jface.text,
+ org.eclipse.core.databinding.beans;bundle-version="1.2.100",
+ org.eclipse.core.databinding.property;bundle-version="1.4.0",
+ org.eclipse.jdt.ui;bundle-version="3.7.1",
+ org.eclipse.jdt.core;bundle-version="3.7.1",
+ org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
+ org.eclipse.xsd;bundle-version="2.7.0",
+ org.eclipse.ui.workbench.texteditor;bundle-version="3.7.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.bonitasoft.studio.expression.editor,
+ org.bonitasoft.studio.expression.editor.constant,
+ org.bonitasoft.studio.expression.editor.filter,
+ org.bonitasoft.studio.expression.editor.i18n;x-friends:="org.bonitasoft.studio.properties.test,org.bonitasoft.studio.test.swtbot.util,org.bonitasoft.studio.tests.ex",
+ org.bonitasoft.studio.expression.editor.operation,
+ org.bonitasoft.studio.expression.editor.provider,
+ org.bonitasoft.studio.expression.editor.viewer
+Import-Package: org.bonitasoft.engine.expression

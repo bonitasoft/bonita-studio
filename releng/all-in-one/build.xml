@@ -1,0 +1,193 @@
+<!--
+ * Copyright (C) 2009, 2010 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+ <project name="Build Bonita all-in-one distribution" default="package">
+	
+	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpath="svnant.jar" /> 
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" classpath="maven-ant-task-2.0.10.jar"/> <!--uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" /-->
+	
+	<condition property="svnkit" value="true" else="false">
+		<os family="mac" />
+	</condition>
+	<condition property="javahl" value="false" else="true">
+		<os family="mac" />
+	</condition>
+	
+	<tstamp>
+		<format property="timestamp" pattern="yyyyMMdd-HHmm"/>
+	</tstamp>
+	<condition property="bos.version.label" value="${studio.version}" else="${timestamp}">
+		<isset property="studio.version"/>
+	</condition>
+ 	<property name="isBranch" value=""/>
+	<condition property="branchOrTag" value="branches" else="tags">
+		<and>
+			<isset property="isBranch"/>
+			<not>
+				<equals arg1="${isBranch}" arg2=""/>
+			</not>
+			<not>
+				<equals arg1="${isBranch}" arg2="false"/>
+			</not>
+		</and>
+	</condition>
+	<condition property="svnTagStudio" value="${branchOrTag}/bonita-studio-${bos.version}" else="trunk">
+		<and>
+			<isset property="bos.version"/>
+			<not>
+				<equals arg1="${bos.version}" arg2=""/>
+			</not>
+		</and>
+	</condition>
+ 	
+	<property name="studioRepository" value="https://svn.bonitasoft.org/bos-studio/${svnTagStudio}/releng/org.bonitasoft.studio-build"/>
+	
+	<target name="package" depends="clean,init,build-studio">
+		<mkdir dir="shortcut"/>
+		<zip destfile="BOS-${bos.version.label}.zip" duplicate="preserve">
+			<zipfileset dir="BOS-${bos.version.label}" prefix="BOS-${bos.version.label}">
+				<exclude name="studio/BonitaStudio-**"/>
+				<exclude name="studio/BonitaStudio-**/**"/>
+				<exclude name="links/*.zip"/>
+			</zipfileset>
+			<zipfileset dir="BOS-${bos.version.label}" includes="studio/BonitaStudio-**" filemode="755" prefix="BOS-${bos.version.label}"/>
+			<zipfileset dir="BOS-${bos.version.label}" includes="studio/BonitaStudio-**/**" filemode="755" prefix="BOS-${bos.version.label}"/>
+			<zipfileset dir="links" includes="**" excludes="win/**" filemode="755" prefix="BOS-${bos.version.label}"/>
+			<zipfileset dir="shortcut" includes="*" prefix="BOS-${bos.version.label}"/>
+			<zipfileset dir="license" includes="*" prefix="BOS-${bos.version.label}"/>
+		</zip>
+		<mkdir dir="distrib"/>
+		<unzip src="BOS-${bos.version.label}.zip" dest="distrib" />
+		<path id="executablePath">
+			<fileset dir="distrib/BOS-${bos.version.label}">
+				<include name="*.sh"/>
+				<include name="studio/BonitaStudio-linux"/>
+				<include name="studio/BonitaStudio-linux64"/>
+				<include name="*.app/Contents/MacOS/*"/>
+				<include name="studio/*.app/Contents/MacOS/*"/>
+			</fileset>
+		</path>
+		<pathconvert property="executables" refid="executablePath"/>
+		<echo>Setting X perms to: ${executables}</echo>
+		<chmod perm="ugo+x">
+			<fileset dir="distrib/BOS-${bos.version.label}">
+				<include name="*.sh"/>
+				<include name="studio/BonitaStudio-linux"/>
+				<include name="studio/BonitaStudio-linux64"/>
+				<include name="*.app/Contents/MacOS/*"/>
+				<include name="studio/*.app/Contents/MacOS/*"/>
+			</fileset>
+		</chmod>
+
+		<antcall target="build-installer" />
+
+	</target>
+			
+ 	<target name="build-installer" if="bitrock.install">
+ 		<property name="all.in.one.folder" value="${basedir}/distrib/BOS-${bos.version.label}"/>
+ 		<property name="bitrock.output" value="${basedir}/installers"/>
+ 		<property name="product.version" value="${bos.version.label}"/>
+ 				
+ 			
+ 		<ant dir="${basedir}/installer" antfile="${basedir}/installer/build.xml"/>
+ 				
+ 		<chmod perm="ugo+x">
+ 			<fileset dir="${basedir}/installers" includes="**"/>
+ 		</chmod>
+ 		<zip destfile="${basedir}/installers/BOS-${bos.version.label}-setup.app.zip">
+ 			<zipfileset dir="${basedir}/installers" includes="**.app/**" filemode="755"/>
+ 		</zip>
+ 		<zip destfile="${basedir}/installers/BOS-${bos.version.label}-lin-setup.zip">
+ 			<zipfileset dir="${basedir}/installers" includes="BOS-${bos.version.label}-setup" filemode="755"/>
+ 			<zipfileset dir="${basedir}/license" includes="*"/>
+ 		</zip>
+ 		<rename dest="${basedir}/installers/BOS-${bos.version.label}-win-setup.exe" src="${basedir}/installers/BOS-${bos.version.label}-setup.exe"/>
+ 		<delete file="${basedir}/installers/BOS-${bos.version.label}-setup" />
+ 	</target>
+ 	
+ 	
+	<target name="get-eclipse-base-platform" unless="eclipse.base.platform">
+		<svn svnkit="${svnkit}" javahl="${javahl}" username="hudson" password="Unph9tlVD0">
+			<checkout url="https://svn.bonitasoft.org/bos-studio/${svnTagStudio}/releng/org.bonitasoft.studio-platform" destPath="productBuildDirectory/platform" />
+		</svn>
+		<property name="eclipse.base.platform" value="${productBuildDirectory}/platform"/>
+	</target>
+ 
+ 	
+ 	<target name="checkoutBuildPlugin" unless="build.src.path">
+ 		<svn svnkit="${svnkit}" javahl="${javahl}" username="hudson" password="Unph9tlVD0">
+ 			<checkout url="${studioRepository}" destPath="${productBuildDirectory}/studio/org.bonitasoft.studio-build" />
+ 		</svn>
+ 	</target>
+ 	
+ 	<target name="build-src-copy" if="build.src.path" >
+ 		<echo>copy: ${build.src.path}</echo>
+ 		<copy todir="${productBuildDirectory}/studio/org.bonitasoft.studio-build">
+ 			<fileset dir="${build.src.path}" />
+ 		</copy>
+ 	</target>
+ 	
+	<target name="build-studio" depends="get-eclipse-base-platform">
+		<property name="studioBuildDirectory" value="${productBuildDirectory}/build" />
+		<property name="buildDirectory" value="${studioBuildDirectory}"/>
+		
+		<antcall target="build-src-copy"/>
+		<antcall target="checkoutBuildPlugin"/>
+		
+		
+		<property name="skipTests" value="true"/>
+		<ant dir="${productBuildDirectory}/studio/org.bonitasoft.studio-build" antfile="build.xml" />
+		<unzip dest="${productBuildDirectory}/studio/tmp">
+			<fileset dir="${studioBuildDirectory}" includes="BonitaStudio-*.zip" />
+		</unzip>
+		<path id="studio.path.id">
+		    <dirset dir="${productBuildDirectory}/studio/tmp/" includes="BonitaStudio-*"/>
+		</path>
+		<property name="studio.path" refid="studio.path.id"/>
+		<echo>${studio.path}</echo>
+		<copy todir="BOS-${bos.version.label}/studio" >
+			<fileset dir="${studio.path}" includes="**" />
+		</copy>
+	</target>
+	
+	
+	<target name="add-doc" depends="build-studio">
+		<copy todir="BOS-${bos.version.label}" flatten="true">
+			<fileset dir="${studioBuildDirectory}/plugins/org.bonitasoft.studio.engine/modules/bonita-distrib/" includes="**/*.pdf" />
+		</copy>
+	</target>
+	
+	<target name="clean">
+		<delete dir="productBuildDirectory"/>
+		<delete dir="BOS-${bos.version.label}"/>
+		<delete dir="distrib"/>
+		<delete includeemptydirs="true">
+			<fileset dir="${basedir}" includes="BOS-*/**"/>
+			<fileset dir="${basedir}" includes="bonita-all-in-one-*.zip"/>
+		</delete>
+		<delete dir="installers" />
+		<mkdir dir="installers"/>
+	</target>
+	
+	<target name="init">
+		<property name="antExecutable" value="ant"/> <!-- To be overriden to full path when using Windows -->
+		<mkdir dir="productBuildDirectory"/>
+		<mkdir dir="BOS-${bos.version.label}"/>
+		<property name="productBuildDirectory" value="${basedir}/productBuildDirectory" />
+	</target>
+	
+</project>

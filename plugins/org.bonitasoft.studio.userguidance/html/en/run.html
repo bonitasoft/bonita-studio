@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Bonita User's Guidance - Run</title>
+  <link href="css/template.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<h1>Run a process</h1>
+
+<div id="category">
+(Category: Process Development)</div>
+
+<p style="margin-top:10px;"></p>
+
+<div id="separator">
+</div>
+
+<p>To run a process from inside Bonita Studio is one means to "execute" it - in
+a development environment, to be used for testing as you develop a process. It
+does not deploy a process in a production environment.</p>
+
+<p>Before a process can be run, all its parameters (dependencies) must be
+defined and keyed, an organization must be defined, and actors must be defined
+and mapped to the organization.</p>
+
+<p>When you select <em>Run</em> from Bonita Studio, the process is executed
+with the default web application(s) packaged with Bonita Open Solution.</p>
+
+<p>Clicking on the Run button "installs" the process on a test application
+server (Jetty by default). This action deletes all previous instances of the
+process and thereby should be used for tests only.</p>
+
+<p>What happens, essentially, behind the <strong>Run</strong> button:</p>
+
+<p>The process and its resources are packaged in a *.bar (Bonita ARchive)
+file</p>
+<ul>
+  <li>A default Web application specific to the configuration of forms,
+    templates, etc in this process is created</li>
+  <li>The Bonita Execution Engine and a lightweight relational database
+    (Hibernate) are launched by the application</li>
+  <li>A web container (Jetty) is started and the *.war file deployed</li>
+  <li>A new browser window opens and the first application page (instantiation
+    form) is presented</li>
+</ul>
+
+<p>When a process has been run/executed, it can be instantiated again from
+Bonita User Experience - still in a development environment</p>
+
+<p></p>
+</body>
+</html>

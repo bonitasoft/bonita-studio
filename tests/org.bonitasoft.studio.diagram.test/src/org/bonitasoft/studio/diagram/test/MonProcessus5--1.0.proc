@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:decision="http://www.bonitasoft.org/ns/studio/process/decision" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:process="http://www.bonitasoft.org/ns/studio/process" xsi:schemaLocation="http://www.bonitasoft.org/ns/studio/process/decision http://www.bonitasoft.org/ns/studio/process#//decision">
+  <process:MainProcess xmi:id="_F8k3ANPhEeCqxcvdZjNUxg" name="MonDiagramme5" label="MonDiagramme5" bonitaVersion="5.5" bonitaModelVersion="5.5">
+    <elements xmi:type="process:Pool" xmi:id="_HCvN0NPhEeCqxcvdZjNUxg" name="MonProcessus5" label="MonProcessus5" welcomePageInternal="false">
+      <elements xmi:type="process:Lane" xmi:id="_LnG7cNPiEeCqxcvdZjNUxg" name="Lane1" label="Lane1">
+        <elements xmi:type="process:Task" xmi:id="_HYT1MNPhEeCqxcvdZjNUxg" name="Etape1" label="Étape1" incoming="_HjX1sNPhEeCqxcvdZjNUxg" groups="_HelcUNPhEeCqxcvdZjNUxg"/>
+        <elements xmi:type="process:StartEvent" xmi:id="_Hdq2UNPhEeCqxcvdZjNUxg" name="Debut1" label="Début1" outgoing="_HjX1sNPhEeCqxcvdZjNUxg"/>
+        <elements xmi:type="process:SubProcessEvent" xmi:id="_MXYh0NPiEeCqxcvdZjNUxg" name="Event_subProc" label="Event-subProc">
+          <elements xmi:type="process:Task" xmi:id="_QGXVANPiEeCqxcvdZjNUxg" name="Etape2" label="Étape2"/>
+        </elements>
+      </elements>
+      <elements xmi:type="process:Lane" xmi:id="_L2v58NPiEeCqxcvdZjNUxg" name="Lane2" label="Lane2"/>
+      <resourceFolders xmi:type="process:ResourceFolder" xmi:id="_Hi7JwNPhEeCqxcvdZjNUxg" path="User/_HCvN0NPhEeCqxcvdZjNUxg/application/application"/>
+      <errorTemplate xmi:type="process:AssociatedFile" xmi:id="_Hi7Jw9PhEeCqxcvdZjNUxg" path="User/_HCvN0NPhEeCqxcvdZjNUxg/html/error.html"/>
+      <processTemplate xmi:type="process:AssociatedFile" xmi:id="_Hi7JwdPhEeCqxcvdZjNUxg" path="User/_HCvN0NPhEeCqxcvdZjNUxg/html/process.html"/>
+      <pageTemplate xmi:type="process:AssociatedFile" xmi:id="_Hi7JxNPhEeCqxcvdZjNUxg" path="User/_HCvN0NPhEeCqxcvdZjNUxg/html/page.html"/>
+      <consultationTemplate xmi:type="process:AssociatedFile" xmi:id="_Hi7JwtPhEeCqxcvdZjNUxg" path="User/_HCvN0NPhEeCqxcvdZjNUxg/html/consultation.html"/>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_HjX1sNPhEeCqxcvdZjNUxg" source="_Hdq2UNPhEeCqxcvdZjNUxg" target="_HYT1MNPhEeCqxcvdZjNUxg">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_HjZD0NPhEeCqxcvdZjNUxg"/>
+      </connections>
+    </elements>
+    <groups xmi:type="process:Group" xmi:id="_HelcUNPhEeCqxcvdZjNUxg" documentation="Personne qui prend la première action pour démarrer le processus" name="Initiateur" label="Initiateur" connectorId="ProcessInitiatior"/>
+    <datatypes xmi:type="process:BooleanType" xmi:id="_F8mFINPhEeCqxcvdZjNUxg" name="Boolean" label="Boolean"/>
+    <datatypes xmi:type="process:DateType" xmi:id="_F8mFIdPhEeCqxcvdZjNUxg" name="Date" label="Date"/>
+    <datatypes xmi:type="process:IntegerType" xmi:id="_F8mFItPhEeCqxcvdZjNUxg" name="Integer" label="Integer"/>
+    <datatypes xmi:type="process:FloatType" xmi:id="_F8mFI9PhEeCqxcvdZjNUxg" name="Decimal" label="Decimal"/>
+    <datatypes xmi:type="process:StringType" xmi:id="_F8mFJNPhEeCqxcvdZjNUxg" name="Text" label="Text"/>
+    <datatypes xmi:type="process:AttachmentType" xmi:id="_F8mFJdPhEeCqxcvdZjNUxg" name="Attachment" label="Attachment"/>
+    <datatypes xmi:type="process:JavaType" xmi:id="_F8mFJtPhEeCqxcvdZjNUxg" name="Java_object" label="Java object"/>
+    <datatypes xmi:type="process:XMLType" xmi:id="_F8mFJ9PhEeCqxcvdZjNUxg" name="XML" label="XML"/>
+    <includedEntries>bonita/bonita</includedEntries>
+  </process:MainProcess>
+  <notation:Diagram xmi:id="_F-m3UNPhEeCqxcvdZjNUxg" type="Process" element="_F8k3ANPhEeCqxcvdZjNUxg" name="MonDiagramme5_1.0.proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_HThb0NPhEeCqxcvdZjNUxg" type="2007" element="_HCvN0NPhEeCqxcvdZjNUxg">
+      <children xmi:type="notation:DecorationNode" xmi:id="_HTjRANPhEeCqxcvdZjNUxg" type="5008"/>
+      <children xmi:type="notation:DecorationNode" xmi:id="_HTj4ENPhEeCqxcvdZjNUxg" type="7001">
+        <children xmi:type="notation:Node" xmi:id="_LnZPUNPiEeCqxcvdZjNUxg" type="3007" element="_LnG7cNPiEeCqxcvdZjNUxg">
+          <children xmi:type="notation:DecorationNode" xmi:id="_LnZ2YNPiEeCqxcvdZjNUxg" type="5007"/>
+          <children xmi:type="notation:DecorationNode" xmi:id="_LnZ2YdPiEeCqxcvdZjNUxg" type="7002">
+            <children xmi:type="notation:Shape" xmi:id="_HdsrgNPhEeCqxcvdZjNUxg" type="3002" element="_Hdq2UNPhEeCqxcvdZjNUxg" fontName="Segoe UI">
+              <children xmi:type="notation:DecorationNode" xmi:id="_HdtSkdPhEeCqxcvdZjNUxg" type="5024">
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_HdtSktPhEeCqxcvdZjNUxg" y="5"/>
+              </children>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_HdtSkNPhEeCqxcvdZjNUxg" x="40" y="65"/>
+            </children>
+            <children xmi:type="notation:Shape" xmi:id="_MXiS0NPiEeCqxcvdZjNUxg" type="3058" element="_MXYh0NPiEeCqxcvdZjNUxg" fontName="Segoe UI" lineColor="10710316">
+              <children xmi:type="notation:DecorationNode" xmi:id="_MXi54NPiEeCqxcvdZjNUxg" type="5083"/>
+              <children xmi:type="notation:BasicCompartment" xmi:id="_MXi54dPiEeCqxcvdZjNUxg" type="7006">
+                <children xmi:type="notation:Shape" xmi:id="_QGlXcNPiEeCqxcvdZjNUxg" type="3005" element="_QGXVANPiEeCqxcvdZjNUxg" fontName="Segoe UI" fillColor="14334392" lineColor="10710316">
+                  <children xmi:type="notation:DecorationNode" xmi:id="_QGl-gNPiEeCqxcvdZjNUxg" type="5005"/>
+                  <layoutConstraint xmi:type="notation:Bounds" xmi:id="_QGlXcdPiEeCqxcvdZjNUxg" x="473" y="115"/>
+                </children>
+              </children>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_MXiS0dPiEeCqxcvdZjNUxg" x="358" y="65" width="400" height="150"/>
+            </children>
+          </children>
+          <styles xmi:type="notation:DescriptionStyle" xmi:id="_LnZPUdPiEeCqxcvdZjNUxg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_LnZPUtPiEeCqxcvdZjNUxg" fontName="Segoe UI"/>
+          <styles xmi:type="notation:LineStyle" xmi:id="_LnZPU9PiEeCqxcvdZjNUxg"/>
+          <styles xmi:type="notation:FillStyle" xmi:id="_LnZ2YtPiEeCqxcvdZjNUxg"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_LnZPVNPiEeCqxcvdZjNUxg" x="137" y="176"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_L25D4NPiEeCqxcvdZjNUxg" type="3007" element="_L2v58NPiEeCqxcvdZjNUxg">
+          <children xmi:type="notation:DecorationNode" xmi:id="_L25q8NPiEeCqxcvdZjNUxg" type="5007"/>
+          <children xmi:type="notation:DecorationNode" xmi:id="_L26SANPiEeCqxcvdZjNUxg" type="7002"/>
+          <styles xmi:type="notation:DescriptionStyle" xmi:id="_L25D4dPiEeCqxcvdZjNUxg"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_L25D4tPiEeCqxcvdZjNUxg" fontName="Segoe UI"/>
+          <styles xmi:type="notation:LineStyle" xmi:id="_L25D49PiEeCqxcvdZjNUxg"/>
+          <styles xmi:type="notation:FillStyle" xmi:id="_L26SAdPiEeCqxcvdZjNUxg"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_L25D5NPiEeCqxcvdZjNUxg" x="45" y="250" width="1088" height="700"/>
+        </children>
+      </children>
+      <styles xmi:type="notation:DescriptionStyle" xmi:id="_HThb0dPhEeCqxcvdZjNUxg"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_HTiC4NPhEeCqxcvdZjNUxg" fontName="Segoe UI"/>
+      <styles xmi:type="notation:LineStyle" xmi:id="_HTiC4dPhEeCqxcvdZjNUxg"/>
+      <styles xmi:type="notation:FillStyle" xmi:id="_HTj4EdPhEeCqxcvdZjNUxg"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_HTiC4tPhEeCqxcvdZjNUxg"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_F-m3UdPhEeCqxcvdZjNUxg"/>
+  </notation:Diagram>
+</xmi:XMI>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Bonita User's Guidance - Configure events : Messages</title>
+  <link href="css/template.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<h1>Configure messages</h1>
+
+<div id="category">
+(Category: Process Modeling)</div>
+
+<p style="margin-top:10px;"></p>
+
+<div id="separator">
+</div>
+
+<p>Messages are used in a process to carry information from one process (pool)
+to another. Messages are unique; that is, a single message is sent and a target
+can receive a single message. This is useful to synchronize two processes, for
+example.</p>
+
+<p>This is a definition specific to BPMN - these are not messages sent by email
+or chat. (To send email, see email connectors). Since transitions / process
+flow cannot cross process boundaries in BPMN, messages are used to carry
+information such as data from one process to another. This requires
+configuration called data mapping between the processes involved.</p>
+
+<p>Messages cannot be sent within a pool – only between pools. To send
+information to multiple receivers at once, or within a pool, use signals.</p>
+
+<p>There five types of message events: </p>
+<ul>
+  <li>start message</li>
+  <li>throw message</li>
+  <li>catch message</li>
+  <li>boundary message</li>
+  <li>end message</li>
+</ul>
+
+<p>There are two ways to add messages to a process design in Bonita Studio :</p>
+<ul>
+  <li>using drag and drop from the design palette</li>
+  <li>drag and drop via the context palette on an element</li>
+</ul>
+</body>
+</html>

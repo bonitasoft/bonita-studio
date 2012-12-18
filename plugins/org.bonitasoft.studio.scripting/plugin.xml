@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.bonitasoft.studio.scripting.scriptLanguageProvider" name="org.bonitasoft.studio.scripting.scriptLanguageProvider" schema="schema/org.bonitasoft.studio.scripting.scriptLanguageProvider.exsd"/>
+   <extension
+         point="org.bonitasoft.studio.expression.expressionProvider">
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.scripting.provider.ScriptExpressionProvider">
+      </expressionProvider>
+   </extension>
+
+</plugin>

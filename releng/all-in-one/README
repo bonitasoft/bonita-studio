@@ -1,0 +1,27 @@
+Once you get this folder, you can integrate the full Bonita distribution from latest sources simply by typing
+  > ant -lib antDeps
+  	    -DMAVEN_HOME=/path/to/the/location/where/maven/is/installed
+        -DantExecutable=/path/to/your/ant/executable
+        -Dmaven.repo=/path/to/a/maven/repo/containing/bonita/artifacts
+		-Dengine.version=5.5-SNAPSHOT
+		-Dweb.version=5.5-SNAPSHOT
+		-Dsimulation.version=5.5-SNAPSHOT
+		-Dconnectors.version=5.5-SNAPSHOT
+		-Dartifact.version=5.5   (artifact.version replaces all *.version if they are not explicitly set)
+        (-Dbitrock.install=/path/to/Bitrock/install/folder)
+        (-Declipse.base.platform=/path/to/an/eclipse/platform)
+        (-Dbos.version=VERSION_ID)
+        (-DisBranch=[true|false] -default false)
+     
+In case your already have an Eclipse platform you wish to use for this build, you can also set the "eclipse.base.platform" property to point on the eclipse folder
+If not specified, the default one will be checked out from Bonita repository.
+
+It requires
+* Ant >= 1.7
+* Subversion >= 1.5 to be installed and available in path
+* A working Internet connection
+
+"antExecutable" property can be set to "ant" under Linux, and to the full path to ant under Windows
+
+After the build, the product ZIP is located in the same folder as the build.xml. You can find the source code
+of the studio in the folder productBuildDirectory/build/plugins.

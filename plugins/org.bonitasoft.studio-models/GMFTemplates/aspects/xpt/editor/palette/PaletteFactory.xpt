@@ -1,0 +1,79 @@
+/*
+ * Copyright (C) 2009 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«EXTENSION xpt::diagram::editparts::Utils»
+
+«REM» 
+	Replace the extended class to PaletteToolEntry to activate Drag'N'Drop feature
+«ENDREM»
+«AROUND nodeToolEntry FOR OclAny»
+	«EXPAND xpt::Common::generatedClassComment»
+	private static class NodeToolEntry extends org.eclipse.gmf.runtime.diagram.ui.internal.services.palette.PaletteToolEntry {
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private final java.util.List elementTypes;
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private NodeToolEntry(String title, String description, java.util.List elementTypes) {
+			super(null,org.bonitasoft.studio.common.NamingUtils.getPaletteTitle(elementTypes), null);
+			super.setDescription(org.bonitasoft.studio.common.NamingUtils.getPaletteDescription(elementTypes)) ;
+			this.elementTypes = elementTypes;
+		}
+
+		/**
+		* Used a custom tool to have a better feedback.
+		* @generated
+		*/
+		public org.eclipse.gef.Tool createTool() {
+«REM»Use a custom tool for palette to have better feedback«ENDREM»
+			org.eclipse.gef.Tool tool = new org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeProcessCreationTool(org.bonitasoft.studio.common.diagram.tools.BonitaConnectionTypes.getTypesFor(elementTypes));
+			tool.setProperties(getToolProperties());
+			return tool;
+		}
+	}
+«ENDAROUND»
+
+«AROUND linkToolEntry FOR OclAny»
+	«EXPAND xpt::Common::generatedClassComment»
+	private static class LinkToolEntry extends org.eclipse.gef.palette.ToolEntry {
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private final java.util.List relationshipTypes;
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		private LinkToolEntry(String title, String description, java.util.List relationshipTypes) {
+			super(org.bonitasoft.studio.common.NamingUtils.getPaletteTitle(relationshipTypes),
+			 org.bonitasoft.studio.common.NamingUtils.getPaletteDescription(relationshipTypes), null, null);
+			this.relationshipTypes = relationshipTypes;
+		}
+
+		«EXPAND xpt::Common::generatedMemberComment»
+		public org.eclipse.gef.Tool createTool() {
+			«REM»Use a custom tool for palette to have better feedback«ENDREM»
+			org.eclipse.gef.Tool tool = new org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeConnectionTool(org.bonitasoft.studio.common.diagram.tools.BonitaConnectionTypes.getRelationTypes());
+			tool.setProperties(getToolProperties());
+			return tool;
+		}
+	}
+«ENDAROUND»
+
+«AROUND addEntry(varName : String) FOR gmfgen::Separator-»
+«varName».add(new org.eclipse.gef.palette.PaletteSeparator("separator"));
+«ENDAROUND»

@@ -1,0 +1,81 @@
+/**
+ * Copyright (C) 2012 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.actors.ui.wizard;
+
+import org.bonitasoft.engine.filter.AbstractUserFilter;
+import org.bonitasoft.studio.actors.ActorsPlugin;
+import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
+import org.bonitasoft.studio.actors.repository.ActorFilterImplRepositoryStore;
+import org.bonitasoft.studio.actors.repository.ActorFilterSourceRepositoryStore;
+import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connectors.ui.wizard.ConnectorImplementationWizard;
+import org.bonitasoft.studio.pics.Pics;
+
+
+/**
+ * @author Romain Bioteau
+ *
+ */
+public class FilterImplementationWizard extends ConnectorImplementationWizard {
+
+
+    public FilterImplementationWizard(){
+        super() ;
+        setWindowTitle(Messages.newFilterImplementation) ;
+        setNeedsProgressMonitor(true) ;
+        setDefaultPageImageDescriptor(Pics.getWizban()) ;
+
+    }
+
+    public FilterImplementationWizard(ConnectorImplementation implementation){
+        super(implementation) ;
+        setWindowTitle(Messages.editFilterImplementation) ;
+    }
+
+    @Override
+    protected void initialize() {
+        implStore = RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class) ;
+        if(getOriginalImplementation() != null){
+            fileStore = implStore.getChild(NamingUtils.toConnectorImplementationFilename(getOriginalImplementation().getImplementationId(),getOriginalImplementation().getImplementationVersion(),true)) ;
+        }
+        defStore =  RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class) ;
+        sourceStore = (ActorFilterSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class) ;
+        messageProvider = DefinitionResourceProvider.getInstance(defStore, ActorsPlugin.getDefault().getBundle()) ;
+    }
+
+    @Override
+    protected String getAbstractClassName() {
+        return AbstractUserFilter.class.getName() ;
+    }
+
+    @Override
+    protected String getPageTitle() {
+        return Messages.actorFilterImplementationPageTitle;
+    }
+
+
+    @Override
+    protected String getPageDescription() {
+        return Messages.actorFilterImplementationPageDesc ;
+    }
+
+
+}

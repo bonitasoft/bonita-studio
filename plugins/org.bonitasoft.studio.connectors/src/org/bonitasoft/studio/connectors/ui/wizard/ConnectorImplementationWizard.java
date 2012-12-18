@@ -1,0 +1,225 @@
+/**
+ * Copyright (C) 2012 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.connectors.ui.wizard;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+
+import org.bonitasoft.engine.connector.AbstractConnector;
+import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.editor.BonitaJavaEditor;
+import org.bonitasoft.studio.common.jface.ExtensibleWizard;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.ClassGenerator;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
+import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
+import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
+import org.bonitasoft.studio.connector.model.implementation.wizard.ImplementationWizardPage;
+import org.bonitasoft.studio.connectors.ConnectorPlugin;
+import org.bonitasoft.studio.connectors.i18n.Messages;
+import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
+import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.part.FileEditorInput;
+
+
+/**
+ * @author Romain Bioteau
+ *
+ */
+public class ConnectorImplementationWizard extends ExtensibleWizard {
+
+
+    private boolean editMode = false;
+    protected IRepositoryFileStore fileStore;
+    protected final ConnectorImplementation implWorkingCopy;
+    private ImplementationWizardPage infoPage;
+    protected ConnectorImplementation originalImpl;
+    private IFile fileToOpen;
+    protected  IRepositoryStore implStore;
+    protected SourceRepositoryStore sourceStore;
+    protected IRepositoryStore defStore;
+    protected DefinitionResourceProvider messageProvider;
+
+    public ConnectorImplementationWizard(){
+        setWindowTitle(Messages.newConnectorImplementation) ;
+        setNeedsProgressMonitor(true) ;
+        setDefaultPageImageDescriptor(Pics.getWizban()) ;
+        implWorkingCopy = ConnectorImplementationFactory.eINSTANCE.createConnectorImplementation() ;
+        implWorkingCopy.setImplementationVersion("1.0.0") ;
+        implWorkingCopy.setJarDependencies(ConnectorImplementationFactory.eINSTANCE.createJarDependencies()) ;
+        initialize() ;
+    }
+
+
+
+    public ConnectorImplementationWizard(ConnectorImplementation implementation){
+        setNeedsProgressMonitor(true) ;
+        setWindowTitle(Messages.editConnectorImplementation) ;
+        setDefaultPageImageDescriptor(Pics.getWizban()) ;
+        editMode  = true ;
+        originalImpl = implementation ;
+        implWorkingCopy = EcoreUtil.copy(implementation) ;
+        if(implWorkingCopy.getJarDependencies() == null){
+            implWorkingCopy.setJarDependencies(ConnectorImplementationFactory.eINSTANCE.createJarDependencies()) ;
+        }
+        initialize() ;
+    }
+
+    protected void initialize() {
+        implStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
+        if(originalImpl != null){
+            fileStore = implStore.getChild(NamingUtils.toConnectorImplementationFilename(originalImpl.getImplementationId(),originalImpl.getImplementationVersion(),true)) ;
+        }
+        defStore =  RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+        sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class) ;
+        messageProvider = DefinitionResourceProvider.getInstance(defStore, ConnectorPlugin.getDefault().getBundle()) ;
+    }
+
+    @Override
+    public void addPages() {
+        List<ConnectorImplementation> existingImplementation = ((IImplementationRepositoryStore)implStore).getImplementations() ;
+        if(originalImpl != null){
+            existingImplementation.clear() ;
+            for(ConnectorImplementation impl : ((IImplementationRepositoryStore)implStore).getImplementations()){
+                if(!(impl.getImplementationId().equals(originalImpl.getImplementationId()) && impl.getImplementationVersion().equals(originalImpl.getImplementationVersion()))){
+                    existingImplementation.add(impl) ;
+                }
+            }
+        }
+
+
+
+        infoPage = new ImplementationWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),sourceStore,getPageTitle(),getPageDescription(),messageProvider) ;
+        addPage(infoPage) ;
+    }
+
+
+
+    protected String getPageDescription() {
+        return Messages.connectorImplementationDesc;
+    }
+
+    protected String getPageTitle() {
+        return Messages.connectorImplementationTitle;
+    }
+
+
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.wizard.Wizard#performFinish()
+     */
+    @Override
+    public boolean performFinish() {
+        try {
+            getContainer().run(false, false, new IRunnableWithProgress() {
+
+                @Override
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+
+                    String implId =  NamingUtils.toConnectorImplementationFilename(implWorkingCopy.getImplementationId(),implWorkingCopy.getImplementationVersion(),false);
+                    String implFileName = implId+"."+ConnectorImplRepositoryStore.CONNECTOR_IMPL_EXT;
+
+                    if(editMode){
+                        final String qualifiedClassname = implWorkingCopy.getImplementationClassname() ;
+                        final IRepositoryFileStore file = sourceStore.getChild(ClassGenerator.getAbstractClassName(originalImpl.getImplementationClassname())) ;
+                        if(file != null){
+                            file.delete() ;
+                        }
+                        if(!originalImpl.getImplementationClassname().equals(implWorkingCopy.getImplementationClassname())){
+                            SourceFileStore sourceFile = (SourceFileStore) sourceStore.getChild(originalImpl.getImplementationClassname()) ;
+                            if(sourceFile != null){
+                                sourceFile.rename(qualifiedClassname) ;
+                                try {
+                                    ClassGenerator.updateConnectorImplementationAbstractClassName(implWorkingCopy, ClassGenerator.getAbstractClassName(originalImpl.getImplementationClassname()), sourceFile, monitor);
+                                } catch (Exception e) {
+                                    BonitaStudioLog.error(e);
+                                }
+                            }
+                        }
+
+                        if(!fileStore.getName().equals(implFileName)){
+                            fileStore.delete() ;
+                        }
+                    }
+
+                    fileStore = implStore.createRepositoryFileStore(implFileName) ;
+                    fileStore.save(implWorkingCopy) ;
+
+                    try {
+                        ConnectorDefinition definition = ((IDefinitionRepositoryStore) defStore).getDefinition(implWorkingCopy.getDefinitionId(),implWorkingCopy.getDefinitionVersion()) ;
+                        ClassGenerator.generateConnectorImplementationAbstractClass(implWorkingCopy,definition,getAbstractClassName(),sourceStore, monitor) ;
+                        fileToOpen = ClassGenerator.generateConnectorImplementationClass(implWorkingCopy,sourceStore, monitor) ;
+                    } catch (Exception e) {
+                        BonitaStudioLog.error(e) ;
+                    }
+                    monitor.done() ;
+                }
+            });
+        } catch (Exception e){
+            BonitaStudioLog.error(e) ;
+        }
+
+        if(fileToOpen != null){
+            BusyIndicator.showWhile(Display.getDefault(),new Runnable() {
+                @Override
+                public void run() {
+                    //need to get the acive page from the UI shell
+                    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                    try {
+                        IEditorPart part = IDE.openEditor(page, new FileEditorInput(fileToOpen), BonitaJavaEditor.ID);
+                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveEditor(part, false);
+                    } catch (PartInitException e) {
+                    }
+                }
+            });
+        }
+
+        return true;
+    }
+
+
+    protected String getAbstractClassName() {
+        return AbstractConnector.class.getName();
+    }
+
+    public ConnectorImplementation getOriginalImplementation() {
+        return originalImpl;
+    }
+
+
+}

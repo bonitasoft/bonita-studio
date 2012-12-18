@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schema.omg.org/spec/BPMN/2.0" xmlns:bpmndi="http://bpmndi.org" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:itp="http://www.itp-commerce.com/XPDL2.1" xmlns:xpdl="http://www.wfmc.org/2008/XPDL2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/bpmn20 schema\Infrastructure.xsd" targetNamespace="http://example.org/bpmn">
+	<collaboration id="collaboration1">
+		<participant id="_346a7f2f-917e-4897-8c26-133bf1cf4db6-p" name="Customer"/>
+		<participant id="_dbd4c1a3-8fb4-4fd1-83ee-170a19c84091-p" name="Standard Process"/>
+		<messageFlow id="_4c29a034-f47f-4bbe-96dc-1cd5c885a094" name="ReturnedMaterials" sourceRef="_07c10a6c-cfee-468c-82db-7565fe23417f" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94"/>
+		<messageFlow id="_8be5fa08-c4ef-4d95-bc8b-341d874100dc" name="Cancellation" sourceRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94" targetRef="_61dcff5f-c765-4981-a7c2-9bec3c679c04"/>
+		<messageFlow id="_ba9295ec-2438-415a-8ad1-4c45c22cc0be" name="AcctMaterials" sourceRef="_ce73567d-0215-437f-8786-c8136109a40c" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94"/>
+		<messageFlow id="_c2868108-077f-4d13-86bd-b5b2248e8855" name="Mail item" sourceRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94" targetRef="_4f3ec2a8-b0d7-4110-a6c6-de31b5855999"/>
+		<messageFlow id="_bef27844-88c4-4c50-970c-464cd0a31791" name="InfoResponse" sourceRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94" targetRef="_34916e77-42d1-4684-8399-5a4130926f2a"/>
+		<messageFlow id="_411002cc-fcc1-4ac1-8258-c936a85ef6e1" name="InfoResponse" sourceRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94" targetRef="_a37f20b9-d02d-4057-8940-949e59f1eb13"/>
+		<messageFlow id="_d24e9c8f-cd62-47fd-959f-c2e23ce6fae9" name="AppIncomplete" sourceRef="_3992aa16-f04f-40ac-a891-092848f46221" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94"/>
+		<messageFlow id="_932b16db-f5aa-42cc-ad81-45c33d5a426c" name="InfoRequest" sourceRef="_a37f20b9-d02d-4057-8940-949e59f1eb13" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94"/>
+		<messageFlow id="_6026fee8-ac92-446c-bdc2-703e137f2297" name="InfoRequest" sourceRef="_d6383064-6a23-4443-aea4-57fd37949712" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94"/>
+		<messageFlow id="_bfbe97b8-1809-45ea-95c6-7c80e5a9733b" name="Confirmation" sourceRef="_f5597109-19b4-4f51-8482-c1fa4d7489f8" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94"/>
+	</collaboration>
+	<resource id="_d1abe6f5-eb3c-4264-8d5f-edab6e079e58" name="Back Office"/>
+	<resource id="_8842760b-1c81-4876-ac6f-110de60c5332" name="Customer Service"/>
+	<process id="_dbd4c1a3-8fb4-4fd1-83ee-170a19c84091" name="Standard Process">
+		<laneSet id="byRole">
+			<lane id="byRole_d1abe6f5-eb3c-4264-8d5f-edab6e079e58" name="Back Office" partitionElementRef="_d1abe6f5-eb3c-4264-8d5f-edab6e079e58">
+				<flowNodeRef>_71200872-24e1-482e-abb1-41d34773eb46</flowNodeRef>
+				<flowNodeRef>_fba68ee8-faf0-41f9-b08e-b7a393c8762c</flowNodeRef>
+				<flowNodeRef>_f5d398cf-ba45-4e9b-85da-669e0eddff5a</flowNodeRef>
+				<flowNodeRef>_edadeee4-32eb-4378-92d2-707c9b82d836</flowNodeRef>
+				<flowNodeRef>_d6383064-6a23-4443-aea4-57fd37949712</flowNodeRef>
+				<flowNodeRef>_dd2174ae-b399-4e85-bee0-ba23c7f09d15</flowNodeRef>
+				<flowNodeRef>_7c1fd3ca-bac9-440e-822c-5c2c4ea0f094</flowNodeRef>
+				<flowNodeRef>_34916e77-42d1-4684-8399-5a4130926f2a</flowNodeRef>
+				<flowNodeRef>_d7023559-12a8-45fa-9bdd-a1ee5d378c8b</flowNodeRef>
+				<flowNodeRef>_b1545b5c-7400-4618-bca0-135e8cd4007d</flowNodeRef>
+				<flowNodeRef>_cec9e4c1-bd04-4974-bb88-d5496aba56cf</flowNodeRef>
+				<flowNodeRef>_920d05dd-031b-4d8e-b00e-5fad95690335</flowNodeRef>
+				<flowNodeRef>_f3fb9dd9-9508-4d56-84d4-19be9d6d6004</flowNodeRef>
+				<flowNodeRef>_ce73567d-0215-437f-8786-c8136109a40c</flowNodeRef>
+				<flowNodeRef>_22990e7d-6454-4064-b6ab-79bfea98e5f3</flowNodeRef>
+				<flowNodeRef>_4f3ec2a8-b0d7-4110-a6c6-de31b5855999</flowNodeRef>
+				<flowNodeRef>_29749b37-5ab0-4bbb-8b27-9d8d5ffc55dd</flowNodeRef>
+				<flowNodeRef>_a37f20b9-d02d-4057-8940-949e59f1eb13</flowNodeRef>
+				<flowNodeRef>_f5597109-19b4-4f51-8482-c1fa4d7489f8</flowNodeRef>
+				<flowNodeRef>_8860ffdc-9d15-4abc-8fb6-1706fc2e1961</flowNodeRef>
+				<flowNodeRef>_03a6fe7c-2a5e-4d1d-8f7d-fbf6027a5a7c</flowNodeRef>
+				<flowNodeRef>_3992aa16-f04f-40ac-a891-092848f46221</flowNodeRef>
+				<flowNodeRef>_3b701134-b724-4a7c-bb1d-cf1e70a52dca</flowNodeRef>
+				<flowNodeRef>_61dcff5f-c765-4981-a7c2-9bec3c679c04</flowNodeRef>
+				<flowNodeRef>_07c10a6c-cfee-468c-82db-7565fe23417f</flowNodeRef>
+				<flowNodeRef>_ad3ff962-67a6-4076-a1e3-a2dc7e1ffb97</flowNodeRef>
+				<flowNodeRef>_7ada124e-2f5c-45a9-a1e8-c5e5f0144cfb</flowNodeRef>
+				<flowNodeRef>_d1ffe4cb-b8cc-4209-b70b-025ff05b425b</flowNodeRef>
+				<flowNodeRef>_3c50b1a9-a58e-47ac-9d4d-b1c069fd1aa5</flowNodeRef>
+			</lane>
+			<lane id="byRole_8842760b-1c81-4876-ac6f-110de60c5332" name="Customer Service" partitionElementRef="_8842760b-1c81-4876-ac6f-110de60c5332">
+				<flowNodeRef>_175449e5-027c-4f52-a3d2-c30e90f9c60f</flowNodeRef>
+				<flowNodeRef>_a6533064-c2d1-4df7-afa3-3a1b09370e17</flowNodeRef>
+				<flowNodeRef>_6219476d-9d90-4462-9d90-8212e6297c06</flowNodeRef>
+				<flowNodeRef>_7a7da462-784b-4338-a9ba-c29a98dba869</flowNodeRef>
+			</lane>
+		</laneSet>
+		<dataObject id="_6b35b310-ad84-4c8c-854c-1cefd2655736" name="Remittance"/>
+		<dataObject id="_a2370682-3fca-40f5-ad23-a25180931e6a" name="Application"/>
+		<startEvent id="_4f3ec2a8-b0d7-4110-a6c6-de31b5855999" name="Receive&#xA;Application">
+			<messageEventDefinition/>
+		</startEvent>
+		<userTask id="_29749b37-5ab0-4bbb-8b27-9d8d5ffc55dd" name="Open Mail">
+			<dataOutputAssociation id="_ef59debe-c0ea-49c8-8c96-3d625d4f82ff">
+				<sourceRef>_29749b37-5ab0-4bbb-8b27-9d8d5ffc55dd</sourceRef>
+				<targetRef>_6b35b310-ad84-4c8c-854c-1cefd2655736</targetRef>
+			</dataOutputAssociation>
+			<dataOutputAssociation id="_dc482d79-eb09-4246-bfc4-002af3a3cee6">
+				<sourceRef>_29749b37-5ab0-4bbb-8b27-9d8d5ffc55dd</sourceRef>
+				<targetRef>_a2370682-3fca-40f5-ad23-a25180931e6a</targetRef>
+			</dataOutputAssociation>
+		</userTask>
+		<userTask id="_175449e5-027c-4f52-a3d2-c30e90f9c60f" name="Resolve Discrepancy"/>
+		<subProcess id="_a37f20b9-d02d-4057-8940-949e59f1eb13" name="Process Application">
+			<dataInputAssociation id="_0a532aef-d8b2-4229-8185-aab8f02d0a97">
+				<sourceRef>_a2370682-3fca-40f5-ad23-a25180931e6a</sourceRef>
+				<targetRef>_a37f20b9-d02d-4057-8940-949e59f1eb13</targetRef>
+			</dataInputAssociation>
+			<startEvent id="_71200872-24e1-482e-abb1-41d34773eb46"/>
+			<serviceTask id="_fba68ee8-faf0-41f9-b08e-b7a393c8762c" name="Retrieve Customer Info"/>
+			<endEvent id="_f5d398cf-ba45-4e9b-85da-669e0eddff5a"/>
+			<exclusiveGateway id="_edadeee4-32eb-4378-92d2-707c9b82d836" name="App complete?"/>
+			<intermediateThrowEvent id="_d6383064-6a23-4443-aea4-57fd37949712" name="Request info">
+				<messageEventDefinition/>
+			</intermediateThrowEvent>
+			<eventBasedGateway id="_dd2174ae-b399-4e85-bee0-ba23c7f09d15"/>
+			<intermediateCatchEvent id="_7c1fd3ca-bac9-440e-822c-5c2c4ea0f094" name="3 days">
+				<timerEventDefinition/>
+			</intermediateCatchEvent>
+			<intermediateCatchEvent id="_34916e77-42d1-4684-8399-5a4130926f2a" name="Receive info">
+				<messageEventDefinition/>
+			</intermediateCatchEvent>
+			<endEvent id="_d7023559-12a8-45fa-9bdd-a1ee5d378c8b" name="AppIncomplete">
+				<errorEventDefinition/>
+			</endEvent>
+			<sequenceFlow id="_feff1069-fcbc-4f9d-8b13-3ee758db896e" sourceRef="_71200872-24e1-482e-abb1-41d34773eb46" targetRef="_fba68ee8-faf0-41f9-b08e-b7a393c8762c"/>
+			<sequenceFlow id="_174134f4-cea9-4217-89f3-95e2089395fb" sourceRef="_fba68ee8-faf0-41f9-b08e-b7a393c8762c" targetRef="_edadeee4-32eb-4378-92d2-707c9b82d836"/>
+			<sequenceFlow id="_1ef6e832-99f8-4ac0-818e-805555f5b53a" name="yes" sourceRef="_edadeee4-32eb-4378-92d2-707c9b82d836" targetRef="_f5d398cf-ba45-4e9b-85da-669e0eddff5a">
+				<conditionExpression>Condition = 'yes'</conditionExpression>
+			</sequenceFlow>
+			<sequenceFlow id="_98dd539f-bb21-4491-b783-29286dd5c231" name="no" sourceRef="_edadeee4-32eb-4378-92d2-707c9b82d836" targetRef="_d6383064-6a23-4443-aea4-57fd37949712">
+				<conditionExpression>Condition = 'no'</conditionExpression>
+			</sequenceFlow>
+			<sequenceFlow id="_9d3910ec-9d27-4cd9-ab45-9572840230ca" sourceRef="_d6383064-6a23-4443-aea4-57fd37949712" targetRef="_dd2174ae-b399-4e85-bee0-ba23c7f09d15"/>
+			<sequenceFlow id="_5b9a0689-6306-4fbb-9160-4cc0032148a7" sourceRef="_dd2174ae-b399-4e85-bee0-ba23c7f09d15" targetRef="_7c1fd3ca-bac9-440e-822c-5c2c4ea0f094"/>
+			<sequenceFlow id="_3d4a99c0-9d2f-4ed6-8312-1798de56deaa" sourceRef="_dd2174ae-b399-4e85-bee0-ba23c7f09d15" targetRef="_34916e77-42d1-4684-8399-5a4130926f2a"/>
+			<sequenceFlow id="_b279450e-53da-4629-9ca0-78d4243c3ccf" sourceRef="_7c1fd3ca-bac9-440e-822c-5c2c4ea0f094" targetRef="_d7023559-12a8-45fa-9bdd-a1ee5d378c8b"/>
+			<sequenceFlow id="_8e101684-badd-47d3-829d-14f006cc1ad2" sourceRef="_34916e77-42d1-4684-8399-5a4130926f2a" targetRef="_f5d398cf-ba45-4e9b-85da-669e0eddff5a"/>
+		</subProcess>
+		<endEvent id="_f5597109-19b4-4f51-8482-c1fa4d7489f8" name="Confirmation"/>
+		<subProcess id="_8860ffdc-9d15-4abc-8fb6-1706fc2e1961" name="Process Remittance">
+			<dataInputAssociation id="_e64a1752-0410-4a19-aa21-82004fd100f6">
+				<sourceRef>_6b35b310-ad84-4c8c-854c-1cefd2655736</sourceRef>
+				<targetRef>_8860ffdc-9d15-4abc-8fb6-1706fc2e1961</targetRef>
+			</dataInputAssociation>
+		</subProcess>
+		<boundaryEvent id="_03a6fe7c-2a5e-4d1d-8f7d-fbf6027a5a7c" name="AppIncomplete" attachedToRef="_a37f20b9-d02d-4057-8940-949e59f1eb13">
+			<errorEventDefinition/>
+		</boundaryEvent>
+		<endEvent id="_3992aa16-f04f-40ac-a891-092848f46221" name="AppIncomplete">
+			<messageEventDefinition/>
+		</endEvent>
+		<endEvent id="_3b701134-b724-4a7c-bb1d-cf1e70a52dca"/>
+		<boundaryEvent id="_61dcff5f-c765-4981-a7c2-9bec3c679c04" name="Customer&#xA;Cancel" attachedToRef="_a37f20b9-d02d-4057-8940-949e59f1eb13">
+			<messageEventDefinition/>
+		</boundaryEvent>
+		<userTask id="_07c10a6c-cfee-468c-82db-7565fe23417f" name="Return Application Materials"/>
+		<inclusiveGateway id="_ad3ff962-67a6-4076-a1e3-a2dc7e1ffb97"/>
+		<subProcess id="_7ada124e-2f5c-45a9-a1e8-c5e5f0144cfb" name="ForEach Fund">
+			<multiInstanceLoopCharacteristics/>
+			<startEvent id="_b1545b5c-7400-4618-bca0-135e8cd4007d"/>
+			<userTask id="_cec9e4c1-bd04-4974-bb88-d5496aba56cf" name="Setup fund account"/>
+			<userTask id="_920d05dd-031b-4d8e-b00e-5fad95690335" name="Setup online access"/>
+			<parallelGateway id="_f3fb9dd9-9508-4d56-84d4-19be9d6d6004"/>
+			<sendTask id="_ce73567d-0215-437f-8786-c8136109a40c" name="Mail fund materials"/>
+			<endEvent id="_22990e7d-6454-4064-b6ab-79bfea98e5f3"/>
+			<sequenceFlow id="_7e3c095a-5b60-44b7-a42d-d44eb3701e48" sourceRef="_b1545b5c-7400-4618-bca0-135e8cd4007d" targetRef="_920d05dd-031b-4d8e-b00e-5fad95690335"/>
+			<sequenceFlow id="_ae74bd9a-7733-4746-b14a-24b6e50ef560" sourceRef="_b1545b5c-7400-4618-bca0-135e8cd4007d" targetRef="_cec9e4c1-bd04-4974-bb88-d5496aba56cf"/>
+			<sequenceFlow id="_da196323-4dbd-479a-956a-d8d1a7af0a18" sourceRef="_cec9e4c1-bd04-4974-bb88-d5496aba56cf" targetRef="_f3fb9dd9-9508-4d56-84d4-19be9d6d6004"/>
+			<sequenceFlow id="_0e3b659f-8245-4575-a42b-0d855208377a" sourceRef="_920d05dd-031b-4d8e-b00e-5fad95690335" targetRef="_f3fb9dd9-9508-4d56-84d4-19be9d6d6004"/>
+			<sequenceFlow id="_8d56f7af-3584-400b-b3e0-8ff2116b14bf" sourceRef="_f3fb9dd9-9508-4d56-84d4-19be9d6d6004" targetRef="_ce73567d-0215-437f-8786-c8136109a40c"/>
+			<sequenceFlow id="_9c9a34a9-3dcc-42e7-8e7e-d3535d2aa744" sourceRef="_ce73567d-0215-437f-8786-c8136109a40c" targetRef="_22990e7d-6454-4064-b6ab-79bfea98e5f3"/>
+		</subProcess>
+		<exclusiveGateway id="_d1ffe4cb-b8cc-4209-b70b-025ff05b425b" name="Correct remittance&#xA;amount?"/>
+		<inclusiveGateway id="_3c50b1a9-a58e-47ac-9d4d-b1c069fd1aa5"/>
+		<boundaryEvent id="_a6533064-c2d1-4df7-afa3-3a1b09370e17" name="48 hrs" attachedToRef="_175449e5-027c-4f52-a3d2-c30e90f9c60f">
+			<timerEventDefinition/>
+		</boundaryEvent>
+		<userTask id="_6219476d-9d90-4462-9d90-8212e6297c06" name="Escalate resolution"/>
+		<intermediateCatchEvent id="_7a7da462-784b-4338-a9ba-c29a98dba869" name="Wait 1 hr">
+			<timerEventDefinition/>
+		</intermediateCatchEvent>
+		<sequenceFlow id="_6c477f39-a676-45a1-9bc9-41ae37ef05ac" sourceRef="_4f3ec2a8-b0d7-4110-a6c6-de31b5855999" targetRef="_29749b37-5ab0-4bbb-8b27-9d8d5ffc55dd"/>
+		<sequenceFlow id="_163a3b61-1ba1-4c25-909d-161ec33dc6b8" sourceRef="_29749b37-5ab0-4bbb-8b27-9d8d5ffc55dd" targetRef="_a37f20b9-d02d-4057-8940-949e59f1eb13"/>
+		<sequenceFlow id="_f9be430f-3a5e-4512-b486-447a332e4133" sourceRef="_175449e5-027c-4f52-a3d2-c30e90f9c60f" targetRef="_7a7da462-784b-4338-a9ba-c29a98dba869"/>
+		<sequenceFlow id="_c4426e6e-69ea-433d-81a1-7bd83fa21541" sourceRef="_a37f20b9-d02d-4057-8940-949e59f1eb13" targetRef="_ad3ff962-67a6-4076-a1e3-a2dc7e1ffb97"/>
+		<sequenceFlow id="_8b47400c-ec76-4f29-8990-bb2a384c0ccb" sourceRef="_8860ffdc-9d15-4abc-8fb6-1706fc2e1961" targetRef="_d1ffe4cb-b8cc-4209-b70b-025ff05b425b"/>
+		<sequenceFlow id="_2eef196a-0e68-45a5-b0ea-76088f028e13" sourceRef="_03a6fe7c-2a5e-4d1d-8f7d-fbf6027a5a7c" targetRef="_3992aa16-f04f-40ac-a891-092848f46221"/>
+		<sequenceFlow id="_fcab4422-02b4-40a8-9d7c-b697f1ba31d1" sourceRef="_61dcff5f-c765-4981-a7c2-9bec3c679c04" targetRef="_07c10a6c-cfee-468c-82db-7565fe23417f"/>
+		<sequenceFlow id="_25f8eba2-48a0-4b19-8ad4-989cb437e799" sourceRef="_07c10a6c-cfee-468c-82db-7565fe23417f" targetRef="_3b701134-b724-4a7c-bb1d-cf1e70a52dca"/>
+		<sequenceFlow id="_c5e66faf-800e-48c1-b40a-cfd886182759" name="ifNewAccount" sourceRef="_ad3ff962-67a6-4076-a1e3-a2dc7e1ffb97" targetRef="_7ada124e-2f5c-45a9-a1e8-c5e5f0144cfb">
+			<conditionExpression id="_c5e66faf-800e-48c1-b40a-cfd886182759_">Condition ='ifNewAccount'</conditionExpression>
+		</sequenceFlow>
+		<sequenceFlow id="_29b18cc5-5383-4ab1-9ece-07abe38420c9" name="ifRemittance" sourceRef="_ad3ff962-67a6-4076-a1e3-a2dc7e1ffb97" targetRef="_8860ffdc-9d15-4abc-8fb6-1706fc2e1961">
+			<conditionExpression id="_29b18cc5-5383-4ab1-9ece-07abe38420c9_">Condition ='ifRemittance'</conditionExpression>
+		</sequenceFlow>
+		<sequenceFlow id="_ecd51dda-68dc-4be4-9185-d6e05d198a5d" sourceRef="_7ada124e-2f5c-45a9-a1e8-c5e5f0144cfb" targetRef="_3c50b1a9-a58e-47ac-9d4d-b1c069fd1aa5"/>
+		<sequenceFlow id="_ced36d06-91ae-494d-ac35-34460f001f98" name="YES" sourceRef="_d1ffe4cb-b8cc-4209-b70b-025ff05b425b" targetRef="_3c50b1a9-a58e-47ac-9d4d-b1c069fd1aa5">
+			<conditionExpression id="_ced36d06-91ae-494d-ac35-34460f001f98_">Condition ='YES'(default)</conditionExpression>
+		</sequenceFlow>
+		<sequenceFlow id="_130b654a-0b2a-44c3-a3d8-fa6cf15d378b" name="NO" sourceRef="_d1ffe4cb-b8cc-4209-b70b-025ff05b425b" targetRef="_175449e5-027c-4f52-a3d2-c30e90f9c60f">
+			<conditionExpression id="_130b654a-0b2a-44c3-a3d8-fa6cf15d378b_">Condition ='NO'</conditionExpression>
+		</sequenceFlow>
+		<sequenceFlow id="_ff696f5d-9d3f-4fa2-bab5-359155bba671" sourceRef="_3c50b1a9-a58e-47ac-9d4d-b1c069fd1aa5" targetRef="_f5597109-19b4-4f51-8482-c1fa4d7489f8"/>
+		<sequenceFlow id="_0c7781e6-b551-43ff-a7e3-9f30ace4e1e8" sourceRef="_a6533064-c2d1-4df7-afa3-3a1b09370e17" targetRef="_6219476d-9d90-4462-9d90-8212e6297c06"/>
+		<sequenceFlow id="_150bffb8-2e74-44ad-baaa-9e8d55fb6195" sourceRef="_6219476d-9d90-4462-9d90-8212e6297c06" targetRef="_8860ffdc-9d15-4abc-8fb6-1706fc2e1961"/>
+		<sequenceFlow id="_2f4e0d83-775c-4616-8e53-0668f2652450" sourceRef="_7a7da462-784b-4338-a9ba-c29a98dba869" targetRef="_8860ffdc-9d15-4abc-8fb6-1706fc2e1961"/>
+		<textAnnotation id="_b4517c74-73f7-407f-8b34-aa8888de134c">
+			<text>Contact customer by phone</text>
+		</textAnnotation>
+		<association id="_5c0c958a-4954-4a2d-b3ea-654ebc4ff183" sourceRef="_b4517c74-73f7-407f-8b34-aa8888de134c" targetRef="_175449e5-027c-4f52-a3d2-c30e90f9c60f"/>
+	</process>
+	<bpmndi:collaborationDiagram id="collaborationDiagram1" name="Standard Process" collaborationRef="collaboration1">
+		<bpmndi:pool id="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.1" name="Customer" x="28.7" y="20" width="1365" height="86" isVisible="true" orientation="horizontal" participantRef="_346a7f2f-917e-4897-8c26-133bf1cf4db6-p"/>
+		<bpmndi:pool id="_4604e58a-54d3-4ca9-8cbd-229ff81a37ab.1" name="Standard Process" x="20" y="157.3" width="1450.8" height="394.7" isVisible="true" orientation="horizontal" participantRef="_dbd4c1a3-8fb4-4fd1-83ee-170a19c84091-p">
+			<bpmndi:laneCompRef>_d1abe6f5-eb3c-4264-8d5f-edab6e079e58</bpmndi:laneCompRef>
+			<bpmndi:laneCompRef>_8842760b-1c81-4876-ac6f-110de60c5332</bpmndi:laneCompRef>
+		</bpmndi:pool>
+		<bpmndi:messageFlowConnector id="_4c29a034-f47f-4bbe-96dc-1cd5c885a094.1" sourceRef="_07c10a6c-cfee-468c-82db-7565fe23417f.1" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.1" label="ReturnedMaterials" messageFlowRef="_4c29a034-f47f-4bbe-96dc-1cd5c885a094">
+			<bpmndi:bendpoint x="607.2" y="166"/>
+			<bpmndi:bendpoint x="607.2" y="140"/>
+			<bpmndi:bendpoint x="902.3" y="140"/>
+			<bpmndi:bendpoint x="902.3" y="106"/>
+		</bpmndi:messageFlowConnector>
+		<bpmndi:messageFlowConnector id="_8be5fa08-c4ef-4d95-bc8b-341d874100dc.1" sourceRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.1" targetRef="_61dcff5f-c765-4981-a7c2-9bec3c679c04.1" label="Cancellation" messageFlowRef="_8be5fa08-c4ef-4d95-bc8b-341d874100dc">
+			<bpmndi:bendpoint x="356.3" y="106"/>
+			<bpmndi:bendpoint x="356.3" y="250.5"/>
+			<bpmndi:bendpoint x="394.6" y="250.5"/>
+			<bpmndi:bendpoint x="405.7" y="259"/>
+		</bpmndi:messageFlowConnector>
+		<bpmndi:messageFlowConnector id="_ba9295ec-2438-415a-8ad1-4c45c22cc0be.1" sourceRef="_ce73567d-0215-437f-8786-c8136109a40c.1" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.1" label="AcctMaterials" messageFlowRef="_ba9295ec-2438-415a-8ad1-4c45c22cc0be">
+			<bpmndi:bendpoint x="1121.7" y="223.3"/>
+			<bpmndi:bendpoint x="1066.1" y="203.3"/>
+			<bpmndi:bendpoint x="1066.1" y="106"/>
+			<bpmndi:bendpoint x="1066.1" y="106"/>
+		</bpmndi:messageFlowConnector>
+		<bpmndi:messageFlowConnector id="_c2868108-077f-4d13-86bd-b5b2248e8855.1" sourceRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.1" targetRef="_4f3ec2a8-b0d7-4110-a6c6-de31b5855999.1" label="Mail item" messageFlowRef="_c2868108-077f-4d13-86bd-b5b2248e8855">
+			<bpmndi:bendpoint x="247.1" y="106"/>
+			<bpmndi:bendpoint x="247.1" y="125.1"/>
+			<bpmndi:bendpoint x="110.6" y="125.1"/>
+			<bpmndi:bendpoint x="110.6" y="336"/>
+		</bpmndi:messageFlowConnector>
+		<bpmndi:messageFlowConnector id="_411002cc-fcc1-4ac1-8258-c936a85ef6e1.1" sourceRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.1" targetRef="_a37f20b9-d02d-4057-8940-949e59f1eb13.1" label="InfoResponse" messageFlowRef="_411002cc-fcc1-4ac1-8258-c936a85ef6e1">
+			<bpmndi:bendpoint x="574.7" y="106"/>
+			<bpmndi:bendpoint x="574.7" y="125.1"/>
+			<bpmndi:bendpoint x="482.8" y="125.1"/>
+			<bpmndi:bendpoint x="482.8" y="258.7"/>
+			<bpmndi:bendpoint x="482.8" y="254.7"/>
+		</bpmndi:messageFlowConnector>
+		<bpmndi:messageFlowConnector id="_d24e9c8f-cd62-47fd-959f-c2e23ce6fae9.1" sourceRef="_3992aa16-f04f-40ac-a891-092848f46221.1" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.1" label="AppIncomplete" messageFlowRef="_d24e9c8f-cd62-47fd-959f-c2e23ce6fae9">
+			<bpmndi:bendpoint x="564.3" y="346"/>
+			<bpmndi:bendpoint x="376.7" y="354.5"/>
+			<bpmndi:bendpoint x="322.5" y="354.5"/>
+			<bpmndi:bendpoint x="322.5" y="168.1"/>
+			<bpmndi:bendpoint x="301.7" y="168.1"/>
+			<bpmndi:bendpoint x="301.7" y="106"/>
+			<bpmndi:bendpoint x="301.7" y="106"/>
+		</bpmndi:messageFlowConnector>
+		<bpmndi:messageFlowConnector id="_932b16db-f5aa-42cc-ad81-45c33d5a426c.1" sourceRef="_a37f20b9-d02d-4057-8940-949e59f1eb13.1" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.1" label="InfoRequest" messageFlowRef="_932b16db-f5aa-42cc-ad81-45c33d5a426c">
+			<bpmndi:bendpoint x="482.8" y="254.7"/>
+			<bpmndi:bendpoint x="465.5" y="226.5"/>
+			<bpmndi:bendpoint x="474.1" y="226.5"/>
+			<bpmndi:bendpoint x="474.1" y="106"/>
+			<bpmndi:bendpoint x="465.5" y="106"/>
+		</bpmndi:messageFlowConnector>
+		<bpmndi:messageFlowConnector id="_bfbe97b8-1809-45ea-95c6-7c80e5a9733b.1" sourceRef="_f5597109-19b4-4f51-8482-c1fa4d7489f8.1" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.1" label="Confirmation" messageFlowRef="_bfbe97b8-1809-45ea-95c6-7c80e5a9733b">
+			<bpmndi:bendpoint x="1436.6" y="229"/>
+			<bpmndi:bendpoint x="1436.6" y="152"/>
+			<bpmndi:bendpoint x="1339.1" y="152"/>
+			<bpmndi:bendpoint x="1339.1" y="106"/>
+			<bpmndi:bendpoint x="1339.1" y="106"/>
+		</bpmndi:messageFlowConnector>
+	</bpmndi:collaborationDiagram>
+	<bpmndi:collaborationDiagram id="collaborationDiagram2" name="Process Application (1)" collaborationRef="collaboration1">
+		<bpmndi:pool id="_4604e58a-54d3-4ca9-8cbd-229ff81a37ab" name="Standard Process" isVisible="false" participantRef="_dbd4c1a3-8fb4-4fd1-83ee-170a19c84091"/>
+		<bpmndi:pool id="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.2" name="Customer" x="20" y="20" width="624" height="84" isVisible="true" orientation="horizontal" participantRef="_346a7f2f-917e-4897-8c26-133bf1cf4db6-p"/>
+		<bpmndi:messageFlowConnector id="_bef27844-88c4-4c50-970c-464cd0a31791.2" sourceRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.2" targetRef="_34916e77-42d1-4684-8399-5a4130926f2a.2" label="InfoResponse" messageFlowRef="_bef27844-88c4-4c50-970c-464cd0a31791">
+			<bpmndi:bendpoint x="419.4" y="104"/>
+			<bpmndi:bendpoint x="419.4" y="123.1"/>
+			<bpmndi:bendpoint x="359.6" y="123.1"/>
+			<bpmndi:bendpoint x="359.6" y="213.4"/>
+			<bpmndi:bendpoint x="359.6" y="195.4"/>
+		</bpmndi:messageFlowConnector>
+		<bpmndi:messageFlowConnector id="_6026fee8-ac92-446c-bdc2-703e137f2297.2" sourceRef="_d6383064-6a23-4443-aea4-57fd37949712.2" targetRef="_bfd4d289-332c-43b1-9425-d2e22a0b1f94.2" label="InfoRequest" messageFlowRef="_6026fee8-ac92-446c-bdc2-703e137f2297">
+			<bpmndi:bendpoint x="186.4" y="195.4"/>
+			<bpmndi:bendpoint x="195.2" y="194.4"/>
+			<bpmndi:bendpoint x="203.6" y="194.4"/>
+			<bpmndi:bendpoint x="203.6" y="104"/>
+			<bpmndi:bendpoint x="194.7" y="104"/>
+		</bpmndi:messageFlowConnector>
+	</bpmndi:collaborationDiagram>
+	<bpmndi:processDiagram id="_dbd4c1a3-8fb4-4fd1-83ee-170a19c84091.1" name="Standard Process" processRef="_dbd4c1a3-8fb4-4fd1-83ee-170a19c84091">
+		<bpmndi:laneCompartment id="_d1abe6f5-eb3c-4264-8d5f-edab6e079e58.1" name="Back Office" x="72.4" y="157.3" width="1398.4" height="260" isVisible="true" laneRef="_d1abe6f5-eb3c-4264-8d5f-edab6e079e58">
+			<bpmndi:eventShape id="_b1545b5c-7400-4618-bca0-135e8cd4007d.1" name="" x="763.1" y="224.3" width="60.0" height="60.0" eventRef="_b1545b5c-7400-4618-bca0-135e8cd4007d"/>
+			<bpmndi:taskShape id="_cec9e4c1-bd04-4974-bb88-d5496aba56cf.1" name="Setup fund account" x="859.9" y="194.7" width="102.0" height="68.0" activityRef="_cec9e4c1-bd04-4974-bb88-d5496aba56cf"/>
+			<bpmndi:taskShape id="_920d05dd-031b-4d8e-b00e-5fad95690335.1" name="Setup online access" x="889.4" y="264.0" width="102.0" height="68.0" activityRef="_920d05dd-031b-4d8e-b00e-5fad95690335"/>
+			<bpmndi:gatewayShape id="_f3fb9dd9-9508-4d56-84d4-19be9d6d6004.1" name="" x="1072.9" y="282.2" width="28.0" height="36.0" gatewayRef="_f3fb9dd9-9508-4d56-84d4-19be9d6d6004"/>
+			<bpmndi:taskShape id="_ce73567d-0215-437f-8786-c8136109a40c.1" name="Mail fund materials" x="1121.7" y="189.3" width="102.0" height="68.0" activityRef="_ce73567d-0215-437f-8786-c8136109a40c"/>
+			<bpmndi:eventShape id="_22990e7d-6454-4064-b6ab-79bfea98e5f3.1" name="" x="1192.9" y="265.7" width="60.0" height="60.0" eventRef="_22990e7d-6454-4064-b6ab-79bfea98e5f3"/>
+			<bpmndi:eventShape id="_4f3ec2a8-b0d7-4110-a6c6-de31b5855999.1" name="Receive&#xA;Application" x="80.6" y="333.0" width="60.0" height="60.0" eventRef="_4f3ec2a8-b0d7-4110-a6c6-de31b5855999"/>
+			<bpmndi:taskShape id="_29749b37-5ab0-4bbb-8b27-9d8d5ffc55dd.1" name="Open Mail" x="184.4" y="335.0" width="102.0" height="68.0" activityRef="_29749b37-5ab0-4bbb-8b27-9d8d5ffc55dd"/>
+			<bpmndi:subprocessShape id="_a37f20b9-d02d-4057-8940-949e59f1eb13.1" name="Process Application" x="431.8" y="254.7" width="102.0" height="68.0" activityRef="_a37f20b9-d02d-4057-8940-949e59f1eb13" isExpanded="false"/>
+			<bpmndi:eventShape id="_f5597109-19b4-4f51-8482-c1fa4d7489f8.1" name="Confirmation" x="1406.6" y="226.0" width="60.0" height="60.0" eventRef="_f5597109-19b4-4f51-8482-c1fa4d7489f8"/>
+			<bpmndi:subprocessShape id="_8860ffdc-9d15-4abc-8fb6-1706fc2e1961.1" name="Process Remittance" x="773.3" y="341.3" width="102.0" height="68.0" activityRef="_8860ffdc-9d15-4abc-8fb6-1706fc2e1961" isExpanded="false"/>
+			<bpmndi:eventShape id="_03a6fe7c-2a5e-4d1d-8f7d-fbf6027a5a7c.1" name="AppIncomplete" x="411.2" y="288.2" width="60.0" height="60.0" eventRef="_03a6fe7c-2a5e-4d1d-8f7d-fbf6027a5a7c"/>
+			<bpmndi:eventShape id="_3992aa16-f04f-40ac-a891-092848f46221.1" name="AppIncomplete" x="534.3" y="313.0" width="60.0" height="60.0" eventRef="_3992aa16-f04f-40ac-a891-092848f46221"/>
+			<bpmndi:eventShape id="_3b701134-b724-4a7c-bb1d-cf1e70a52dca.1" name="" x="695.5" y="168.0" width="60.0" height="60.0" eventRef="_3b701134-b724-4a7c-bb1d-cf1e70a52dca"/>
+			<bpmndi:eventShape id="_61dcff5f-c765-4981-a7c2-9bec3c679c04.1" name="Customer&#xA;Cancel" x="375.7" y="226.0" width="60.0" height="60.0" eventRef="_61dcff5f-c765-4981-a7c2-9bec3c679c04"/>
+			<bpmndi:taskShape id="_07c10a6c-cfee-468c-82db-7565fe23417f.1" name="Return Application Materials" x="556.2" y="166.0" width="102.0" height="68.0" activityRef="_07c10a6c-cfee-468c-82db-7565fe23417f"/>
+			<bpmndi:gatewayShape id="_ad3ff962-67a6-4076-a1e3-a2dc7e1ffb97.1" name="" x="620.5" y="271.5" width="28.0" height="36.0" gatewayRef="_ad3ff962-67a6-4076-a1e3-a2dc7e1ffb97"/>
+			<bpmndi:subprocessShape id="_7ada124e-2f5c-45a9-a1e8-c5e5f0144cfb.1" name="ForEach Fund" x="960.5" y="225.0" width="102.0" height="68.0" activityRef="_7ada124e-2f5c-45a9-a1e8-c5e5f0144cfb" isExpanded="true"/>
+			<bpmndi:gatewayShape id="_d1ffe4cb-b8cc-4209-b70b-025ff05b425b.1" name="Correct remittance&#xA;amount?" x="1050.8" y="357.3" width="28.0" height="36.0" gatewayRef="_d1ffe4cb-b8cc-4209-b70b-025ff05b425b"/>
+			<bpmndi:gatewayShape id="_3c50b1a9-a58e-47ac-9d4d-b1c069fd1aa5.1" name="" x="1336.8" y="241.0" width="28.0" height="36.0" gatewayRef="_3c50b1a9-a58e-47ac-9d4d-b1c069fd1aa5"/>
+		</bpmndi:laneCompartment>
+		<bpmndi:laneCompartment id="_8842760b-1c81-4876-ac6f-110de60c5332.1" name="Customer Service" x="72.4" y="417.3" width="1398.4" height="134.7" isVisible="true" laneRef="_8842760b-1c81-4876-ac6f-110de60c5332">
+			<bpmndi:taskShape id="_175449e5-027c-4f52-a3d2-c30e90f9c60f.1" name="Resolve Discrepancy" x="877.3" y="426.0" width="102.0" height="68.0" activityRef="_175449e5-027c-4f52-a3d2-c30e90f9c60f"/>
+			<bpmndi:eventShape id="_a6533064-c2d1-4df7-afa3-3a1b09370e17.1" name="48 hrs" x="899.6" y="458.0" width="60.0" height="60.0" eventRef="_a6533064-c2d1-4df7-afa3-3a1b09370e17"/>
+			<bpmndi:taskShape id="_6219476d-9d90-4462-9d90-8212e6297c06.1" name="Escalate resolution" x="411.9" y="475.0" width="102.0" height="68.0" activityRef="_6219476d-9d90-4462-9d90-8212e6297c06"/>
+			<bpmndi:eventShape id="_7a7da462-784b-4338-a9ba-c29a98dba869.1" name="Wait 1 hr" x="725.4" y="427.0" width="60.0" height="60.0" eventRef="_7a7da462-784b-4338-a9ba-c29a98dba869"/>
+		</bpmndi:laneCompartment>
+		<bpmndi:sequenceFlowConnector id="_7e3c095a-5b60-44b7-a42d-d44eb3701e48.1" sourceRef="_b1545b5c-7400-4618-bca0-135e8cd4007d.1" targetRef="_920d05dd-031b-4d8e-b00e-5fad95690335.1" sequenceFlowRef="_7e3c095a-5b60-44b7-a42d-d44eb3701e48">
+			<bpmndi:bendpoint x="793.1" y="287.3"/>
+			<bpmndi:bendpoint x="793.1" y="298.0"/>
+			<bpmndi:bendpoint x="862.4" y="298.0"/>
+			<bpmndi:bendpoint x="889.4" y="298.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_ae74bd9a-7733-4746-b14a-24b6e50ef560.1" sourceRef="_b1545b5c-7400-4618-bca0-135e8cd4007d.1" targetRef="_cec9e4c1-bd04-4974-bb88-d5496aba56cf.1" sequenceFlowRef="_ae74bd9a-7733-4746-b14a-24b6e50ef560">
+			<bpmndi:bendpoint x="793.1" y="227.3"/>
+			<bpmndi:bendpoint x="793.1" y="227.0"/>
+			<bpmndi:bendpoint x="832.9" y="227.0"/>
+			<bpmndi:bendpoint x="859.9" y="228.7"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_da196323-4dbd-479a-956a-d8d1a7af0a18.1" sourceRef="_cec9e4c1-bd04-4974-bb88-d5496aba56cf.1" targetRef="_f3fb9dd9-9508-4d56-84d4-19be9d6d6004.1" sequenceFlowRef="_da196323-4dbd-479a-956a-d8d1a7af0a18">
+			<bpmndi:bendpoint x="961.9" y="228.7"/>
+			<bpmndi:bendpoint x="1086.9" y="228.7"/>
+			<bpmndi:bendpoint x="1086.9" y="277.7"/>
+			<bpmndi:bendpoint x="1086.9" y="282.2"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_0e3b659f-8245-4575-a42b-0d855208377a.1" sourceRef="_920d05dd-031b-4d8e-b00e-5fad95690335.1" targetRef="_f3fb9dd9-9508-4d56-84d4-19be9d6d6004.1" sequenceFlowRef="_0e3b659f-8245-4575-a42b-0d855208377a">
+			<bpmndi:bendpoint x="991.4" y="298.0"/>
+			<bpmndi:bendpoint x="1034.2" y="306.9"/>
+			<bpmndi:bendpoint x="1034.2" y="309.1"/>
+			<bpmndi:bendpoint x="1047.9" y="309.1"/>
+			<bpmndi:bendpoint x="1072.9" y="300.2"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_8d56f7af-3584-400b-b3e0-8ff2116b14bf.1" sourceRef="_f3fb9dd9-9508-4d56-84d4-19be9d6d6004.1" targetRef="_ce73567d-0215-437f-8786-c8136109a40c.1" sequenceFlowRef="_8d56f7af-3584-400b-b3e0-8ff2116b14bf">
+			<bpmndi:bendpoint x="1100.9" y="300.2"/>
+			<bpmndi:bendpoint x="1149.3" y="300.2"/>
+			<bpmndi:bendpoint x="1149.3" y="253.3"/>
+			<bpmndi:bendpoint x="1172.7" y="257.3"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_9c9a34a9-3dcc-42e7-8e7e-d3535d2aa744.1" sourceRef="_ce73567d-0215-437f-8786-c8136109a40c.1" targetRef="_22990e7d-6454-4064-b6ab-79bfea98e5f3.1" sequenceFlowRef="_9c9a34a9-3dcc-42e7-8e7e-d3535d2aa744">
+			<bpmndi:bendpoint x="1172.7" y="257.3"/>
+			<bpmndi:bendpoint x="1212.5" y="272.4"/>
+			<bpmndi:bendpoint x="1210.8" y="272.4"/>
+			<bpmndi:bendpoint x="1210.8" y="286.7"/>
+			<bpmndi:bendpoint x="1222.9" y="268.7"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_6c477f39-a676-45a1-9bc9-41ae37ef05ac.1" sourceRef="_4f3ec2a8-b0d7-4110-a6c6-de31b5855999.1" targetRef="_29749b37-5ab0-4bbb-8b27-9d8d5ffc55dd.1" sequenceFlowRef="_6c477f39-a676-45a1-9bc9-41ae37ef05ac">
+			<bpmndi:bendpoint x="140.6" y="366.0"/>
+			<bpmndi:bendpoint x="142.0" y="374.5"/>
+			<bpmndi:bendpoint x="142.0" y="377.5"/>
+			<bpmndi:bendpoint x="157.4" y="377.5"/>
+			<bpmndi:bendpoint x="184.4" y="369.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_163a3b61-1ba1-4c25-909d-161ec33dc6b8.1" sourceRef="_29749b37-5ab0-4bbb-8b27-9d8d5ffc55dd.1" targetRef="_a37f20b9-d02d-4057-8940-949e59f1eb13.1" sequenceFlowRef="_163a3b61-1ba1-4c25-909d-161ec33dc6b8">
+			<bpmndi:bendpoint x="286.4" y="369.0"/>
+			<bpmndi:bendpoint x="371.2" y="369.0"/>
+			<bpmndi:bendpoint x="371.2" y="308.7"/>
+			<bpmndi:bendpoint x="404.8" y="308.7"/>
+			<bpmndi:bendpoint x="431.8" y="288.7"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_f9be430f-3a5e-4512-b486-447a332e4133.1" sourceRef="_175449e5-027c-4f52-a3d2-c30e90f9c60f.1" targetRef="_7a7da462-784b-4338-a9ba-c29a98dba869.1" sequenceFlowRef="_f9be430f-3a5e-4512-b486-447a332e4133">
+			<bpmndi:bendpoint x="877.3" y="460.0"/>
+			<bpmndi:bendpoint x="785.4" y="460.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_c4426e6e-69ea-433d-81a1-7bd83fa21541.1" sourceRef="_a37f20b9-d02d-4057-8940-949e59f1eb13.1" targetRef="_ad3ff962-67a6-4076-a1e3-a2dc7e1ffb97.1" sequenceFlowRef="_c4426e6e-69ea-433d-81a1-7bd83fa21541">
+			<bpmndi:bendpoint x="482.8" y="288.7"/>
+			<bpmndi:bendpoint x="580.6" y="298.3"/>
+			<bpmndi:bendpoint x="580.6" y="299.1"/>
+			<bpmndi:bendpoint x="595.5" y="299.1"/>
+			<bpmndi:bendpoint x="620.5" y="289.5"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_8b47400c-ec76-4f29-8990-bb2a384c0ccb.1" sourceRef="_8860ffdc-9d15-4abc-8fb6-1706fc2e1961.1" targetRef="_d1ffe4cb-b8cc-4209-b70b-025ff05b425b.1" sequenceFlowRef="_8b47400c-ec76-4f29-8990-bb2a384c0ccb">
+			<bpmndi:bendpoint x="875.3" y="375.3"/>
+			<bpmndi:bendpoint x="1050.8" y="375.3"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_2eef196a-0e68-45a5-b0ea-76088f028e13.1" sourceRef="_03a6fe7c-2a5e-4d1d-8f7d-fbf6027a5a7c.1" targetRef="_3992aa16-f04f-40ac-a891-092848f46221.1" sequenceFlowRef="_2eef196a-0e68-45a5-b0ea-76088f028e13">
+			<bpmndi:bendpoint x="441.2" y="351.2"/>
+			<bpmndi:bendpoint x="441.2" y="349.6"/>
+			<bpmndi:bendpoint x="548.7" y="349.6"/>
+			<bpmndi:bendpoint x="534.3" y="346.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_fcab4422-02b4-40a8-9d7c-b697f1ba31d1.1" sourceRef="_61dcff5f-c765-4981-a7c2-9bec3c679c04.1" targetRef="_07c10a6c-cfee-468c-82db-7565fe23417f.1" sequenceFlowRef="_fcab4422-02b4-40a8-9d7c-b697f1ba31d1">
+			<bpmndi:bendpoint x="405.7" y="229.0"/>
+			<bpmndi:bendpoint x="405.7" y="200.0"/>
+			<bpmndi:bendpoint x="460.0" y="200.0"/>
+			<bpmndi:bendpoint x="477.3" y="200.0"/>
+			<bpmndi:bendpoint x="556.2" y="200.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_25f8eba2-48a0-4b19-8ad4-989cb437e799.1" sourceRef="_07c10a6c-cfee-468c-82db-7565fe23417f.1" targetRef="_3b701134-b724-4a7c-bb1d-cf1e70a52dca.1" sequenceFlowRef="_25f8eba2-48a0-4b19-8ad4-989cb437e799">
+			<bpmndi:bendpoint x="658.2" y="200.0"/>
+			<bpmndi:bendpoint x="698.5" y="209.5"/>
+			<bpmndi:bendpoint x="698.5" y="210.5"/>
+			<bpmndi:bendpoint x="710.5" y="210.5"/>
+			<bpmndi:bendpoint x="695.5" y="201.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_c5e66faf-800e-48c1-b40a-cfd886182759.1" sourceRef="_ad3ff962-67a6-4076-a1e3-a2dc7e1ffb97.1" targetRef="_7ada124e-2f5c-45a9-a1e8-c5e5f0144cfb.1" label="ifNewAccount" sequenceFlowRef="_c5e66faf-800e-48c1-b40a-cfd886182759">
+			<bpmndi:bendpoint x="634.5" y="271.5"/>
+			<bpmndi:bendpoint x="634.5" y="253.0"/>
+			<bpmndi:bendpoint x="756.7" y="253.0"/>
+			<bpmndi:bendpoint x="1011.5" y="259.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_29b18cc5-5383-4ab1-9ece-07abe38420c9.1" sourceRef="_ad3ff962-67a6-4076-a1e3-a2dc7e1ffb97.1" targetRef="_8860ffdc-9d15-4abc-8fb6-1706fc2e1961.1" label="ifRemittance" sequenceFlowRef="_29b18cc5-5383-4ab1-9ece-07abe38420c9">
+			<bpmndi:bendpoint x="634.5" y="307.5"/>
+			<bpmndi:bendpoint x="634.5" y="355.3"/>
+			<bpmndi:bendpoint x="746.3" y="355.3"/>
+			<bpmndi:bendpoint x="773.3" y="375.3"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_ecd51dda-68dc-4be4-9185-d6e05d198a5d.1" sourceRef="_7ada124e-2f5c-45a9-a1e8-c5e5f0144cfb.1" targetRef="_3c50b1a9-a58e-47ac-9d4d-b1c069fd1aa5.1" sequenceFlowRef="_ecd51dda-68dc-4be4-9185-d6e05d198a5d">
+			<bpmndi:bendpoint x="1011.5" y="259.0"/>
+			<bpmndi:bendpoint x="1336.8" y="259.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_ced36d06-91ae-494d-ac35-34460f001f98.1" sourceRef="_d1ffe4cb-b8cc-4209-b70b-025ff05b425b.1" targetRef="_3c50b1a9-a58e-47ac-9d4d-b1c069fd1aa5.1" label="YES" sequenceFlowRef="_ced36d06-91ae-494d-ac35-34460f001f98">
+			<bpmndi:bendpoint x="1078.8" y="375.3"/>
+			<bpmndi:bendpoint x="1350.8" y="375.3"/>
+			<bpmndi:bendpoint x="1350.8" y="281.5"/>
+			<bpmndi:bendpoint x="1350.8" y="277.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_130b654a-0b2a-44c3-a3d8-fa6cf15d378b.1" sourceRef="_d1ffe4cb-b8cc-4209-b70b-025ff05b425b.1" targetRef="_175449e5-027c-4f52-a3d2-c30e90f9c60f.1" label="NO" sequenceFlowRef="_130b654a-0b2a-44c3-a3d8-fa6cf15d378b">
+			<bpmndi:bendpoint x="1064.8" y="375.3"/>
+			<bpmndi:bendpoint x="1064.8" y="460.0"/>
+			<bpmndi:bendpoint x="979.3" y="460.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_ff696f5d-9d3f-4fa2-bab5-359155bba671.1" sourceRef="_3c50b1a9-a58e-47ac-9d4d-b1c069fd1aa5.1" targetRef="_f5597109-19b4-4f51-8482-c1fa4d7489f8.1" sequenceFlowRef="_ff696f5d-9d3f-4fa2-bab5-359155bba671">
+			<bpmndi:bendpoint x="1364.8" y="259.0"/>
+			<bpmndi:bendpoint x="1406.6" y="259.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_0c7781e6-b551-43ff-a7e3-9f30ace4e1e8.1" sourceRef="_a6533064-c2d1-4df7-afa3-3a1b09370e17.1" targetRef="_6219476d-9d90-4462-9d90-8212e6297c06.1" sequenceFlowRef="_0c7781e6-b551-43ff-a7e3-9f30ace4e1e8">
+			<bpmndi:bendpoint x="929.6" y="521.0"/>
+			<bpmndi:bendpoint x="929.6" y="522.7"/>
+			<bpmndi:bendpoint x="897.5" y="522.7"/>
+			<bpmndi:bendpoint x="897.5" y="516.0"/>
+			<bpmndi:bendpoint x="540.9" y="516.0"/>
+			<bpmndi:bendpoint x="513.9" y="509.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_150bffb8-2e74-44ad-baaa-9e8d55fb6195.1" sourceRef="_6219476d-9d90-4462-9d90-8212e6297c06.1" targetRef="_8860ffdc-9d15-4abc-8fb6-1706fc2e1961.1" sequenceFlowRef="_150bffb8-2e74-44ad-baaa-9e8d55fb6195">
+			<bpmndi:bendpoint x="411.9" y="509.0"/>
+			<bpmndi:bendpoint x="360.1" y="509.0"/>
+			<bpmndi:bendpoint x="360.1" y="460.0"/>
+			<bpmndi:bendpoint x="520.1" y="460.0"/>
+			<bpmndi:bendpoint x="520.1" y="395.3"/>
+			<bpmndi:bendpoint x="746.3" y="395.3"/>
+			<bpmndi:bendpoint x="773.3" y="375.3"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_2f4e0d83-775c-4616-8e53-0668f2652450.1" sourceRef="_7a7da462-784b-4338-a9ba-c29a98dba869.1" targetRef="_8860ffdc-9d15-4abc-8fb6-1706fc2e1961.1" sequenceFlowRef="_2f4e0d83-775c-4616-8e53-0668f2652450">
+			<bpmndi:bendpoint x="725.4" y="460.0"/>
+			<bpmndi:bendpoint x="652.0" y="460.0"/>
+			<bpmndi:bendpoint x="652.0" y="395.3"/>
+			<bpmndi:bendpoint x="756.0" y="395.3"/>
+			<bpmndi:bendpoint x="773.3" y="375.3"/>
+		</bpmndi:sequenceFlowConnector>
+	</bpmndi:processDiagram>
+	<bpmndi:processDiagram id="_dbd4c1a3-8fb4-4fd1-83ee-170a19c84091.2" name="Standard Process" processRef="_dbd4c1a3-8fb4-4fd1-83ee-170a19c84091">
+		<bpmndi:laneCompartment id="_4604e58a-54d3-4ca9-8cbd-229ff81a37ab.2-defaultLane" isVisible="false">
+			<bpmndi:eventShape id="_71200872-24e1-482e-abb1-41d34773eb46.2" name="" x="43.6" y="308" width="60" height="60" eventRef="_71200872-24e1-482e-abb1-41d34773eb46"/>
+			<bpmndi:taskShape id="_fba68ee8-faf0-41f9-b08e-b7a393c8762c.2" name="Retrieve Customer Info" x="173.4" y="307" width="102" height="68" activityRef="_fba68ee8-faf0-41f9-b08e-b7a393c8762c"/>
+			<bpmndi:eventShape id="_f5d398cf-ba45-4e9b-85da-669e0eddff5a.2" name="" x="464.8" y="308" width="60" height="60" eventRef="_f5d398cf-ba45-4e9b-85da-669e0eddff5a"/>
+			<bpmndi:gatewayShape id="_edadeee4-32eb-4378-92d2-707c9b82d836.2" name="App complete?" x="361.2" y="323" width="28" height="36" gatewayRef="_edadeee4-32eb-4378-92d2-707c9b82d836"/>
+			<bpmndi:eventShape id="_d6383064-6a23-4443-aea4-57fd37949712.2" name="Request info" x="156.4" y="192.4" width="60" height="60" eventRef="_d6383064-6a23-4443-aea4-57fd37949712"/>
+			<bpmndi:gatewayShape id="_dd2174ae-b399-4e85-bee0-ba23c7f09d15.2" name="" x="255.6" y="207.4" width="28" height="36" gatewayRef="_dd2174ae-b399-4e85-bee0-ba23c7f09d15"/>
+			<bpmndi:eventShape id="_7c1fd3ca-bac9-440e-822c-5c2c4ea0f094.2" name="3 days" x="282.8" y="131.0" width="60.0" height="60.0" eventRef="_7c1fd3ca-bac9-440e-822c-5c2c4ea0f094"/>
+			<bpmndi:eventShape id="_34916e77-42d1-4684-8399-5a4130926f2a.2" name="Receive info" x="329.6" y="192.4" width="60.0" height="60.0" eventRef="_34916e77-42d1-4684-8399-5a4130926f2a"/>
+			<bpmndi:eventShape id="_d7023559-12a8-45fa-9bdd-a1ee5d378c8b.2" name="AppIncomplete" x="493.4" y="132.4" width="60.0" height="60.0" eventRef="_d7023559-12a8-45fa-9bdd-a1ee5d378c8b"/>
+		</bpmndi:laneCompartment>
+		<bpmndi:sequenceFlowConnector id="_feff1069-fcbc-4f9d-8b13-3ee758db896e.2" sourceRef="_71200872-24e1-482e-abb1-41d34773eb46.2" targetRef="_fba68ee8-faf0-41f9-b08e-b7a393c8762c.2" sequenceFlowRef="_feff1069-fcbc-4f9d-8b13-3ee758db896e">
+			<bpmndi:bendpoint x="103.6" y="341.0"/>
+			<bpmndi:bendpoint x="173.4" y="341.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_174134f4-cea9-4217-89f3-95e2089395fb.2" sourceRef="_fba68ee8-faf0-41f9-b08e-b7a393c8762c.2" targetRef="_edadeee4-32eb-4378-92d2-707c9b82d836.2" sequenceFlowRef="_174134f4-cea9-4217-89f3-95e2089395fb">
+			<bpmndi:bendpoint x="275.4" y="341.0"/>
+			<bpmndi:bendpoint x="361.2" y="341.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_1ef6e832-99f8-4ac0-818e-805555f5b53a.2" sourceRef="_edadeee4-32eb-4378-92d2-707c9b82d836.2" targetRef="_f5d398cf-ba45-4e9b-85da-669e0eddff5a.2" label="yes" sequenceFlowRef="_1ef6e832-99f8-4ac0-818e-805555f5b53a">
+			<bpmndi:bendpoint x="389.2" y="341.0"/>
+			<bpmndi:bendpoint x="464.8" y="341.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_98dd539f-bb21-4491-b783-29286dd5c231.2" sourceRef="_edadeee4-32eb-4378-92d2-707c9b82d836.2" targetRef="_d6383064-6a23-4443-aea4-57fd37949712.2" label="no" sequenceFlowRef="_98dd539f-bb21-4491-b783-29286dd5c231">
+			<bpmndi:bendpoint x="375.2" y="323.0"/>
+			<bpmndi:bendpoint x="375.2" y="298.3"/>
+			<bpmndi:bendpoint x="129.5" y="298.3"/>
+			<bpmndi:bendpoint x="129.5" y="225.4"/>
+			<bpmndi:bendpoint x="170.8" y="225.4"/>
+			<bpmndi:bendpoint x="156.4" y="225.4"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_9d3910ec-9d27-4cd9-ab45-9572840230ca.2" sourceRef="_d6383064-6a23-4443-aea4-57fd37949712.2" targetRef="_dd2174ae-b399-4e85-bee0-ba23c7f09d15.2" sequenceFlowRef="_9d3910ec-9d27-4cd9-ab45-9572840230ca">
+			<bpmndi:bendpoint x="216.4" y="225.4"/>
+			<bpmndi:bendpoint x="255.6" y="225.4"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_5b9a0689-6306-4fbb-9160-4cc0032148a7.2" sourceRef="_dd2174ae-b399-4e85-bee0-ba23c7f09d15.2" targetRef="_7c1fd3ca-bac9-440e-822c-5c2c4ea0f094.2" sequenceFlowRef="_5b9a0689-6306-4fbb-9160-4cc0032148a7">
+			<bpmndi:bendpoint x="269.6" y="207.4"/>
+			<bpmndi:bendpoint x="269.6" y="164.0"/>
+			<bpmndi:bendpoint x="297.2" y="164.0"/>
+			<bpmndi:bendpoint x="282.8" y="164.0"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_3d4a99c0-9d2f-4ed6-8312-1798de56deaa.2" sourceRef="_dd2174ae-b399-4e85-bee0-ba23c7f09d15.2" targetRef="_34916e77-42d1-4684-8399-5a4130926f2a.2" sequenceFlowRef="_3d4a99c0-9d2f-4ed6-8312-1798de56deaa">
+			<bpmndi:bendpoint x="269.6" y="225.4"/>
+			<bpmndi:bendpoint x="329.6" y="225.4"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_b279450e-53da-4629-9ca0-78d4243c3ccf.2" sourceRef="_7c1fd3ca-bac9-440e-822c-5c2c4ea0f094.2" targetRef="_d7023559-12a8-45fa-9bdd-a1ee5d378c8b.2" sequenceFlowRef="_b279450e-53da-4629-9ca0-78d4243c3ccf">
+			<bpmndi:bendpoint x="342.8" y="164.0"/>
+			<bpmndi:bendpoint x="353.2" y="173.3"/>
+			<bpmndi:bendpoint x="353.2" y="174.7"/>
+			<bpmndi:bendpoint x="354.1" y="174.7"/>
+			<bpmndi:bendpoint x="507.8" y="174.7"/>
+			<bpmndi:bendpoint x="493.4" y="165.4"/>
+		</bpmndi:sequenceFlowConnector>
+		<bpmndi:sequenceFlowConnector id="_8e101684-badd-47d3-829d-14f006cc1ad2.2" sourceRef="_34916e77-42d1-4684-8399-5a4130926f2a.2" targetRef="_f5d398cf-ba45-4e9b-85da-669e0eddff5a.2" sequenceFlowRef="_8e101684-badd-47d3-829d-14f006cc1ad2">
+			<bpmndi:bendpoint x="389.6" y="225.4"/>
+			<bpmndi:bendpoint x="494.8" y="225.4"/>
+			<bpmndi:bendpoint x="494.8" y="329.0"/>
+			<bpmndi:bendpoint x="494.8" y="311.0"/>
+		</bpmndi:sequenceFlowConnector>
+	</bpmndi:processDiagram>
+</definitions>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Bonita User's Guidance - Multi-instantiation Introduction</title>
+  <link href="css/template.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<h1>Multi-instantiation</h1>
+
+<div id="category">
+(Category: Process Modeling)</div>
+
+<p style="margin-top:10px;"></p>
+
+<div id="separator">
+</div>
+
+<p>Multi instantiation instantiates (initiates) the same task or set of tasks
+multiple times in parallel. The number of instances (and possibly also the
+specific actors who will perform each instance), are determined in the process
+design.</p>
+
+<p>The number of iterations of a multi-instantiated task are known in advance
+and the iterations are performed in parallel.</p>
+
+<p>To multi-instantiate a task, you will need an instantiator and a join
+checker.</p>
+
+<p>The instantiator is configured to specify how many times the task will be
+repeated. The join checker is configured to evaluate when the specified number
+of parallel instances have been completed, so the process can continue to the
+next step. If there are multiple tasks to multi-instantiate as a discrete
+sequence, define a multi-instantiated call activity (that is, a
+multi-instantiated subprocess).</p>
+
+<p>Instantiators and join checkers are similar to connectors, and can be
+defined, created, and tested in essentially the same way as connectors can
+be.</p>
+</body>
+</html>

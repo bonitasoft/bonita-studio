@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.bonitasoft.studio.bos"
+      label="BOS specific bundles"
+      version="1.0.0.qualifier"
+      provider-name="BonitaSoft S.A.">
+
+   <description url="http://www.example.com/description">
+      Contains plugins that are only in the BOS product
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      Bonita Studio
+Copyright (c) BonitaSoft S.A., 2009-2011
+All right reserved
+
+This software is licensed under GPL v2.
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import feature="studio-feature" version="1.0.0.qualifier"/>
+   </requires>
+
+   <plugin
+         id="org.bonitasoft.studio.properties.bos"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.console.libs"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.bonitasoft.studio.simulation.libs"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.bonitasoft.studio.registration"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

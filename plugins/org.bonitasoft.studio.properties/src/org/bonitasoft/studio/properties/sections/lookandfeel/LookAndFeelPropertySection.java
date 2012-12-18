@@ -1,0 +1,505 @@
+/**
+ * Copyright (C) 2010 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.properties.sections.lookandfeel;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
+import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
+import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileStore.ResourceType;
+import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.AssociatedFile;
+import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.ResourceContainer;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.properties.sections.resources.SaveAsTemplateWizard;
+import org.bonitasoft.studio.properties.sections.resources.SelectLocalTemplateWizard;
+import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+
+/**
+ * @author Aurelien Pupier
+ * @author Baptiste Mesta
+ */
+public class LookAndFeelPropertySection extends AbstractBonitaDescriptionSection {
+
+	private Button saveAsTemplate;
+	private Label globalConsultationIsSet;
+	private Label errorIsSet;
+	protected Label hostPageIsSet;
+	private Label processIsSet;
+	private Label globalPageIsSet;
+	private List<LookAndFeelPropertySectionListener> listeners = new ArrayList<LookAndFeelPropertySectionListener>();
+
+
+	ResourceContainer resourceContainer;
+	private Label basedOnValue;
+	private GridDataFactory layoutForIsSetImages = GridDataFactory.swtDefaults().hint(28, 28);
+
+	@Override
+	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
+		super.createControls(parent, aTabbedPropertySheetPage);
+		listeners.clear();
+		Composite templates = createTemplates(parent);
+		createButtonsTemplate(templates);
+		hostPageIsSet = createTemplate(templates, ResourceType.HOST_PAGE);
+		processIsSet = createTemplate(templates, ResourceType.PROCESS_TEMPLATE);
+		globalPageIsSet = createTemplate(templates, ResourceType.GLOBAL_PAGE_TEMPLATE);
+		globalConsultationIsSet = createTemplate(templates, ResourceType.GLOBAL_CONSULTATION_TEMPLATE);
+		errorIsSet = createTemplate(templates, ResourceType.ERROR_TEMPLATE);
+	}
+
+	/**
+	 * @param templates
+	 */
+	private void createButtonsTemplate(Composite templates) {
+		Composite buttonsComposite = getWidgetFactory().createComposite(templates);
+		buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().span(6, 1).create());
+		buttonsComposite.setLayout(new GridLayout(4,false));
+		Button useLocalTemplate = getWidgetFactory().createButton(buttonsComposite, Messages.localTemplate, SWT.FLAT);
+		useLocalTemplate.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				selectLocalTemplate();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+			}
+		});
+
+
+		saveAsTemplate = getWidgetFactory().createButton(buttonsComposite, Messages.ResourceSection_SaveAsTemplate, SWT.FLAT);
+		saveAsTemplate.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SaveAsTemplateWizard wizard = new SaveAsTemplateWizard();
+				Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+				CustomWizardDialog dialog = new CustomWizardDialog(shell, wizard, Messages.save);
+				if (dialog.open() == Dialog.OK) {
+					ApplicationResourceRepositoryStore store = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
+					String processUUID = ModelHelper.getEObjectID(getAbstractProcess()) ;
+					ApplicationResourceFileStore webTemplateArtifact = (ApplicationResourceFileStore) store.getChild(processUUID);
+					try {
+						WebTemplatesUtil.convertWebTemplateToTheme(webTemplateArtifact, wizard.getTemplateName(), wizard.getPreviewPath(), new NullProgressMonitor());
+					} catch (Exception e1) {
+						new BonitaErrorDialog(shell, Messages.Error, Messages.saveAsTemplate_error, e1).open();
+						BonitaStudioLog.error(e1);
+					}
+				}
+			}
+		});
+
+		Label basedOnLabel = getWidgetFactory().createLabel(buttonsComposite, "");
+		basedOnLabel.setText(Messages.ResourceSection_BasedOnLookAndFeel);
+
+		basedOnValue = getWidgetFactory().createLabel(buttonsComposite, "");
+
+	}
+
+	private Composite createTemplates(Composite parent) {
+		Composite templates = getWidgetFactory().createComposite(parent);
+		GridLayout gl =	new GridLayout(6, false) ;
+		gl.horizontalSpacing = 10 ;
+		templates.setLayout(gl);
+		return templates;
+	}
+
+	/**
+	 * @param templates
+	 */
+	private Label createTemplate(Composite templates,final ResourceType templateType) {
+
+		CLabel templateLabel = getWidgetFactory().createCLabel(templates, getLabelFor(templateType), SWT.CENTER);
+		templateLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.FILL, false, false, 1, 1));
+		ControlDecoration hint = new ControlDecoration(templateLabel, SWT.RIGHT) ;
+		hint.setImage(Pics.getImage(PicsConstants.hint)) ;
+		hint.setDescriptionText(getHintFor(templateType)) ;
+
+		// the path to the html template
+		Label isSetLabel = getWidgetFactory().createLabel(templates, "");
+		isSetLabel.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+		layoutForIsSetImages.applyTo(isSetLabel);
+		Button clear = getWidgetFactory().createButton(templates,"", SWT.FLAT);//$NON-NLS-1$
+		clear.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 1, 1));
+		clear.setImage(Pics.getImage(PicsConstants.remove));
+		clear.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent e) {
+				setPathIsFilled(getIsSetImage(templateType), false);
+				getEditingDomain().getCommandStack().execute(
+						new SetCommand(getEditingDomain(), resourceContainer, getFeature(templateType), null));
+			}
+		});
+		// change the html template button
+		Button changeTemplate = getWidgetFactory().createButton(templates, Messages.Browse, SWT.FLAT);
+		GridDataFactory.swtDefaults().applyTo(changeTemplate);
+		final BrowseForPageListener browseForPageListener = new BrowseForPageListener(templateType, getFeature(templateType), isSetLabel);
+		changeTemplate.addListener(SWT.Selection, browseForPageListener);
+		// At this point, getEObject, getAbstractProcess & so on return "null"
+		// Then listener is incomplete and must its eObject must be set later
+		listeners.add(browseForPageListener);
+
+		final Button editTemplateButton = getWidgetFactory().createButton(templates, Messages.Edit, SWT.FLAT);
+		GridDataFactory.swtDefaults().applyTo(editTemplateButton);
+		EditPageListener editPageListener = new EditPageListener(templateType);
+		editTemplateButton.addSelectionListener(editPageListener);
+		isSetLabel.setData(editTemplateButton);
+		listeners.add(editPageListener);
+		// download template
+		Button downloadTemplate = getWidgetFactory().createButton(templates, Messages.Download, SWT.FLAT);
+		GridDataFactory.swtDefaults().applyTo(downloadTemplate);
+		downloadTemplate.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				downloadDefaultTemplate(templateType);
+			}
+
+		});
+		return isSetLabel;
+	}
+
+	private String getHintFor(ResourceType templateType) {
+		switch (templateType) {
+		case PROCESS_TEMPLATE:
+			return Messages.ResourceSection_ProcessTemplate_hint;
+		case ERROR_TEMPLATE:
+			return Messages.ResourceSection_ErrorTemplate_hint;
+		case HOST_PAGE:
+			return Messages.ResourceSection_HostPageTemplate_hint;
+		case GLOBAL_PAGE_TEMPLATE:
+			return Messages.ResourceSection_PageTemplate_hint;
+		case GLOBAL_CONSULTATION_TEMPLATE:
+			return Messages.ResourceSection_ViewTemplate_hint;
+		}
+		return null;
+	}
+
+	/**
+	 * @param templateType
+	 * @return
+	 */
+	protected EStructuralFeature getFeature(ResourceType templateType) {
+		switch (templateType) {
+		case PROCESS_TEMPLATE:
+			return ProcessPackage.Literals.PROCESS_APPLICATION__PROCESS_TEMPLATE;
+		case ERROR_TEMPLATE:
+			return ProcessPackage.Literals.PROCESS_APPLICATION__ERROR_TEMPLATE;
+		case HOST_PAGE:
+			return ProcessPackage.Literals.PROCESS_APPLICATION__HOST_PAGE;
+		case GLOBAL_PAGE_TEMPLATE:
+			return ProcessPackage.Literals.PROCESS_APPLICATION__PAGE_TEMPLATE;
+		case GLOBAL_CONSULTATION_TEMPLATE:
+			return ProcessPackage.Literals.PROCESS_APPLICATION__CONSULTATION_TEMPLATE;
+		}
+		return null;
+	}
+
+	/**
+	 * @param templateType
+	 * @return
+	 */
+	protected Label getIsSetImage(ResourceType templateType) {
+		switch (templateType) {
+		case PROCESS_TEMPLATE:
+			return processIsSet;
+		case ERROR_TEMPLATE:
+			return errorIsSet;
+		case HOST_PAGE:
+			return hostPageIsSet;
+		case GLOBAL_PAGE_TEMPLATE:
+			return globalPageIsSet;
+		case GLOBAL_CONSULTATION_TEMPLATE:
+			return globalConsultationIsSet;
+		}
+		return null;
+	}
+
+	private String getLabelFor(ResourceType templateType) {
+		switch (templateType) {
+		case PROCESS_TEMPLATE:
+			return Messages.ResourceSection_ProcessTemplate;
+		case ERROR_TEMPLATE:
+			return Messages.ResourceSection_ErrorTemplate;
+		case HOST_PAGE:
+			return Messages.ResourceSection_HostPageTemplate;
+		case GLOBAL_PAGE_TEMPLATE:
+			return Messages.ResourceSection_PageTemplate;
+		case GLOBAL_CONSULTATION_TEMPLATE:
+			return Messages.ResourceSection_ViewTemplate;
+		}
+		return null;
+	}
+
+	/**
+	 * @param path
+	 * @return
+	 */
+	protected boolean isEditable(String path) {
+		if(path != null && path.length()>0){
+			File file = WebTemplatesUtil.getFile(path);
+			if (file != null && file.exists() && !file.isDirectory()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected void selectLocalTemplate() {
+		SelectLocalTemplateWizard wizard = new SelectLocalTemplateWizard();
+		Shell shell = getPart().getSite().getShell();
+		int res = new WizardDialog(shell, wizard){
+			protected org.eclipse.swt.graphics.Point getInitialSize() {
+				return new org.eclipse.swt.graphics.Point(650, 500);
+			};
+		}.open();
+		if (res == Dialog.OK) {
+			AbstractProcess process = getAbstractProcess();
+			ApplicationLookNFeelFileStore selectedTheme = wizard.getSelectedTemplate();
+			if(MessageDialog.openQuestion(shell, Messages.ResourceSection_OverWrite_title, Messages.ResourceSection_OverWrite_msg)){
+				CompoundCommand cc = WebTemplatesUtil.createAddTemplateCommand(getEditingDomain(), process, selectedTheme, new NullProgressMonitor());
+				getEditingDomain().getCommandStack().execute(cc);
+				refresh();
+			}
+		}
+	}
+
+	protected AbstractProcess getAbstractProcess() {
+		EObject eo = getEObject();
+		if (eo instanceof AbstractProcess) {
+			return (AbstractProcess) eo;
+		} else {
+			return ModelHelper.getParentProcess(eo);
+		}
+	}
+
+	/**
+	 * if the EObject has changed refresh all
+	 */
+	public void refresh() {
+        super.refresh();
+		if (getEObject() != null) {
+			for (LookAndFeelPropertySectionListener listener : listeners) {
+				listener.setProcess(getAbstractProcess());
+				listener.setEditDomain(getEditingDomain());
+			}
+
+			// if it's a lane take the eContainer (the pool)
+			if (getEObject() instanceof Lane) {
+				resourceContainer = (ResourceContainer) getEObject().eContainer();
+			} else if (getEObject() instanceof ResourceContainer) {
+				resourceContainer = (ResourceContainer) getEObject();
+			}
+			String basedOnLookAndFeel = ((AbstractProcess) resourceContainer).getBasedOnLookAndFeel();
+
+			basedOnValue.setText(basedOnLookAndFeel != null?basedOnLookAndFeel:"");
+
+			// reload html template
+			AssociatedFile template = ((AbstractProcess) resourceContainer).getProcessTemplate();
+			setPathIsFilled(processIsSet, template != null && template.getPath() != null);
+
+			// reload page template
+			template = ((AbstractProcess) resourceContainer).getPageTemplate();
+			setPathIsFilled(globalPageIsSet, template != null && template.getPath() != null);
+
+			// reload consultation template
+			template = ((AbstractProcess) resourceContainer).getConsultationTemplate();
+			setPathIsFilled(globalConsultationIsSet, template != null && template.getPath() != null);
+
+			// reload error template
+			template = ((AbstractProcess) resourceContainer).getErrorTemplate();
+			setPathIsFilled(errorIsSet, template != null && template.getPath() != null);
+
+			// reload host page
+			template = ((AbstractProcess) resourceContainer).getHostPage();
+			setPathIsFilled(hostPageIsSet, template != null && template.getPath() != null);
+
+			// reload resources folder+files
+			List<AssociatedFile> toRemoveFolders = new ArrayList<AssociatedFile>();
+			List<AssociatedFile> toRemoveFiles = new ArrayList<AssociatedFile>();
+			CompoundCommand cc = new CompoundCommand();
+			if (toRemoveFolders.size() > 0)
+				cc.append(new RemoveCommand(getEditingDomain(), resourceContainer, ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FOLDERS, toRemoveFolders));
+			if (toRemoveFiles.size() > 0)
+				cc.append(new RemoveCommand(getEditingDomain(), resourceContainer, ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES, toRemoveFiles));
+			if (!cc.isEmpty())
+				getEditingDomain().getCommandStack().execute(cc);
+		}
+		basedOnValue.getParent().getParent().layout();
+
+	}
+
+	private static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
+	/**
+	 * download login page from bonita-app.war
+	 * 
+	 * @param name
+	 *            resource name
+	 * @param path
+	 *            path in bonita-app.war
+	 */
+	public static void downloadDefaultTemplate(ResourceType templateType) {
+
+		String name;
+		String path;
+		boolean fromBundle;
+		switch (templateType) {
+		case PROCESS_TEMPLATE:
+			name = "bonita_process_default.html";
+			path = "WEB-INF/classes/html/";
+			fromBundle = false;
+			break;
+		case ERROR_TEMPLATE:
+			name = "bonita_default_error.html";
+			path = "WEB-INF/classes/html/";
+			fromBundle = false;
+			break;
+		case HOST_PAGE:
+			name = "BonitaApplication.html";
+			path = "application/";
+			fromBundle = false;
+			break;
+		case GLOBAL_PAGE_TEMPLATE:
+			name = "default_page_template.html";
+			path = "default_page_template.html";
+			fromBundle = true;
+			break;
+		case GLOBAL_CONSULTATION_TEMPLATE:
+			name = "default_view_page_template.html";
+			path = "default_page_template.html";
+			fromBundle = true;
+			break;
+		default:
+			return;
+		}
+		if(fromBundle){
+			FileOutputStream fos = null;
+			try {
+				FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
+				fd.setFileName(name);//$NON-NLS-1$
+				String outFile = fd.open();
+				File template = new File(outFile);
+				template.delete();
+				fos = new FileOutputStream(template);
+				//FileUtil.copy(HtmlTemplateGenerator.class.getResourceAsStream(path), fos);
+
+			} catch (FileNotFoundException e1) {
+				BonitaStudioLog.error(e1);
+			} catch (IOException e2) {
+				BonitaStudioLog.error(e2);
+			} finally {
+				if (fos != null) {
+					try {
+						fos.close();
+					} catch (IOException e1) {
+						BonitaStudioLog.error(e1);
+					}
+				}
+			}			
+		}else{
+			FileDialog fd = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
+			fd.setFileName(name);//$NON-NLS-1$
+			String outFile = fd.open();
+			if(outFile != null){
+				File template = new File(outFile);
+				template.delete();
+				try {
+					template.createNewFile();
+					// should not be copied here
+					PlatformUtil.copyResource(new File(TMP_DIR), ProjectUtil.getConsoleLibsBundle(), "/webapp/bonita-app.war", new NullProgressMonitor());
+					FileUtil.getFileFromZip(new File(TMP_DIR + File.separatorChar + "bonita-app.war"), path + name, template);
+					// edit it in the java/html editor?
+					// IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(),
+					// ifile,BonitaJavaEditor.ID);
+				} catch (IOException e) {
+					BonitaStudioLog.error(e);
+				}
+			}
+		}
+
+	}
+
+	@Override
+	public void dispose() {
+		listeners.clear();
+		super.dispose();
+	}
+
+	/**
+	 * @param isSetLabel
+	 * @param isFilled TODO
+	 */
+	static void setPathIsFilled(Label isSetLabel, boolean isFilled) {
+		Object data = isSetLabel.getData();
+		if(data instanceof Button){
+			((Button) data).setEnabled(isFilled);
+		}
+		if(isFilled){
+			isSetLabel.setImage(Pics.getImage(PicsConstants.greenCheck20));
+		}else{
+			isSetLabel.setImage(Pics.getImage(PicsConstants.empty20));
+		}
+	}
+
+	@Override
+	public String getSectionDescription() {
+		return Messages.looknfeelPropertySectionDescription;
+	}
+
+}

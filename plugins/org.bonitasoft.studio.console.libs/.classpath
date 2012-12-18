@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/bonita-client.jar" sourcepath="lib/bonita-client-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bonita-common.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bonita-server.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/common-model.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/common-server.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/console-model.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/console-server-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/theme-builder.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/forms-model.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/forms-server.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/platform-model.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/platform-server-impl.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

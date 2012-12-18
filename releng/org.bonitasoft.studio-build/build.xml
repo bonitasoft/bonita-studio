@@ -1,0 +1,558 @@
+<!--
+ * Copyright (C) 2009, 2010 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<project name="org.bonitasoft.studio-build" default="all" xmlns:cobertura="cobertura:net.sourceforge.cobertura">
+
+	<taskdef classpath="${antDeps}/bonita_antTasks.jar" name="osgi-bundle" classname="org.bonitasoft.studio.antTasks.OSGIBundlePropertyTask"/>
+	<taskdef classpath="${antDeps}/bonita_antTasks.jar" name="osgi-bundle-merge" classname="org.bonitasoft.studio.antTasks.OSGIBundleMergeTask"/>
+	<!--taskdef  classpath="${antDeps}/findbugs/findbugs-ant.jar" name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/-->
+	
+	<property file="build.properties" />
+	<property name="antDeps" value="${basedir}/antDeps"></property>
+	<!--typedef classpath="${antDeps}/cobertura/cobertura.jar" resource="net/sourceforge/cobertura/ant/antlib.xml" uri="cobertura:net.sourceforge.cobertura"/--> 
+	<taskdef classpath="${antDeps}/cobertura/cobertura.jar" resource="tasks.properties"/>
+	
+	<tstamp>
+		<format property="timestamp" pattern="yyyyMMdd-HHmm"/>
+	</tstamp>
+	<delete file="generatedProperties.properties"/>
+	<echo file="generatedProperties.properties">bos.version.studioqualifier=${studio.version}</echo>
+	<replaceregexp file="generatedProperties.properties" match="bos.version.studioqualifier=(.*)\.(.*)\.(.*)" replace="bos.version.studioqualifier=\1_\2_\3" />
+	<replaceregexp file="generatedProperties.properties" match="bos.version.studioqualifier=(.*)\.(.*)" replace="bos.version.studioqualifier=\1_\2" />
+	<property file="generatedProperties.properties"/>
+	<condition property="qualifier" value="${bos.version.studioqualifier}" else="${timestamp}">
+		<and>
+			<isset property="studio.version"/>
+			<not>
+				<equals arg1="${studio.version}" arg2=""/>
+			</not>
+		</and>
+	</condition>
+	<condition property="branchOrTag" value="branches" else="tags">
+		<and>
+			<isset property="isBranch"/>
+			<not>
+				<equals arg1="isBranch" arg2=""/>
+			</not>
+		</and>
+	</condition>
+	<condition property="svnTag" value="${branchOrTag}/bos-studio-${bos.version}" else="trunk">
+		<and>
+			<isset property="bos.version"/>
+			<not>
+				<equals arg1="${bos.version}" arg2=""/>
+			</not>
+		</and>
+	</condition>
+	
+	
+	<property name="engine.src.path" value=""/>
+	<property name="engine.sp.src.path" value=""/>
+	<property name="console.src.path" value=""/> 
+	<property name="console.sp.src.path" value=""/> 
+	<property name="connectors.src.path" value=""/> 
+	<property name="connectors.sp.src.path" value=""/> 
+	<property name="simulation.src.path" value=""/> 
+	<property name="simulation.sp.src.path" value=""/> 
+	<property name="security.src.path" value=""/> 
+	
+	<property name="distrib.name" value="${distrib.label}-${qualifier}" />
+	<property name="ant.runner" value="org.eclipse.ant.core.antRunner" />
+	<property name="distrib.dir" value="${buildDirectory}/${distrib.name}" />
+	<property name="distrib.tmp.dir" value="${buildDirectory}/${distrib.name}-tmp" />
+	<property name="license.dir" value="${basedir}"/>
+	
+	<tstamp>
+		<format property="timestamp" pattern="yyyyMMdd-HHmm"/>
+	</tstamp>
+
+	<!--This target is responsible for cleaning up the build-directory-->
+	<target name="clean">
+		<delete dir="${buildDirectory}" />
+		<delete dir="${basedir}/maps"/>
+	</target>
+
+	<path id="equinox.path">
+		<pathelement location="${equinox.launcher}" />
+	</path>
+
+	<target name="initLauncherProperties">
+		<path id="launcher.path.id">
+		    <fileset dir="${baseLocation}/plugins/" includes="org.eclipse.equinox.launcher_*.jar"/>
+		</path>
+		<property name="equinox.launcher" refid="launcher.path.id"/>
+
+		<path id="productBuild.path.id">
+		    <fileset dir="${baseLocation}/plugins/" includes="org.eclipse.pde.build_*/scripts/productBuild/productBuild.xml"/>
+		</path>
+		<pathconvert property="product.build" pathsep=" -buildfile " refid="productBuild.path.id"/>
+	
+		<echo>launcher: ${equinox.launcher}</echo>
+		<echo>build: ${product.build}</echo>
+		<echo>buildfile: ${product.build}</echo>
+	</target>
+	
+	
+	<!--
+		This target actually executes the PDE Build process by launching the 
+		Eclipse antRunner application.
+	-->
+	<target name="pde-build" depends="initLauncherProperties">
+		
+		<!-- default value for bos.version -->
+		<property name="bos.version" value=""/>
+		
+		<!-- Default values if properties not directly set -->
+		<property name="engine.version" value="artifact.version"/>
+		<property name="connectors.version" value="artifact.version"/>
+		<property name="web.version" value="artifact.version"/>
+
+		<mkdir dir="${buildDirectory}" />
+		<condition property="doSkipTests">
+			<and>
+				<isset property="skipTests"/>
+				<equals arg1="${skipTests}" arg2="true"/>
+			</and>
+		</condition>
+		<condition property="javacDebugInfo" value="false" else="true">
+			<equals arg1="${skipTests}" arg2="true"/>
+		</condition>
+		<condition property="macVMArgs" value="-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -D32" else="">
+			<os family="mac"/>
+		</condition>
+		<echo>macVMArgs = ${macVMArgs}</echo>
+		<echo>buildDirectory value =  ${buildDirectory}</echo>
+		<echo>product : ${product}</echo>
+		<echo>classifier : ${classifier}</echo>
+		<echo>topLevelElementId : ${topLevelElementId}</echo>
+		<java classname="org.eclipse.equinox.launcher.Main"  maxmemory="2048m" fork="true" failonerror="true">
+			<classpath>
+				<path id="launcher.path.id">
+				    <fileset dir="${baseLocation}/plugins/" includes="org.eclipse.equinox.launcher_*.jar"/>
+				</path>
+			</classpath>
+			<arg value="-application" />
+			<arg value="${ant.runner}" />
+			<arg value="-data" />
+			<arg value="${buildDirectory}/plugins" /> <!-- workspace where EMF code generation takes place -->
+			<!-- arg value="-buildfile" /-->
+			<arg line="-Ddistrib.label=${distrib.label}" />
+			<arg line="-DlauncherName=${launcherName}" />
+			<arg line="-Dlauncher.name=${launcher.name}" />
+			<arg line="-buildfile ${product.build}" />
+			<arg value="-Dbuilder=${basedir}" />
+			<arg value="-Dclassifier=${classifier}" />
+			<arg value="-Dtimestamp=${timestamp}" />
+			<arg value="-DtopLevelElementId=${topLevelElementId}" />
+			<arg value="-Dproduct=${product}" />
+			<arg value="-consoleLog" />
+			<arg value="-Declipse.base.platform=${eclipse.base.platform}"/>
+			<arg value="-DbuildDirectory=${buildDirectory}"/>
+			<arg value="-Dbase=${baseLocation}"/>
+			<arg value="-DbaseLocation=${baseLocation}"/>
+			<arg value="-DantExecutable=${antExecutable}"/>
+			<arg value="-DantDeps=${basedir}/antDeps" />
+			<arg value="-DforceQualifier=${qualifier}" />
+			<arg value="-DforceContextQualifier=${qualifier}"/>
+			<arg value="-Dbos.version=${bos.version}" />
+			<arg value="-DisBranch=${isBranch}"/>
+			<arg value="-Dtimestamp=${timestamp}"/>
+			<arg value="-Ddistrib.name=${distrib.name}"/>
+			<arg value="-DskipTests=${skipTests}"/>
+			<arg value="-DjavacDebugInfo=${javacDebugInfo}"/>
+			<arg value="-DcompilerArg=${compilerArg}"/>
+			<arg value="-Dlicense.dir=${license.dir}"/>
+			<arg value="-DMAVEN_HOME=${MAVEN_HOME}"/> <!-- Remove me when build is improved -->
+			<arg value="-Dartifact.version=${artifact.version}"/>
+			<arg value="-Dengine.version=${engine.version}"/>
+			<arg value="-Dweb.version=${web.version}"/>
+			<arg value="-Dconnectors.version=${connectors.version}"/>
+			<arg value="-Dsimulation.version=${simulation.version}"/>
+			<arg value="-Dmaven.repo=${maven.repo}"/>
+			<!--Use to workaround the eclipse bug 257983
+			<arg value="-Dpde.jreProfile=J2SE-1.5"/>-->
+			<jvmarg line="-Xms2048m -Xmx2048m -XX:MaxPermSize=256m ${macVMArgs} -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=pdeBuild.hprof"/>
+		</java>
+	</target>
+
+	<target name="distrib">
+		<!-- parameters -->
+		<!--  * productsDir: the directory that contains products to merge -->
+		<!--  * destDir: the directory that will contain the result of the merge -->
+		<delete file="${destDir}/${distrib.label}-${qualifier}.zip" failonerror="false" />
+		<mkdir dir="${distrib.tmp.dir}" />
+		
+		<delete dir="${destDir}/${distrib.label}-${qualifier}" failonerror="false" />
+		<mkdir dir="${destDir}/${distrib.label}-${qualifier}" />
+
+		<antcall target="merge-conf">
+			<param name="conf" value="linux.gtk.x86_64" />
+			<param name="launcher-suffix" value="-linux64" />
+			<!-- products dir -->
+			<param name="todir" value="${destDir}/${distrib.label}-${qualifier}"/>
+		</antcall>
+		<antcall target="merge-conf">
+			<param name="conf" value="linux.gtk.x86" />
+			<param name="launcher-suffix" value="-linux" />
+			<param name="todir" value="${destDir}/${distrib.label}-${qualifier}"/>
+		</antcall>
+		<antcall target="merge-conf">
+			<param name="conf" value="macosx.cocoa.x86" />
+			<param name="launcher-suffix" value="-mac" />
+			<param name="todir" value="${destDir}/${distrib.label}-${qualifier}"/>
+		</antcall>
+		<antcall target="merge-conf">
+			<param name="conf" value="win32.win32.x86" />
+			<param name="launcher-suffix" value="" />
+			<param name="todir" value="${destDir}/${distrib.label}-${qualifier}"/>
+		</antcall>
+		<antcall target="merge-conf">
+			<param name="conf" value="win32.win32.x86_64" />
+			<param name="launcher-suffix" value="-x86_64" />
+			<param name="todir" value="${destDir}/${distrib.label}-${qualifier}"/>
+		</antcall>
+		
+		<delete dir="${distrib.tmp.dir}" />
+		
+		<!-- workspace with examples -->
+		<copy todir="${destDir}/${distrib.label}-${qualifier}">
+			<fileset dir="${basedir}" includes="workspace/**" />
+		</copy>
+		<!-- License and about-->
+		<copy todir="${destDir}/${distrib.label}-${qualifier}">
+			<fileset dir="${basedir}/license" includes="**" />
+		</copy>
+		<move todir="${destDir}/${distrib.label}-${qualifier}/about_files">
+			<fileset dir="${destDir}/${distrib.label}-${qualifier}" includes="about.html" />
+		</move>
+		
+		<!-- endorsed folder-->
+		<mkdir dir="${destDir}/${distrib.label}-${qualifier}/endorsed" />
+		
+		<!-- Add versions in config.ini -->
+		<copy tofile="${destDir}/${distrib.label}-${qualifier}/configuration/tmpconfig.ini" file="${destDir}/${distrib.label}-${qualifier}/configuration/config.ini"/>
+		<concat destfile="${destDir}/${distrib.label}-${qualifier}/configuration/config.ini">
+			<fileset file="${destDir}/${distrib.label}-${qualifier}/configuration/tmpconfig.ini"/>
+				 <footer>
+eclipse.buildId=${buildId}
+product.version=${studio.version}</footer>
+		</concat>
+		
+		<delete file="${destDir}/${distrib.label}-${qualifier}/configuration/tmpconfig.ini" />
+		<replace file="${destDir}/${distrib.label}-${qualifier}/configuration/config.ini" token="${buildId}" value="${timestamp}"/>
+		<replace file="${destDir}/${distrib.label}-${qualifier}/configuration/config.ini" token="${studio.version}" value="${studio.version}"/>
+	</target>
+	
+
+	<target name="generate-zip">
+		<!--osgi-bundle-merge conf="${distrib.dir}"/--> 
+		<delete file="${distrib.dir}/config-tmp.ini"/>
+		<zip destfile="${buildDirectory}/${distrib.name}.zip">
+			<zipfileset dir="${distrib.dir}" prefix="${distrib.name}" includes="**/*" excludes="**/${launcher.name}*" />
+			<zipfileset dir="${distrib.dir}" prefix="${distrib.name}" includes="**/${launcher.name}*" filemode="755" />
+		</zip>
+	</target>
+	
+	<target name="merge-conf">
+		<unzip dest="${distrib.tmp.dir}/${distrib.name}-${conf}" src="${productsDir}/${distrib.name}-${conf}.zip" />
+		
+		<!--osgi-bundle conf="${distrib.tmp.dir}/${distrib.name}-${conf}/${distrib.name}" tmp="${distrib.dir}"/--> 
+		
+		<copy todir="${todir}" overwrite="false">
+			<fileset dir="${distrib.tmp.dir}/${distrib.name}-${conf}/${distrib.name}">
+				<include name="**/*" />
+				<exclude name="${launcher.name}*" />
+				<exclude name="${launcher.name}**/*" />
+				<exclude name="*.app/**" />
+			</fileset>
+		</copy>
+		<copy todir="${todir}">
+			<fileset dir="${distrib.tmp.dir}/${distrib.name}-${conf}/${distrib.name}">
+				<include name="${launcher.name}*/**" />
+				<include name="${launcher.name}*" />
+			</fileset>
+			<mapper type="glob" from="${launcher.name}*" to="${launcher.name}${launcher-suffix}*" />
+		</copy>
+		<chmod perm="755" type="file">
+			<fileset dir="${todir}">
+				<include name="**/${launcher.name}*" />
+			</fileset>
+		</chmod>
+	</target>
+
+	<target name="prepare" depends="prepare-local" unless="root.src.path">
+		<mkdir dir="${basedir}/maps"/>
+		<copy todir="${basedir}/maps">
+			<fileset dir="${basedir}/map_templates" excludes="*_local.map"  />
+		</copy>
+		<replace token="XXX_TAG_XXX" value="${svnTag}" dir="${basedir}/maps" includes="*.map"/>
+	</target>
+	
+	<target name="prepare-local" if="root.src.path">
+		<mkdir dir="${basedir}/maps"/>
+		<copy todir="${basedir}/maps">
+			<fileset dir="${basedir}/map_templates" includes="*local.map"/>
+		</copy>
+		<replace token="XXX_ROOT_LOCATION_XXX" value="${root.src.path}" dir="${basedir}/maps" includes="*.map"/>
+		<replace token="XXX_FEATURE_LOCATION_XXX" value="${features.src.path}" dir="${basedir}/maps" includes="*.map"/>
+		<replace token="XXX_PLUGIN_LOCATION_XXX" value="${plugins.src.path}" dir="${basedir}/maps" includes="*.map"/>
+	</target>
+	
+	
+	<!--This target defines the run-order of the targets-->
+	<target name="build" depends="clean, prepare, pde-build">
+		<antcall target="distrib">
+			<param name="destDir" value="${buildDirectory}"/>
+			<param name="productsDir" value="${buildDirectory}/products"/>
+		</antcall>
+
+		<antcall target="generate-zip"/>
+	</target>
+	
+	<target name="prepareTests" unless="doSkipTests">
+		<property name="testBuildDirectory" value="${buildDirectory}/testBuild"/>
+		<mkdir dir="${testBuildDirectory}"/>
+		<echo> testBuildDirectory: ${testBuildDirectory}</echo>
+		<exec command="${antExecutable}" dir="tests">
+			<arg value="-DbuildDirectory=${testBuildDirectory}"/>
+			<arg value="-Declipse.base.platform=${eclipse.base.platform}"/>
+			<arg value="-Dbos.path=${distrib.dir}"/>
+			<arg value="-Dbos.verion=${bos.version.studioqualifier}"/>
+			<arg value="-DsvnTag=${svnTag}"/>
+		</exec>
+		
+		<condition property="test.home" value="${buildDirectory}/OpenJDKTests" else="${buildDirectory}/lé tests">
+			<contains string="${java.vm.name}" substring="OpenJDK" casesensitive="false"/>
+		</condition>
+		
+		<rename dest="${test.home}" src="${distrib.dir}"/>
+		<unzip dest="${test.home}">
+			<fileset dir="${testBuildDirectory}" includes="*.zip"/>
+		</unzip>
+		
+		<antcall target="run-cobertura-instrument"/>
+		<!--antcall target="findbugs"/-->
+		<!--zip destfile="${buildDirectory}/${distrib.name}-tests.zip">
+			<fileset dir="${test.home}" includes="**"/>
+		</zip-->
+	</target>
+	
+	<target name="test" unless="doSkipTests">
+		<echo>Test product: ${test.home}</echo>
+		<property name="coberturaDataFile" value="${test.home}/cobertura-data/cobertura.ser"/>
+		<echo>${coberturaDataFile}</echo>
+		<!-- First tests -->
+		<java dir="${test.home}" fork="true" output="${test.home}/outputTest1.txt" logError="true"
+			classname="org.eclipse.core.launcher.Main" failonerror="false">
+			<classpath>
+				<fileset dir="${test.home}/plugins">
+					<include name="org.eclipse.equinox.launcher_*.jar"/>
+				</fileset>
+			</classpath>
+		    <arg line="-application org.eclipse.test.uitestapplication"/>
+		    <arg line="-testPluginName org.bonitasoft.studio.tests"/>
+			<arg line="-testApplication org.bonitasoft.studio.application.application"/>
+		    <arg line="-className org.bonitasoft.studio.tests.AllTests"/>
+			<arg line="formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,junit-results.xml"/> <!-- TODO restore formatter -->
+			<arg line="-nl en"/><!-- Must keep in english -->
+		    <arg line="-consoleLog"/>
+		    <jvmarg value='-Xms512m'/>
+			<jvmarg value='-Xmx1024m'/>
+			<jvmarg value='-XX:MaxPermSize=640m'/>
+			<jvmarg value='-XX:+HeapDumpOnOutOfMemoryError'/>
+			<jvmarg value='-XX:HeapDumpPath=AllTests.hprof'/>
+			<jvmarg line='-Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=ALL -Dbonita.client.home="${license.dir}" -Xbootclasspath/p:${antDeps}/cobertura/cobertura.jar${path.separator}${antDeps}/cobertura/lib/asm-3.0.jar${path.separator}${antDeps}/cobertura/asm-tree-3.0.jar${path.separator}${antDeps}/cobertura/jakarta-oro-2.0.8.jar${path.separator}${antDeps}/cobertura/log4j-1.2.9.jar -Dnet.sourceforge.cobertura.datafile="${coberturaDataFile}" -DconsolePortPreference=${consolePortPreference}'/>
+		</java>
+		<!-- java -jar plugins/org.eclipse.equinox.launcher_1.0.200.v20090520.jar -application org.eclipse.test.uitestapplication -data workspaceTest -className org.bonitasoft.studio.tests.AllTests -testPluginName org.bonitasoft.studio.tests -testApplication org.bonitasoft.studio.application.application -os linux -ws gtk -arch x86 -consoleLog -Xms4m -Xmx348 -XX:MaxPermSize=128m -->
+		
+		<echo>SWTBot tests</echo>
+		<java dir="${test.home}" fork="true" output="${test.home}/outputSWTBotTest.txt" logError="true"
+			classname="org.eclipse.core.launcher.Main" failonerror="false">
+			<classpath>
+				<fileset dir="${test.home}/plugins">
+					<include name="org.eclipse.equinox.launcher_*.jar"/>
+				</fileset>
+			</classpath>
+		    <arg line="-application org.eclipse.swtbot.eclipse.junit4.headless.swtbottestapplication"/>
+		    <arg line="-testPluginName org.bonitasoft.studio.tests"/>
+			<arg line="-testApplication org.bonitasoft.studio.application.application"/>
+		    <arg line="-className org.bonitasoft.studio.tests.AllSWTBotTests"/>
+			<arg line="formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,junit-results-swtbot.xml"/> <!-- TODO restore formatter -->
+			<arg line="-nl en"/>
+		    <arg line="-consoleLog"/>
+			<jvmarg value='-Xms512m'/>
+			<jvmarg value='-Xmx1024m'/>
+			<jvmarg value='-XX:MaxPermSize=640m'/>
+			<jvmarg value='-XX:+HeapDumpOnOutOfMemoryError'/>
+			<jvmarg value='-XX:HeapDumpPath=AllTests.hprof'/>						
+			<jvmarg line='-Dorg.eclipse.swt.browser.DefaultType=mozilla -Declipse.log.level=ALL -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Dbonita.client.home="${license.dir}" -Xbootclasspath/p:${antDeps}/cobertura/cobertura.jar${path.separator}${antDeps}/cobertura/lib/asm-3.0.jar${path.separator}${antDeps}/cobertura/asm-tree-3.0.jar${path.separator}${antDeps}/cobertura/jakarta-oro-2.0.8.jar${path.separator}${antDeps}/cobertura/log4j-1.2.9.jar -Dnet.sourceforge.cobertura.datafile="${coberturaDataFile}" -DconsolePortPreference=${consolePortPreference}'/>
+		</java>
+		<!-- java -jar plugins/org.eclipse.equinox.launcher_*.jar -application org.eclipse.swtbot.eclipse.junit4.headless.swtbottestapplication -testPluginName org.bonitasoft.studio.diagram.test -testApplication org.bonitasoft.studio.application.application -className org.bonitasoft.studio.diagram.test.AllSWTBotTests formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,junit-results-swtbot.xml -nl en -consoleLog -Xms40m -Xmx348m -XX:MaxPermSize=256m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=AllSWTBotTests.hprof -Dbonita.noregister=1 --> 
+		
+		<echo>SWTBot tests 2</echo>
+				<java dir="${test.home}" fork="true" output="${test.home}/outputSWTBotTest2.txt" logError="true"
+					classname="org.eclipse.core.launcher.Main" failonerror="false">
+					<classpath>
+						<fileset dir="${test.home}/plugins">
+							<include name="org.eclipse.equinox.launcher_*.jar"/>
+						</fileset>
+					</classpath>
+				    <arg line="-application org.eclipse.swtbot.eclipse.junit4.headless.swtbottestapplication"/>
+				    <arg line="-testPluginName org.bonitasoft.studio.tests"/>
+					<arg line="-testApplication org.bonitasoft.studio.application.application"/>
+				    <arg line="-className org.bonitasoft.studio.tests.AllSWTBotTests2"/>
+					<arg line="formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,junit-results-swtbot2.xml"/> <!-- TODO restore formatter -->
+					<arg line="-nl en"/>
+				    <arg line="-consoleLog"/>
+					<jvmarg value='-Xms512m'/>
+					<jvmarg value='-Xmx1024m'/>
+					<jvmarg value='-XX:MaxPermSize=640m'/>
+					<jvmarg value='-XX:+HeapDumpOnOutOfMemoryError'/>
+					<jvmarg value='-XX:HeapDumpPath=AllTests.hprof'/>						
+					<jvmarg line='-Dorg.eclipse.swt.browser.DefaultType=mozilla -Declipse.log.level=ALL -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Dbonita.client.home="${license.dir}" -Xbootclasspath/p:${antDeps}/cobertura/cobertura.jar${path.separator}${antDeps}/cobertura/lib/asm-3.0.jar${path.separator}${antDeps}/cobertura/asm-tree-3.0.jar${path.separator}${antDeps}/cobertura/jakarta-oro-2.0.8.jar${path.separator}${antDeps}/cobertura/log4j-1.2.9.jar -Dnet.sourceforge.cobertura.datafile="${coberturaDataFile}" -DconsolePortPreference=${consolePortPreference}'/>
+				</java>
+				<!-- java -jar plugins/org.eclipse.equinox.launcher_*.jar -application org.eclipse.swtbot.eclipse.junit4.headless.swtbottestapplication -testPluginName org.bonitasoft.studio.diagram.test -testApplication org.bonitasoft.studio.application.application -className org.bonitasoft.studio.diagram.test.AllSWTBotTests formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,junit-results-swtbot.xml -nl en -consoleLog -Xms40m -Xmx348m -XX:MaxPermSize=256m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=AllSWTBotTests.hprof -Dbonita.noregister=1 -->
+		
+		
+		<echo>Second part of tests</echo>
+		<java dir="${test.home}" fork="true" output="${test.home}/outputTest2.txt" logError="true"
+			classname="org.eclipse.core.launcher.Main" failonerror="false">
+			<classpath>
+				<fileset dir="${test.home}/plugins">
+					<include name="org.eclipse.equinox.launcher_*.jar"/>
+				</fileset>
+			</classpath>
+		    <arg line="-application org.eclipse.test.uitestapplication"/>
+		    <arg line="-testPluginName org.bonitasoft.studio.tests"/>
+			<arg line="-testApplication org.bonitasoft.studio.application.application"/>
+		    <arg line="-className org.bonitasoft.studio.tests.AllTests2"/>
+			<arg line="formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,junit-results2.xml"/> <!-- TODO restore formatter -->
+			<arg line="-nl fr"/>
+		    <arg line="-consoleLog"/>
+			<jvmarg value='-Xms512m'/>
+						<jvmarg value='-Xmx1024m'/>
+						<jvmarg value='-XX:MaxPermSize=640m'/>
+						<jvmarg value='-XX:+HeapDumpOnOutOfMemoryError'/>
+						<jvmarg value='-XX:HeapDumpPath=AllTests.hprof'/>						
+			<jvmarg line='-Dorg.eclipse.swt.browser.DefaultType=mozilla -Declipse.log.level=ALL -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Dbonita.client.home="${license.dir}" -Xbootclasspath/p:${antDeps}/cobertura/cobertura.jar${path.separator}${antDeps}/cobertura/lib/asm-3.0.jar${path.separator}${antDeps}/cobertura/asm-tree-3.0.jar${path.separator}${antDeps}/cobertura/jakarta-oro-2.0.8.jar${path.separator}${antDeps}/cobertura/log4j-1.2.9.jar -Dnet.sourceforge.cobertura.datafile="${coberturaDataFile}" -DconsolePortPreference=${consolePortPreference}'/>
+		</java>
+		
+		<echo>Test Studio restarted, run tests after restart</echo>
+		<java dir="${test.home}" fork="true" timeout="600000" output="${test.home}/outputAfterRestart.txt" logError="true"
+			classname="org.eclipse.core.launcher.Main" failonerror="false">
+			<classpath>
+				<fileset dir="${test.home}/plugins">
+					<include name="org.eclipse.equinox.launcher_*.jar"/>
+				</fileset>
+			</classpath>
+		    <arg line="-application org.eclipse.test.uitestapplication"/>
+		    <arg line="-testPluginName org.bonitasoft.studio.tests"/>
+			<arg line="-testApplication org.bonitasoft.studio.application.application"/>
+		    <arg line="-className org.bonitasoft.studio.tests.AllTestsAfterReboot"/>
+			<arg line="formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,junit-results-after-reboot.xml"/> <!-- TODO restore formatter -->
+			<arg line="-nl fr"/>
+		    <arg line="-consoleLog"/>
+			<jvmarg value='-Xms512m'/>
+						<jvmarg value='-Xmx1024m'/>
+						<jvmarg value='-XX:MaxPermSize=640m'/>
+						<jvmarg value='-XX:+HeapDumpOnOutOfMemoryError'/>
+						<jvmarg value='-XX:HeapDumpPath=AllTests.hprof'/>							
+			<jvmarg line='-Dorg.eclipse.swt.browser.DefaultType=mozilla -Declipse.log.level=ALL -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Dbonita.client.home="${license.dir}" -Xbootclasspath/p:${antDeps}/cobertura/cobertura.jar${path.separator}${antDeps}/cobertura/lib/asm-3.0.jar${path.separator}${antDeps}/cobertura/asm-tree-3.0.jar${path.separator}${antDeps}/cobertura/jakarta-oro-2.0.8.jar${path.separator}${antDeps}/cobertura/log4j-1.2.9.jar -Dnet.sourceforge.cobertura.datafile="${coberturaDataFile}" -DconsolePortPreference=${consolePortPreference}'/>
+		</java>
+		
+		<echo>Stress tests</echo>
+		<java dir="${test.home}" fork="true" timeout="600000" output="${test.home}/outputStressTests.txt" logError="true"
+			classname="org.eclipse.core.launcher.Main" failonerror="false">
+			<classpath>
+				<fileset dir="${test.home}/plugins">
+					<include name="org.eclipse.equinox.launcher_*.jar"/>
+				</fileset>
+			</classpath>
+		    <arg line="-application org.eclipse.test.uitestapplication"/>
+		    <arg line="-testPluginName org.bonitasoft.studio.tests"/>
+			<arg line="-testApplication org.bonitasoft.studio.application.application"/>
+		    <arg line="-className org.bonitasoft.studio.tests.AllTestsStress"/>
+			<arg line="formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,junit-results-stress.xml"/> <!-- TODO restore formatter -->
+			<arg line="-nl fr"/>
+		    <arg line="-consoleLog"/>
+			<jvmarg value='-Xms512m'/>
+						<jvmarg value='-Xmx1024m'/>
+						<jvmarg value='-XX:MaxPermSize=640m'/>
+						<jvmarg value='-XX:+HeapDumpOnOutOfMemoryError'/>
+						<jvmarg value='-XX:HeapDumpPath=AllTests.hprof'/>						
+			<jvmarg line='-Dorg.eclipse.swt.browser.DefaultType=mozilla -Declipse.log.level=ALL -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Dbonita.client.home="${license.dir}" -Xbootclasspath/p:${antDeps}/cobertura/cobertura.jar${path.separator}${antDeps}/cobertura/lib/asm-3.0.jar${path.separator}${antDeps}/cobertura/asm-tree-3.0.jar${path.separator}${antDeps}/cobertura/jakarta-oro-2.0.8.jar${path.separator}${antDeps}/cobertura/log4j-1.2.9.jar -Dnet.sourceforge.cobertura.datafile="${coberturaDataFile}" -DconsolePortPreference=${consolePortPreference}'/>
+		</java>
+		<!--  java -jar plugins/org.eclipse.equinox.launcher_1.0.201.R35x_v20090715.jar -application org.eclipse.test.uitestapplication -testPluginName org.bonitasoft.studio.tests -testApplication org.bonitasoft.studio.application.application -className org.bonitasoft.studio.tests.AllTestsStress formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,junit-results-stress.xml -vmargs -XX:MaxPermSize=256m -Xms40m -Xmx348m -XX:+HeadDumpOnOutOfMemoryError -XX:HeadDumpPath=AllTestsStress.hprof -Dbonita.noregister=1 -->
+		
+		
+		<condition property="extensionExists">
+			<and>
+				<isset property="buildExtensionFile"/>
+				<available file="${buildExtensionFile}"/>
+			</and>
+		</condition>
+		<echo message="Executing extension tests : ${extensionExists}"/>
+		<antcall target="extensionTests"/>
+		<antcall target="run-cobertura-report"/>
+	</target>
+	
+	<target name="extensionTests" if="extensionExists">
+			<ant antfile="${buildExtensionFile}" target="extensionTests"/>
+	</target>
+	
+	<!--Cobertura targets-->
+	<target name="run-cobertura-instrument" if="runCobertura">
+		<mkdir dir="${test.home}/cobertura-data"/>
+		<property name="coberturaDataFile" value="${test.home}/cobertura-data/cobertura.ser"/>
+		<cobertura-instrument datafile="${coberturaDataFile}">
+			<fileset dir="${test.home}/plugins">
+				<include name="org.bonitasoft.*.jar"/>
+				<include name="org.bonitasoft.*/**/*.class"/>
+				<exclude name="org.bonitasoft.*test*.jar"/>
+				<exclude name="org.bonitasoft.*test*/**/*.class"/>
+			</fileset>
+		</cobertura-instrument>
+	</target>
+	
+	<target name="run-cobertura-report" if="runCobertura">
+		<cobertura-report format="xml" datafile="${coberturaDataFile}" destdir="${test.home}/cobertura-data">
+			<fileset dir="${buildDirectory}/plugins">
+		    	<include name="*/src/**/*.java"/>
+			</fileset>
+		</cobertura-report>
+	</target>
+		
+	<target name="all" depends="build, prepareTests, test">
+	</target>
+	
+	<!--target name="findbugs" if="runFindbugs">
+	    <findbugs
+	    	home="${findbugs.home}"
+	        output="xml"
+	        outputFile="${testDir}/bonitasoftStudio-fb.xml"  	
+	    	reportlevel="high"
+	    	adjustexperimental="false"
+	    	workhard="false"
+	    	jvmargs="-Xmx1024m -Xms1024m"
+	    	timeout="600000"
+	    	debug="false">
+	      <auxClasspath path="${testDir}/${distrib.name}/plugins/org.bonitasoft.studio.application"/-->
+	      <!--sourcePath path="${buildDirectory}/plugins" /-->
+	      <!--class location="F:\ws\3.6RC2\plugins/org.bonitasoft.studio.application"/>
+	    </findbugs>
+	 </target-->
+</project>

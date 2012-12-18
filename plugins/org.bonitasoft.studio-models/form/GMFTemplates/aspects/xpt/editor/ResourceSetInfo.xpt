@@ -1,0 +1,103 @@
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«AROUND attributes FOR gmfgen::GenDiagram-»
+	«IF null = editorGen.application-»
+		«EXPAND xpt::Common::generatedMemberComment»
+		private java.util.Collection<org.eclipse.emf.ecore.resource.Resource> myUnSynchronizedResources = new java.util.ArrayList<org.eclipse.emf.ecore.resource.Resource>();
+		
+	«ENDIF-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument myDocument;
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.eclipse.ui.IEditorInput myEditorInput;
+		
+	«EXPAND xpt::Common::generatedMemberComment»
+	private boolean myUpdateCache = true;
+	
+	«EXPAND xpt::Common::generatedMemberComment»
+	private boolean myModifiable = false;
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private boolean myReadOnly = true;
+	
+	«EXPAND xpt::Common::generatedMemberComment»
+	private ResourceSetModificationListener myResourceSetListener;
+	
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate sharedResourceSetInfoDelegate;
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private SynchronizerDelegate synchronizerDelegate;
+«ENDAROUND»
+
+«AROUND _constructor FOR gmfgen::GenDiagram-»
+/**
+ * @Generated Bonitasoft
+ */
+public ResourceSetInfo(org.eclipse.gmf.runtime.diagram.ui.resources.editor.document.IDiagramDocument document, org.eclipse.ui.IEditorInput editorInput) {
+	super(document);
+	myDocument = document;
+	myEditorInput = editorInput;
+	
+	synchronizerDelegate = new SynchronizerDelegate();
+	sharedResourceSetInfoDelegate = org.bonitasoft.studio.common.editingdomain.BonitaResourceSetInfoDelegate.adapt(getEditingDomain());
+	sharedResourceSetInfoDelegate.addWorkspaceSynchronizerDelegate(synchronizerDelegate);
+	// set the dirty flag depending of the dirty state of the resource set
+	fCanBeSaved = sharedResourceSetInfoDelegate.resourceSetIsDirty(); 
+
+	myResourceSetListener = new ResourceSetModificationListener(this);
+	getResourceSet().eAdapters().add(myResourceSetListener);
+	«IF null = editorGen.application-»
+	startResourceListening();
+	«ENDIF-»
+}
+«ENDAROUND»
+
+«AROUND getModificationStamp FOR gmfgen::GenDiagram-»
+/**
+ * @Generated Bonitasoft
+ */
+public long getModificationStamp() {
+	return sharedResourceSetInfoDelegate.getModificationStamp();
+}
+«ENDAROUND»
+
+«AROUND setModificationStamp FOR gmfgen::GenDiagram-»
+/**
+ * @Generated Bonitasoft
+ */
+public void setModificationStamp(long modificationStamp) {
+	sharedResourceSetInfoDelegate.setModificationStamp(modificationStamp);
+}
+«ENDAROUND»
+
+«AROUND dispose FOR gmfgen::GenDiagram-»
+/**
+ * @Generated Bonitasoft
+ */
+public void dispose() {
+	sharedResourceSetInfoDelegate
+					.removeWorkspaceSynchronizerDelegate(synchronizerDelegate);
+	getResourceSet().eAdapters().remove(myResourceSetListener);
+	org.bonitasoft.studio.common.editingdomain.EditingDomainResourcesDisposer.disposeEditorInput(getResourceSet(), myEditorInput);
+}
+«ENDAROUND»
+
+«AROUND stopResourceListening FOR gmfgen::GenDiagram-»
+/**
+ * @Generated Bonitasoft
+ */
+public final void stopResourceListening() {
+	sharedResourceSetInfoDelegate.stopResourceListening();
+}
+«ENDAROUND»
+
+«AROUND startResourceListening FOR gmfgen::GenDiagram-»
+/**
+ * @Generated Bonitasoft
+ */
+public final void startResourceListening() {
+	sharedResourceSetInfoDelegate.startResourceListening();
+}
+«ENDAROUND»

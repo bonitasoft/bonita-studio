@@ -1,0 +1,131 @@
+/**
+ * Copyright (C) 2009 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.properties.sections.general;
+
+import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.TextAnnotation;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
+
+/**
+ * @author Aurelien Pupier
+ * This contribution is designed to have the text of the Text annotation.
+ */
+public class TextAnnotationTextPropertySectionContribution implements IExtensibleGridPropertySectionContribution{
+	
+	private Text text;
+	protected TextAnnotation textAnnotation;
+	protected TransactionalEditingDomain editingDomain;
+	protected NotificationListener notificationListener = new NotificationListener() {
+
+		public void notifyChanged(Notification notification) {
+			refreshWidget() ;
+		}
+	};
+	
+	public void createControl(Composite composite,
+			TabbedPropertySheetWidgetFactory widgetFactory,
+			ExtensibleGridPropertySection extensibleGridPropertySection) {
+		composite.setLayout(new RowLayout());
+		text = widgetFactory.createText(composite, "", SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL); //$NON-NLS-1$
+		RowData rd = new RowData();
+		rd.width = 400;
+		rd.height = 150;
+		text.setLayoutData(rd);
+		if (textAnnotation != null && textAnnotation.getText() != null) {
+			text.setText(textAnnotation.getText());
+		}
+
+		text.addModifyListener(new ModifyListener() {
+
+			public void modifyText(ModifyEvent e) {
+				editingDomain.getCommandStack().execute(
+						new SetCommand(editingDomain, textAnnotation, ProcessPackage.Literals.TEXT_ANNOTATION__TEXT, text.getText()));
+			}
+		});
+
+
+	}
+
+	
+	protected void refreshWidget() {
+		if(text != null && !text.isDisposed()){
+			Point sel = text.getSelection() ;
+			if(textAnnotation.getDocumentation() != null){
+				text.setText(textAnnotation.getText());
+				text.setSelection(sel.x);
+			}else{
+				text.setText(""); //$NON-NLS-1$
+			}
+		}
+	}
+	
+
+	public void dispose() {
+		DiagramEventBroker.getInstance(editingDomain).removeNotificationListener(textAnnotation, notificationListener);
+	}
+
+	public String getLabel() {
+		return Messages.GeneralSection_TextAnnotation;
+	}
+
+	public boolean isRelevantFor(EObject eObject) {
+		return eObject instanceof TextAnnotation;
+	}
+
+	public void refresh() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setEObject(EObject object) {
+		this.textAnnotation = (TextAnnotation) object;
+		
+	}
+
+	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+		this.editingDomain = editingDomain;		
+	}
+
+	public void setSelection(ISelection selection) {
+		// Nothing	
+	}
+
+
+	
+	
+	
+	
+}

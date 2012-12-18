@@ -1,0 +1,139 @@
+<!--
+ * Copyright (C) 2009 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<project name="org.bonitasoft.studio-build-tests" default="pde-build" >
+	
+	<!-- This build takes as input
+		* buildDirectory
+		* eclipse.base.platform: The path to the Eclipse build platform
+		* bos.path: The path to the BOS to test
+		* bos.version: The name of the version 5.3, I20101039-1245 ...
+		* svnTag: The tag to check out in the SVN:  trunk, branch/bonita-studio-5.3.1, tags/bonita-studio-5.3 ...
+	-->
+	
+	<property file="build.properties" />
+	
+	<tstamp>
+		<format property="timestamp" pattern="yyyyMMdd-HHmm"/>
+	</tstamp>
+	<delete file="generatedProperties.properties"/>
+	<echo file="generatedProperties.properties">bos.version.studioqualifier=${bos.version}</echo>
+	<replaceregexp file="generatedProperties.properties" match="bos.version.studioqualifier=(.*)\.(.*)\.(.*)" replace="bos.version.studioqualifier=\1_\2_\3" />
+	<property file="generatedProperties.properties"/>
+	<condition property="qualifier" value="${bos.version.studioqualifier}" else="${timestamp}">
+		<and>
+			<isset property="bos.version"/>
+			<not>
+				<equals arg1="${bos.version}" arg2=""/>
+			</not>
+		</and>
+	</condition>
+	
+	<property name="distrib.name" value="${distrib.label}-${qualifier}" />
+	<property name="ant.runner" value="org.eclipse.ant.core.antRunner" />
+	<property name="distrib.dir" value="${buildDirectory}/${distrib.name}" />
+	<property name="distrib.tmp.dir" value="${buildDirectory}/${distrib.name}-tmp" />
+	
+	<tstamp>
+		<format property="timestamp" pattern="yyyyMMdd-HHmm"/>
+	</tstamp>
+
+	<!--This target is responsible for cleaning up the build-directory-->
+	<target name="clean">
+		<delete dir="${buildDirectory}" />
+	</target>
+
+	<path id="equinox.path">
+		<pathelement location="${equinox.launcher}" />
+	</path>
+
+	<target name="initLauncherProperties">
+		<path id="launcher.path.id">
+		    <fileset dir="${baseLocation}/plugins/" includes="org.eclipse.equinox.launcher_*.jar"/>
+		</path>
+		<property name="equinox.launcher" refid="launcher.path.id"/>
+
+		<path id="featureBuild.path.id">
+		    <fileset dir="${baseLocation}/plugins/" includes="org.eclipse.pde.build_*/scripts/build.xml"/>
+		</path>
+		<pathconvert property="feature.build" pathsep=" -buildfile " refid="featureBuild.path.id"/>
+		
+		<echo>launcher: ${equinox.launcher}</echo>
+		<echo>build: ${feature.build}</echo>
+		<echo>buildfile: ${feature.build}</echo>
+	</target>
+	
+	<target name="prepare">
+		<copy todir="${basedir}/maps">
+			<fileset dir="${basedir}/map_templates" includes="*.map"/>
+		</copy>
+		<replace token="XXX_TAG_XXX" value="${svnTag}" dir="${basedir}/maps" includes="*.map"/>
+	</target>
+	
+	
+	<!-- ================================= 
+          target: info              
+         ================================= -->
+    <target name="info">
+    	<echo>-Dbos.version=${bos.version}</echo>
+        <echo>-DpluginPath=${eclipse.base.platform}/plugins${path.separator}${bos.path}/plugins</echo>
+    	<echo>-DbuildDirectory=${buildDirectory}</echo>
+    </target>
+
+	
+	<!--
+		This target actually executes the PDE Build process by launching the 
+		Eclipse antRunner application.
+	-->
+	<target name="pde-build" depends="info,initLauncherProperties,prepare">
+		
+		<!--echo>${eclipse.base.platform}/plugins${path.separator}${bos.path}/plugins</echo>
+		<fail/-->
+		
+		<!-- default value for bos.version -->
+		<property name="bos.version" value=""/>
+
+		<mkdir dir="${buildDirectory}" />
+		<java classname="org.eclipse.equinox.launcher.Main" maxmemory="512m" fork="true" failonerror="true">
+			<classpath>
+				<path id="launcher.path.id">
+				    <fileset dir="${eclipse.base.platform}/plugins/" includes="org.eclipse.equinox.launcher_*.jar"/>
+				</path>
+			</classpath>
+			<arg value="-application" />
+			<arg value="${ant.runner}" />
+			<arg value="-data" />
+			<arg value="${buildDirectory}/plugins" /> <!-- workspace where EMF code generation takes place -->
+			<!-- arg value="-buildfile" /-->
+			<arg line="-buildfile ${feature.build}" />
+			<arg value="-DpluginPath=${eclipse.base.platform}/plugins${path.separator}${bos.path}/plugins"/>
+			<arg value="-Dbuilder=${basedir}" />
+			<arg value="-Dbase=${eclipse.base.platform}"/>
+			<arg value="-DbaseLocation=${eclipse.base.platform}"/>
+			<arg value="-Dtimestamp=${timestamp}" />
+			<arg value="-consoleLog" />
+			<arg value="-Declipse.base.platform=${eclipse.base.platform}"/>
+			<arg value="-DbuildDirectory=${buildDirectory}"/>
+			<arg value="-DforceQualifier=${qualifier}" />
+			<arg value="-DforceContextQualifier=${qualifier}"/>
+			<arg value="-Dtimestamp=${timestamp}"/>
+			<arg value="-Ddistrib.name=${distrib.name}"/>
+		</java>
+
+	</target>
+
+</project>

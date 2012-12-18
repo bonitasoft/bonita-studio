@@ -1,0 +1,39 @@
+@charset "utf-8";
+/* CSS Document */
+*{
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	word-wrap: break-word;
+	font-size:14px;
+}
+#separator {
+	height:2px;
+	background:#C80707;
+	width:100%;
+}
+h1{
+	font-weight:bold;
+	font-size:22px;
+	color:#C80707;
+	margin:0;
+}
+p{
+	margin-top:30px;
+	}
+	
+p strong {
+	color:#C80707;
+}
+p a{
+	color:#000;
+}
+p a:hover{
+	color:#C80707;
+}
+#category {
+	color:#666;
+	font-style:italic;
+	font-size:16px;
+	}
+ul li strong {
+	color:#C80707
+}

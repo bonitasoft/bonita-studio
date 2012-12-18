@@ -1,0 +1,82 @@
+/**
+ * Copyright (C) 2012 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.importer.bar.custom.migration;
+
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivity2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivityName2EditPart;
+import org.eclipse.emf.edapt.migration.CustomMigration;
+import org.eclipse.emf.edapt.migration.Instance;
+import org.eclipse.emf.edapt.migration.Metamodel;
+import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+
+
+/**
+ * @author Romain Bioteau
+ *
+ */
+public class CallActivityMigration extends CustomMigration {
+
+    private static final String SUBPROCESS_VIEW_TYPE = "3004";
+    private static final String SUBPROCESS_LABEL_VIEW_TYPE = "5004";
+
+    @Override
+    public void migrateBefore(Model model, Metamodel metamodel) throws MigrationException {
+
+    }
+
+    @Override
+    public void migrateAfter(Model model, Metamodel metamodel) throws MigrationException {
+        for(Instance callActivity : model.getAllInstances("process.CallActivity")){
+            String subprocessName = callActivity.get("subprocessName");
+            String subprocessVersion = callActivity.get("subprocessVersion");
+
+            Instance nameExp = model.newInstance("expression.Expression");
+            nameExp.set("name", subprocessName);
+            nameExp.set("content", subprocessName);
+            nameExp.set("returnType", String.class.getName());
+            nameExp.set("type", ExpressionConstants.CONSTANT_TYPE);
+            callActivity.set("calledActivityName", nameExp);
+
+            Instance versionExp = model.newInstance("expression.Expression");
+            versionExp.set("name", subprocessVersion);
+            versionExp.set("content", subprocessVersion);
+            versionExp.set("returnType", String.class.getName());
+            versionExp.set("type", ExpressionConstants.CONSTANT_TYPE);
+            callActivity.set("calledActivityVersion", versionExp);
+        }
+
+        for(Instance shape :model.getAllInstances(NotationPackage.Literals.SHAPE)){
+            String viewType = shape.get(NotationPackage.Literals.VIEW__TYPE);
+            if(SUBPROCESS_VIEW_TYPE.equals(viewType)){
+                shape.set(NotationPackage.Literals.VIEW__TYPE,String.valueOf(CallActivity2EditPart.VISUAL_ID));
+            }
+        }
+
+        for(Instance decorationNode :model.getAllInstances(NotationPackage.Literals.DECORATION_NODE)){
+            String viewType = decorationNode.get(NotationPackage.Literals.VIEW__TYPE);
+            if(SUBPROCESS_LABEL_VIEW_TYPE.equals(viewType)){
+                decorationNode.set(NotationPackage.Literals.VIEW__TYPE, String.valueOf(CallActivityName2EditPart.VISUAL_ID));
+            }
+        }
+
+
+    }
+
+}

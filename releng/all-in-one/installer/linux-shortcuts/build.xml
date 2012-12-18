@@ -1,0 +1,58 @@
+<project name="create linux shortcuts" default="create-shortcuts">
+	
+	<typedef resource="org/bonitasoft/studio/antTasks/antlib-standalone.xml" classpath="${basedir}/../../antDeps/bonita_antTasks.jar" /> 
+	
+	<property file="product.properties"/>
+	
+	<target name="clean">
+		<delete dir="files"/>
+		<mkdir dir="files"/>
+	</target>
+	
+	<target name="prepare-files" depends="clean">
+		<!-- Shortcut -->
+		<copyfile dest="files/${product}.desktop" src="product.desktop"/>
+		<replace file="files/${product}.desktop" token="@product@" value="${product}"/>
+		<replace file="files/${product}.desktop" token="@productDir@" value="${productDir}"/>
+		<replace file="files/${product}.desktop" token="@relativeIconPath@" value="${relativeIconPath}"/>
+		<replace file="files/${product}.desktop" token="@shortcut.base@" value="${shortcut.base}"/>
+		<replace file="files/${product}.desktop" token="@product.full.name@" value="${product.full.name}"/>
+		<!-- Directory -->
+		<copyfile dest="files/${product}.directory" src="product.directory"/>
+		<replace file="files/${product}.directory" token="@product@" value="${product}"/>
+		<replace file="files/${product}.directory" token="@productDir@" value="${productDir}"/>
+		<replace file="files/${product}.directory" token="@relativeIconPath@" value="${relativeIconPath}"/>
+		<replace file="files/${product}.directory" token="@shortcut.base@" value="${shortcut.base}"/>
+		<replace file="files/${product}.directory" token="@product.full.name@" value="${product.full.name}"/>
+		<!-- menu -->
+		<copyfile dest="files/${product}.menu" src="product.menu"/>
+		<replace file="files/${product}.menu" token="@product@" value="${product}"/>
+		<replace file="files/${product}.menu" token="@productDir@" value="${productDir}"/>
+		<replace file="files/${product}.menu" token="@relativeIconPath@" value="${relativeIconPath}"/>
+		<replace file="files/${product}.menu" token="@shortcut.base@" value="${shortcut.base}"/>
+		<replace file="files/${product}.menu" token="@product.full.name@" value="${product.full.name}"/>
+	</target>
+	
+	<target name="prepare-folder" depends="prepare-files">
+		<mkdir dir="${productDir}/.shortcuts"/>
+		<copy todir="${productDir}/.shortcuts">
+			<fileset dir="files/" includes="*"/>
+		</copy>
+	</target>
+	
+	<target name="prepare-applications-menu">
+		<copy todir="${user.home}/.config/menus" overwrite="false" failonerror="true">
+			<fileset dir="${basedir}" file="applications.menu"/>
+		</copy>
+	</target>
+	
+	<target name="edit-menu" depends="prepare-folder,prepare-applications-menu">
+		<injectMenuDescription srcMenuExtensionFile="files/${product}.menu" targetMenuFile="${user.home}/.config/menus/applications.menu"/>
+		<exec executable="nautilus" failonerror="false">
+			<arg value="-q"/>
+		</exec>
+	</target>
+	
+	<target name="create-shortcuts" depends="edit-menu">
+	</target>
+</project>

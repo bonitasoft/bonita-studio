@@ -1,0 +1,439 @@
+/**
+ * Copyright (C) 2009 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.common.diagram.tools;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bonitasoft.studio.common.figures.CustomSVGFigure;
+import org.bonitasoft.studio.common.figures.DecoratorSVGFigure;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.notation.Bounds;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+
+/**
+ * @author Mickael Istria
+ *
+ */
+public class FiguresHelper {
+
+    public static final int EVENT_WIDTH = 30;
+    public static final int BOUNDARY_EVENT_WIDTH = 25;
+    public static final int BIG_EVENT_WIDTH = 34;
+    public static final int GATEWAY_WIDTH = 43;
+    public static final int ACTIVITY_HEIGHT = 50;
+    public static final int ACTIVITY_WIDTH = 100;
+    public static final int TEXTANNOTATION_HEIGHT = 50;
+    public static final int TEXTANNOTATION_WIDTH = 100;
+
+    private static Color ACTIVITY_BLUE = new Color(Display.getCurrent(), 54,107, 163);
+    private static Color GATEWAY_DARK_GREEN = new Color(Display.getCurrent(), 151,170, 36);
+    //private static Color LIGHT_GREEN = new Color(Display.getCurrent(), 243,245, 211);
+    private static Color STARTEVENT_DARK_GREEN = new Color(Display.getCurrent(), 106,172,37);
+    //private static Color STARTEVENT_LIGHT_GREEN = new Color(Display.getCurrent(), 106,172,37);
+    private static Color ENDEVENT_DARK_RED = new Color(Display.getCurrent(), 131,20,29);
+
+    //private static Color ENDEVENT_LIGHT_RED = new Color(Display.getCurrent(), 248,221,214);
+    public final static String CONNECTOR_DECORATOR = "connecteur.svgz";
+    public final static String HUMAN_DECORATOR = "task.svgz";
+    public final static String RECEIVE_DECORATOR = "enveloppe-vide.svgz";
+    public final static String SEND_DECORATOR = "enveloppe-pleine.svgz";
+    public final static String LOOP_DECORATOR = "loop.svgz";
+    public final static String SCRIPT_DECORATOR = "scriptTask.svgz";
+    public final static String SERVICE_DECORATOR = "serviceTask.svgz";
+    public final static String SUBPROCESS_DECORATOR = "plus.svgz";
+    public static final String TIMER_DECORATOR = "timer.svgz";
+    public static final String SUBPROCESS_LOOP_DECORATOR = "plus_loop.svgz";
+    public static final String SUBPROCESS_DECORATOR_COLLAPSE = "minus.svgz";
+    public static String SUBPROCESS_DECORATOR_EXPAND = "plus.svgz";
+    public static final String MULTI_SUB_DECORATOR = "plus_multi.svgz";
+    public static final String MULTI_SEQUENTIAL_SUB_DECORATOR = "plus_multi_sequential.svgz";
+    public static final String MULTIINSTANCE_DECORATOR = "multiInstance.svgz";
+    public static final String MULTIINSTANCE_SEQUENTIAL_DECORATOR = "multiInstance-sequential.svgz";
+    public static final String LOOP_SUB_DECORATOR = "plus_loop.svgz";
+    public static final String SUBPROCEVENT_TIMER_DECORATOR = "subProcTimer.svgz";
+    public static final String SUBPROCEVENT_SIGNAL_DECORATOR = "subProcSignal.svgz";
+    public static final String SUBPROCEVENT_MESSAGE_DECORATOR = "subProcMessage.svgz";
+    public static final String SUBPROCEVENT_ERROR_DECORATOR =  "subProcError.svgz";
+
+    private static final int LINE_LENGTH = 20;
+    public static final Color COMPARTMENT_FEEDBACK_COLOR = new Color(PlatformUI.getWorkbench().getDisplay(), 240, 245, 245);
+
+    public static boolean AVOID_OVERLAP_ENABLE = true;
+
+    public static IFigure getSelectedFigure(EClass eClass,int width,int height,Color foreground,Color background) {
+
+        String eclassName = eClass.getName();
+        CustomSVGFigure svgFigure = new CustomSVGFigure();
+        svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/figures/" + eclassName + "_selected.svgz"); //$NON-NLS-1$ //$NON-NLS-2$
+
+        if (ProcessPackage.Literals.ACTIVITY.isSuperTypeOf(eClass) || ProcessPackage.Literals.SUB_PROCESS_EVENT.equals(eClass)) {
+            if(height != 0 && width != -1){
+                svgFigure.setSize(width, height);
+            }else{
+                svgFigure.setSize(ACTIVITY_WIDTH, ACTIVITY_HEIGHT);
+            }
+
+
+            if(foreground != null && background != null){
+                svgFigure.setColor(foreground, background) ;
+            }
+
+        } else if (ProcessPackage.Literals.GATEWAY.isSuperTypeOf(eClass)) {
+            svgFigure.setSize(GATEWAY_WIDTH, GATEWAY_WIDTH);
+        }else if(ProcessPackage.Literals.END_EVENT.isSuperTypeOf(eClass)){
+            svgFigure.setSize(EVENT_WIDTH, EVENT_WIDTH);
+        }else if(ProcessPackage.Literals.START_EVENT.isSuperTypeOf(eClass)){
+            svgFigure.setSize(EVENT_WIDTH, EVENT_WIDTH);
+        }else if(ProcessPackage.Literals.BOUNDARY_EVENT.isSuperTypeOf(eClass)){
+            svgFigure.setSize(BOUNDARY_EVENT_WIDTH+6, BOUNDARY_EVENT_WIDTH+6);
+        }else if(ProcessPackage.Literals.TEXT_ANNOTATION.isSuperTypeOf(eClass)){
+            svgFigure.setSize(TEXTANNOTATION_WIDTH, TEXTANNOTATION_HEIGHT);
+        }else {
+            svgFigure.setSize(EVENT_WIDTH, EVENT_WIDTH);
+        }
+        return svgFigure;
+    }
+
+
+    /**
+     * Convenient method to translate bounds to Absolute coordinate
+     * @param owner
+     * @param b
+     */
+    public static void translateToAbsolute(IFigure owner,Rectangle b){
+        owner.translateToAbsolute(b);
+        IFigure parentFigure = owner.getParent();
+        while( parentFigure != null  ) {
+            if(parentFigure instanceof Viewport) {
+                Viewport viewport = (Viewport)parentFigure;
+                b.translate(
+                        viewport.getHorizontalRangeModel().getValue(),
+                        viewport.getVerticalRangeModel().getValue());
+                parentFigure = parentFigure.getParent();
+            }
+            else {
+                parentFigure = parentFigure.getParent();
+            }
+        }
+    }
+
+    /**
+     * Convenient method to translate bounds to Absolute coordinate
+     * @param owner
+     * @param p
+     */
+    public static void translateToAbsolute(IFigure owner,Point p){
+        while( owner != null  ) {
+            if(owner instanceof Viewport) {
+                Viewport viewport = (Viewport)owner;
+                p.translate(
+                        viewport.getHorizontalRangeModel().getValue(),
+                        viewport.getVerticalRangeModel().getValue());
+                owner = owner.getParent();
+            }
+            else {
+                owner = owner.getParent();
+            }
+        }
+    }
+
+    public static Point handleCompartmentMargin(IGraphicalEditPart ep ,int x,int y, boolean notAllowExentedMargins){
+        IFigure editPartFigure = ep.getFigure();
+        if(ep.getParent() instanceof ShapeCompartmentEditPart){
+            GraphicalEditPart epCompartment = (GraphicalEditPart)ep.getParent() ;
+            Dimension parentSize = ((GraphicalEditPart)ep.getParent()).getFigure().getSize().getCopy() ;
+            Point parentLoc = ((GraphicalEditPart)ep.getParent()).getFigure().getBounds().getCopy().getLocation() ;
+            if(!(parentSize.height == 0 && parentSize.width == 0)){
+                Rectangle newBounds = null ;
+                if(editPartFigure.getSize().width == 0 && editPartFigure.getSize().height == 0){
+                    newBounds = new Rectangle(new Point(x,y), editPartFigure.getPreferredSize());
+                }else{
+                    newBounds = new Rectangle(new Point(x,y), editPartFigure.getSize());
+                }
+                EditPart parent = ep.getParent().getParent();
+
+                for(Object child : epCompartment.getChildren()){
+
+                    if(child instanceof IGraphicalEditPart && !child.equals(ep)){
+                        boolean compartment = false ;
+                        for(Object o : ((IGraphicalEditPart)child).getChildren()){
+                            if(o instanceof ShapeCompartmentEditPart){
+                                if(((ShapeCompartmentEditPart) o).getCompartmentFigure().isExpanded() && ep.getTargetConnections().isEmpty() && ep.getSourceConnections().isEmpty()){
+                                    compartment = true ;
+                                }
+
+                            }
+                        }
+                        if(compartment && parent.getChildren().contains(child)){
+                            newBounds = translate((IGraphicalEditPart) child,newBounds);
+                        }
+                        if(!compartment){
+                            newBounds = translate((IGraphicalEditPart) child,newBounds);
+                        }
+                    }
+                }
+
+
+                /*
+                 * Handle Pool and Lanes inner margins
+                 */
+                if(editPartFigure.getBounds().height == 0){
+                    if(parentSize.height + parentLoc.y < newBounds.y + editPartFigure.getPreferredSize().height){
+                        if(notAllowExentedMargins){
+                            newBounds.y = parentSize.height + parentLoc.y - editPartFigure.getPreferredSize().height - 10 ;
+                        }
+                    }else if( newBounds.y - parentLoc.y - 10 <= 0){
+                        newBounds.y = 10 +parentLoc.y ;
+                    }
+                }else{
+                    if(parentSize.height + parentLoc.y < newBounds.y + editPartFigure.getBounds().height){
+                        if(notAllowExentedMargins){
+                            newBounds.y = parentSize.height + parentLoc.y - editPartFigure.getBounds().height - 10 ;
+                        }
+                    }else if(newBounds.y - parentLoc.y - 10 <= 0){
+                        newBounds.y = 10 + parentLoc.y;
+                    }
+                }
+
+
+                if(editPartFigure.getBounds().width == 0){
+                    if(parentSize.width + parentLoc.x < editPartFigure.getPreferredSize().width + newBounds.x){
+                        if(notAllowExentedMargins){
+                            newBounds.x = parentSize.width + parentLoc.x - editPartFigure.getPreferredSize().width - 10 ;
+                        }
+                    }else if(x - parentLoc.x - 10<=0){
+                        newBounds.x = 25 +parentLoc.x;
+                    }
+                }else{
+                    if(parentSize.width + parentLoc.x  < editPartFigure.getBounds().width + newBounds.x){
+                        if(notAllowExentedMargins){
+                            newBounds.x = parentSize.width + parentLoc.x - editPartFigure.getBounds().width - 10 ;
+                        }
+                    }else if(x - parentLoc.x - 10<=0){
+                        newBounds.x = 25 +parentLoc.x;
+                    }
+                }
+
+
+
+                Point res = new Point(newBounds.x,newBounds.y);
+                return res ;
+            }
+        }
+
+        return new Point(0,0);
+    }
+
+    private static Rectangle translate(IGraphicalEditPart child, Rectangle newBounds){
+        Rectangle childBounds = child.getFigure().getBounds().getCopy() ;
+        Bounds b =  (Bounds) ((Node)child.getModel()).getLayoutConstraint();
+        childBounds.x  = b.getX() ;
+        childBounds.y  = b.getY() ;
+        if(childBounds.width <= 0){
+            childBounds.width = child.getFigure().getPreferredSize().width ;
+        }
+        if(childBounds.height <= 0){
+            childBounds.height = child.getFigure().getPreferredSize().height ;
+        }
+        Rectangle oldBound = newBounds.getCopy() ;
+        childBounds.expand(new Insets(15, 15, 15, 15)) ;
+
+        if(childBounds.intersects(newBounds)){
+
+            Set<Integer> directionTry = new HashSet<Integer>();
+            Set<Integer> allDirection = new HashSet<Integer>();
+            allDirection.add(PositionConstants.NORTH_WEST);
+            allDirection.add(PositionConstants.NORTH_EAST);
+            allDirection.add(PositionConstants.SOUTH_EAST);
+            allDirection.add(PositionConstants.SOUTH_WEST);
+
+            while(childBounds.intersects(newBounds)){
+
+                if(directionTry.containsAll(allDirection)){
+                    return  oldBound;
+                }
+
+                if(childBounds.x >= newBounds.x && childBounds.y >= newBounds.y){
+                    newBounds.translate(-1, -1);
+                    directionTry.add(PositionConstants.NORTH_WEST);
+                }else if(childBounds.x <= newBounds.x && childBounds.y >= newBounds.y){
+                    newBounds.translate(1, -1);
+                    directionTry.add(PositionConstants.NORTH_EAST);
+                }else if(childBounds.x <= newBounds.x && childBounds.y <= newBounds.y){
+                    newBounds.translate(1, 1);
+                    directionTry.add(PositionConstants.SOUTH_EAST);
+                }else if(childBounds.x >= newBounds.x && childBounds.y <= newBounds.y){
+                    newBounds.translate(-1, 1);
+                    directionTry.add(PositionConstants.SOUTH_WEST);
+                }
+            }
+        }
+        return newBounds ;
+    }
+
+    public static Dimension getMinimumCompartmentSize(ShapeCompartmentEditPart ep) {
+        Dimension size = new Dimension(50, 100) ;
+
+        for(Object child : ep.getChildren()){
+            if(child instanceof GraphicalEditPart){
+                int y = ((Integer) ((GraphicalEditPart) child).getStructuralFeatureValue(NotationPackage.eINSTANCE.getLocation_Y())).intValue();
+                int h = ((GraphicalEditPart)child).getFigure().getPreferredSize().height + y ;
+                if(h<100){
+                    h = 100 ;
+                }
+                int w = ((IGraphicalEditPart)child).getFigure().getPreferredSize().width + ((IGraphicalEditPart)child).getFigure().getBounds().getLocation().x ;
+                Dimension tmp = new Dimension(w, h);
+                if(size.height < tmp.height){
+                    size.height = tmp.height ;
+                }
+                if(size.width < tmp.width){
+                    size.width = tmp.width ;
+                }
+            }
+        }
+        //		size.height =size.height +10;
+        //		size.width = size.width+10 ;
+        return size;
+    }
+
+    public static void translateToRelative(IFigure owner, Rectangle b) {
+        owner.translateToRelative(b);
+    }
+
+
+    public static void resizeActivitiesFigure(final IGraphicalEditPart parentEp,final String text) {
+
+        int lineNumber = text.length()/LINE_LENGTH ;
+
+
+        ChangeBoundsRequest req = new ChangeBoundsRequest(RequestConstants.REQ_RESIZE);
+
+
+        int currentWidth = parentEp.getFigure().getSize().width ;
+        int defaultWidth = parentEp.getFigure().getPreferredSize().width ;
+        int withDeltaFromDefault = currentWidth - defaultWidth ;
+
+        int currentHeight = parentEp.getFigure().getSize().height ;
+        int defaultHeight = parentEp.getFigure().getPreferredSize().height ;
+        int heightDeltaFromDefault = currentHeight - defaultHeight ;
+
+
+        req.setSizeDelta(new Dimension(20*lineNumber - withDeltaFromDefault, 10*lineNumber - heightDeltaFromDefault ));
+        req.setConstrainedResize(true);
+        req.setCenteredResize(true);
+        req.setResizeDirection(PositionConstants.CENTER);
+        req.setEditParts(parentEp);
+        //avoid to perform request on element creation (figure have no size)
+        if(currentWidth>0 && currentHeight>0 && req.getSizeDelta().width > 0 && req.getSizeDelta().height > 0) {
+            final Command cmd = parentEp.getCommand(req);
+            if(cmd != null){
+                parentEp.getDiagramEditDomain().getDiagramCommandStack().execute(cmd);
+            }
+        }
+
+
+    }
+
+    public static Color getFeedbackColor(EClass eClass) {
+        if (ProcessPackage.Literals.ACTIVITY.isSuperTypeOf(eClass)) {
+            return ACTIVITY_BLUE ;
+        } else if (ProcessPackage.Literals.GATEWAY.isSuperTypeOf(eClass)) {
+            return GATEWAY_DARK_GREEN ;
+        }else if(ProcessPackage.Literals.END_EVENT.isSuperTypeOf(eClass)){
+            return ENDEVENT_DARK_RED ;
+        }else if(ProcessPackage.Literals.END_ERROR_EVENT.isSuperTypeOf(eClass)){
+            return ENDEVENT_DARK_RED ;
+        }else if(ProcessPackage.Literals.END_MESSAGE_EVENT.isSuperTypeOf(eClass)){
+            return ENDEVENT_DARK_RED ;
+        }else if(ProcessPackage.Literals.END_SIGNAL_EVENT.isSuperTypeOf(eClass)){
+            return ENDEVENT_DARK_RED ;
+        }else if(ProcessPackage.Literals.END_TERMINATED_EVENT.isSuperTypeOf(eClass)){
+            return ENDEVENT_DARK_RED ;
+        }else if(ProcessPackage.Literals.START_EVENT.isSuperTypeOf(eClass)){
+            return STARTEVENT_DARK_GREEN ;
+        }else if(ProcessPackage.Literals.START_ERROR_EVENT.isSuperTypeOf(eClass)){
+            return STARTEVENT_DARK_GREEN ;
+        }else if(ProcessPackage.Literals.START_TIMER_EVENT.isSuperTypeOf(eClass)){
+            return STARTEVENT_DARK_GREEN ;
+        }else if(ProcessPackage.Literals.START_MESSAGE_EVENT.isSuperTypeOf(eClass)){
+            return STARTEVENT_DARK_GREEN ;
+        }else if(ProcessPackage.Literals.START_SIGNAL_EVENT.isSuperTypeOf(eClass)){
+            return STARTEVENT_DARK_GREEN ;
+        }else if(ProcessPackage.Literals.BOUNDARY_EVENT.isSuperTypeOf(eClass)){
+            return ACTIVITY_BLUE ;
+        }else{
+            return ACTIVITY_BLUE ;
+        }
+    }
+
+
+
+
+    public static DecoratorSVGFigure getDecoratorFigure(String figurePath) {
+        DecoratorSVGFigure svgFigure = new DecoratorSVGFigure();
+        svgFigure.setURI("platform:/plugin/org.bonitasoft.studio.pics/icons/decoration/svg/"+figurePath);
+        svgFigure.setSize(16,16);
+        return svgFigure;
+    }
+
+
+    public static int getWidthFor(IElementType elementType) {
+        if(elementType.getId().contains("Event")){
+            return BIG_EVENT_WIDTH;
+        }else if(elementType.getId().contains("Gateway")){
+            return GATEWAY_WIDTH;
+        }else{
+            return ACTIVITY_WIDTH;
+        }
+    }
+
+
+    public static int getHeightFor(IElementType elementType) {
+        if(elementType.getId().contains("Event")){
+            return BIG_EVENT_WIDTH;
+        }else if(elementType.getId().contains("Gateway")){
+            return GATEWAY_WIDTH;
+        }else{
+            return ACTIVITY_HEIGHT;
+        }
+    }
+
+}
+
+

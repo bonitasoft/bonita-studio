@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/bpmn20">
+    <!--peopleGroup name="General Role" id="Role"/-->
+    <process name="TestFlow" id="TestFlow" processType="Private">
+        <!--laneSet id="laneSet">
+            <lane name="DefaultLane" id="lane">
+            </lane>
+        </laneSet-->
+        <startEvent name="StartEvent_1" id="StartEvent_1" isInterrupting="false">
+            <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                <ns2:GraphicsAttributes>
+                    <ns2:Position x="122" y="91"/>
+                    <ns2:Size height="30" width="30"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet/>
+                <ns2:Participant/>
+            </ns2:OracleExtensions>
+        </startEvent>
+        <endEvent name="Process_Transfer" id="Process_Transfer">
+            <inputSet/>
+            <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                <ns2:GraphicsAttributes>
+                    <ns2:Position x="855" y="465"/>
+                    <ns2:Size height="28" width="28"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet/>
+                <ns2:Participant/>
+            </ns2:OracleExtensions>
+        </endEvent>
+        <subProcess triggeredByEvent="false" isForCompensation="false" name="Subflow" id="Subflow">
+            <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                <ns2:GraphicsAttributes>
+                    <ns2:Position x="615" y="375"/>
+                    <ns2:Size height="108" width="88"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet/>
+                <ns2:Participant/>
+            </ns2:OracleExtensions>
+            <ioSpecification/>
+            <startEvent name="Subflow__StartEvent_1" id="Subflow__StartEvent_1"
+                isInterrupting="false">
+                <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                    <ns2:GraphicsAttributes>
+                        <ns2:Position x="194" y="191"/>
+                        <ns2:Size height="30" width="30"/>
+                    </ns2:GraphicsAttributes>
+                    <ns2:FeatureSet/>
+                    <ns2:Participant/>
+                </ns2:OracleExtensions>
+            </startEvent>
+            <userTask implementation="other" isForCompensation="false"
+                name="Subflow__Wizard_Information" id="Subflow__Wizard_Information">
+                <performer name="Role" id="Role"/>
+                <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                    <ns2:GraphicsAttributes>
+                        <ns2:Position x="301" y="162"/>
+                        <ns2:Size height="108" width="88"/>
+                    </ns2:GraphicsAttributes>
+                    <ns2:FeatureSet/>
+                    <ns2:Participant/>
+                </ns2:OracleExtensions>
+            </userTask>
+            <endEvent name="Subflow__End" id="Subflow__End">
+                <inputSet/>
+                <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                    <ns2:GraphicsAttributes>
+                        <ns2:Position x="516" y="192"/>
+                        <ns2:Size height="28" width="28"/>
+                    </ns2:GraphicsAttributes>
+                    <ns2:FeatureSet/>
+                    <ns2:Participant/>
+                </ns2:OracleExtensions>
+            </endEvent>
+
+        </subProcess>
+        <userTask implementation="other" isForCompensation="false" name="Fail_Screen"
+            id="Fail_Screen">
+            <performer name="Role" id="Role"/>
+            <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                <ns2:GraphicsAttributes>
+                    <ns2:Position x="525" y="525"/>
+                    <ns2:Size height="108" width="88"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet/>
+                <ns2:Participant/>
+            </ns2:OracleExtensions>
+        </userTask>
+        <userTask implementation="other" isForCompensation="false" name="Wizard_Information2"
+            id="Wizard_Information2">
+            <performer name="Role" id="Role"/>
+            <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                <ns2:GraphicsAttributes>
+                    <ns2:Position x="156" y="346"/>
+                    <ns2:Size height="108" width="88"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet/>
+                <ns2:Participant/>
+            </ns2:OracleExtensions>
+        </userTask>
+        <userTask implementation="other" isForCompensation="false" name="Wizard_Information"
+            id="Wizard_Information">
+            <performer name="Role" id="Role"/>
+            <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                <ns2:GraphicsAttributes>
+                    <ns2:Position x="287" y="87"/>
+                    <ns2:Size height="108" width="88"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet/>
+                <ns2:Participant/>
+            </ns2:OracleExtensions>
+        </userTask>
+        <userTask implementation="other" isForCompensation="false" name="Account_Status"
+            id="Account_Status">
+            <performer name="Role" id="Role"/>
+            <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                <ns2:GraphicsAttributes>
+                    <ns2:Position x="360" y="210"/>
+                    <ns2:Size height="108" width="88"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet/>
+                <ns2:Participant/>
+            </ns2:OracleExtensions>
+        </userTask>
+        <scriptTask isForCompensation="false" name="My_Script_Node" id="My_Script_Node">
+            <ioSpecification/>
+            <script>Some expression</script>
+            <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                <ns2:GraphicsAttributes>
+                    <ns2:Position x="298" y="588"/>
+                    <ns2:Size height="108" width="88"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet/>
+                <ns2:Participant/>
+            </ns2:OracleExtensions>
+        </scriptTask>
+        <exclusiveGateway gatewayDirection="Unspecified" name="Xor_2" id="Xor_2">
+            <ns2:OracleExtensions xmlns:ns2="http://xmlns.oracle.com/bpm/OracleExtensions">
+                <ns2:GraphicsAttributes>
+                    <ns2:Position x="390" y="399"/>
+                    <ns2:Size height="40" width="40"/>
+                </ns2:GraphicsAttributes>
+                <ns2:FeatureSet/>
+                <ns2:Participant/>
+            </ns2:OracleExtensions>
+        </exclusiveGateway>
+
+        <sequenceFlow sourceRef="StartEvent_1" targetRef="Wizard_Information"
+            name="Sequence StartEvent_1_to_Wizard_Information"
+            id="StartEvent_1_to_Wizard_Information"/>
+        <sequenceFlow sourceRef="Subflow__StartEvent_1" targetRef="Subflow__Wizard_Information"
+            name="Sequence Subflow__StartEvent_1_to_Subflow__Wizard_Information"
+            id="Subflow__StartEvent_1_to_Subflow__Wizard_Information"/>
+        <sequenceFlow sourceRef="Subflow__Wizard_Information" targetRef="Subflow__End"
+            name="Sequence Subflow__Wizard_Information_to_Subflow__End"
+            id="Subflow__Wizard_Information_to_Subflow__End"/>
+        <sequenceFlow sourceRef="Subflow__End" targetRef="Process_Transfer"
+            name="Sequence Subflow__End_to_Process_Transfer" id="Subflow__End_to_Process_Transfer"/>
+        <sequenceFlow sourceRef="Fail_Screen" targetRef="Process_Transfer"
+            name="Sequence Fail_Screen_to_Process_Transfer" id="Fail_Screen_to_Process_Transfer"/>
+        <sequenceFlow sourceRef="Wizard_Information2" targetRef="Account_Status"
+            name="Sequence Wizard_Information2_to_Account_Status"
+            id="Wizard_Information2_to_Account_Status"/>
+        <sequenceFlow sourceRef="Wizard_Information2" targetRef="My_Script_Node"
+            name="Sequence Wizard_Information2_to_My_Script_Node"
+            id="Wizard_Information2_to_My_Script_Node"/>
+        <sequenceFlow sourceRef="Wizard_Information" targetRef="Wizard_Information2"
+            name="Sequence Wizard_Information_to_Wizard_Information2"
+            id="Wizard_Information_to_Wizard_Information2"/>
+        <sequenceFlow sourceRef="Account_Status" targetRef="Xor_2"
+            name="Sequence Account_Status_to_Xor_2" id="Account_Status_to_Xor_2"/>
+        <sequenceFlow sourceRef="My_Script_Node" targetRef="Fail_Screen"
+            name="Sequence My_Script_Node_to_Fail_Screen" id="My_Script_Node_to_Fail_Screen"/>
+        <sequenceFlow sourceRef="Xor_2" targetRef="Subflow" name="Sequence Xor_2_to_Subflow"
+            id="Xor_2_to_Subflow">
+            <conditionExpression>true</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow sourceRef="Xor_2" targetRef="Fail_Screen" name="Sequence Xor_2_to_Fail_Screen"
+            id="Xor_2_to_Fail_Screen">
+            <conditionExpression>false</conditionExpression>
+        </sequenceFlow>
+    </process>
+</definitions>

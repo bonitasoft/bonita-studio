@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.bonitasoft.studio.importer.import">
+      <importFactory
+            description="%import_BOS_desc"
+            filterExtensions="*.bos"
+            importerFactoryClass="org.bonitasoft.studio.importer.bar.factory.BosArchiveImporterFactory"
+            inputName="BOS Archive"
+            menuIcon="icons/bos-desc.png"
+            priorityDisplay="1">
+      </importFactory>
+   </extension>
+
+</plugin>

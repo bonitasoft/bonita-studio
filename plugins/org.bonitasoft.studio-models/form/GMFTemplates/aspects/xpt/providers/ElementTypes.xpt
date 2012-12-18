@@ -1,0 +1,70 @@
+/*
+ * Copyright (C) 2010 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+«IMPORT 'http://www.eclipse.org/emf/2002/GenModel'»
+«EXTENSION xpt::diagram::Utils»
+
+«REM»In order to fix Eclipse bug 320102«ENDREM»
+«AROUND getElement FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment('Returns \'type\' of the ecore object associated with the hint.\n')»
+public static org.eclipse.emf.ecore.ENamedElement getElement(org.eclipse.core.runtime.IAdaptable hint) {
+	Object type = hint.getAdapter(org.eclipse.gmf.runtime.emf.type.core.IElementType.class);
+	if (elements == null) {
+		initElements();
+	}
+	return (org.eclipse.emf.ecore.ENamedElement) elements.get(type);
+}
+«ENDAROUND»
+
+«DEFINE initElements FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	private synchronized static void initElements(){
+		elements = new «EXPAND CodeStyle::G2('java.util.IdentityHashMap', 'org.eclipse.gmf.runtime.emf.type.core.IElementType', 'org.eclipse.emf.ecore.ENamedElement')»();
+		«EXPAND xpt::providers::ElementTypes::bindUniqueIdentifierToNamedElement(getUniqueIdentifier()) FOR domainDiagramElement-»
+		«FOREACH getAllNodes() AS node-»
+			«EXPAND xpt::providers::ElementTypes::bindUniqueIdentifierToNamedElement(node.getUniqueIdentifier()) FOR node.modelFacet-»
+		«ENDFOREACH-»
+		«FOREACH links->asSequence() AS link-»
+			«EXPAND xpt::providers::ElementTypes::bindUniqueIdentifierToNamedElement(link.getUniqueIdentifier()) FOR link.modelFacet-»
+		«ENDFOREACH-»
+	}
+«ENDDEFINE»
+
+«AROUND isKnownElementType FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+public static boolean isKnownElementType(org.eclipse.gmf.runtime.emf.type.core.IElementType elementType) {
+	if (KNOWN_ELEMENT_TYPES == null) {
+		initKnownElementTypes();	
+	}
+	return KNOWN_ELEMENT_TYPES.contains(elementType);
+}
+«ENDAROUND»
+
+«DEFINE initKnownElementTypes FOR gmfgen::GenDiagram-»
+	«EXPAND xpt::Common::generatedMemberComment»
+	private synchronized static void initKnownElementTypes(){
+		KNOWN_ELEMENT_TYPES = new «EXPAND CodeStyle::G('java.util.HashSet', 'org.eclipse.gmf.runtime.emf.type.core.IElementType')»();
+		«EXPAND xpt::providers::ElementTypes::addKnownElementType FOREACH getAllTypedElements()-»
+	}
+«ENDDEFINE»
+
+«AROUND additions FOR gmfgen::GenDiagram-»
+	«EXPAND initKnownElementTypes»
+	«EXPAND initElements»
+«ENDAROUND»
+

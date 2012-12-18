@@ -1,0 +1,33 @@
+#!/bin/sh
+# antRunAsync - Wrapper script to run an executable detached in the 
+# background from Ant's <exec> task.  This works be redirecting stdin,
+# stdout and stderr so Ant finds them closed and doesn't wait for the
+# program to exit.
+#
+# usage:
+# <exec executable="antRunAsync">
+#   <env key="ANTRUN_NOHUP" value="true" />  <!-- optional -->
+#   <env key="ANTRUN_OUTPUT" value="output.log" />  <!-- optional -->
+#   <env key="ANTRUN_TITLE" value="Title for Window" />  <!-- optional -->
+#   <arg value="real executable" />
+# </exec>
+
+# If ANTRUN_NOHUP environment variable is set to true/yes/nohup, run the
+# executable prefixed with "nohup" making it immune to a logout.
+case "$ANTRUN_NOHUP" in
+    true|yes|nohup) ANTRUN_NOHUP=nohup ;;
+    *) unset ANTRUN_NOHUP ;;
+esac
+
+# In order for Ant's <exec> to not wait for the process, all of stdin, stdout
+# and stderr must be redirected somewhere else.
+
+# If the ANTRUN_OUTPUT environment variable is defined, assume all output 
+# should be directed to it.
+if [ -n "$ANTRUN_OUTPUT" ]
+then
+    $ANTRUN_NOHUP "$@" </dev/null > "$ANTRUN_OUTPUT" 2>&1 &
+else
+    ANTRUN_TITLE="${ANTRUN_TITLE-Ant - $*}"
+    xterm -n "$1" -title "$ANTRUN_TITLE" -e "$@" </dev/null >/dev/null 2>&1 &
+fi

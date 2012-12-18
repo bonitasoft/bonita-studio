@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.bonitasoft.studio.expression.expressionProvider" name="org.bonitasoft.studio.expression.expressionProvider" schema="schema/org.bonitasoft.studio.expression.expressionProvider.exsd"/>
+   <extension-point id="org.bonitasoft.studio.expression.expressionFilter" name="org.bonitasoft.studio.expression.expressionFilter" schema="schema/org.bonitasoft.studio.expression.expressionFilter.exsd"/>
+   <extension-point id="org.bonitasoft.studio.expression.operatorEditor" name="org.bonitasoft.studio.expression.operatorEditor" schema="schema/org.bonitasoft.studio.expression.operatorEditor.exsd"/>
+   <extension
+         point="org.bonitasoft.studio.expression.expressionProvider">
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.expression.editor.constant.ConstantExpressionProvider">
+      </expressionProvider>
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.expression.editor.message.MessageIdExpressionProvider">
+      </expressionProvider>
+   </extension>
+</plugin>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            class="org.bonitasoft.studio.antTasks.P2AllInOneBundleInfo"
+            eclipseRuntime="true"
+            headless="true"
+            library="bonita_antTasks.jar"
+            name="P2AllInOneBundleInfo">
+      </antTask>
+   </extension>
+
+</plugin>

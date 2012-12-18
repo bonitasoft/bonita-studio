@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.bonitasoft.studio</groupId>
+		<artifactId>plugins</artifactId>
+		<version>6.0-SNAPSHOT</version>
+	</parent>
+	<groupId>org.bonitasoft.studio.plugins</groupId>
+	<artifactId>org.bonitasoft.studio.console.libs</artifactId>
+	<version>6.0-SNAPSHOT</version>
+	<packaging>eclipse-plugin</packaging>
+	
+	<properties>
+		<tomcat.bundle.dir>${basedir}/tomcat</tomcat.bundle.dir>
+		<bonita.home.dir>${basedir}/bonita</bonita.home.dir>
+		<javadoc.dir>${basedir}/javadoc</javadoc.dir>
+		<lib.dir>lib</lib.dir>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.bonitasoft.engine</groupId>
+			<artifactId>bonita-client</artifactId>
+			<version>${engine.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.engine</groupId>
+			<artifactId>bonita-client</artifactId>
+			<version>${engine.version}</version>
+			<classifier>sources</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.engine</groupId>
+			<artifactId>bonita-common</artifactId>
+			<version>${engine.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.engine</groupId>
+			<artifactId>bonita-server</artifactId>
+			<version>${engine.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.theme</groupId>
+			<artifactId>theme-builder</artifactId>
+			<version>${bundle.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.forms</groupId>
+			<artifactId>forms-server</artifactId>
+			<version>${bundle.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.forms</groupId>
+			<artifactId>forms-model</artifactId>
+			<version>${bundle.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.forms</groupId>
+			<artifactId>forms-rpc</artifactId>
+			<version>${bundle.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.platform</groupId>
+			<artifactId>platform-server-impl</artifactId>
+			<version>${bundle.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.platform</groupId>
+			<artifactId>platform-model</artifactId>
+			<version>${bundle.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.console</groupId>
+			<artifactId>console-server-impl</artifactId>
+			<version>${bundle.version}</version> 
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.console</groupId>
+			<artifactId>common-server</artifactId>
+			<version>${bundle.version}</version> 
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.console</groupId>
+			<artifactId>common-model</artifactId>
+			<version>${bundle.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.bonitasoft.console</groupId>
+			<artifactId>console-model</artifactId>
+			<version>${bundle.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+	<build>
+		 <pluginManagement>
+	      <plugins>
+	        <plugin>
+	          <groupId>org.eclipse.m2e</groupId>
+	          <artifactId>lifecycle-mapping</artifactId>
+	          <version>1.0.0</version>
+	          <configuration>
+	            <lifecycleMappingMetadata>
+	              <lifecycleMappings>
+	                <lifecycleMapping>
+	                  <packagingType>bundle</packagingType>
+	                  <lifecycleMappingId>org.sonatype.tycho.m2e.wrapperBundle</lifecycleMappingId>
+	                </lifecycleMapping>
+	              </lifecycleMappings>
+	              <pluginExecutions>
+	                <pluginExecution>
+	                  <pluginExecutionFilter>
+	                    <groupId>org.apache.felix</groupId>
+	                    <artifactId>maven-bundle-plugin</artifactId>
+	                    <versionRange>2.3.7</versionRange>
+	                    <goals>
+	                      <goal>bundle</goal>
+	                    </goals>
+	                  </pluginExecutionFilter>
+	                  <action>
+	                    <configurator>
+	                      <id>org.sonatype.tycho.m2e.wrapperBundle</id>
+	                    </configurator>
+	                  </action>
+	                </pluginExecution>
+	                <pluginExecution>
+	                  <pluginExecutionFilter>
+	                    <groupId>org.apache.felix</groupId>
+	                    <artifactId>maven-bundle-plugin</artifactId>
+	                    <versionRange>2.3.7</versionRange>
+	                    <goals>
+	                      <goal>manifest</goal>
+	                    </goals>
+	                  </pluginExecutionFilter>
+	                  <action>
+	                    <ignore />
+	                  </action>
+	                </pluginExecution>
+	              </pluginExecutions>
+	            </lifecycleMappingMetadata>
+	          </configuration>
+	        </plugin>
+	        <plugin>
+	          <groupId>org.apache.felix</groupId>
+	          <artifactId>maven-bundle-plugin</artifactId>
+	          <version>2.3.7</version>
+	        </plugin>
+	      </plugins>
+	    </pluginManagement>
+	
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<packaging>bundle</packaging>
+					<manifestLocation>${basedir}/META-INF/</manifestLocation>
+					<version>${project.version}</version>
+					<instructions>
+						<_exportcontents>
+							org.bonitasoft.console.common.server.preferences.constants;version = "0.0.0",
+							org.bonitasoft.console.common.server.preferences.properties;version = "0.0.0",
+							org.bonitasoft.console.common.server.sso;version = "0.0.0",
+							org.bonitasoft.engine.api;version = "0.0.0",
+							org.bonitasoft.engine.bpm.bar;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.archive;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.archive.impl;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.data;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.document;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.event.trigger;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.impl;version = "0.0.0",
+							org.bonitasoft.engine.command;version = "0.0.0",
+							org.bonitasoft.engine.external.web.userprofile.command.utils;version = "0.0.0",
+							org.bonitasoft.engine.connector;version = "0.0.0",
+							org.bonitasoft.engine.core.operation;version = "0.0.0",
+							org.bonitasoft.engine.exception;version = "0.0.0",
+							org.bonitasoft.engine.expression;version = "0.0.0",
+							org.bonitasoft.engine.expression.exception;version = "0.0.0",
+							org.bonitasoft.engine.expression.model.builder;version = "0.0.0",
+							org.bonitasoft.engine.filter;version = "0.0.0",
+							org.bonitasoft.engine.identity;version = "0.0.0",
+							org.bonitasoft.engine.platform;version = "0.0.0",
+							org.bonitasoft.engine.search;version = "0.0.0",
+							org.bonitasoft.engine.util;version = "0.0.0",
+							org.bonitasoft.console.common.client.model.exception;version = "0.0.0",
+							org.bonitasoft.engine.session;version = "0.0.0",
+							org.bonitasoft.forms.client.model;version = "0.0.0",
+							org.bonitasoft.forms.server.accessor;version = "0.0.0",
+							org.bonitasoft.forms.server.accessor.impl.util;version = "0.0.0",
+							org.bonitasoft.forms.server.builder;version = "0.0.0",
+							org.bonitasoft.forms.server.builder.impl;version = "0.0.0",
+							org.bonitasoft.forms.server.exception;version = "0.0.0",
+							org.bonitasoft.forms.server.provider.impl.util;version = "0.0.0",
+							org.bonitasoft.forms.server.validator;version = "0.0.0",
+							org.bonitasoft.engine.external.web.profile.command;version = "0.0.0",
+							org.bonitasoft.engine.external.web.profileentry.command;version = "0.0.0",
+							org.bonitasoft.platform.client.exceptions;version = "0.0.0",
+							org.bonitasoft.theme;version = "0.0.0",
+							org.bonitasoft.theme.builder;version = "0.0.0",
+							org.bonitasoft.theme.builder.impl;version = "0.0.0",
+							org.bonitasoft.theme.constants;version = "0.0.0",
+							org.bonitasoft.theme.css;version = "0.0.0",
+							org.bonitasoft.theme.css.impl;version = "0.0.0",
+							org.bonitasoft.theme.exception;version = "0.0.0",
+							org.bonitasoft.theme.impl;version = "0.0.0",
+							org.bonitasoft.theme.model;version = "0.0.0"
+						</_exportcontents>
+						<_nouses>true</_nouses>
+						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
+						<Bundle-Name>Bonita Console embedded in Studio</Bundle-Name>
+						<Bundle-Vendor>BonitaSoft S.A.</Bundle-Vendor>
+						<Bundle-Version>1.0.0.qualifier</Bundle-Version>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Embed-Directory>${lib.dir}</Embed-Directory>
+						<Embed-StripVersion>true</Embed-StripVersion>
+						<Eclipse-BundleShape>dir</Eclipse-BundleShape>
+						<Include-Resource>
+							 {maven-resources}, {maven-dependencies}, javadoc.zip,bonita=bonita,plugin.xml,tomcat=tomcat
+						</Include-Resource>
+						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+						<Import-Package>!*</Import-Package>
+						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+					</instructions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>Compile bundle</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+				<execution>
+						<id>Retrieve BOS Tomcat Bundle</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.distrib</groupId>
+									<artifactId>bundle-tomcat</artifactId>
+									<version>${bundle.version}</version>
+									<type>zip</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${tomcat.bundle.dir}</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+					<execution>
+						<id>Retrieve Studio specific war</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.console</groupId>
+									<artifactId>studio-integration</artifactId>
+									<version>${bundle.version}</version>
+									<type>war</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${tomcat.bundle.dir}/webapps</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+					<execution>
+						<id>Retrieve Bonita Home</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.console</groupId>
+									<artifactId>bonita-home</artifactId>
+									<version>${bundle.version}</version>
+									<type>zip</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${basedir}</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+					<execution>
+						<id>Retrieve Javadoc</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.engine</groupId>
+									<artifactId>bonita-common</artifactId>
+									<version>${engine.version}</version>
+									<classifier>javadoc</classifier>
+									<type>jar</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.bonitasoft.engine</groupId>
+									<artifactId>bonita-client</artifactId>
+									<version>${engine.version}</version>
+									<classifier>javadoc</classifier>
+									<type>jar</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.bonitasoft.forms</groupId>
+									<artifactId>forms-server</artifactId>
+									<version>${bundle.version}</version>
+									<classifier>javadoc</classifier>
+									<type>jar</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${javadoc.dir}</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+					<execution>
+						<id>Retrieve bonita-client dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<stripVersion>true</stripVersion>
+							<transitive>true</transitive>
+							<outputDirectory>${lib.dir}</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+				<execution>
+						<id>Clean generated resources</id>
+						<phase>clean</phase>
+						<configuration>
+							<target>
+								<delete dir="${tomcat.bundle.dir}"/>
+								<delete dir="${bonita.home.dir}"/>
+								<delete dir="${lib.dir}"/>
+								<mkdir dir="${lib.dir}"/>
+								<delete file="javadoc.zip"/>
+						
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>Resources generation add-on</id>
+						<phase>generate-resources</phase>
+						<configuration>
+							<target>
+								<!-- Configure tomcat bundle resoruce -->
+								<move todir="${tomcat.bundle.dir}">
+									<fileset dir="${tomcat.bundle.dir}/BOS-${bundle.version}-Tomcat-6.0.35/"/>
+								</move>
+								<concat append="true" destfile="${tomcat.bundle.dir}/conf/catalina.properties">java.awt.headless=true</concat>
+								<delete dir="${tomcat.bundle.dir}/webapps/examples" />
+								<!-- Clean bonita-home server part -->
+								<delete dir="${bonita.home.dir}/server" />
+								
+								<!-- Package javadoc -->
+								<zip destfile="${basedir}/javadoc.zip" basedir="${javadoc.dir}" encoding="UTF-8"/>
+								<delete dir="${javadoc.dir}" failonerror="false"/>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,43 @@
+!** Feature
+feature@tests-feature=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.tests-feature,username=hudson,password=Unph9tlVD0
+
+!** Requirements
+!** plugin@org.eclipse.test=v20100118,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.test
+!** fragment@org.eclipse.ant.optional.junit=v20080717,:pserver:anonymous:@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.ant.optional.junit
+!** Use newer JUnit as described in http://wiki.eclipse.org/Eclipse/Testing/JUnit4_Changes
+!** Should facilitate integration with SWTBot headless
+!** plugin@org.junit,4.8.1=GET,http://www.eclipse.org/downloads/download.php?r=1&file=/tools/orbit/downloads/drops/R20100519200754/bundles/org.junit_4.8.1.v4_8_1_v20100427-1100.zip,unpack=true
+!** plugin@org.junit4=v20100104,:pserver:anonymous:@dev.eclipse.org:/cvsroot/eclipse,,org.junit4
+!** plugin@org.eclipse.jdt.junit.runtime=v20091201-0800,:pserver:anonymous:@dev.eclipse.org:/cvsroot/eclipse,,org.eclipse.jdt.junit.runtime
+
+!** Test plugins
+plugin@org.bonitasoft.studio.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.exporter.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.exporter.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.connectors.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.connectors.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.engine.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.engine.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.properties.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.properties.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.repository.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.repository.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.workspace.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.workspace.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.groovy.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.groovy.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.util.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.util.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.diagram.form.custom.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.diagram.form.custom.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.importer.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.importer.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.diagram.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.diagram.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.importer.jpdl.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.importer.jpdl.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.application.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.application.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.xml.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.xml.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.simulation.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.simulation.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.decision.core.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.decision.core.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.connector.wizard.java.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.connector.wizard.java.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.model.edit.custom.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.model.edit.custom.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.profiles.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.profiles.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.userguidance.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.userguidance.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.repository.themes.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.repository.themes.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.configuration.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.configuration.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.actors.tests=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.actors.tests,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.validators.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.validators.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.expressions.test=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.expressions.test,username=hudson,password=Unph9tlVD0
+plugin@org.bonitasoft.studio.test.swtbot.util=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.test.swtbot.util,username=hudson,password=Unph9tlVD0
+
+fragment@org.bonitasoft.studio.tests.hotspot=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.tests.hotspot,username=hudson,password=Unph9tlVD0
+fragment@org.bonitasoft.studio.jre.extension=SVN,url=https://svn.bonitasoft.org/,tag=bos-studio,path=XXX_TAG_XXX/tests/org.bonitasoft.studio.jre.extension,username=hudson,password=Unph9tlVD0

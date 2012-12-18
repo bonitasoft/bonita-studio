@@ -1,0 +1,75 @@
+<configuration id="SaveConfigurationForImportExportTest">
+  <parameters>
+    <parameter>
+      <name>setHeaders</name>
+      <value></value>
+      <typeClassName>java.util.ArrayList</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setMessage</name>
+      <value> </value>
+      <typeClassName>java.lang.String</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setSmtpHost</name>
+      <value>smtp.gmail.com</value>
+      <typeClassName>java.lang.String</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setSslSupport</name>
+      <value>true</value>
+      <typeClassName>java.lang.Boolean</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setFrom</name>
+      <value> </value>
+      <typeClassName>java.lang.String</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setTo</name>
+      <value> </value>
+      <typeClassName>java.lang.String</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setCc</name>
+      <value> </value>
+      <typeClassName>java.lang.String</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setBcc</name>
+      <value> </value>
+      <typeClassName>java.lang.String</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setUserName</name>
+      <value> </value>
+      <typeClassName>java.lang.String</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setStarttlsSupport</name>
+      <value>false</value>
+      <typeClassName>java.lang.Boolean</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setSmtpPort</name>
+      <value>465</value>
+      <typeClassName>java.lang.String</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setHtml</name>
+      <value>false</value>
+      <typeClassName>java.lang.Boolean</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setPassword</name>
+      <value> </value>
+      <typeClassName>java.lang.String</typeClassName>
+    </parameter>
+    <parameter>
+      <name>setSubject</name>
+      <value> </value>
+      <typeClassName>java.lang.String</typeClassName>
+    </parameter>
+  </parameters>
+  <connector connectorId="Email"/>
+</configuration>

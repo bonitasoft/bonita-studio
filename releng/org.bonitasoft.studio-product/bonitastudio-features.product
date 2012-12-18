@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Bonita Studio" uid="org.bonitasoft.studio.product" id="org.bonitasoft.studio.product" application="org.bonitasoft.studio.application.application" version="6.0" useFeatures="true" includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="about.bmp"/>
+      <text>
+         Bonita Studio
+Copyright (c) BonitaSoft S.A., 2009-2013
+All right reserved
+
+This software is licensed under GPL v2.
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-nl
+en
+--launcher.XXMaxPermSize512m</programArgs>
+      <vmArgs>-Dosgi.requiredJavaVersion=1.6 -Dfile.encoding=UTF8 -Xmx512m -Xms128m -XX:MaxPermSize=256m</vmArgs>
+      <vmArgsLin>-Dorg.eclipse.swt.browser.DefaultType=webkit</vmArgsLin>
+      <vmArgsMac>-Xdock:name=BonitaStudio -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Dorg.eclipse.swt.browser.DefaultType=webkit</vmArgsMac>
+      <vmArgsWin>-Dorg.eclipse.swt.browser.DefaultType=mozilla</vmArgsWin>
+   </launcherArgs>
+
+   <windowImages i16="icons/bonitasoft-icon-16-16-transparent.png" i32="icons/bonitasoft-icon-32-32-transparent.png" i48="icons/bonitasoft-icon-48-48-transparent.png" i64="icons/bonitasoft-icon-64-64-transparent.png" i128="icons/bonitasoft-icon-128-128-transparent.png"/>
+
+   <splash
+      startupProgressRect="4,345,679,5"
+      startupMessageRect="223,190,250,25"
+      startupForegroundColor="FFFCFC" />
+   <launcher name="BonitaStudio">
+      <linux icon="icons/bonitasoft-icon-64-64-transparent.xpm"/>
+      <macosx icon="icons/bonitasoft-icon-128-128-transparent.icns"/>
+      <solaris/>
+      <win useIco="false">
+         <bmp
+            winSmallHigh="icons/bonitasoft-icon-16-16-transparent.bmp"
+            winMediumHigh="icons/bonitasoft-icon-32-32-transparent.bmp"
+            winLargeHigh="icons/bonitasoft-icon-48-48-transparent.bmp"/>
+      </win>
+   </launcher>
+
+   <vm>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</linux>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</windows>
+   </vm>
+
+   <license>
+        <url>http://www.gnu.org/licenses/gpl-2.0.html</url>
+        <text>
+   Copyright (C) 2013 BonitaSoft S.A.
+BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2.0 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+         </text>
+   </license>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="studio-feature" version="1.0.0.qualifier"/>
+      <feature id="org.eclipse.rcp"/>
+      <feature id="org.bonitasoft.studio.bos" version="1.0.0.qualifier"/>
+      <feature id="org.bonitasoft.studio.branding" version="1.0.0.qualifier"/>
+   </features>
+
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="4" />
+      <property name="org.eclipse.update.reconcile" value="true" />
+      <property name="eclipse.log.level" value="INFO" />
+      <property name="file.encoding" value="UTF-8" />
+      <property name="osgi.framework.extensions" value="org.bonitasoft.studio.logging.extension" />
+      <property name="osgi.hook.configurators.exclude" value="org.eclipse.core.runtime.internal.adaptor.EclipseLogHook" />
+      <property name="osgi.nl" value="en" />
+      <property name="osgi.nls.warnings" value="ignore" />
+   </configurations>
+
+</product>

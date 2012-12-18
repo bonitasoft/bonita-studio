@@ -1,0 +1,122 @@
+body {
+	background:none transparent;
+}
+
+/** Loading */
+div#loading {
+	height: 100px;
+	left: 50%;
+	margin-left: -50px;
+	margin-top: -50px;
+	position: absolute;
+	top: 50%;
+	width: 100px;
+}
+
+.bonita_form_entry {
+	clear: both;
+}
+
+.bonita_form_label {
+	color: #5F5F5F;
+	font-weight: bold;
+	font-size: 13px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	float: left;
+	text-align: right;
+	width: 29%;
+}
+
+.bonita_form_field {
+	float: left;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 10px;
+	text-align: left;
+	width: 55%;
+}
+
+.bonita_form_text {
+	font-size: 13px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	margin-left: 10px;
+	text-align: left;
+	float: left;
+	width: 55%;
+}
+
+.bonita_form_message {
+	font-size: 13px;
+	margin-top: 10px;
+	margin-bottom: 8px;
+	margin-left: 10px;
+	text-align: center;
+	width: 99%;
+}
+
+.bonita_upload_button {
+	float:	left;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	margin-left: 10px;
+}
+
+.bonita_form_mandatory {
+	color: #C8071D;
+	font-size: 13px;
+	float: left;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	margin-left: 10px;
+	text-align: left;
+}
+
+.bonita_form_radio {
+	display: block;
+}
+
+.bonita_form_button {
+	width: auto;
+	text-align: center;
+}
+
+.bonita_form_button_entry {
+	display: inline;
+}
+
+.bonita_form_field_validation_message {
+	color: #C8071D;
+	clear: both;
+	margin-bottom: 5px;
+	margin-left: 29%;
+	padding-left: 10px;
+	width: 60%;
+	text-align: left;
+}
+
+.bonita_form_page_validation_message {
+	color: #C8071D;
+	clear: both;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 29%;
+	padding-left: 10px;
+	width: 60%;
+	text-align: left;
+}
+
+.bonita_form_page_validation_container{
+	clear: both;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	width: 100%;
+}
+
+.bonita_form_button_container {
+	clear: both;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	width: 100%;
+}

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:decision="http://www.bonitasoft.org/ns/studio/process/decision" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:process="http://www.bonitasoft.org/ns/studio/process" xsi:schemaLocation="http://www.bonitasoft.org/ns/studio/process/decision http://www.bonitasoft.org/ns/studio/process#//decision">
+  <process:MainProcess xmi:id="_LQd-Ec71EeCR0pGfS4rPcQ" name="_2Pools" label="2Pools" bonitaVersion="5.6" bonitaModelVersion="5.6">
+    <elements xmi:type="process:Pool" xmi:id="_SXUE8M71EeCR0pGfS4rPcQ" name="FirstPool" label="FirstPool" welcomePageInternal="false">
+      <elements xmi:type="process:Task" xmi:id="_SrPtkM71EeCR0pGfS4rPcQ" name="Step1" label="Step1" incoming="_TRhDYM71EeCR0pGfS4rPcQ" groups="_TLTGoM71EeCR0pGfS4rPcQ"/>
+      <elements xmi:type="process:StartEvent" xmi:id="_TJ5YcM71EeCR0pGfS4rPcQ" name="Start1" label="Start1" outgoing="_TRhDYM71EeCR0pGfS4rPcQ"/>
+      <resourceFolders xmi:type="process:ResourceFolder" xmi:id="_TNffAM71EeCR0pGfS4rPcQ" path="User/_SXUE8M71EeCR0pGfS4rPcQ/application/application"/>
+      <confirmationTemplate xmi:type="process:AssociatedFile" xmi:id="_TNgGEc71EeCR0pGfS4rPcQ" path="User/_SXUE8M71EeCR0pGfS4rPcQ/html/confirmation.html"/>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_TRhDYM71EeCR0pGfS4rPcQ" source="_TJ5YcM71EeCR0pGfS4rPcQ" target="_SrPtkM71EeCR0pGfS4rPcQ">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_TRiRgM71EeCR0pGfS4rPcQ"/>
+      </connections>
+    </elements>
+    <elements xmi:type="process:Pool" xmi:id="_W3sf4M71EeCR0pGfS4rPcQ" name="SecondPool" label="SecondPool">
+      <elements xmi:type="process:StartEvent" xmi:id="_b2A0AM71EeCR0pGfS4rPcQ" name="Start2" label="Start2" outgoing="_cHvdMM71EeCR0pGfS4rPcQ"/>
+      <elements xmi:type="process:ServiceTask" xmi:id="_cG1eQM71EeCR0pGfS4rPcQ" name="Step2" label="Step2" incoming="_cHvdMM71EeCR0pGfS4rPcQ"/>
+      <connections xmi:type="process:SequenceFlow" xmi:id="_cHvdMM71EeCR0pGfS4rPcQ" source="_b2A0AM71EeCR0pGfS4rPcQ" target="_cG1eQM71EeCR0pGfS4rPcQ">
+        <decisionTable xmi:type="decision:DecisionTable" xmi:id="_cHvdMc71EeCR0pGfS4rPcQ"/>
+      </connections>
+    </elements>
+    <groups xmi:type="process:Group" xmi:id="_TLTGoM71EeCR0pGfS4rPcQ" documentation="Person who takes the first action to start the process" name="Initiator" label="Initiator" connectorId="ProcessInitiatior"/>
+    <datatypes xmi:type="process:BooleanType" xmi:id="_LQelIM71EeCR0pGfS4rPcQ" name="Boolean" label="Boolean"/>
+    <datatypes xmi:type="process:DateType" xmi:id="_LQelIc71EeCR0pGfS4rPcQ" name="Date" label="Date"/>
+    <datatypes xmi:type="process:IntegerType" xmi:id="_LQelIs71EeCR0pGfS4rPcQ" name="Integer" label="Integer"/>
+    <datatypes xmi:type="process:FloatType" xmi:id="_LQelI871EeCR0pGfS4rPcQ" name="Decimal" label="Decimal"/>
+    <datatypes xmi:type="process:StringType" xmi:id="_LQelJM71EeCR0pGfS4rPcQ" name="Text" label="Text"/>
+    <datatypes xmi:type="process:AttachmentType" xmi:id="_LQelJc71EeCR0pGfS4rPcQ" name="Attachment" label="Attachment"/>
+    <datatypes xmi:type="process:JavaType" xmi:id="_LQelJs71EeCR0pGfS4rPcQ" name="Java_object" label="Java object"/>
+    <datatypes xmi:type="process:XMLType" xmi:id="_LQelJ871EeCR0pGfS4rPcQ" name="XML" label="XML"/>
+    <includedEntries>bonita/bonita</includedEntries>
+  </process:MainProcess>
+  <notation:Diagram xmi:id="_LY9LsM71EeCR0pGfS4rPcQ" type="Process" element="_LQd-Ec71EeCR0pGfS4rPcQ" name="_2Pools_1.0.proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_SfyrgM71EeCR0pGfS4rPcQ" type="2007" element="_SXUE8M71EeCR0pGfS4rPcQ">
+      <children xmi:type="notation:DecorationNode" xmi:id="_Sfz5oM71EeCR0pGfS4rPcQ" type="5008"/>
+      <children xmi:type="notation:DecorationNode" xmi:id="_Sfz5oc71EeCR0pGfS4rPcQ" type="7001">
+        <children xmi:type="notation:Shape" xmi:id="_SrQ7sM71EeCR0pGfS4rPcQ" type="3005" element="_SrPtkM71EeCR0pGfS4rPcQ" fontName="Ubuntu" fillColor="14334392" lineColor="10710316">
+          <children xmi:type="notation:DecorationNode" xmi:id="_SrRiwc71EeCR0pGfS4rPcQ" type="5005"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_SrRiwM71EeCR0pGfS4rPcQ" x="110" y="55"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_TJ6mkM71EeCR0pGfS4rPcQ" type="3002" element="_TJ5YcM71EeCR0pGfS4rPcQ" fontName="Ubuntu">
+          <children xmi:type="notation:DecorationNode" xmi:id="_TJ7NoM71EeCR0pGfS4rPcQ" type="5024">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_TJ7Noc71EeCR0pGfS4rPcQ" y="5"/>
+          </children>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_TJ6mkc71EeCR0pGfS4rPcQ" x="40" y="65"/>
+        </children>
+      </children>
+      <styles xmi:type="notation:DescriptionStyle" xmi:id="_Sfyrgc71EeCR0pGfS4rPcQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Sfyrgs71EeCR0pGfS4rPcQ" fontName="Ubuntu"/>
+      <styles xmi:type="notation:LineStyle" xmi:id="_Sfyrg871EeCR0pGfS4rPcQ"/>
+      <styles xmi:type="notation:FillStyle" xmi:id="_Sfz5os71EeCR0pGfS4rPcQ"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_SfyrhM71EeCR0pGfS4rPcQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_W5EY4M71EeCR0pGfS4rPcQ" type="2007" element="_W3sf4M71EeCR0pGfS4rPcQ">
+      <children xmi:type="notation:DecorationNode" xmi:id="_W5EY5c71EeCR0pGfS4rPcQ" type="5008"/>
+      <children xmi:type="notation:DecorationNode" xmi:id="_W5E_8M71EeCR0pGfS4rPcQ" type="7001">
+        <children xmi:type="notation:Shape" xmi:id="_b2NoUM71EeCR0pGfS4rPcQ" type="3002" element="_b2A0AM71EeCR0pGfS4rPcQ" fontName="Ubuntu">
+          <children xmi:type="notation:DecorationNode" xmi:id="_b2OPYM71EeCR0pGfS4rPcQ" type="5024">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_b2OPYc71EeCR0pGfS4rPcQ" y="5"/>
+          </children>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_b2NoUc71EeCR0pGfS4rPcQ" x="81" y="90"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_cHDgsM71EeCR0pGfS4rPcQ" type="3027" element="_cG1eQM71EeCR0pGfS4rPcQ" fontName="Ubuntu" fillColor="14334392" lineColor="10710316">
+          <children xmi:type="notation:DecorationNode" xmi:id="_cHDgss71EeCR0pGfS4rPcQ" type="5017"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cHDgsc71EeCR0pGfS4rPcQ" x="189" y="82"/>
+        </children>
+      </children>
+      <styles xmi:type="notation:DescriptionStyle" xmi:id="_W5EY4c71EeCR0pGfS4rPcQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_W5EY4s71EeCR0pGfS4rPcQ" fontName="Ubuntu"/>
+      <styles xmi:type="notation:LineStyle" xmi:id="_W5EY4871EeCR0pGfS4rPcQ"/>
+      <styles xmi:type="notation:FillStyle" xmi:id="_W5E_8c71EeCR0pGfS4rPcQ"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_W5EY5M71EeCR0pGfS4rPcQ"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_LY9Lsc71EeCR0pGfS4rPcQ"/>
+    <edges xmi:type="notation:Connector" xmi:id="_TRjfoM71EeCR0pGfS4rPcQ" type="4001" element="_TRhDYM71EeCR0pGfS4rPcQ" source="_TJ6mkM71EeCR0pGfS4rPcQ" target="_SrQ7sM71EeCR0pGfS4rPcQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_TRktwM71EeCR0pGfS4rPcQ" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_TRktwc71EeCR0pGfS4rPcQ" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_TRktws71EeCR0pGfS4rPcQ" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_TRktw871EeCR0pGfS4rPcQ" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_TRjfoc71EeCR0pGfS4rPcQ" fontName="Ubuntu"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_TRjfos71EeCR0pGfS4rPcQ" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+    </edges>
+    <edges xmi:type="notation:Connector" xmi:id="_cH5OMM71EeCR0pGfS4rPcQ" type="4001" element="_cHvdMM71EeCR0pGfS4rPcQ" source="_b2NoUM71EeCR0pGfS4rPcQ" target="_cHDgsM71EeCR0pGfS4rPcQ" roundedBendpointsRadius="10" routing="Rectilinear" closestDistance="true">
+      <children xmi:type="notation:DecorationNode" xmi:id="_cH51QM71EeCR0pGfS4rPcQ" type="6001">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_cH51Qc71EeCR0pGfS4rPcQ" y="-10"/>
+      </children>
+      <children xmi:type="notation:DecorationNode" xmi:id="_cH51Qs71EeCR0pGfS4rPcQ" visible="false" type="6002">
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_cH51Q871EeCR0pGfS4rPcQ" y="-10"/>
+      </children>
+      <styles xmi:type="notation:FontStyle" xmi:id="_cH5OMc71EeCR0pGfS4rPcQ" fontName="Ubuntu"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cH5OMs71EeCR0pGfS4rPcQ" points="[-16, -17, 80, 90]$[-96, -107, 0, 0]"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>

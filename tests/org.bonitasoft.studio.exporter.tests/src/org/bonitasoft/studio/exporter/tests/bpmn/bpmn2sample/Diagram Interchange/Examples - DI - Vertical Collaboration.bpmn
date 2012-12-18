@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<semantic:definitions id="_1275488606936" targetNamespace="http://www.trisotech.com/definitions/_1275488606936" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:semantic="http://www.omg.org/spec/BPMN/20100524/MODEL">
+    <semantic:message id="_1275488607061"/>
+    <semantic:message id="_1275488606967"/>
+    <semantic:process isExecutable="false" id="_6-2">
+        <semantic:laneSet id="lsPool_PoolA">
+            <semantic:lane name="Lane 1" id="Lane_Lane1">
+                <semantic:flowNodeRef>Task_Receiving</semantic:flowNodeRef>
+            </semantic:lane>
+            <semantic:lane name="Lane 2" id="Lane_Lane2">
+                <semantic:flowNodeRef>Task_Sending</semantic:flowNodeRef>
+            </semantic:lane>
+        </semantic:laneSet>
+        <semantic:receiveTask implementation="##WebService" instantiate="false" messageRef="_1275488607061" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Receiving" id="Task_Receiving"/>
+        <semantic:sendTask implementation="##WebService" messageRef="_1275488606967" completionQuantity="1" isForCompensation="false" startQuantity="1" name="Sending" id="Task_Sending"/>
+    </semantic:process>
+    <semantic:collaboration id="C1275488607342">
+        <semantic:participant name="Pool A" processRef="_6-2" id="Pool_PoolA"/>
+        <semantic:participant name="Pool B" id="Pool_PoolB"/>
+        <semantic:messageFlow name="b" sourceRef="Pool_PoolB" targetRef="Task_Receiving" id="MessageFlow_b"/>
+        <semantic:messageFlow name="a" sourceRef="Task_Sending" targetRef="Pool_PoolB" id="MessageFlow_a"/>
+    </semantic:collaboration>
+    <bpmndi:BPMNDiagram documentation="" id="Trisotech.Visio-_6" name="Vertical Collaboration" resolution="96.00000267028808">
+        <bpmndi:BPMNPlane bpmnElement="C1275488607342">
+            <bpmndi:BPMNShape bpmnElement="Pool_PoolA" isHorizontal="false" id="Trisotech.Visio_Pool_PoolA">
+                <dc:Bounds height="258.0" width="336.0" x="96.0" y="276.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Lane_Lane1" isHorizontal="false" id="Trisotech.Visio__6_Lane_Lane1">
+                <dc:Bounds height="228.0" width="168.0" x="96.0" y="306.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Lane_Lane2" isHorizontal="false" id="Trisotech.Visio__6_Lane_Lane2">
+                <dc:Bounds height="228.0" width="168.0" x="264.0" y="306.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Pool_PoolB" isHorizontal="false" id="Trisotech.Visio_Pool_PoolB">
+                <dc:Bounds height="258.0" width="336.0" x="624.0" y="279.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Task_Receiving" id="Trisotech.Visio__6_Task_Receiving">
+                <dc:Bounds height="68.0" width="83.0" x="145.0" y="436.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="Task_Sending" id="Trisotech.Visio__6_Task_Sending">
+                <dc:Bounds height="68.0" width="83.0" x="282.0" y="338.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="MessageFlow_a" messageVisibleKind="initiating" id="Trisotech.Visio__6_MessageFlow_a">
+                <di:waypoint x="366.0" y="372.0"/>
+                <di:waypoint x="624.0" y="372.0"/>
+                <di:waypoint x="624.0" y="374.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="MessageFlow_b" messageVisibleKind="non_initiating" id="Trisotech.Visio__6_MessageFlow_b">
+                <di:waypoint x="624.0" y="470.0"/>
+                <di:waypoint x="228.0" y="470.0"/>
+                <bpmndi:BPMNLabel/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</semantic:definitions>
+

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" ?>
+<rss version="2.0">
+  <channel>
+    <pubDate>2011-02-01</pubDate>
+    <author>BonitaSoft</author>
+    <category>News</category>
+    <title>BonitaSoft News</title>
+    <link>http://www.bonitasoft.com/blog</link>
+    <description>News feed from BonitaSoft</description>
+    <item>
+       <pubDate>2011-08-11</pubDate>
+       <author>Jeremy Lipp</author>
+       <category>News</category>
+       <title>Webinar - Discover BOS</title>
+       <link>http://www.bonitasoft.com/events/register-event?event_id=772</link>
+       <description></description>
+    </item>
+    <item>
+       <pubDate>2011-04-20</pubDate>
+       <author>Jeremy Lipp</author>
+       <category>News</category>
+       <title>BonitaSoft recognized Cool Vendor by Gartner</title>
+       <link>http://www.bonitasoft.com/blog/news/leading-industry-analyst-firm-names-bonitasoft-a-%E2%80%9Ccool-vendor%E2%80%9D-for-business-process-management/</link>
+       <description></description>
+    </item>
+   </channel>
+</rss>
+
+

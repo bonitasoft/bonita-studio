@@ -1,0 +1,83 @@
+/**
+ * Copyright (C) 2011 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+.gadgets-gadget-chrome {
+    font-size: 0.8em;
+    overflow: hidden;
+    padding: 0.2em;
+    position: absolute;
+    width: 400px;
+    border-radius: 6px 6px 6px 6px;
+    background: url("../images/ui-bg_flat_75_ffffff_40x100.png") repeat-x scroll 50% 50% #FFFFFF;
+    border: 1px solid #EEEEEE;
+    color: #333333;
+}
+
+.gadgets-gadget {
+  border: none;
+}
+
+.gadgets-gadget-title-bar {
+    padding: 0.4em 1em;
+    position: relative;
+    border-radius: 6px 6px 6px 6px;
+    background: url("../images/ui-bg_highlight-soft_15_cc0000_1x100.png") repeat-x scroll 50% 50% #CC0000;
+    border: 1px solid #E3A1A1;
+    color: #FFFFFF;
+    display: block;
+}
+
+
+.gadgets-gadget-title {
+}
+
+.gadgets-gadget-title-button-bar {
+
+}
+
+.gadgets-gadget-user-prefs-dialog {
+  background-color: #e5ecf9;
+}
+
+.gadgets-gadget-user-prefs-dialog-action-bar {
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+.gadgets-gadget-title-button {
+  color:#FFFFFF;
+  TEXT-DECORATION:none
+}
+
+.gadgets-gadget-content {
+  padding: 4px;
+}
+
+.gadgets-gadget-content iframe{
+  border: 0 none;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+.gadgets-log-entry {
+}
+
+/* Used to style messages produced during rewriting by CajaContentRewriter */
+.gadgets-messages {
+	
+}

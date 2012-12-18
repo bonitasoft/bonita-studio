@@ -1,0 +1,224 @@
+/**
+ * Copyright (C) 2011 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.common;
+
+import java.util.List;
+
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+
+import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.model.process.MainProcess;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.bonitasoft.studio.model.process.AbstractProcess;
+
+
+/**
+ * @author Romain Bioteau
+ *
+ */
+public class OpenNameAndVersionDialog extends Dialog {
+
+    protected String diagramName;
+    protected String diagramVersion;
+    protected String srcName;
+    protected String srcVersion;
+    private final IRepositoryStore diagramStore;
+    private final String typeLabel;
+    private boolean isDiagram = false;
+    private MainProcess diagram;
+   
+
+    protected OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram,IRepositoryStore diagramStore) {
+        super(parentShell);
+        isDiagram  = true;
+        diagramName = diagram.getName();
+        diagramVersion = diagram.getVersion();
+        srcName = diagram.getName();
+        srcVersion = diagram.getVersion();
+        this.diagramStore = diagramStore ;
+        typeLabel = Messages.diagram.toLowerCase();
+        this.diagram = diagram;
+    }
+
+    public OpenNameAndVersionDialog(Shell parentShell,MainProcess diagram, String poolName, String versionName,IRepositoryStore diagramStore) {
+        super(parentShell);
+        diagramName = poolName;
+        diagramVersion = versionName;
+        srcName = poolName;
+        srcVersion = versionName;
+        this.diagramStore = diagramStore ;
+        typeLabel = Messages.Pool_title.toLowerCase();
+        this.diagram=diagram;
+    }
+
+    @Override
+    protected Control createContents(Composite parent) {
+        Control control = super.createContents(parent);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
+        return control;
+    }
+
+    @Override
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText(Messages.openNameAndVersionDialogTitle);
+    }
+
+
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        final DataBindingContext dbc = new DataBindingContext();
+
+        Composite res = new Composite(parent, SWT.FILL);
+        res.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        res.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 15).create());
+
+        createDiagramNameAndVersion(res, dbc);
+
+        DialogSupport.create(this, dbc);
+        return res;
+    }
+
+    protected void createDiagramNameAndVersion(Composite res, final DataBindingContext dbc) {
+        final Label nameLabel = new Label(res, SWT.NONE);
+        nameLabel.setText(Messages.name);
+        nameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
+
+        final Text nameText = new Text(res, SWT.BORDER);
+        nameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(200, SWT.DEFAULT).create());
+
+        final Label versionLabel = new Label(res, SWT.NONE);
+        versionLabel.setText(Messages.version);
+
+        final Text versionText = new Text(res, SWT.BORDER);
+        versionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+        final ISWTObservableValue observeNameText = SWTObservables.observeText(nameText,SWT.Modify);
+        final ISWTObservableValue observeVersionText =  SWTObservables.observeText(versionText,SWT.Modify);
+        final MultiValidator caseValidator = new MultiValidator() {
+
+            @Override
+            protected IStatus validate() {
+                final String name = observeNameText.getValue().toString();
+                final String version = observeVersionText.getValue().toString();
+
+                if(isDiagram){
+                    final String newDiagramFilename = NamingUtils.toDiagramFilename(name, version);
+                    IRepositoryFileStore fileStore = diagramStore.getChild(newDiagramFilename);
+                    if(fileStore != null && !srcName.equals(name) && !srcVersion.equals(version)){
+                        return ValidationStatus.error(Messages.bind(Messages.diagramAlreadyExists,typeLabel));
+                    }
+                    for(Object file :  diagramStore.getChildren()){
+                        MainProcess diagram = (MainProcess) ((IRepositoryFileStore) file).getContent();
+                        if(!NamingUtils.toDiagramFilename(srcName,srcVersion).equals(newDiagramFilename)  && NamingUtils.toDiagramFilename(diagram).equalsIgnoreCase(newDiagramFilename)){
+                            return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError,typeLabel));
+                        }
+                    }
+                } else {
+                	List<AbstractProcess> diagramPools = ModelHelper.getAllProcesses(diagram);
+                	for (AbstractProcess process:diagramPools){
+                		if (name.equals(process.getName())&& version.equals(process.getVersion())){
+                			return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError,typeLabel));
+                		}
+                	}
+                }
+
+                return ValidationStatus.ok();
+            }
+        };
+
+        dbc.addValidationStatusProvider(caseValidator);
+        ControlDecorationSupport.create(caseValidator, SWT.LEFT);
+        final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+        final EmptyInputValidator emptyValidator = new EmptyInputValidator(Messages.name);
+        final InputLengthValidator lenghtValidator = new InputLengthValidator(Messages.name,50);
+        targetToModel.setAfterGetValidator(new IValidator() {
+
+            public IStatus validate(Object value) {
+                IStatus status = emptyValidator.validate(value);
+                if(status.isOK()){
+                    status = lenghtValidator.validate(value);
+                }
+                return status;
+            }
+        });
+
+        targetToModel.setBeforeSetValidator(new URLEncodableInputValidator(Messages.name));
+        ControlDecorationSupport.create(dbc.bindValue(observeNameText, PojoProperties.value("diagramName").observe(this),targetToModel,null), SWT.LEFT);
+
+        final UpdateValueStrategy versionTargetToModel = new UpdateValueStrategy();
+        final EmptyInputValidator verisonEmptyValidator = new EmptyInputValidator(Messages.version);
+        final InputLengthValidator versionLenghtValidator = new InputLengthValidator(Messages.version,50);
+        versionTargetToModel.setAfterGetValidator(new IValidator() {
+
+            public IStatus validate(Object value) {
+                IStatus status = verisonEmptyValidator.validate(value);
+                if(status.isOK()){
+                    status = versionLenghtValidator.validate(value);
+                }
+                return status;
+            }
+        });
+        versionTargetToModel.setBeforeSetValidator(new URLEncodableInputValidator(Messages.version));
+        ControlDecorationSupport.create(dbc.bindValue(observeVersionText, PojoProperties.value("diagramVersion").observe(this),versionTargetToModel,null), SWT.LEFT);
+
+    }
+
+
+    public String getDiagramName() {
+        return diagramName;
+    }
+
+    public void setDiagramName(String diagramName) {
+        this.diagramName = diagramName;
+    }
+
+
+    public String getDiagramVersion() {
+        return diagramVersion;
+    }
+
+    public void setDiagramVersion(String diagramVersion) {
+        this.diagramVersion = diagramVersion;
+    }
+
+}

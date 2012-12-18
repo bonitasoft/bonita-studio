@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.bonitasoft.studio.tests</groupId>
+	<artifactId>tests</artifactId>
+	<version>6.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<!-- Properties to enable jacoco code coverage analysis -->
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.jacoco.reportPath>${basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
+	</properties>
+
+	<modules>
+		<module>org.eclipse.swtbot.finder.nebula.gallery</module>
+		<module>org.bonitasoft.studio.jre.extension</module>
+		<module>org.bonitasoft.studio.actors.tests</module>
+		<module>org.bonitasoft.studio.application.test</module>
+		<module>org.bonitasoft.studio.configuration.test</module>
+		<module>org.bonitasoft.studio.connectors.test</module>
+		<module>org.bonitasoft.studio.decision.core.test</module>
+		<module>org.bonitasoft.studio.diagram.form.custom.tests</module>
+		<module>org.bonitasoft.studio.diagram.test</module>
+		<module>org.bonitasoft.studio.engine.test</module>
+		<module>org.bonitasoft.studio.exporter.tests</module>
+		<module>org.bonitasoft.studio.expressions.test</module>
+		<module>org.bonitasoft.studio.groovy.tests</module>
+		<module>org.bonitasoft.studio.importer.jpdl.tests</module>
+		<module>org.bonitasoft.studio.importer.tests</module>
+		<module>org.bonitasoft.studio.importer.bar.tests</module>
+		<module>org.bonitasoft.studio.model.edit.custom.tests</module>
+		<module>org.bonitasoft.studio.profiles.tests</module>
+		<module>org.bonitasoft.studio.properties.test</module>
+		<module>org.bonitasoft.studio.repository.test</module>
+		<module>org.bonitasoft.studio.repository.themes.test</module>
+		<module>org.bonitasoft.studio.simulation.tests</module>
+		<module>org.bonitasoft.studio.test.swtbot.util</module>
+		<module>org.bonitasoft.studio.tests.hotspot</module>
+		<module>org.bonitasoft.studio.userguidance.tests</module>
+		<module>org.bonitasoft.studio.util.tests</module>
+		<module>org.bonitasoft.studio.validators.test</module>
+		<module>org.bonitasoft.studio.workspace.test</module>
+		<module>org.bonitasoft.studio.xml.tests</module>
+		<module>org.bonitasoft.studio.tests</module>
+		<module>tests-feature</module>
+		<module>org.bonitasoft.studio.test.suite</module>
+		<module>org.bonitasoft.studio.test.suite2</module>
+		<module>org.bonitasoft.studio.test.swtbot.suite</module>
+	</modules>
+
+
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.5.8.201207111220</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<!-- Where to put jacoco coverage report -->
+							<destFile>${sonar.jacoco.reportPath}</destFile>
+							<includes>
+								<include>org.bonitasoft.studio.*</include>
+							</includes>
+							<append>true</append>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<parent>
+		<groupId>org.bonitasoft.studio</groupId>
+		<artifactId>studio</artifactId>
+		<version>6.0-SNAPSHOT</version>
+	</parent>
+</project>

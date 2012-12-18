@@ -1,0 +1,90 @@
+/**
+ * Copyright (C) 2011-2012 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.bonitasoft.studio.decision.core.test;
+
+import groovy.lang.GroovyShell;
+import junit.framework.TestCase;
+
+import org.bonitasoft.studio.decision.core.DecisionTableUtil;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.decision.DecisionFactory;
+import org.bonitasoft.studio.model.process.decision.DecisionTable;
+import org.bonitasoft.studio.model.process.decision.DecisionTableCondition;
+import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
+import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
+import org.bonitasoft.studio.model.process.decision.transitions.TransitionsFactory;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+
+/**
+ * @author Mickael Istria
+ *
+ */
+public class TestDecisionTableToGroovy extends TestCase {
+
+	public void testSimpleDecisionOK() {
+		final TakeTransitionAction takeTransition = TransitionsFactory.eINSTANCE.createTakeTransitionAction();
+		takeTransition.setTakeTransition(true);
+		final TakeTransitionAction dontTakeTransition = TransitionsFactory.eINSTANCE.createTakeTransitionAction();
+		dontTakeTransition.setTakeTransition(false);
+		
+		DecisionTable decisionTable = DecisionFactory.eINSTANCE.createDecisionTable();
+		{
+			DecisionTableLine line = DecisionFactory.eINSTANCE.createDecisionTableLine();
+			decisionTable.getLines().add(line);
+			DecisionTableCondition condition1 = DecisionFactory.eINSTANCE.createDecisionTableCondition();
+			condition1.setOperand1("1"); condition1.setOperand2("1"); condition1.setOperator("==");
+			DecisionTableCondition condition2 = DecisionFactory.eINSTANCE.createDecisionTableCondition();
+			condition2.setOperand1("1"); condition2.setOperand2("1"); condition2.setOperator("==");
+			line.getConditions().add(condition2);
+			line.setAction(EcoreUtil.copy(takeTransition));
+		}
+		{
+			DecisionTableLine line = DecisionFactory.eINSTANCE.createDecisionTableLine();
+			decisionTable.getLines().add(line);
+			DecisionTableCondition condition1 = DecisionFactory.eINSTANCE.createDecisionTableCondition();
+			condition1.setOperand1("1"); condition1.setOperand2("1"); condition1.setOperator("==");
+			DecisionTableCondition condition2 = DecisionFactory.eINSTANCE.createDecisionTableCondition();
+			condition2.setOperand1("1"); condition2.setOperand2("1"); condition2.setOperator("==");
+			line.getConditions().add(condition2);
+			line.setAction(EcoreUtil.copy(takeTransition));
+		}
+		decisionTable.setDefaultAction(dontTakeTransition);
+		Expression groovy = DecisionTableUtil.toGroovyScriptExpression(decisionTable);
+		GroovyShell shell = new GroovyShell();
+		assertTrue((Boolean)shell.evaluate(groovy.getContent()));
+	}
+	
+	public void testSimpleDecisionKO() {
+		final TakeTransitionAction takeTransition = TransitionsFactory.eINSTANCE.createTakeTransitionAction();
+		takeTransition.setTakeTransition(true);
+		final TakeTransitionAction dontTakeTransition = TransitionsFactory.eINSTANCE.createTakeTransitionAction();
+		dontTakeTransition.setTakeTransition(true);
+		
+		DecisionTable decisionTable = DecisionFactory.eINSTANCE.createDecisionTable();
+		DecisionTableLine line = DecisionFactory.eINSTANCE.createDecisionTableLine();
+		decisionTable.getLines().add(line);
+		DecisionTableCondition condition = DecisionFactory.eINSTANCE.createDecisionTableCondition();
+		line.setAction(takeTransition);
+		condition.setOperand1("1"); condition.setOperand2("2"); condition.setOperator("==");
+		line.getConditions().add(condition);
+		decisionTable.setDefaultAction(dontTakeTransition);
+		Expression groovy = DecisionTableUtil.toGroovyScriptExpression(decisionTable);
+		GroovyShell shell = new GroovyShell();
+		assertTrue((Boolean)shell.evaluate(groovy.getContent()));
+	}
+}
