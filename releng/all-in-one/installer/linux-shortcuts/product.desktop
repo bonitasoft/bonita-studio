@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Version=0.9.4
-Name=@product@
-Icon=@productDir@/@relativeIconPath@
-Exec=@productDir@/@shortcut.base@.sh
-Terminal=false
-Path=@productDir@

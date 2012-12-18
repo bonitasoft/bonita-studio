@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Menu>
-	<Name>Applications</Name>
-	<MergeFile type="parent">/etc/xdg/menus/applications.menu</MergeFile>
-</Menu>
