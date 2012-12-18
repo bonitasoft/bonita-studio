@@ -33,11 +33,11 @@
 	 <customLanguageFileList>
         <language>
             <code>en</code>
-            <file>messages.properties</file>
+            <file>i18n/messages.properties</file>
         </language>
            <language>
             <code>fr</code>
-            <file>messages_fr.properties</file>
+            <file>i18n/messages_fr.properties</file>
         </language>
     </customLanguageFileList>
 	<preShowHelpActionList>
