@@ -1,3 +1,0 @@
-#!/bin/bash
-bonita_client_home=$(cd $(dirname $0)/../../../;pwd)
-"$bonita_client_home"/studio/BonitaStudio-mac.app/Contents/MacOS/BonitaStudio -XstartOnFirstThread -data "$bonita_client_home"/studio/workspace -vmargs -Dorg.eclipse.swt.browser.DefaultType=webkit -Dbonita_client_home="$bonita_client_home"/ -Dorg.eclipse.swt.internal.carbon.smallFonts -Dosgi.nls.warnings=ignore -Dfile.encoding=UTF-8 -Xmx512m -Xms256m -XX:MaxPermSize=512m -Dorg.eclipse.swt.browser.DefaultType=webkit & disown -a && exit 0
