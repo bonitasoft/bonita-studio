@@ -8,7 +8,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/bonita-server.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/common-model.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/common-server.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/console-model.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/console-server-impl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/theme-builder.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/forms-model.jar"/>
