@@ -265,7 +265,7 @@
 				<executions>
 					<execution>
 						<id>Generate bundle MANIFEST.MF</id>
-						<phase>process-classes</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>manifest</goal>
 						</goals>
