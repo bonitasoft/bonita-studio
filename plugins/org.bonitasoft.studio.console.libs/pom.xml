@@ -227,102 +227,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<manifestLocation>META-INF/</manifestLocation>
-					<supportedProjectTypes>
-						<supportedProjectType>eclipse-plugin</supportedProjectType>
-					</supportedProjectTypes>
-					<instructions>
-						<_exportcontents>
-							org.bonitasoft.console.common.server.preferences.constants;version
-							= "0.0.0",
-							org.bonitasoft.console.common.server.preferences.properties;version
-							= "0.0.0",
-							org.bonitasoft.console.common.server.sso;version =
-							"0.0.0",
-							org.bonitasoft.engine.api;version = "0.0.0",
-							org.bonitasoft.engine.bpm.bar;version = "0.0.0",
-							org.bonitasoft.engine.bpm.model;version = "0.0.0",
-							org.bonitasoft.engine.bpm.model.archive;version = "0.0.0",
-							org.bonitasoft.engine.bpm.model.archive.impl;version = "0.0.0",
-							org.bonitasoft.engine.bpm.model.data;version = "0.0.0",
-							org.bonitasoft.engine.bpm.model.document;version = "0.0.0",
-							org.bonitasoft.engine.bpm.model.event.trigger;version = "0.0.0",
-							org.bonitasoft.engine.bpm.model.impl;version = "0.0.0",
-							org.bonitasoft.engine.command;version = "0.0.0",
-							org.bonitasoft.engine.external.web.userprofile.command.utils;version
-							= "0.0.0",
-							org.bonitasoft.engine.connector;version = "0.0.0",
-							org.bonitasoft.engine.core.operation;version = "0.0.0",
-							org.bonitasoft.engine.exception;version = "0.0.0",
-							org.bonitasoft.engine.expression;version = "0.0.0",
-							org.bonitasoft.engine.expression.exception;version = "0.0.0",
-							org.bonitasoft.engine.expression.model.builder;version = "0.0.0",
-							org.bonitasoft.engine.filter;version = "0.0.0",
-							org.bonitasoft.engine.identity;version = "0.0.0",
-							org.bonitasoft.engine.platform;version = "0.0.0",
-							org.bonitasoft.engine.search;version = "0.0.0",
-							org.bonitasoft.engine.util;version = "0.0.0",
-							org.bonitasoft.console.common.client.model.exception;version =
-							"0.0.0",
-							org.bonitasoft.engine.session;version = "0.0.0",
-							org.bonitasoft.forms.client.model;version = "0.0.0",
-							org.bonitasoft.forms.server.accessor;version = "0.0.0",
-							org.bonitasoft.forms.server.accessor.impl.util;version = "0.0.0",
-							org.bonitasoft.forms.server.builder;version = "0.0.0",
-							org.bonitasoft.forms.server.builder.impl;version = "0.0.0",
-							org.bonitasoft.forms.server.exception;version = "0.0.0",
-							org.bonitasoft.forms.server.provider.impl.util;version = "0.0.0",
-							org.bonitasoft.forms.server.validator;version = "0.0.0",
-							org.bonitasoft.engine.external.web.profile.command;version =
-							"0.0.0",
-							org.bonitasoft.engine.external.web.profileentry.command;version =
-							"0.0.0",
-							org.bonitasoft.platform.client.exceptions;version =
-							"0.0.0",
-							org.bonitasoft.theme;version = "0.0.0",
-							org.bonitasoft.theme.builder;version = "0.0.0",
-							org.bonitasoft.theme.builder.impl;version = "0.0.0",
-							org.bonitasoft.theme.constants;version = "0.0.0",
-							org.bonitasoft.theme.css;version = "0.0.0",
-							org.bonitasoft.theme.css.impl;version = "0.0.0",
-							org.bonitasoft.theme.exception;version = "0.0.0",
-							org.bonitasoft.theme.impl;version = "0.0.0",
-							org.bonitasoft.theme.model;version = "0.0.0"
-						</_exportcontents>
-						<_nouses>true</_nouses>
-						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
-						<Bundle-Name>Bonita Console embedded in Studio</Bundle-Name>
-						<Bundle-Vendor>BonitaSoft S.A.</Bundle-Vendor>
-						<Bundle-Version>1.0.0.qualifier</Bundle-Version>
-						<Embed-Transitive>true</Embed-Transitive>
-						<Embed-Directory>${lib.dir}</Embed-Directory>
-						<Embed-StripVersion>true</Embed-StripVersion>
-						<Eclipse-BundleShape>dir</Eclipse-BundleShape>
-						<Include-Resource>
-							{maven-resources}, {maven-dependencies},
-							javadoc.zip,bonita=bonita,plugin.xml,tomcat=tomcat
-						</Include-Resource>
-						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
-						<Import-Package>!*</Import-Package>
-						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
-					</instructions>
-				</configuration>
-				<executions>
-					<execution>
-						<id>Generate bundle MANIFEST.MF</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>manifest</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
@@ -437,6 +341,103 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<manifestLocation>META-INF/</manifestLocation>
+					<supportedProjectTypes>
+						<supportedProjectType>eclipse-plugin</supportedProjectType>
+					</supportedProjectTypes>
+					<instructions>
+						<_exportcontents>
+							org.bonitasoft.console.common.server.preferences.constants;version
+							= "0.0.0",
+							org.bonitasoft.console.common.server.preferences.properties;version
+							= "0.0.0",
+							org.bonitasoft.console.common.server.sso;version =
+							"0.0.0",
+							org.bonitasoft.engine.api;version = "0.0.0",
+							org.bonitasoft.engine.bpm.bar;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.archive;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.archive.impl;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.data;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.document;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.event.trigger;version = "0.0.0",
+							org.bonitasoft.engine.bpm.model.impl;version = "0.0.0",
+							org.bonitasoft.engine.command;version = "0.0.0",
+							org.bonitasoft.engine.external.web.userprofile.command.utils;version
+							= "0.0.0",
+							org.bonitasoft.engine.connector;version = "0.0.0",
+							org.bonitasoft.engine.core.operation;version = "0.0.0",
+							org.bonitasoft.engine.exception;version = "0.0.0",
+							org.bonitasoft.engine.expression;version = "0.0.0",
+							org.bonitasoft.engine.expression.exception;version = "0.0.0",
+							org.bonitasoft.engine.expression.model.builder;version = "0.0.0",
+							org.bonitasoft.engine.filter;version = "0.0.0",
+							org.bonitasoft.engine.identity;version = "0.0.0",
+							org.bonitasoft.engine.platform;version = "0.0.0",
+							org.bonitasoft.engine.search;version = "0.0.0",
+							org.bonitasoft.engine.util;version = "0.0.0",
+							org.bonitasoft.console.common.client.model.exception;version =
+							"0.0.0",
+							org.bonitasoft.engine.session;version = "0.0.0",
+							org.bonitasoft.forms.client.model;version = "0.0.0",
+							org.bonitasoft.forms.server.accessor;version = "0.0.0",
+							org.bonitasoft.forms.server.accessor.impl.util;version = "0.0.0",
+							org.bonitasoft.forms.server.builder;version = "0.0.0",
+							org.bonitasoft.forms.server.builder.impl;version = "0.0.0",
+							org.bonitasoft.forms.server.exception;version = "0.0.0",
+							org.bonitasoft.forms.server.provider.impl.util;version = "0.0.0",
+							org.bonitasoft.forms.server.validator;version = "0.0.0",
+							org.bonitasoft.engine.external.web.profile.command;version =
+							"0.0.0",
+							org.bonitasoft.engine.external.web.profileentry.command;version =
+							"0.0.0",
+							org.bonitasoft.platform.client.exceptions;version =
+							"0.0.0",
+							org.bonitasoft.theme;version = "0.0.0",
+							org.bonitasoft.theme.builder;version = "0.0.0",
+							org.bonitasoft.theme.builder.impl;version = "0.0.0",
+							org.bonitasoft.theme.constants;version = "0.0.0",
+							org.bonitasoft.theme.css;version = "0.0.0",
+							org.bonitasoft.theme.css.impl;version = "0.0.0",
+							org.bonitasoft.theme.exception;version = "0.0.0",
+							org.bonitasoft.theme.impl;version = "0.0.0",
+							org.bonitasoft.theme.model;version = "0.0.0"
+						</_exportcontents>
+						<_nouses>true</_nouses>
+						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
+						<Bundle-Name>Bonita Console embedded in Studio</Bundle-Name>
+						<Bundle-Vendor>BonitaSoft S.A.</Bundle-Vendor>
+						<Bundle-Version>1.0.0.qualifier</Bundle-Version>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Embed-Directory>${lib.dir}</Embed-Directory>
+						<Embed-StripVersion>true</Embed-StripVersion>
+						<Eclipse-BundleShape>dir</Eclipse-BundleShape>
+						<Include-Resource>
+							{maven-resources}, {maven-dependencies},
+							javadoc.zip,bonita=bonita,plugin.xml,tomcat=tomcat
+						</Include-Resource>
+						<Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
+						<Import-Package>!*</Import-Package>
+						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+					</instructions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>Generate bundle MANIFEST.MF</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			
 
 		</plugins>
 	</build>
