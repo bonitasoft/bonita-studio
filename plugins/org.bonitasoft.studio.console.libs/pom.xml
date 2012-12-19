@@ -401,6 +401,7 @@
 								<delete dir="${bonita.home.dir}" />
 								<delete file="META-INF/MANIFEST.MF" />
 								<delete file="javadoc.zip" />
+								<mkdir file="${project.build.directory}/classes" />
 							</target>
 						</configuration>
 						<goals>
