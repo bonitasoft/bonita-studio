@@ -177,56 +177,7 @@
 		</pluginManagement>
 
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>Clean generated resources</id>
-						<phase>clean</phase>
-						<configuration>
-							<target>
-								<delete dir="${tomcat.bundle.dir}" />
-								<delete dir="${bonita.home.dir}" />
-								<delete file="META-INF/MANIFEST.MF" />
-								<delete file="javadoc.zip" />
-								<mkdir dir="${project.build.directory}/classes" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>Resources generation add-on</id>
-						<phase>generate-resources</phase>
-						<configuration>
-							<target>
-								<!-- Configure tomcat bundle resoruce -->
-								<move todir="${tomcat.bundle.dir}">
-									<fileset
-										dir="${tomcat.bundle.dir}/BOS-${bundle.version}-Tomcat-6.0.35/" />
-								</move>
-								<concat append="true"
-									destfile="${tomcat.bundle.dir}/conf/catalina.properties">java.awt.headless=true</concat>
-								<delete dir="${tomcat.bundle.dir}/webapps/examples" />
-								<!-- Clean bonita-home server part -->
-								<delete dir="${bonita.home.dir}/server" />
-
-								<!-- Package javadoc -->
-								<zip destfile="${basedir}/javadoc.zip" basedir="${javadoc.dir}"
-									encoding="UTF-8" />
-								<delete dir="${javadoc.dir}" failonerror="false" />
-								<delete dir="${lib.dir}/${project.artifactId}-${lib.dir}" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
+				<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
@@ -341,6 +292,56 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Clean generated resources</id>
+						<phase>clean</phase>
+						<configuration>
+							<target>
+								<delete dir="${tomcat.bundle.dir}" />
+								<delete dir="${bonita.home.dir}" />
+								<delete file="META-INF/MANIFEST.MF" />
+								<delete file="javadoc.zip" />
+								<mkdir dir="${project.build.directory}/classes" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>Resources generation add-on</id>
+						<phase>generate-resources</phase>
+						<configuration>
+							<target>
+								<!-- Configure tomcat bundle resoruce -->
+								<move todir="${tomcat.bundle.dir}">
+									<fileset
+										dir="${tomcat.bundle.dir}/BOS-${bundle.version}-Tomcat-6.0.35/" />
+								</move>
+								<concat append="true"
+									destfile="${tomcat.bundle.dir}/conf/catalina.properties">java.awt.headless=true</concat>
+								<delete dir="${tomcat.bundle.dir}/webapps/examples" />
+								<!-- Clean bonita-home server part -->
+								<delete dir="${bonita.home.dir}/server" />
+
+								<!-- Package javadoc -->
+								<zip destfile="${basedir}/javadoc.zip" basedir="${javadoc.dir}"
+									encoding="UTF-8" />
+								<delete dir="${javadoc.dir}" failonerror="false" />
+								<delete dir="${lib.dir}/${project.artifactId}-${lib.dir}" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+	
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
