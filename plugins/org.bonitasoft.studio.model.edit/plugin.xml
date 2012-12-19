@@ -23,7 +23,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://www.bonitasoft.org/ns/actormapping/6.0beta"
+            uri="http://www.bonitasoft.org/ns/actormapping/6.0"
             class="org.bonitasoft.studio.model.actormapping.provider.ActorMappingItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
@@ -35,7 +35,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://www.bonitasoft.org/ns/studio/configuration/60beta"
+            uri="http://www.bonitasoft.org/ns/studio/configuration/"
             class="org.bonitasoft.studio.model.configuration.provider.ConfigurationItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
@@ -47,7 +47,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://wwww.bonitasoft.org/model/connector/configuration/60beta"
+            uri="http://wwww.bonitasoft.org/model/connector/configuration/"
             class="org.bonitasoft.studio.model.connectorconfiguration.provider.ConnectorConfigurationItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
@@ -59,7 +59,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://www.bonitasoft.org/ns/studio/expression/60beta"
+            uri="http://www.bonitasoft.org/ns/studio/expression/"
             class="org.bonitasoft.studio.model.expression.provider.ExpressionItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
@@ -71,7 +71,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://www.bonitasoft.org/ns/studio/form/60beta"
+            uri="http://www.bonitasoft.org/ns/studio/form/"
             class="org.bonitasoft.studio.model.form.provider.FormItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
@@ -83,7 +83,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://www.bonitasoft.org/ns/studio/kpi/60beta"
+            uri="http://www.bonitasoft.org/ns/studio/kpi/"
             class="org.bonitasoft.studio.model.kpi.provider.KpiItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
@@ -95,7 +95,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://www.bonitasoft.org/ns/studio/parameter/60beta"
+            uri="http://www.bonitasoft.org/ns/studio/parameter/"
             class="org.bonitasoft.studio.model.parameter.provider.ParameterItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
@@ -107,7 +107,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://www.bonitasoft.org/ns/studio/process/60beta"
+            uri="http://www.bonitasoft.org/ns/studio/process/"
             class="org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
@@ -119,7 +119,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://www.bonitasoft.org/ns/studio/process/decision/60beta"
+            uri="http://www.bonitasoft.org/ns/studio/process/decision/"
             class="org.bonitasoft.studio.model.process.decision.provider.DecisionItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
@@ -131,7 +131,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://www.bonitasoft.org/ns/studio/process/decision/transitions/60beta"
+            uri="http://www.bonitasoft.org/ns/studio/process/decision/transitions/"
             class="org.bonitasoft.studio.model.process.decision.transitions.provider.TransitionsItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
@@ -143,7 +143,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://www.bonitasoft.org/ns/studio/process/simulation/60beta"
+            uri="http://www.bonitasoft.org/ns/studio/process/simulation/"
             class="org.bonitasoft.studio.model.simulation.provider.SimulationItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider

@@ -7147,12 +7147,12 @@
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element"
             featureName="name" dataValue="dbName"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
@@ -7384,32 +7384,6 @@
     </changes>
   </releases>
   <releases date="2012-12-11T11:58:53.422+0100" label="60beta_u1">
-    <changes xsi:type="history:CompositeChange">
-      <changes xsi:type="history:Set" element="process.ecore#/" featureName="nsURI"
-          dataValue="http://www.bonitasoft.org/ns/studio/process/60beta" oldDataValue="http://www.bonitasoft.org/ns/studio/process"/>
-      <changes xsi:type="history:Set" element="simulation.ecore#/" featureName="nsURI"
-          dataValue="http://www.bonitasoft.org/ns/studio/process/simulation/60beta"
-          oldDataValue="http://www.bonitasoft.org/ns/studio/process/simulation"/>
-      <changes xsi:type="history:Set" element="form.ecore#/" featureName="nsURI" dataValue="http://www.bonitasoft.org/ns/studio/form/60beta"
-          oldDataValue="http://www.bonitasoft.org/ns/studio/form"/>
-      <changes xsi:type="history:Set" element="configuration.ecore#/" featureName="nsURI"
-          dataValue="http://www.bonitasoft.org/ns/studio/configuration/60beta" oldDataValue="http://www.bonitasoft.org/ns/studio/configuration"/>
-      <changes xsi:type="history:Set" element="connector-configuration.ecore#/" featureName="nsURI"
-          dataValue="http://wwww.bonitasoft.org/model/connector/configuration/60beta"
-          oldDataValue="http://wwww.bonitasoft.org/model/connector/configuration"/>
-      <changes xsi:type="history:Set" element="expression.ecore#/" featureName="nsURI"
-          dataValue="http://www.bonitasoft.org/ns/studio/expression/60beta" oldDataValue="http://www.bonitasoft.org/ns/studio/expression"/>
-      <changes xsi:type="history:Set" element="kpi.ecore#/" featureName="nsURI" dataValue="http://www.bonitasoft.org/ns/studio/kpi/60beta"
-          oldDataValue="http://www.bonitasoft.org/ns/studio/kpi"/>
-      <changes xsi:type="history:Set" element="parameter.ecore#/" featureName="nsURI"
-          dataValue="http://www.bonitasoft.org/ns/studio/parameter/60beta" oldDataValue="http://www.bonitasoft.org/ns/studio/parameter"/>
-      <changes xsi:type="history:Set" element="process.ecore#//decision" featureName="nsURI"
-          dataValue="http://www.bonitasoft.org/ns/studio/process/decision/60beta"
-          oldDataValue="http://www.bonitasoft.org/ns/studio/process/decision"/>
-      <changes xsi:type="history:Set" element="process.ecore#//decision/transitions"
-          featureName="nsURI" dataValue="http://www.bonitasoft.org/ns/studio/process/decision/transitions/60beta"
-          oldDataValue="http://www.bonitasoft.org/ns/studio/process/decision/transitions"/>
-    </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.kpi.KPlDatabaseNameToUrlMigration">
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Delete" target="kpi.ecore#//DatabaseKPIBinding"
@@ -7419,7 +7393,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
