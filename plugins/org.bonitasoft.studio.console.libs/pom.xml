@@ -427,6 +427,8 @@
 								<zip destfile="${basedir}/javadoc.zip" basedir="${javadoc.dir}"
 									encoding="UTF-8" />
 								<delete dir="${javadoc.dir}" failonerror="false" />
+								<delete dir="${lib.dir}/${project.artifactId}-${lib.dir}" />
+								
 							</target>
 						</configuration>
 						<goals>
