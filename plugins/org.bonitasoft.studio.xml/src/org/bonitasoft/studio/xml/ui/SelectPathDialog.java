@@ -61,6 +61,7 @@ public class SelectPathDialog extends Dialog {
 	private TreeViewer xsdViewer;
 	private boolean browseOnly;
 	private XSDElementDeclaration root;
+	public static final String NO_NAMESPACE = "No Namespace";
 
 	/**
 	 * 
@@ -86,7 +87,7 @@ public class SelectPathDialog extends Dialog {
 		this.element = element;
 		this.browseOnly = browseOnly;
 		XSDRepositoryStore store = (XSDRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(XSDRepositoryStore.class) ;
-		root = store.findElementDeclaration(namespace, element);
+		root = store.findElementDeclaration(NO_NAMESPACE.equals(namespace)?"":namespace, element);
 	}
 
 	/**
