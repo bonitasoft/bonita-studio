@@ -55,7 +55,7 @@ public class CorrelationMigrationTest extends TestCase {
 
 	@Test
 	public void testImportMessage59Bar() throws Exception{
-		URL fileURL2 = FileLocator.toFileURL(CorrelationMigrationTest.class.getResource("sendMessage-1.0.bar")); //$NON-NLS-1$
+		URL fileURL2 = FileLocator.toFileURL(CorrelationMigrationTest.class.getResource("sendMessage--1.0.bar")); //$NON-NLS-1$
 		File migratedProcess = BarImporterTestUtil.migrateBar(fileURL2);
 		 assertNotNull("Fail to migrate bar file", migratedProcess);
 	     assertNotNull("Fail to migrate bar file", migratedProcess.exists());
