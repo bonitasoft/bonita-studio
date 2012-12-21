@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-modeltype FORM "strict" uses 'http://www.bonitasoft.org/ns/studio/form/60beta';
+modeltype FORM "strict" uses 'http://www.bonitasoft.org/ns/studio/form';
 modeltype Xhtml "strict" uses 'http://www.w3.org/1999/xhtml';
-modeltype PROC "strict" uses 'http://www.bonitasoft.org/ns/studio/process/60beta';
+modeltype PROC "strict" uses 'http://www.bonitasoft.org/ns/studio/process';
 modeltype Ecore "strict" uses 'http://www.eclipse.org/emf/2002/Ecore';
 
 
