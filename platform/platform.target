@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?>
-
-<target includeMode="feature" name="platform" sequenceNumber="40">
+<?pde version="3.6"?><target includeMode="feature" name="platform" sequenceNumber="41">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
@@ -27,14 +25,6 @@
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.uguess.tribix.feature.group" version="2.5.2.201107181644"/>
 <repository location="http://tribix.sourceforge.net/update"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.codehaus.groovy18.feature.feature.group" version="2.7.1.xx-20120921-2000-e37RELEASE"/>
-<unit id="org.codehaus.groovy.jdt.patch.source.feature.group" version="2.7.1.xx-20120921-2000-e37RELEASE"/>
-<unit id="org.codehaus.groovy.eclipse.feature.source.feature.group" version="2.7.1.xx-20120921-2000-e37RELEASE"/>
-<unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.7.1.xx-20120921-2000-e37RELEASE"/>
-<unit id="org.codehaus.groovy.jdt.patch.feature.group" version="2.7.1.xx-20120921-2000-e37RELEASE"/>
-<repository location="http://dist.springsource.org/release/GRECLIPSE/e3.7/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
@@ -103,6 +93,11 @@
 <unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.10.1.v201208161415-7I9e7GFE9JgB7ngIxQtPITxSGQER"/>
 <unit id="org.eclipse.datatools.sdk.feature.feature.group" version="1.10.1.v201208161415-7PAO7MFEpPZ56X3j7z0oZGcDIWFs"/>
 <repository location="http://download.eclipse.org/datatools/updates"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.codehaus.groovy18.feature.feature.group" version="2.7.2.xx-RELEASE-20121219-0800-e37"/>
+<unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.7.2.xx-RELEASE-20121219-0800-e37"/>
+<repository location="http://dist.springsource.org/release/GRECLIPSE/e3.7/"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
