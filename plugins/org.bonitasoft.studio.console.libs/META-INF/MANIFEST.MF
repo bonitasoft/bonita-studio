@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1355759665581
-Build-Jdk: 1.6.0_37
-Built-By: Romain
+Bnd-LastModified: 1355840183062
+Build-Jdk: 1.7.0_05
+Built-By: aurelie
 Bundle-ClassPath: .,lib/bonita-client.jar,lib/bonita-common-api-ejb2.jar
  ,lib/bonita-common-api.jar,lib/httpclient.jar,lib/httpcore.jar,lib/comm
  ons-logging.jar,lib/commons-codec.jar,lib/xstream.jar,lib/xmlpull.jar,l
@@ -9,7 +9,7 @@ Bundle-ClassPath: .,lib/bonita-client.jar,lib/bonita-common-api-ejb2.jar
  server.jar,lib/theme-builder.jar,lib/forms-server.jar,lib/forms-model.j
  ar,lib/forms-rpc.jar,lib/platform-server-impl.jar,lib/platform-model.ja
  r,lib/console-server-impl.jar,lib/common-server.jar,lib/common-model.ja
- r,lib/console-model.jar,lib/org.bonitasoft.studio.console.libs.jar
+ r,lib/console-model.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Console embedded in Studio
 Bundle-SymbolicName: org.bonitasoft.studio.console.libs;singleton:=true
@@ -47,9 +47,7 @@ Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
  ",lib/common-server.jar;g="org.bonitasoft.console";a="common-server";v=
  "6.0-Beta-SNAPSHOT",lib/common-model.jar;g="org.bonitasoft.console";a="
  common-model";v="6.0-Beta-SNAPSHOT",lib/console-model.jar;g="org.bonita
- soft.console";a="console-model";v="6.0-Beta-SNAPSHOT",lib/org.bonitasof
- t.studio.console.libs.jar;g="org.bonitasoft.studio.plugins";a="org.boni
- tasoft.studio.console.libs";v="6.0-SNAPSHOT"
+ soft.console";a="console-model";v="6.0-Beta-SNAPSHOT"
 Export-Package: org.bonitasoft.console.common.server.preferences.constan
  ts;version="0.0.0",org.bonitasoft.console.common.server.preferences.pro
  perties;version="0.0.0",org.bonitasoft.console.common.server.sso;versio
