@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<history:History xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<history:History xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:history="http://www.eclipse.org/emf/edapt/history/0.3">
   <releases date="2012-12-06T17:03:02.276+0100" label="v59">
     <changes xsi:type="history:CompositeChange">
@@ -1083,10 +1084,10 @@
             featureName="eOpposite" referenceValue="process.ecore#//MessageFlow/target"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//AbstractCatchMessageEvent"
-          referenceName="eStructuralFeatures" element="process.ecore#//AbstractCatchMessageEvent/matcher">
-        <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/matcher"
+          referenceName="eStructuralFeatures" element="#//@releases.2/@changes.21/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.21/@changes.0/@element"
             featureName="name" dataValue="matcher"/>
-        <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/matcher"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.21/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -1140,44 +1141,44 @@
             featureName="eOpposite" referenceValue="process.ecore#//Element/textAnnotationAttachment"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-          element="process.ecore#//EventObject">
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject" featureName="name"
+          element="process.ecore#//Message">
+        <changes xsi:type="history:Set" element="process.ecore#//Message" featureName="name"
             dataValue="EventObject"/>
-        <changes xsi:type="history:Add" element="process.ecore#//EventObject" featureName="eSuperTypes"
+        <changes xsi:type="history:Add" element="process.ecore#//Message" featureName="eSuperTypes"
             referenceValue="process.ecore#//ConnectableElement"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//EventObject" referenceName="eStructuralFeatures"
-          element="process.ecore#//EventObject/throwEvent">
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/throwEvent"
+      <changes xsi:type="history:Create" target="process.ecore#//Message" referenceName="eStructuralFeatures"
+          element="process.ecore#//Message/throwEvent">
+        <changes xsi:type="history:Set" element="process.ecore#//Message/throwEvent"
             featureName="name" dataValue="throwEvent"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/throwEvent"
+        <changes xsi:type="history:Set" element="process.ecore#//Message/throwEvent"
             featureName="lowerBound" dataValue="1" oldDataValue="0"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/throwEvent"
+        <changes xsi:type="history:Set" element="process.ecore#//Message/throwEvent"
             featureName="defaultValueLiteral" dataValue=""/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/throwEvent"
+        <changes xsi:type="history:Set" element="process.ecore#//Message/throwEvent"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//EventObject" referenceName="eStructuralFeatures"
-          element="process.ecore#//EventObject/ttl">
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/ttl"
-            featureName="name" dataValue="ttl"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/ttl"
-            featureName="defaultValueLiteral" dataValue="31104000000"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/ttl"
-            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <changes xsi:type="history:Create" target="process.ecore#//Message" referenceName="eStructuralFeatures"
+          element="process.ecore#//Message/ttl">
+        <changes xsi:type="history:Set" element="process.ecore#//Message/ttl" featureName="name"
+            dataValue="ttl"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Message/ttl" featureName="defaultValueLiteral"
+            dataValue="31104000000"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Message/ttl" featureName="eType"
+            referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//EventObject" referenceName="eStructuralFeatures"
-          element="process.ecore#//EventObject/targetProcessName">
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/targetProcessName"
+      <changes xsi:type="history:Create" target="process.ecore#//Message" referenceName="eStructuralFeatures"
+          element="process.ecore#//Message/targetProcessName">
+        <changes xsi:type="history:Set" element="process.ecore#//Message/targetProcessName"
             featureName="name" dataValue="targetProcessName"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/targetProcessName"
+        <changes xsi:type="history:Set" element="process.ecore#//Message/targetProcessName"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//EventObject" referenceName="eStructuralFeatures"
-          element="process.ecore#//EventObject/targetElementName">
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/targetElementName"
+      <changes xsi:type="history:Create" target="process.ecore#//Message" referenceName="eStructuralFeatures"
+          element="process.ecore#//Message/targetElementName">
+        <changes xsi:type="history:Set" element="process.ecore#//Message/targetElementName"
             featureName="name" dataValue="targetElementName"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/targetElementName"
+        <changes xsi:type="history:Set" element="process.ecore#//Message/targetElementName"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -1499,23 +1500,23 @@
             dataValue="Correlation"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//AbstractCatchMessageEvent"
-          referenceName="eStructuralFeatures" element="process.ecore#//AbstractCatchMessageEvent/correlation">
-        <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/correlation"
+          referenceName="eStructuralFeatures" element="#//@releases.2/@changes.18/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.18/@changes.0/@element"
             featureName="name" dataValue="correlation"/>
-        <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/correlation"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.18/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/correlation"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.18/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Correlation"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//EventObject" referenceName="eStructuralFeatures"
-          element="process.ecore#//EventObject/correlation">
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/correlation"
+      <changes xsi:type="history:Create" target="process.ecore#//Message" referenceName="eStructuralFeatures"
+          element="process.ecore#//Message/correlation">
+        <changes xsi:type="history:Set" element="process.ecore#//Message/correlation"
             featureName="name" dataValue="correlation"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/correlation"
+        <changes xsi:type="history:Set" element="process.ecore#//Message/correlation"
             featureName="lowerBound" dataValue="1" oldDataValue="0"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/correlation"
+        <changes xsi:type="history:Set" element="process.ecore#//Message/correlation"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/correlation"
+        <changes xsi:type="history:Set" element="process.ecore#//Message/correlation"
             featureName="eType" referenceValue="process.ecore#//Correlation"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -1556,28 +1557,28 @@
             featureName="name" dataValue="CorrelationAssociation"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Correlation" referenceName="eStructuralFeatures"
-          element="process.ecore#//Correlation/correlationAssociation">
-        <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
+          element="#//@releases.2/@changes.11/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.11/@changes.0/@element"
             featureName="name" dataValue="correlationAssociation"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.11/@changes.0/@element"
             featureName="upperBound" dataValue="5" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.11/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.11/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//CorrelationAssociation"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//CorrelationAssociation"
-          referenceName="eStructuralFeatures" element="process.ecore#//CorrelationAssociation/correlationKey">
-        <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/correlationKey"
+          referenceName="eStructuralFeatures" element="#//@releases.2/@changes.6/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.6/@changes.0/@element"
             featureName="name" dataValue="correlationKey"/>
-        <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/correlationKey"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.6/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//CorrelationAssociation"
-          referenceName="eStructuralFeatures" element="process.ecore#//CorrelationAssociation/correlationExpression">
-        <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/correlationExpression"
+          referenceName="eStructuralFeatures" element="#//@releases.2/@changes.7/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.7/@changes.0/@element"
             featureName="name" dataValue="correlationExpression"/>
-        <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/correlationExpression"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.7/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eSubpackages"
@@ -6467,7 +6468,7 @@
         <changes xsi:type="history:Set" element="process.ecore#//ThrowMessageEvent/events"
             featureName="containment" dataValue="true" oldDataValue="false"/>
         <changes xsi:type="history:Set" element="process.ecore#//ThrowMessageEvent/events"
-            featureName="eType" referenceValue="process.ecore#//EventObject"/>
+            featureName="eType" referenceValue="process.ecore#//Message"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//ThrowMessageEvent"
           referenceName="eStructuralFeatures" element="process.ecore#//ThrowMessageEvent/outgoingMessages">
@@ -6519,16 +6520,16 @@
         <changes xsi:type="history:Add" element="process.ecore#//IntermediateThrowMessageEvent"
             featureName="eSuperTypes" referenceValue="process.ecore#//ThrowMessageEvent"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//EventObject" referenceName="eStructuralFeatures"
-          element="process.ecore#//EventObject/source">
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/source"
-            featureName="name" dataValue="source"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/source"
-            featureName="eType" referenceValue="process.ecore#//ThrowMessageEvent"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventObject/source"
-            featureName="eOpposite" referenceValue="process.ecore#//ThrowMessageEvent/events"/>
+      <changes xsi:type="history:Create" target="process.ecore#//Message" referenceName="eStructuralFeatures"
+          element="process.ecore#//Message/source">
+        <changes xsi:type="history:Set" element="process.ecore#//Message/source" featureName="name"
+            dataValue="source"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Message/source" featureName="eType"
+            referenceValue="process.ecore#//ThrowMessageEvent"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Message/source" featureName="eOpposite"
+            referenceValue="process.ecore#//ThrowMessageEvent/events"/>
         <changes xsi:type="history:Set" element="process.ecore#//ThrowMessageEvent/events"
-            featureName="eOpposite" referenceValue="process.ecore#//EventObject/source"/>
+            featureName="eOpposite" referenceValue="process.ecore#//Message/source"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
           element="process.ecore#//TimerEvent">
@@ -7350,6 +7351,287 @@
           <referenceValue element="#//@releases.2/@changes.5/@changes.0/@element"/>
         </parameters>
       </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="process.ecore#//CorrelationAssociation"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="correlationKey" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.2/@changes.6/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="process.ecore#//CorrelationAssociation"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="correlationExpression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.2/@changes.7/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//CorrelationAssociation"
+          referenceName="eStructuralFeatures" element="process.ecore#//CorrelationAssociation/correlationKey">
+        <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/correlationKey"
+            featureName="name" dataValue="correlationKey"/>
+        <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/correlationKey"
+            featureName="eType" referenceValue="expression.ecore#//AbstractExpression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//CorrelationAssociation"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>correlationKey</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//AbstractExpression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>false</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//CorrelationAssociation"
+          referenceName="eStructuralFeatures" element="process.ecore#//CorrelationAssociation/correlationExpression">
+        <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/correlationExpression"
+            featureName="name" dataValue="correlationExpression"/>
+        <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/correlationExpression"
+            featureName="eType" referenceValue="expression.ecore#//AbstractExpression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//CorrelationAssociation"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>correlationExpression</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//AbstractExpression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>false</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Create" target="process.ecore#//CorrelationTypeActive"
+          referenceName="eLiterals" element="process.ecore#//CorrelationTypeActive/PREDICATES"/>
+      <changes xsi:type="history:Set" element="process.ecore#//CorrelationTypeActive/PREDICATES"
+          featureName="literal" dataValue=""/>
+      <changes xsi:type="history:Set" element="process.ecore#//CorrelationTypeActive/PREDICATES"
+          featureName="value" dataValue="2" oldDataValue="0"/>
+      <changes xsi:type="history:Set" element="process.ecore#//CorrelationTypeActive/PREDICATES"
+          featureName="literal" dataValue="PREDIC" oldDataValue=""/>
+      <changes xsi:type="history:Set" element="process.ecore#//CorrelationTypeActive/PREDICATES"
+          featureName="literal" dataValue="PREDICATES" oldDataValue="PREDIC"/>
+      <changes xsi:type="history:Set" element="process.ecore#//CorrelationTypeActive/PREDICATES"
+          featureName="name" dataValue="PREDICATES"/>
+      <changes xsi:type="history:Create" target="process.ecore#//CorrelationAssociation"
+          referenceName="eStructuralFeatures" element="process.ecore#//CorrelationAssociation/priority"/>
+      <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/priority"
+          featureName="name" dataValue="priority"/>
+      <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/priority"
+          featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="process.ecore#//Correlation" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="correlationAssociation" upperBound="5"
+            eType="ecore:EClass process.ecore#//CorrelationAssociation" containment="true"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.2/@changes.11/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:Create" target="process.ecore#//Correlation" referenceName="eStructuralFeatures"
+        element="#//@releases.2/@changes.13/@element"/>
+    <changes xsi:type="history:Delete" target="process.ecore#//Correlation" referenceName="eStructuralFeatures">
+      <element xsi:type="ecore:EReference"/>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//Correlation" referenceName="eStructuralFeatures"
+          element="process.ecore#//Correlation/correlationAssociation">
+        <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
+            featureName="name" dataValue="correlationAssociation"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
+            featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
+            featureName="eType" referenceValue="expression.ecore#//TableExpression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//Correlation"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>correlationAssociation</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//TableExpression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>false</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
+          featureName="containment" dataValue="true" oldDataValue="false"/>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Set" element="process.ecore#//Message" featureName="name"
+          dataValue="Message" oldDataValue="EventObject"/>
+      <operation name="rename">
+        <parameters name="element">
+          <referenceValue element="process.ecore#//Message"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>Message</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Remove" element="process.ecore#//Message" featureName="eSuperTypes"
+          referenceValue="process.ecore#//ConnectableElement"/>
+      <changes xsi:type="history:Add" element="process.ecore#//Message" featureName="eSuperTypes"
+          referenceValue="process.ecore#//Element"/>
+      <operation name="generalizeSuperType">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//Message"/>
+        </parameters>
+        <parameters name="superType">
+          <referenceValue element="process.ecore#//ConnectableElement"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="process.ecore#//AbstractCatchMessageEvent"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="correlation" eType="ecore:EClass process.ecore#//Correlation"
+            containment="true"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.2/@changes.18/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//AbstractCatchMessageEvent"
+          referenceName="eStructuralFeatures" element="process.ecore#//AbstractCatchMessageEvent/correlation">
+        <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/correlation"
+            featureName="name" dataValue="correlation"/>
+        <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/correlation"
+            featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+        <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/correlation"
+            featureName="eType" referenceValue="expression.ecore#//TableExpression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//AbstractCatchMessageEvent"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>correlation</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//TableExpression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>false</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/correlation"
+          featureName="lowerBound" dataValue="0" oldDataValue="1"/>
+      <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/correlation"
+          featureName="containment" dataValue="true" oldDataValue="false"/>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="process.ecore#//AbstractCatchMessageEvent"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="matcher" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.2/@changes.21/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:Create" target="process.ecore#//AbstractCatchMessageEvent"
+        referenceName="eStructuralFeatures" element="#//@releases.2/@changes.23/@element"/>
+    <changes xsi:type="history:Delete" target="process.ecore#//AbstractCatchMessageEvent"
+        referenceName="eStructuralFeatures">
+      <element xsi:type="ecore:EReference"/>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//AbstractCatchMessageEvent"
+          referenceName="eStructuralFeatures" element="process.ecore#//AbstractCatchMessageEvent/messageContent">
+        <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/messageContent"
+            featureName="name" dataValue="messageContent"/>
+        <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/messageContent"
+            featureName="eType" referenceValue="expression.ecore#//Operation"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//AbstractCatchMessageEvent"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>messageContent</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Operation"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>false</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/messageContent"
+          featureName="containment" dataValue="true" oldDataValue="false"/>
     </changes>
   </releases>
   <releases/>

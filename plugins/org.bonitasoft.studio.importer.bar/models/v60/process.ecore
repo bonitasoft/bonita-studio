@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="process" nsURI="http://www.bonitasoft.org/ns/studio/process"
-    nsPrefix="process">
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="process"
+    nsURI="http://www.bonitasoft.org/ns/studio/process" nsPrefix="process">
   <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true" interface="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="documentation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral=""/>
@@ -362,15 +363,16 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="event" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="incomingMessag" eType="#//MessageFlow"
         eOpposite="#//MessageFlow/target"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="matcher" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="correlation" eType="#//Correlation"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="correlation" eType="ecore:EClass expression.ecore#//TableExpression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messageContent" eType="ecore:EClass expression.ecore#//Operation"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CatchMessageEvent" abstract="true" interface="true"
       eSuperTypes="#//MessageEvent #//ConnectableElement #//AbstractCatchMessageEvent"/>
   <eClassifiers xsi:type="ecore:EClass" name="ThrowMessageEvent" eSuperTypes="#//MessageEvent">
     <eStructuralFeatures xsi:type="ecore:EReference" name="events" upperBound="-1"
-        eType="#//EventObject" containment="true" eOpposite="#//EventObject/source"/>
+        eType="#//Message" containment="true" eOpposite="#//Message/source"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingMessages" upperBound="-1"
         eType="#//MessageFlow" eOpposite="#//MessageFlow/source"/>
   </eClassifiers>
@@ -386,7 +388,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Element"
         eOpposite="#//Element/textAnnotationAttachment"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EventObject" eSuperTypes="#//ConnectableElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="throwEvent" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//ThrowMessageEvent"
@@ -508,16 +510,18 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="correlationType" lowerBound="1"
         eType="#//CorrelationTypeActive" defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="correlationAssociation"
-        upperBound="5" eType="#//CorrelationAssociation" containment="true"/>
+        lowerBound="1" eType="ecore:EClass expression.ecore#//TableExpression" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="CorrelationTypeActive">
     <eLiterals name="INACTIVE"/>
     <eLiterals name="KEYS" value="1"/>
+    <eLiterals name="PREDICATES" value="2" literal="PREDICATES"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CorrelationAssociation">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="correlationKey" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="correlationExpression"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="correlationKey" eType="ecore:EClass expression.ecore#//AbstractExpression"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="correlationExpression"
+        eType="ecore:EClass expression.ecore#//AbstractExpression"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Actor" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="initiator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
