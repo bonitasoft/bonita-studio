@@ -12,8 +12,8 @@
   	  <module>org.bonitasoft.studio-product</module>
      <module>rootfiles-feature</module>
      <module>studio-feature</module>
-     <module>org.bonitasoft.studio.bos-feature</module>
-     <module>org.bonitasoft.studio.branding</module>
+     <module>studio-bos-specific-feature</module>
+     <module>bos-branding-feature</module>
      <module>platform-specific-feature</module>
      <module>studio-repository</module> 
   </modules>
