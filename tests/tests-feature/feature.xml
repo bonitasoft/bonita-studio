@@ -18,8 +18,6 @@
    </license>
 
    <requires>
-      <import feature="org.bonitasoft.studio.branding"/>
-      <import feature="org.bonitasoft.studio.bos"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.equinox.app"/>
       <import plugin="org.eclipse.osgi"/>
@@ -61,6 +59,8 @@
       <import plugin="org.hamcrest.text" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.views.properties.tabbed" version="3.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.xsd" version="2.6.0" match="greaterOrEqual"/>
+      <import feature="bos-branding-feature" version="1.0.0.qualifier"/>
+      <import feature="studio-bos-specific-feature" version="1.0.0.qualifier"/>
    </requires>
 
    <plugin
