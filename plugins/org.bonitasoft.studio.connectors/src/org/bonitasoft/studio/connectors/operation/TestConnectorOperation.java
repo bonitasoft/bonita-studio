@@ -27,6 +27,7 @@ import java.util.Map;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.TenantAPIAccessor;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
+import org.bonitasoft.engine.bpm.model.ActivationState;
 import org.bonitasoft.engine.bpm.model.ConnectorEvent;
 import org.bonitasoft.engine.bpm.model.ProcessDefinition;
 import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
@@ -135,7 +136,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 
 
         }catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             BonitaStudioLog.error(e);
             throw new InvocationTargetException(e);
         }finally{
@@ -165,7 +166,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
                     domain.getCommandStack().execute(cc);
                     break;
                 }
-            } 
+            }
         }
         //Add jars from managed jars to dependency list of the process used to test the connector
         for(FragmentContainer fc : configuration.getProcessDependencies()){
@@ -173,20 +174,20 @@ public class TestConnectorOperation implements IRunnableWithProgress {
                 final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
                 if(libFolder.exists()){
                     try {
-						for(IResource f : libFolder.members()){
-						    if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar")){
-						        Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
-						        fragment.setExported(true);
-						        fragment.setKey(f.getName());
-						        fragment.setValue(f.getName());
-						        fragment.setType(FragmentTypes.JAR);
-						        AdapterFactoryEditingDomain domain = createEditingDomain();
-						        domain.getCommandStack().execute(AddCommand.create(domain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, fragment));
-						    }
-						}
-					} catch (CoreException e) {
-						BonitaStudioLog.error(e);
-					}
+                        for(IResource f : libFolder.members()){
+                            if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar")){
+                                Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
+                                fragment.setExported(true);
+                                fragment.setKey(f.getName());
+                                fragment.setValue(f.getName());
+                                fragment.setType(FragmentTypes.JAR);
+                                AdapterFactoryEditingDomain domain = createEditingDomain();
+                                domain.getCommandStack().execute(AddCommand.create(domain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, fragment));
+                            }
+                        }
+                    } catch (CoreException e) {
+                        BonitaStudioLog.error(e);
+                    }
                 }
             }
         }
@@ -246,8 +247,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             for(ProcessDeploymentInfo info : processes){
                 if(info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())){
                     try{
-                        String state ="enabled";
-                        if (state.equals(processApi.getProcessDeploymentInfo(info.getProcessId()).getState())){
+                        if (processApi.getProcessDeploymentInfo(info.getProcessId()).getActivationState() == ActivationState.ENABLED){
                             processApi.disableProcess(info.getProcessId()) ;
                         }
                     }catch (ProcessDisablementException e) {
