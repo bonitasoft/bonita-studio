@@ -1,8 +1,0 @@
-Builder for test feature:
-Invoke it with
-> ant -Declipse.base.platform=/location/of/the/eclipse/base/to/use
-      -Dbos.path=/path/to/BonitaStudio/dir
-      -DbuildDirectory=/target/folder/for/the/test/feature
-      -Dbos.version=bos version (5.2.3, 5.3, I20101020-2039 ...)
-      -DsvnTag=tag to use on SVN (trunk, tags/bonita-studio-5.3, branches/bonita-studio-5.3.1 ...)
-      
