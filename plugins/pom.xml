@@ -44,7 +44,7 @@
 		<module>org.bonitasoft.studio.exporter</module>
 		<module>org.bonitasoft.studio.expression.editor</module>
 		<module>org.bonitasoft.studio.groovy</module>
-		<module>org.bonitasoft.studio.groovy.ui.e37</module>
+		<module>org.bonitasoft.studio.groovy.ui</module>
 		<module>org.bonitasoft.studio.importer</module>
 		<module>org.bonitasoft.studio.importer.bar</module>
 		<module>org.bonitasoft.studio.importer.bos</module>
