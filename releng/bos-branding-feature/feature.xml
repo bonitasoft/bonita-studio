@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.bonitasoft.studio.branding"
+      id="bos-branding-feature"
       label="Bonitasoft Branding Feature"
       version="1.0.0.qualifier"
       provider-name="BonitaSoft S.A.">

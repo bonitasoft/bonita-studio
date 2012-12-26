@@ -4,7 +4,7 @@
 <product name="Bonita Studio" uid="org.bonitasoft.studio.product" id="org.bonitasoft.studio.product" application="org.bonitasoft.studio.application.application" version="6.0" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="about.bmp"/>
+      <image path="icons/about.bmp"/>
       <text>
          Bonita Studio
 Copyright (c) BonitaSoft S.A., 2009-2013
@@ -33,7 +33,6 @@ This software is licensed under GPL v2.
       startupMessageRect="223,190,250,25"
       startupForegroundColor="FFFCFC" />
    <launcher name="BonitaStudio">
-      <linux icon="icons/bonitasoft-icon-64-64-transparent.xpm"/>
       <macosx icon="icons/bonitasoft-icon-128-128-transparent.icns"/>
       <solaris/>
       <win useIco="false">
@@ -79,7 +78,7 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <feature id="platform-specific-feature" version="1.0.0.qualifier"/>
       <feature id="org.eclipse.rcp"/>
       <feature id="org.bonitasoft.studio.bos" version="1.0.0.qualifier"/>
-      <feature id="org.bonitasoft.studio.branding" version="1.0.0.qualifier"/>
+      <feature id="bos-branding-feature" version="1.0.0.qualifier"/>
       <feature id="rootfiles-feature" version="1.0.0.qualifier"/>
    </features>
 
