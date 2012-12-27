@@ -5,7 +5,7 @@
          point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
             class="org.bonitasoft.studio.model.edit.custom.process.CustomProcessItemProviderAdapterFactory"
-            uri="http://www.bonitasoft.org/ns/studio/process/"
+            uri="http://www.bonitasoft.org/ns/studio/process"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider
@@ -16,7 +16,7 @@
    </extension>
      <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <factory
-            uri="http://www.bonitasoft.org/ns/studio/process/decision/"
+            uri="http://www.bonitasoft.org/ns/studio/process/decision"
             class="org.bonitasoft.studio.model.edit.custom.decision.CustomDecisionItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
