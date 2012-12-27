@@ -24,7 +24,10 @@ import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.extension.IConfigurationSynchronizer;
+import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.bonitasoft.studio.configuration.ui.wizard.page.ApplicationDependenciesConfigurationWizardPage;
+import org.bonitasoft.studio.configuration.ui.wizard.page.ProcessDependenciesConfigurationWizardPage;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
@@ -61,20 +64,47 @@ public class ConfigurationSynchronizer {
     private AdapterFactoryEditingDomain editingDomain;
     private ComposedAdapterFactory adapterFactory;
     private final boolean synchronizeLocalConfiguraiton;
-    private final ArrayList<IConfigurationSynchronizer> synchronizers;
+    private static ArrayList<IConfigurationSynchronizer> synchronizers;
+    private static ArrayList<IProcessConfigurationWizardPage> wizardPages;
+    private static final String CONFIGURATION_WIZARD_PAGE_ID = "org.bonitasoft.studio.configuration.wizardPage";
+    private static final String CLASS_ATTRIBUTE = "class";
 
     public ConfigurationSynchronizer(AbstractProcess process, Configuration configuration){
         this.process = process ;
         this.configuration = configuration ;
         synchronizeLocalConfiguraiton= ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON.equals(configuration.getName()) || configuration.getName() == null ;
         editingDomain = (AdapterFactoryEditingDomain) TransactionUtil.getEditingDomain(process) ;
-        synchronizers = new ArrayList<IConfigurationSynchronizer>() ;
-        for(IConfigurationElement elem :  BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.configuration.synchronizer")){
-            try {
-                synchronizers.add((IConfigurationSynchronizer) elem.createExecutableExtension("class"));
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e) ;
+        initializaSynchronizers();
+        initializaWizardPages();
+    }
+
+    protected void initializaSynchronizers() {
+        if(synchronizers == null){
+            synchronizers = new ArrayList<IConfigurationSynchronizer>() ;
+            for(IConfigurationElement elem :  BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.configuration.synchronizer")){
+                try {
+                    synchronizers.add((IConfigurationSynchronizer) elem.createExecutableExtension("class"));
+                } catch (CoreException e) {
+                    BonitaStudioLog.error(e) ;
+                }
             }
+        }
+    }
+
+    protected void initializaWizardPages() {
+        if(wizardPages == null){
+            wizardPages = new ArrayList<IProcessConfigurationWizardPage>();
+            IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(CONFIGURATION_WIZARD_PAGE_ID);
+            for(IConfigurationElement e :elems){
+                try {
+                    IProcessConfigurationWizardPage page =  (IProcessConfigurationWizardPage) e.createExecutableExtension(CLASS_ATTRIBUTE) ;
+                    wizardPages.add(page);
+                } catch (Exception e1){
+                    BonitaStudioLog.error(e1) ;
+                }
+            }
+            wizardPages.add(new ProcessDependenciesConfigurationWizardPage()) ;
+            wizardPages.add(new ApplicationDependenciesConfigurationWizardPage()) ;
         }
     }
 
@@ -172,7 +202,19 @@ public class ConfigurationSynchronizer {
     }
 
 
-
+    /**
+     * 
+     * @param configuration
+     * @return true if the configuration is runnable
+     */
+    public boolean isConfigurationValid(){
+        for(IProcessConfigurationWizardPage page : wizardPages){
+            if(page.isConfigurationPageValid(configuration) != null){
+                return false;
+            }
+        }
+        return true;
+    }
 
 
     public Configuration getConfiguration() {
