@@ -769,16 +769,16 @@
             </constraint>
          </constraints>
          <package
-               namespaceUri="http://www.bonitasoft.org/ns/studio/process/">
+               namespaceUri="http://www.bonitasoft.org/ns/studio/process">
          </package>
          <package
-               namespaceUri="http://www.bonitasoft.org/ns/studio/form/">
+               namespaceUri="http://www.bonitasoft.org/ns/studio/form">
          </package>
          <package
-               namespaceUri="http://www.bonitasoft.org/ns/studio/kpi/">
+               namespaceUri="http://www.bonitasoft.org/ns/studio/kpi">
          </package>
          <package
-               namespaceUri="http://www.bonitasoft.org/ns/studio/process/simulation/">
+               namespaceUri="http://www.bonitasoft.org/ns/studio/process/simulation">
          </package>
          <package
                namespaceUri="http://www.eclipse.org/gmf/runtime/1.0.2/notation">
@@ -931,7 +931,7 @@
             </constraint>
          </constraints>
          <package
-               namespaceUri="http://www.bonitasoft.org/ns/studio/expression/">
+               namespaceUri="http://www.bonitasoft.org/ns/studio/expression">
          </package>
       </constraintProvider>
    </extension>
