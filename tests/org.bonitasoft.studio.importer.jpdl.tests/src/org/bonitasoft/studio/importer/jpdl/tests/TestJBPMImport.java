@@ -20,8 +20,6 @@ package org.bonitasoft.studio.importer.jpdl.tests;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -30,7 +28,6 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
-import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.ImporterRegistry;
 import org.bonitasoft.studio.importer.jpdl.JBPM3ImportFactory;
@@ -50,8 +47,6 @@ import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.StartEvent;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XORGateway;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -89,7 +84,6 @@ public class TestJBPMImport extends TestCase {
         Activity mailNode = findActivity(mainProcess, "mail-node1");
         assertEquals("No mail connector found", "email", mailNode.getConnectors().get(0).getDefinitionId());
 
-        Map<String,Object> parameters = new HashMap<String, Object>();
         final AbstractProcess process = (AbstractProcess) mainProcess.getElements().get(0);
         final ProcessConfigurationRepositoryStore store = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
         final String fileName = ModelHelper.getEObjectID(process)+".conf";
@@ -99,14 +93,10 @@ public class TestJBPMImport extends TestCase {
             fileStore.save(ConfigurationFactory.eINSTANCE.createConfiguration());
         }
         final Configuration configuration = fileStore.getContent();
-        new ConfigurationSynchronizer(process,configuration).synchronize();
+        final ConfigurationSynchronizer configurationSynchronizer = new ConfigurationSynchronizer(process,configuration);
+        configurationSynchronizer.synchronize();
+        assertFalse("Configuration should not be valid",configurationSynchronizer.isConfigurationValid());
 
-        parameters.put(RunProcessCommand.PROCESS, process);
-        ExecutionEvent event = new ExecutionEvent(parameters,null,null);
-
-
-        IStatus res = (IStatus) new RunProcessCommand(true).execute(event);
-        assertTrue("Run imported jpdl process should work",res.isOK());
     }
 
     public void testWebSale() throws Exception{
