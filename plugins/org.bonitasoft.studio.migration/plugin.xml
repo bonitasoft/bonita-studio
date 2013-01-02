@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.bonitasoft.studio.edapt.migrators" name="org.bonitasoft.studio.edapt.migrators" schema="schema/org.bonitasoft.studio.edapt.migrators.exsd"/>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            class="org.bonitasoft.studio.migration.model.report.MigrationReportPackage"
+            genModel="model/report.genmodel"
+            uri="http://www.bonitasoft.org/ns/studio/migration/report">
+      </package>
+   </extension>
+
+</plugin>

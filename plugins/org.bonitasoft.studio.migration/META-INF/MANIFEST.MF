@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Migration Plugin
-Bundle-SymbolicName: org.bonitasoft.studio.migration
+Bundle-SymbolicName: org.bonitasoft.studio.migration;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.migration.MigrationPlugin
 Bundle-Vendor: BonitaSoft S.A.
@@ -9,7 +9,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.bonitasoft.studio.common;bundle-version="1.0.0",
  org.eclipse.emf.edapt.migration;bundle-version="0.3.0",
- org.eclipse.ui
+ org.eclipse.ui,
+ org.eclipse.emf.edapt.history;bundle-version="0.3.0",
+ org.eclipse.emf.transaction,
+ org.eclipse.gmf.runtime.emf.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.migration
+Export-Package: org.bonitasoft.studio.migration,
+ org.bonitasoft.studio.migration.migrator,
+ org.bonitasoft.studio.migration.model.report
