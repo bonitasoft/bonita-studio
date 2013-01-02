@@ -19,6 +19,8 @@ package org.bonitasoft.studio.importer.bar.custom.migration;
 import java.util.List;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
+import org.bonitasoft.studio.migration.migrator.IReportMigration;
+import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
@@ -30,7 +32,7 @@ import org.eclipse.emf.edapt.migration.Model;
  * @author Romain Bioteau
  *
  */
-public class DatatypesMigration extends CustomMigration {
+public class DatatypesMigration extends ReportCustomMigration {
 
     @Override
     public void migrateBefore(Model model, Metamodel metamodel) throws MigrationException {
@@ -52,6 +54,8 @@ public class DatatypesMigration extends CustomMigration {
         }
     }
 
+    
+    
     @Override
     public void migrateAfter(Model model, Metamodel metamodel) throws MigrationException {
         Instance doubleDataType = null;

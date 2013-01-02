@@ -36,6 +36,8 @@ import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
 import org.bonitasoft.studio.importer.bar.exception.IncompatibleVersionException;
 import org.bonitasoft.studio.importer.bar.preferences.BarImporterPreferenceConstants;
 import org.bonitasoft.studio.importer.bar.ui.MigrationWarningWizard;
+import org.bonitasoft.studio.migration.migrator.BOSMigrator;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -64,12 +66,12 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
     private static final String SUPPORTED_VERSION = "5.9";
     private static final String MIGRATION_HISTORY_PATH = "models/v60/process.history";
     private File migratedProc;
-    private Migrator migrator;
+    private BOSMigrator migrator;
 
     public EdaptBarToProcProcessor(){
         final URI migratorURI = URI.createPlatformPluginURI("/" + BarImporterPlugin.getDefault().getBundle().getSymbolicName() + "/" + MIGRATION_HISTORY_PATH, true);
         try {
-            migrator =  new Migrator(migratorURI, new BundleClassLoader(BarImporterPlugin.getDefault().getBundle()));
+            migrator =  new BOSMigrator(migratorURI, new BundleClassLoader(BarImporterPlugin.getDefault().getBundle()));
         } catch (MigrationException e) {
             BonitaStudioLog.error(e,BarImporterPlugin.PLUGIN_ID);
         }
@@ -103,7 +105,12 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 
         if(resource.getContents().size() > 1){
             final EObject mainProcess = resource.getContents().get(0);
-            Object sourceVersion = ((AnyType) mainProcess).getAnyAttribute().getValue(3);
+            Object sourceVersion = null;
+            if(mainProcess instanceof AnyType){
+            	sourceVersion = ((AnyType) mainProcess).getAnyAttribute().getValue(3);
+            }else if( mainProcess instanceof MainProcess){
+            	sourceVersion = ((MainProcess)mainProcess).getBonitaModelVersion();
+            }
             if(sourceVersion == null || !sourceVersion.toString().equals(SUPPORTED_VERSION)){
                 throw new IncompatibleVersionException((String) sourceVersion,SUPPORTED_VERSION);
             }
@@ -170,7 +177,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
     }
 
 
-    private void performMigration(final Migrator migrator,final URI resourceURI, final Release release,IProgressMonitor monitor) throws MigrationException {
+    private void performMigration(final BOSMigrator migrator,final URI resourceURI, final Release release,IProgressMonitor monitor) throws MigrationException {
         migrator.setLevel(ValidationLevel.RELEASE);
         migrator.migrateAndSave(
                 Collections.singletonList(resourceURI), release,
