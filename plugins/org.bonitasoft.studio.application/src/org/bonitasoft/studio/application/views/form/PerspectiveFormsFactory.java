@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2010-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,17 +45,16 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
         //left.addPlaceholder("ID of the migration view");
         
         // Bottom left.
-        final float ratioForBottomPart = (float) (400. / 650.);
 		IFolderLayout bottomLeft = layout.createFolder(
-                "bottomLeft", IPageLayout.BOTTOM, ratioForBottomPart,//$NON-NLS-1$
-                "left");//$NON-NLS-1$
+                "bottomLeft", IPageLayout.BOTTOM, (float) (400. / 650.),//$NON-NLS-1$
+                editorArea);//$NON-NLS-1$
         bottomLeft.addView("org.bonitasoft.studio.views.overview");
         bottomLeft.setProperty(VIEW_KIND, BONITA_OVERVIEW);
-
+        
         // Bottom right.
 		IFolderLayout bottomRight = layout.createFolder(
-                "bottomRight", IPageLayout.BOTTOM, ratioForBottomPart,//$NON-NLS-1$
-                editorArea);
+                "bottomRight", IPageLayout.RIGHT, (float) 0.33,//$NON-NLS-1$
+                "bottomLeft");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.form.general");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.form.appearance");
 
