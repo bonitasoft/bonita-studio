@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2010-2012 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,15 @@
  */
 package org.bonitasoft.studio.application.actions;
 
-import java.lang.reflect.Method;
-
 import org.bonitasoft.studio.application.actions.coolbar.NormalCoolBarHandler;
 import org.bonitasoft.studio.application.actions.coolbar.SmallCoolBarHandler;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.draw2d.FigureCanvas;
-import org.eclipse.gef.ui.palette.FlyoutPaletteComposite;
-import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -49,22 +42,6 @@ public class ResetPerspectiveCommand extends AbstractHandler implements IHandler
 		}else if(store.getString(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE).equals(BonitaCoolBarPreferenceConstant.NORMAL)){
 			new NormalCoolBarHandler().execute(null) ;
 		}
-		IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-		if(part instanceof DiagramEditor){
-			FlyoutPaletteComposite paletteComposite = (FlyoutPaletteComposite) ((FigureCanvas) ((DiagramEditor)part).getDiagramGraphicalViewer().getControl()).getParent().getParent() ;
-
-			for(Method m : FlyoutPaletteComposite.class.getDeclaredMethods()){
-				if(m.getName().equals("setState")){
-					m.setAccessible(true) ;
-					try {
-						m.invoke(paletteComposite, new Integer(4)) ;
-					} catch (Exception e) {
-						BonitaStudioLog.error(e) ;
-					}
-				}
-			}
-		}
-	
 		return null;
 	}
 

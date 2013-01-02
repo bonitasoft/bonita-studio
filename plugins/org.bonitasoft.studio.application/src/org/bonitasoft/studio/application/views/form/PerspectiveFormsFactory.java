@@ -20,6 +20,7 @@ package org.bonitasoft.studio.application.views.form;
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
+import org.eclipse.gef.ui.views.palette.PaletteView;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -35,16 +36,26 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 		 // Editors are placed for free.
         String editorArea = layout.getEditorArea();
         
+        IFolderLayout left = layout.createFolder(
+        		"left",
+        		IPageLayout.LEFT,
+        		(float) 0.15,
+        		editorArea);
+        left.addView(PaletteView.ID);
+        //left.addPlaceholder("ID of the migration view");
+        
         // Bottom left.
-        IFolderLayout bottomLeft = layout.createFolder(
-                "bottomLeft", IPageLayout.BOTTOM, (float) (400. / 650.),//$NON-NLS-1$
-                editorArea);//$NON-NLS-1$
+        final float ratioForBottomPart = (float) (400. / 650.);
+		IFolderLayout bottomLeft = layout.createFolder(
+                "bottomLeft", IPageLayout.BOTTOM, ratioForBottomPart,//$NON-NLS-1$
+                "left");//$NON-NLS-1$
         bottomLeft.addView("org.bonitasoft.studio.views.overview");
         bottomLeft.setProperty(VIEW_KIND, BONITA_OVERVIEW);
+
         // Bottom right.
 		IFolderLayout bottomRight = layout.createFolder(
-                "bottomRight", IPageLayout.RIGHT, (float) 0.33,//$NON-NLS-1$
-                "bottomLeft");
+                "bottomRight", IPageLayout.BOTTOM, ratioForBottomPart,//$NON-NLS-1$
+                editorArea);
 		bottomRight.addView("org.bonitasoft.studio.views.properties.form.general");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.form.appearance");
 
