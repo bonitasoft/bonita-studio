@@ -15,7 +15,7 @@
       <view
             allowMultiple="false"
             category="org.bonitasoft.studio.application.bonita"
-            class="org.bonitasoft.studio.migration.MigrationStatusView"
+            class="org.bonitasoft.studio.migration.ui.view.MigrationStatusView"
             id="org.bonitasoft.studio.migration.view"
             name="%importStatusReport"
             restorable="true">

@@ -64,7 +64,6 @@ public class StringToExpressionConverter {
 		}else{
 			
 		}
-		
 	}
 
 	private boolean isAGroovyString(String stringToParse) {

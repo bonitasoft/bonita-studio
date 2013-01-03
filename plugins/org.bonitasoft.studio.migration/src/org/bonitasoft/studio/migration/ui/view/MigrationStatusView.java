@@ -15,8 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.migration;
+package org.bonitasoft.studio.migration.ui.view;
 
+import org.bonitasoft.studio.migration.MigrationPlugin;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -114,7 +115,7 @@ public class MigrationStatusView extends ViewPart {
 
 	private void createTopComposite(Composite mainComposite) {
 		Composite topComposite = new Composite(mainComposite, SWT.NONE);
-		topComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+		topComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(5, 5, 5, 5).create());
 		topComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 		
 		createFilterComposite(topComposite);
@@ -122,7 +123,7 @@ public class MigrationStatusView extends ViewPart {
 	}
 
 	private void createFilterComposite(Composite topComposite) {
-		Text findText = new Text(topComposite, SWT.BORDER);
+		Text findText = new Text(topComposite, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL | SWT.ICON_SEARCH);
 		findText.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.RIGHT, SWT.CENTER).hint(100, SWT.DEFAULT).create());
 		findText.setMessage("Find...");
 		
