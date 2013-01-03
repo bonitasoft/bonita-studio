@@ -8,12 +8,7 @@
 	<version>6.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<properties>
-		<!-- Properties to enable jacoco code coverage analysis -->
-		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-		<sonar.jacoco.reportPath>${basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
-	</properties>
+	
 
 	<modules>
 		<module>org.eclipse.swtbot.finder.nebula.gallery</module>
@@ -56,26 +51,7 @@
 	
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.5.8.201207111220</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<configuration>
-							<!-- Where to put jacoco coverage report -->
-							<destFile>${sonar.jacoco.reportPath}</destFile>
-							<includes>
-								<include>org.bonitasoft.studio.*</include>
-							</includes>
-							<append>true</append>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+
 		</plugins>
 	</build>
 	<parent>
