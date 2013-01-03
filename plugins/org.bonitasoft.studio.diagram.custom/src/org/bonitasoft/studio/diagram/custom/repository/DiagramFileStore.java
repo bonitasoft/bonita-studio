@@ -42,9 +42,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.edit.command.RemoveCommand;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -179,7 +176,6 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
     @Override
     protected IWorkbenchPart doOpen() {
         final MainProcess newProcess = getContent() ;
-
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         for (IEditorReference editor : activePage.getEditorReferences()) {
             IEditorPart simpleEditor = editor.getEditor(true);
@@ -194,10 +190,14 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                 }
 
                 if(oldProcess != null){
-                    if (oldProcess.getName().equals(newProcess.getName()) &&
-                            oldProcess.getVersion().equals(newProcess.getVersion())) {
-                        activePage.closeEditor(diagramEditor, false);
-                    }
+                	if(newProcess != null){
+                		if (oldProcess.getName().equals(newProcess.getName()) &&
+                				oldProcess.getVersion().equals(newProcess.getVersion())) {
+                			activePage.closeEditor(diagramEditor, false);
+                		}
+                	} else {
+                		BonitaStudioLog.log("The new Process is null. Name of currentDiagramFileStore is: " +getName());
+                	}
                 }
             }
         }
