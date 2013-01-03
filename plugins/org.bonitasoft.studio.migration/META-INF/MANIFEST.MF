@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.bonitasoft.studio.migration;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.migration.MigrationPlugin
 Bundle-Vendor: BonitaSoft S.A.
+Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.bonitasoft.studio.common;bundle-version="1.0.0",

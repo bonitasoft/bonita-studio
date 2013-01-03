@@ -30,6 +30,9 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public class StringToExpressionConverter {
 
+	private static final String GROOVY_SUFFIX = "}";
+	private static final String GROOVY_PREFIX = "${";
+	
 	private Model model;
 
 	public StringToExpressionConverter(Model model) {
@@ -45,7 +48,7 @@ public class StringToExpressionConverter {
 			return createExpressionInstance(model,null, null, returnType, ExpressionConstants.CONSTANT_TYPE, false);
 		}
 		
-
+		guessExpressionType(stringToParse);
 		final List<Instance> data = model.getAllInstances("process.Data");
 		
 		
@@ -54,6 +57,19 @@ public class StringToExpressionConverter {
 	}
 
 
+
+	private void guessExpressionType(String stringToParse) {
+		if(isAGroovyString(stringToParse)){
+			
+		}else{
+			
+		}
+		
+	}
+
+	private boolean isAGroovyString(String stringToParse) {
+		return stringToParse.startsWith(GROOVY_PREFIX) && stringToParse.endsWith(GROOVY_SUFFIX);
+	}
 
 	public static Instance createExpressionInstance(Model model,String name, String content,String returnType,String expresisonType,boolean fixedReturnType){
 		final Instance instance = model.newInstance("expression.Expression");
