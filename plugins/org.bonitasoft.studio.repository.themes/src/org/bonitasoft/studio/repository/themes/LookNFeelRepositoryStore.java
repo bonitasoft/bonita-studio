@@ -315,8 +315,10 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
             } catch (MalformedURLException e) {
                 //            	ApplicationLookNFeelFileStore fileStore =  new ApplicationLookNFeelFileStore(fileName, this) ;
                 //            	fileStore.save(null);
+            	BonitaStudioLog.error(e) ;
                 return null;
             }catch (Exception e1) {
+            	BonitaStudioLog.error("Exception when searching for file with name: "+ fileName, "org.bonitasoft.studio.repository.themes");
                 BonitaStudioLog.error(e1) ;
                 return null ;
             }
