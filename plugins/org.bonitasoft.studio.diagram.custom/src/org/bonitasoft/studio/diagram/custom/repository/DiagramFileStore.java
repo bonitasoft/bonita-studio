@@ -19,6 +19,7 @@ package org.bonitasoft.studio.diagram.custom.repository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -41,7 +42,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -258,6 +264,30 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 		return null;
     }
     
+    /**
+     * 
+     * Remove the migration report from the proc file.
+     * @param save , Whether we save the resoruce after deletion or not
+     * @throws IOException 
+     */
+    public void clearMigrationReport(boolean save) throws IOException{
+    	EObject toRemove = null;
+	    final Resource emfResource = getEMFResource();
+		final Report report = getMigrationReport(); 
+		if(report != null){
+			final TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(toRemove);
+			if(domain != null){
+				domain.getCommandStack().execute(new RecordingCommand(domain) {
+				    protected void doExecute() {
+				    	emfResource.getContents().remove(report);
+				    }
+				});
+				if(save){
+					emfResource.save(Collections.emptyMap());
+				}
+			}
+		}
+    }
 
 
 }
