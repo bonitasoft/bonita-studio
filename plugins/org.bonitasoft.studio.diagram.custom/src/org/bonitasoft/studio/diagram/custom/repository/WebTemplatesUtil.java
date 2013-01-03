@@ -205,21 +205,26 @@ public class WebTemplatesUtil {
 
         Collection<ResourceFile> filesToAdd = new ArrayList<ResourceFile>();
         Collection<ResourceFolder> foldersToAdd = new ArrayList<ResourceFolder>();
-        for (File resource : theme.getResourcesApplicationFolder().listFiles()) {
-            if(!resource.getName().equals(".svn")){
-                String res = artifact.addResource(resource, monitor);
-                if(res != null && res.length()>0){
-                    if(resource.isDirectory()){
-                        ResourceFolder af = ProcessFactory.eINSTANCE.createResourceFolder();
-                        af.setPath(res);
-                        foldersToAdd.add(af);
-                    }else{
-                        ResourceFile af = ProcessFactory.eINSTANCE.createResourceFile();
-                        af.setPath(res);
-                        filesToAdd.add(af);
-                    }
-                }
-            }
+        final File themeResourcesApplicationFolder = theme.getResourcesApplicationFolder();
+        if(themeResourcesApplicationFolder != null){
+        	for (File resource : themeResourcesApplicationFolder.listFiles()) {
+        		if(!resource.getName().equals(".svn")){
+        			String res = artifact.addResource(resource, monitor);
+        			if(res != null && res.length()>0){
+        				if(resource.isDirectory()){
+        					ResourceFolder af = ProcessFactory.eINSTANCE.createResourceFolder();
+        					af.setPath(res);
+        					foldersToAdd.add(af);
+        				}else{
+        					ResourceFile af = ProcessFactory.eINSTANCE.createResourceFile();
+        					af.setPath(res);
+        					filesToAdd.add(af);
+        				}
+        			}
+        		}
+        	}
+        } else {
+        	BonitaStudioLog.log("The resource Application folder of the theme was not found. (theme: "+ theme.getDisplayName() + ")");
         }
         if(filesToAdd.size()>0) {
             cc.append(new AddCommand(editingDomain, process,ProcessPackage.Literals.RESOURCE_CONTAINER__RESOURCE_FILES, filesToAdd));
