@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
+import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -243,7 +244,20 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         return getParentStore().getResource().getFile(getName());
     }
 
-
+    
+    /**
+     * 
+     * @return the migration report if exists otherwise returns null
+     */
+    public Report getMigrationReport(){
+	    for(EObject root : getEMFResource().getContents()){
+	    	if(root instanceof Report){
+	    		return (Report) root;
+	    	}
+	    }
+		return null;
+    }
+    
 
 
 }
