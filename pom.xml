@@ -16,6 +16,15 @@
 		<connector.version>6.0.Beta.1-SNAPSHOT</connector.version>
 		<simulation.version>6.0-Alpha</simulation.version>
 		<filters.version>6.0.Beta.2-SNAPSHOT</filters.version>
+		<jacoco.file>${user.home}/jacoco-studio.exec</jacoco.file>
+		<!-- Sonar -->
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<!-- The destination file for the code coverage report has to be set to 
+			the same value in the parent pom and in each module pom. Then JaCoCo will 
+			add up information in the same report, so that, it will give the cross-module 
+			code coverage. -->
+		<sonar.jacoco.reportPath>${jacoco.file}</sonar.jacoco.reportPath>
 	</properties>
 
 	<modules>
@@ -60,6 +69,11 @@
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>exec-maven-plugin</artifactId>
 					<version>1.2.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.6.0.201210061924</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -120,7 +134,24 @@
 					</target>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>org.bonitasoft.studio.*</include>
+					</includes>
+					<destFile>${jacoco.file}</destFile>
+				</configuration>
+				<executions>
+					<execution>
+						<id>pre-test</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
 		</plugins>
 	</build>
