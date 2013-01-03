@@ -21,7 +21,9 @@ import java.util.List;
 
 import org.bonitasoft.studio.migration.model.report.Change;
 import org.bonitasoft.studio.migration.model.report.MigrationReportFactory;
+import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.eclipse.emf.edapt.migration.CustomMigration;
+import org.eclipse.emf.edapt.migration.Model;
 
 /**
  * @author Romain Bioteau
@@ -30,7 +32,6 @@ import org.eclipse.emf.edapt.migration.CustomMigration;
 public abstract class ReportCustomMigration extends CustomMigration implements IReportMigration {
 
 	private List<Change> changes = new ArrayList<Change>();
-	
 	
 	public Change addReportChange(String elementUUID,String description,String propertyName, int status){
 		Change change = MigrationReportFactory.eINSTANCE.createChange();
@@ -44,5 +45,9 @@ public abstract class ReportCustomMigration extends CustomMigration implements I
 	@Override
 	public List<Change> getChanges() {
 		return changes;
+	}
+	
+	public StringToExpressionConverter getConverter(Model model) {
+		return new StringToExpressionConverter(model);
 	}
 }

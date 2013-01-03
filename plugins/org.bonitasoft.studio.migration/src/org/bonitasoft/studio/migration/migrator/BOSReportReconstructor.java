@@ -54,8 +54,8 @@ public class BOSReportReconstructor extends MigrationReconstructor {
 					try {
 						customMigration.migrateAfter(repository.getModel(),
 								repository.getMetamodel());
-						if(customMigration instanceof ReportCustomMigration){
-							report.getChanges().addAll(((ReportCustomMigration) customMigration).getChanges());
+						if(customMigration instanceof IReportMigration){
+							report.getChanges().addAll(((IReportMigration) customMigration).getChanges());
 						}
 						monitor.worked(1);
 						checkConformanceIfMoreThan(ValidationLevel.CUSTOM_MIGRATION);
