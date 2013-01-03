@@ -26,11 +26,6 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.bonitasoft.studio.common.perspectives.PerspectiveProcessFactory"
-            id="org.bonitasoft.studio.perspective.process"
-            name="%processPerspective">
-      </perspective>
-      <perspective
             class="org.bonitasoft.studio.common.perspectives.PerspectiveJavaFactory"
             id="org.bonitasoft.studio.perspective.java"
             name="Java perspective">

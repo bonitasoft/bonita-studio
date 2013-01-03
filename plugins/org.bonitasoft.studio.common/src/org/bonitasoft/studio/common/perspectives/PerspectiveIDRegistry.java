@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2010-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +19,13 @@ package org.bonitasoft.studio.common.perspectives;
 
 
 
+
 /**
  * @author Aurelien Pupier
  */
 public class PerspectiveIDRegistry {
 	
-	public static String PROCESS_PERSPECTIVE_ID = PerspectiveProcessFactory.PROCESS_PERSPECTIVE_ID;
+	public static String PROCESS_PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.process";
 	public static String JAVA_PERSPECTIVE_ID = PerspectiveJavaFactory.JAVA_PERSPECTIVE_ID;
 	
 }
