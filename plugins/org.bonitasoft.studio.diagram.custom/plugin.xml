@@ -647,5 +647,17 @@
             providerClass="org.bonitasoft.studio.diagram.custom.repository.DiagramResourceProvider">
       </bosArchiveProvider>
    </extension>
-
+<extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.bonitasoft.studio.diagram.custom.perspective.PerspectiveProcessFactory"
+            id="org.bonitasoft.studio.perspective.process"
+            name="%processPerspective">
+      </perspective>
+       <perspective
+            class="org.bonitasoft.studio.diagram.custom.perspective.PerspectiveMigrationProcessFactory"
+            id="org.bonitasoft.studio.migration.perspective.process"
+            name="Migration Process">
+      </perspective>
+      </extension>
 </plugin>

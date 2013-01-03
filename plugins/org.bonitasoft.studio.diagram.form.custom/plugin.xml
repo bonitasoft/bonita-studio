@@ -2,6 +2,19 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.bonitasoft.studio.diagram.form.custom.perspective.PerspectiveFormsFactory"
+            id="org.bonitasoft.studio.common.perspective.form"
+            name="Form perspective">
+      </perspective>
+      <perspective
+            class="org.bonitasoft.studio.diagram.form.custom.perspective.PerspectiveMigrationFormsFactory"
+            id="org.bonitasoft.studio.common.perspective.form.migration"
+            name="Migration Form Perspective">
+      </perspective>
+   </extension>
+   <extension
          point="org.eclipse.gmf.runtime.diagram.ui.layoutProviders">
       <layoutProvider
             class="org.bonitasoft.studio.diagram.form.custom.providers.FormLayoutProvider">

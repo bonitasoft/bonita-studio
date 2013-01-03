@@ -38,6 +38,7 @@ Export-Package: org.bonitasoft.studio.diagram.custom;x-friends:="org.bonitasoft.
  org.bonitasoft.studio.diagram.custom.figures,
  org.bonitasoft.studio.diagram.custom.part,
  org.bonitasoft.studio.diagram.custom.parts,
+ org.bonitasoft.studio.diagram.custom.perspective,
  org.bonitasoft.studio.diagram.custom.repository,
  org.bonitasoft.studio.diagram.custom.resources,
  org.bonitasoft.studio.diagram.custom.wizard

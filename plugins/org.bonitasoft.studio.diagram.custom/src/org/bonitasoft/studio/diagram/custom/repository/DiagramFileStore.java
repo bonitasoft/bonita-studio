@@ -58,6 +58,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -214,6 +215,14 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                 if(editPart != null) {
                     editor.getDiagramEditPart().getViewer().select(editPart);
                 }
+                
+                if(getMigrationReport() != null){
+                	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.bonitasoft.studio.migration.view");
+                } else {
+                	final IViewPart migrationView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView("org.bonitasoft.studio.migration.view");
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
+                }
+                
                 return editor;
             }
         } catch (PartInitException e) {
@@ -222,7 +231,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
         return part ;
     }
 
-    @Override
+	@Override
     protected void doClose() {
         if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
             IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();

@@ -71,6 +71,18 @@
                id="org.eclipse.ui.run">
          </hiddenMenuItem>
       </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.bonitasoft.studio.common.perspective.form.migration">
+         <hiddenMenuItem
+               id="org.eclipse.ui.run">
+         </hiddenMenuItem>
+      </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.bonitasoft.studio.migration.perspective.process">
+         <hiddenMenuItem
+               id="org.eclipse.ui.run">
+         </hiddenMenuItem>
+      </perspectiveExtension>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -677,6 +689,18 @@
                   value="org.bonitasoft.studio.perspective.theme">
             </equals>
          </with>
+         <with
+               variable="activeWorkbenchWindow.activePerspective">
+            <equals
+                  value="org.bonitasoft.studio.common.perspective.form.migration">
+            </equals>
+         </with>
+         <with
+               variable="activeWorkbenchWindow.activePerspective">
+            <equals
+                  value="org.bonitasoft.studio.migration.perspective.process">
+            </equals>
+         </with>
          </or>
       </definition>
       <definition
@@ -711,16 +735,6 @@
             id="org.eclipse.birt.report.designer.ui.lib.explorer.view">
       </excludeSources>
    </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.bonitasoft.studio.application.views.form.PerspectiveFormsFactory"
-            id="org.bonitasoft.studio.common.perspective.form"
-            name="Form perspective">
-      </perspective>
-   </extension>
-   
-
    <extension
          id="InitializerApplication"
          point="org.eclipse.core.runtime.applications">
