@@ -17,14 +17,12 @@
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.migration.migrator.IReportMigration;
+import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
-import org.bonitasoft.studio.migration.model.report.Change;
+import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivity2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivityName2EditPart;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -41,6 +39,7 @@ public class CallActivityMigration extends ReportCustomMigration {
     private static final String SUBPROCESS_VIEW_TYPE = "3004";
     private static final String SUBPROCESS_LABEL_VIEW_TYPE = "5004";
 
+    
     @Override
     public void migrateBefore(Model model, Metamodel metamodel) throws MigrationException {
 
@@ -52,7 +51,9 @@ public class CallActivityMigration extends ReportCustomMigration {
             String subprocessName = callActivity.get("subprocessName");
             String subprocessVersion = callActivity.get("subprocessVersion");
 
-            Instance nameExp = model.newInstance("expression.Expression");
+           final StringToExpressionConverter converter = getConverter(model);
+           final Instance nameExp = converter.parse(subprocessName,String.class.getName(),true);
+         
             nameExp.set("name", subprocessName);
             nameExp.set("content", subprocessName);
             nameExp.set("returnType", String.class.getName());
@@ -60,8 +61,8 @@ public class CallActivityMigration extends ReportCustomMigration {
             callActivity.set("calledActivityName", nameExp);
 
             addReportChange(callActivity.getUuid(),
-            		"Call activity target name migrated to expression",
-            		"Called process name",
+            		Messages.callActivityTargetNameMigrationDescription,
+            		Messages.callActivityTargetNameProperty,
             		IStatus.WARNING);
    
             Instance versionExp = model.newInstance("expression.Expression");
@@ -72,8 +73,8 @@ public class CallActivityMigration extends ReportCustomMigration {
             callActivity.set("calledActivityVersion", versionExp);
             
             addReportChange(callActivity.getUuid(),
-            		"Call activity target version migrated to expression",
-            		"Called process verison",
+            		Messages.callActivityTargetVersionMigrationDescription,
+            		Messages.callActivityTargetVersionProperty,
             		IStatus.WARNING);
         }
 
