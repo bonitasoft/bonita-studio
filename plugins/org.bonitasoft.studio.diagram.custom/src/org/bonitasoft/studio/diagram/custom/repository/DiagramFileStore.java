@@ -217,10 +217,12 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
                 }
                 
                 if(getMigrationReport() != null){
-                	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.bonitasoft.studio.migration.view");
+                	activePage.showView("org.bonitasoft.studio.migration.view");
                 } else {
-                	final IViewPart migrationView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView("org.bonitasoft.studio.migration.view");
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
+                	final IViewPart migrationView = activePage.findView("org.bonitasoft.studio.migration.view");
+                	if(migrationView != null){
+                		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
+                	}
                 }
                 
                 return editor;
