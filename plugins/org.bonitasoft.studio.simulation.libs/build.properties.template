@@ -24,4 +24,4 @@ jars.compile.order = .
 source.. = src/
 output.. = bin/
 bin.excludes = META-INF/MANIFEST.MF.template,\
-			   lib/bos-simulation-XXX_VERSION_XXX-sources.jar
+			   lib/bos-simulation-sources.jar
