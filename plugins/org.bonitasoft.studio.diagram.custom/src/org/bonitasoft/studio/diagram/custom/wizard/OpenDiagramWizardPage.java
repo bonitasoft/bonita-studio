@@ -111,7 +111,7 @@ public class OpenDiagramWizardPage extends WizardPage implements IWizardPage {
                     styledString.append(fileStoreLabelProvider.getText(filseStore), null);
                     if(filseStore.getMigrationReport() != null){
                     	  styledString.append(" -- ",StyledString.DECORATIONS_STYLER) ;
-                    	  styledString.append( Messages.migrationOngoing ,StyledString.QUALIFIER_STYLER) ;
+                    	  styledString.append( Messages.migrationOngoing ,StyledString.COUNTER_STYLER) ;
                     }
                 
                     cell.setText(styledString.getString());
