@@ -87,26 +87,6 @@
 							<goal>run</goal>
 						</goals>
 					</execution>
-					<execution>
-						<id>Configure generated resources</id>
-						<phase>generate-resources</phase>
-						<configuration>
-							<target>
-								<!-- MANIFEST.MF -->
-								<copy tofile="META-INF/MANIFEST.MF" file="META-INF/MANIFEST.MF.template" overwrite="true"/>
-								<replace token="XXX_VERSION_XXX" value="${simulation.version}" file="META-INF/MANIFEST.MF" />
-								<!-- build.properties -->
-								<copy tofile="build.properties" file="build.properties.template" overwrite="true"/>
-								<replace token="XXX_VERSION_XXX" value="${simulation.version}" file="build.properties" />
-								<!-- .classpath -->
-								<copy tofile=".classpath" file=".classpath.template" overwrite="true"/>
-								<replace token="XXX_VERSION_XXX" value="${simulation.version}" file=".classpath" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
 				</executions>
 			</plugin>
 		</plugins>
