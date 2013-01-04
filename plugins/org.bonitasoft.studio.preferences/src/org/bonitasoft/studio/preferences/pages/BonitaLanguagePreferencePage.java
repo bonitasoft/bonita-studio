@@ -37,7 +37,6 @@ import org.bonitasoft.studio.preferences.i18n.Messages;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.ComboFieldEditor;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;

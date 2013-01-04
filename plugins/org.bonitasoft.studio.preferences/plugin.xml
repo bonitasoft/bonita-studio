@@ -16,33 +16,37 @@
          </keywordReference>
       </page>
       <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
             class="org.bonitasoft.studio.preferences.pages.BonitaDatabasePreferencePage"
             id="org.bonitasoft.studio.preferences.database"
-            name="database preference page">
+            name="Database">
          <keywordReference
                id="org.bonitasoft.studio.preferences.keywordReference.database">
          </keywordReference>
       </page>
       <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
             class="org.bonitasoft.studio.preferences.pages.BonitaAppearancePreferencePage"
             id="org.bonitasoft.studio.preferences.appearance"
-            name="appearance preference page">
+            name="Appearance">
          <keywordReference
                id="org.bonitasoft.studio.preferences.keywords.appearance">
          </keywordReference>
       </page>
       <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
             class="org.bonitasoft.studio.preferences.pages.BonitaLanguagePreferencePage"
             id="org.bonitasoft.studio.preferences.language"
-            name="language preference page">
+            name="Language">
          <keywordReference
                id="org.bonitasoft.studio.preferences.keywords.language">
          </keywordReference>
       </page>
       <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
             class="org.bonitasoft.studio.preferences.pages.BonitaRunPreferencePage"
             id="org.bonitasoft.studio.preferences.run"
-            name="run preference page">
+            name="Run">
          <keywordReference
                id="org.bonitasoft.studio.preferences.keyword.run">
          </keywordReference>
