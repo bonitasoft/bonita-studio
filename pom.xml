@@ -14,7 +14,7 @@
 		<bundle.version>6.0-Beta-SNAPSHOT</bundle.version>
 		<engine.version>6.0.Beta.4-SNAPSHOT</engine.version>
 		<connector.version>6.0.Beta.1-SNAPSHOT</connector.version>
-		<simulation.version>6.0-Alpha</simulation.version>
+		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
 		<filters.version>6.0.Beta.2-SNAPSHOT</filters.version>
 		<jacoco.file>${user.home}/jacoco-studio.exec</jacoco.file>
 		<!-- Sonar -->
