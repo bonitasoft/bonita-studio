@@ -23,8 +23,11 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -41,45 +44,64 @@ import org.junit.Test;
 public class TestSimpleMigrationUseCase {
 
 
-    private static boolean disablepopup;
+	private static boolean disablepopup;
 
-    @BeforeClass
-    public static void disablePopup(){
-        disablepopup = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-    }
+	@BeforeClass
+	public static void disablePopup(){
+		disablepopup = FileActionDialog.getDisablePopup();
+		FileActionDialog.setDisablePopup(true);
+	}
 
-    @AfterClass
-    public static void resetdisablePopup(){
-        FileActionDialog.setDisablePopup(disablepopup);
-    }
+	@AfterClass
+	public static void resetdisablePopup(){
+		FileActionDialog.setDisablePopup(disablepopup);
+	}
 
 
-    @Test
-    public void testDatatypesMigration() throws Exception{
-        final URL url = TestSimpleMigrationUseCase.class.getResource("AllDatatypes--1.0.bar");
-        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-        assertNotNull("Fail to migrate bar file", migratedProc);
-        assertNotNull("Fail to migrate bar file", migratedProc.exists());
-        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+	@Test
+	public void testDatatypesMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("AllDatatypes--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
 
-        final List<DataType> datatypes =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.DATA_TYPE);
-        assertEquals("Invalid number of datatypes", 9, datatypes.size()); //8 provided + 1 enum
-        final DataTypeSwitch typesSwitch = new DataTypeSwitch(datatypes);
-        typesSwitch.testDatatypesConsistency();
-    }
+		final List<DataType> datatypes =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.DATA_TYPE);
+		assertEquals("Invalid number of datatypes", 9, datatypes.size()); //8 provided + 1 enum
+		final DataTypeSwitch typesSwitch = new DataTypeSwitch(datatypes);
+		typesSwitch.testDatatypesConsistency();
+	}
 
-    @Test
-    public void testCallActivityMigration() throws Exception{
-        final URL url = TestSimpleMigrationUseCase.class.getResource("Simple_Call_Activity--1.0.bar");
-        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-        assertNotNull("Fail to migrate bar file", migratedProc);
-        assertNotNull("Fail to migrate bar file", migratedProc.exists());
-        final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-        final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-        assertEquals("Call Activity is missing",1, ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CALL_ACTIVITY).size());
-        BarImporterTestUtil.assertViewsAreConsistent(resource);
-    }
+	@Test
+	public void testCallActivityMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("Simple_Call_Activity--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		assertEquals("Call Activity is missing",1, ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CALL_ACTIVITY).size());
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+
+	@Test
+	public void testStringToExpression1() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("Simple_ScriptToExpression--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
+		int nbVariableExpression = 0;
+		for(Expression exp : expressions){
+			if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
+				nbVariableExpression++;
+			}
+		}
+		assertEquals("Invalid number of variable expression",3, nbVariableExpression);
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
 
 }
