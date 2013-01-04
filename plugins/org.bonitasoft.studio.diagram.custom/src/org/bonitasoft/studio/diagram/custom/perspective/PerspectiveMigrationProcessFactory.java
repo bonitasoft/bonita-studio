@@ -36,7 +36,7 @@ public class PerspectiveMigrationProcessFactory extends PerspectiveProcessFactor
 		IFolderLayout left = layout.createFolder(
 				"left",
 				IPageLayout.LEFT,
-				(float) 0.3,
+				(float) 0.35,
 				editorArea);
 		left.addView("org.bonitasoft.studio.migration.view");
 		left.addView(PaletteView.ID);	

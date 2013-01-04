@@ -17,11 +17,7 @@
  */
 package org.bonitasoft.studio.diagram.form.custom.perspective;
 
-import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gef.ui.views.palette.PaletteView;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
@@ -36,7 +32,7 @@ public class PerspectiveMigrationFormsFactory extends PerspectiveFormsFactory {
 		IFolderLayout left = layout.createFolder(
 				"left",
 				IPageLayout.LEFT,
-				(float) 0.3,
+				(float) 0.35,
 				editorArea);
 		left.addView("org.bonitasoft.studio.migration.view");
 		left.addView(PaletteView.ID);	
