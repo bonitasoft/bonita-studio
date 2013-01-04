@@ -30,13 +30,18 @@ import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceReposi
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
@@ -92,7 +97,31 @@ public class OpenDiagramWizardPage extends WizardPage implements IWizardPage {
         processesListLayoutData.heightHint = 250;
         ifileTree.setLayoutData(processesListLayoutData);
         ifileTree.getViewer().setContentProvider(new DiagramTreeContentProvider());
-        ifileTree.getViewer().setLabelProvider(new FileStoreLabelProvider()) ;
+        
+        
+        final LabelProvider fileStoreLabelProvider = new FileStoreLabelProvider();
+        ifileTree.getViewer().setLabelProvider(new StyledCellLabelProvider() {
+
+        	@Override
+        	public void update(ViewerCell cell) {
+                if (cell.getElement() instanceof DiagramFileStore) {
+                	DiagramFileStore filseStore = (DiagramFileStore) cell.getElement();
+                    StyledString styledString = new StyledString();
+
+                    styledString.append(fileStoreLabelProvider.getText(filseStore), null);
+                    if(filseStore.getMigrationReport() != null){
+                    	  styledString.append(" -- ",StyledString.DECORATIONS_STYLER) ;
+                    	  styledString.append( Messages.migrationOngoing ,StyledString.QUALIFIER_STYLER) ;
+                    }
+                
+                    cell.setText(styledString.getString());
+                    cell.setImage(fileStoreLabelProvider.getImage(filseStore)) ;
+                    cell.setStyleRanges(styledString.getStyleRanges());
+                }
+        		super.update(cell);
+        	}
+        	
+		}) ;
         ifileTree.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {

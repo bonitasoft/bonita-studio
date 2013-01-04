@@ -70,5 +70,6 @@ public class Messages extends NLS {
     public static String Application_Resources;
     public static String localConfigurationFor;
     public static String applicationResourcesFor;
+	public static String migrationOngoing;
 
 }
