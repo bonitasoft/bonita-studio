@@ -33,8 +33,10 @@ public abstract class ReportCustomMigration extends CustomMigration implements I
 
 	private List<Change> changes = new ArrayList<Change>();
 	
-	public Change addReportChange(String elementUUID,String description,String propertyName, int status){
+	public Change addReportChange(String elementName,String elementType,String elementUUID,String description,String propertyName, int status){
 		Change change = MigrationReportFactory.eINSTANCE.createChange();
+		change.setElementName(elementName);
+		change.setElementType(elementType);
 		change.setElementUUID(elementUUID);
 		change.setDescription(description);
 		change.setPropertyName(propertyName);

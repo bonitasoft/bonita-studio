@@ -21,6 +21,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
@@ -92,8 +93,13 @@ public class DatatypesMigration extends ReportCustomMigration {
 
     protected void removeAttachmentData(Model model) {
         for (Instance data : model.getAllInstances("process.AttachmentData")) {
+            addReportChange((String) data.get("name"),
+            		ProcessPackage.Literals.DATA.getName(),
+            		data.getUuid(), 
+            		Messages.attachmentDataRemovedDescription, 
+            		Messages.dataProperty, 
+            		IStatus.ERROR);
             model.delete(data);
-            addReportChange(data.getUuid(), Messages.attachmentDataRemovedDescription, Messages.dataProperty, IStatus.ERROR);
         }
     }
 

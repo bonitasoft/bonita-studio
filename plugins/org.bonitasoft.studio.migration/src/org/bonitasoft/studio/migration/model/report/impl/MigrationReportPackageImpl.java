@@ -168,6 +168,24 @@ public class MigrationReportPackageImpl extends EPackageImpl implements Migratio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getChange_ElementName() {
+		return (EAttribute)changeEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getChange_ElementType() {
+		return (EAttribute)changeEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getReport() {
 		return reportEClass;
 	}
@@ -234,6 +252,8 @@ public class MigrationReportPackageImpl extends EPackageImpl implements Migratio
 		createEAttribute(changeEClass, CHANGE__PROPERTY_NAME);
 		createEAttribute(changeEClass, CHANGE__TRANSFORMATION_KIND);
 		createEAttribute(changeEClass, CHANGE__ELEMENT_UUID);
+		createEAttribute(changeEClass, CHANGE__ELEMENT_NAME);
+		createEAttribute(changeEClass, CHANGE__ELEMENT_TYPE);
 
 		reportEClass = createEClass(REPORT);
 		createEAttribute(reportEClass, REPORT__NAME);
@@ -278,6 +298,8 @@ public class MigrationReportPackageImpl extends EPackageImpl implements Migratio
 		initEAttribute(getChange_PropertyName(), ecorePackage.getEString(), "propertyName", null, 0, 1, Change.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getChange_TransformationKind(), ecorePackage.getEString(), "transformationKind", null, 0, 1, Change.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getChange_ElementUUID(), ecorePackage.getEString(), "elementUUID", null, 0, 1, Change.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChange_ElementName(), ecorePackage.getEString(), "elementName", null, 0, 1, Change.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getChange_ElementType(), ecorePackage.getEString(), "elementType", null, 0, 1, Change.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(reportEClass, Report.class, "Report", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getReport_Name(), ecorePackage.getEString(), "name", null, 0, 1, Report.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

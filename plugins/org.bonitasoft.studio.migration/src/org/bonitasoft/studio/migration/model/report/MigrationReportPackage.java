@@ -124,13 +124,31 @@ public interface MigrationReportPackage extends EPackage {
 	int CHANGE__ELEMENT_UUID = 5;
 
 	/**
+	 * The feature id for the '<em><b>Element Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHANGE__ELEMENT_NAME = 6;
+
+	/**
+	 * The feature id for the '<em><b>Element Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CHANGE__ELEMENT_TYPE = 7;
+
+	/**
 	 * The number of structural features of the '<em>Change</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CHANGE_FEATURE_COUNT = 6;
+	int CHANGE_FEATURE_COUNT = 8;
 
 	/**
 	 * The meta object id for the '{@link org.bonitasoft.studio.migration.model.report.impl.ReportImpl <em>Report</em>}' class.
@@ -256,6 +274,28 @@ public interface MigrationReportPackage extends EPackage {
 	EAttribute getChange_ElementUUID();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.migration.model.report.Change#getElementName <em>Element Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Element Name</em>'.
+	 * @see org.bonitasoft.studio.migration.model.report.Change#getElementName()
+	 * @see #getChange()
+	 * @generated
+	 */
+	EAttribute getChange_ElementName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.migration.model.report.Change#getElementType <em>Element Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Element Type</em>'.
+	 * @see org.bonitasoft.studio.migration.model.report.Change#getElementType()
+	 * @see #getChange()
+	 * @generated
+	 */
+	EAttribute getChange_ElementType();
+
+	/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.migration.model.report.Report <em>Report</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -377,6 +417,22 @@ public interface MigrationReportPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute CHANGE__ELEMENT_UUID = eINSTANCE.getChange_ElementUUID();
+
+		/**
+		 * The meta object literal for the '<em><b>Element Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CHANGE__ELEMENT_NAME = eINSTANCE.getChange_ElementName();
+
+		/**
+		 * The meta object literal for the '<em><b>Element Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CHANGE__ELEMENT_TYPE = eINSTANCE.getChange_ElementType();
 
 		/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.migration.model.report.impl.ReportImpl <em>Report</em>}' class.

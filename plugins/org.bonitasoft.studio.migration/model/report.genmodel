@@ -14,6 +14,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report.ecore#//Change/propertyName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report.ecore#//Change/transformationKind"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report.ecore#//Change/elementUUID"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report.ecore#//Change/elementName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report.ecore#//Change/elementType"/>
     </genClasses>
     <genClasses ecoreClass="report.ecore#//Report">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report.ecore#//Report/name"/>

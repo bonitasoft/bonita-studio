@@ -16,10 +16,10 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivity2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivityName2EditPart;
 import org.eclipse.core.runtime.IStatus;
@@ -53,26 +53,22 @@ public class CallActivityMigration extends ReportCustomMigration {
 
            final StringToExpressionConverter converter = getConverter(model);
            final Instance nameExp = converter.parse(subprocessName,String.class.getName(),true);
-         
-            nameExp.set("name", subprocessName);
-            nameExp.set("content", subprocessName);
-            nameExp.set("returnType", String.class.getName());
-            nameExp.set("type", ExpressionConstants.CONSTANT_TYPE);
+        
             callActivity.set("calledActivityName", nameExp);
 
-            addReportChange(callActivity.getUuid(),
+            addReportChange((String) callActivity.get("name"),
+            		ProcessPackage.Literals.CALL_ACTIVITY.getName(),
+            		callActivity.getUuid(),
             		Messages.callActivityTargetNameMigrationDescription,
             		Messages.callActivityTargetNameProperty,
             		IStatus.WARNING);
    
-            Instance versionExp = model.newInstance("expression.Expression");
-            versionExp.set("name", subprocessVersion);
-            versionExp.set("content", subprocessVersion);
-            versionExp.set("returnType", String.class.getName());
-            versionExp.set("type", ExpressionConstants.CONSTANT_TYPE);
+            final Instance versionExp = converter.parse(subprocessVersion,String.class.getName(),true);
             callActivity.set("calledActivityVersion", versionExp);
             
-            addReportChange(callActivity.getUuid(),
+            addReportChange((String) callActivity.get("name"),
+            		ProcessPackage.Literals.CALL_ACTIVITY.getName(),
+            		callActivity.getUuid(),
             		Messages.callActivityTargetVersionMigrationDescription,
             		Messages.callActivityTargetVersionProperty,
             		IStatus.WARNING);

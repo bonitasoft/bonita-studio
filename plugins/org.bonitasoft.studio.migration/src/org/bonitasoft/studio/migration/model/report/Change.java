@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.bonitasoft.studio.migration.model.report.Change#getPropertyName <em>Property Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.migration.model.report.Change#getTransformationKind <em>Transformation Kind</em>}</li>
  *   <li>{@link org.bonitasoft.studio.migration.model.report.Change#getElementUUID <em>Element UUID</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.migration.model.report.Change#getElementName <em>Element Name</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.migration.model.report.Change#getElementType <em>Element Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -187,5 +189,57 @@ public interface Change extends EObject {
 	 * @generated
 	 */
 	void setElementUUID(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Element Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Element Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Element Name</em>' attribute.
+	 * @see #setElementName(String)
+	 * @see org.bonitasoft.studio.migration.model.report.MigrationReportPackage#getChange_ElementName()
+	 * @model
+	 * @generated
+	 */
+	String getElementName();
+
+	/**
+	 * Sets the value of the '{@link org.bonitasoft.studio.migration.model.report.Change#getElementName <em>Element Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Element Name</em>' attribute.
+	 * @see #getElementName()
+	 * @generated
+	 */
+	void setElementName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Element Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Element Type</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Element Type</em>' attribute.
+	 * @see #setElementType(String)
+	 * @see org.bonitasoft.studio.migration.model.report.MigrationReportPackage#getChange_ElementType()
+	 * @model
+	 * @generated
+	 */
+	String getElementType();
+
+	/**
+	 * Sets the value of the '{@link org.bonitasoft.studio.migration.model.report.Change#getElementType <em>Element Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Element Type</em>' attribute.
+	 * @see #getElementType()
+	 * @generated
+	 */
+	void setElementType(String value);
 
 } // Change

@@ -31,6 +31,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  *   <li>{@link org.bonitasoft.studio.migration.model.report.impl.ChangeImpl#getPropertyName <em>Property Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.migration.model.report.impl.ChangeImpl#getTransformationKind <em>Transformation Kind</em>}</li>
  *   <li>{@link org.bonitasoft.studio.migration.model.report.impl.ChangeImpl#getElementUUID <em>Element UUID</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.migration.model.report.impl.ChangeImpl#getElementName <em>Element Name</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.migration.model.report.impl.ChangeImpl#getElementType <em>Element Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -156,6 +158,46 @@ public class ChangeImpl extends EObjectImpl implements Change {
 	 * @ordered
 	 */
 	protected String elementUUID = ELEMENT_UUID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getElementName() <em>Element Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getElementName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String ELEMENT_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getElementName() <em>Element Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getElementName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String elementName = ELEMENT_NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getElementType() <em>Element Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getElementType()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String ELEMENT_TYPE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getElementType() <em>Element Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getElementType()
+	 * @generated
+	 * @ordered
+	 */
+	protected String elementType = ELEMENT_TYPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -307,6 +349,48 @@ public class ChangeImpl extends EObjectImpl implements Change {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getElementName() {
+		return elementName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setElementName(String newElementName) {
+		String oldElementName = elementName;
+		elementName = newElementName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MigrationReportPackage.CHANGE__ELEMENT_NAME, oldElementName, elementName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getElementType() {
+		return elementType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setElementType(String newElementType) {
+		String oldElementType = elementType;
+		elementType = newElementType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MigrationReportPackage.CHANGE__ELEMENT_TYPE, oldElementType, elementType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -322,6 +406,10 @@ public class ChangeImpl extends EObjectImpl implements Change {
 				return getTransformationKind();
 			case MigrationReportPackage.CHANGE__ELEMENT_UUID:
 				return getElementUUID();
+			case MigrationReportPackage.CHANGE__ELEMENT_NAME:
+				return getElementName();
+			case MigrationReportPackage.CHANGE__ELEMENT_TYPE:
+				return getElementType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -351,6 +439,12 @@ public class ChangeImpl extends EObjectImpl implements Change {
 				return;
 			case MigrationReportPackage.CHANGE__ELEMENT_UUID:
 				setElementUUID((String)newValue);
+				return;
+			case MigrationReportPackage.CHANGE__ELEMENT_NAME:
+				setElementName((String)newValue);
+				return;
+			case MigrationReportPackage.CHANGE__ELEMENT_TYPE:
+				setElementType((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -382,6 +476,12 @@ public class ChangeImpl extends EObjectImpl implements Change {
 			case MigrationReportPackage.CHANGE__ELEMENT_UUID:
 				setElementUUID(ELEMENT_UUID_EDEFAULT);
 				return;
+			case MigrationReportPackage.CHANGE__ELEMENT_NAME:
+				setElementName(ELEMENT_NAME_EDEFAULT);
+				return;
+			case MigrationReportPackage.CHANGE__ELEMENT_TYPE:
+				setElementType(ELEMENT_TYPE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -406,6 +506,10 @@ public class ChangeImpl extends EObjectImpl implements Change {
 				return TRANSFORMATION_KIND_EDEFAULT == null ? transformationKind != null : !TRANSFORMATION_KIND_EDEFAULT.equals(transformationKind);
 			case MigrationReportPackage.CHANGE__ELEMENT_UUID:
 				return ELEMENT_UUID_EDEFAULT == null ? elementUUID != null : !ELEMENT_UUID_EDEFAULT.equals(elementUUID);
+			case MigrationReportPackage.CHANGE__ELEMENT_NAME:
+				return ELEMENT_NAME_EDEFAULT == null ? elementName != null : !ELEMENT_NAME_EDEFAULT.equals(elementName);
+			case MigrationReportPackage.CHANGE__ELEMENT_TYPE:
+				return ELEMENT_TYPE_EDEFAULT == null ? elementType != null : !ELEMENT_TYPE_EDEFAULT.equals(elementType);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -432,6 +536,10 @@ public class ChangeImpl extends EObjectImpl implements Change {
 		result.append(transformationKind);
 		result.append(", elementUUID: ");
 		result.append(elementUUID);
+		result.append(", elementName: ");
+		result.append(elementName);
+		result.append(", elementType: ");
+		result.append(elementType);
 		result.append(')');
 		return result.toString();
 	}

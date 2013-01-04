@@ -44,20 +44,22 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 	public void partActivated(IWorkbenchPart part) {
 		if (part instanceof IEditorPart) {
 			final String id = BonitaPerspectivesUtils.getPerspectiveId((IEditorPart) part);
+			
 			if (id != null) {
-				UIJob job = new UIJob("changePerspective") {
-					@Override
-					public IStatus runInUIThread(IProgressMonitor monitor) {
-						Display.getDefault().syncExec(new Runnable() {
-							public void run() {
-								BonitaPerspectivesUtils.switchToPerspective(id);
-							}
-						});
-						return Status.OK_STATUS;
-					}
-				};
-				job.setSystem(true);
-				job.schedule();
+				BonitaPerspectivesUtils.switchToPerspective(id);
+//				UIJob job = new UIJob("changePerspective") {
+//					@Override
+//					public IStatus runInUIThread(IProgressMonitor monitor) {
+//						Display.getDefault().syncExec(new Runnable() {
+//							public void run() {
+//								BonitaPerspectivesUtils.switchToPerspective(id);
+//							}
+//						});
+//						return Status.OK_STATUS;
+//					}
+//				};
+//				job.setSystem(true);
+//				job.schedule();
 			}
 		}
 	}
