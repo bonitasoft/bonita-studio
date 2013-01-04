@@ -23,10 +23,21 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomActivityName2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomCallActivity2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomCallActivityName2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomCatchLinkEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomEndErrorEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomEndEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomEndMessageEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomEndSignalEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomEndTerminatedEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomEventSubProcessPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomEventSubProcessPoolLabelEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomEventSubProcessPoolPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomInclusiveGateway2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomIntermediateCatchMessageEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomIntermediateCatchSignalEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomIntermediateCatchTimerEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomIntermediateErrorCatchEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomIntermediateThrowMessageEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomIntermediateThrowSignalEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneNameEditPart;
@@ -46,6 +57,11 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomSequenceFlowEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSequenceFlowNameEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomServiceTask2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomServiceTaskLabel2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomStartErrorEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomStartEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomStartMessageEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomStartSignalEvent2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomStartTimerEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubProcessEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubProcessEventLabel2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubprocessEventCompartmentEditPart;
@@ -53,6 +69,7 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomTask2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomTaskName2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomTextAnnotation2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomTextAnnotationText2EditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomThrowLinkEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomXORGateway2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ANDGateway2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.Activity2EditPart;
@@ -60,10 +77,21 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.ActivityName2EditP
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivity2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CallActivityName2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CatchLinkEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.EndErrorEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.EndEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.EndMessageEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.EndSignalEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.EndTerminatedEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.EventSubProcessPoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.EventSubProcessPoolLabelEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.EventSubProcessPoolPoolCompartmentEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.InclusiveGateway2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateCatchMessageEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateCatchSignalEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateCatchTimerEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateErrorCatchEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateThrowMessageEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateThrowSignalEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneLaneCompartmentEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneNameEditPart;
@@ -84,6 +112,11 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowEditPa
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowNameEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ServiceTask2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.ServiceTaskLabel2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.StartErrorEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.StartEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.StartMessageEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.StartSignalEvent2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.StartTimerEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEventLabel2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEventSubProcessCompartment2EditPart;
@@ -91,6 +124,7 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.Task2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.TaskName2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.TextAnnotation2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.TextAnnotationText2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.ThrowLinkEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.XORGateway2EditPart;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessVisualIDRegistry;
 import org.eclipse.gef.EditPart;
@@ -149,7 +183,53 @@ public class CustomProcessEditPartFactory extends ProcessEditPartFactory {
                 case LaneNameEditPart.VISUAL_ID:
                     return new CustomLaneNameEditPart(view);
 
+                case EndEvent2EditPart.VISUAL_ID:
+                    return new CustomEndEvent2EditPart(view);
 
+                case EndErrorEvent2EditPart.VISUAL_ID:
+                    return new CustomEndErrorEvent2EditPart(view);
+
+                case EndMessageEvent2EditPart.VISUAL_ID:
+                    return new CustomEndMessageEvent2EditPart(view);
+
+                case EndSignalEvent2EditPart.VISUAL_ID:
+                    return new CustomEndSignalEvent2EditPart(view);
+
+                case EndTerminatedEvent2EditPart.VISUAL_ID:
+                    return new CustomEndTerminatedEvent2EditPart(view);
+                    
+                case StartEvent2EditPart.VISUAL_ID:
+                    return new CustomStartEvent2EditPart(view);
+
+                case StartErrorEvent2EditPart.VISUAL_ID:
+                    return new CustomStartErrorEvent2EditPart(view);
+
+                case StartMessageEvent2EditPart.VISUAL_ID:
+                    return new CustomStartMessageEvent2EditPart(view);
+
+                case StartSignalEvent2EditPart.VISUAL_ID:
+                    return new CustomStartSignalEvent2EditPart(view);
+
+                case StartTimerEvent2EditPart.VISUAL_ID:
+                    return new CustomStartTimerEvent2EditPart(view);
+
+                case IntermediateCatchMessageEvent2EditPart.VISUAL_ID:
+                    return new CustomIntermediateCatchMessageEvent2EditPart(view);
+
+                case IntermediateCatchSignalEvent2EditPart.VISUAL_ID:
+                    return new CustomIntermediateCatchSignalEvent2EditPart(view);
+
+                case IntermediateCatchTimerEvent2EditPart.VISUAL_ID:
+                    return new CustomIntermediateCatchTimerEvent2EditPart(view);
+
+                case IntermediateErrorCatchEvent2EditPart.VISUAL_ID:
+                    return new CustomIntermediateErrorCatchEvent2EditPart(view);
+
+                case IntermediateThrowMessageEvent2EditPart.VISUAL_ID:
+                    return new CustomIntermediateThrowMessageEvent2EditPart(view);
+
+                case IntermediateThrowSignalEvent2EditPart.VISUAL_ID:
+                    return new CustomIntermediateThrowSignalEvent2EditPart(view);
 
                 case ANDGateway2EditPart.VISUAL_ID:
                     return new CustomANDGateway2EditPart(view);
@@ -194,6 +274,9 @@ public class CustomProcessEditPartFactory extends ProcessEditPartFactory {
 
                 case CatchLinkEvent2EditPart.VISUAL_ID:
                     return new CustomCatchLinkEvent2EditPart(view);
+
+                case ThrowLinkEvent2EditPart.VISUAL_ID:
+                    return new CustomThrowLinkEvent2EditPart(view);
 
 
                 case SendTask2EditPart.VISUAL_ID:

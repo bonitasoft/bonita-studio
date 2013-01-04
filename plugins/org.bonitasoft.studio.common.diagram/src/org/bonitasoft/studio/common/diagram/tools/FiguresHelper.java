@@ -29,6 +29,7 @@ import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gef.EditPart;
@@ -60,6 +61,9 @@ public class FiguresHelper {
     public static final int ACTIVITY_WIDTH = 100;
     public static final int TEXTANNOTATION_HEIGHT = 50;
     public static final int TEXTANNOTATION_WIDTH = 100;
+    
+    private static final double TWO_PI = 2*Math.PI;
+    private static final int NB_POINTS_DRAW_CIRCLE = 50;
 
     private static Color ACTIVITY_BLUE = new Color(Display.getCurrent(), 54,107, 163);
     private static Color GATEWAY_DARK_GREEN = new Color(Display.getCurrent(), 151,170, 36);
@@ -434,6 +438,25 @@ public class FiguresHelper {
         }
     }
 
+	public static PointList CirclePointList( Rectangle anchRect){
+		PointList points = new PointList(NB_POINTS_DRAW_CIRCLE);
+		double angle= TWO_PI/NB_POINTS_DRAW_CIRCLE;
+		Point center = anchRect.getCenter();
+		int centerX=center.x;
+		int centerY=center.y;
+
+		int halfWidth = anchRect.width/2;
+		int halfHeight = anchRect.height/2;
+		
+		double angleT=0;
+		while(angleT<TWO_PI){
+			points.addPoint((int)((halfWidth*Math.cos(angleT))+centerX), (int)((halfHeight*Math.sin(angleT))+centerY));
+			angleT+=angle;
+		}
+		// add last point, the same than the first point
+		points.addPoint((int)((halfWidth*Math.cos(0))+centerX),(int)((halfHeight*Math.sin(0))+centerY));
+		return points;
+	}
 }
 
 

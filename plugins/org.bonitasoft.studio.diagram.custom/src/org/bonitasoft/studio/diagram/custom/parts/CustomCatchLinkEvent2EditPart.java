@@ -25,6 +25,8 @@ import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.CatchLinkEvent2EditPart;
+import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -46,7 +48,12 @@ public class CustomCatchLinkEvent2EditPart extends CatchLinkEvent2EditPart {
 	
 	@Override
 	protected NodeFigure createNodePlate() {
-		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(FiguresHelper.BIG_EVENT_WIDTH, FiguresHelper.BIG_EVENT_WIDTH);
+		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(FiguresHelper.BIG_EVENT_WIDTH, FiguresHelper.BIG_EVENT_WIDTH){
+				public PointList getPolygonPoints() {
+					Rectangle anchRect = getHandleBounds();
+					return FiguresHelper.CirclePointList(anchRect);
+				}
+		};
 		return result;
 	}
 	
