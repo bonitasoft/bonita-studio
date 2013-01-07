@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
@@ -35,8 +36,11 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public class DatatypesMigration extends ReportCustomMigration {
 
+	private final HashMap<Instance,Instance> attachmentDatas=new HashMap<Instance,Instance>();
+	
     @Override
     public void migrateBefore(Model model, Metamodel metamodel) throws MigrationException {
+    	
         removeAttachmentData(model);
         removeAttachmentType(model);
     }
@@ -89,10 +93,20 @@ public class DatatypesMigration extends ReportCustomMigration {
             }
             model.delete(floatTypeInstance);
         }
+        
+        for (Instance attachmentData:attachmentDatas.keySet()){
+        	Instance process = attachmentDatas.get(attachmentData);
+        	Instance document = model.newInstance("process.Document");
+        	document.set("isInternal", true);
+        	Instance defaultValue = attachmentData.get("defaultValue");
+        	document.set("defaultValueIdOfDocumentStore", defaultValue);
+        	process.add("documents", document);
+        }
     }
 
     protected void removeAttachmentData(Model model) {
         for (Instance data : model.getAllInstances("process.AttachmentData")) {
+        	attachmentDatas.put(data.copy(),data.getContainer());
             addReportChange((String) data.get("name"),
             		ProcessPackage.Literals.DATA.getName(),
             		data.getUuid(), 

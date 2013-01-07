@@ -20,17 +20,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.importer.ToProcProcessor;
 import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
 import org.bonitasoft.studio.importer.bar.exception.IncompatibleVersionException;
@@ -63,125 +69,144 @@ import org.eclipse.swt.widgets.Display;
  */
 public class EdaptBarToProcProcessor extends ToProcProcessor {
 
-    private static final String SUPPORTED_VERSION = "5.9";
-    private static final String MIGRATION_HISTORY_PATH = "models/v60/process.history";
-    private File migratedProc;
-    private BOSMigrator migrator;
+	private static final String SUPPORTED_VERSION = "5.9";
+	private static final String MIGRATION_HISTORY_PATH = "models/v60/process.history";
+	private File migratedProc;
+	private BOSMigrator migrator;
 
-    public EdaptBarToProcProcessor(){
-        final URI migratorURI = URI.createPlatformPluginURI("/" + BarImporterPlugin.getDefault().getBundle().getSymbolicName() + "/" + MIGRATION_HISTORY_PATH, true);
-        try {
-            migrator =  new BOSMigrator(migratorURI, new BundleClassLoader(BarImporterPlugin.getDefault().getBundle()));
-        } catch (MigrationException e) {
-            BonitaStudioLog.error(e,BarImporterPlugin.PLUGIN_ID);
-        }
-    }
+	public EdaptBarToProcProcessor(){
+		final URI migratorURI = URI.createPlatformPluginURI("/" + BarImporterPlugin.getDefault().getBundle().getSymbolicName() + "/" + MIGRATION_HISTORY_PATH, true);
+		try {
+			migrator =  new BOSMigrator(migratorURI, new BundleClassLoader(BarImporterPlugin.getDefault().getBundle()));
+		} catch (MigrationException e) {
+			BonitaStudioLog.error(e,BarImporterPlugin.PLUGIN_ID);
+		}
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.ToProcProcessor#createDiagram(java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public File createDiagram(URL sourceFileURL, IProgressMonitor progressMonitor) throws Exception {
-        if(!FileActionDialog.getDisablePopup() && displayMigrationWarningPopup()){
-            int result =  new WizardDialog(Display.getDefault().getActiveShell(), new MigrationWarningWizard()).open();
-            if(result != Dialog.OK){
-                return null;
-            }
-        }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.importer.ToProcProcessor#createDiagram(java.net.URL, org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public File createDiagram(URL sourceFileURL, IProgressMonitor progressMonitor) throws Exception {
+		if(!FileActionDialog.getDisablePopup() && displayMigrationWarningPopup()){
+			int result =  new WizardDialog(Display.getDefault().getActiveShell(), new MigrationWarningWizard()).open();
+			if(result != Dialog.OK){
+				return null;
+			}
+		}
 
-        final File archiveFile = new File(URI.decode(sourceFileURL.getFile())) ;
-        final File barProcFile = getProcFormBar(archiveFile);
+		final File archiveFile = new File(URI.decode(sourceFileURL.getFile())) ;
+		final File barProcFile = getProcFormBar(archiveFile);
+		importAttachment(archiveFile);
+		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
 
-        final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
+		final Resource resource = editingDomain.getResourceSet().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
+		if(resource == null){
+			throw new Exception("Failed to create an EMF resource for "+barProcFile.getName());
+		}
+		final Map<Object, Object> loadOptions = new HashMap<Object, Object>(editingDomain.getResourceSet().getLoadOptions());
+		//Ignore unknown features
+		loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+		resource.load(loadOptions);
 
-        final Resource resource = editingDomain.getResourceSet().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
-        if(resource == null){
-            throw new Exception("Failed to create an EMF resource for "+barProcFile.getName());
-        }
-        final Map<Object, Object> loadOptions = new HashMap<Object, Object>(editingDomain.getResourceSet().getLoadOptions());
-        //Ignore unknown features
-        loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
-        resource.load(loadOptions);
+		if(resource.getContents().size() > 1){
+			final EObject mainProcess = resource.getContents().get(0);
+			Object sourceVersion = null;
+			if(mainProcess instanceof AnyType){
+				sourceVersion = ((AnyType) mainProcess).getAnyAttribute().getValue(3);
+			}else if( mainProcess instanceof MainProcess){
+				sourceVersion = ((MainProcess)mainProcess).getBonitaModelVersion();
+			}
+			if(sourceVersion == null || !sourceVersion.toString().equals(SUPPORTED_VERSION)){
+				throw new IncompatibleVersionException((String) sourceVersion,SUPPORTED_VERSION);
+			}
+			resource.unload();
+			final URI resourceURI = resource.getURI();
+			final Release release = migrator.getRelease(0);
+			performMigration(migrator, resourceURI, release,progressMonitor);
+		}else{
+			throw new Exception("Invalid source proc file");
+		}
 
-        if(resource.getContents().size() > 1){
-            final EObject mainProcess = resource.getContents().get(0);
-            Object sourceVersion = null;
-            if(mainProcess instanceof AnyType){
-            	sourceVersion = ((AnyType) mainProcess).getAnyAttribute().getValue(3);
-            }else if( mainProcess instanceof MainProcess){
-            	sourceVersion = ((MainProcess)mainProcess).getBonitaModelVersion();
-            }
-            if(sourceVersion == null || !sourceVersion.toString().equals(SUPPORTED_VERSION)){
-                throw new IncompatibleVersionException((String) sourceVersion,SUPPORTED_VERSION);
-            }
-            resource.unload();
-            final URI resourceURI = resource.getURI();
-            final Release release = migrator.getRelease(0);
-            performMigration(migrator, resourceURI, release,progressMonitor);
-        }else{
-            throw new Exception("Invalid source proc file");
-        }
+		migratedProc = barProcFile;
+		return barProcFile;
+	}
 
-        migratedProc = barProcFile;
-        return barProcFile;
-    }
+	private boolean displayMigrationWarningPopup() {
+		final IPreferenceStore store = BarImporterPlugin.getDefault().getPreferenceStore();
+		return store.getBoolean(BarImporterPreferenceConstants.DISPLAY_MIGRATION_WARNING);
+	}
 
-    private boolean displayMigrationWarningPopup() {
-        final IPreferenceStore store = BarImporterPlugin.getDefault().getPreferenceStore();
-        return store.getBoolean(BarImporterPreferenceConstants.DISPLAY_MIGRATION_WARNING);
-    }
-
-    private File getProcFormBar(File archiveFile) throws Exception {
-        final ZipInputStream zin = new ZipInputStream(new FileInputStream(archiveFile));
-        ZipEntry zipEntry = zin.getNextEntry();
-        while (zipEntry != null && !zipEntry.getName().endsWith(".proc")) {
-            zipEntry = zin.getNextEntry();
-        }
-        if (zipEntry == null) {
-            throw new FileNotFoundException("can't find a .proc file in bar "+ archiveFile.getName());
-        }
-        String entryName = zipEntry.getName();
-        if(entryName.indexOf("/") != -1){
-            entryName.substring(entryName.lastIndexOf("/"));
-        }
-        final File tempFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), entryName) ;
-        byte[] buf = new byte[1024];
-        tempFile.delete();
-        int len;
-        FileOutputStream out = new FileOutputStream(tempFile);
-        while ((len = zin.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        zin.close();
-        out.close();
-        return tempFile;
-    }
-
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.ToProcProcessor#getResources()
-     */
-    @Override
-    public List<File> getResources() {
-        if(migratedProc != null){
-            return Collections.singletonList(migratedProc);
-        }
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.importer.ToProcProcessor#getExtension()
-     */
-    @Override
-    public String getExtension() {
-        return ".bar";
-    }
+	private void importAttachment(File archiveFile) throws IOException{
+		
+		ZipFile zipfile=new ZipFile(archiveFile);
+		Enumeration enumEntries = zipfile.entries();
+		ZipEntry zipEntry = null;
+		String attachments = "attachments";
+		while (enumEntries.hasMoreElements()){
+			zipEntry=(ZipEntry)enumEntries.nextElement();
+			File currentFile = new File (zipEntry.getName());
+			if (!zipEntry.isDirectory() && zipEntry.getName().contains(attachments)){
+				DocumentRepositoryStore store = (DocumentRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+				store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+			}
+			
+		}
+		zipfile.close();
+	}
 
 
-    private void performMigration(final BOSMigrator migrator,final URI resourceURI, final Release release,IProgressMonitor monitor) throws MigrationException {
-        migrator.setLevel(ValidationLevel.RELEASE);
-        migrator.migrateAndSave(
-                Collections.singletonList(resourceURI), release,
-                null, monitor);
-    }
+	private File getProcFormBar(File archiveFile) throws Exception {
+		final ZipInputStream zin = new ZipInputStream(new FileInputStream(archiveFile));
+		ZipEntry zipEntry = zin.getNextEntry();
+		while (zipEntry != null && !zipEntry.getName().endsWith(".proc")) {
+			zipEntry = zin.getNextEntry();
+		}
+		if (zipEntry == null) {
+			throw new FileNotFoundException("can't find a .proc file in bar "+ archiveFile.getName());
+		}
+		String entryName = zipEntry.getName();
+		if(entryName.indexOf("/") != -1){
+			entryName.substring(entryName.lastIndexOf("/"));
+		}
+		final File tempFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), entryName) ;
+		byte[] buf = new byte[1024];
+		tempFile.delete();
+		int len;
+		FileOutputStream out = new FileOutputStream(tempFile);
+		while ((len = zin.read(buf)) > 0) {
+			out.write(buf, 0, len);
+		}
+		zin.close();
+		out.close();
+		return tempFile;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.importer.ToProcProcessor#getResources()
+	 */
+	@Override
+	public List<File> getResources() {
+		if(migratedProc != null){
+			return Collections.singletonList(migratedProc);
+		}
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.importer.ToProcProcessor#getExtension()
+	 */
+	@Override
+	public String getExtension() {
+		return ".bar";
+	}
+
+
+	private void performMigration(final BOSMigrator migrator,final URI resourceURI, final Release release,IProgressMonitor monitor) throws MigrationException {
+		migrator.setLevel(ValidationLevel.RELEASE);
+		migrator.migrateAndSave(
+				Collections.singletonList(resourceURI), release,
+				null, monitor);
+	}
 
 }
