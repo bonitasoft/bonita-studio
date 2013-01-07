@@ -92,7 +92,7 @@
 							<include>**/*AllSWTBotTests.java</include>
 							<include>**/*AllSWTBotTests2.java</include>
 						</includes>
-						
+
 					</configuration>
 				</plugin>
 			</plugins>
@@ -162,6 +162,7 @@
 						<include>org.bonitasoft.studio.*</include>
 					</includes>
 					<destFile>${jacoco.file}</destFile>
+					<dataFile>${jacoco.file}</dataFile>
 					<append>true</append>
 				</configuration>
 				<executions>
@@ -169,6 +170,13 @@
 						<id>pre-test</id>
 						<goals>
 							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>site</phase>
+						<goals>
+							<goal>report</goal>
 						</goals>
 					</execution>
 				</executions>
