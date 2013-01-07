@@ -78,7 +78,7 @@ public class DatatypesMigration extends ReportCustomMigration {
 
         for (Instance data : model.getAllInstances("process.Data")) {
             Instance datatype = data.get("dataType");
-            if(datatype.instanceOf("process.FloatType")){
+            if(datatype != null && datatype.instanceOf("process.FloatType")){
                 data.set("dataType", doubleDataType);
             }
         }
@@ -98,7 +98,7 @@ public class DatatypesMigration extends ReportCustomMigration {
         	Instance process = attachmentDatas.get(attachmentData);
         	Instance document = model.newInstance("process.Document");
         	document.set("isInternal", true);
-        	Instance defaultValue = attachmentData.get("defaultValue");
+        	String defaultValue = attachmentData.get("defaultValue");
         	document.set("defaultValueIdOfDocumentStore", defaultValue);
         	process.add("documents", document);
         }
