@@ -381,17 +381,17 @@
             referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-          element="#//@releases.1/@changes.16/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.16/@changes.0/@element"
+          element="#//@releases.1/@changes.17/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.17/@changes.0/@element"
             featureName="name" dataValue="AttachmentData"/>
-        <changes xsi:type="history:Add" element="#//@releases.1/@changes.16/@changes.0/@element"
+        <changes xsi:type="history:Add" element="#//@releases.1/@changes.17/@changes.0/@element"
             featureName="eSuperTypes" referenceValue="process.ecore#//Data"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.16/@changes.0/@element"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.16/@changes.0/@element/barPath">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.16/@changes.0/@element/barPath"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.17/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.17/@changes.0/@element/barPath">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.17/@changes.0/@element/barPath"
             featureName="name" dataValue="barPath"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.16/@changes.0/@element/barPath"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.17/@changes.0/@element/barPath"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -532,10 +532,10 @@
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-          element="#//@releases.1/@changes.15/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.15/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.16/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.16/@changes.0/@changes.0/@element"
             featureName="name" dataValue="AttachmentType"/>
-        <changes xsi:type="history:Add" element="#//@releases.1/@changes.15/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Add" element="#//@releases.1/@changes.16/@changes.0/@changes.0/@element"
             featureName="eSuperTypes" referenceValue="process.ecore#//DataType"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -7385,6 +7385,40 @@
     <changes xsi:type="history:CompositeChange">
       <changes xsi:type="history:Set" element="process.ecore#//Document/mimeType"
           featureName="containment" dataValue="true" oldDataValue="false"/>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//Pool" referenceName="eStructuralFeatures"
+          element="process.ecore#//Pool/documents">
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/documents" featureName="name"
+            dataValue="documents"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/documents" featureName="upperBound"
+            dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/documents" featureName="containment"
+            dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/documents" featureName="eType"
+            referenceValue="process.ecore#//Document"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//Pool"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>documents</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="process.ecore#//Document"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>-1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
     </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.DatatypesMigration">
       <changes xsi:type="history:CompositeChange">

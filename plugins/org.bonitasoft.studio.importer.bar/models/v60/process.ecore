@@ -96,7 +96,10 @@
     <eLiterals name="DECISION_TABLE" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Lane" eSuperTypes="#//Container #//Assignable"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Pool" eSuperTypes="#//AbstractProcess"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Pool" eSuperTypes="#//AbstractProcess">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="documents" upperBound="-1"
+        eType="#//Document" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EventSubProcessPool" eSuperTypes="#//AbstractProcess">
     <eStructuralFeatures xsi:type="ecore:EReference" name="subProcessActivityInParentProcess"
         eType="#//SubProcessEvent" eOpposite="#//SubProcessEvent/subProcessEvent"/>
