@@ -178,7 +178,7 @@ public class GMFTools {
     }
 
 
-    public static IGraphicalEditPart findEditPart(EditPart containerEditPart,Element elementToFind) {
+    public static IGraphicalEditPart findEditPart(EditPart containerEditPart,EObject elementToFind) {
 
         final EObject containerElement = ((IGraphicalEditPart) containerEditPart).resolveSemanticElement();
         if (ModelHelper.getEObjectID( containerElement) != null && ModelHelper.getEObjectID(containerElement).equals(ModelHelper.getEObjectID(elementToFind))) {
