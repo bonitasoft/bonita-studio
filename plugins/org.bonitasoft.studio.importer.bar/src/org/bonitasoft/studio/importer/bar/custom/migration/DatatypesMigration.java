@@ -97,10 +97,14 @@ public class DatatypesMigration extends ReportCustomMigration {
         for (Instance attachmentData:attachmentDatas.keySet()){
         	Instance process = attachmentDatas.get(attachmentData);
         	Instance document = model.newInstance("process.Document");
+        	
         	document.set("isInternal", true);
+        	String name = attachmentData.get("name");
+        	document.set("name",name);
         	String defaultValue = attachmentData.get("defaultValue");
         	document.set("defaultValueIdOfDocumentStore", defaultValue);
         	process.add("documents", document);
+        	model.delete(attachmentData);
         }
     }
 
