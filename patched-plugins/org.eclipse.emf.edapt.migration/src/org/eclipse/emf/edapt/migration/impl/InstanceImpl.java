@@ -284,8 +284,10 @@ public class InstanceImpl extends EObjectImpl implements Instance {
         if (slot == null) {
             if (attribute.isMany()) {
                 return (V) new UpdatingList(this, attribute);
-            } else if (Collection.class.isAssignableFrom(attribute.getEType().getInstanceClass())) {//Patch for Notation model
+            } else if (attribute.getEType().getInstanceClass() != null && Collection.class.isAssignableFrom(attribute.getEType().getInstanceClass())) {//Patch for Notation model
                 return (V) new UpdatingList(this, attribute);
+            }else if(attribute.getEType().getInstanceClass() == null){
+            	 return (V) new UpdatingList(this, attribute);
             }else if (attribute.getDefaultValue() != null) {
                 return (V) attribute.getDefaultValue();
             }
