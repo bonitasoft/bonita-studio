@@ -7778,8 +7778,10 @@
         <parameters name="opposite"/>
       </operation>
     </changes>
-    <changes xsi:type="history:Set" element="process.ecore#//Document/mimeType" featureName="containment"
-        dataValue="true" oldDataValue="false"/>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Set" element="process.ecore#//Document/mimeType"
+          featureName="containment" dataValue="true" oldDataValue="false"/>
+    </changes>
   </releases>
   <releases/>
 </history:History>
