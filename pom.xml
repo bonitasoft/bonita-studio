@@ -25,6 +25,7 @@
 			add up information in the same report, so that, it will give the cross-module 
 			code coverage. -->
 		<sonar.jacoco.reportPath>${jacoco.file}</sonar.jacoco.reportPath>
+		<sonar.surefire.reportsPath>../${project.artifactId}.tests/target/surefire-reports/</sonar.surefire.reportsPath>
 	</properties>
 
 	<modules>
@@ -90,6 +91,7 @@
 							<include>**/*AllSWTBotTests.java</include>
 							<include>**/*AllSWTBotTests2.java</include>
 						</includes>
+						
 					</configuration>
 				</plugin>
 			</plugins>
@@ -159,6 +161,7 @@
 						<include>org.bonitasoft.studio.*</include>
 					</includes>
 					<destFile>${jacoco.file}</destFile>
+					<append>true</append>
 				</configuration>
 				<executions>
 					<execution>
