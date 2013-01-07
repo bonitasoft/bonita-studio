@@ -7470,37 +7470,39 @@
     <changes xsi:type="history:Delete" target="process.ecore#//Correlation" referenceName="eStructuralFeatures">
       <element xsi:type="ecore:EReference"/>
     </changes>
-    <changes xsi:type="history:OperationChange">
-      <changes xsi:type="history:Create" target="process.ecore#//Correlation" referenceName="eStructuralFeatures"
-          element="process.ecore#//Correlation/correlationAssociation">
-        <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
-            featureName="name" dataValue="correlationAssociation"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
-            featureName="lowerBound" dataValue="1" oldDataValue="0"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
-            featureName="eType" referenceValue="expression.ecore#//TableExpression"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.CorrelationMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//Correlation" referenceName="eStructuralFeatures"
+            element="process.ecore#//Correlation/correlationAssociation">
+          <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
+              featureName="name" dataValue="correlationAssociation"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
+              featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
+              featureName="eType" referenceValue="expression.ecore#//TableExpression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//Correlation"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>correlationAssociation</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//TableExpression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>false</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
       </changes>
-      <operation name="newReference">
-        <parameters name="eClass">
-          <referenceValue element="process.ecore#//Correlation"/>
-        </parameters>
-        <parameters name="name">
-          <dataValue>correlationAssociation</dataValue>
-        </parameters>
-        <parameters name="type">
-          <referenceValue element="expression.ecore#//TableExpression"/>
-        </parameters>
-        <parameters name="lowerBound">
-          <dataValue>1</dataValue>
-        </parameters>
-        <parameters name="upperBound">
-          <dataValue>1</dataValue>
-        </parameters>
-        <parameters name="containment">
-          <dataValue>false</dataValue>
-        </parameters>
-        <parameters name="opposite"/>
-      </operation>
     </changes>
     <changes xsi:type="history:CompositeChange">
       <changes xsi:type="history:Set" element="process.ecore#//Correlation/correlationAssociation"
@@ -7633,6 +7635,151 @@
       <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/messageContent"
           featureName="containment" dataValue="true" oldDataValue="false"/>
     </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+          element="process.ecore#//Document">
+        <changes xsi:type="history:Set" element="process.ecore#//Document" featureName="name"
+            dataValue="Document"/>
+        <changes xsi:type="history:Add" element="process.ecore#//Document" featureName="eSuperTypes"
+            referenceValue="process.ecore#//Element"/>
+      </changes>
+      <operation name="newClass">
+        <parameters name="ePackage">
+          <referenceValue element="process.ecore#/"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>Document</dataValue>
+        </parameters>
+        <parameters name="superClasses">
+          <referenceValue element="process.ecore#//Element"/>
+        </parameters>
+        <parameters name="abstr">
+          <dataValue>false</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
+          element="process.ecore#//Document/defaultValueIdOfDocumentStore">
+        <changes xsi:type="history:Set" element="process.ecore#//Document/defaultValueIdOfDocumentStore"
+            featureName="name" dataValue="defaultValueIdOfDocumentStore"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/defaultValueIdOfDocumentStore"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//Document"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>defaultValueIdOfDocumentStore</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
+          element="process.ecore#//Document/isInternal">
+        <changes xsi:type="history:Set" element="process.ecore#//Document/isInternal"
+            featureName="name" dataValue="isInternal"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/isInternal"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//Document"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>isInternal</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
+          element="process.ecore#//Document/mimeType">
+        <changes xsi:type="history:Set" element="process.ecore#//Document/mimeType"
+            featureName="name" dataValue="mimeType"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/mimeType"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//Document"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>mimeType</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>false</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//Document" referenceName="eStructuralFeatures"
+          element="process.ecore#//Document/url">
+        <changes xsi:type="history:Set" element="process.ecore#//Document/url" featureName="name"
+            dataValue="url"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/url" featureName="containment"
+            dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Document/url" featureName="eType"
+            referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//Document"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>url</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:Set" element="process.ecore#//Document/mimeType" featureName="containment"
+        dataValue="true" oldDataValue="false"/>
   </releases>
   <releases/>
 </history:History>
