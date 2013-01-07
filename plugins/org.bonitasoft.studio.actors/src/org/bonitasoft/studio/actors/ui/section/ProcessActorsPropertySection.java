@@ -125,7 +125,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
         initiatorIconViewer.setLabelProvider(new ColumnLabelProvider(){
             @Override
             public String getText(Object element) {
-                return "";
+                return null;
             }
 
             @Override
