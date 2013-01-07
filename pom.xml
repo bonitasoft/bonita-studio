@@ -82,6 +82,7 @@
 					<version>${tychoVersion}</version>
 					<configuration>
 						<useUIHarness>false</useUIHarness>
+						<forkMode>pertest</forkMode>
 						<includes>
 							<include>**/*AllTests.java</include>
 							<include>**/*AllTestsStress.java</include>
