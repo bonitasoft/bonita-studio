@@ -19,6 +19,7 @@
 package org.bonitasoft.studio.engine.operation;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -112,7 +113,7 @@ public class ExportBarOperation  {
     protected IStatus exportBar( final AbstractProcess process, final File outputFile,IProgressMonitor monitor) {
         try {
             final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(process,configurationId,Collections.EMPTY_SET);
-            BusinessArchiveFactory.writeBusinessArchiveToFile(bar,outputFile);
+            writeBusinessArchiveToFile(outputFile, bar);
         } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
             monitor.done() ;
@@ -121,6 +122,11 @@ public class ExportBarOperation  {
         }
         return Status.OK_STATUS;
     }
+
+
+	protected void writeBusinessArchiveToFile(final File outputFile, final BusinessArchive bar) throws IOException {
+		BusinessArchiveFactory.writeBusinessArchiveToFile(bar,outputFile);
+	}
 
 
     public IStatus getStatus() {

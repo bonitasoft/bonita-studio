@@ -116,7 +116,7 @@ public class DesignProcessDefinitionBuilder {
      * @throws InvalidProcessDefinitionException
      */
     public DesignProcessDefinition createDefinition(final AbstractProcess process) throws InvalidProcessDefinitionException {
-        final ProcessDefinitionBuilder processBuilder = new ProcessDefinitionBuilder().createNewInstance(process.getName(), process.getVersion());
+        final ProcessDefinitionBuilder processBuilder = createProcessDefinitionBuilderInstance(process);
         String decription = process.getDocumentation();
         if(decription != null){
             processBuilder.addDescription(decription);
@@ -132,7 +132,12 @@ public class DesignProcessDefinitionBuilder {
         return processBuilder.done();
     }
 
-    protected AbstractProcessSwitch createProcessSwitch(final ProcessDefinitionBuilder processBuilder) {
+
+	protected ProcessDefinitionBuilder createProcessDefinitionBuilderInstance(final AbstractProcess process) {
+		return new ProcessDefinitionBuilder().createNewInstance(process.getName(), process.getVersion());
+	}
+
+    protected AbstractProcessSwitch createProcessSwitch(ProcessDefinitionBuilder processBuilder) {
         return new AbstractProcessSwitch(processBuilder, eObjectNotExported);
     }
 
