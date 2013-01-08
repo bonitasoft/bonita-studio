@@ -45,8 +45,9 @@ Export-Package: org.bonitasoft.studio.simulation,
  org.bonitasoft.studio.simulation.repository,
  org.bonitasoft.studio.simulation.wizards
 Bundle-Activator: org.bonitasoft.studio.simulation.SimulationPlugin
-Import-Package: org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.simulation.engine,
+Bundle-ActivationPolicy: lazy
+Import-Package: org.bonitasoft.simulation.engine,
+ org.bonitasoft.simulation.iteration,
  org.bonitasoft.simulation.model,
  org.bonitasoft.simulation.model.calendar,
  org.bonitasoft.simulation.model.instance,
@@ -56,4 +57,3 @@ Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.simulation.reporting,
  org.bonitasoft.simulation.reporting.jasperreport,
  org.bonitasoft.simulation.reporting.jdbc
-Bundle-ActivationPolicy: lazy
