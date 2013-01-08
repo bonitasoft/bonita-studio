@@ -26,6 +26,7 @@ Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.simulation.engine,
+ org.bonitasoft.simulation.iteration,
  org.bonitasoft.simulation.model,
  org.bonitasoft.simulation.model.calendar,
  org.bonitasoft.simulation.model.instance,
