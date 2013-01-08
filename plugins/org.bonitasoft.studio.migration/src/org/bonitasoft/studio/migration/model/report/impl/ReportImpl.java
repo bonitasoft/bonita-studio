@@ -36,6 +36,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.bonitasoft.studio.migration.model.report.impl.ReportImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.migration.model.report.impl.ReportImpl#getChanges <em>Changes</em>}</li>
  *   <li>{@link org.bonitasoft.studio.migration.model.report.impl.ReportImpl#getCompletion <em>Completion</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.migration.model.report.impl.ReportImpl#getSourceRelease <em>Source Release</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.migration.model.report.impl.ReportImpl#getTargetRelease <em>Target Release</em>}</li>
  * </ul>
  * </p>
  *
@@ -91,6 +93,46 @@ public class ReportImpl extends EObjectImpl implements Report {
 	 * @ordered
 	 */
 	protected double completion = COMPLETION_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getSourceRelease() <em>Source Release</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSourceRelease()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String SOURCE_RELEASE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getSourceRelease() <em>Source Release</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSourceRelease()
+	 * @generated
+	 * @ordered
+	 */
+	protected String sourceRelease = SOURCE_RELEASE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getTargetRelease() <em>Target Release</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTargetRelease()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String TARGET_RELEASE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getTargetRelease() <em>Target Release</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTargetRelease()
+	 * @generated
+	 * @ordered
+	 */
+	protected String targetRelease = TARGET_RELEASE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -170,6 +212,48 @@ public class ReportImpl extends EObjectImpl implements Report {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getSourceRelease() {
+		return sourceRelease;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setSourceRelease(String newSourceRelease) {
+		String oldSourceRelease = sourceRelease;
+		sourceRelease = newSourceRelease;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MigrationReportPackage.REPORT__SOURCE_RELEASE, oldSourceRelease, sourceRelease));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getTargetRelease() {
+		return targetRelease;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setTargetRelease(String newTargetRelease) {
+		String oldTargetRelease = targetRelease;
+		targetRelease = newTargetRelease;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, MigrationReportPackage.REPORT__TARGET_RELEASE, oldTargetRelease, targetRelease));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -193,6 +277,10 @@ public class ReportImpl extends EObjectImpl implements Report {
 				return getChanges();
 			case MigrationReportPackage.REPORT__COMPLETION:
 				return getCompletion();
+			case MigrationReportPackage.REPORT__SOURCE_RELEASE:
+				return getSourceRelease();
+			case MigrationReportPackage.REPORT__TARGET_RELEASE:
+				return getTargetRelease();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -216,6 +304,12 @@ public class ReportImpl extends EObjectImpl implements Report {
 			case MigrationReportPackage.REPORT__COMPLETION:
 				setCompletion((Double)newValue);
 				return;
+			case MigrationReportPackage.REPORT__SOURCE_RELEASE:
+				setSourceRelease((String)newValue);
+				return;
+			case MigrationReportPackage.REPORT__TARGET_RELEASE:
+				setTargetRelease((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -237,6 +331,12 @@ public class ReportImpl extends EObjectImpl implements Report {
 			case MigrationReportPackage.REPORT__COMPLETION:
 				setCompletion(COMPLETION_EDEFAULT);
 				return;
+			case MigrationReportPackage.REPORT__SOURCE_RELEASE:
+				setSourceRelease(SOURCE_RELEASE_EDEFAULT);
+				return;
+			case MigrationReportPackage.REPORT__TARGET_RELEASE:
+				setTargetRelease(TARGET_RELEASE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -255,6 +355,10 @@ public class ReportImpl extends EObjectImpl implements Report {
 				return changes != null && !changes.isEmpty();
 			case MigrationReportPackage.REPORT__COMPLETION:
 				return completion != COMPLETION_EDEFAULT;
+			case MigrationReportPackage.REPORT__SOURCE_RELEASE:
+				return SOURCE_RELEASE_EDEFAULT == null ? sourceRelease != null : !SOURCE_RELEASE_EDEFAULT.equals(sourceRelease);
+			case MigrationReportPackage.REPORT__TARGET_RELEASE:
+				return TARGET_RELEASE_EDEFAULT == null ? targetRelease != null : !TARGET_RELEASE_EDEFAULT.equals(targetRelease);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -273,6 +377,10 @@ public class ReportImpl extends EObjectImpl implements Report {
 		result.append(name);
 		result.append(", completion: ");
 		result.append(completion);
+		result.append(", sourceRelease: ");
+		result.append(sourceRelease);
+		result.append(", targetRelease: ");
+		result.append(targetRelease);
 		result.append(')');
 		return result.toString();
 	}

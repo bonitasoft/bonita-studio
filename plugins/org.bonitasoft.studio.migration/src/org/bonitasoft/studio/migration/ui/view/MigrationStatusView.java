@@ -27,6 +27,10 @@ import org.bonitasoft.studio.migration.i18n.Messages;
 import org.bonitasoft.studio.migration.model.report.Change;
 import org.bonitasoft.studio.migration.model.report.MigrationReportPackage;
 import org.bonitasoft.studio.migration.model.report.Report;
+import org.bonitasoft.studio.migration.ui.action.ExportMigrationReportAsPDFAction;
+import org.bonitasoft.studio.migration.ui.action.HideReviewedAction;
+import org.bonitasoft.studio.migration.ui.action.HideValidStatusAction;
+import org.bonitasoft.studio.migration.ui.action.ToggleLinkingAction;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -41,31 +45,31 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.jdt.internal.ui.actions.AbstractToggleLinkingAction;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -73,7 +77,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
@@ -83,9 +87,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.internal.navigator.CommonNavigatorMessages;
-import org.eclipse.ui.internal.navigator.NavigatorPlugin;
-import org.eclipse.ui.internal.navigator.filters.SelectFiltersAction;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
@@ -93,12 +94,15 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
  * @author Aurelien Pupier
  * @author Romain Bioteau
  */
-public class MigrationStatusView extends ViewPart implements ISelectionListener,IDoubleClickListener {
+public class MigrationStatusView extends ViewPart implements ISelectionListener,ISelectionChangedListener {
 
 	public static String ID = "org.bonitasoft.studio.migration.view";
 	private TableViewer tableViewer;
 	private ISelectionProvider selectionProvider;
-
+	private ExportMigrationReportAsPDFAction exportAction;
+	private String searchQuery;
+	private ToggleLinkingAction linkAction;
+	private Text descripitonText;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -123,66 +127,39 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		IActionBars actionBars = getViewSite().getActionBars();
 		IMenuManager dropDownMenu = actionBars.getMenuManager();
 		IToolBarManager toolBar = actionBars.getToolBarManager();
-		IAction exportAction = createExportAction();
+		exportAction = new ExportMigrationReportAsPDFAction();
+		exportAction.setReport(getReportFromEditor(getSite().getPage().getActiveEditor()));
 		dropDownMenu.add(exportAction);
 		
-		IAction synchronizeAction = createSynchronizeAction();
-		toolBar.add(synchronizeAction);
+		linkAction = new ToggleLinkingAction();
+		linkAction.setViewer(tableViewer);
+		linkAction.setEditor((DiagramEditor) getSite().getPage().getActiveEditor());
+		toolBar.add(linkAction);
 		
-		IAction selectFiltersAction = new Action(){
-			public void run() {
-				
-			}
-		};
-		selectFiltersAction.setToolTipText(CommonNavigatorMessages.SelectFiltersActionDelegate_1);
-		selectFiltersAction.setText(Messages.filters);
-		ImageDescriptor selectFiltersIcon = NavigatorPlugin.getImageDescriptor("icons/full/elcl16/filter_ps.gif"); //$NON-NLS-1$ 
-		selectFiltersAction.setImageDescriptor(selectFiltersIcon);
-		selectFiltersAction.setHoverImageDescriptor(selectFiltersIcon);
-		dropDownMenu.add(selectFiltersAction);
+		final HideValidStatusAction hideStatusAction = new HideValidStatusAction();
+		hideStatusAction.setViewer(tableViewer);
+		dropDownMenu.add(hideStatusAction);
+		
+		final HideReviewedAction hideReviewedAction = new HideReviewedAction();
+		hideReviewedAction.setViewer(tableViewer);
+		dropDownMenu.add(hideReviewedAction);
 	}
 
-	private IAction createSynchronizeAction() {
-		IAction action = new AbstractToggleLinkingAction() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				
-			}
-		};
-		return action;
-	}
+	
 
-	private IAction createExportAction() {
-		IAction action = new Action() {
-			@Override
-			public String getText() {
-				return Messages.exportAsPdf;
-			}
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				super.run();
-			}
-		};
-		return action;
-	}
 
 	protected void createBottomComposite(Composite mainComposite) {
 		final Composite bottomComposite = new Composite(mainComposite, SWT.NONE);
-		bottomComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		bottomComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 		bottomComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
-		createPrintButton(bottomComposite);
 		createMarkAsCompletedButton(bottomComposite);
 
 	}
 
 	protected void createMarkAsCompletedButton(Composite bottomComposite) {
 		Button markAsCompletedButton = new Button(bottomComposite, SWT.NONE);
-		markAsCompletedButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).create());
+		markAsCompletedButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).grab(true, false).create());
 		markAsCompletedButton.setText(Messages.completeImport);
 		markAsCompletedButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -190,13 +167,8 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 				super.widgetSelected(e);				
 				MessageDialogWithToggle mdwt = MessageDialogWithToggle.openYesNoQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Complete import", "Completing the import will remove the import status report from your repository.\n Do you want to continue?", "Export the import status report", true, MigrationPlugin.getDefault().getPreferenceStore(), "toggleStateForImportExportStatus");
 				if(IDialogConstants.YES_ID == mdwt.getReturnCode()){
-
 					if(mdwt.getToggleState()){
-						FileDialog fd = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.SAVE);
-						String filePath = fd.open();
-						if(filePath != null){
-							//TODO : write the report to the specified filename
-						}
+						exportAction.run();
 					}
 					try {
 						clearMigrationReport(true);
@@ -255,10 +227,17 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		tableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
 
-		tableViewer = new TableViewer(tableComposite);
+		tableViewer = new TableViewer(tableComposite,SWT.SINGLE | SWT.BORDER) ;
 		tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
 		tableViewer.getTable().setHeaderVisible(true);
 		tableViewer.getTable().setLinesVisible(true);
+		tableViewer.addFilter(new ViewerFilter() {
+
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                return viewerSelect(element,searchQuery) ;
+            }
+        }) ;
 
 		addElementTypeColumn();
 		addElementNameColumn();
@@ -278,8 +257,18 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		tableViewer.getTable().setLayout(layout);
 
 		tableViewer.setContentProvider(new ReportContentProvider());
-		tableViewer.setInput(getSite().getPage().getActiveEditor());
-		tableViewer.addDoubleClickListener(this);
+		IEditorPart activeEditor = getSite().getPage().getActiveEditor();
+		tableViewer.setInput(activeEditor);
+		tableViewer.addSelectionChangedListener(this);
+		
+		
+		final Label descriptionLabel = new Label(tableComposite, SWT.NONE);
+		descriptionLabel.setText(Messages.description);
+		descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		
+		descripitonText = new Text(tableComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY);
+		descripitonText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).create());
+		
 	}
 
 	protected void addElementNameColumn() {
@@ -514,26 +503,31 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		final Text findText = new Text(topComposite, SWT.BORDER | SWT.SEARCH | SWT.ICON_CANCEL | SWT.ICON_SEARCH);
 		findText.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.RIGHT, SWT.CENTER).hint(150, SWT.DEFAULT).create());
 		findText.setMessage(Messages.find);
+		findText.addModifyListener(new ModifyListener() {
+			
+			
 
-	}
-
-	protected void createPrintButton(Composite topComposite) {
-		final Button printButton = new Button(topComposite, SWT.PUSH);
-		printButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.CENTER).grab(true, false).create());
-		printButton.setText(Messages.exportAsPdf);
-		printButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				super.widgetSelected(e);
-
+			public void modifyText(ModifyEvent e) {
+				searchQuery = findText.getText() ;
+                tableViewer.refresh() ;
+				
 			}
 		});
 	}
 
-	@Override
-	public void setFocus() {
+    protected boolean viewerSelect(Object element, String searchQuery) {
+        if(searchQuery == null || searchQuery.isEmpty()
+                || (((Change)element).getElementType() != null && ((Change)element).getElementType().toLowerCase().contains(searchQuery.toLowerCase()))
+                || (((Change)element).getElementName() != null && ((Change)element).getElementName().toLowerCase().contains(searchQuery.toLowerCase()))
+                || (((Change)element).getPropertyName() != null && ((Change)element).getPropertyName().toLowerCase().contains(searchQuery.toLowerCase()))){
+            return true ;
+        }
+        return false ;
+    }
 
-	}
+	@Override
+	public void setFocus() {}
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -545,12 +539,26 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 					selectionProvider = editorPart.getEditorSite().getSelectionProvider();
 					getSite().setSelectionProvider(selectionProvider); 
 					tableViewer.setInput(editorPart);
+					exportAction.setReport(getReportFromEditor(editorPart));
+					linkAction.setEditor((DiagramEditor) editorPart);
 				}else if(editorPart != null && editorPart.equals(tableViewer.getInput())){
 					tableViewer.refresh();
 				}
 				tableViewer.getTable().layout(true,true);
 			}
 		}
+	}
+
+	private Report getReportFromEditor(IEditorPart editorPart) {
+		if(editorPart instanceof DiagramEditor){
+			final Resource resource = ((DiagramEditor) editorPart).getDiagramEditPart().getNotationView().eResource();
+			for(EObject r : resource.getContents()){
+				if(r instanceof Report){
+					return (Report) r;
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -584,19 +592,15 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		return null;
 	}
 
-
-
 	@Override
-	public void dispose() {
-		super.dispose();
+	public void selectionChanged(SelectionChangedEvent event) {
+		if(!event.getSelection().isEmpty()){
+			descripitonText.setText(((Change) ((IStructuredSelection) event.getSelection()).getFirstElement()).getDescription());
+		}
+		
+		
 	}
 
-	@Override
-	public void doubleClick(DoubleClickEvent event) {
-		Object selection = ((IStructuredSelection)event.getSelection()).getFirstElement();
-		// TODO retrieve the selected element and set the focus in the editor for it
-
-	}
 
 
 }

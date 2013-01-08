@@ -53,9 +53,11 @@ public class ReportContentProvider implements IStructuredContentProvider {
 	public Object[] getElements(Object inputElement) {
 		if(inputElement instanceof DiagramEditor){
 			final Resource resource = ((DiagramEditor) inputElement).getDiagramEditPart().getNotationView().eResource();
-			for(EObject r : resource.getContents()){
-				if(r instanceof Report){
-					return ((Report) r).getChanges().toArray(new Change[((Report) r).getChanges().size()]);
+			if(resource != null){
+				for(EObject r : resource.getContents()){
+					if(r instanceof Report){
+						return ((Report) r).getChanges().toArray(new Change[((Report) r).getChanges().size()]);
+					}
 				}
 			}
 		}

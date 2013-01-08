@@ -61,13 +61,14 @@ public class StringToExpressionConverter {
 		}
 
 		final String expressionType = guessExpressionType(stringToParse);
-		final String groovyScript = stringToParse.substring(1,stringToParse.length()-1);
+		
 		if(ExpressionConstants.SCRIPT_TYPE.equals(expressionType)){
+			final String groovyScript = stringToParse.substring(2,stringToParse.length()-1);
 			final Instance expression = createExpressionInstance(model,"migratedScript", groovyScript, returnType, ExpressionConstants.SCRIPT_TYPE, fixedReturnType);
 			resolveScriptDependencies(expression,groovyScript);
 			return expression;
 		}else{
-			return createExpressionInstance(model,groovyScript, groovyScript, returnType, expressionType, fixedReturnType);
+			return createExpressionInstance(model,stringToParse, stringToParse, returnType, expressionType, fixedReturnType);
 		}
 	}
 

@@ -222,6 +222,24 @@ public class MigrationReportPackageImpl extends EPackageImpl implements Migratio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getReport_SourceRelease() {
+		return (EAttribute)reportEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getReport_TargetRelease() {
+		return (EAttribute)reportEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public MigrationReportFactory getMigrationReportFactory() {
 		return (MigrationReportFactory)getEFactoryInstance();
 	}
@@ -259,6 +277,8 @@ public class MigrationReportPackageImpl extends EPackageImpl implements Migratio
 		createEAttribute(reportEClass, REPORT__NAME);
 		createEReference(reportEClass, REPORT__CHANGES);
 		createEAttribute(reportEClass, REPORT__COMPLETION);
+		createEAttribute(reportEClass, REPORT__SOURCE_RELEASE);
+		createEAttribute(reportEClass, REPORT__TARGET_RELEASE);
 	}
 
 	/**
@@ -305,6 +325,8 @@ public class MigrationReportPackageImpl extends EPackageImpl implements Migratio
 		initEAttribute(getReport_Name(), ecorePackage.getEString(), "name", null, 0, 1, Report.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getReport_Changes(), this.getChange(), null, "changes", null, 0, -1, Report.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getReport_Completion(), ecorePackage.getEDouble(), "completion", null, 0, 1, Report.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getReport_SourceRelease(), ecorePackage.getEString(), "sourceRelease", null, 0, 1, Report.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getReport_TargetRelease(), ecorePackage.getEString(), "targetRelease", null, 0, 1, Report.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

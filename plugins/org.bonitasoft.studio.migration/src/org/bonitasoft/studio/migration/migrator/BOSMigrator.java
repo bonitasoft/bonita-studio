@@ -28,7 +28,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.migration.i18n.Messages;
 import org.bonitasoft.studio.migration.model.report.Report;
+import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -170,8 +174,8 @@ public class BOSMigrator  {
 	 * @param monitor
 	 *            Progress monitor
 	 */
-	public void migrateAndSave(List<URI> modelURIs, Release sourceRelease,
-			Release targetRelease, IProgressMonitor monitor)
+	public void migrateAndSave(final List<URI> modelURIs, final Release sourceRelease,
+			final Release targetRelease, IProgressMonitor monitor)
 			throws MigrationException {
 		Model model = migrate(modelURIs, sourceRelease, targetRelease, monitor);
 		if (model == null) {
@@ -192,7 +196,23 @@ public class BOSMigrator  {
 				
 				@Override
 				protected void doExecute() {
-					resource.getContents().add(getReport());
+					final Report report = getReport();
+					String diagramName = "";
+					for(EObject root : resource.getContents()){
+						if(root instanceof MainProcess){
+							diagramName = ((MainProcess) root).getName()+"--"+((MainProcess) root).getVersion();
+						}
+					}
+					report.setName(Messages.bind(Messages.migrationReportOf,diagramName));
+					report.setSourceRelease(sourceRelease.getLabel());
+					
+					if(targetRelease != null){
+						report.setTargetRelease(targetRelease.getLabel());
+					}else{
+						report.setTargetRelease(Messages.currentVersion);
+					}
+					
+					resource.getContents().add(report);
 				}
 			};
 			editingDomain.getCommandStack().execute(cmd);

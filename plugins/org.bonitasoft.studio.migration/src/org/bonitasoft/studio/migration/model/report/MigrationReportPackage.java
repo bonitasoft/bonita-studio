@@ -188,13 +188,31 @@ public interface MigrationReportPackage extends EPackage {
 	int REPORT__COMPLETION = 2;
 
 	/**
+	 * The feature id for the '<em><b>Source Release</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT__SOURCE_RELEASE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Target Release</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REPORT__TARGET_RELEASE = 4;
+
+	/**
 	 * The number of structural features of the '<em>Report</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REPORT_FEATURE_COUNT = 3;
+	int REPORT_FEATURE_COUNT = 5;
 
 
 	/**
@@ -339,6 +357,28 @@ public interface MigrationReportPackage extends EPackage {
 	EAttribute getReport_Completion();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.migration.model.report.Report#getSourceRelease <em>Source Release</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Source Release</em>'.
+	 * @see org.bonitasoft.studio.migration.model.report.Report#getSourceRelease()
+	 * @see #getReport()
+	 * @generated
+	 */
+	EAttribute getReport_SourceRelease();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.migration.model.report.Report#getTargetRelease <em>Target Release</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Target Release</em>'.
+	 * @see org.bonitasoft.studio.migration.model.report.Report#getTargetRelease()
+	 * @see #getReport()
+	 * @generated
+	 */
+	EAttribute getReport_TargetRelease();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -467,6 +507,22 @@ public interface MigrationReportPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute REPORT__COMPLETION = eINSTANCE.getReport_Completion();
+
+		/**
+		 * The meta object literal for the '<em><b>Source Release</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPORT__SOURCE_RELEASE = eINSTANCE.getReport_SourceRelease();
+
+		/**
+		 * The meta object literal for the '<em><b>Target Release</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REPORT__TARGET_RELEASE = eINSTANCE.getReport_TargetRelease();
 
 	}
 

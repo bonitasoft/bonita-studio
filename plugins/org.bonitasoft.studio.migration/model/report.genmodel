@@ -21,6 +21,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report.ecore#//Report/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference report.ecore#//Report/changes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report.ecore#//Report/completion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report.ecore#//Report/sourceRelease"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute report.ecore#//Report/targetRelease"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

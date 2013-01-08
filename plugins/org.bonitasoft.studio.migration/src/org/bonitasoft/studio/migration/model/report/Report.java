@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.bonitasoft.studio.migration.model.report.Report#getName <em>Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.migration.model.report.Report#getChanges <em>Changes</em>}</li>
  *   <li>{@link org.bonitasoft.studio.migration.model.report.Report#getCompletion <em>Completion</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.migration.model.report.Report#getSourceRelease <em>Source Release</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.migration.model.report.Report#getTargetRelease <em>Target Release</em>}</li>
  * </ul>
  * </p>
  *
@@ -96,5 +98,57 @@ public interface Report extends EObject {
 	 * @generated
 	 */
 	void setCompletion(double value);
+
+	/**
+	 * Returns the value of the '<em><b>Source Release</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Source Release</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Source Release</em>' attribute.
+	 * @see #setSourceRelease(String)
+	 * @see org.bonitasoft.studio.migration.model.report.MigrationReportPackage#getReport_SourceRelease()
+	 * @model
+	 * @generated
+	 */
+	String getSourceRelease();
+
+	/**
+	 * Sets the value of the '{@link org.bonitasoft.studio.migration.model.report.Report#getSourceRelease <em>Source Release</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Source Release</em>' attribute.
+	 * @see #getSourceRelease()
+	 * @generated
+	 */
+	void setSourceRelease(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Target Release</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Target Release</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Target Release</em>' attribute.
+	 * @see #setTargetRelease(String)
+	 * @see org.bonitasoft.studio.migration.model.report.MigrationReportPackage#getReport_TargetRelease()
+	 * @model
+	 * @generated
+	 */
+	String getTargetRelease();
+
+	/**
+	 * Sets the value of the '{@link org.bonitasoft.studio.migration.model.report.Report#getTargetRelease <em>Target Release</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Target Release</em>' attribute.
+	 * @see #getTargetRelease()
+	 * @generated
+	 */
+	void setTargetRelease(String value);
 
 } // Report
