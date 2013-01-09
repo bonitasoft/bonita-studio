@@ -25,32 +25,17 @@ public class Messages extends NLS {
 
 
 
+	
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//IndexSection
+	public static String indexName;
+	public static String searchIndexTypeLabel;
+	
+	//GeneralSection
     public static String GeneralSection_Name;
     public static String GeneralSection_Description;
     public static String GeneralSection_Version;
@@ -832,6 +817,7 @@ public class Messages extends NLS {
 	public static String oneCorrelationAtLeastNeeded;
 	public static String valueShouldBeDefined;
 	public static String idShouldBeDefined;
+	public static String indexValue;
 
 
     static {
