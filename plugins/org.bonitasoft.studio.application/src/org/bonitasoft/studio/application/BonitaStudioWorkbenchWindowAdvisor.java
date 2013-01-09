@@ -168,7 +168,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor i
     }
 
     private void createToolbar(final Composite toolbarContainer) {
-        toolbar = new ToolBar(toolbarContainer,SWT.FLAT) ;
+    	toolbar = new ToolBar(toolbarContainer,SWT.FLAT) ;
         toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).create()) ;
 
         fillBonitaBar();
@@ -199,9 +199,8 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor i
             }
         }) ;
 
-        toolbar.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE)) ;
-        toolbarContainer.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE)) ;
-
+        
+     
         if(image != null){
             image.dispose() ;
         }
@@ -213,13 +212,8 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor i
             image = new Image(Display.getDefault(),Pics.getImage(COOLBAR_PNG).getImageData().scaledTo(Display.getDefault().getBounds().width, 75)) ;
 
         }
-        toolbarContainer.setBackgroundImage(image) ;
-        toolbar.setBackgroundImage(image) ;
-        if(Platform.getOS().equals(Platform.WS_WIN32)){
-            sizingToolbar.setBackgroundImage(image) ;
-        }
-
-
+        toolbarContainer.setBackgroundImage(image);
+    	toolbarContainer.setBackgroundMode(SWT.INHERIT_FORCE);
     }
 
     public void minimizeCoolbar() {
