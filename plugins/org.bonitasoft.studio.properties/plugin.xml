@@ -152,6 +152,12 @@
                id="tab.document"
                label="%tab.document.label">
          </propertyTab>
+         <propertyTab
+               afterTab="tab.document"
+               category="domain"
+               id="tab.index"
+               label="%tab.index.label">
+         </propertyTab>
       </propertyTabs>
    </extension>
    
@@ -293,6 +299,14 @@
                       filter="org.bonitasoft.studio.properties.filters.PoolOrLaneFilter"
                       id="section.general.tab.document"
                       tab="tab.document"
+                      viewID="org.bonitasoft.studio.views.properties.process.general">
+                </propertySection>
+                <propertySection
+                      class="org.bonitasoft.studio.properties.sections.index.IndexSection"
+                      enablesFor="1"
+                      filter="org.bonitasoft.studio.properties.filters.IndexFilter"
+                      id="IndexSection"
+                      tab="tab.index"
                       viewID="org.bonitasoft.studio.views.properties.process.general">
                 </propertySection>
       </propertySections>
