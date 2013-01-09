@@ -30,7 +30,6 @@ public class Messages extends NLS {
 	public static String completeImport;
 	public static String unknown;
 	public static String name;
-	public static String element;
 	public static String property;
 	public static String status;
 	public static String reviewed;
@@ -41,6 +40,7 @@ public class Messages extends NLS {
 	public static String hideValidStatusAction;
 	public static String hideReviewedAction;
 	public static String description;
+	public static String elementType;
   
 
     static {

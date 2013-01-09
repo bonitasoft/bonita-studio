@@ -32,7 +32,7 @@ public class PerspectiveMigrationFormsFactory extends PerspectiveFormsFactory {
 		IFolderLayout left = layout.createFolder(
 				"left",
 				IPageLayout.LEFT,
-				(float) 0.35,
+				(float) 0.3,
 				editorArea);
 		left.addView("org.bonitasoft.studio.migration.view");
 		left.addView(PaletteView.ID);	

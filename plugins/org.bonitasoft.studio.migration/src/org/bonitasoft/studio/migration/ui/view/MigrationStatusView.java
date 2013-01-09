@@ -31,10 +31,8 @@ import org.bonitasoft.studio.migration.ui.action.ExportMigrationReportAsPDFActio
 import org.bonitasoft.studio.migration.ui.action.HideReviewedAction;
 import org.bonitasoft.studio.migration.ui.action.HideValidStatusAction;
 import org.bonitasoft.studio.migration.ui.action.ToggleLinkingAction;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -72,7 +70,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -83,7 +80,6 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -227,7 +223,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		tableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
 
-		tableViewer = new TableViewer(tableComposite,SWT.SINGLE | SWT.BORDER) ;
+		tableViewer = new TableViewer(tableComposite,SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION) ;
 		tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
 		tableViewer.getTable().setHeaderVisible(true);
 		tableViewer.getTable().setLinesVisible(true);
@@ -242,17 +238,15 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		addElementTypeColumn();
 		addElementNameColumn();
 		addPropertyColumn();
-		addDescriptionColumn();
 		addStatusColumn();
 		addReviewedColumn();
 
 		TableLayout layout = new TableLayout();
+		layout.addColumnData(new ColumnWeightData(25));
+		layout.addColumnData(new ColumnWeightData(25));
+		layout.addColumnData(new ColumnWeightData(25));
+		layout.addColumnData(new ColumnWeightData(10));
 		layout.addColumnData(new ColumnWeightData(15));
-		layout.addColumnData(new ColumnWeightData(20));
-		layout.addColumnData(new ColumnWeightData(15));
-		layout.addColumnData(new ColumnWeightData(30));
-		layout.addColumnData(new ColumnWeightData(8));
-		layout.addColumnData(new ColumnWeightData(12));
 
 		tableViewer.getTable().setLayout(layout);
 
@@ -267,6 +261,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		
 		descripitonText = new Text(tableComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY);
+		descripitonText.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		descripitonText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).create());
 		
 	}
@@ -310,8 +305,8 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 	}
 
 	protected void addElementTypeColumn() {
-		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
-		column.getColumn().setText(Messages.element);
+		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.CENTER);
+		column.getColumn().setText(Messages.elementType);
 		column.getColumn().setAlignment(SWT.CENTER);
 		column.setLabelProvider(new ColumnLabelProvider(){
 			@Override
@@ -385,64 +380,13 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		});
 	}
 
-	protected void addDescriptionColumn() {
-		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.MULTI | SWT.WRAP);
-		column.getColumn().setAlignment(SWT.CENTER);
-		column.getColumn().setText(Messages.information);
-		column.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				if(element instanceof Change){
-					return ((Change) element).getDescription();
-				}
-				return Messages.unknown;
-			}
-
-			@Override
-			public String getToolTipText(Object element) {
-				if(element instanceof Change){
-					return ((Change) element).getDescription();
-				}
-
-				return null ;
-			}
-
-			@Override
-			public int getToolTipTimeDisplayed(Object object) {
-				return 4000 ;
-			}
-
-			@Override
-			public int getToolTipDisplayDelayTime(Object object) {
-				return 50;
-			}
-
-			@Override
-			public Point getToolTipShift(Object object) {
-				return new Point(5,5);
-			}
-		});
-	}
 
 	protected void addStatusColumn() {
-		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
+		final TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
 		column.getColumn().setText(Messages.status);
-		column.getColumn().setAlignment(SWT.CENTER);
-		column.setLabelProvider(new ColumnLabelProvider(){
-			@Override
-			public String getText(Object element) {
-				return null;
-			}
-
-			@Override
-			public Image getImage(Object element) {
-				if(element instanceof Change){
-					int status =  ((Change) element).getStatus();
-					return getImageForStatus(status);
-				}
-				return super.getImage(element);
-			}
-		});
+		column.getColumn().setAlignment(SWT.RIGHT);
+		
+		column.setLabelProvider(new StatusColumnLabelProvider());
 
 	}
 
@@ -580,17 +524,6 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		return super.getAdapter(adapter);
 	}
 
-	private Image getImageForStatus(int status) {
-		switch (status) {
-		case IStatus.OK: return Pics.getImage("valid.png");
-		case IStatus.WARNING: return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
-		case IStatus.INFO: return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
-		case IStatus.ERROR: return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
-		default:break;
-		}
-
-		return null;
-	}
 
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {

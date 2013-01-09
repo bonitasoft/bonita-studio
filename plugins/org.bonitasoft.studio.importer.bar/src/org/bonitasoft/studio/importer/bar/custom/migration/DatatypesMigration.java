@@ -103,7 +103,10 @@ public class DatatypesMigration extends ReportCustomMigration {
         	document.set("name",name);
         	String defaultValue = attachmentData.get("defaultValue");
         	document.set("defaultValueIdOfDocumentStore", defaultValue);
+        	String doc = attachmentData.get("documentation");
+        	document.set("documentation", doc);
         	process.add("documents", document);
+        	addReportChange(name,Messages.document, process.getUuid(),Messages.documentCreationDescription,Messages.documentProperty, IStatus.WARNING);
         	model.delete(attachmentData);
         }
     }
@@ -113,10 +116,10 @@ public class DatatypesMigration extends ReportCustomMigration {
         	attachmentDatas.put(data.copy(),data.getContainer());
             addReportChange((String) data.get("name"),
             		ProcessPackage.Literals.DATA.getName(),
-            		data.getUuid(), 
+            		data.getContainer().getUuid(), 
             		Messages.attachmentDataRemovedDescription, 
             		Messages.dataProperty, 
-            		IStatus.ERROR);
+            		IStatus.OK);
             model.delete(data);
         }
     }

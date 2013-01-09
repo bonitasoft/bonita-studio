@@ -21,6 +21,8 @@ import org.bonitasoft.studio.migration.model.report.Report;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -28,11 +30,14 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
 
-public class CheckboxLabelProvider extends CellLabelProvider implements ILabelProvider{
+public class CheckboxLabelProvider extends StyledCellLabelProvider implements ILabelProvider{
 
 	private static final String CHECKED_KEY = "checkedKey";//NON-NLS-1
 	private static final String UNCHECK_KEY = "uncheckKey";//NON-NLS-1
@@ -46,15 +51,6 @@ public class CheckboxLabelProvider extends CellLabelProvider implements ILabelPr
 		}
 	}
 	
-	@Override
-	public void update(ViewerCell cell) {
-		Change change = (Change)cell.getElement();
-		if(change.isReviewed()){
-			cell.setImage(JFaceResources.getImage(CHECKED_KEY));
-		} else {
-			cell.setImage(JFaceResources.getImage(UNCHECK_KEY));
-		}
-	}
 
 	@Override
 	public Image getImage(Object element) {
@@ -105,6 +101,31 @@ public class CheckboxLabelProvider extends CellLabelProvider implements ILabelPr
 				.getRGB());
 
 		return new Image(control.getDisplay(), imageData);
+	}
+
+
+	@Override
+	protected void paint(Event event, Object element) {
+		super.paint(event, element);
+		Image image = null;
+		Change change = (Change)element;
+		if(change.isReviewed()){
+			image = JFaceResources.getImage(CHECKED_KEY);
+		} else {
+			image = JFaceResources.getImage(UNCHECK_KEY);
+		}
+		Rectangle bounds = ((TableItem) event.item)
+				.getBounds(event.index);
+		Rectangle imgBounds = image.getBounds();
+		bounds.width /= 2;
+		bounds.width -= imgBounds.width / 2;
+		bounds.height /= 2;
+		bounds.height -= imgBounds.height / 2;
+
+		int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
+		int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
+
+		event.gc.drawImage(image, x, y);
 	}
 
 

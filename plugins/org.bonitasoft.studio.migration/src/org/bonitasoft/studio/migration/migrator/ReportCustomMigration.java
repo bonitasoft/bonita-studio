@@ -40,6 +40,7 @@ public abstract class ReportCustomMigration extends CustomMigration implements I
 		change.setElementUUID(elementUUID);
 		change.setDescription(description);
 		change.setPropertyName(propertyName);
+		change.setStatus(status);
 		changes.add(change);
 		return change;
 	}

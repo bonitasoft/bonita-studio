@@ -19,6 +19,7 @@ package org.bonitasoft.studio.migration.ui.action;
 import java.io.File;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.migration.MigrationPlugin;
 import org.bonitasoft.studio.migration.i18n.Messages;
 import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.migration.utils.PDFMigrationReportWriter;
@@ -40,8 +41,8 @@ public class ExportMigrationReportAsPDFAction extends Action {
 		super();
 		setText(Messages.exportAsPdf);
 		setToolTipText(Messages.exportAsPdf);
-		setImageDescriptor(Pics.getImageDescriptor("pdf.png"));
-		setHoverImageDescriptor(Pics.getImageDescriptor("pdf.png"));
+		setImageDescriptor(Pics.getImageDescriptor("pdf.png",MigrationPlugin.getDefault()));
+		setHoverImageDescriptor(Pics.getImageDescriptor("pdf.png",MigrationPlugin.getDefault()));
 	}
 	
 	@Override

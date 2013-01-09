@@ -35,6 +35,9 @@ public class Messages extends NLS {
 	public static String callActivityTargetVersionProperty;
 	public static String attachmentDataRemovedDescription;
 	public static String dataProperty;
+	public static String document;
+	public static String documentProperty;
+	public static String documentCreationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$
