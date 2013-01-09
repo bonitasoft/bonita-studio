@@ -58,11 +58,12 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
                 ExpressionConstants.CONNECTOR_OUTPUT_TYPE,
                 ExpressionConstants.I18N_TYPE,
                 ExpressionConstants.CONNECTOR_TYPE,
-                ExpressionConstants.SIMULATION_VARIABLE_TYPE
+                ExpressionConstants.SIMULATION_VARIABLE_TYPE,
         }) ;
 
         AvailableExpressionTypeFilter dataFilter =  new AvailableExpressionTypeFilter(new String[]{
-                ExpressionConstants.VARIABLE_TYPE
+                ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.SEARCH_INDEX_TYPE
         }) ;
 
         return new OperationsComposite(tabbedPropertySheetPage, parent, actionFilter, dataFilter);

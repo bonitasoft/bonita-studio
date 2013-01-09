@@ -471,7 +471,7 @@ public class OperationsComposite extends Composite {
             @Override
             public String getText(Object expression) {
                 return super.getText(expression) + " ("
-                        + ((Expression) expression).getReturnType() + ")";
+                        + ((Expression) expression).getReturnType() + ") -- "+((Expression)expression).getType();
             }
         });
 

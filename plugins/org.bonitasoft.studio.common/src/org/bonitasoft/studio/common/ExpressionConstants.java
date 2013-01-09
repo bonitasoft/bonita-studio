@@ -23,6 +23,7 @@ public interface ExpressionConstants {
     String ENGINE_CONSTANT_TYPE = ExpressionType.TYPE_ENGINE_CONSTANT.name();
     String CONNECTOR_OUTPUT_TYPE = "CONNECTOR_OUTPUT_TYPE";
     String MESSAGE_ID_TYPE = "MESSAGE_ID_TYPE";
+    String SEARCH_INDEX_TYPE="SEARCH_INDEX_TYPE";
 
     String CONNECTOR_TYPE = "CONNECTOR_TYPE" ;
     String XPATH_TYPE = "XPATH_TYPE";
