@@ -34,8 +34,8 @@ public class BonitaTabsPresentationFactory extends WorkbenchPresentationFactory 
     public StackPresentation createEditorPresentation(Composite parent,
             IStackPresentationSite site) {
         final StackPresentation  result = super.createEditorPresentation(parent, site);
-        org.eclipse.swt.custom.CTabFolder tab = (org.eclipse.swt.custom.CTabFolder)result.getControl();
-        tab.setBackgroundImage(Pics.getImage(PresentationImages.COOLBAR_BACKGROUND));
+//        org.eclipse.swt.custom.CTabFolder tab = (org.eclipse.swt.custom.CTabFolder)result.getControl();
+//        tab.setBackgroundImage(Pics.getImage(PresentationImages.COOLBAR_BACKGROUND));
         return result;
     }
 
@@ -49,8 +49,8 @@ public class BonitaTabsPresentationFactory extends WorkbenchPresentationFactory 
     public StackPresentation createViewPresentation(Composite parent,
             IStackPresentationSite site) {
         final StackPresentation  result = super.createViewPresentation(parent, site);
-        org.eclipse.swt.custom.CTabFolder tab = (org.eclipse.swt.custom.CTabFolder)result.getControl();
-        tab.setBackgroundImage(Pics.getImage(PresentationImages.COOLBAR_BACKGROUND));
+//        org.eclipse.swt.custom.CTabFolder tab = (org.eclipse.swt.custom.CTabFolder)result.getControl();
+//        tab.setBackgroundImage(Pics.getImage(PresentationImages.COOLBAR_BACKGROUND));
 
         return result;
     }

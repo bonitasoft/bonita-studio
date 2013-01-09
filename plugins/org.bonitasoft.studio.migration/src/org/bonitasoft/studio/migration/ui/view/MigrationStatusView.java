@@ -103,7 +103,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 0, 5).create());
 
 		createTopComposite(mainComposite);
 		createTableComposite(mainComposite);
@@ -146,7 +146,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 	protected void createBottomComposite(Composite mainComposite) {
 		final Composite bottomComposite = new Composite(mainComposite, SWT.NONE);
-		bottomComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+		bottomComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(0, 10, 0, 0).create());
 		bottomComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
 		createMarkAsCompletedButton(bottomComposite);
