@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="process" nsURI="http://www.bonitasoft.org/ns/studio/process"
-    nsPrefix="process">
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="process"
+    nsURI="http://www.bonitasoft.org/ns/studio/process" nsPrefix="process">
   <eClassifiers xsi:type="ecore:EClass" name="AbstractCatchMessageEvent" abstract="true"
       interface="true" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="event" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -369,6 +370,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Pool" eSuperTypes="#//AbstractProcess">
     <eStructuralFeatures xsi:type="ecore:EReference" name="documents" upperBound="-1"
         eType="#//Document" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SearchIndexs" lowerBound="5"
+        upperBound="5" eType="#//SearchIndex" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProcessApplication" eSuperTypes="#//ResourceContainer form.ecore#//MandatoryFieldsCustomization">
     <eStructuralFeatures xsi:type="ecore:EReference" name="errorTemplate" eType="#//AssociatedFile"
@@ -551,6 +554,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XMLType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="XORGateway" eSuperTypes="#//Gateway"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SearchIndex">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Name" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Value" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
+  </eClassifiers>
   <eSubpackages name="decision" nsURI="http://www.bonitasoft.org/ns/studio/process/decision"
       nsPrefix="decision">
     <eClassifiers xsi:type="ecore:EClass" name="DecisionTable">

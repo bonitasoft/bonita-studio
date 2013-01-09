@@ -2520,7 +2520,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.44">
+              value="//@expressionProviders/@providers.0/@expressions.45">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -2647,7 +2647,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.45">
+              value="//@expressionProviders/@providers.0/@expressions.46">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -2709,7 +2709,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.46">
+              value="//@expressionProviders/@providers.0/@expressions.47">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -2777,7 +2777,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.48">
+              value="//@expressionProviders/@providers.0/@expressions.49">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -3700,6 +3700,12 @@
               </initializers>
             </newElementInitializers>
           </initializers>
+          <initializers
+              xsi:type="gmfgen:GenFeatureValueSpec"
+              value="//@expressionProviders/@providers.0/@expressions.44">
+            <feature
+                href="process.genmodel#//process/Pool/SearchIndexs"/>
+          </initializers>
         </modelElementInitializer>
       </modelFacet>
       <labels
@@ -3716,7 +3722,10 @@
             figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet"
-            parser="//@labelParsers/@implementations.0">
+            parser="//@labelParsers/@implementations.0"
+            viewPattern=""
+            editorPattern=""
+            editPattern="">
           <metaFeatures
               href="process.genmodel#//process/Element/name"/>
           <editableMetaFeatures
@@ -3763,7 +3772,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.47">
+              value="//@expressionProviders/@providers.0/@expressions.48">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -4267,7 +4276,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.46">
+              value="//@expressionProviders/@providers.0/@expressions.47">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -4329,7 +4338,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.45">
+              value="//@expressionProviders/@providers.0/@expressions.46">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -4849,13 +4858,13 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.49">
+              value="//@expressionProviders/@providers.0/@expressions.50">
             <feature
                 href="process.genmodel#//process/SequenceFlow/decisionTable"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.50">
+              value="//@expressionProviders/@providers.0/@expressions.51">
             <feature
                 href="process.genmodel#//process/SequenceFlow/condition"/>
           </initializers>
@@ -4890,7 +4899,7 @@
         </modelFacet>
       </labels>
       <creationConstraints
-          sourceEnd="//@expressionProviders/@providers.0/@expressions.51"/>
+          sourceEnd="//@expressionProviders/@providers.0/@expressions.52"/>
     </links>
     <links
         visualID="4002"
@@ -4920,7 +4929,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.52">
+              value="//@expressionProviders/@providers.0/@expressions.53">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -4956,7 +4965,7 @@
         </modelFacet>
       </labels>
       <creationConstraints
-          sourceEnd="//@expressionProviders/@providers.0/@expressions.53"/>
+          sourceEnd="//@expressionProviders/@providers.0/@expressions.54"/>
     </links>
     <links
         visualID="4003"
@@ -8750,6 +8759,8 @@
       <expressions
           body="return &quot;&quot;;"/>
       <expressions
+          body="List&lt;SearchIndex> searchIndexs = new ArrayList&lt;SearchIndex>(5);&#xD;&#xA;&#x9;&#x9;for (int i = 0; i &lt; 5; i++) {&#xD;&#xA;&#x9;&#x9;&#x9;SearchIndex searchIndex = ProcessFactory.eINSTANCE&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;.createSearchIndex();&#xD;&#xA;&#x9;&#x9;&#x9;Expression name = ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;&#x9;&#x9;&#x9;name.setContent(&quot;&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;name.setType(ExpressionConstants.CONSTANT_TYPE);&#xD;&#xA;&#x9;&#x9;&#x9;name.setReturnType(String.class.getName());&#xD;&#xA;&#x9;&#x9;&#x9;name.setReturnTypeFixed(true);&#xD;&#xA;&#x9;&#x9;&#x9;searchIndex.setName(name);&#xD;&#xA;&#x9;&#x9;&#x9;Expression value = ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;&#x9;&#x9;&#x9;value.setContent(&quot;&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;value.setReturnType(String.class.getName());&#xD;&#xA;&#x9;&#x9;&#x9;value.setReturnTypeFixed(true);&#xD;&#xA;&#x9;&#x9;&#x9;searchIndex.setValue(value);&#xD;&#xA;&#x9;&#x9;&#x9;searchIndexs.add(searchIndex);&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;return searchIndexs;"/>
+      <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
@@ -8770,7 +8781,7 @@
           body="return org.bonitasoft.studio.common.NamingUtils.getEventDefaultId(self);"/>
       <expressions
           xsi:type="gmfgen:GenConstraint"
-          body="&#x9;&#x9;&#x9;&#x9;if(source instanceof org.bonitasoft.studio.model.process.ThrowMessageEvent){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(((org.bonitasoft.studio.model.process.ThrowMessageEvent) source).getEvents().isEmpty()){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false ;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;}&#xA;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source != null &amp;&amp; target != null) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(source.eContainer() instanceof org.bonitasoft.studio.model.process.SubProcessEvent){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if(!target.eContainer().equals(source.eContainer())){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return true ;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(target.eContainer() instanceof org.bonitasoft.studio.model.process.SubProcessEvent){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if(!target.eContainer().equals(source.eContainer())){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return true ;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if (org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(source) instanceof org.bonitasoft.studio.model.process.Pool&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&amp;&amp; org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(target) instanceof org.bonitasoft.studio.model.process.Pool){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(source).equals(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(target)))&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false ;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}else if(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(source) instanceof org.bonitasoft.studio.model.process.MainProcess &amp;&amp; &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(target) instanceof org.bonitasoft.studio.model.process.MainProcess){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false ;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;"/>
+          body="&#x9;&#x9;&#x9;&#x9;if(source instanceof org.bonitasoft.studio.model.process.ThrowMessageEvent){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(((org.bonitasoft.studio.model.process.ThrowMessageEvent) source).getEvents().isEmpty()){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false ;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;}&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source != null &amp;&amp; target != null) {&#xA; &#x9;&#x9;&#x9;&#x9;&#x9; if(target.getIncomingMessag() != null){&#xA;           &#x9;&#x9;&#x9;             return false;&#xA;            &#x9;&#x9;&#x9;        }&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if (org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(source) instanceof org.bonitasoft.studio.model.process.Pool&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&amp;&amp; org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(target) instanceof org.bonitasoft.studio.model.process.Pool){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(source).equals(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(target)))&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false ;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}else if(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(source) instanceof org.bonitasoft.studio.model.process.MainProcess &amp;&amp; &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcess(target) instanceof org.bonitasoft.studio.model.process.MainProcess){&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false ;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(source.eContainer() instanceof org.bonitasoft.studio.model.process.SubProcessEvent){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if(!target.eContainer().equals(source.eContainer())){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return true ;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(target.eContainer() instanceof org.bonitasoft.studio.model.process.SubProcessEvent){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if(!target.eContainer().equals(source.eContainer())){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return true ;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;"/>
     </providers>
     <providers
         xsi:type="gmfgen:GenExpressionInterpreter">
