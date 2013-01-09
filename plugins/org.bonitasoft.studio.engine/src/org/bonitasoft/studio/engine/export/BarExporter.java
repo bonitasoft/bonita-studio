@@ -57,6 +57,10 @@ import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.actormapping.ActorMappingFactory;
 import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
 import org.bonitasoft.studio.model.actormapping.DocumentRoot;
+import org.bonitasoft.studio.model.actormapping.Groups;
+import org.bonitasoft.studio.model.actormapping.Membership;
+import org.bonitasoft.studio.model.actormapping.Roles;
+import org.bonitasoft.studio.model.actormapping.Users;
 import org.bonitasoft.studio.model.actormapping.util.ActorMappingResourceFactoryImpl;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
@@ -209,16 +213,20 @@ public class BarExporter {
 
     private void cleanMapping(ActorMappingsType mapping) {
         for(ActorMapping m : mapping.getActorMapping()){
-            if(m.getGroups() != null && m.getGroups().getGroup().isEmpty()){
+            final Groups groups = m.getGroups();
+			if(groups != null && groups.getGroup().isEmpty()){
                 m.setGroups(null) ;
             }
-            if(m.getMemberships() != null && m.getMemberships().getMembership().isEmpty()){
+            final Membership memberships = m.getMemberships();
+			if(memberships != null && memberships.getMembership().isEmpty()){
                 m.setMemberships(null) ;
             }
-            if(m.getRoles() != null && m.getRoles().getRole().isEmpty()){
+            final Roles roles = m.getRoles();
+			if(roles != null && roles.getRole().isEmpty()){
                 m.setRoles(null) ;
             }
-            if(m.getUsers() != null && m.getUsers().getUser().isEmpty()){
+            final Users users = m.getUsers();
+			if(users != null && users.getUser().isEmpty()){
                 m.setUsers(null) ;
             }
         }
