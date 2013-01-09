@@ -123,6 +123,7 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase {
         bot.textInGroup(Messages.addMessageContent).setText(messageContent3);
         bot.tableInGroup(Messages.addMessageContent).click(2,1);
         bot.textInGroup(Messages.addMessageContent).setText(messageContent3);
+        bot.tableInGroup(Messages.addMessageContent).click(2,0);//need click elsewhere to trigger validation
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
 
