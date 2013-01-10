@@ -41,6 +41,8 @@ import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -59,6 +61,7 @@ public class AbstractProcessSwitch extends ProcessSwitch<Element> {
     public static final String DB_QUERY = "script";
     public static final String DB_USER = "username";
     public static final String DB_PASSWORD = "password";
+	private static final int MAX_INDEX = 5;
 
     protected final ProcessDefinitionBuilder builder;
     protected final Set<EObject> eObjectNotExported;
@@ -73,6 +76,7 @@ public class AbstractProcessSwitch extends ProcessSwitch<Element> {
         addActors(builder,object);
         addData(builder,object) ;
         addConnector(builder, object) ;
+        addSearchIndex(builder, object);
         addKPIBinding(builder, object);
         return object;
     }
@@ -154,6 +158,17 @@ public class AbstractProcessSwitch extends ProcessSwitch<Element> {
                 }
             }
         }
+    }
+    
+    protected void addSearchIndex(final ProcessDefinitionBuilder builder, final AbstractProcess process){
+    	if (process instanceof Pool){
+    		Pool pool = (Pool)process;
+    		for (int i = 0;i<MAX_INDEX;i++){
+    			SearchIndex searchIndex = pool.getSearchIndexs().get(i);
+    			Expression expr = EngineExpressionUtil.createExpression(searchIndex.getValue());
+    			builder.setStringIndex(0, searchIndex.getName().getContent(), expr);
+    		}
+    	}
     }
 
     protected void addDescription(final DescriptionBuilder builder ,final String description){
