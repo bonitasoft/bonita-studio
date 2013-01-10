@@ -51,7 +51,7 @@ public class BatchValidationHandler extends AbstractHandler {
     		if(parameters != null && !parameters.isEmpty()){
     			final Object diagramParameters = parameters.get("diagrams");
     			if(diagramParameters != null){
-    				toValidate = (Set<Diagram>) parameters.get("diagrams");
+    				toValidate = (Set<Diagram>) diagramParameters;
     			}
     		}
     		if(toValidate.isEmpty()){
