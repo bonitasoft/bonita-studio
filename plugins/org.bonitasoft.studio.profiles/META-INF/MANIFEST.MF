@@ -17,4 +17,3 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.profiles,
  org.bonitasoft.studio.profiles.manager,
  org.bonitasoft.studio.profiles.repository
-Import-Package: org.bonitasoft.engine.bpm.bar
