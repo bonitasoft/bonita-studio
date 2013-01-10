@@ -100,6 +100,7 @@ public class IndexSection extends AbstractBonitaDescriptionSection{
 					valueViewer.setContext(getEObject());
 					valueViewer.setInput(searchIndex);
 					valueViewer.setEditingDomain(editingDomain);
+					valueViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE}));
 					context.bindValue(ViewerProperties.singleSelection().observe(valueViewer),EMFEditProperties.value(editingDomain, ProcessPackage.Literals.SEARCH_INDEX__VALUE).observe(searchIndex));
 				}
 			}
