@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -45,44 +45,51 @@ public class BatchValidationHandler extends AbstractHandler {
      * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        Map parameters = event.getParameters();
-        Set<Diagram> toValidate = new HashSet<Diagram>();
-        if(parameters != null && !parameters.isEmpty() && parameters.get("diagrams") != null){
-            toValidate = (Set<Diagram>) parameters.get("diagrams");
-        }
-        if(toValidate.isEmpty()){
-            IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-            if(part instanceof DiagramEditor){
-                toValidate.add( ((DiagramEditor) part).getDiagram());
-            }
-        }
+    	if(PlatformUI.isWorkbenchRunning()){
+    		Map<?,?> parameters = event.getParameters();
+    		Set<Diagram> toValidate = new HashSet<Diagram>();
+    		if(parameters != null && !parameters.isEmpty()){
+    			final Object diagramParameters = parameters.get("diagrams");
+    			if(diagramParameters != null){
+    				toValidate = (Set<Diagram>) parameters.get("diagrams");
+    			}
+    		}
+    		if(toValidate.isEmpty()){
+    			IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+    			if(part instanceof DiagramEditor){
+    				toValidate.add( ((DiagramEditor) part).getDiagram());
+    			}
+    		}
 
-        final IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
-        final BatchValidationOperation validateOperation = new BatchValidationOperation();
-        validateOperation.setDiagramToValidate(toValidate);
-        Display.getDefault().syncExec(new Runnable() {
+    		final IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
+    		final BatchValidationOperation validateOperation = new BatchValidationOperation();
+    		validateOperation.setDiagramToValidate(toValidate);
+    		Display.getDefault().syncExec(new Runnable() {
 
-            public void run() {
-                try {
-                    service.run(true, false, validateOperation );
-                } catch (InvocationTargetException e) {
-                    BonitaStudioLog.error(e);
-                } catch (InterruptedException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
-        });
+    			public void run() {
+    				try {
+    					service.run(true, false, validateOperation );
+    				} catch (InvocationTargetException e) {
+    					BonitaStudioLog.error(e);
+    				} catch (InterruptedException e) {
+    					BonitaStudioLog.error(e);
+    				}
+    			}
+    		});
 
-        Object showReport = parameters.get("showReport");
-        if(showReport == null){
-            showReport = Boolean.TRUE;
-        }
-        if(showReport instanceof Boolean){
-            if(((Boolean)showReport).booleanValue()){
-                showReport(validateOperation.getResult());
-            }
-        }
-        return validateOperation.getResult();
+    		Object showReport = parameters.get("showReport");
+    		if(showReport == null){
+    			showReport = Boolean.TRUE;
+    		}
+    		if(showReport instanceof Boolean){
+    			if(((Boolean)showReport).booleanValue()){
+    				showReport(validateOperation.getResult());
+    			}
+    		}
+    		return validateOperation.getResult();
+    	} else {
+    		return IStatus.OK;
+    	}
     }
 
     private void showReport(IStatus status) {
