@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="tests-common-feature"
+      label="Feature for BonitaStudio tests"
+      version="1.0.0.qualifier"
+      provider-name="BonitaSoft S.A.">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.equinox.app"/>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.eclipse.swt"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.update.configurator" version="3.1.100" match="compatible"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.emf.edit"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.ui"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.ui.resources.editor"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.ui.browser" version="3.2.300" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.swtbot.eclipse.finder" version="2.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.swtbot.swt.finder" version="2.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.equinox.common"/>
+      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.commands" version="3.5.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.swtbot.eclipse.junit4.headless" version="2.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.swtbot.junit4_x" version="2.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.transaction" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.commands" version="3.6.0" match="greaterOrEqual"/>
+      <import plugin="org.hamcrest.core" version="1.1.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.common.ui" version="2.5.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.swtbot.eclipse.gef.finder" version="2.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.ecore" version="2.5.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.gmf.runtime.emf.commands.core" version="1.2.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.core" version="1.2.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jdt.junit.runtime"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.draw2d"/>
+      <import plugin="org.eclipse.gef"/>
+      <import plugin="org.apache.log4j" version="1.2.13" match="greaterOrEqual"/>
+      <import plugin="org.junit" version="4.8.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.jobs"/>
+      <import plugin="org.hamcrest.library" version="1.1.0" match="greaterOrEqual"/>
+      <import plugin="org.hamcrest.integration" version="1.1.0" match="greaterOrEqual"/>
+      <import plugin="org.hamcrest.text" version="1.1.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.views.properties.tabbed" version="3.5.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xsd" version="2.6.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.core.runtime.compatibility"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.hamcrest.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.engine.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.properties.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.repository.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.util.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.exporter.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.junit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.ant"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.bonitasoft.studio.diagram.form.custom.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.importer.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.eclipse.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.eclipse.finder"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.eclipse.gef.finder"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.junit4_x"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.swt.finder"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.diagram.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.log4j"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.junit4"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.workspace.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.hamcrest"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.groovy.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.importer.jpdl.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.application.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.simulation.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.tests.hotspot"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.hamcrest.library"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.hamcrest.integration"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.hamcrest.text"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.decision.core.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.model.edit.custom.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.profiles.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.repository.themes.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.finder.nebula.gallery"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.userguidance.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.configuration.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.actors.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.connectors.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.validators.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.test.swtbot.util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.ant.optional.junit4"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.eclipse.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.forms.finder"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.expressions.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.eclipse.junit4.headless"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.pde.launching"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jdt.junit.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.pde.build"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.pde.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.jdt.debug"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.bonitasoft.studio.test.suite"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.test.suite2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.test.swtbot.suite"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.jre.extension"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.importer.bar.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.migration.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
