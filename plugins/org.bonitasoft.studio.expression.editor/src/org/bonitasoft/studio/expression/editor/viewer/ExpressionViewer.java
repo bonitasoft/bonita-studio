@@ -486,7 +486,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
             @Override
             public Object convert(Object from) {
-                final boolean isScriptType = from.toString().equals(ExpressionConstants.SCRIPT_TYPE);
+                final boolean isScriptType = ExpressionConstants.SCRIPT_TYPE.equals(from.toString());
                 if(isScriptType){
                     getTextControl().setToolTipText(Messages.editScriptExpressionTooltip);
                 }else{
