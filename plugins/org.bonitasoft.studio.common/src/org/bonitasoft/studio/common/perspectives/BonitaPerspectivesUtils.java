@@ -110,7 +110,7 @@ public class BonitaPerspectivesUtils {
      * Switch to the perspective with id given as parameter
      * @param perspectiveID
      */
-    public static void switchToPerspective(String perspectiveID){
+    public static synchronized void switchToPerspective(String perspectiveID){
         IWorkbench workbench = PlatformUI.getWorkbench();
         IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
         if (window != null) {
