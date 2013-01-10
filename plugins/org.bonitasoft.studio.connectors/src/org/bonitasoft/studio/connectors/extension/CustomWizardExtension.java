@@ -71,7 +71,12 @@ public class CustomWizardExtension {
 
     public AbstractConnectorOutputWizardPage getOutputPage()  {
         try {
-            return (AbstractConnectorOutputWizardPage) config.createExecutableExtension("outputPage");
+        	 IConfigurationElement[] outputPagesConfig =  config.getChildren("outputPage");
+        	 if(outputPagesConfig.length > 0){
+            return (AbstractConnectorOutputWizardPage) outputPagesConfig[0].createExecutableExtension("page");
+        	 }else{
+        		 return null;
+        	 }
         } catch (CoreException e) {
             BonitaStudioLog.error(e) ;
         }

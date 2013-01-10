@@ -86,43 +86,45 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
     private static final String CUSTOM_WIZARD_ID = "org.bonitasoft.studio.connectors.connectorWizard";
 
-    protected final EObject container;
-    protected Connector connectorWorkingCopy;
-    private boolean editMode = false;
-    private Connector originalConnector;
-    private final Set<EStructuralFeature> featureToCheckForUniqueID ;
-    private final EStructuralFeature connectorContainmentFeature;
-    private SelectConnectorDefinitionWizardPage selectionPage;
-    private SelectNameAndDescWizardPage namePage;
-    private DefinitionResourceProvider messageProvider;
-    private CustomWizardExtension extension;
+	protected final EObject container;
+	protected Connector connectorWorkingCopy;
+	private boolean editMode = false;
+	protected Connector originalConnector;
+	protected final Set<EStructuralFeature> featureToCheckForUniqueID ;
+	protected final EStructuralFeature connectorContainmentFeature;
+	private SelectConnectorDefinitionWizardPage selectionPage;
+	private SelectNameAndDescWizardPage namePage;
+	private DefinitionResourceProvider messageProvider;
+	private CustomWizardExtension extension;
 
     private List<CustomWizardExtension> contributions;
 
     private boolean useEvents = true;
 
 
-    public ConnectorWizard(EObject container,EStructuralFeature connectorContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID){
-        this.container = container ;
-        connectorWorkingCopy = ProcessFactory.eINSTANCE.createConnector() ;
-        connectorWorkingCopy.setConfiguration(ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration()) ;
-        editMode = false ;
-        this.connectorContainmentFeature = connectorContainmentFeature ;
-        this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
-        this.featureToCheckForUniqueID.add(connectorContainmentFeature);
-        initialize() ;
-    }
+	public ConnectorWizard(EObject container,EStructuralFeature connectorContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID){
+		this.container = container ;
+		connectorWorkingCopy = ProcessFactory.eINSTANCE.createConnector() ;
+		connectorWorkingCopy.setConfiguration(ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration()) ;
+		editMode = false ;
+		this.connectorContainmentFeature = connectorContainmentFeature ;
+		this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
+		this.featureToCheckForUniqueID.add(connectorContainmentFeature);
+		setWindowTitle("Connectors");
+		initialize() ;
+	}
 
-    public ConnectorWizard(Connector connector, EStructuralFeature connectorContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID){
-        Assert.isNotNull(connector) ;
-        container = connector.eContainer() ;
-        originalConnector = connector ;
-        this.connectorContainmentFeature = connectorContainmentFeature ;
-        connectorWorkingCopy = EcoreUtil.copy(connector) ;
-        editMode = true ;
-        this.featureToCheckForUniqueID = featureToCheckForUniqueID ;
-        initialize() ;
-    }
+	public ConnectorWizard(Connector connector, EStructuralFeature connectorContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID){
+		Assert.isNotNull(connector) ;
+		container = connector.eContainer() ;
+		originalConnector = connector ;
+		this.connectorContainmentFeature = connectorContainmentFeature ;
+		connectorWorkingCopy = EcoreUtil.copy(connector) ;
+		editMode = true ;
+		this.featureToCheckForUniqueID = featureToCheckForUniqueID ;
+		setWindowTitle("Connectors");
+		initialize() ;
+	}
 
 
     protected void initialize() {
@@ -138,24 +140,26 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
         }
     }
 
-    protected void initializeContainment() {
-        AbstractProcess process =  ModelHelper.getParentProcess(container) ;
-        EObject processCopy = EcoreUtil.copy(process) ;
-        EObject containerCopy = null ;
-        for(EObject element : ModelHelper.getAllItemsOfType(processCopy, container.eClass())){
-            if(element instanceof Element && container instanceof Element){
-                if(((Element) element).getName().equals(((Element)container).getName())){
-                    containerCopy = element ;
-                    break ;
-                }
-            }
-        }
+	protected void initializeContainment() {
+		if(container instanceof Element){
+			AbstractProcess process =  ModelHelper.getParentProcess(container) ;
+			EObject processCopy = EcoreUtil.copy(process) ;
+			EObject containerCopy = null ;
+			for(EObject element : ModelHelper.getAllItemsOfType(processCopy, container.eClass())){
+				if(element instanceof Element && container instanceof Element){
+					if(((Element) element).getName().equals(((Element)container).getName())){
+						containerCopy = element ;
+						break ;
+					}
+				}
+			}
 
 
-        @SuppressWarnings("unchecked")
-        List<EObject> connectors = (List<EObject>) containerCopy.eGet(connectorContainmentFeature) ;
-        connectors.add(connectorWorkingCopy) ;
-    }
+			@SuppressWarnings("unchecked")
+			List<EObject> connectors = (List<EObject>) containerCopy.eGet(connectorContainmentFeature) ;
+			connectors.add(connectorWorkingCopy) ;
+		}
+	}
 
     protected DefinitionResourceProvider initMessageProvider() {
         IRepositoryStore<? extends IRepositoryFileStore> store =RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
@@ -204,276 +208,285 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
         return new SelectConnectorDefinitionWizardPage(connectorWorkingCopy,resourceProvider);
     }
 
-    protected void addOuputPage(ConnectorDefinition definition) {
-        IWizardPage outputPage = getOutputPageFor(definition) ;
-        if(outputPage != null){
-            addAdditionalPage(outputPage) ;
-        }
-    }
+	protected void addOuputPage(ConnectorDefinition definition) {
+		IWizardPage outputPage = getOutputPageFor(definition) ;
+		
+		//IWizardPage outputPage = getConnectorOutputPageFor(definition) ;
+		
+		if(outputPage != null){
+			addAdditionalPage(outputPage) ;
+		}
+	}
 
-    protected IWizardPage getOutputPageFor(ConnectorDefinition definition) {
-        AbstractConnectorOutputWizardPage outputPage = null ;
-        if(!definition.getOutput().isEmpty()){
-            if(!editMode){
-                if(!definition.getOutput().isEmpty() && connectorWorkingCopy.getOutputs().isEmpty()){ //Add default output
-                    createDefaultOutputs(definition) ;
-                }
-            }
-            if(extension != null && !extension.useDefaultOutputPage()){
-                outputPage = extension.getOutputPage() ;
-            }else{
-                outputPage = new ConnectorOutputWizardPage() ;
-            }
-            outputPage.setElementContainer(container) ;
-            outputPage.setConnector(connectorWorkingCopy) ;
-            outputPage.setDefinition(definition) ;
-        }
-        return outputPage;
-    }
-
-    protected boolean hasOutputPage(){
-        return (extension != null && !extension.useDefaultOutputPage() && extension.getOutputPage() != null) || (!getDefinition().getOutput().isEmpty());
-    }
-
-    protected void createDefaultOutputs(ConnectorDefinition definition) {
-        for(Output output : definition.getOutput()){
-            Operation operation = ExpressionFactory.eINSTANCE.createOperation() ;
-            Operator assignment = ExpressionFactory.eINSTANCE.createOperator() ;
-            assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
-            operation.setOperator(assignment) ;
-
-            Expression rightOperand = ExpressionFactory.eINSTANCE.createExpression() ;
-            rightOperand.setName(output.getName()) ;
-            rightOperand.setContent(output.getName()) ;
-            rightOperand.setReturnType(output.getType()) ;
-            rightOperand.setType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE) ;
-            rightOperand.getReferencedElements().add(EcoreUtil.copy(output)) ;
-            operation.setRightOperand(rightOperand) ;
-
-            Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression() ;
-            operation.setLeftOperand(leftOperand) ;
-
-            connectorWorkingCopy.getOutputs().add(operation) ;
-        }
-    }
-
-    @Override
-    public IWizardPage getNextPage(IWizardPage page) {
-        if(page.equals(selectionPage)){
-            final ConnectorDefinition definition = selectionPage.getSelectedDefinition() ;
-
-            checkDefinitionDependencies(definition) ;
-
-            clearConnectorConfiguration(definition) ;
-            extension = findCustomWizardExtension(definition) ;
-            recreateConnectorConfigurationPages(definition);
-        }
-        return super.getNextPage(page);
-    }
-
-    protected void checkDefinitionDependencies(final ConnectorDefinition definition) {
-        if(!definition.getJarDependency().isEmpty()){
-            try {
-                getContainer().run(true, false, new IRunnableWithProgress() {
-
-                    @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor.beginTask(Messages.addingDefinitionDependencies, IProgressMonitor.UNKNOWN) ;
-                        DependencyRepositoryStore depStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
-                        for(String jarName : definition.getJarDependency()){
-                            if( depStore.getChild(jarName) == null){
-                                InputStream is = messageProvider.getDependencyInputStream(jarName) ;
-                                if(is != null){
-                                    depStore.importInputStream(jarName, is) ;
-                                }
-                            }
-                        }
-                    }
-                }) ;
-            } catch (Exception e){
-                BonitaStudioLog.error(e) ;
-            }
-        }
-    }
-
-    private CustomWizardExtension findCustomWizardExtension(ConnectorDefinition definition) {
-        int priority = 0 ;
-        CustomWizardExtension result = null ;
-        for(CustomWizardExtension ext : contributions){
-            if(ext.appliesTo(definition) && ext.getPriority() > priority ){
-                result = ext ;
-                priority = ext.getPriority() ;
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public void recreateConnectorConfigurationPages(final ConnectorDefinition definition) {
-        List<IWizardPage> pages = getPagesFor(definition) ;
-
-        //Remove already generated page in case of return
-        removeAllAdditionalPages() ;
-        for(IWizardPage p : pages){
-            addAdditionalPage(p) ; //Additional pages control will be created lazily by the WizardContainer
-        }
-        addOuputPage(definition) ;
-        initializeEmptyConnectorConfiguration(definition);
-    }
-
-    private void initializeEmptyConnectorConfiguration(ConnectorDefinition definition) {
-        final ConnectorConfiguration configuration = connectorWorkingCopy.getConfiguration();
-        for(Input input : definition.getInput()){
-            if(getConnectorParameter(configuration, input.getName()) == null){
-                final ConnectorParameter param = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter() ;
-                param.setKey(input.getName()) ;
-                configuration.getParameters().add(param);
-            }
-        }
-    }
-
-    private ConnectorParameter getConnectorParameter(ConnectorConfiguration configuration, String inputName) {
-        for(ConnectorParameter param : configuration.getParameters()){
-            if(param.getKey().equals(inputName)){
-                return param ;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public boolean canFinish() {
-        if(extension != null && extension.hasCanFinishProvider()){
-            if(connectorWorkingCopy.getConfiguration() != null){
-                return extension.canFinish(connectorWorkingCopy.getConfiguration()) ;
-            }
-        }
-
-        if(!isConfigurationValid(getDefinition(),connectorWorkingCopy.getConfiguration())){
-            return false;
-        }
-
-        return super.canFinish();
-    }
-
-    private boolean isConfigurationValid(ConnectorDefinition def,ConnectorConfiguration configuration) {
-        if(def == null){
-            return false;
-        }
-        for(ConnectorParameter parameter : configuration.getParameters()){
-            Input input = getConnectorInput(def,parameter.getKey());
-            if(input != null && input.isMandatory()){
-                if(expressionIsEmpty(parameter.getExpression())){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private boolean expressionIsEmpty(AbstractExpression expression) {
-        if(expression == null){
-            return true;
-        }
-        if(expression instanceof Expression){
-            return ((Expression) expression).getContent() == null || ((Expression) expression).getContent().isEmpty();
-        }else if(expression instanceof TableExpression){
-            return ((TableExpression) expression).getExpressions().isEmpty();
-        }else if(expression instanceof ListExpression){
-            return ((ListExpression) expression).getExpressions().isEmpty();
-        }
-        return false;
-    }
-
-    private Input getConnectorInput(ConnectorDefinition def,String inputName) {
-        for(Input input : def.getInput()){
-            if(input.getName().equals(inputName)){
-                return input ;
-            }
-        }
-        return null;
-    }
-
-    protected void clearConnectorConfiguration(ConnectorDefinition definition) {
-        ConnectorConfiguration configuration =  connectorWorkingCopy.getConfiguration() ;
-        configuration.getParameters().clear() ;
-    }
+	protected IWizardPage getOutputPageFor(ConnectorDefinition definition) {
+		AbstractConnectorOutputWizardPage outputPage = null ;
+		if(!definition.getOutput().isEmpty()){
+			if(!editMode){
+				if(connectorWorkingCopy.getOutputs().isEmpty()){ //Add default output
+					createDefaultOutputs(definition) ;
+				}
+			}
+			if(extension != null && !extension.useDefaultOutputPage()){
+				outputPage = extension.getOutputPage() ;
+			}else{	
+				outputPage = new ConnectorOutputWizardPage() ;
+			}
+			outputPage.setElementContainer(container) ;
+			outputPage.setConnector(connectorWorkingCopy) ;
+			outputPage.setDefinition(definition) ;
+		}
+		return outputPage;
+	}
 
 
+	
+	protected boolean hasOutputPage(){
+		return (extension != null && !extension.useDefaultOutputPage() && extension.getOutputPage() != null) || (!getDefinition().getOutput().isEmpty());
+	}
 
-    protected List<IWizardPage> getPagesFor(ConnectorDefinition definition) {
-        List<IWizardPage> result = new ArrayList<IWizardPage>() ;
-        if(extension != null && !extension.useDefaultGeneratedPages()
-                && (!extension.hasCanBeUsedProvider() || extension.canBeUsed(definition,connectorWorkingCopy))){ //Extension page
-            for(AbstractConnectorConfigurationWizardPage p : extension.getPages()){
-                p.setMessageProvider(messageProvider) ;
-                p.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
-                p.setDefinition(definition) ;
-                p.setElementContainer(container) ;
-                result.add(p) ;
-            }
-        }else{ //Default page
-            for(Page p : definition.getPage()){
-                result.add(createDefaultConnectorPage(definition,p)) ;
-            }
-        }
-        return result;
-    }
+	protected void createDefaultOutputs(ConnectorDefinition definition) {
+		for(Output output : definition.getOutput()){
+			Operation operation = ExpressionFactory.eINSTANCE.createOperation() ;
+			Operator assignment = ExpressionFactory.eINSTANCE.createOperator() ;
+			assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
+			operation.setOperator(assignment) ;
 
-    protected IWizardPage createDefaultConnectorPage(ConnectorDefinition def,Page page) {
-        AbstractConnectorConfigurationWizardPage wizPage = new GeneratedConnectorWizardPage() ;
-        wizPage.setMessageProvider(messageProvider) ;
-        wizPage.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
-        wizPage.setDefinition(def) ;
-        wizPage.setElementContainer(container) ;
-        wizPage.setPage(page) ;
-        return wizPage ;
-    }
+			Expression rightOperand = ExpressionFactory.eINSTANCE.createExpression() ;
+			rightOperand.setName(output.getName()) ;
+			rightOperand.setContent(output.getName()) ;
+			rightOperand.setReturnType(output.getType()) ;
+			rightOperand.setType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE) ;
+			rightOperand.getReferencedElements().add(EcoreUtil.copy(output)) ;
+			operation.setRightOperand(rightOperand) ;
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
-    @Override
-    public boolean performFinish() {
-        final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(container) ;
-        if(editMode){
-            List<?> connectorsList = (List<?>) container.eGet(connectorContainmentFeature) ;
-            int index = connectorsList.indexOf(originalConnector) ;
-            editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, container, connectorContainmentFeature, originalConnector)) ;
-            editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, connectorContainmentFeature, connectorWorkingCopy,index)) ;
-        }else{
-            editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, connectorContainmentFeature, connectorWorkingCopy)) ;
-        }
-        return true;
-    }
+			Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression() ;
+			operation.setLeftOperand(leftOperand) ;
 
-    public Connector getOriginalConnector() {
-        return originalConnector;
-    }
+			connectorWorkingCopy.getOutputs().add(operation) ;
+		}
+	}
 
-    @Override
-    public ConnectorDefinition getDefinition() {
-        ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-        if(originalConnector != null){
-            return defStore.getDefinition(originalConnector.getDefinitionId(), originalConnector.getDefinitionVersion()) ;
-        }else{
-            if(connectorWorkingCopy.getDefinitionId() != null && !connectorWorkingCopy.getDefinitionId().isEmpty()){
-                return defStore.getDefinition(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion()) ;
-            }
-        }
-        return null;
-    }
+	@Override
+	public IWizardPage getNextPage(IWizardPage page) {
+		if(page.equals(selectionPage)){
+			final ConnectorDefinition definition = selectionPage.getSelectedDefinition() ;
 
-    @Override
-    public IWizardPage getPreviousPage(IWizardPage page) {
-        IWizardPage previousPage = super.getPreviousPage(page);
-        if(previousPage != null && previousPage.equals(selectionPage)){
-            return null;
-        }
-        return previousPage;
-    }
+			checkDefinitionDependencies(definition) ;
 
-    public boolean isEditMode() {
-        return editMode;
-    }
+			clearConnectorConfiguration(definition) ;
+			extension = findCustomWizardExtension(definition) ;
+			recreateConnectorConfigurationPages(definition);
+		}
+		return super.getNextPage(page);
+	}
+
+	protected void checkDefinitionDependencies(final ConnectorDefinition definition) {
+		if(!definition.getJarDependency().isEmpty()){
+			try {
+				getContainer().run(true, false, new IRunnableWithProgress() {
+
+					@Override
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						monitor.beginTask(Messages.addingDefinitionDependencies, IProgressMonitor.UNKNOWN) ;
+						DependencyRepositoryStore depStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
+						for(String jarName : definition.getJarDependency()){
+							if( depStore.getChild(jarName) == null){
+								InputStream is = messageProvider.getDependencyInputStream(jarName) ;
+								if(is != null){
+									depStore.importInputStream(jarName, is) ;
+								}
+							}
+						}
+					}
+				}) ;
+			} catch (Exception e){
+				BonitaStudioLog.error(e) ;
+			}
+		}
+	}
+
+	private CustomWizardExtension findCustomWizardExtension(ConnectorDefinition definition) {
+		int priority = 0 ;
+		CustomWizardExtension result = null ;
+		for(CustomWizardExtension ext : contributions){
+			if(ext.appliesTo(definition) && ext.getPriority() > priority ){
+				result = ext ;
+				priority = ext.getPriority() ;
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public void recreateConnectorConfigurationPages(final ConnectorDefinition definition) {
+		List<IWizardPage> pages = getPagesFor(definition) ;
+
+		//Remove already generated page in case of return
+				removeAllAdditionalPages() ;
+		for(IWizardPage p : pages){
+			addAdditionalPage(p) ; //Additional pages control will be created lazily by the WizardContainer
+		}
+		addOuputPage(definition) ;
+		initializeEmptyConnectorConfiguration(definition);
+	}
+
+	private void initializeEmptyConnectorConfiguration(ConnectorDefinition definition) {
+		final ConnectorConfiguration configuration = connectorWorkingCopy.getConfiguration();
+		for(Input input : definition.getInput()){
+			if(getConnectorParameter(configuration, input.getName()) == null){
+				final ConnectorParameter param = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter() ;
+				param.setKey(input.getName()) ;
+				configuration.getParameters().add(param);
+			}
+		}
+	}
+
+	private ConnectorParameter getConnectorParameter(ConnectorConfiguration configuration, String inputName) {
+		for(ConnectorParameter param : configuration.getParameters()){
+			if(param.getKey().equals(inputName)){
+				return param ;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public boolean canFinish() {
+		if(extension != null && extension.hasCanFinishProvider()){
+			if(connectorWorkingCopy.getConfiguration() != null){
+				return extension.canFinish(connectorWorkingCopy.getConfiguration()) ;
+			}
+		}
+
+		if(!isConfigurationValid(getDefinition(),connectorWorkingCopy.getConfiguration())){
+			return false;
+		}
+
+		return super.canFinish();
+	}
+
+	private boolean isConfigurationValid(ConnectorDefinition def,ConnectorConfiguration configuration) {
+		if(def == null){
+			return false;
+		}
+		for(ConnectorParameter parameter : configuration.getParameters()){
+			Input input = getConnectorInput(def,parameter.getKey());
+			if(input != null && input.isMandatory()){
+				if(expressionIsEmpty(parameter.getExpression())){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private boolean expressionIsEmpty(AbstractExpression expression) {
+		if(expression == null){
+			return true;
+		}
+		if(expression instanceof Expression){
+			return ((Expression) expression).getContent() == null || ((Expression) expression).getContent().isEmpty();
+		}else if(expression instanceof TableExpression){
+			return ((TableExpression) expression).getExpressions().isEmpty();
+		}else if(expression instanceof ListExpression){
+			return ((ListExpression) expression).getExpressions().isEmpty();
+		}
+		return false;
+	}
+
+	private Input getConnectorInput(ConnectorDefinition def,String inputName) {
+		for(Input input : def.getInput()){
+			if(input.getName().equals(inputName)){
+				return input ;
+			}
+		}
+		return null;
+	}
+
+	protected void clearConnectorConfiguration(ConnectorDefinition definition) {
+		ConnectorConfiguration configuration =  connectorWorkingCopy.getConfiguration() ;
+		configuration.getParameters().clear() ;
+	}
+
+
+
+	protected List<IWizardPage> getPagesFor(ConnectorDefinition definition) {
+		List<IWizardPage> result = new ArrayList<IWizardPage>() ;
+		if(extension != null && (!extension.hasCanBeUsedProvider() || extension.canBeUsed(definition,connectorWorkingCopy))){ //Extension page
+			for(AbstractConnectorConfigurationWizardPage p : extension.getPages()){
+				p.setMessageProvider(messageProvider) ;
+				p.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
+				p.setDefinition(definition) ;
+				p.setElementContainer(container) ;
+				result.add(p) ;
+			}
+			if(extension.useDefaultGeneratedPages()){
+				for(Page p : definition.getPage()){
+					result.add(createDefaultConnectorPage(definition,p)) ;
+				}
+			}
+		}else{ //Default page
+			for(Page p : definition.getPage()){
+				result.add(createDefaultConnectorPage(definition,p)) ;
+			}
+		}
+		return result;
+	}
+
+	protected IWizardPage createDefaultConnectorPage(ConnectorDefinition def,Page page) {
+		AbstractConnectorConfigurationWizardPage wizPage = new GeneratedConnectorWizardPage() ;
+		wizPage.setMessageProvider(messageProvider) ;
+		wizPage.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
+		wizPage.setDefinition(def) ;
+		wizPage.setElementContainer(container) ;
+		wizPage.setPage(page) ;
+		return wizPage ;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
+	 */
+	@Override
+	public boolean performFinish() {
+		final EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(container) ;
+		if(editMode){
+			List<?> connectorsList = (List<?>) container.eGet(connectorContainmentFeature) ;
+			int index = connectorsList.indexOf(originalConnector) ;
+			editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, container, connectorContainmentFeature, originalConnector)) ;
+			editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, connectorContainmentFeature, connectorWorkingCopy,index)) ;
+		}else{
+			editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, connectorContainmentFeature, connectorWorkingCopy)) ;
+		}
+		return true;
+	}
+
+	public Connector getOriginalConnector() {
+		return originalConnector;
+	}
+
+	@Override
+	public ConnectorDefinition getDefinition() {
+		ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+		if(originalConnector != null){
+			return defStore.getDefinition(originalConnector.getDefinitionId(), originalConnector.getDefinitionVersion()) ;
+		}else{
+			if(connectorWorkingCopy.getDefinitionId() != null && !connectorWorkingCopy.getDefinitionId().isEmpty()){
+				return defStore.getDefinition(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion()) ;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public IWizardPage getPreviousPage(IWizardPage page) {
+		IWizardPage previousPage = super.getPreviousPage(page);
+		if(previousPage != null && previousPage.equals(selectionPage)){
+			return null;
+		}
+		return previousPage;
+	}
+
+	public boolean isEditMode() {
+		return editMode;
+	}
 }
