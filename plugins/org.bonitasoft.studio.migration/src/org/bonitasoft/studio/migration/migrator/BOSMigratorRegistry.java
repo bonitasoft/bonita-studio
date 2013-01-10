@@ -27,7 +27,6 @@ import org.eclipse.emf.edapt.migration.MigrationPlugin;
 import org.eclipse.emf.edapt.migration.ReleaseUtils;
 import org.eclipse.emf.edapt.migration.execution.BundleClassLoader;
 import org.eclipse.emf.edapt.migration.execution.IClassLoader;
-import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.osgi.framework.Bundle;
 
 

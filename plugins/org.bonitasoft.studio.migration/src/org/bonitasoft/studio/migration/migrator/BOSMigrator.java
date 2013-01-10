@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.migration.i18n.Messages;
 import org.bonitasoft.studio.migration.model.report.Report;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -40,8 +38,6 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edapt.common.MetamodelFactory;
 import org.eclipse.emf.edapt.common.MetamodelUtils;
 import org.eclipse.emf.edapt.common.ResourceUtils;
 import org.eclipse.emf.edapt.declaration.LibraryImplementation;
@@ -59,18 +55,15 @@ import org.eclipse.emf.edapt.migration.MaterializingBackwardConverter;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.Model;
-import org.eclipse.emf.edapt.migration.ModelResource;
 import org.eclipse.emf.edapt.migration.Persistency;
 import org.eclipse.emf.edapt.migration.PrintStreamProgressMonitor;
 import org.eclipse.emf.edapt.migration.ReleaseUtils;
 import org.eclipse.emf.edapt.migration.execution.ClassLoaderFacade;
 import org.eclipse.emf.edapt.migration.execution.IClassLoader;
-import org.eclipse.emf.edapt.migration.execution.MigrationReconstructor;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edapt.migration.execution.MigratorCommandLine;
 import org.eclipse.emf.edapt.migration.execution.ValidationLevel;
 import org.eclipse.emf.edapt.migration.execution.WrappedMigrationException;
-import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;

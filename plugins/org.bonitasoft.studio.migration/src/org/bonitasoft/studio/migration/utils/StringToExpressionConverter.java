@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,11 @@
 package org.bonitasoft.studio.migration.utils;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Model;
 

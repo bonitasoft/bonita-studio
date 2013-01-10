@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,9 @@
 package org.bonitasoft.studio.migration.ui.view;
 
 import org.bonitasoft.studio.migration.model.report.Change;
-import org.bonitasoft.studio.migration.model.report.Report;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
