@@ -37,7 +37,7 @@ import org.junit.Test;
  * @author Romain Bioteau
  *
  */
-public class MigrationReportPDFExportITest extends SWTBotGefTestCase {
+public class MigrationReporTest extends SWTBotGefTestCase {
 	
 	@BeforeClass
 	public static void disablePopup(){
@@ -47,7 +47,7 @@ public class MigrationReportPDFExportITest extends SWTBotGefTestCase {
 	@Test
 	public void testAutomaticPerspectiveSwitch() throws Exception{
 		FileActionDialog.setDisablePopup(true);
-		final URL url = MigrationReportPDFExportITest.class.getResource("TestMigrationReport-1.0.bos");
+		final URL url = MigrationReporTest.class.getResource("TestMigrationReport-1.0.bos");
 		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
 		op.setArchiveFile(FileLocator.toFileURL(url).getFile());
 		op.run(Repository.NULL_PROGRESS_MONITOR);
@@ -58,7 +58,7 @@ public class MigrationReportPDFExportITest extends SWTBotGefTestCase {
 	@Test
 	public void testCompleteReport() throws Exception{
 		FileActionDialog.setDisablePopup(true);
-		final URL url = MigrationReportPDFExportITest.class.getResource("TestMigrationReport-1.0.bos");
+		final URL url = MigrationReporTest.class.getResource("TestMigrationReport-1.0.bos");
 		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
 		op.setArchiveFile(FileLocator.toFileURL(url).getFile());
 		op.run(Repository.NULL_PROGRESS_MONITOR);
@@ -76,7 +76,7 @@ public class MigrationReportPDFExportITest extends SWTBotGefTestCase {
 	@Test
 	public void testEditorSelectionSynchronization() throws Exception{
 		FileActionDialog.setDisablePopup(true);
-		final URL url = MigrationReportPDFExportITest.class.getResource("TestMigrationReport-1.0.bos");
+		final URL url = MigrationReporTest.class.getResource("TestMigrationReport-1.0.bos");
 		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
 		op.setArchiveFile(FileLocator.toFileURL(url).getFile());
 		op.run(Repository.NULL_PROGRESS_MONITOR);

@@ -35,8 +35,8 @@ import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowConditionExport
 import org.bonitasoft.studio.exporter.tests.form.TestFormsExporter;
 import org.bonitasoft.studio.exporter.tests.preview.TestPreviewForm;
 import org.bonitasoft.studio.importer.test.bos.TestBOSArchiveImport;
-import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportITest;
-import org.bonitasoft.studio.migration.tests.MigrationReportUITest;
+import org.bonitasoft.studio.migration.tests.MigrationReporTest;
+import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.simulation.tests.TestSimulationResourceRepository;
@@ -90,7 +90,7 @@ import org.junit.runners.Suite;
     TestDataRefactor.class,
     // keep it at the end because if it fails it might be in an infinite loop
     TestDeployCommand.class,
-    MigrationReportPDFExportITest.class,
+    MigrationReportPDFExportTest.class,
     CloseAllEditors.class,
 })
 public class AllTests2 extends TestSuite {

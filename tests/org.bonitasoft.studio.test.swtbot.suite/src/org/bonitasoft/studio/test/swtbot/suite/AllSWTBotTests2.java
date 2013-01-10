@@ -22,7 +22,8 @@ import org.bonitasoft.studio.engine.test.bar.BarExporterTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNConnectorExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNExportTests;
 import org.bonitasoft.studio.groovy.tests.TestBonitaGroovyEditorDialog;
-import org.bonitasoft.studio.migration.tests.MigrationReportUITest;
+import org.bonitasoft.studio.migration.tests.MigrationReporTest;
+import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestMultiInstantiation;
@@ -93,7 +94,7 @@ import org.junit.runners.Suite;
     TestExportBosArchive.class,
     TestSave.class,
     TestMoveBetweenLane.class,
-    MigrationReportUITest.class,
+    MigrationReporTest.class,
     TestTimer.class
 })
 public class AllSWTBotTests2 {

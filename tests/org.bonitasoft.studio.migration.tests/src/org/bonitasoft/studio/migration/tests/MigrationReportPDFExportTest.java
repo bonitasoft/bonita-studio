@@ -36,7 +36,7 @@ import org.junit.Test;
  * @author Romain Bioteau
  *
  */
-public class MigrationReportUITest  {
+public class MigrationReportPDFExportTest  {
 	
 	@BeforeClass
 	public static void disablePopup(){
@@ -46,7 +46,7 @@ public class MigrationReportUITest  {
 	@Test
 	public void testExportAsPDF() throws Exception{
 		FileActionDialog.setDisablePopup(true);
-		final URL url = MigrationReportUITest.class.getResource("TestMigrationReport-1.0.bos");
+		final URL url = MigrationReportPDFExportTest.class.getResource("TestMigrationReport-1.0.bos");
 		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
 		op.setArchiveFile(FileLocator.toFileURL(url).getFile());
 		op.run(Repository.NULL_PROGRESS_MONITOR);
