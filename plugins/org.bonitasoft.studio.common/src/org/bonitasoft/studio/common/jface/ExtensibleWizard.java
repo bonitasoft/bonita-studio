@@ -55,10 +55,7 @@ public abstract class ExtensibleWizard extends Wizard {
 
     public void removeAllAdditionalPages() {
         for(IWizardPage p : additionalPages){
-            //   if(!p.).isDisposed()){
-            //      p.getControl().dispose() ;
             p.dispose();
-            //   }
         }
         additionalPages.clear() ;
     }
