@@ -34,9 +34,11 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.migration.MigrationPlugin;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edapt.history.Release;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -62,6 +64,7 @@ import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends AbstractRepositoryStore<T> implements IRepositoryStore<T> {
 
     private static final String MIGRATION_HISTORY_PATH = "process.history";
+	private static final String PROCESS_NS_URI = "http://www.bonitasoft.org/ns/studio/process";
     private AdapterFactoryLabelProvider labelProvider;
     private final ComposedAdapterFactory adapterFactory;
     private Migrator migrator;
@@ -108,14 +111,19 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
         final File tmpFile = new File(resource.getURI().toFileString());
         String nsURI = ReleaseUtils.getNamespaceURI(resourceURI);
         Migrator targetMigrator = migrator;
-        if(migrator.getNsURIs().contains(nsURI) ){
+       if(migrator.getNsURIs().contains(nsURI) ){
             targetMigrator = migrator;
         }else{
             targetMigrator = MigratorRegistry.getInstance().getMigrator(nsURI);
         }
 
         if (targetMigrator != null) {
-            final Release release = targetMigrator.getRelease(resourceURI).iterator().next();
+        	 Release release = null;
+        	if(nsURI.equals(PROCESS_NS_URI)){
+        		release = getRelease(targetMigrator,resource);
+             }else{
+            	 release = targetMigrator.getRelease(resourceURI).iterator().next();
+             }
             if (!release.isLatestRelease()) {
                 try {
                     performMigration(targetMigrator, resourceURI, release);
@@ -136,7 +144,21 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
         return originalStream;
     }
 
-    private void performMigration(Migrator migrator, URI resourceURI, Release release) throws MigrationException {
+    private Release getRelease(Migrator targetMigrator, Resource resource) {
+		for(Release release : targetMigrator.getReleases()){
+			for(EObject root : resource.getContents()){
+				if(root instanceof MainProcess){
+					String modelVersion = ((MainProcess) root).getBonitaModelVersion();
+					if(release.getLabel().equals(modelVersion)){
+						return release;
+					}
+				}
+			}
+		}
+		return targetMigrator.getReleases().iterator().next(); //First release of all time
+	}
+
+	private void performMigration(Migrator migrator, URI resourceURI, Release release) throws MigrationException {
         migrator.setLevel(ValidationLevel.RELEASE);
         migrator.migrateAndSave(
                 Collections.singletonList(resourceURI), release,
