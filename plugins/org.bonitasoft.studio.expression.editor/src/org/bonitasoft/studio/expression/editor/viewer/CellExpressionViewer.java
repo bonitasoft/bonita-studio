@@ -17,8 +17,6 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
-import java.awt.FontMetrics;
-
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.emf.ecore.EReference;
@@ -32,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -75,7 +74,12 @@ public class CellExpressionViewer extends ExpressionViewer {
 			public Object convert(Object fromObject) {
 				String input  = (String) fromObject ;
                 Composite composite = getTextControl().getParent().getParent();
-                int width=((Table)composite).getColumn(colIndex).getWidth();
+                int width = 150;
+                if(composite instanceof Table){
+                	  width=((Table)composite).getColumn(colIndex).getWidth();
+                }else if(composite instanceof Tree){
+                	  width=((Tree)composite).getColumn(colIndex).getWidth();
+                }
                 String troncatedLabel = getTroncatedLabel(input,width);
                 if (!input.isEmpty() && !fullText.equals(input) && !input.equals(getTroncatedLabel(fullText, width))){
                 		setFullText(input);
