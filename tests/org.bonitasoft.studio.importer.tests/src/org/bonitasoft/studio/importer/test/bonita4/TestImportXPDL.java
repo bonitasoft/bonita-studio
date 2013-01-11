@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -99,7 +99,7 @@ public class TestImportXPDL extends TestCase {
         assertEquals("Not the same number of transitions as expected", 14, transitions);
         assertEquals("Not the same number of data as expected", 4, process.getData().size());
 
-        assertEquals("Not the same number of group as expected", 1, mainProcess.getActors().size());
+        assertEquals("Not the same number of group as expected", 1, process.getActors().size());
         assertEquals("Not the same number of connectors as expected", 7, connectors);
 
         Actor group = mainProcess.getActors().get(0);
@@ -163,7 +163,7 @@ public class TestImportXPDL extends TestCase {
         assertEquals("Not the same number of global data as expected", 1, pool.getData().size());
         assertEquals("Not the same number of data as expected for task 'Approval'", 1, approval.getData().size());
 
-        assertEquals("Not the same number of group as expected", 2, mainProcess.getActors().size());
+        assertEquals("Not the same number of group as expected", 2, pool.getActors().size());
         assertEquals("Not the same number of connectors as expected", 2, connectors);
         assertEquals("Not the same number of deadlines as expected", 0, deadlines);
         for (Task task : tasks) {
@@ -225,7 +225,7 @@ public class TestImportXPDL extends TestCase {
         assertEquals("Not the same number of global data as expected", 4, process.getData().size());
         assertEquals("Not the same number of data as expected for task 'Approval'", 1, approval.getData().size());
 
-        assertEquals("Not the same number of group as expected", 2, mainProcess.getActors().size());
+        assertEquals("Not the same number of group as expected", 2, process.getActors().size());
         assertEquals("Not the same number of connectors as expected", 3, connectors);
         assertEquals("Not the same number of deadlines as expected", 0, deadlines);
 
