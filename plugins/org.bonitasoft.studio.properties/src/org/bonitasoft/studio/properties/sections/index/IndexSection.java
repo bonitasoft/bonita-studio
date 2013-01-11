@@ -84,25 +84,21 @@ public class IndexSection extends AbstractBonitaDescriptionSection{
 		}
 		context = new EMFDataBindingContext();
 		if (pool!=null){
-			for (int i=0;i<MAX_LINES;i++){
-				if (!pool.getSearchIndexs().isEmpty()){
-					SearchIndex searchIndex = pool.getSearchIndexs().get(i);
-					ExpressionViewer nameViewer = nameViewers.get(i);
+			for (SearchIndex searchIndex : pool.getSearchIndexes()){
+					int i = pool.getSearchIndexes().indexOf(searchIndex);
+					final ExpressionViewer nameViewer = nameViewers.get(i);
 					nameViewer.setContext(getEObject());
 					nameViewer.setInput(searchIndex);
 					nameViewer.setEditingDomain(editingDomain);
-					final ViewerFilter filter = new AvailableExpressionTypeFilter(new String[]{
-			                ExpressionConstants.CONSTANT_TYPE
-			        });
-				    nameViewer.addFilter(filter); 
+				    nameViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{  ExpressionConstants.CONSTANT_TYPE})); 
 					context.bindValue(ViewerProperties.singleSelection().observe(nameViewer),EMFEditProperties.value(editingDomain, ProcessPackage.Literals.SEARCH_INDEX__NAME).observe(searchIndex));
-					ExpressionViewer valueViewer = valueViewers.get(i);
+					
+					final ExpressionViewer valueViewer = valueViewers.get(i);
 					valueViewer.setContext(getEObject());
 					valueViewer.setInput(searchIndex);
 					valueViewer.setEditingDomain(editingDomain);
 					valueViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE}));
 					context.bindValue(ViewerProperties.singleSelection().observe(valueViewer),EMFEditProperties.value(editingDomain, ProcessPackage.Literals.SEARCH_INDEX__VALUE).observe(searchIndex));
-				}
 			}
 		}
 	}

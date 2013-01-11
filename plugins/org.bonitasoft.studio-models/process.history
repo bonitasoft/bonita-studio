@@ -7413,37 +7413,47 @@
           <element xsi:type="ecore:EAttribute" defaultValueLiteral=""/>
         </changes>
         <changes xsi:type="history:Create" target="process.ecore#//SearchIndex" referenceName="eStructuralFeatures"
-            element="process.ecore#//SearchIndex/Name"/>
-        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/Name"
+            element="process.ecore#//SearchIndex/name"/>
+        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/name"
             featureName="name" dataValue="Name"/>
-        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/Name"
+        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/name"
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
-        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/Name"
+        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/name"
             featureName="upperBound" dataValue="5" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/Name"
+        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/name"
             featureName="upperBound" dataValue="1" oldDataValue="5"/>
         <changes xsi:type="history:Create" target="process.ecore#//SearchIndex" referenceName="eStructuralFeatures"
-            element="process.ecore#//SearchIndex/Value"/>
-        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/Value"
+            element="process.ecore#//SearchIndex/value"/>
+        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/value"
             featureName="name" dataValue="Value"/>
-        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/Value"
+        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/value"
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
         <changes xsi:type="history:Create" target="process.ecore#//Pool" referenceName="eStructuralFeatures"
-            element="process.ecore#//Pool/SearchIndexs"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Pool/SearchIndexs"
+            element="process.ecore#//Pool/searchIndexes"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/searchIndexes"
             featureName="name" dataValue="SearchIndexs"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Pool/SearchIndexs"
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/searchIndexes"
             featureName="upperBound" dataValue="5" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Pool/SearchIndexs"
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/searchIndexes"
             featureName="eType" referenceValue="process.ecore#//SearchIndex"/>
-        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/Name"
+        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/name"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/Value"
+        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/value"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Pool/SearchIndexs"
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/searchIndexes"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Pool/SearchIndexs"
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/searchIndexes"
             featureName="lowerBound" dataValue="5" oldDataValue="0"/>
+        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/name"
+            featureName="name" dataValue="name" oldDataValue="Name"/>
+        <changes xsi:type="history:Set" element="process.ecore#//SearchIndex/value"
+            featureName="name" dataValue="value" oldDataValue="Value"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/searchIndexes"
+            featureName="lowerBound" dataValue="0" oldDataValue="5"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/searchIndexes"
+            featureName="upperBound" dataValue="-1" oldDataValue="5"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Pool/searchIndexes"
+            featureName="name" dataValue="searchIndexes" oldDataValue="SearchIndexs"/>
       </changes>
     </changes>
   </releases>

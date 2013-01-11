@@ -691,7 +691,7 @@
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Pool">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Pool/documents"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Pool/SearchIndexs"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Pool/searchIndexes"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ProcessApplication">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ProcessApplication/errorTemplate"/>
@@ -727,6 +727,10 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//ResourceFolder/resourceFiles"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ScriptTask"/>
+    <genClasses ecoreClass="process.ecore#//SearchIndex">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//SearchIndex/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//SearchIndex/value"/>
+    </genClasses>
     <genClasses ecoreClass="process.ecore#//SendTask"/>
     <genClasses ecoreClass="process.ecore#//SequenceFlow">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//SequenceFlow/isDefault"/>
@@ -797,10 +801,6 @@
     </genClasses>
     <genClasses ecoreClass="process.ecore#//XMLType"/>
     <genClasses ecoreClass="process.ecore#//XORGateway"/>
-    <genClasses ecoreClass="process.ecore#//SearchIndex">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//SearchIndex/Name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//SearchIndex/Value"/>
-    </genClasses>
     <nestedGenPackages prefix="Decision" basePackage="org.bonitasoft.studio.model.process"
         disposableProviderFactory="true" ecorePackage="process.ecore#//decision">
       <genClasses ecoreClass="process.ecore#//decision/DecisionTable">

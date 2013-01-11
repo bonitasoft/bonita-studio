@@ -29,7 +29,7 @@ public class SearchIndexMigration extends CustomMigration {
 			throws MigrationException {
 		for (Instance pool:model.getAllInstances("process.Pool")){
 			for (int i=0;i<MAX;i++){
-				pool.add("SearchIndexs", createSearchIndex(model));
+				pool.add("searchIndexes", createSearchIndex(model));
 			}
 		}
 	}
@@ -37,9 +37,9 @@ public class SearchIndexMigration extends CustomMigration {
 	private Instance createSearchIndex(Model model){
 		Instance searchIndex = model.newInstance(ProcessPackage.Literals.SEARCH_INDEX);
 		Instance nameExpression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
-		searchIndex.set("Name", nameExpression);
+		searchIndex.set("name", nameExpression);
 		Instance valueExpression = StringToExpressionConverter.createExpressionInstance(model, "", "",String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
-		searchIndex.set("Value",valueExpression);
+		searchIndex.set("value",valueExpression);
 		return searchIndex;
 	}
 }

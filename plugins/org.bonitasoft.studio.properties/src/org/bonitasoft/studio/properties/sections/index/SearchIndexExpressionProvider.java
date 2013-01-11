@@ -33,7 +33,7 @@ public class SearchIndexExpressionProvider implements IExpressionProvider {
 		Set<Expression> result = new HashSet<Expression>();
 		Pool pool = (Pool)ModelHelper.getParentProcess(context);
 		if (pool!=null){
-			for(SearchIndex searchIndex:pool.getSearchIndexs()){
+			for(SearchIndex searchIndex:pool.getSearchIndexes()){
 				if (!searchIndex.getName().getContent().trim().isEmpty()){
 					result.add(createExpression(searchIndex));
 				}
@@ -43,7 +43,7 @@ public class SearchIndexExpressionProvider implements IExpressionProvider {
 	}
 
 	private Expression createExpression(SearchIndex searchIndex){
-		 Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
+		 final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
 		 exp.setType(getExpressionType());
 		 exp.setName(searchIndex.getName().getContent());
 		 exp.setContent(searchIndex.getName().getContent());
@@ -97,7 +97,6 @@ public class SearchIndexExpressionProvider implements IExpressionProvider {
 	 */
 	@Override
 	public String getTypeLabel() {
-		// TODO Auto-generated method stub
 		return Messages.searchIndexTypeLabel;
 	}
 
@@ -106,7 +105,6 @@ public class SearchIndexExpressionProvider implements IExpressionProvider {
 	 */
 	@Override
 	public IExpressionEditor getExpressionEditor(Expression expression) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

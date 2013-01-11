@@ -370,8 +370,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="Pool" eSuperTypes="#//AbstractProcess">
     <eStructuralFeatures xsi:type="ecore:EReference" name="documents" upperBound="-1"
         eType="#//Document" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="SearchIndexs" lowerBound="5"
-        upperBound="5" eType="#//SearchIndex" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="searchIndexes" upperBound="-1"
+        eType="#//SearchIndex" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProcessApplication" eSuperTypes="#//ResourceContainer form.ecore#//MandatoryFieldsCustomization">
     <eStructuralFeatures xsi:type="ecore:EReference" name="errorTemplate" eType="#//AssociatedFile"
@@ -432,6 +432,12 @@
         eType="#//ResourceFile" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ScriptTask" eSuperTypes="#//Activity"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SearchIndex">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="name" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SendTask" eSuperTypes="#//Activity #//ThrowMessageEvent">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A SendTask is equivalent to a ThrowEvent. the difference will be only graphical"/>
@@ -554,12 +560,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="XMLType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="XORGateway" eSuperTypes="#//Gateway"/>
-  <eClassifiers xsi:type="ecore:EClass" name="SearchIndex">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="Name" eType="ecore:EClass expression.ecore#//Expression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="Value" eType="ecore:EClass expression.ecore#//Expression"
-        containment="true"/>
-  </eClassifiers>
   <eSubpackages name="decision" nsURI="http://www.bonitasoft.org/ns/studio/process/decision"
       nsPrefix="decision">
     <eClassifiers xsi:type="ecore:EClass" name="DecisionTable">
