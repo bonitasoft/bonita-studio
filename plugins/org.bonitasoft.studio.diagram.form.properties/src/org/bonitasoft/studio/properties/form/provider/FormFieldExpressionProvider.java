@@ -60,7 +60,9 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
         if (relevantParent instanceof Widget) {
         	result.add(createExpression((Widget) relevantParent) ) ;
         	for(WidgetDependency dep : ((Widget) relevantParent).getDependOn()){
+        		if(dep.getWidget()!=null){
         		result.add(createExpression(dep.getWidget())) ;
+        		}
         	}
 
         	// for the Submit button only, add fields of other widgets
