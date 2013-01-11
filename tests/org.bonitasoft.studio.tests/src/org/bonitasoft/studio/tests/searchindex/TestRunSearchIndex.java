@@ -1,12 +1,13 @@
 package org.bonitasoft.studio.tests.searchindex;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import junit.framework.TestCase;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.model.HumanTaskInstance;
@@ -20,8 +21,6 @@ import org.bonitasoft.engine.exception.ProcessInstanceCreationException;
 import org.bonitasoft.engine.exception.ProcessInstanceNotFoundException;
 import org.bonitasoft.engine.exception.ProcessInstanceReadException;
 import org.bonitasoft.engine.exception.UserNotFoundException;
-import org.bonitasoft.engine.search.SearchOptions;
-import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
@@ -38,7 +37,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestRunSearchIndex extends TestCase{
+
+public class TestRunSearchIndex{
 
 	private HumanTaskInstance newTask;
 	private APISession session;
@@ -62,7 +62,6 @@ public class TestRunSearchIndex extends TestCase{
 		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
 		assertEquals("MyDiagram", mainProcess.getName());
-		final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
 		//final List<HumanTaskInstance> tasks =processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
         Map<String,Object> param = new HashMap<String, Object>();
