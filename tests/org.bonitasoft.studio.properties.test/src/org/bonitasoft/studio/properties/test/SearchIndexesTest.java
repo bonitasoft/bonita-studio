@@ -14,6 +14,7 @@ import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
@@ -29,7 +30,7 @@ public class SearchIndexesTest extends SWTBotGefTestCase{
 	private final String indexSection = "Index";
 	
 	@Test
-	public void testSearchIndex(){
+	public void testSearchIndex() throws ExecutionException{
 		SWTBotTestUtil.createNewDiagram(bot);
 		 bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
 	     bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
@@ -51,6 +52,7 @@ public class SearchIndexesTest extends SWTBotGefTestCase{
 	     SWTBotTestUtil.selectTabbedPropertyView(bot, "Operations");
 	     bot.button("Add").click();
 	     bot.comboBox().setSelection("index1 ("+String.class.getName()+") -- SEARCH_INDEX_TYPE");
+	     bot.textWithId(SWTBotConstants.SWTBOT_ID_EXPRESSIONVIEWER_TEXT).setText("myNewValue");
 	     MainProcess mainProcess= (MainProcess)((IGraphicalEditPart)gmfEditor.mainEditPart().part()).resolveSemanticElement();
 	     List<AbstractProcess> processes = ModelHelper.getAllProcesses(mainProcess);
 	     Pool pool = null;
@@ -65,6 +67,7 @@ public class SearchIndexesTest extends SWTBotGefTestCase{
 	    	 assertEquals("index"+(i+1),searchIndex.getName().getContent());
 	    	 assertEquals("value"+(i+1),searchIndex.getValue().getContent());
 	     }
+	     SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
 	     
 	}
 	
