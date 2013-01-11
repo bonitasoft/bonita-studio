@@ -7148,12 +7148,12 @@
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element"
             featureName="name" dataValue="dbName"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="expression.ecore#//Expression"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
@@ -7385,6 +7385,10 @@
     </changes>
   </releases>
   <releases date="2012-12-11T11:58:53.422+0100" label="60beta_u1">
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Set" element="expression.ecore#//Expression/connectors"
+          featureName="containment" dataValue="true" oldDataValue="false"/>
+    </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.kpi.KPlDatabaseNameToUrlMigration">
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Delete" target="kpi.ecore#//DatabaseKPIBinding"
@@ -7394,7 +7398,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -7406,8 +7410,8 @@
         <changes xsi:type="history:Set" element="process.ecore#//SearchIndex" featureName="name"
             dataValue="SearchIndex"/>
         <changes xsi:type="history:Create" target="process.ecore#//SearchIndex" referenceName="eStructuralFeatures"
-            element="#//@releases.1/@changes.1/@changes.0/@changes.4/@element"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.0/@changes.4/@element"
+            element="#//@releases.1/@changes.2/@changes.0/@changes.4/@element"/>
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.2/@changes.0/@changes.4/@element"
             featureName="defaultValueLiteral" dataValue=""/>
         <changes xsi:type="history:Delete" target="process.ecore#//SearchIndex" referenceName="eStructuralFeatures">
           <element xsi:type="ecore:EAttribute" defaultValueLiteral=""/>

@@ -19,7 +19,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="referencedElements" upperBound="-1"
         eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="connectors" upperBound="-1"
-        eType="ecore:EClass process.ecore#//Connector"/>
+        eType="ecore:EClass process.ecore#//Connector" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="propagateVariableChange"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
         defaultValueLiteral="false"/>
