@@ -32,23 +32,23 @@ import org.eclipse.ui.IPageLayout;
  * @author Aurelien Pupier
  */
 public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
-	
+
 	protected static String FORM_PERSPECTIVE_ID = "org.bonitasoft.studio.common.perspective.form";
-	
+
 	public void createInitialLayout(IPageLayout layout) {
-		 // Editors are placed for free.
-        String editorArea = layout.getEditorArea();
-        
-        // Bottom left.
-        IFolderLayout bottomLeft = layout.createFolder(
-                "bottomLeft", IPageLayout.BOTTOM, (float) (400. / 650.),//$NON-NLS-1$
-                editorArea);//$NON-NLS-1$
-        bottomLeft.addView("org.bonitasoft.studio.views.overview");
-        bottomLeft.setProperty(VIEW_KIND, BONITA_OVERVIEW);
-        // Bottom right.
+		// Editors are placed for free.
+		String editorArea = layout.getEditorArea();
+
+		// Bottom left.
+		IFolderLayout bottomLeft = layout.createFolder(
+				"bottomLeft", IPageLayout.BOTTOM, (float) (400. / 650.),//$NON-NLS-1$
+				editorArea);//$NON-NLS-1$
+		bottomLeft.addView("org.bonitasoft.studio.views.overview");
+		bottomLeft.setProperty(VIEW_KIND, BONITA_OVERVIEW);
+		// Bottom right.
 		IFolderLayout bottomRight = layout.createFolder(
-                "bottomRight", IPageLayout.RIGHT, (float) 0.33,//$NON-NLS-1$
-                "bottomLeft");
+				"bottomRight", IPageLayout.RIGHT, (float) 0.33,//$NON-NLS-1$
+				"bottomLeft");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.form.general");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.form.appearance");
 
@@ -56,9 +56,9 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 			bottomRight.addView(viewId);
 		}
 		bottomRight.setProperty(VIEW_KIND, BONITA_TABS);
-		
+
 		createLeftViewFolder(layout, editorArea);
-		
+
 	}
 
 	protected void createLeftViewFolder(IPageLayout layout, String editorArea) {
@@ -84,9 +84,11 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 
 	protected boolean isOngoingMigration(FormDiagramEditor formDiagramEditor) {
 		final Resource resource = formDiagramEditor.getDiagramEditPart().resolveSemanticElement().eResource();
-		for(EObject root : resource.getContents()){
-			if(root instanceof Report){
-				return true;
+		if(resource != null){
+			for(EObject root : resource.getContents()){
+				if(root instanceof Report){
+					return true;
+				}
 			}
 		}
 		return false;

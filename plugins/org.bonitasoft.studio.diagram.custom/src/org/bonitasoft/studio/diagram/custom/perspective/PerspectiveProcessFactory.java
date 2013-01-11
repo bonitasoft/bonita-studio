@@ -32,37 +32,37 @@ import org.eclipse.ui.IPageLayout;
  * @author Aurelien Pupier
  */
 public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
-	
+
 	public static String PROCESS_PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.process";
 
 	public void createInitialLayout(IPageLayout layout) {
-		 // Editors are placed for free.
-        String editorArea = layout.getEditorArea();
-             
-        // Bottom left.
+		// Editors are placed for free.
+		String editorArea = layout.getEditorArea();
+
+		// Bottom left.
 		IFolderLayout bottomLeft = layout.createFolder(
-                "bottomLeft", IPageLayout.BOTTOM, (float) (400. / 650.),//$NON-NLS-1$
-                editorArea);//$NON-NLS-1$
-        bottomLeft.addView("org.bonitasoft.studio.views.overview");
-        bottomLeft.setProperty(VIEW_KIND, BONITA_OVERVIEW);
-        
-        // Bottom right.
+				"bottomLeft", IPageLayout.BOTTOM, (float) (400. / 650.),//$NON-NLS-1$
+				editorArea);//$NON-NLS-1$
+		bottomLeft.addView("org.bonitasoft.studio.views.overview");
+		bottomLeft.setProperty(VIEW_KIND, BONITA_OVERVIEW);
+
+		// Bottom right.
 		IFolderLayout bottomRight = layout.createFolder(
-                "bottomRight", IPageLayout.RIGHT, (float) 0.33,//$NON-NLS-1$
-                "bottomLeft");
+				"bottomRight", IPageLayout.RIGHT, (float) 0.33,//$NON-NLS-1$
+				"bottomLeft");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.process.general");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.application");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.process.appearance");
-	
+
 		for (String viewId : BonitaPerspectivesUtils.getContributedPropertiesViews(PROCESS_PERSPECTIVE_ID)) {
 			bottomRight.addView(viewId);
 		}
-		
+
 		//bottomRight.setProperty("viewProperty", "true");
 		bottomRight.setProperty(VIEW_KIND, BONITA_TABS);
-		
+
 		createLeftViewFolder(layout, editorArea);
-		
+
 	}
 
 	protected void createLeftViewFolder(IPageLayout layout, String editorArea) {
@@ -88,9 +88,11 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 
 	protected boolean isOngoingMigration(ProcessDiagramEditor processDiagramEditor) {
 		final Resource resource = processDiagramEditor.getDiagramEditPart().resolveSemanticElement().eResource();
-		for(EObject root : resource.getContents()){
-			if(root instanceof Report){
-				return true;
+		if(resource != null){
+			for(EObject root : resource.getContents()){
+				if(root instanceof Report){
+					return true;
+				}
 			}
 		}
 		return false;
