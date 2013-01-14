@@ -162,7 +162,6 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CorrelationAssociation">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="CorrelationExpression"
         eType="ecore:EClass expression.ecore#//AbstractExpression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="correlationKey" eType="ecore:EClass expression.ecore#//AbstractExpression"

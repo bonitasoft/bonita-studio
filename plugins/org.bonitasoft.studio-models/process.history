@@ -72,10 +72,10 @@
             featureName="name" dataValue="CorrelationAssociation"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//CorrelationAssociation"
-          referenceName="eStructuralFeatures" element="process.ecore#//CorrelationAssociation/priority">
-        <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/priority"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.3/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.3/@changes.0/@element"
             featureName="name" dataValue="priority"/>
-        <changes xsi:type="history:Set" element="process.ecore#//CorrelationAssociation/priority"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.3/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -7459,6 +7459,17 @@
         <changes xsi:type="history:Set" element="process.ecore#//Pool/searchIndexes"
             featureName="name" dataValue="searchIndexes" oldDataValue="SearchIndexs"/>
       </changes>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="process.ecore#//CorrelationAssociation"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.1/@changes.3/@changes.0/@element"/>
+        </parameters>
+      </operation>
     </changes>
   </releases>
   <releases/>
