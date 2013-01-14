@@ -22,6 +22,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -56,6 +92,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -88,6 +160,42 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -133,6 +241,69 @@
           <value
               xsi:type="gmfmap:Constraint"
               body="return  !(self.eContainer() instanceof org.bonitasoft.studio.model.process.Lane);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopMaximum"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/multiInstantiation"/>
+          <value
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -308,6 +479,87 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//CallActivity/calledActivityName"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//CallActivity/calledActivityVersion"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopMaximum"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/multiInstantiation"/>
+          <value
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -478,6 +730,15 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -682,6 +943,69 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopMaximum"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/multiInstantiation"/>
+          <value
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -751,6 +1075,69 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopMaximum"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/multiInstantiation"/>
+          <value
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -783,6 +1170,69 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopMaximum"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/multiInstantiation"/>
+          <value
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -852,6 +1302,69 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopMaximum"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/multiInstantiation"/>
+          <value
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -932,6 +1445,42 @@
               body="return true ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -966,6 +1515,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -998,6 +1583,69 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/loopMaximum"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//Activity/multiInstantiation"/>
+          <value
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1078,38 +1726,66 @@
               body="'1.0'"/>
         </initializers>
         <initializers
-            xsi:type="gmfmap:ReferenceNewElementSpec">
-          <feature
-              xsi:type="ecore:EReference"
-              href="process.ecore#//PageFlow/entryRedirectionURL"/>
-          <newElementInitializers>
-            <initializers
-                xsi:type="gmfmap:FeatureValueSpec">
-              <feature
-                  xsi:type="ecore:EAttribute"
-                  href="expression.ecore#//Expression/type"/>
-              <value
-                  body="return org.bonitasoft.studio.common.ExpressionConstants.CONSTANT_TYPE;"
-                  language="java"/>
-            </initializers>
-            <initializers
-                xsi:type="gmfmap:FeatureValueSpec">
-              <feature
-                  xsi:type="ecore:EAttribute"
-                  href="expression.ecore#//Expression/content"/>
-              <value
-                  body="return &quot;&quot;;"
-                  language="java"/>
-            </initializers>
-          </newElementInitializers>
-        </initializers>
-        <initializers
             xsi:type="gmfmap:FeatureValueSpec">
           <feature
               xsi:type="ecore:EReference"
               href="process.ecore#//Pool/searchIndexes"/>
           <value
               body="java.util.List&lt;org.bonitasoft.studio.model.process.SearchIndex> searchIndexs = new java.util.ArrayList&lt;org.bonitasoft.studio.model.process.SearchIndex>(5);&#xD;&#xA;&#x9;&#x9;for (int i = 0; i &lt; 5; i++) {&#xD;&#xA;&#x9;&#x9;&#x9;org.bonitasoft.studio.model.process.SearchIndex searchIndex = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;.createSearchIndex();&#xD;&#xA;&#x9;&#x9;&#x9;org.bonitasoft.studio.model.expression.Expression name =org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;&#x9;&#x9;&#x9;name.setContent(&quot;&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;name.setType(org.bonitasoft.studio.common.ExpressionConstants.CONSTANT_TYPE);&#xD;&#xA;&#x9;&#x9;&#x9;name.setReturnType(String.class.getName());&#xD;&#xA;&#x9;&#x9;&#x9;name.setReturnTypeFixed(true);&#xD;&#xA;&#x9;&#x9;&#x9;searchIndex.setName(name);&#xD;&#xA;&#x9;&#x9;&#x9;org.bonitasoft.studio.model.expression.Expression value = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;&#x9;&#x9;&#x9;value.setContent(&quot;&quot;);&#xD;&#xA;&#x9;&#x9;&#x9;value.setReturnType(String.class.getName());&#xD;&#xA;&#x9;&#x9;&#x9;value.setReturnTypeFixed(true);&#xD;&#xA;&#x9;&#x9;&#x9;searchIndex.setValue(value);&#xD;&#xA;&#x9;&#x9;&#x9;searchIndexs.add(searchIndex);&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;return searchIndexs;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="form.ecore#//MandatoryFieldsCustomization/mandatoryLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="form.ecore#//MandatoryFieldsCustomization/mandatorySymbol"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//PageFlow/confirmationMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//PageFlow/entryRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1553,6 +2229,15 @@
           <value
               body="'1.0'"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping"
@@ -1974,6 +2659,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -2006,6 +2727,42 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -2042,6 +2799,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -2074,6 +2867,42 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -2144,6 +2973,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -2176,6 +3041,42 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -2212,6 +3113,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -2246,6 +3183,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping"
@@ -2277,6 +3250,42 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -2313,6 +3322,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -2347,6 +3392,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -2379,6 +3460,42 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -2428,6 +3545,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping"
@@ -2463,6 +3616,42 @@
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping"
@@ -2496,6 +3685,42 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicDescription"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/dynamicLabel"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//FlowElement/stepSummary"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
