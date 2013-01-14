@@ -20,18 +20,15 @@ package org.bonitasoft.studio.properties.form.sections.options.contributions;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.expression.editor.filter.HiddenExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jface.databinding.swt.IWidgetValueProperty;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
@@ -48,83 +45,75 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  */
 public class InjectWidgetContribution extends AbstractPropertySectionContribution {
 
-    private Button checkbox;
-    private ExpressionViewer expressionViewer;
-    private EMFDataBindingContext context;
-    private final IWidgetValueProperty widgetValuePropertySelection  = WidgetProperties.selection();
-    private final UpdateValueStrategy never = new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER);
-    private final HiddenExpressionTypeFilter filterVariableType = new HiddenExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE});
+	private Button checkbox;
+	private ExpressionViewer expressionViewer;
+	private EMFDataBindingContext context;
+	private final IWidgetValueProperty widgetValuePropertySelection  = WidgetProperties.selection();
+	private final UpdateValueStrategy never = new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER);
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
-     */
-    public boolean isRelevantFor(EObject eObject) {
-        return eObject instanceof Widget;
-    }
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#refresh()
-     */
-    public void refresh() {
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
+	 */
+	public boolean isRelevantFor(EObject eObject) {
+		return eObject instanceof Widget;
+	}
 
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#refresh()
+	 */
+	public void refresh() {
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#getLabel()
-     */
-    public String getLabel() {
-        return Messages.injectWidgetIf;
-    }
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
-     */
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
-        composite.setLayout(new GridLayout(2, false));
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-        checkbox = widgetFactory.createButton(composite, "", SWT.CHECK);
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#getLabel()
+	 */
+	public String getLabel() {
+		return Messages.injectWidgetIf;
+	}
 
-        expressionViewer = new ExpressionViewer(composite, SWT.BORDER, widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT);
-        expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-        //bind
-        if(context != null){
-            context.dispose();
-        }
-        if(expressionViewer != null && ! expressionViewer.getControl().isDisposed()){
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
+	 */
+	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
+		composite.setLayout(new GridLayout(2, false));
+		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
+		checkbox = widgetFactory.createButton(composite, "", SWT.CHECK);
 
-            context = new EMFDataBindingContext();
-            Expression injectWidgetScript = ((Widget) getEObject()).getInjectWidgetScript();
-            if(injectWidgetScript == null){
-                injectWidgetScript = ExpressionFactory.eINSTANCE.createExpression();
-                injectWidgetScript.setReturnType(Boolean.class.getName());
-                injectWidgetScript.setReturnTypeFixed(true);
-                editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, getEObject(), FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT, injectWidgetScript));
-            }
+		expressionViewer = new ExpressionViewer(composite, SWT.BORDER, widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT);
+		expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
+		expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.FORM_FIELD_TYPE}));
+		//bind
+		if(context != null){
+			context.dispose();
+		}
+		if(expressionViewer != null && ! expressionViewer.getControl().isDisposed()){
+			context = new EMFDataBindingContext();
+			expressionViewer.setInput(getEObject());
+			context.bindValue(ViewerProperties.singleSelection().observe(expressionViewer)
+					, EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT).observe(getEObject()));
 
-            expressionViewer.setInput(getEObject());
-            context.bindValue(ViewerProperties.singleSelection().observe(expressionViewer)
-                    , EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT).observe(getEObject()));
+			context.bindValue(widgetValuePropertySelection.observe(checkbox),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()));
+			context.bindValue(WidgetProperties.enabled().observe(expressionViewer.getControl()),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()),
+					never,
+					null);
+			context.bindValue(WidgetProperties.enabled().observe(expressionViewer.getTextControl()),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()),
+					never,
+					null);
+			context.bindValue(WidgetProperties.enabled().observe(expressionViewer.getButtonControl()),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()),
+					never,
+					null);
+		}
+	}
 
-            context.bindValue(widgetValuePropertySelection.observe(checkbox),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()));
-            context.bindValue(WidgetProperties.enabled().observe(expressionViewer.getControl()),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()),
-                    never,
-                    null);
-            context.bindValue(WidgetProperties.enabled().observe(expressionViewer.getTextControl()),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()),
-                    never,
-                    null);
-            context.bindValue(WidgetProperties.enabled().observe(expressionViewer.getButtonControl()),EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_CONDITION).observe(getEObject()),
-                    never,
-                    null);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
-     */
-    public void dispose() {
-        if(context != null){
-            context.dispose();
-        }
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
+	 */
+	public void dispose() {
+		if(context != null){
+			context.dispose();
+		}
+	}
 
 }

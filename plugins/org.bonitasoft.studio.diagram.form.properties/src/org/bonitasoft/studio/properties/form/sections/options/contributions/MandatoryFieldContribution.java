@@ -94,12 +94,14 @@ public class MandatoryFieldContribution implements IExtensibleGridPropertySectio
 	}
 
 	public void refresh() {
-		removeListeners();
-		check.setSelection(widget.isMandatory());
-		if(mandatoryStyleLink != null){
-			mandatoryStyleLink.setVisible(widget.isMandatory());
+		if(check != null && !check.isDisposed()){
+			removeListeners();
+			check.setSelection(widget.isMandatory());
+			if(mandatoryStyleLink != null){
+				mandatoryStyleLink.setVisible(widget.isMandatory());
+			}
+			addListeners();
 		}
-		addListeners();
 
 	}
 
