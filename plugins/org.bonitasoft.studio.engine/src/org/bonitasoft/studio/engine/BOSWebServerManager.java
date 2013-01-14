@@ -194,7 +194,7 @@ public class BOSWebServerManager {
         String args = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,"");
 		if(!args.contains(TOMCAT_INTSANCE_LOCATION)){
 			 conf = server.getLaunchConfiguration(true,Repository.NULL_PROGRESS_MONITOR);
-			 conf.getWorkingCopy();
+			 workingCopy = conf.getWorkingCopy();
 		}
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,getVMArgs());
 		workingCopy.doSave();
