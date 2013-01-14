@@ -39,7 +39,7 @@ public class TestPathSize extends TestCase {
 		File longestPathNotBonita = findLongestPathNotBonita(pluginFolder);
 		final String longestAbsolutePath = longestPath.getAbsolutePath();
 		final int extraChars = longestAbsolutePath.length()-longestPathNotBonita.getAbsolutePath().length();
-		assertFalse("Longest path is [" + longestAbsolutePath + "]. The size of the path contains "+ extraChars +"extra characters", longestAbsolutePath.contains("org.bonitasoft"));
+		assertFalse("Longest path is [" + longestAbsolutePath + "]. The size of the path contains "+ extraChars +"extra characters", longestAbsolutePath.contains("org.bonitasoft") && extraChars > 0);
 	}
 
 	private File findLongestPathNotBonita(File dir) {
