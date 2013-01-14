@@ -32,6 +32,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.Dialog;
@@ -146,7 +147,7 @@ public class PatternExpressionViewer extends Composite {
                         int indexOf = currentContent.indexOf(exp.getName());
                         boolean added = false ;
                         while (indexOf != -1 && !added) {
-                            if(PatternLineStyleListener.isValidKeyWord(exp.getName(), currentContent, indexOf)){
+                            if(PatternLineStyleListener.isValidKeyWord(exp.getName(), currentContent, indexOf) && isNotIncludedInWord(exp.getName(), indexOf, currentContent, patternExpression.getReferencedElements() )){
                                 patternExpression.getReferencedElements().add(EcoreUtil.copy(exp));
                                 added = true;
                             }
@@ -157,10 +158,35 @@ public class PatternExpressionViewer extends Composite {
                         }
                     }
                 }
-
             }
         });
         helpDecoration.show();
+    }
+    
+    /** Check if a word is contained as a sub-word in each element of a list of expressions
+     * 
+     * @param word word to search in the expressions of the list
+     * @param startIndexWord index of the word in the message
+     * @param message the currentContent
+     * @param eList list of Expressions in the current Content
+     * @return 
+     */
+    public boolean isNotIncludedInWord(String word,  int startIndexWord, String message, EList<EObject> eList){
+    	for(Object exp : eList){
+    		if(exp instanceof Expression){
+    			String expWord = ((Expression)exp).getName();
+    			int offset = 0;
+    			while(message.indexOf( expWord, offset)!=-1){
+        			int startIndexReference = message.indexOf(expWord, offset);
+        			int endIndexReference = startIndexReference+expWord.length();
+        			if(startIndexWord-offset >= startIndexReference && startIndexWord < endIndexReference){
+        				return false;
+        			}
+        			offset=endIndexReference;
+    			}
+    		}
+    	}
+    	return true;
     }
 
     public void setContextInput(EObject input){
