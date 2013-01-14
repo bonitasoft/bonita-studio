@@ -62,8 +62,8 @@ public class TestURLs extends TestCase {
         assertNotNull("Timeout exceeded while retrieveing run url",url);
         final String stringURL = url.toString();
         assertTrue("wrong Run url, it doesn't contains bonita/console/homepage; current: " +stringURL, stringURL.contains(URLEncoder.encode("bonita/console/homepage","UTF-8")));
-        assertTrue("wrong Run url, it doesn't contain process; current: " +stringURL, stringURL.contains(URLEncoder.encode("name=","UTF-8")) && stringURL.contains(URLEncoder.encode("version=","UTF-8")));
-        assertTrue("wrong run URL, it doesn't contains _p=StartProcess; current: " +stringURL, stringURL.contains(URLEncoder.encode("_p=StartProcess","UTF-8")));
+        assertTrue("wrong Run url, it doesn't contain form or process; current: " +stringURL, stringURL.contains(URLEncoder.encode("form=","UTF-8")) && stringURL.contains(URLEncoder.encode("process=","UTF-8")));
+        assertTrue("wrong run URL, it doesn't contains mode=app; current: " +stringURL, stringURL.contains(URLEncoder.encode("mode=app","UTF-8")));
     }
 
     public void testUserXPURl() throws ExecutionException, MalformedURLException, UnsupportedEncodingException{
