@@ -31,13 +31,16 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.connectors.model.edit;bundle-version="1.0.0",
  org.bonitasoft.studio.data;bundle-version="1.0.0",
  org.bonitasoft.studio.configuration;bundle-version="1.0.0",
- org.bonitasoft.studio.engine;bundle-version="1.0.0"
+ org.bonitasoft.studio.engine;bundle-version="1.0.0",
+ org.bonitasoft.studio.groovy.ui;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.connectors,
  org.bonitasoft.studio.connectors.configuration,
+ org.bonitasoft.studio.connectors.expression,
  org.bonitasoft.studio.connectors.extension,
  org.bonitasoft.studio.connectors.repository,
+ org.bonitasoft.studio.connectors.ui.property.section,
  org.bonitasoft.studio.connectors.ui.provider,
  org.bonitasoft.studio.connectors.ui.wizard,
  org.bonitasoft.studio.connectors.ui.wizard.page
@@ -47,4 +50,5 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.connector,
  org.bonitasoft.engine.exception,
  org.bonitasoft.engine.expression,
- org.bonitasoft.engine.session
+ org.bonitasoft.engine.session,
+ org.bonitasoft.studio.connectors.extension

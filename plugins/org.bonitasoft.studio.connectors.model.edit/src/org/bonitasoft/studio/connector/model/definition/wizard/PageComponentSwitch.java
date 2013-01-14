@@ -105,7 +105,8 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
             ExpressionConstants.CONSTANT_TYPE,
             ExpressionConstants.VARIABLE_TYPE,
             ExpressionConstants.SCRIPT_TYPE,
-            ExpressionConstants.PARAMETER_TYPE
+            ExpressionConstants.PARAMETER_TYPE,
+            ExpressionConstants.FORM_FIELD_TYPE
     }) ;
 
     public PageComponentSwitch(Composite parent,EObject container,ConnectorDefinition definition,ConnectorConfiguration connectorConfiguration, EMFDataBindingContext context,DefinitionResourceProvider messageProvider) {

@@ -73,6 +73,7 @@ public class Messages extends NLS {
     public static String patternViewerHelp;
     public static String returnTypeIsMandatory;
     public static String editScriptExpressionTooltip;
+    public static String editConnectorExpressionTooltip;
     public static String editAndContinue;
     public static String invalidReturnTypeBetween;
     public static String eraseExpression;

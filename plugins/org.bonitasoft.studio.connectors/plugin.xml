@@ -86,6 +86,9 @@
       <expressionProvider
             providerClass="org.bonitasoft.studio.connectors.expression.ConnectorOutputExpressionProvider">
       </expressionProvider>
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.connectors.expression.ConnectorExpressionProvider">
+      </expressionProvider>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

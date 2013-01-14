@@ -83,7 +83,7 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 
     protected void doCreateControl(TabbedPropertySheetWidgetFactory widgetFactory) {
         /*Create control for initial value*/
-        expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION) ;
+        expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, true) ;
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,

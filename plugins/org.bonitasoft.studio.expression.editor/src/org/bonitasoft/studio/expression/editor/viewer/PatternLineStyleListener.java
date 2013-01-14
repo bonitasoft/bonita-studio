@@ -44,20 +44,28 @@ public class PatternLineStyleListener implements LineStyleListener {
     public void lineGetStyle(LineStyleEvent event) {
         Vector<StyleRange> styles = new Vector<StyleRange>();
 
-        addVariableExpressionStyles(event, styles);
-        addParameterExpressionStyles(event, styles);
+        addExpressionStyles( event,  styles, ExpressionConstants.VARIABLE_TYPE, SWT.COLOR_DARK_RED);
+        addExpressionStyles( event,  styles, ExpressionConstants.PARAMETER_TYPE, SWT.COLOR_DARK_GREEN);
+        addExpressionStyles( event,  styles, ExpressionConstants.FORM_FIELD_TYPE, SWT.COLOR_DARK_CYAN);
         event.styles = styles.toArray(new StyleRange[styles.size()]);
     }
 
-    protected void addVariableExpressionStyles(LineStyleEvent event, Vector<StyleRange> styles) {
+    /**
+     * 
+     * @param event
+     * @param styles
+     * @param type
+     * @param color
+     */
+    protected void addExpressionStyles(LineStyleEvent event, Vector<StyleRange> styles, String type, int color){
         for (Expression exp : expressions) {
-            if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
+            if(type.equals(exp.getType())){
                 String content = event.lineText;
                 int indexOf = content.indexOf(exp.getName());
                 int offset = indexOf;
                 while (indexOf != -1) {
                     if(isValidKeyWord(exp.getName(), content, indexOf)){
-                        styles.add(new StyleRange(event.lineOffset + offset, exp.getName().length(), Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED), null,SWT.BOLD));
+                        styles.add(new StyleRange(event.lineOffset + offset, exp.getName().length(), Display.getDefault().getSystemColor(color), null,SWT.BOLD));
                     }
                     content = content.substring(indexOf+exp.getName().length());
                     indexOf = content.indexOf(exp.getName());
@@ -66,24 +74,7 @@ public class PatternLineStyleListener implements LineStyleListener {
             }
         }
     }
-
-    protected void addParameterExpressionStyles(LineStyleEvent event, Vector<StyleRange> styles) {
-        for (Expression exp : expressions) {
-            if(ExpressionConstants.PARAMETER_TYPE.equals(exp.getType())){
-                String content = event.lineText;
-                int indexOf = content.indexOf(exp.getName());
-                int offset = indexOf;
-                while (indexOf != -1) {
-                    if(isValidKeyWord(exp.getName(), content, indexOf)){
-                        styles.add(new StyleRange(event.lineOffset + offset, exp.getName().length(), Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN), null,SWT.BOLD));
-                    }
-                    content = content.substring(indexOf+exp.getName().length());
-                    indexOf = content.indexOf(exp.getName());
-                    offset = indexOf+exp.getName().length() + offset;
-                }
-            }
-        }
-    }
+    
 
     public static boolean isValidKeyWord(String expName, String content, int indexOf) {
         return isStartingWord(indexOf) || isNotEscapeWord(content, indexOf);

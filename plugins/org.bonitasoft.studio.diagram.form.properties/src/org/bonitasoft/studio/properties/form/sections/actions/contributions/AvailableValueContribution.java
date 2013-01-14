@@ -76,7 +76,7 @@ public class AvailableValueContribution extends InitialValueContribution {
     protected void doCreateControl(TabbedPropertySheetWidgetFactory widgetFactory) {
         /*Create combo for availavle value*/
         composite.setLayout(new GridLayout(3, false));
-        expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION) ;
+        expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, true) ;
         expressionViewer.addFilter(new HiddenExpressionTypeFilter(new String[]{ExpressionConstants.FORM_FIELD_TYPE}));
         expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         if(widget instanceof SuggestBox){

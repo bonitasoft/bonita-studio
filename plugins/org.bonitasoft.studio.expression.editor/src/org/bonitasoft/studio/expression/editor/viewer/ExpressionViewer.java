@@ -28,8 +28,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
@@ -37,6 +40,7 @@ import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionToolbarContribution;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.pics.Pics;
@@ -49,6 +53,8 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFProperties;
@@ -128,6 +134,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     private EObject context;
     private final List<ISelectionChangedListener> expressionEditorListener = new ArrayList<ISelectionChangedListener>();
     private String entireText;
+    private boolean withConnector=false;
 
 
     protected final DisposeListener disposeListener = new DisposeListener() {
@@ -143,6 +150,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     protected Binding expressionBinding;
     private final Map<Integer, String> messages = new HashMap<Integer, String>();
 	private ToolBar toolbar;
+	private List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<IExpressionToolbarContribution>();
 
     public ExpressionViewer(Composite composite,int style, EReference expressionReference) {
         this(composite,style,null,null,expressionReference) ;
@@ -153,13 +161,20 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     public ExpressionViewer(Composite composite,int style,TabbedPropertySheetWidgetFactory widgetFactory,EditingDomain editingDomain,  EReference expressionReference) {
+        this(composite, style, widgetFactory, editingDomain, expressionReference, false);
+
+    }
+    
+    public ExpressionViewer(Composite composite,int style,TabbedPropertySheetWidgetFactory widgetFactory,EditingDomain editingDomain,  EReference expressionReference, boolean withConnector) {
         this.editingDomain = editingDomain ;
         this.expressionReference =expressionReference;
         filters = new HashSet<ViewerFilter>() ;
+        this.withConnector=withConnector;
         createControl(composite, style, widgetFactory);
         setContentProvider(new ArrayContentProvider()) ;
         setLabelProvider(new ExpressionLabelProvider()) ;
         this.entireText = "";
+        
     }
 
     protected void createControl(Composite composite, int style, TabbedPropertySheetWidgetFactory widgetFactory) {
@@ -174,20 +189,37 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         createTextControl(style, widgetFactory);
         createToolbar(style, widgetFactory);
        
-
     }
 
     protected void createToolbar(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
             toolbar = new ToolBar(control, SWT.FLAT);
             toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).indent(20, 0).grab(false, false).create());
             editControl = createEditToolItem(toolbar);
+            if(withConnector){
+            	createToolBarExtension(toolbar);
+            }
             createEraseToolItem(toolbar);
             if(widgetFactory != null){
                 widgetFactory.adapt(toolbar, true, true) ;
             }
     }
 
-    protected ToolItem createEditToolItem(ToolBar tb) {
+    protected void createToolBarExtension(ToolBar toolbar) {
+    	for( IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.expression.editor.expressionViewerToolbar")){
+    		try {
+    			final IExpressionToolbarContribution item = (IExpressionToolbarContribution) elem.createExecutableExtension("class");
+    			if(item.getId()=="ConnectorInExpressionViewer" && withConnector){
+    				item.fill(toolbar, -1);
+    				item.setExpressionViewer(this);
+    			}
+    			toolbarContributions .add(item);
+    		} catch (CoreException e) {
+    			BonitaStudioLog.error(e, ExpressionEditorPlugin.PLUGIN_ID);
+    		}
+    	}
+    }
+
+	protected ToolItem createEditToolItem(ToolBar tb) {
         final ToolItem editControl = new ToolItem(tb, SWT.PUSH);
         editControl.setImage(Pics.getImage(PicsConstants.edit)) ;
         editControl.setToolTipText(Messages.editAndContinue);
@@ -220,11 +252,13 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
                     editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME,""));
                     editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT,""));
                     editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,selectedExpression.getReferencedElements()));
+                    editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONNECTORS,selectedExpression.getConnectors()));
                 }else{
                     selectedExpression.setType(ExpressionConstants.CONSTANT_TYPE);
                     selectedExpression.setName("");
                     selectedExpression.setContent("");
                     selectedExpression.getReferencedElements().clear();
+                    selectedExpression.getConnectors().clear();
                 }
                 textControl.setText("");
                 refresh();
@@ -299,6 +333,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression))) ;
         }
     }
+    
+    
 
 
     protected void fireExpressionEditorChanged(SelectionChangedEvent selectionChangedEvent) {
@@ -362,7 +398,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
                 final StructuredSelection selection2 = new StructuredSelection(selectedExpression);
                 fireSelectionChanged(new SelectionChangedEvent(this, selection2)) ;
-
+                for(IExpressionToolbarContribution contribution : toolbarContributions){
+                	contribution.setExpression(selectedExpression);
+                }
                 refresh() ;
             } else {
                 selectedExpression = null;
@@ -487,12 +525,15 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
             @Override
             public Object convert(Object from) {
                 final boolean isScriptType = ExpressionConstants.SCRIPT_TYPE.equals(from.toString());
+                final boolean isConnectorType = from.toString().equals(ExpressionConstants.CONNECTOR_TYPE);
                 if(isScriptType){
                     getTextControl().setToolTipText(Messages.editScriptExpressionTooltip);
+                }else if(isConnectorType){
+                    getTextControl().setToolTipText(Messages.editConnectorExpressionTooltip);
                 }else{
                     getTextControl().setToolTipText(null);
                 }
-                return !isScriptType;
+                return !(isScriptType || isConnectorType);
             }
 
         });
@@ -580,13 +621,15 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
     }
 
     protected String getContentTypeFromInput(String input) {
-        String returnType = selectedExpression.getType() ;
+        String expressionType = selectedExpression.getType() ;
         if( selectedExpression.getType() == null){
-            returnType = CONSTANT_TYPE ;
+            expressionType = CONSTANT_TYPE ;
         }
 
         if(ExpressionConstants.SCRIPT_TYPE.equals(selectedExpression.getType())){
             return ExpressionConstants.SCRIPT_TYPE ;
+        }else if(ExpressionConstants.CONNECTOR_TYPE.equals(selectedExpression.getType())){
+        	  return ExpressionConstants.CONNECTOR_TYPE ;
         }
 
         Set<String> cache = new HashSet<String>() ;
@@ -605,10 +648,10 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
         }else if(cache.size() == 1){
             return cache.iterator().next() ;
         }else{
-            returnType = CONSTANT_TYPE ;
+            expressionType = CONSTANT_TYPE ;
         }
 
-        return returnType;
+        return expressionType;
     }
 
     protected void internalRefresh(Object element) {

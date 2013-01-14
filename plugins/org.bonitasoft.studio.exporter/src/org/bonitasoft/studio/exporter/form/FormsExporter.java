@@ -543,7 +543,7 @@ public class FormsExporter {
     }
 
 
-    private boolean isTransientData(final Expression expression) {
+    protected boolean isTransientData(final Expression expression) {
         if (expression != null) {
             if (ExpressionConstants.VARIABLE_TYPE.equals(expression.getType())) {
                 final EList<EObject> referencedElements = expression.getReferencedElements();
@@ -595,7 +595,7 @@ public class FormsExporter {
     protected void addTransientDataExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addTransientDataExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
@@ -697,7 +697,7 @@ public class FormsExporter {
                 && engineExpression.getContent() != null
                 && !engineExpression.getContent().isEmpty()){
             builder.addParameterExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                    engineExpression.getReturnType(), engineExpression.getInterpreter());
+                    engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
         }
     }

@@ -66,7 +66,7 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
         composite.setLayout(layout);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(composite);
 
-        defaultExpressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.MULTIPLE_VALUATED_FORM_FIELD__DEFAULT_EXPRESSION) ;
+        defaultExpressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.MULTIPLE_VALUATED_FORM_FIELD__DEFAULT_EXPRESSION, true) ;
 
         if(widget instanceof RadioFormField ||widget instanceof  ComboFormField ||widget instanceof  SelectFormField){
             defaultExpressionViewer.setMessage(Messages.data_tooltip_text,IStatus.INFO);

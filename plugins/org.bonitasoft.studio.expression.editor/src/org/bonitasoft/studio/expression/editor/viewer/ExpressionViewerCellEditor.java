@@ -180,6 +180,9 @@ public class ExpressionViewerCellEditor extends CellEditor {
 	protected void doSetValue(Object value) {
 		Expression exp = (Expression) ((IStructuredSelection) viewer
 				.getSelection()).getFirstElement();
+		if(exp == null && value instanceof Expression){
+			exp =(Expression) value;
+		}
 		viewer.setSelection(new StructuredSelection(exp));
 	}
 

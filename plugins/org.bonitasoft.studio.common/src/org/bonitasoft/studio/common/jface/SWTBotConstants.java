@@ -29,6 +29,7 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_EXPRESSIONVIEWER_TEXT = "expressionViewerText";
     public static final String SWTBOT_ID_EDITBUTTON = "expressionViewerEditButton";
     public static final String SWTBOT_ID_ERASEBUTTON = "expressionViewerEraseButton";
+    public static final String SWTBOT_ID_CONNECTORBUTTON = "expressionViewerConnectorButton";
     public static final String BONITA_OVERVIEW_TREE_ID = "bonitaOverviewTreeId";
     public static final String APPLICATION_RESOURCES_TREE_ID = "bonitaApplicationResourcesTree";
 
