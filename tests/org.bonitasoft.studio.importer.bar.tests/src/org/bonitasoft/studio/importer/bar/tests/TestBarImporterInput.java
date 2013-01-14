@@ -64,7 +64,7 @@ public class TestBarImporterInput {
 
     @Test(expected=FileNotFoundException.class)
     public void testv6Bar() throws Exception {
-        final URL url = TestBarImporterInput.class.getResource("Barv6--1.0.bar");
+        final URL url = TestBarImporterInput.class.getResource("BarV6--1.0.bar");
         BarImporterTestUtil.migrateBar(url);
     }
 
