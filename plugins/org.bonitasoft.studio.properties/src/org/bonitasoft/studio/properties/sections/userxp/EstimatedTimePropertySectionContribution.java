@@ -79,9 +79,10 @@ IExtensibleGridPropertySectionContribution {
     protected void refreshWidget() {
         if( durationWidget != null && !durationWidget.isDisposed()){
             if(((Activity)activity).getDuration() != null){
-                durationWidget.setDuration(Long.parseLong(((Activity)activity).getDuration()));
-            }else{
-                durationWidget.setDuration(0L);
+                long parseLong = Long.parseLong(((Activity)activity).getDuration());
+				if(durationWidget.getDuration() != parseLong){
+					durationWidget.setDuration(parseLong);
+				}
             }
         }
     }
@@ -110,7 +111,7 @@ IExtensibleGridPropertySectionContribution {
      */
     @Override
     public void refresh() {
-
+    	
     }
 
     /*
@@ -148,7 +149,13 @@ IExtensibleGridPropertySectionContribution {
         final ControlDecoration controlDecoration = new ControlDecoration(durationWidget, SWT.LEFT );
         controlDecoration.setImage(Pics.getImage(PicsConstants.hint));
         controlDecoration.setDescriptionText(Messages.executionTimeHint);
-
+        if(activity != null && ((Activity)activity).getDuration() != null){
+        	   long parseLong = Long.parseLong(((Activity)activity).getDuration());
+               durationWidget.setDuration(parseLong);
+        }else{
+               durationWidget.setDuration(0L);
+        }
+     
         durationWidget.addModifyListener(updateConsitionListener) ;
 
         refreshWidget() ;
