@@ -157,6 +157,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -344,6 +353,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -508,6 +526,15 @@
               href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -697,6 +724,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -864,6 +900,15 @@
               href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1053,6 +1098,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -1238,6 +1292,15 @@
               href="../form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1427,6 +1490,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -1594,6 +1666,15 @@
               href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1765,6 +1846,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -1934,6 +2024,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -2038,6 +2137,15 @@
               href="../form.ecore#//Widget/afterEventExpression"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -2146,6 +2254,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -2250,6 +2367,15 @@
               href="../form.ecore#//Widget/afterEventExpression"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -2410,6 +2536,15 @@
               href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -2651,6 +2786,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -2755,6 +2899,15 @@
               href="../form.ecore#//Widget/afterEventExpression"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -2933,6 +3086,15 @@
               href="../form.ecore#//FileWidget/outputDocumentListExpression"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -3122,6 +3284,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -3289,6 +3460,15 @@
               href="../form.ecore#//ImageWidget/imgPath"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -3460,6 +3640,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -3629,6 +3818,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -3733,6 +3931,15 @@
               href="../form.ecore#//Widget/afterEventExpression"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -3985,6 +4192,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -4226,6 +4442,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -4332,6 +4557,15 @@
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -4436,6 +4670,15 @@
               href="../form.ecore#//Widget/afterEventExpression"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/action"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Operation action = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperation() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Operator op = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createOperator() ;&#xD;&#xA;                op.setType(org.bonitasoft.studio.common.ExpressionConstants.ASSIGNMENT_OPERATOR) ;&#xD;&#xA;                op.setExpression(&quot;=&quot;) ;&#xD;&#xA;                action.setOperator(op) ;&#xD;&#xA;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression variableExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                org.bonitasoft.studio.model.expression.Expression actionExp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression() ;&#xD;&#xA;                action.setLeftOperand(variableExp) ;&#xD;&#xA;                action.setRightOperand(actionExp) ;&#xD;&#xA;return action;"
               language="java"/>
         </initializers>
       </domainInitializer>
