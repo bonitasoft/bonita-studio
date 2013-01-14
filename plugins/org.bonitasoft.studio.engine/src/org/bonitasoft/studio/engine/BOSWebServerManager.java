@@ -84,7 +84,7 @@ public class BOSWebServerManager {
 	protected static int WATCHDOG_PORT = 6969;
 	protected static final String START_TIMEOUT = "start-timeout";
 	protected static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
-	protected static final String TOMCAT_INTSANCE_LOCATION = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),"tomcat").getAbsolutePath();
+	protected final String tomcatInstanceLocation = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),"tomcat").getAbsolutePath();
 
 	protected static final String WATCHDOG_PORT_PROPERTY = "org.bonitasoft.studio.watchdog.port";
 	private static final int MIN_PORT_NUMBER = 1024;
@@ -122,7 +122,7 @@ public class BOSWebServerManager {
 	public void copyTomcatBundleInWorkspace(IProgressMonitor monitor) {
 		File tomcatFolder = null;
 		try {
-			final File targetFolder = new File(TOMCAT_INTSANCE_LOCATION);
+			final File targetFolder = new File(tomcatInstanceLocation);
 			if(!targetFolder.exists()){
 				BonitaStudioLog.debug("Copying tomcat bundle in worksapce...", EnginePlugin.PLUGIN_ID);
 				URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat") ;
@@ -192,7 +192,7 @@ public class BOSWebServerManager {
 		}
 	    ILaunchConfigurationWorkingCopy workingCopy = conf.getWorkingCopy();
         String args = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,"");
-		if(!args.contains(TOMCAT_INTSANCE_LOCATION)){
+		if(!args.contains(tomcatInstanceLocation)){
 			 conf = server.getLaunchConfiguration(true,Repository.NULL_PROGRESS_MONITOR);
 			 workingCopy = conf.getWorkingCopy();
 		}
@@ -211,7 +211,7 @@ public class BOSWebServerManager {
 		IFile file = confProject.getFile("bonitaTomcatServerSerialization");
 		confProject.open(Repository.NULL_PROGRESS_MONITOR);
 		final IFolder configurationFolder = confProject.getFolder("tomcat_conf");
-		final File sourceFolder = new File(TOMCAT_INTSANCE_LOCATION,"conf");
+		final File sourceFolder = new File(tomcatInstanceLocation,"conf");
 
 		PlatformUtil.copyResource(configurationFolder.getLocation().toFile(), sourceFolder, Repository.NULL_PROGRESS_MONITOR);
 		configurationFolder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
@@ -283,8 +283,8 @@ public class BOSWebServerManager {
 	protected IServerWorkingCopy configureServer(IRuntime runtime, IServerType sType, IFile file, final IFolder configurationFolder) throws CoreException {
 		IServerWorkingCopy server = sType.createServer("bonitaTomcatServer", file, runtime, null);
 		server.setServerConfiguration(configurationFolder);
-		server.setAttribute(ITomcatServer.PROPERTY_INSTANCE_DIR,TOMCAT_INTSANCE_LOCATION);
-		server.setAttribute(ITomcatServer.PROPERTY_DEPLOY_DIR, TOMCAT_INTSANCE_LOCATION + File.separatorChar+ "webapps");
+		server.setAttribute(ITomcatServer.PROPERTY_INSTANCE_DIR,tomcatInstanceLocation);
+		server.setAttribute(ITomcatServer.PROPERTY_DEPLOY_DIR, tomcatInstanceLocation + File.separatorChar+ "webapps");
 		server.setAttribute(START_TIMEOUT, 300);
 		return server;
 	}
@@ -293,7 +293,7 @@ public class BOSWebServerManager {
 
 	protected IRuntime createServerRuntime(IRuntimeType type) throws CoreException {
 		IRuntimeWorkingCopy tomcatRuntime = type.createRuntime("bonitaTomcatRuntime",null);
-		tomcatRuntime.setLocation(Path.fromOSString(TOMCAT_INTSANCE_LOCATION));
+		tomcatRuntime.setLocation(Path.fromOSString(tomcatInstanceLocation));
 		IStatus status = tomcatRuntime.validate(null);
 		if(!status.isOK()){
 			throw new RuntimeException("Failed to create a tomcat server : "+status.getMessage());
@@ -317,12 +317,12 @@ public class BOSWebServerManager {
 		args.append("-Xmx512m");
 		args.append(" ");
 		args.append("-XX:MaxPermSize=256m");
-		addSystemProperty(args, "catalina.home", "\""+TOMCAT_INTSANCE_LOCATION+"\"");
-		addSystemProperty(args, "wtp.deploy", "\""+TOMCAT_INTSANCE_LOCATION+File.separatorChar+"webapps\"");
-		addSystemProperty(args, "java.endorsed.dirs", "\""+TOMCAT_INTSANCE_LOCATION+File.separatorChar+"endorsed\"");
-		addSystemProperty(args, "bonita.home", "\""+TOMCAT_INTSANCE_LOCATION+File.separatorChar+"bonita\"");
+		addSystemProperty(args, "catalina.home", "\""+tomcatInstanceLocation+"\"");
+		addSystemProperty(args, "wtp.deploy", "\""+tomcatInstanceLocation+File.separatorChar+"webapps\"");
+		addSystemProperty(args, "java.endorsed.dirs", "\""+tomcatInstanceLocation+File.separatorChar+"endorsed\"");
+		addSystemProperty(args, "bonita.home", "\""+tomcatInstanceLocation+File.separatorChar+"bonita\"");
 		addSystemProperty(args, "java.util.logging.manager", "org.apache.juli.ClassLoaderLogManager");
-		addSystemProperty(args, "java.util.logging.config.file", "\""+TOMCAT_INTSANCE_LOCATION+File.separatorChar+"conf"+File.separatorChar+"logging.properties\"");
+		addSystemProperty(args, "java.util.logging.config.file", "\""+tomcatInstanceLocation+File.separatorChar+"conf"+File.separatorChar+"logging.properties\"");
 		addSystemProperty(args, "file.encoding", "UTF-8");
 		if(!isPortAvailable(WATCHDOG_PORT)){
 			int oldPort = WATCHDOG_PORT;
@@ -436,14 +436,14 @@ public class BOSWebServerManager {
 
 
 	public void cleanTomCatServer(){
-		String urlServer = TOMCAT_INTSANCE_LOCATION+File.separator+"bonita"+File.separator+"server"+File.separator+"tenants"+File.separator+"1";
-		String urlClient = TOMCAT_INTSANCE_LOCATION+File.separator+"bonita"+File.separator+"client"+File.separator+"tenants"+File.separator+"1";
+		String urlServer = tomcatInstanceLocation+File.separator+"bonita"+File.separator+"server"+File.separator+"tenants"+File.separator+"1";
+		String urlClient = tomcatInstanceLocation+File.separator+"bonita"+File.separator+"client"+File.separator+"tenants"+File.separator+"1";
 		File bonitaServerFile = new File(urlServer);
 		File bonitaClientFile = new File(urlClient);
 		//FileUtil.deleteDir(bonitaFile);
 		PlatformUtil.delete(bonitaServerFile,null);
 		PlatformUtil.delete(bonitaClientFile,null);
-		String platformTomcatConfigURL = TOMCAT_INTSANCE_LOCATION+File.separator+"bonita"+File.separator+"client"+File.separator+"platform"+File.separator+"conf"+File.separator+"platform-tenant-config.properties";
+		String platformTomcatConfigURL = tomcatInstanceLocation+File.separator+"bonita"+File.separator+"client"+File.separator+"platform"+File.separator+"conf"+File.separator+"platform-tenant-config.properties";
 		File platformTomcatConfig = new File(platformTomcatConfigURL);
 		PlatformUtil.delete(platformTomcatConfig, null);
 		try {
@@ -451,7 +451,7 @@ public class BOSWebServerManager {
 		} catch (IOException e) {
 			BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
 		}
-		String workURL = TOMCAT_INTSANCE_LOCATION+File.separator+"bonita"+File.separator+"server"+File.separator+"platform"+File.separator+"work";
+		String workURL = tomcatInstanceLocation+File.separator+"bonita"+File.separator+"server"+File.separator+"platform"+File.separator+"work";
 		File workDir = new File(workURL);
 		if (workDir!=null && workDir.exists()){
 			for (File file:workDir.listFiles()){
@@ -462,7 +462,7 @@ public class BOSWebServerManager {
 
 
 	public File getBonitaLogFile() {
-		File logDir = new File(TOMCAT_INTSANCE_LOCATION,"logs");
+		File logDir = new File(tomcatInstanceLocation,"logs");
 		File[] list = logDir.listFiles(new FilenameFilter() {
 
 			@Override
