@@ -31,6 +31,132 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -74,6 +200,150 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -112,6 +382,132 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -157,6 +553,150 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -198,6 +738,132 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -243,6 +909,150 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -284,6 +1094,150 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -329,6 +1283,150 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -370,6 +1468,132 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -415,6 +1639,132 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -456,6 +1806,132 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -501,6 +1977,69 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -542,6 +2081,69 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -587,6 +2189,69 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -628,6 +2293,123 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -806,6 +2588,69 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -847,6 +2692,69 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -892,6 +2800,141 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FileWidget/outputDocumentListExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -933,6 +2976,150 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -978,6 +3165,132 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//ImageWidget/imgPath"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -1019,6 +3332,132 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1064,6 +3503,132 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -1105,6 +3670,69 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1159,6 +3787,204 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Table/maxRowForPagination"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Table/columnForInitialSelectionIndex"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Table/selectedValues"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//AbstractTable/verticalHeaderExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//AbstractTable/tableExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.TableExpression exp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createTableExpression();&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//AbstractTable/horizontalHeaderExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -1211,6 +4037,195 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//FormField/exampleMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/tooltipForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForRemove"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/displayLabelForAdd"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/minNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Duplicable/maxNumberOfDuplication"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//AbstractTable/verticalHeaderExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//AbstractTable/tableExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.TableExpression exp = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createTableExpression();&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//AbstractTable/horizontalHeaderExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//DynamicTable/maxNumberOfColumn"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//DynamicTable/maxNumberOfRow"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//DynamicTable/minNumberOfColumn"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//DynamicTable/minNumberOfRow"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Integer.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -1254,6 +4269,69 @@
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
               language="java"/>
         </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
       </domainInitializer>
       <labelMappings
           xsi:type="gmfmap:FeatureLabelMapping">
@@ -1295,6 +4373,69 @@
               href="../form.ecore#//Widget/displayLabel"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/injectWidgetScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/helpMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/tooltip"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/inputExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/displayAfterEventDependsOnConditionScript"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="../form.ecore#//Widget/afterEventExpression"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
