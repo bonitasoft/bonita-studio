@@ -122,7 +122,7 @@ public class BOSWebServerManager {
 	public void copyTomcatBundleInWorkspace(IProgressMonitor monitor) {
 		File tomcatFolder = null;
 		try {
-			final File targetFolder = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),"tomcat");
+			final File targetFolder = new File(TOMCAT_INTSANCE_LOCATION);
 			if(!targetFolder.exists()){
 				BonitaStudioLog.debug("Copying tomcat bundle in worksapce...", EnginePlugin.PLUGIN_ID);
 				URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat") ;

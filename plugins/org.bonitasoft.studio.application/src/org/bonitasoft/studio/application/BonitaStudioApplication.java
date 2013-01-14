@@ -86,7 +86,7 @@ public class BonitaStudioApplication implements IApplication {
         Location instanceLoc = Platform.getInstanceLocation();
         //if workspace is set via -Data, can't reset it
         if(!instanceLoc.isSet()){
-            String path2 = Platform.getInstallLocation().getURL().getPath() + PREFERENCES_FILE;
+            String path2 = Platform.getInstallLocation().getURL().getFile()+ File.separator + PREFERENCES_FILE;
             String lastUsedWs = null;//preferences.get(WS_ROOT, null);
             File propertiesFile = new File(path2);
             if(propertiesFile.exists()){
