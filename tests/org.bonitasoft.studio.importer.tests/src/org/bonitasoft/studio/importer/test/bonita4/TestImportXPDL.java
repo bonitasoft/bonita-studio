@@ -102,7 +102,7 @@ public class TestImportXPDL extends TestCase {
         assertEquals("Not the same number of group as expected", 1, process.getActors().size());
         assertEquals("Not the same number of connectors as expected", 7, connectors);
 
-        Actor group = mainProcess.getActors().get(0);
+        Actor group = process.getActors().get(0);
         for (Task task : tasks) {
             assertEquals("Task has no group", group, task.getActor());
         }
