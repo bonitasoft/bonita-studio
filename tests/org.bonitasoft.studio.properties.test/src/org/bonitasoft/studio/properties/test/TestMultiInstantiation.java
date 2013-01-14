@@ -256,7 +256,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase {
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Operations");
         bot.button("Add").click();
 
-        bot.comboBox().setSelection("vip (java.util.List)");
+        bot.comboBox().setSelection("vip (java.util.List) -- TYPE_VARIABLE");
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
         String expressionScript = "List vipList = new ArrayList(vip)\nvipList.remove(vipName)\nreturn vipList";
         SWTBotTestUtil.setScriptExpression( bot,"removeUser", expressionScript, "java.util.List");
