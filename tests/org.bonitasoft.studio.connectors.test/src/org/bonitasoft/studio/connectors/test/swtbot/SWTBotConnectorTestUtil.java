@@ -28,7 +28,7 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 
 /**
- * @author AurŽlie Zara
+ * @author Aurï¿½lie Zara
  * 
  */
 /**
@@ -244,7 +244,7 @@ public class SWTBotConnectorTestUtil {
         bot.sleep(1000); // Due to delayed observable on databinding
         bot.button(IDialogConstants.NEXT_LABEL).click();
         if (dataName!=null && !dataName.isEmpty()){
-        	bot.comboBox().setSelection(dataName + " (java.lang.String)");
+        	bot.comboBox().setSelection(dataName + " (java.lang.String) -- TYPE_VARIABLE");
         }
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
