@@ -34,7 +34,6 @@ import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
-import org.bonitasoft.studio.model.process.diagram.form.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -49,7 +48,9 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocument
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.handlers.SaveHandler;
 
 
@@ -119,16 +120,17 @@ public class SaveCommandHandler extends SaveHandler {
 							diagramDocumentEditor.close(true);
 						}
 						oldArtifact.rename(NamingUtils.toDiagramFilename(proc)) ;
-						oldArtifact.open();
+						IWorkbenchPart newEditorOfDiagram = oldArtifact.open();
 						MainProcess diagram =  oldArtifact.getContent();
 						List<EObject> forms=ModelHelper.getAllItemsOfType(diagram, FormPackage.Literals.FORM);
 						for (EObject form:forms){
 							String id = ModelHelper.getEObjectID(form);
 							if (formIds.contains(id)){
+								//TODO: find a way to just open the diagram without bringing them to top and make the UI blinking
 								FormsUtils.openDiagram((Form)form, null);
 							}
 						}
-
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(newEditorOfDiagram);
 					}else{
 						editorPart.doSave(Repository.NULL_PROGRESS_MONITOR);
 					}
