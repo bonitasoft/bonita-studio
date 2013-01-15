@@ -79,7 +79,6 @@ public class ImagePathContribution implements IExtensibleGridPropertySectionCont
     private Button browse;
     private EMFDataBindingContext context = null;
     private final String noDocumentComboItem = Messages.noDocument;
-    private final HiddenExpressionTypeFilter filterVariableType = new HiddenExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE});
 
 
     private ControlDecoration controlDecoration;

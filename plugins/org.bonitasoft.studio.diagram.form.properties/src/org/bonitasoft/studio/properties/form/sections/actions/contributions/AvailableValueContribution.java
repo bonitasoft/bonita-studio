@@ -25,7 +25,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
-import org.bonitasoft.studio.expression.editor.filter.HiddenExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -77,7 +77,12 @@ public class AvailableValueContribution extends InitialValueContribution {
         /*Create combo for availavle value*/
         composite.setLayout(new GridLayout(3, false));
         expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, true) ;
-        expressionViewer.addFilter(new HiddenExpressionTypeFilter(new String[]{ExpressionConstants.FORM_FIELD_TYPE}));
+       
+        expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{
+    			ExpressionConstants.CONSTANT_TYPE,
+    			ExpressionConstants.VARIABLE_TYPE,
+    			ExpressionConstants.SCRIPT_TYPE
+        }));
         expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         if(widget instanceof SuggestBox){
             expressionViewer.setMessage(Messages.data_tooltip_list+" ("+Messages.mapUnsupported+")",IStatus.INFO);

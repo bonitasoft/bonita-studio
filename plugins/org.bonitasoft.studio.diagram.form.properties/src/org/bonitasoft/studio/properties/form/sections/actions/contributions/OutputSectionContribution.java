@@ -21,7 +21,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.data.provider.DataExpressionProviderForFormOutput;
-import org.bonitasoft.studio.expression.editor.filter.HiddenExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -62,12 +62,11 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 
-        HiddenExpressionTypeFilter expressionFilter = new HiddenExpressionTypeFilter(new String[]{
-                ExpressionConstants.I18N_TYPE,
-                ExpressionConstants.CONNECTOR_TYPE,
-                ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.SIMULATION_VARIABLE_TYPE,
-                ExpressionConstants.CONNECTOR_OUTPUT_TYPE
+    	AvailableExpressionTypeFilter expressionFilter =  new AvailableExpressionTypeFilter(new String[]{
+    			ExpressionConstants.CONSTANT_TYPE,
+    			ExpressionConstants.VARIABLE_TYPE,
+    			ExpressionConstants.SCRIPT_TYPE,
+    			ExpressionConstants.FORM_FIELD_TYPE
         }) ;
 
         operationViewer = new OperationViewer(composite, widgetFactory,getEditingDomain(), expressionFilter, new ExpressionViewerVariableFilter()) ;

@@ -21,7 +21,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.data.provider.DataExpressionProviderForFormOutput;
-import org.bonitasoft.studio.expression.editor.filter.HiddenExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
@@ -185,13 +185,13 @@ public class DocumentOutputSectionContribution implements IExtensibleGridPropert
         final Composite client  = widgetFactory.createComposite(composite);
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-        HiddenExpressionTypeFilter expressionFilter = new HiddenExpressionTypeFilter(new String[]{
-                ExpressionConstants.I18N_TYPE,
-                ExpressionConstants.CONNECTOR_TYPE,
-                ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.SIMULATION_VARIABLE_TYPE,
-                ExpressionConstants.CONNECTOR_OUTPUT_TYPE
-        }) ;
+
+        AvailableExpressionTypeFilter expressionFilter =  new AvailableExpressionTypeFilter(new String[]{
+     			ExpressionConstants.CONSTANT_TYPE,
+     			ExpressionConstants.VARIABLE_TYPE,
+     			ExpressionConstants.FORM_FIELD_TYPE,
+     			ExpressionConstants.SCRIPT_TYPE
+         }) ;
 
         operationViewer = new OperationViewer(client, widgetFactory,getEditingDomain(), expressionFilter, new ExpressionViewerVariableFilter()) ;
         operationViewer.setStorageExpressionContentProvider(new DataExpressionProviderForFormOutput());
@@ -338,12 +338,11 @@ public class DocumentOutputSectionContribution implements IExtensibleGridPropert
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
-        HiddenExpressionTypeFilter expressionFilter = new HiddenExpressionTypeFilter(new String[]{
-                ExpressionConstants.I18N_TYPE,
-                ExpressionConstants.CONNECTOR_TYPE,
-                ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.SIMULATION_VARIABLE_TYPE,
-                ExpressionConstants.CONNECTOR_OUTPUT_TYPE
+        AvailableExpressionTypeFilter expressionFilter =  new AvailableExpressionTypeFilter(new String[]{
+    			ExpressionConstants.CONSTANT_TYPE,
+    			ExpressionConstants.VARIABLE_TYPE,
+    			ExpressionConstants.FORM_FIELD_TYPE,
+    			ExpressionConstants.SCRIPT_TYPE
         }) ;
 
         documentListExpressionViewer = new ExpressionViewer(client, SWT.BORDER, widgetFactory, editingDomain, FormPackage.Literals.FILE_WIDGET__OUTPUT_DOCUMENT_LIST_EXPRESSION);

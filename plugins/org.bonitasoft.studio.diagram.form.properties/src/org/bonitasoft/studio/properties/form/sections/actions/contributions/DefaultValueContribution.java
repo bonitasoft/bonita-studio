@@ -54,7 +54,7 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
     protected MultipleValuatedFormField widget;
     protected ExpressionViewer defaultExpressionViewer;
     protected EMFDataBindingContext dataBindingContext;
-    final HiddenExpressionTypeFilter filterVariableType = new HiddenExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE});
+    protected final HiddenExpressionTypeFilter filterVariableType = new HiddenExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SEARCH_INDEX_TYPE});
 
 
     public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {

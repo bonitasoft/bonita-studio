@@ -91,7 +91,6 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
     private MagicComposite magicComposite;
     private Composite headersComposite;
     private Composite headersValueComposite;
-    private final HiddenExpressionTypeFilter filterVariableType = new HiddenExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE});
 
 
     public AbstractTableDataPropertySection() {

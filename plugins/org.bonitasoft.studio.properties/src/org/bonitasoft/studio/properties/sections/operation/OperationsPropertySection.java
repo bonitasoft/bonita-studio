@@ -19,7 +19,6 @@ package org.bonitasoft.studio.properties.sections.operation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.filter.HiddenExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -54,11 +53,11 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
     }
 
     protected OperationsComposite createActionLinesComposite(Composite parent) {
-        HiddenExpressionTypeFilter actionFilter =  new HiddenExpressionTypeFilter(new String[]{
-                ExpressionConstants.CONNECTOR_OUTPUT_TYPE,
-                ExpressionConstants.I18N_TYPE,
-                ExpressionConstants.CONNECTOR_TYPE,
-                ExpressionConstants.SIMULATION_VARIABLE_TYPE,
+    	AvailableExpressionTypeFilter actionFilter =  new AvailableExpressionTypeFilter(new String[]{
+    			ExpressionConstants.CONSTANT_TYPE,
+    			ExpressionConstants.VARIABLE_TYPE,
+    			ExpressionConstants.SCRIPT_TYPE,
+    			ExpressionConstants.FORM_FIELD_TYPE
         }) ;
 
         AvailableExpressionTypeFilter dataFilter =  new AvailableExpressionTypeFilter(new String[]{

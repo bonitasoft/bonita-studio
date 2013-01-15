@@ -55,7 +55,6 @@ public class TableDataPropertySection extends AbstractTableDataPropertySection {
     private Button allowSingleSelection;
     private ExpressionViewer paginationMaxNumber;
     private Table lastEObject;
-    private final HiddenExpressionTypeFilter filterVariableType = new HiddenExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE});
 
 
     @Override

@@ -21,7 +21,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
-import org.bonitasoft.studio.expression.editor.filter.HiddenExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -87,7 +87,11 @@ IExtensibleGridPropertySectionContribution {
             editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, element, FormPackage.Literals.FORM__PAGE_LABEL, ExpressionFactory.eINSTANCE.createExpression()));
         }
         if(ModelHelper.isAnEntryPageFlowOnAPool(element)){
-            pageLabelExpresssionViewer.addFilter(new HiddenExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE}));
+            pageLabelExpresssionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{
+        			ExpressionConstants.CONSTANT_TYPE,
+        			ExpressionConstants.PARAMETER_TYPE,
+        			ExpressionConstants.SCRIPT_TYPE
+            }));
         }
 
         pageLabelExpresssionViewer.setInput(element);

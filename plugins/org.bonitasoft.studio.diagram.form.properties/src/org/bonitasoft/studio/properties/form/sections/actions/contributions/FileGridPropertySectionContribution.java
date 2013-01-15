@@ -22,7 +22,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.filter.HiddenExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -100,7 +99,6 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
     private Button useResourceButton;
     private TabbedPropertySheetWidgetFactory widgetFactory;
     private ExpressionViewer inputURLExpressionViewer;
-    private final HiddenExpressionTypeFilter filterVariableType = new HiddenExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE});
     private Text resourceText;
     private TableViewer resourceTableViewer;
     private ExpressionViewer inputDocumentExpressionViewer;

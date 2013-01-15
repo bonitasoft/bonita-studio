@@ -20,7 +20,7 @@ package org.bonitasoft.studio.properties.form.sections.actions;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.data.provider.DataExpressionProviderForFormOutput;
-import org.bonitasoft.studio.expression.editor.filter.HiddenExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
 import org.bonitasoft.studio.properties.form.provider.ExpressionViewerVariableFilter;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -55,10 +55,11 @@ public class FormActionsPropertySection extends AbstractBonitaDescriptionSection
     }
 
     protected OperationsComposite createActionLinesComposite() {
-        HiddenExpressionTypeFilter actionFilter =  new HiddenExpressionTypeFilter(new String[]{
-                ExpressionConstants.CONNECTOR_OUTPUT_TYPE,
-                ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.I18N_TYPE
+    	AvailableExpressionTypeFilter actionFilter =  new AvailableExpressionTypeFilter(new String[]{
+    			ExpressionConstants.CONSTANT_TYPE,
+    			ExpressionConstants.VARIABLE_TYPE,
+    			ExpressionConstants.SCRIPT_TYPE,
+    			ExpressionConstants.FORM_FIELD_TYPE
         }) ;
 
         final OperationsComposite operationsComposite = new OperationsComposite(tabbedPropertySheetPage, mainComposite, actionFilter, new ExpressionViewerVariableFilter());
