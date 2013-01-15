@@ -384,7 +384,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 	protected void addStatusColumn() {
 		final TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
 		column.getColumn().setText(Messages.status);
-		column.getColumn().setAlignment(SWT.RIGHT);
+		column.getColumn().setAlignment(SWT.CENTER);
 		
 		column.setLabelProvider(new StatusColumnLabelProvider());
 
