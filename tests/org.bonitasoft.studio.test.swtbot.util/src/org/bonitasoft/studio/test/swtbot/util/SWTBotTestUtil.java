@@ -657,4 +657,109 @@ public class SWTBotTestUtil implements SWTBotConstants{
         toolbarFigure.translateToAbsolute(location);
         editor.click(location.x, location.y);
     }    
+    
+    /**
+     * 
+     * @param bot
+     */
+    public static void editScriptConnector(SWTGefBot bot, String scriptName, String scriptText){
+    	editScriptConnector( bot,  scriptName,  scriptText, null );
+    }
+    
+   /**
+     * 
+     * @param bot
+     */
+    public static void editScriptConnector(SWTGefBot bot, String scriptName, String scriptText, String scriptDescription ){
+    	// 1st page
+    	editConnector( bot,"Script", "Groovy");
+    	
+    	// 2nde page
+    	bot.textWithLabel("Name *").setText(scriptName);
+    	if(scriptDescription!=null){
+    		bot.textWithLabel("Description").setText(scriptDescription);
+    	}
+    	Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+    	bot.button(IDialogConstants.NEXT_LABEL).click();
+    	
+    	// 3th page
+    	bot.styledText().setText(scriptText);
+    	Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+    	bot.button(IDialogConstants.NEXT_LABEL).click();
+    	
+    	// 4th page
+    	Assert.assertTrue("Error : finish button is not enable in Connectors Wizard.", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+    	bot.button(IDialogConstants.FINISH_LABEL).click();
+    }
+    
+    /** Set the connector type and the select the connector specified in the parameters
+     * 
+     * @param bot
+     * @param connectorType
+     * @param connectorTool
+     */
+    public static void editConnector(SWTGefBot bot, String connectorType, String connectorTool){
+    	
+    	bot.waitUntil(Conditions.shellIsActive("Connectors"));
+    	SWTBotTree tree = bot.tree();
+    	tree.expandNode(connectorType);
+    	SWTBotTreeItem theItem = tree.getTreeItem(connectorType);
+    	Assert.assertNotNull("Error : No item "+connectorType+" found in the tree.", theItem);
+    	for( SWTBotTreeItem item : theItem.getItems()){
+    		System.out.println("item = "+item.getText());
+    		if(item.getText().startsWith(connectorTool)){
+    			item.select();
+    			item.click();
+    			break;
+    		}
+    	}
+    	
+    	Assert.assertTrue("Error : No "+ connectorTool +" "+connectorType +" found in the connector list", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+    	
+    	bot.button(IDialogConstants.NEXT_LABEL).click();
+    	
+    }
+
+	public static void editEmailConnector(SWTGefBot bot, String emailName, String emailDescription, String from, String to, String subject, String message ) {
+    	// 1st page
+    	editConnector( bot,"Messaging", "Email");
+    	
+    	// 2nde page
+    	bot.textWithLabel("Name *").setText(emailName);
+    	if(emailDescription!=null && !emailDescription.isEmpty()){
+    		bot.textWithLabel("Description").setText(emailDescription);
+    	}
+    	Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+    	bot.button(IDialogConstants.NEXT_LABEL).click();
+    	
+    	// 3th page
+    	Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+    	bot.button(IDialogConstants.NEXT_LABEL).click();
+    	
+    	// 4th page
+    	bot.textWithLabel("From *").setText(from);
+    	bot.textWithLabel("To *").setText(to);
+    	bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)));
+    	Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+    	bot.button(IDialogConstants.NEXT_LABEL).click();
+    	
+    	// 5th page
+    	bot.textWithLabel("Subject *").setText(subject);
+    	if(message!=null && !message.isEmpty()){
+    		bot.textWithLabel("Message").setText(message);
+    	}
+    	bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)));
+    	Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+    	bot.button(IDialogConstants.NEXT_LABEL).click();
+    	
+    	// 6th page
+    	Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
+    	bot.button(IDialogConstants.NEXT_LABEL).click();
+    	
+    	// 7th page
+    	Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+    	bot.button(IDialogConstants.FINISH_LABEL).click();
+     	
+    	
+	}
 }
