@@ -18,7 +18,9 @@
 package org.bonitasoft.studio.connectors.test;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -94,6 +96,15 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 
                 List<String> inputs = new ArrayList<String>();
                 for(Input in : definition.getInput()){
+                	try{
+                		Class inputClazz = Class.forName(in.getType());
+                		if(!(Collection.class.isAssignableFrom(inputClazz) || Serializable.class.isAssignableFrom(inputClazz))){
+                			testReport.append("\n");
+                            testReport.append("Input "+in.getName()+" with type "+in.getType()+" from "+definition.getId()+" ("+definition.getVersion()+") is not Serializable or is not a Collection");
+                		}
+                	}catch (Exception e) {
+						
+					}
                     inputs.add(in.getName());
                 }
                 for(String inputName : inputs){
@@ -142,6 +153,16 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 
                 List<String> outputs = new ArrayList<String>();
                 for(Output out : definition.getOutput()){
+                	try{
+                		Class outputClazz = Class.forName(out.getType());
+                		if(!(Collection.class.isAssignableFrom(outputClazz) || Serializable.class.isAssignableFrom(outputClazz))){
+                			testReport.append("\n");
+                            testReport.append("Output "+out.getName()+" with type "+out.getType()+" from "+definition.getId()+" ("+definition.getVersion()+") is not Serializable or is not a Collection");
+                		}
+                	}catch (Exception e) {
+						
+					}
+                	
                     outputs.add(out.getName());
                 }
                 for(String outputName : outputs){
