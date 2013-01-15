@@ -560,7 +560,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//Correlation/correlationAssociation"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//CorrelationAssociation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//CorrelationAssociation/priority"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//CorrelationAssociation/CorrelationExpression"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//CorrelationAssociation/correlationKey"/>
     </genClasses>
