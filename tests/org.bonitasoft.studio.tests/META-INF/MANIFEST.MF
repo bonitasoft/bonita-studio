@@ -73,7 +73,6 @@ Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.processzoo,
  org.bonitasoft.studio.tests.processzoo.examples,
  org.bonitasoft.studio.tests.processzooBis,
- org.bonitasoft.studio.tests.searchindex,
  org.bonitasoft.studio.tests.stress,
  org.bonitasoft.studio.tests.subprocess,
  org.bonitasoft.studio.tests.timer
