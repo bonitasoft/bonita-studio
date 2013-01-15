@@ -179,14 +179,14 @@ public class FormsExporter {
         }
 
         final Expression mandatorySymbol = studioProcess.getMandatorySymbol();
-        if (mandatorySymbol != null) {
+        if (mandatorySymbol != null && mandatorySymbol.getContent() != null && !mandatorySymbol.getContent().isEmpty()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(mandatorySymbol);
             builder.addMandatorySymbolExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
                     engineExpression.getReturnType(), engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
         }
         final Expression mandatoryLabel = studioProcess.getMandatoryLabel();
-        if (mandatoryLabel != null) {
+        if (mandatoryLabel != null && mandatoryLabel.getContent() != null && !mandatoryLabel.getContent().isEmpty()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(mandatoryLabel);
             builder.addMandatoryLabelExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
                     engineExpression.getReturnType(), engineExpression.getInterpreter());
