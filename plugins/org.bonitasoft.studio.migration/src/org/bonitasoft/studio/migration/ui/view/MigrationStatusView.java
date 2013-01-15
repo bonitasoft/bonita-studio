@@ -68,13 +68,17 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
@@ -126,22 +130,22 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		exportAction = new ExportMigrationReportAsPDFAction();
 		exportAction.setReport(getReportFromEditor(getSite().getPage().getActiveEditor()));
 		dropDownMenu.add(exportAction);
-		
+
 		linkAction = new ToggleLinkingAction();
 		linkAction.setViewer(tableViewer);
 		linkAction.setEditor((DiagramEditor) getSite().getPage().getActiveEditor());
 		toolBar.add(linkAction);
-		
+
 		final HideValidStatusAction hideStatusAction = new HideValidStatusAction();
 		hideStatusAction.setViewer(tableViewer);
 		dropDownMenu.add(hideStatusAction);
-		
+
 		final HideReviewedAction hideReviewedAction = new HideReviewedAction();
 		hideReviewedAction.setViewer(tableViewer);
 		dropDownMenu.add(hideReviewedAction);
 	}
 
-	
+
 
 
 	protected void createBottomComposite(Composite mainComposite) {
@@ -229,11 +233,11 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		tableViewer.getTable().setLinesVisible(true);
 		tableViewer.addFilter(new ViewerFilter() {
 
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                return viewerSelect(element,searchQuery) ;
-            }
-        }) ;
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				return viewerSelect(element,searchQuery) ;
+			}
+		}) ;
 
 		addElementTypeColumn();
 		addElementNameColumn();
@@ -254,16 +258,20 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		IEditorPart activeEditor = getSite().getPage().getActiveEditor();
 		tableViewer.setInput(activeEditor);
 		tableViewer.addSelectionChangedListener(this);
-		
-		
+		tableViewer.getTable().addListener(SWT.MeasureItem, new Listener() {
+			public void handleEvent(Event event) {
+				event.height = 25;
+			}
+		});
+
 		final Label descriptionLabel = new Label(tableComposite, SWT.NONE);
 		descriptionLabel.setText(Messages.description);
 		descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		
+
 		descripitonText = new Text(tableComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY);
 		descripitonText.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		descripitonText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).create());
-		
+
 	}
 
 	protected void addElementNameColumn() {
@@ -385,7 +393,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		final TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
 		column.getColumn().setText(Messages.status);
 		column.getColumn().setAlignment(SWT.CENTER);
-		
+
 		column.setLabelProvider(new StatusColumnLabelProvider());
 
 	}
@@ -448,27 +456,27 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		findText.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).align(SWT.RIGHT, SWT.CENTER).hint(150, SWT.DEFAULT).create());
 		findText.setMessage(Messages.find);
 		findText.addModifyListener(new ModifyListener() {
-			
-			
+
+
 
 			@Override
 			public void modifyText(ModifyEvent e) {
 				searchQuery = findText.getText() ;
-                tableViewer.refresh() ;
-				
+				tableViewer.refresh() ;
+
 			}
 		});
 	}
 
-    protected boolean viewerSelect(Object element, String searchQuery) {
-        if(searchQuery == null || searchQuery.isEmpty()
-                || (((Change)element).getElementType() != null && ((Change)element).getElementType().toLowerCase().contains(searchQuery.toLowerCase()))
-                || (((Change)element).getElementName() != null && ((Change)element).getElementName().toLowerCase().contains(searchQuery.toLowerCase()))
-                || (((Change)element).getPropertyName() != null && ((Change)element).getPropertyName().toLowerCase().contains(searchQuery.toLowerCase()))){
-            return true ;
-        }
-        return false ;
-    }
+	protected boolean viewerSelect(Object element, String searchQuery) {
+		if(searchQuery == null || searchQuery.isEmpty()
+				|| (((Change)element).getElementType() != null && ((Change)element).getElementType().toLowerCase().contains(searchQuery.toLowerCase()))
+				|| (((Change)element).getElementName() != null && ((Change)element).getElementName().toLowerCase().contains(searchQuery.toLowerCase()))
+				|| (((Change)element).getPropertyName() != null && ((Change)element).getPropertyName().toLowerCase().contains(searchQuery.toLowerCase()))){
+			return true ;
+		}
+		return false ;
+	}
 
 	@Override
 	public void setFocus() {}
@@ -530,8 +538,8 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		if(!event.getSelection().isEmpty()){
 			descripitonText.setText(((Change) ((IStructuredSelection) event.getSelection()).getFirstElement()).getDescription());
 		}
-		
-		
+
+
 	}
 
 
