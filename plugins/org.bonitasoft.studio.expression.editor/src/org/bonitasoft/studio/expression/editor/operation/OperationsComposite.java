@@ -293,10 +293,13 @@ public class OperationsComposite extends Composite {
 						Expression exp = (Expression) storageComboViewer
 								.getElementAt(i);
 						if (!exp.getReferencedElements().isEmpty()) {
+							
 							EObject eObject = exp.getReferencedElements()
 									.get(0);
 							if (originalEObject instanceof SearchIndex){
-								return exp;
+								if (modelExpression.getName().equals(exp.getName())){
+											return exp;
+								}
 							} else {
 								if (originalEObject instanceof Element
 										&& eObject instanceof Element) {
