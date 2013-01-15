@@ -154,7 +154,7 @@ public class BOSWebServerManager {
 				}
 			}
 			configureConsolePreferences();
-
+			updateRuntimeLocationIfNeeded();
 			IRuntimeType type =  ServerCore.findRuntimeType(TOMCAT_RUNTIME_TYPE);
 			try {
 				final IProject confProject = createServerConfigurationProject(monitor);
@@ -172,6 +172,23 @@ public class BOSWebServerManager {
 				BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
 			}
 
+		}
+	}
+
+	private void updateRuntimeLocationIfNeeded() {
+		for(IRuntime runtime : ServerCore.getRuntimes()){
+			if(runtime instanceof org.eclipse.wst.server.core.internal.Runtime && runtime.getLocation() != null && !runtime.getLocation().toFile().getAbsolutePath().equals(tomcatInstanceLocation)){
+				IRuntimeWorkingCopy copy = runtime.createWorkingCopy();
+				final String oldLocaiton = copy.getLocation().toFile().getAbsolutePath();
+				copy.setLocation(Path.fromOSString(tomcatInstanceLocation));
+				File serverXmlFile = new File(tomcatInstanceLocation,"conf"+File.separatorChar+"server.xml");
+				FileUtil.replaceStringInFile(serverXmlFile, oldLocaiton, tomcatInstanceLocation);
+				try {
+					copy.save(true, Repository.NULL_PROGRESS_MONITOR);
+				} catch (CoreException e) {
+					BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
+				}
+			}
 		}
 	}
 
