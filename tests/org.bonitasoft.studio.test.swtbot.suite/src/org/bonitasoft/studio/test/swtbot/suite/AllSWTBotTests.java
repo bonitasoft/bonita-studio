@@ -25,7 +25,6 @@ import org.bonitasoft.studio.diagram.test.TestOpenDiagram;
 import org.bonitasoft.studio.diagram.test.TestUndoRedoStackLimit;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.bonitasoft.studio.properties.test.SearchIndexesTest;
 import org.bonitasoft.studio.properties.test.TestThrowCatchMessage;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.bug.TestBugsSWTBot;
@@ -78,7 +77,6 @@ import org.junit.runners.Suite;
     ConnectorEditionTest.class,
     ConnectorDefinitionWizardPageTest.class,
     ConnectorImplementationTest.class,
-    SearchIndexesTest.class,
     TestLoadSaveConnectorConfiguration.class,
     TestTextAreaInConnectorWizard.class,
     SWTBotConnectorExportTests.class,
