@@ -52,6 +52,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelection;
@@ -65,6 +66,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -263,6 +265,8 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 				event.height = 25;
 			}
 		});
+		
+		ColumnViewerToolTipSupport.enableFor(tableViewer,ToolTip.NO_RECREATE);  
 
 		final Label descriptionLabel = new Label(tableComposite, SWT.NONE);
 		descriptionLabel.setText(Messages.description);
