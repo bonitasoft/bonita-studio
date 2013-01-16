@@ -80,7 +80,7 @@ public class DatatypesMigration extends ReportCustomMigration {
             Instance datatype = data.get("dataType");
             if(datatype != null && datatype.instanceOf("process.FloatType")){
                 data.set("dataType", doubleDataType);
-            }
+            }   
         }
 
         for (Instance mainProcess : model.getAllInstances("process.MainProcess")) {

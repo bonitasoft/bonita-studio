@@ -86,8 +86,8 @@ public class TestSimpleMigrationUseCase {
 	}
 
 	@Test
-	public void testStringToExpression1() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("Simple_ScriptToExpression--1.0.bar");
+	public void testDataDefaultValueMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("DefaultValueMigrationUseCase--1.0.bar");
 		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
@@ -95,12 +95,22 @@ public class TestSimpleMigrationUseCase {
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
 		List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
 		int nbVariableExpression = 0;
+		int nbScriptExpression = 0;
+		int nbConstantExpression = 0;
 		for(Expression exp : expressions){
 			if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
 				nbVariableExpression++;
 			}
+			if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
+				nbScriptExpression++;
+			}
+			if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())){
+				nbConstantExpression++;
+			}
 		}
-		assertEquals("Invalid number of variable expression",3, nbVariableExpression);
+		assertEquals("Invalid number of variable expression",1, nbVariableExpression);
+		assertEquals("Invalid number of script expression",3, nbScriptExpression);
+		assertEquals("Invalid number of constant expression",1, nbConstantExpression);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
 

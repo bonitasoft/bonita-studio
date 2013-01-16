@@ -268,7 +268,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		descriptionLabel.setText(Messages.description);
 		descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-		descripitonText = new Text(tableComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY);
+		descripitonText = new Text(tableComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY | SWT.WRAP);
 		descripitonText.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		descripitonText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).create());
 

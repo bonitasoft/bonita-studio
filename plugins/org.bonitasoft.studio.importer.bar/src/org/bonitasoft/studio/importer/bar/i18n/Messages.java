@@ -38,6 +38,9 @@ public class Messages extends NLS {
 	public static String document;
 	public static String documentProperty;
 	public static String documentCreationDescription;
+	public static String dataDefaultValueProperty;
+	public static String dataDefaultValueMigrationDescription;
+	public static String dataDefaultValueWithOtherDataDependencyMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

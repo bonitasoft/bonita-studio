@@ -24,6 +24,7 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Model;
+import org.w3c.dom.Document;
 
 /**
  * @author Romain Bioteau
@@ -59,14 +60,22 @@ public class StringToExpressionConverter {
 		}
 
 		final String expressionType = guessExpressionType(stringToParse);
-		
+		String content = stringToParse;
+		if(isAGroovyString(content)){
+			content = content.substring(2,content.length()-1);
+		}
 		if(ExpressionConstants.SCRIPT_TYPE.equals(expressionType)){
-			final String groovyScript = stringToParse.substring(2,stringToParse.length()-1);
-			final Instance expression = createExpressionInstance(model,"migratedScript", groovyScript, returnType, ExpressionConstants.SCRIPT_TYPE, fixedReturnType);
-			resolveScriptDependencies(expression,groovyScript);
+			final Instance expression = createExpressionInstance(model,"migratedScript", content, returnType, ExpressionConstants.SCRIPT_TYPE, fixedReturnType);
+			resolveScriptDependencies(expression,content);
 			return expression;
 		}else{
-			return createExpressionInstance(model,stringToParse, stringToParse, returnType, expressionType, fixedReturnType);
+			final Instance exp = createExpressionInstance(model,content, content, returnType, expressionType, fixedReturnType);
+			if(ExpressionConstants.VARIABLE_TYPE.equals(expressionType)){
+				resolveDataDependencies(exp, content);
+			}else if(ExpressionConstants.FORM_FIELD_TYPE.equals(expressionType)){
+				resolveWidgetDependencies(exp, content);
+			}
+			return exp;
 		}
 	}
 
@@ -119,12 +128,12 @@ public class StringToExpressionConverter {
 				}else if(index == 0){
 					validPrefix=true;
 				}
-				if(index < groovyScript.length()-1){
+				if(index + dataName.length() < groovyScript.length()-1){
 					String suffix = groovyScript.substring(index+dataName.length(),index+dataName.length()+1);
 					if(!Character.isLetter(suffix.toCharArray()[0])){
 						validSuffix = true;
 					}
-				}else if(index == groovyScript.length()-1){
+				}else if(index+dataName.length() == groovyScript.length()){
 					validSuffix = true;
 				}
 				if(validPrefix && validSuffix){
@@ -145,7 +154,7 @@ public class StringToExpressionConverter {
 
 	private String guessExpressionType(String stringToParse) {
 		if(isAGroovyString(stringToParse)){
-			final String groovyScript = stringToParse.substring(1,stringToParse.length()-1);
+			final String groovyScript = stringToParse.substring(2,stringToParse.length()-1);
 			if(data.containsKey(groovyScript)){
 				return ExpressionConstants.VARIABLE_TYPE;
 			}else if(widget.containsKey(groovyScript)){
@@ -165,10 +174,40 @@ public class StringToExpressionConverter {
 		final Instance instance = model.newInstance("expression.Expression");
 		instance.set("name", name);
 		instance.set("content", content);
-		instance.set("returnType", String.class.getName());
+		instance.set("returnType", returnType);
 		instance.set("returnTypeFixed", fixedReturnType);
-		instance.set("type", ExpressionConstants.CONSTANT_TYPE);
+		instance.set("type", expresisonType);
+		if(ExpressionConstants.SCRIPT_TYPE.equals(expresisonType)){
+			instance.set("interpreter", ExpressionConstants.GROOVY);
+		}
 		return instance;
+	}
+
+	public static String getDataReturnType(Instance data) {
+		final Instance dataype = data.get("dataType");
+		if(dataype.instanceOf("process.StringType")){
+			return String.class.getName();
+		}else if(dataype.instanceOf("process.IntegerType")){
+			return Integer.class.getName();
+		}else if(dataype.instanceOf("process.BooleanType")){
+			return Boolean.class.getName();
+		}else if(dataype.instanceOf("process.DoubleType")){
+			return Double.class.getName();
+		}else if(dataype.instanceOf("process.FloatType")){
+			return Float.class.getName();
+		}else if(dataype.instanceOf("process.EnumType")){
+			return String.class.getName();
+		}else if(dataype.instanceOf("process.JavaType")){
+			final String returnType = data.get("className");
+			if(returnType != null && !returnType.isEmpty()){
+				return returnType;
+			}
+		}else if(dataype.instanceOf("process.LongType")){
+			return Long.class.getName();
+		}else if(dataype.instanceOf("process.XMLType")){
+			return Document.class.getName();
+		}
+		return String.class.getName();
 	}
 
 

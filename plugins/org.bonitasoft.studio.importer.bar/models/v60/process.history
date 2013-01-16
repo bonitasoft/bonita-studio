@@ -351,10 +351,10 @@
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Data" referenceName="eStructuralFeatures"
-          element="process.ecore#//Data/defaultValue">
-        <changes xsi:type="history:Set" element="process.ecore#//Data/defaultValue"
+          element="#//@releases.2/@changes.22/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.22/@changes.0/@changes.0/@element"
             featureName="name" dataValue="defaultValue"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Data/defaultValue"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.22/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Data" referenceName="eStructuralFeatures"
@@ -7805,6 +7805,31 @@
     <changes xsi:type="history:CompositeChange">
       <changes xsi:type="history:Set" element="process.ecore#//AbstractCatchMessageEvent/messageContent"
           featureName="containment" dataValue="true" oldDataValue="false"/>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.DataDefaultValueMigeation">
+      <changes xsi:type="history:CompositeChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Data" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="defaultValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <changes xsi:type="history:Create" target="process.ecore#//Data" referenceName="eStructuralFeatures"
+            element="process.ecore#//Data/defaultValue"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Data/defaultValue"
+            featureName="name" dataValue="defaultValue"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Data/defaultValue"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Data/defaultValue"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        <changes xsi:type="history:Create" target="process.ecore#//Data" referenceName="eStructuralFeatures"
+            element="process.ecore#//Data/datasourceId"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Data/datasourceId"
+            featureName="name" dataValue="datasourceId"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Data/datasourceId"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Data/datasourceId"
+            featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+        <changes xsi:type="history:Set" element="process.ecore#//Data/datasourceId"
+            featureName="defaultValueLiteral" dataValue="BOS"/>
+      </changes>
     </changes>
   </releases>
   <releases/>
