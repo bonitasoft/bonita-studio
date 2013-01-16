@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.migration.ui.view;
 
 import org.bonitasoft.studio.migration.MigrationPlugin;
+import org.bonitasoft.studio.migration.i18n.Messages;
 import org.bonitasoft.studio.migration.model.report.Change;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.IStatus;
@@ -55,6 +56,18 @@ public class StatusColumnLabelProvider extends StyledCellLabelProvider implement
 			event.gc.drawImage(image, x, y);
 			
 		}
+	}
+	
+	@Override
+	public String getToolTipText(Object element) {
+		int status =  ((Change) element).getStatus();
+		switch (status) {
+		case IStatus.OK: return Messages.okStatusTooltip;
+		case IStatus.WARNING: return Messages.warningStatusTooltip;
+		case IStatus.ERROR: return Messages.errorStatusTooltip;
+		default:break;
+		}
+		return super.getToolTipText(element);
 	}
 
 	@Override

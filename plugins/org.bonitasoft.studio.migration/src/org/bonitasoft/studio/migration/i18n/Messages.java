@@ -41,6 +41,9 @@ public class Messages extends NLS {
 	public static String hideReviewedAction;
 	public static String description;
 	public static String elementType;
+	public static String okStatusTooltip;
+	public static String warningStatusTooltip;
+	public static String errorStatusTooltip;
   
 
     static {
