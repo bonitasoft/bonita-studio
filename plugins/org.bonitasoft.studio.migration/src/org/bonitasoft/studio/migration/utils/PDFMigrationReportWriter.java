@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.migration.MigrationPlugin;
 import org.bonitasoft.studio.migration.model.report.Change;
 import org.bonitasoft.studio.migration.model.report.Report;
@@ -71,7 +72,7 @@ public class PDFMigrationReportWriter {
 			addContent(document);
 			document.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			BonitaStudioLog.error(e);
 		}
 	}
 	
