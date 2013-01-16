@@ -113,5 +113,29 @@ public class TestSimpleMigrationUseCase {
 		assertEquals("Invalid number of constant expression",1, nbConstantExpression);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
+	
+	@Test
+	public void testSequenceFlowConditionMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("SequenceFlowCondition_MigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
+		int nbVariableExpression = 0;
+		int nbScriptExpression = 0;
+		for(Expression exp : expressions){
+			if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
+				nbVariableExpression++;
+			}
+			if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
+				nbScriptExpression++;
+			}
+		}
+		assertEquals("Invalid number of variable expression",1, nbVariableExpression);
+		assertEquals("Invalid number of script expression",1, nbScriptExpression);
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
 
 }
