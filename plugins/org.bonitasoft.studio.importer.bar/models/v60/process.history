@@ -5478,10 +5478,10 @@
             featureName="eType" referenceValue="process.ecore#//SequenceFlowConditionType"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//SequenceFlow" referenceName="eStructuralFeatures"
-          element="process.ecore#//SequenceFlow/condition">
-        <changes xsi:type="history:Set" element="process.ecore#//SequenceFlow/condition"
+          element="#//@releases.2/@changes.23/@changes.1/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.23/@changes.1/@element"
             featureName="name" dataValue="condition"/>
-        <changes xsi:type="history:Set" element="process.ecore#//SequenceFlow/condition"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.23/@changes.1/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//SequenceFlow" referenceName="eStructuralFeatures"
@@ -7830,6 +7830,21 @@
         <changes xsi:type="history:Set" element="process.ecore#//Data/datasourceId"
             featureName="defaultValueLiteral" dataValue="BOS"/>
       </changes>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.SequenceFlowConditionMigration">
+      <changes xsi:type="history:Set" element="process.ecore#//Task/overrideGroupsOfTheLane"
+          featureName="defaultValueLiteral" dataValue="true"/>
+      <changes xsi:type="history:Delete" target="process.ecore#//SequenceFlow" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="condition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <changes xsi:type="history:Create" target="process.ecore#//SequenceFlow" referenceName="eStructuralFeatures"
+          element="process.ecore#//SequenceFlow/condition"/>
+      <changes xsi:type="history:Set" element="process.ecore#//SequenceFlow/condition"
+          featureName="containment" dataValue="true" oldDataValue="false"/>
+      <changes xsi:type="history:Set" element="process.ecore#//SequenceFlow/condition"
+          featureName="name" dataValue="condition"/>
+      <changes xsi:type="history:Set" element="process.ecore#//SequenceFlow/condition"
+          featureName="eType" referenceValue="expression.ecore#//Expression"/>
     </changes>
   </releases>
   <releases/>

@@ -22,6 +22,7 @@ import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.FlowElement;
+import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -48,7 +49,7 @@ public class ToggleLinkingAction extends AbstractToggleLinkingAction {
 				final Change change = (Change) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 				final String uuid = change.getElementUUID();
 				EObject element = editor.getDiagram().eResource().getEObject(uuid);
-				while(element != null && !(element instanceof AbstractProcess   || element instanceof FlowElement || element instanceof Widget || element instanceof Form)){
+				while(element != null && !(element instanceof SequenceFlow || element instanceof AbstractProcess || element instanceof FlowElement || element instanceof Widget || element instanceof Form)){
 					element = element.eContainer();
 				}
 				if(element != null){
