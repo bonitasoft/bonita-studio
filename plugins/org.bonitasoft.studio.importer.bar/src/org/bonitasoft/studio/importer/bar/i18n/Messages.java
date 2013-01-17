@@ -53,6 +53,7 @@ public class Messages extends NLS {
 	public static String portalProperty;
 	public static String dynamicDescriptionMigrationDescription;
 	public static String stepSummaryMigrationDescription;
+	public static String removeConnectorMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$
