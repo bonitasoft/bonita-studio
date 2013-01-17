@@ -3761,7 +3761,7 @@
             xsi:type="ecore:EReference"
             href="process.ecore#//SequenceFlow/condition"/>
         <value
-            body="org.bonitasoft.studio.model.expression.Expression expression = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xA;expression.setReturnType(java.lang.Boolean.class.getName()) ;&#xA;expression.setReturnTypeFixed(true) ;&#xA;return expression;"
+            body="org.bonitasoft.studio.model.expression.Expression expression = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;expression.setName(&quot;&quot;);&#xD;&#xA;expression.setType(org.bonitasoft.studio.common.ExpressionConstants.CONDITION_TYPE);&#xD;&#xA;expression.setReturnType(java.lang.Boolean.class.getName()) ;&#xD;&#xA;expression.setReturnTypeFixed(true) ;&#xD;&#xA;return expression;"
             language="java"/>
       </initializers>
     </domainInitializer>
