@@ -963,28 +963,28 @@
             featureName="eType" referenceValue="process.ecore#//ResourceFile"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-          element="process.ecore#//Deadline">
-        <changes xsi:type="history:Set" element="process.ecore#//Deadline" featureName="name"
-            dataValue="Deadline"/>
+          element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element"
+            featureName="name" dataValue="Deadline"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//Deadline" referenceName="eStructuralFeatures"
-          element="process.ecore#//Deadline/condition">
-        <changes xsi:type="history:Set" element="process.ecore#//Deadline/condition"
+      <changes xsi:type="history:Create" target="#//@releases.2/@changes.24/@changes.1/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element/condition">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element/condition"
             featureName="name" dataValue="condition"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Deadline/condition"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element/condition"
             featureName="lowerBound" dataValue="1" oldDataValue="0"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Deadline/condition"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element/condition"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//Deadline" referenceName="eStructuralFeatures"
-          element="process.ecore#//Deadline/connector">
-        <changes xsi:type="history:Set" element="process.ecore#//Deadline/connector"
+      <changes xsi:type="history:Create" target="#//@releases.2/@changes.24/@changes.1/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element/connector">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element/connector"
             featureName="name" dataValue="connector"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Deadline/connector"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element/connector"
             featureName="lowerBound" dataValue="1" oldDataValue="0"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Deadline/connector"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element/connector"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Deadline/connector"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element/connector"
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -6198,15 +6198,15 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Activity" referenceName="eStructuralFeatures"
-          element="process.ecore#//Activity/deadlines">
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/deadlines"
+          element="#//@releases.2/@changes.24/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.0/@changes.0/@element"
             featureName="name" dataValue="deadlines"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/deadlines"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.0/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/deadlines"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.0/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Activity/deadlines"
-            featureName="eType" referenceValue="process.ecore#//Deadline"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.24/@changes.0/@changes.0/@element"
+            featureName="eType" referenceValue="#//@releases.2/@changes.24/@changes.1/@changes.0/@element"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Activity" referenceName="eStructuralFeatures"
           element="process.ecore#//Activity/multiInstantiation">
@@ -7845,6 +7845,34 @@
           featureName="name" dataValue="condition"/>
       <changes xsi:type="history:Set" element="process.ecore#//SequenceFlow/condition"
           featureName="eType" referenceValue="expression.ecore#//Expression"/>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.RemoveDeadlinesMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Activity" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" name="deadlines" upperBound="-1" eType="#//@releases.2/@changes.24/@changes.1/@changes.0/@element"
+              containment="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.24/@changes.0/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#/" referenceName="eClassifiers">
+          <element xsi:type="ecore:EClass" name="Deadline">
+            <eStructuralFeatures xsi:type="ecore:EAttribute" name="condition" lowerBound="1"
+                eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" name="connector" lowerBound="1"
+                eType="ecore:EClass process.ecore#//Connector" containment="true"/>
+          </element>
+        </changes>
+        <operation name="deleteClass">
+          <parameters name="eClass">
+            <referenceValue element="#//@releases.2/@changes.24/@changes.1/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
     </changes>
   </releases>
   <releases/>

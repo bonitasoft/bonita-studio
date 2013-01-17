@@ -107,8 +107,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Activity" eSuperTypes="#//FlowElement #//ConnectableElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="deadlines" upperBound="-1"
-        eType="#//Deadline" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="multiInstantiation" eType="#//MultiInstantiation"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLoop" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
@@ -345,12 +343,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="ResourceFolder" eSuperTypes="#//AssociatedFile">
     <eStructuralFeatures xsi:type="ecore:EReference" name="resourceFiles" upperBound="-1"
         eType="#//ResourceFile" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Deadline">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="condition" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="connector" lowerBound="1"
-        eType="#//Connector" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MultiInstantiation" eSuperTypes="#//Connector">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="enabled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>

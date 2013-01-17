@@ -43,6 +43,8 @@ public class Messages extends NLS {
 	public static String dataDefaultValueWithOtherDataDependencyMigrationDescription;
 	public static String sequenceFlowConditionMigrationDescription;
 	public static String sequenceFlowConditionProperty;
+	public static String removeDeadlinesMigrationDescription;
+	public static String connectorProperty;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

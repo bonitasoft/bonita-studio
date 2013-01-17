@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.EClassImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -358,7 +359,18 @@ public class InstanceImpl extends EObjectImpl implements Instance {
                         this.add(feature, newValue);
                     }
                 }
+            }else if(feature.getEType() != null && feature.getEType().isInstance(EcorePackage.Literals.EJAVA_OBJECT)){
+            	 Object oldValue = this.get(feature);
+                 if (oldValue != newValue) {
+                     if (isSet(feature) && oldValue != null) {
+                         this.remove(feature, oldValue);
+                     }
+                     if (newValue != null) {
+                         this.add(feature, newValue);
+                     }
+                 }
             }else{
+            
                 if (newValue instanceof List<?>) {
                     throw new IllegalArgumentException(
                             "Single value expected, but list found");

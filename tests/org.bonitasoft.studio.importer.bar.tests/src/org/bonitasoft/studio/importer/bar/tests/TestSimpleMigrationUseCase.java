@@ -137,5 +137,15 @@ public class TestSimpleMigrationUseCase {
 		assertEquals("Invalid number of script expression",1, nbScriptExpression);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
+	
+	@Test
+	public void testRemoveDeadlineMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("DeadlineMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
 
 }
