@@ -57,6 +57,11 @@ public class Messages extends NLS {
 	public static String removeGroupMigrationDescription;
 	public static String actorProperty;
 	public static String actorSelector;
+	public static String redirectionUrlMigrationDescription;
+	public static String entryPageflowProperty;
+	public static String confirmationProperty;
+	public static String confirmationMessageMigrationDescription;
+	public static String redirectionActionMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

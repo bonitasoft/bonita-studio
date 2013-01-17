@@ -319,10 +319,10 @@
             featureName="value" dataValue="This field is used to provide additional description of the target data.&#xA;For example, if the selected data is &quot;myData&quot;, which is of XML, then this field will contain&#xA;&quot;:/myNode/@myAttr&quot; or &quot;:/myNode/text()&quot;"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-          element="#//@releases.2/@changes.29/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.2/@changes.29/@changes.0/@element"
+          element="#//@releases.2/@changes.30/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.30/@changes.0/@element"
             featureName="name" dataValue="Group"/>
-        <changes xsi:type="history:Add" element="#//@releases.2/@changes.29/@changes.0/@element"
+        <changes xsi:type="history:Add" element="#//@releases.2/@changes.30/@changes.0/@element"
             featureName="eSuperTypes" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -636,10 +636,10 @@
             featureName="source" dataValue="Deprecated_since_5.4"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
-          element="process.ecore#//PageFlow/confirmationMessage">
-        <changes xsi:type="history:Set" element="process.ecore#//PageFlow/confirmationMessage"
+          element="#//@releases.2/@changes.31/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.0/@changes.0/@element"
             featureName="name" dataValue="confirmationMessage"/>
-        <changes xsi:type="history:Set" element="process.ecore#//PageFlow/confirmationMessage"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
@@ -665,10 +665,10 @@
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
-          element="process.ecore#//PageFlow/entryRedirectionURL">
-        <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionURL"
+          element="#//@releases.2/@changes.31/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.2/@changes.0/@element"
             featureName="name" dataValue="entryRedirectionURL"/>
-        <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionURL"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
@@ -1396,13 +1396,13 @@
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Assignable" referenceName="eStructuralFeatures"
-          element="process.ecore#//Assignable/groups">
-        <changes xsi:type="history:Set" element="process.ecore#//Assignable/groups"
+          element="#//@releases.2/@changes.29/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.29/@changes.0/@element"
             featureName="name" dataValue="groups"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Assignable/groups"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.29/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Assignable/groups"
-            featureName="eType" referenceValue="#//@releases.2/@changes.29/@changes.0/@element"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.29/@changes.0/@element"
+            featureName="eType" referenceValue="#//@releases.2/@changes.30/@changes.0/@element"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Assignable" referenceName="eStructuralFeatures"
           element="process.ecore#//Assignable/actorType">
@@ -3101,14 +3101,14 @@
             dataValue="GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
-          element="process.ecore#//PageFlow/entryRedirectionActions">
-        <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionActions"
+          element="#//@releases.2/@changes.31/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.4/@changes.0/@element"
             featureName="name" dataValue="entryRedirectionActions"/>
-        <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionActions"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.4/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionActions"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.4/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionActions"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.4/@changes.0/@element"
             featureName="eType" referenceValue="form.ecore#//GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//GroovyScript" referenceName="eStructuralFeatures"
@@ -5940,7 +5940,7 @@
         <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
         <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element"
-            featureName="eType" referenceValue="#//@releases.2/@changes.29/@changes.0/@element"/>
+            featureName="eType" referenceValue="#//@releases.2/@changes.30/@changes.0/@element"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//AbstractProcess"
           referenceName="eStructuralFeatures" element="process.ecore#//AbstractProcess/datatypes">
@@ -7029,7 +7029,7 @@
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Delete" target="process.ecore#//AbstractProcess"
             referenceName="eStructuralFeatures">
-          <element xsi:type="ecore:EReference" name="groups" upperBound="-1" eType="#//@releases.2/@changes.29/@changes.0/@element"
+          <element xsi:type="ecore:EReference" name="groups" upperBound="-1" eType="#//@releases.2/@changes.30/@changes.0/@element"
               containment="true"/>
         </changes>
         <operation name="deleteFeature2">
@@ -8676,11 +8676,152 @@
         </parameters>
       </operation>
     </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="process.ecore#//Assignable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="groups" upperBound="-1"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.2/@changes.29/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
     <changes xsi:type="history:CompositeChange">
       <changes xsi:type="history:Delete" target="process.ecore#/" referenceName="eClassifiers">
-        <changes xsi:type="history:Set" element="process.ecore#//Assignable/groups"
-            featureName="eType" oldReferenceValue="#//@releases.2/@changes.29/@changes.0/@element"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.29/@changes.0/@element"
+            featureName="eType" oldReferenceValue="#//@releases.2/@changes.30/@changes.0/@element"/>
         <element xsi:type="ecore:EClass" name="Group" eSuperTypes="process.ecore#//Connector"/>
+      </changes>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.PageFlowMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="confirmationMessage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.31/@changes.0/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
+            element="process.ecore#//PageFlow/confirmationMessage">
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/confirmationMessage"
+              featureName="name" dataValue="confirmationMessage"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/confirmationMessage"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/confirmationMessage"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//PageFlow"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>confirmationMessage</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="entryRedirectionURL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.31/@changes.2/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
+            element="process.ecore#//PageFlow/entryRedirectionURL">
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionURL"
+              featureName="name" dataValue="entryRedirectionURL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionURL"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionURL"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//PageFlow"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>entryRedirectionURL</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" name="entryRedirectionActions" upperBound="-1"
+              eType="ecore:EClass form.ecore#//GroovyScript" containment="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.31/@changes.4/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
+            element="process.ecore#//PageFlow/entryRedirectionActions">
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionActions"
+              featureName="name" dataValue="entryRedirectionActions"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionActions"
+              featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionActions"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlow/entryRedirectionActions"
+              featureName="eType" referenceValue="expression.ecore#//Operation"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//PageFlow"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>entryRedirectionActions</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Operation"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>-1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
       </changes>
     </changes>
   </releases>

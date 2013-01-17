@@ -254,21 +254,23 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="confirmationTemplate" eType="#//AssociatedFile"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="confirmationMessage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="pageFlowTransitions" upperBound="-1"
         eType="#//PageFlowTransition" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transientData" upperBound="-1"
         eType="#//Data" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="pageFlowConnectors" upperBound="-1"
         eType="#//Connector" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="entryRedirectionURL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="entryPageFlowType" eType="#//EntryPageFlowType"
         defaultValueLiteral=""/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entryRedirectionActions"
-        upperBound="-1" eType="ecore:EClass form.ecore#//GroovyScript" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="transmitURLAsParameter"
         lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="confirmationMessage" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entryRedirectionURL" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entryRedirectionActions"
+        upperBound="-1" eType="ecore:EClass expression.ecore#//Operation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ConsultationPageFlowType">
     <eLiterals name="PAGEFLOW" literal="PAGEFLOW"/>
@@ -456,7 +458,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="user" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="filters" upperBound="-1"
         eType="#//Connector" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="groups" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="actorType" eType="#//ActorType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BoundaryEvent" eSuperTypes="#//Element #//SourceElement"/>

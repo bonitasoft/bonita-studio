@@ -51,6 +51,37 @@ public class StringToExpressionConverter {
 		}
 	}
 
+
+	public Instance parseOperation(Instance groovyScriptInstance,String returnType,boolean fixedReturnType) {
+		final String expressionScript = groovyScriptInstance.get("exprScript");
+		final String inputScript = groovyScriptInstance.get("inputScript");
+		final Instance variable = groovyScriptInstance.get("setVar");
+		final boolean allowHTML = groovyScriptInstance.get("allowHTMLInValues");
+		final String setVarScript = groovyScriptInstance.get("setVarScript");
+
+		Instance operation = model.newInstance("expression.Operation");
+		final Instance actionExpression = parse(expressionScript, returnType, fixedReturnType);
+		operation.set("rightOperand", actionExpression);
+		final Instance operator = model.newInstance("expression.Operator");
+		operator.set("type", ExpressionConstants.ASSIGNMENT_OPERATOR);
+		operation.set("operator", operator);
+
+		Instance leftOperand = null;
+		if(setVarScript != null){
+			Instance dataInstance= null;
+			for(String dataName : data.keySet()){
+				if(setVarScript.equals(dataName)){
+					dataInstance = data.get(dataName);
+				}
+			}
+			if(dataInstance != null){
+				leftOperand = parse("${"+setVarScript+"}", getDataReturnType(dataInstance), true);
+			}
+		}
+		operation.set("leftOperand", leftOperand);
+		return operation;
+	}
+
 	public Instance parse(String stringToParse,String returnType,boolean fixedReturnType) {
 		if(returnType == null || returnType.isEmpty()){//Default return type is String
 			returnType = String.class.getName();
