@@ -151,6 +151,16 @@ public class TestSimpleMigrationUseCase {
 	}
 	
 	@Test
+	public void testPageflowRedirectionMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("PageFlowMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+	
+	@Test
 	public void testRemoveConnectorsMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("RemoveConnectorMigrationUseCase--1.0.bar");
 		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
