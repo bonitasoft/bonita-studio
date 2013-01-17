@@ -62,6 +62,9 @@ public class Messages extends NLS {
 	public static String confirmationProperty;
 	public static String confirmationMessageMigrationDescription;
 	public static String redirectionActionMigrationDescription;
+	public static String viewPageflowProperty;
+	public static String recapPageflowProperty;
+	public static String pageFlowTransitionMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

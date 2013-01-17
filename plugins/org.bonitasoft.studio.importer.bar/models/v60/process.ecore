@@ -288,8 +288,8 @@
         upperBound="-1" eType="#//Connector" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewPageFlowType" eType="#//ConsultationPageFlowType"
         defaultValueLiteral=""/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewPageFlowRedirectionURL"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewPageFlowRedirectionURL"
+        eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RecapFlow" abstract="true" interface="true"
       eSuperTypes="#//AbstractPageFlow">
@@ -303,13 +303,14 @@
         eType="#//Connector" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="recapPageFlowType" eType="#//ConsultationPageFlowType"
         defaultValueLiteral=""/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="recapPageFlowRedirectionURL"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="recapPageFlowRedirectionURL"
+        eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PageFlowTransition">
     <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="ecore:EClass form.ecore#//Form"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="ecore:EClass form.ecore#//Form"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="condition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ResourceContainer">
     <eStructuralFeatures xsi:type="ecore:EReference" name="resourceFolders" upperBound="-1"

@@ -755,10 +755,10 @@
             featureName="eType" referenceValue="process.ecore#//ConsultationPageFlowType"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//ViewPageFlow" referenceName="eStructuralFeatures"
-          element="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL">
-        <changes xsi:type="history:Set" element="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"
+          element="#//@releases.2/@changes.31/@changes.6/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.6/@changes.0/@element"
             featureName="name" dataValue="viewPageFlowRedirectionURL"/>
-        <changes xsi:type="history:Set" element="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.6/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -804,10 +804,10 @@
             featureName="eType" referenceValue="process.ecore#//ConsultationPageFlowType"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//RecapFlow" referenceName="eStructuralFeatures"
-          element="process.ecore#//RecapFlow/recapPageFlowRedirectionURL">
-        <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"
+          element="#//@releases.2/@changes.31/@changes.8/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.8/@changes.0/@element"
             featureName="name" dataValue="recapPageFlowRedirectionURL"/>
-        <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.8/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -849,10 +849,10 @@
             featureName="eType" referenceValue="process.ecore#//PageFlowTransition"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlowTransition"
-          referenceName="eStructuralFeatures" element="process.ecore#//PageFlowTransition/condition">
-        <changes xsi:type="history:Set" element="process.ecore#//PageFlowTransition/condition"
+          referenceName="eStructuralFeatures" element="#//@releases.2/@changes.31/@changes.10/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.10/@changes.0/@element"
             featureName="name" dataValue="condition"/>
-        <changes xsi:type="history:Set" element="process.ecore#//PageFlowTransition/condition"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.31/@changes.10/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -8816,6 +8816,134 @@
           </parameters>
           <parameters name="upperBound">
             <dataValue>-1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//ViewPageFlow" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="viewPageFlowRedirectionURL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.31/@changes.6/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//ViewPageFlow" referenceName="eStructuralFeatures"
+            element="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL">
+          <changes xsi:type="history:Set" element="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"
+              featureName="name" dataValue="viewPageFlowRedirectionURL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//ViewPageFlow"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>viewPageFlowRedirectionURL</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//RecapFlow" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="recapPageFlowRedirectionURL"
+              eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.31/@changes.8/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//RecapFlow" referenceName="eStructuralFeatures"
+            element="process.ecore#//RecapFlow/recapPageFlowRedirectionURL">
+          <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"
+              featureName="name" dataValue="recapPageFlowRedirectionURL"/>
+          <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//RecapFlow/recapPageFlowRedirectionURL"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//RecapFlow"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>recapPageFlowRedirectionURL</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//PageFlowTransition"
+            referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="condition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.31/@changes.10/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//PageFlowTransition"
+            referenceName="eStructuralFeatures" element="process.ecore#//PageFlowTransition/condition">
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlowTransition/condition"
+              featureName="name" dataValue="condition"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlowTransition/condition"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//PageFlowTransition/condition"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//PageFlowTransition"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>condition</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
           </parameters>
           <parameters name="containment">
             <dataValue>true</dataValue>
