@@ -18,6 +18,7 @@ package org.bonitasoft.studio.migration.ui.action;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.migration.model.report.Change;
+import org.bonitasoft.studio.migration.ui.view.PropertySelectionProvider;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -54,7 +55,8 @@ public class ToggleLinkingAction extends AbstractToggleLinkingAction {
 				}
 				if(element != null){
 					EditPart ep = findEditPart(editor.getDiagramEditPart(), element);
-					editor.getDiagramGraphicalViewer().select(ep);
+					editor.getDiagramEditPart().getViewer().select(ep);
+					PropertySelectionProvider.getInstance().fireSelectionChanged((IGraphicalEditPart) ep, null);
 				}
 			}
 		}

@@ -94,7 +94,7 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
  * @author Aurelien Pupier
  * @author Romain Bioteau
  */
-public class MigrationStatusView extends ViewPart implements ISelectionListener,ISelectionChangedListener {
+public class MigrationStatusView extends ViewPart implements ISelectionListener,ISelectionChangedListener,ISelectionProvider {
 
 	public static String ID = "org.bonitasoft.studio.migration.view";
 	private TableViewer tableViewer;
@@ -117,11 +117,14 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		ss.addPostSelectionListener(this);
 		if(getSite().getPage().getActiveEditor() != null){
 			selectionProvider =  getSite().getPage().getActiveEditor().getEditorSite().getSelectionProvider();
-			getSite().setSelectionProvider(selectionProvider);
+			getSite().setSelectionProvider(this);
+	
 		}
 		createActions();
 
 	}
+	
+	
 
 	protected void createActions() {
 		IActionBars actionBars = getViewSite().getActionBars();
@@ -481,7 +484,11 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 	}
 
 	@Override
-	public void setFocus() {}
+	public void setFocus() {
+		if(getSite().getPage().getActiveEditor() != null){
+			getSite().getPage().getActiveEditor().setFocus();
+		}
+	}
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -491,7 +498,6 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 				IEditorPart editorPart = getSite().getPage().getActiveEditor();
 				if(editorPart != null && !editorPart.equals(tableViewer.getInput())){
 					selectionProvider = editorPart.getEditorSite().getSelectionProvider();
-					getSite().setSelectionProvider(selectionProvider); 
 					tableViewer.setInput(editorPart);
 					exportAction.setReport(getReportFromEditor(editorPart));
 					linkAction.setEditor((DiagramEditor) editorPart);
@@ -541,10 +547,27 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		if(!event.getSelection().isEmpty()){
 			descripitonText.setText(((Change) ((IStructuredSelection) event.getSelection()).getFirstElement()).getDescription());
 		}
-
-
 	}
 
+	@Override
+	public void addSelectionChangedListener(ISelectionChangedListener listener) {
+		selectionProvider.addSelectionChangedListener(listener);
+	}
 
+	@Override
+	public ISelection getSelection() {
+		return selectionProvider.getSelection();
+	}
+
+	@Override
+	public void removeSelectionChangedListener(
+			ISelectionChangedListener listener) {
+		selectionProvider.removeSelectionChangedListener(listener);
+	}
+
+	@Override
+	public void setSelection(ISelection selection) {
+		selectionProvider.setSelection(selection);
+	}
 
 }
