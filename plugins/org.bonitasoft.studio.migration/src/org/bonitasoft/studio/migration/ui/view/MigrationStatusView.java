@@ -124,8 +124,6 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 	}
 	
-	
-
 	protected void createActions() {
 		IActionBars actionBars = getViewSite().getActionBars();
 		IMenuManager dropDownMenu = actionBars.getMenuManager();
