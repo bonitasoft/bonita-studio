@@ -54,6 +54,9 @@ public class Messages extends NLS {
 	public static String dynamicDescriptionMigrationDescription;
 	public static String stepSummaryMigrationDescription;
 	public static String removeConnectorMigrationDescription;
+	public static String removeGroupMigrationDescription;
+	public static String actorProperty;
+	public static String actorSelector;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

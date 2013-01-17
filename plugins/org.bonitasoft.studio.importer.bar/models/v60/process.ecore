@@ -190,18 +190,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="definitionVersion" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="OutputParameterMapping">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueExpression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="targetData" eType="#//Data"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="additionalPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        defaultValueLiteral="">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="This field is used to provide additional description of the target data.&#xA;For example, if the selected data is &quot;myData&quot;, which is of XML, then this field will contain&#xA;&quot;:/myNode/@myAttr&quot; or &quot;:/myNode/text()&quot;"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="targetWidget" eType="ecore:EClass form.ecore#//Widget"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Group" eSuperTypes="#//Connector"/>
   <eClassifiers xsi:type="ecore:EClass" name="Data" eSuperTypes="#//Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="dataType" lowerBound="1"
         eType="#//DataType"/>
@@ -468,8 +456,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="user" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="filters" upperBound="-1"
         eType="#//Connector" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="groups" upperBound="-1"
-        eType="#//Group"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groups" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="actorType" eType="#//ActorType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BoundaryEvent" eSuperTypes="#//Element #//SourceElement"/>
