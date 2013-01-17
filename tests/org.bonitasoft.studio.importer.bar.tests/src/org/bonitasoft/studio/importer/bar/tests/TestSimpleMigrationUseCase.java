@@ -104,7 +104,7 @@ public class TestSimpleMigrationUseCase {
 			if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
 				nbScriptExpression++;
 			}
-			if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType())){
+			if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType()) && exp.getContent() != null && !exp.getContent().isEmpty()){
 				nbConstantExpression++;
 			}
 		}
@@ -145,6 +145,35 @@ public class TestSimpleMigrationUseCase {
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+	
+	@Test
+	public void testIterationMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("IterationMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<Expression> expressions = ModelHelper.getAllItemsOfType(mainProc, ExpressionPackage.Literals.EXPRESSION);
+		int nbVariableExpression = 0;
+		int nbScriptExpression = 0;
+		int nbConstantExpression = 0;
+		for(Expression exp : expressions){
+			if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
+				nbVariableExpression++;
+			}
+			if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
+				nbScriptExpression++;
+			}
+			if(ExpressionConstants.CONSTANT_TYPE.equals(exp.getType()) && exp.getContent() != null && !exp.getContent().isEmpty()){
+				nbConstantExpression++;
+			}
+		}
+		assertEquals("Invalid number of variable expression",1, nbVariableExpression);
+		assertEquals("Invalid number of script expression",2, nbScriptExpression);
+		assertEquals("Invalid number of constant expression",3, nbConstantExpression);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
 

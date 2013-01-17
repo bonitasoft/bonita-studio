@@ -45,6 +45,10 @@ public class Messages extends NLS {
 	public static String sequenceFlowConditionProperty;
 	public static String removeDeadlinesMigrationDescription;
 	public static String connectorProperty;
+	public static String removeMultiInstantiationMigrationDescription;
+	public static String iterationProperty;
+	public static String loopMaximumScriptMigrationDescription;
+	public static String loopConditionScriptMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

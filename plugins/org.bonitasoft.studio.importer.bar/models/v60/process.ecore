@@ -113,11 +113,13 @@
         defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="testBefore" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
         defaultValueLiteral="false"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="loopCondition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="loopMaximum" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-        defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="BoundaryIntermediateEvents"
         upperBound="-1" eType="#//BoundaryEvent" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loopCondition" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="loopMaximum" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isMultiInstance" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SendTask" eSuperTypes="#//Activity #//ThrowMessageEvent">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -344,13 +346,21 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="resourceFiles" upperBound="-1"
         eType="#//ResourceFile" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MultiInstantiation" eSuperTypes="#//Connector">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="enabled" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="activityData" eType="#//Data"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="instantiator" eType="#//Connector"
+  <eClassifiers xsi:type="ecore:EClass" name="MultiInstantiation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="useCardinality" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cardinality" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="joinChecker" eType="#//Connector"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="collectionDataToMultiInstantiate"
+        eType="#//Data"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" eType="#//Data"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outputData" eType="#//Data"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="listDataContainingOutputResults"
+        eType="#//Data"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="completionCondition" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sequential" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InputMapping">
     <eStructuralFeatures xsi:type="ecore:EReference" name="processSource" eType="#//Data"/>
