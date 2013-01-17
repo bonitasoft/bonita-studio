@@ -49,6 +49,10 @@ public class Messages extends NLS {
 	public static String iterationProperty;
 	public static String loopMaximumScriptMigrationDescription;
 	public static String loopConditionScriptMigrationDescription;
+	public static String dynamicLabelMigrationDescription;
+	public static String portalProperty;
+	public static String dynamicDescriptionMigrationDescription;
+	public static String stepSummaryMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

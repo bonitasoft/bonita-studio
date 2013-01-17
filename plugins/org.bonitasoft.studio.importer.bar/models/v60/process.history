@@ -6320,35 +6320,35 @@
             featureName="eType" referenceValue="process.ecore#//OutputMapping"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//FlowElement" referenceName="eStructuralFeatures"
-          element="process.ecore#//FlowElement/synchronous">
-        <changes xsi:type="history:Set" element="process.ecore#//FlowElement/synchronous"
+          element="#//@releases.2/@changes.26/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.26/@changes.0/@changes.0/@element"
             featureName="name" dataValue="synchronous"/>
-        <changes xsi:type="history:Set" element="process.ecore#//FlowElement/synchronous"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.26/@changes.0/@changes.0/@element"
             featureName="lowerBound" dataValue="1" oldDataValue="0"/>
-        <changes xsi:type="history:Set" element="process.ecore#//FlowElement/synchronous"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.26/@changes.0/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="true"/>
-        <changes xsi:type="history:Set" element="process.ecore#//FlowElement/synchronous"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.26/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//FlowElement" referenceName="eStructuralFeatures"
-          element="process.ecore#//FlowElement/dynamicLabel">
-        <changes xsi:type="history:Set" element="process.ecore#//FlowElement/dynamicLabel"
+          element="#//@releases.2/@changes.26/@changes.1/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.26/@changes.1/@changes.0/@element"
             featureName="name" dataValue="dynamicLabel"/>
-        <changes xsi:type="history:Set" element="process.ecore#//FlowElement/dynamicLabel"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.26/@changes.1/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//FlowElement" referenceName="eStructuralFeatures"
-          element="process.ecore#//FlowElement/dynamicDescription">
-        <changes xsi:type="history:Set" element="process.ecore#//FlowElement/dynamicDescription"
+          element="#//@releases.2/@changes.26/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.26/@changes.2/@changes.0/@element"
             featureName="name" dataValue="dynamicDescription"/>
-        <changes xsi:type="history:Set" element="process.ecore#//FlowElement/dynamicDescription"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.26/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//FlowElement" referenceName="eStructuralFeatures"
-          element="process.ecore#//FlowElement/stepSummary">
-        <changes xsi:type="history:Set" element="process.ecore#//FlowElement/stepSummary"
+          element="#//@releases.2/@changes.26/@changes.3/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.26/@changes.3/@changes.0/@element"
             featureName="name" dataValue="stepSummary"/>
-        <changes xsi:type="history:Set" element="process.ecore#//FlowElement/stepSummary"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.26/@changes.3/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -8291,6 +8291,145 @@
           <parameters name="defaultValue">
             <dataValue>false</dataValue>
           </parameters>
+        </operation>
+      </changes>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.PortalLabelsMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//FlowElement" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="synchronous" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"
+              defaultValueLiteral="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.26/@changes.0/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//FlowElement" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="dynamicLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.26/@changes.1/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//FlowElement" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="dynamicDescription" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.26/@changes.2/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//FlowElement" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="stepSummary" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.26/@changes.3/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//FlowElement" referenceName="eStructuralFeatures"
+            element="process.ecore#//FlowElement/dynamicLabel">
+          <changes xsi:type="history:Set" element="process.ecore#//FlowElement/dynamicLabel"
+              featureName="name" dataValue="dynamicLabel"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FlowElement/dynamicLabel"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FlowElement/dynamicLabel"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//FlowElement"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>dynamicLabel</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//FlowElement" referenceName="eStructuralFeatures"
+            element="process.ecore#//FlowElement/dynamicDescription">
+          <changes xsi:type="history:Set" element="process.ecore#//FlowElement/dynamicDescription"
+              featureName="name" dataValue="dynamicDescription"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FlowElement/dynamicDescription"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FlowElement/dynamicDescription"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//FlowElement"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>dynamicDescription</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//FlowElement" referenceName="eStructuralFeatures"
+            element="process.ecore#//FlowElement/stepSummary">
+          <changes xsi:type="history:Set" element="process.ecore#//FlowElement/stepSummary"
+              featureName="name" dataValue="stepSummary"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FlowElement/stepSummary"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//FlowElement/stepSummary"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//FlowElement"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>stepSummary</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
         </operation>
       </changes>
     </changes>
