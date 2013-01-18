@@ -22,12 +22,9 @@ import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.TextAnnotation;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
-import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -44,17 +41,11 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * This contribution is designed to have the text of the Text annotation.
  */
 public class TextAnnotationTextPropertySectionContribution implements IExtensibleGridPropertySectionContribution{
-	
+
 	private Text text;
 	protected TextAnnotation textAnnotation;
 	protected TransactionalEditingDomain editingDomain;
-	protected NotificationListener notificationListener = new NotificationListener() {
 
-		public void notifyChanged(Notification notification) {
-			refreshWidget() ;
-		}
-	};
-	
 	public void createControl(Composite composite,
 			TabbedPropertySheetWidgetFactory widgetFactory,
 			ExtensibleGridPropertySection extensibleGridPropertySection) {
@@ -79,23 +70,6 @@ public class TextAnnotationTextPropertySectionContribution implements IExtensibl
 
 	}
 
-	
-	protected void refreshWidget() {
-		if(text != null && !text.isDisposed()){
-			Point sel = text.getSelection() ;
-			if(textAnnotation.getDocumentation() != null){
-				text.setText(textAnnotation.getText());
-				text.setSelection(sel.x);
-			}else{
-				text.setText(""); //$NON-NLS-1$
-			}
-		}
-	}
-	
-
-	public void dispose() {
-		DiagramEventBroker.getInstance(editingDomain).removeNotificationListener(textAnnotation, notificationListener);
-	}
 
 	public String getLabel() {
 		return Messages.GeneralSection_TextAnnotation;
@@ -106,13 +80,12 @@ public class TextAnnotationTextPropertySectionContribution implements IExtensibl
 	}
 
 	public void refresh() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void setEObject(EObject object) {
 		this.textAnnotation = (TextAnnotation) object;
-		
+
 	}
 
 	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
@@ -124,8 +97,14 @@ public class TextAnnotationTextPropertySectionContribution implements IExtensibl
 	}
 
 
-	
-	
-	
-	
+	@Override
+	public void dispose() {
+		
+	}
+
+
+
+
+
+
 }
