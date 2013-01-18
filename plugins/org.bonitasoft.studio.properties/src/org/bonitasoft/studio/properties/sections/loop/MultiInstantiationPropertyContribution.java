@@ -147,10 +147,10 @@ public class MultiInstantiationPropertyContribution implements IExtensibleGridPr
         if(activity.getIsLoop()){
             loopRadio.setSelection(true);
             updateStack(LOOP);
-        }else if(activity.getMultiInstantiation() != null && activity.isIsMultiInstance()){
+        }else if(activity.isIsMultiInstance()){
             multiRadio.setSelection(true);
             updateStack(MULTI);
-            if(activity.getMultiInstantiation().isUseCardinality()){
+            if(activity.getMultiInstantiation() != null && activity.getMultiInstantiation().isUseCardinality()){
                 useCardinalityButton.setSelection(true);
             } else {
                 useCollectionButton.setSelection(true);
