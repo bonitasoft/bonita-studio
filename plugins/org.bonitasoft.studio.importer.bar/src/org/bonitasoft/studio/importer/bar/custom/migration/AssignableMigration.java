@@ -16,8 +16,6 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
-import java.util.List;
-
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.eclipse.core.runtime.IStatus;
@@ -30,21 +28,16 @@ import org.eclipse.emf.edapt.migration.Model;
  * @author Romain Bioteau
  *
  */
-public class RemoveGroupsMigration extends ReportCustomMigration {
+public class AssignableMigration extends ReportCustomMigration {
 
+	
 	@Override
 	public void migrateBefore(Model model, Metamodel metamodel)
 			throws MigrationException {
-		for(Instance group : model.getAllInstances("process.Group")){
-			addReportChange((String) group.get("name"),Messages.actorSelector, group.getContainer().getUuid(), Messages.removeGroupMigrationDescription, Messages.actorProperty, IStatus.ERROR);
-			model.delete(group);
-		}
-		for(Instance assignable : model.getAllInstances("process.Assignable")){
-			final List<Instance> filters = assignable.get("filters");
-			for(Instance filter : filters){
-				addReportChange((String) filter.get("name"),Messages.actorSelector, filter.getContainer().getUuid(), Messages.removeFilterMigrationDescription, Messages.actorProperty, IStatus.ERROR);
-				model.delete(filter);
-			}
+		for(Instance deadline : model.getAllInstances("process.Deadline")){
+			Instance connector =  deadline.get("connector");
+			addReportChange((String) connector.get("name"),"Deadline", deadline.getContainer().getUuid(), Messages.removeDeadlinesMigrationDescription, Messages.connectorProperty, IStatus.ERROR);
+			model.delete(deadline);
 		}
 	}
 	

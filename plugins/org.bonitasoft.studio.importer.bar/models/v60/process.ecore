@@ -461,10 +461,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="StartSignalEvent" eSuperTypes="#//CatchSignalEvent #//Event #//ConnectableElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="BoundarySignalEvent" eSuperTypes="#//BoundaryEvent #//SignalEvent"/>
   <eClassifiers xsi:type="ecore:EClass" name="Assignable" abstract="true" interface="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="user" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="filters" upperBound="-1"
-        eType="#//Connector" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="actorType" eType="#//ActorType"/>
+        eType="#//ActorFilter" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actor" eType="#//Actor"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BoundaryEvent" eSuperTypes="#//Element #//SourceElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="BoundaryMessageEvent" eSuperTypes="#//BoundaryEvent #//AbstractCatchMessageEvent"/>
@@ -542,6 +541,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="data" upperBound="-1" eType="#//Data"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ActorFilter" eSuperTypes="#//Connector"/>
   <eSubpackages name="decision" nsURI="http://www.bonitasoft.org/ns/studio/process/decision"
       nsPrefix="decision">
     <eClassifiers xsi:type="ecore:EClass" name="DecisionTable">

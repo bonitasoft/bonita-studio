@@ -1378,10 +1378,10 @@
             referenceValue="process.ecore#//Assignable"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Assignable" referenceName="eStructuralFeatures"
-          element="process.ecore#//Assignable/user">
-        <changes xsi:type="history:Set" element="process.ecore#//Assignable/user"
+          element="#//@releases.1/@changes.1/@changes.3/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.3/@changes.0/@element"
             featureName="name" dataValue="user"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Assignable/user"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.3/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Assignable" referenceName="eStructuralFeatures"
@@ -1405,10 +1405,10 @@
             featureName="eType" referenceValue="#//@releases.2/@changes.15/@changes.0/@element"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Assignable" referenceName="eStructuralFeatures"
-          element="process.ecore#//Assignable/actorType">
-        <changes xsi:type="history:Set" element="process.ecore#//Assignable/actorType"
+          element="#//@releases.1/@changes.1/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.4/@changes.0/@element"
             featureName="name" dataValue="actorType"/>
-        <changes xsi:type="history:Set" element="process.ecore#//Assignable/actorType"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.1/@changes.4/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//ActorType"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -7036,6 +7036,97 @@
           <parameters name="feature">
             <referenceValue element="#//@releases.1/@changes.1/@changes.0/@changes.0/@element"/>
           </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//ActorFilter">
+          <changes xsi:type="history:Set" element="process.ecore#//ActorFilter" featureName="name"
+              dataValue="ActorFilter"/>
+          <changes xsi:type="history:Add" element="process.ecore#//ActorFilter" featureName="eSuperTypes"
+              referenceValue="process.ecore#//Connector"/>
+        </changes>
+        <operation name="newClass">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>ActorFilter</dataValue>
+          </parameters>
+          <parameters name="superClasses">
+            <referenceValue element="process.ecore#//Connector"/>
+          </parameters>
+          <parameters name="abstr">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Set" element="process.ecore#//Assignable/filters"
+            featureName="eType" referenceValue="process.ecore#//ActorFilter" oldReferenceValue="process.ecore#//Connector"/>
+        <operation name="specializeReference">
+          <parameters name="reference">
+            <referenceValue element="process.ecore#//Assignable/filters"/>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//ActorFilter"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>-1</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Assignable" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="user" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.1/@changes.1/@changes.3/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Assignable" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="actorType" eType="ecore:EEnum process.ecore#//ActorType"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.1/@changes.1/@changes.4/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//Assignable" referenceName="eStructuralFeatures"
+            element="process.ecore#//Assignable/actor">
+          <changes xsi:type="history:Set" element="process.ecore#//Assignable/actor"
+              featureName="name" dataValue="actor"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Assignable/actor"
+              featureName="eType" referenceValue="process.ecore#//Actor"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//Assignable"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>actor</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="process.ecore#//Actor"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>false</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
         </operation>
       </changes>
     </changes>
