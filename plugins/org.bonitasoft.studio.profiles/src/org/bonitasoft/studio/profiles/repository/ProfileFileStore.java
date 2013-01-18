@@ -61,7 +61,7 @@ public class ProfileFileStore extends PropertiesFileStore {
 
     public Set<String> getFeatures(){
         String list = (String)getContent().get(FEATURES_SET) ;
-        String[] categorIds = list.split(SEPARATOR) ;
+        String[] categorIds = list != null ? list.split(SEPARATOR) : new String[]{};
         return new HashSet<String>(Arrays.asList(categorIds));
     }
 
@@ -85,7 +85,9 @@ public class ProfileFileStore extends PropertiesFileStore {
             sb.append(id) ;
             sb.append(SEPARATOR) ;
         }
-        sb.delete( sb.length()-1, sb.length()) ;
+        if(sb.length() != 0){
+        	sb.delete( sb.length()-1, sb.length()) ;
+        }
         properties.put(FEATURES_SET, sb.toString()) ;
         save(properties) ;
     }
