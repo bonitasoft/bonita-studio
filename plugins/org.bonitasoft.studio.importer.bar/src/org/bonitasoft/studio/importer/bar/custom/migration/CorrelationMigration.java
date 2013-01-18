@@ -71,7 +71,7 @@ public class CorrelationMigration extends ReportCustomMigration {
 			}
 		}
 	}
-
+	
 	@Override
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
