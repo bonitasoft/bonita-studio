@@ -69,6 +69,8 @@ public class Messages extends NLS {
 	public static String messagesProperty;
 	public static String targetProcessNameMigrationDescription;
 	public static String targetElementNameMigrationDescription;
+	public static String correlationProperty;
+	public static String correlationMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

@@ -361,8 +361,8 @@
         eOpposite="#//MessageFlow/target"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="correlation" eType="ecore:EClass expression.ecore#//TableExpression"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="messageContent" eType="ecore:EClass expression.ecore#//Operation"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messageContent" upperBound="-1"
+        eType="ecore:EClass expression.ecore#//Operation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CatchMessageEvent" abstract="true" interface="true"
       eSuperTypes="#//MessageEvent #//ConnectableElement #//AbstractCatchMessageEvent"/>
