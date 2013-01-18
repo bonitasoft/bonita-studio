@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.importer.bar.tests;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -32,6 +33,7 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.AfterClass;
@@ -100,7 +102,7 @@ public class TestSimpleMigrationUseCase {
 		int nbScriptExpression = 0;
 		int nbConstantExpression = 0;
 		for(Expression exp : expressions){
-			if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
+			if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && !ModelHelper.isAnExpressionCopy((Expression) exp)){
 				nbVariableExpression++;
 			}
 			if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType())){
@@ -241,4 +243,20 @@ public class TestSimpleMigrationUseCase {
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
 
+	@Test
+	public void testMessageContentMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("MessageMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<Message> messages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.MESSAGE);
+		for(Message message : messages){
+			assertFalse("Message content should not be empty",message.getMessageContent().getExpressions().isEmpty());
+			assertFalse("Message target processs hould not be empty",message.getTargetProcessExpression().getContent().isEmpty());
+			assertFalse("Message target element should not be empty",message.getTargetElementExpression().getContent().isEmpty());
+		}
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
 }
