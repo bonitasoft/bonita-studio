@@ -12,7 +12,6 @@ import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;

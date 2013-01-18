@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.CorrelationTypeActive;
 import org.bonitasoft.studio.model.process.DataType;
@@ -281,6 +282,21 @@ public class TestSimpleMigrationUseCase {
 		List<AbstractCatchMessageEvent> catchMessages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT);
 		for(AbstractCatchMessageEvent message : catchMessages){
 			assertFalse("Invalid correlation association",message.getCorrelation().getExpressions().isEmpty());
+		}
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+	
+	@Test
+	public void testTimerConditionMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("TimerConditionMigration--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<AbstractTimerEvent> timers = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT);
+		for(AbstractTimerEvent timer : timers){
+			assertNotNull("Timer condition should not be empty",timer.getCondition());	
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}

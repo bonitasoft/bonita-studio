@@ -1193,10 +1193,10 @@
             featureName="eSuperTypes" referenceValue="process.ecore#//Element"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//AbstractTimerEvent"
-          referenceName="eStructuralFeatures" element="process.ecore#//AbstractTimerEvent/condition">
-        <changes xsi:type="history:Set" element="process.ecore#//AbstractTimerEvent/condition"
+          referenceName="eStructuralFeatures" element="#//@releases.2/@changes.18/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.18/@changes.0/@changes.0/@element"
             featureName="name" dataValue="condition"/>
-        <changes xsi:type="history:Set" element="process.ecore#//AbstractTimerEvent/condition"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.18/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -9077,6 +9077,51 @@
             <referenceValue element="process.ecore#//ConnectableElement"/>
             <referenceValue element="process.ecore#//ConnectableElement"/>
           </parameters>
+        </operation>
+      </changes>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.TimerConditionMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//AbstractTimerEvent"
+            referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="condition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.18/@changes.0/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//AbstractTimerEvent"
+            referenceName="eStructuralFeatures" element="process.ecore#//AbstractTimerEvent/condition">
+          <changes xsi:type="history:Set" element="process.ecore#//AbstractTimerEvent/condition"
+              featureName="name" dataValue="condition"/>
+          <changes xsi:type="history:Set" element="process.ecore#//AbstractTimerEvent/condition"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//AbstractTimerEvent/condition"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//AbstractTimerEvent"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>condition</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
         </operation>
       </changes>
     </changes>
