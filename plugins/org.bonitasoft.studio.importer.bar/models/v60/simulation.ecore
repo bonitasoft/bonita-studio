@@ -17,9 +17,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SimulationData" abstract="true" interface="true"
       eSuperTypes="#//SimulationElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="expression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="expressionBased" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SimulationActivity" abstract="true"
       interface="true" eSuperTypes="#//SimulationDataContainer">
@@ -117,7 +118,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DataChange">
     <eStructuralFeatures xsi:type="ecore:EReference" name="data" eType="#//SimulationData"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="ecore:EClass expression.ecore#//Expression"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SimulationCalendar">
     <eStructuralFeatures xsi:type="ecore:EReference" name="daysOfWeek" upperBound="7"

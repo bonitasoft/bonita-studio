@@ -3184,11 +3184,11 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Validator" referenceName="eStructuralFeatures"
-          element="form.ecore#//Validator/label">
-        <changes xsi:type="history:Set" element="form.ecore#//Validator/label" featureName="name"
-            dataValue="label"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Validator/label" featureName="eType"
-            referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          element="#//@releases.3/@changes.14/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.14/@changes.0/@element"
+            featureName="name" dataValue="label"/>
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.14/@changes.0/@element"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Validator" referenceName="eStructuralFeatures"
           element="form.ecore#//Validator/name">
@@ -3198,12 +3198,12 @@
             referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Validator" referenceName="eStructuralFeatures"
-          element="form.ecore#//Validator/parameter">
-        <changes xsi:type="history:Set" element="form.ecore#//Validator/parameter"
+          element="#//@releases.3/@changes.15/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.15/@changes.0/@element"
             featureName="name" dataValue="parameter"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Validator/parameter"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.15/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue=""/>
-        <changes xsi:type="history:Set" element="form.ecore#//Validator/parameter"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.15/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Validator" referenceName="eStructuralFeatures"
@@ -3257,15 +3257,15 @@
             featureName="eType" referenceValue="form.ecore#//Form"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Form" referenceName="eStructuralFeatures"
-          element="form.ecore#//Form/scripts">
-        <changes xsi:type="history:Set" element="form.ecore#//Form/scripts" featureName="name"
-            dataValue="scripts"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Form/scripts" featureName="upperBound"
-            dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Form/scripts" featureName="containment"
-            dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Form/scripts" featureName="eType"
-            referenceValue="form.ecore#//GroovyScript"/>
+          element="#//@releases.2/@changes.19/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.19/@changes.0/@changes.0/@element"
+            featureName="name" dataValue="scripts"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.19/@changes.0/@changes.0/@element"
+            featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.19/@changes.0/@changes.0/@element"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.19/@changes.0/@changes.0/@element"
+            featureName="eType" referenceValue="form.ecore#//GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Form" referenceName="eStructuralFeatures"
           element="form.ecore#//Form/nColumn">
@@ -3538,14 +3538,14 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="form.ecore#//Duplicable/maxNumberOfDuplication">
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/maxNumberOfDuplication"
+          element="#//@releases.3/@changes.31/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.31/@changes.0/@element"
             featureName="name" dataValue="maxNumberOfDuplication"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/maxNumberOfDuplication"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.31/@changes.0/@element"
             featureName="lowerBound" dataValue="1" oldDataValue="0"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/maxNumberOfDuplication"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.31/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="10"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/maxNumberOfDuplication"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.31/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
@@ -3558,40 +3558,40 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="form.ecore#//Duplicable/minNumberOfDuplication">
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/minNumberOfDuplication"
+          element="#//@releases.3/@changes.32/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.32/@changes.0/@element"
             featureName="name" dataValue="minNumberOfDuplication"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/minNumberOfDuplication"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.32/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="2"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/minNumberOfDuplication"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.32/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="form.ecore#//Duplicable/displayLabelForAdd">
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/displayLabelForAdd"
+          element="#//@releases.3/@changes.33/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.33/@changes.0/@element"
             featureName="name" dataValue="displayLabelForAdd"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/displayLabelForAdd"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.33/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="form.ecore#//Duplicable/tooltipForAdd">
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/tooltipForAdd"
+          element="#//@releases.3/@changes.34/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.34/@changes.0/@element"
             featureName="name" dataValue="tooltipForAdd"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/tooltipForAdd"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.34/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="form.ecore#//Duplicable/displayLabelForRemove">
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/displayLabelForRemove"
+          element="#//@releases.3/@changes.35/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.35/@changes.0/@element"
             featureName="name" dataValue="displayLabelForRemove"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/displayLabelForRemove"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.35/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="form.ecore#//Duplicable/tooltipForRemove">
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/tooltipForRemove"
+          element="#//@releases.3/@changes.36/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.36/@changes.0/@element"
             featureName="name" dataValue="tooltipForRemove"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/tooltipForRemove"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.36/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -3701,31 +3701,31 @@
             referenceValue="form.ecore#//Widget"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="form.ecore#//Widget/script">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/script" featureName="name"
-            dataValue="script"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/script" featureName="containment"
-            dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/script" featureName="eType"
-            referenceValue="form.ecore#//GroovyScript"/>
+          element="#//@releases.2/@changes.20/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.0/@changes.0/@element"
+            featureName="name" dataValue="script"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.0/@changes.0/@element"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.0/@changes.0/@element"
+            featureName="eType" referenceValue="form.ecore#//GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="form.ecore#//Widget/tooltip">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/tooltip" featureName="name"
-            dataValue="tooltip"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/tooltip" featureName="eType"
-            referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          element="#//@releases.2/@changes.20/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.4/@changes.0/@element"
+            featureName="name" dataValue="tooltip"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.4/@changes.0/@element"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//Widget/tooltip" referenceName="eAnnotations"
-          element="form.ecore#//Widget/tooltip/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/tooltip/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.2/@changes.20/@changes.4/@changes.0/@element"
+          referenceName="eAnnotations" element="#//@releases.2/@changes.20/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//Widget/tooltip/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//Widget/tooltip/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/tooltip/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.2/@changes.20/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.2/@changes.20/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="documentation"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/tooltip/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="The tooltip is mapped with title in forms.xml (and so in GWT)"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
@@ -3738,10 +3738,10 @@
             featureName="eType" referenceValue="form.ecore#//WidgetLayoutInfo"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="form.ecore#//Widget/displayLabel">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/displayLabel"
+          element="#//@releases.2/@changes.20/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.2/@changes.0/@element"
             featureName="name" dataValue="displayLabel"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/displayLabel"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
@@ -3807,30 +3807,30 @@
             featureName="value" dataValue="@Deprecated since 5.5"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"
+          element="#//@releases.2/@changes.20/@changes.6/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.6/@changes.0/@element"
             featureName="name" dataValue="displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.6/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="true"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.6/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="form.ecore#//Widget/scriptAfterEvent">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/scriptAfterEvent"
+          element="#//@releases.2/@changes.20/@changes.8/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.8/@changes.0/@element"
             featureName="name" dataValue="scriptAfterEvent"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/scriptAfterEvent"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.8/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/scriptAfterEvent"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.8/@changes.0/@element"
             featureName="eType" referenceValue="form.ecore#//GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="form.ecore#//Widget/displayAfterEventDependsOnConditionScript">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/displayAfterEventDependsOnConditionScript"
+          element="#//@releases.2/@changes.20/@changes.10/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.10/@changes.0/@element"
             featureName="name" dataValue="displayAfterEventDependsOnConditionScript"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/displayAfterEventDependsOnConditionScript"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.10/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="true"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/displayAfterEventDependsOnConditionScript"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.10/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
@@ -3872,36 +3872,36 @@
             featureName="eType" referenceValue="form.ecore#//LabelPosition"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="form.ecore#//Widget/inputConnectors">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/inputConnectors"
+          element="#//@releases.2/@changes.20/@changes.12/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.12/@changes.0/@element"
             featureName="name" dataValue="inputConnectors"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/inputConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.12/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/inputConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.12/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/inputConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.12/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="form.ecore#//Widget/outputConnectors">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/outputConnectors"
+          element="#//@releases.2/@changes.20/@changes.13/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.13/@changes.0/@element"
             featureName="name" dataValue="outputConnectors"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/outputConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.13/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/outputConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.13/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/outputConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.13/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="form.ecore#//Widget/afterEventConnectors">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/afterEventConnectors"
+          element="#//@releases.2/@changes.20/@changes.14/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.14/@changes.0/@element"
             featureName="name" dataValue="afterEventConnectors"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/afterEventConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.14/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/afterEventConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.14/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/afterEventConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.14/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
@@ -3933,10 +3933,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="form.ecore#//Widget/injectWidgetScript">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/injectWidgetScript"
+          element="#//@releases.2/@changes.20/@changes.17/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.17/@changes.0/@element"
             featureName="name" dataValue="injectWidgetScript"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/injectWidgetScript"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.17/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
@@ -3947,10 +3947,10 @@
             referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="form.ecore#//Widget/helpMessage">
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/helpMessage"
+          element="#//@releases.2/@changes.20/@changes.15/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.15/@changes.0/@element"
             featureName="name" dataValue="helpMessage"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Widget/helpMessage"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.20/@changes.15/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//WidgetDependency" referenceName="eStructuralFeatures"
@@ -4061,10 +4061,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//FormField" referenceName="eStructuralFeatures"
-          element="form.ecore#//FormField/exampleMessage">
-        <changes xsi:type="history:Set" element="form.ecore#//FormField/exampleMessage"
+          element="#//@releases.3/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.0/@changes.0/@element"
             featureName="name" dataValue="exampleMessage"/>
-        <changes xsi:type="history:Set" element="form.ecore#//FormField/exampleMessage"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//FormField" referenceName="eStructuralFeatures"
@@ -4086,95 +4086,95 @@
             featureName="eSuperTypes" referenceValue="form.ecore#//FormField"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="form.ecore#//MultipleValuatedFormField/defaultValue">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultValue"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.2/@changes.0/@element"
             featureName="name" dataValue="defaultValue"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultValue"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="form.ecore#//MultipleValuatedFormField/defaultValueAfterEvent">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultValueAfterEvent"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.4/@changes.0/@element"
             featureName="name" dataValue="defaultValueAfterEvent"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultValueAfterEvent"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.4/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="form.ecore#//MultipleValuatedFormField/enum">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/enum"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.6/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.6/@changes.0/@element"
             featureName="name" dataValue="enum"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/enum"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.6/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="form.ecore#//MultipleValuatedFormField/enumAfterEvent">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/enumAfterEvent"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.7/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.7/@changes.0/@element"
             featureName="name" dataValue="enumAfterEvent"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/enumAfterEvent"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.7/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField/enumAfterEvent"
-          referenceName="eAnnotations" element="form.ecore#//MultipleValuatedFormField/enumAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/enumAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.3/@changes.7/@changes.0/@element"
+          referenceName="eAnnotations" element="#//@releases.3/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField/enumAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//MultipleValuatedFormField/enumAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/enumAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.3/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.3/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="documentation"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/enumAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="enum used for dependencies between widget."/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="form.ecore#//MultipleValuatedFormField/literals">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/literals"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.8/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.8/@changes.0/@element"
             featureName="name" dataValue="literals"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/literals"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.8/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/literals"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.8/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="form.ecore#//MultipleValuatedFormField/literalsAfterEvent">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/literalsAfterEvent"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.9/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.9/@changes.0/@element"
             featureName="name" dataValue="literalsAfterEvent"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/literalsAfterEvent"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.9/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/literalsAfterEvent"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.9/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField/literalsAfterEvent"
-          referenceName="eAnnotations" element="form.ecore#//MultipleValuatedFormField/literalsAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/literalsAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.3/@changes.9/@changes.0/@element"
+          referenceName="eAnnotations" element="#//@releases.3/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField/literalsAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="form.ecore#//MultipleValuatedFormField/literalsAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/literalsAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.3/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.3/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="documentation"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/literalsAfterEvent/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="literals used on dependencies management."/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="form.ecore#//MultipleValuatedFormField/defaultConnectors">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultConnectors"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.10/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.10/@changes.0/@element"
             featureName="name" dataValue="defaultConnectors"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.10/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.10/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.10/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="form.ecore#//MultipleValuatedFormField/defaultAfterEventConnectors">
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultAfterEventConnectors"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.11/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.11/@changes.0/@element"
             featureName="name" dataValue="defaultAfterEventConnectors"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultAfterEventConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.11/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultAfterEventConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.11/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultAfterEventConnectors"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.11/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4371,14 +4371,14 @@
             referenceValue="process.ecore#//ConnectableElement"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//SubmitFormButton" referenceName="eStructuralFeatures"
-          element="form.ecore#//SubmitFormButton/scripts">
-        <changes xsi:type="history:Set" element="form.ecore#//SubmitFormButton/scripts"
+          element="#//@releases.3/@changes.12/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.12/@changes.0/@element"
             featureName="name" dataValue="scripts"/>
-        <changes xsi:type="history:Set" element="form.ecore#//SubmitFormButton/scripts"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.12/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="form.ecore#//SubmitFormButton/scripts"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.12/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="form.ecore#//SubmitFormButton/scripts"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.12/@changes.0/@element"
             featureName="eType" referenceValue="form.ecore#//GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4459,10 +4459,10 @@
             referenceValue="form.ecore#//Duplicable"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//FileWidget" referenceName="eStructuralFeatures"
-          element="form.ecore#//FileWidget/fileData">
-        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/fileData"
+          element="#//@releases.3/@changes.18/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.18/@changes.0/@element"
             featureName="name" dataValue="fileData"/>
-        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/fileData"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.18/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//FileWidget" referenceName="eStructuralFeatures"
@@ -4493,19 +4493,19 @@
             referenceValue="form.ecore#//Duplicable"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//ImageWidget" referenceName="eStructuralFeatures"
-          element="form.ecore#//ImageWidget/imgPath">
-        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/imgPath"
+          element="#//@releases.3/@changes.27/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.27/@changes.0/@element"
             featureName="name" dataValue="imgPath"/>
-        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/imgPath"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.27/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//ImageWidget" referenceName="eStructuralFeatures"
-          element="form.ecore#//ImageWidget/isAnAttachment">
-        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/isAnAttachment"
+          element="form.ecore#//ImageWidget/isADocument">
+        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/isADocument"
             featureName="name" dataValue="isAnAttachment"/>
-        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/isAnAttachment"
+        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/isADocument"
             featureName="defaultValueLiteral" dataValue="false"/>
-        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/isAnAttachment"
+        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/isADocument"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4591,10 +4591,10 @@
             referenceValue="form.ecore#//MultipleValuatedFormField"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Table" referenceName="eStructuralFeatures"
-          element="form.ecore#//Table/maxRowForPagination">
-        <changes xsi:type="history:Set" element="form.ecore#//Table/maxRowForPagination"
+          element="#//@releases.3/@changes.43/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.43/@changes.0/@element"
             featureName="name" dataValue="maxRowForPagination"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Table/maxRowForPagination"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.43/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Table" referenceName="eStructuralFeatures"
@@ -4625,17 +4625,17 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Table" referenceName="eStructuralFeatures"
-          element="form.ecore#//Table/columnForInitialSelectionIndex">
-        <changes xsi:type="history:Set" element="form.ecore#//Table/columnForInitialSelectionIndex"
+          element="#//@releases.3/@changes.45/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.45/@changes.0/@element"
             featureName="name" dataValue="columnForInitialSelectionIndex"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Table/columnForInitialSelectionIndex"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.45/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Table" referenceName="eStructuralFeatures"
-          element="form.ecore#//Table/selectedValues">
-        <changes xsi:type="history:Set" element="form.ecore#//Table/selectedValues"
+          element="#//@releases.3/@changes.47/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.47/@changes.0/@element"
             featureName="name" dataValue="selectedValues"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Table/selectedValues"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.47/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
@@ -4674,10 +4674,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
-          element="form.ecore#//AbstractTable/cells">
-        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/cells"
+          element="#//@releases.3/@changes.49/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.49/@changes.0/@element"
             featureName="name" dataValue="cells"/>
-        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/cells"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.49/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
@@ -4690,10 +4690,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
-          element="form.ecore#//AbstractTable/horizontalHeader">
-        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeader"
+          element="#//@releases.3/@changes.50/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.50/@changes.0/@element"
             featureName="name" dataValue="horizontalHeader"/>
-        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeader"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.50/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
@@ -4706,10 +4706,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
-          element="form.ecore#//AbstractTable/verticalHeader">
-        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeader"
+          element="#//@releases.3/@changes.52/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.52/@changes.0/@element"
             featureName="name" dataValue="verticalHeader"/>
-        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeader"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.52/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4731,10 +4731,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
-          element="form.ecore#//DynamicTable/minNumberOfColumn">
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/minNumberOfColumn"
+          element="#//@releases.3/@changes.55/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.55/@changes.0/@element"
             featureName="name" dataValue="minNumberOfColumn"/>
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/minNumberOfColumn"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.55/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
@@ -4747,10 +4747,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
-          element="form.ecore#//DynamicTable/minNumberOfRow">
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/minNumberOfRow"
+          element="#//@releases.3/@changes.57/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.57/@changes.0/@element"
             featureName="name" dataValue="minNumberOfRow"/>
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/minNumberOfRow"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.57/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
@@ -4781,10 +4781,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
-          element="form.ecore#//DynamicTable/maxNumberOfColumn">
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/maxNumberOfColumn"
+          element="#//@releases.3/@changes.59/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.59/@changes.0/@element"
             featureName="name" dataValue="maxNumberOfColumn"/>
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/maxNumberOfColumn"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.59/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
@@ -4797,10 +4797,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
-          element="form.ecore#//DynamicTable/maxNumberOfRow">
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/maxNumberOfRow"
+          element="#//@releases.3/@changes.61/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.61/@changes.0/@element"
             featureName="name" dataValue="maxNumberOfRow"/>
-        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/maxNumberOfRow"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.61/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4922,21 +4922,21 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MandatoryFieldsCustomization"
-          referenceName="eStructuralFeatures" element="form.ecore#//MandatoryFieldsCustomization/mandatorySymbol">
-        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatorySymbol"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.63/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.63/@changes.0/@element"
             featureName="name" dataValue="mandatorySymbol"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatorySymbol"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.63/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="*"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatorySymbol"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.63/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MandatoryFieldsCustomization"
-          referenceName="eStructuralFeatures" element="form.ecore#//MandatoryFieldsCustomization/mandatoryLabel">
-        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatoryLabel"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.65/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.65/@changes.0/@element"
             featureName="name" dataValue="mandatoryLabel"/>
-        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatoryLabel"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.65/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue=""/>
-        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatoryLabel"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.65/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//CSSCustomizable" referenceName="eStructuralFeatures"
@@ -5095,10 +5095,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//AbstractKPIBinding" referenceName="eStructuralFeatures"
-          element="kpi.ecore#//AbstractKPIBinding/request">
-        <changes xsi:type="history:Set" element="kpi.ecore#//AbstractKPIBinding/request"
+          element="#//@releases.3/@changes.67/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.67/@changes.0/@element"
             featureName="name" dataValue="request"/>
-        <changes xsi:type="history:Set" element="kpi.ecore#//AbstractKPIBinding/request"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.67/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//AbstractKPIBinding" referenceName="eStructuralFeatures"
@@ -5127,10 +5127,10 @@
             featureName="eType" referenceValue="kpi.ecore#//KPIParameterMapping"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//KPIParameterMapping"
-          referenceName="eStructuralFeatures" element="kpi.ecore#//KPIParameterMapping/value">
-        <changes xsi:type="history:Set" element="kpi.ecore#//KPIParameterMapping/value"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.69/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.69/@changes.0/@element"
             featureName="name" dataValue="value"/>
-        <changes xsi:type="history:Set" element="kpi.ecore#//KPIParameterMapping/value"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.69/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//KPIParameterMapping"
@@ -5141,22 +5141,22 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#/" referenceName="eClassifiers"
-          element="kpi.ecore#//DatabaseConfiguration">
-        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseConfiguration"
+          element="#//@releases.3/@changes.84/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.84/@changes.0/@element"
             featureName="name" dataValue="DatabaseConfiguration"/>
       </changes>
-      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseConfiguration"
-          referenceName="eStructuralFeatures" element="kpi.ecore#//DatabaseConfiguration/name">
-        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseConfiguration/name"
+      <changes xsi:type="history:Create" target="#//@releases.3/@changes.84/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.84/@changes.0/@element/name">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.84/@changes.0/@element/name"
             featureName="name" dataValue="name"/>
-        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseConfiguration/name"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.84/@changes.0/@element/name"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseConfiguration"
-          referenceName="eStructuralFeatures" element="kpi.ecore#//DatabaseConfiguration/configuration">
-        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseConfiguration/configuration"
+      <changes xsi:type="history:Create" target="#//@releases.3/@changes.84/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.84/@changes.0/@element/configuration">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.84/@changes.0/@element/configuration"
             featureName="name" dataValue="configuration"/>
-        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseConfiguration/configuration"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.84/@changes.0/@element/configuration"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#/" referenceName="eClassifiers"
@@ -5167,13 +5167,13 @@
             referenceValue="kpi.ecore#//AbstractKPIBinding"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
-          element="kpi.ecore#//DatabaseKPIBinding/databaseConfiguration">
-        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/databaseConfiguration"
+          element="#//@releases.3/@changes.71/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.71/@changes.0/@element"
             featureName="name" dataValue="databaseConfiguration"/>
-        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/databaseConfiguration"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.71/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/databaseConfiguration"
-            featureName="eType" referenceValue="kpi.ecore#//DatabaseConfiguration"/>
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.71/@changes.0/@element"
+            featureName="eType" referenceValue="#//@releases.3/@changes.84/@changes.0/@element"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
           element="kpi.ecore#//DatabaseKPIBinding/tableName">
@@ -5190,13 +5190,13 @@
             featureName="eSuperTypes" referenceValue="kpi.ecore#//AbstractKPIDefinition"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIDefinition"
-          referenceName="eStructuralFeatures" element="kpi.ecore#//DatabaseKPIDefinition/defaultConfiguration">
-        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultConfiguration"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.78/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.78/@changes.0/@element"
             featureName="name" dataValue="defaultConfiguration"/>
-        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultConfiguration"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.78/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultConfiguration"
-            featureName="eType" referenceValue="kpi.ecore#//DatabaseConfiguration"/>
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.78/@changes.0/@element"
+            featureName="eType" referenceValue="#//@releases.3/@changes.84/@changes.0/@element"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIDefinition"
           referenceName="eStructuralFeatures" element="kpi.ecore#//DatabaseKPIDefinition/defaultTableName">
@@ -5398,10 +5398,10 @@
             featureName="eSuperTypes" referenceValue="simulation.ecore#//SimulationElement"/>
       </changes>
       <changes xsi:type="history:Create" target="simulation.ecore#//SimulationData"
-          referenceName="eStructuralFeatures" element="simulation.ecore#//SimulationData/expression">
-        <changes xsi:type="history:Set" element="simulation.ecore#//SimulationData/expression"
+          referenceName="eStructuralFeatures" element="#//@releases.3/@changes.85/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.85/@changes.0/@element"
             featureName="name" dataValue="expression"/>
-        <changes xsi:type="history:Set" element="simulation.ecore#//SimulationData/expression"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.85/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="simulation.ecore#//SimulationData"
@@ -6813,10 +6813,10 @@
             featureName="eType" referenceValue="simulation.ecore#//SimulationData"/>
       </changes>
       <changes xsi:type="history:Create" target="simulation.ecore#//DataChange" referenceName="eStructuralFeatures"
-          element="simulation.ecore#//DataChange/value">
-        <changes xsi:type="history:Set" element="simulation.ecore#//DataChange/value"
+          element="#//@releases.3/@changes.87/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.87/@changes.0/@element"
             featureName="name" dataValue="value"/>
-        <changes xsi:type="history:Set" element="simulation.ecore#//DataChange/value"
+        <changes xsi:type="history:Set" element="#//@releases.3/@changes.87/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="simulation.ecore#/" referenceName="eClassifiers"
@@ -9216,6 +9216,2473 @@
         </operation>
       </changes>
     </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.FormMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Form" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" name="scripts" upperBound="-1" eType="ecore:EClass form.ecore#//GroovyScript"
+              containment="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.19/@changes.0/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Form" referenceName="eStructuralFeatures"
+            element="form.ecore#//Form/actions">
+          <changes xsi:type="history:Set" element="form.ecore#//Form/actions" featureName="name"
+              dataValue="actions"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Form/actions" featureName="upperBound"
+              dataValue="-1" oldDataValue="1"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Form/actions" featureName="containment"
+              dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Form/actions" featureName="eType"
+              referenceValue="expression.ecore#//Operation"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Form"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>actions</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Operation"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>-1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.WidgetMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" name="script" eType="ecore:EClass form.ecore#//GroovyScript"
+              containment="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.20/@changes.0/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
+            element="form.ecore#//Widget/action">
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/action" featureName="name"
+              dataValue="action"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/action" featureName="containment"
+              dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/action" featureName="eType"
+              referenceValue="expression.ecore#//Operation"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Widget"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>action</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Operation"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="displayLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.20/@changes.2/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
+            element="form.ecore#//Widget/displayLabel">
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/displayLabel"
+              featureName="name" dataValue="displayLabel"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/displayLabel"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/displayLabel"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Widget"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>displayLabel</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="tooltip" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+            <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+              <details key="documentation" value="The tooltip is mapped with title in forms.xml (and so in GWT)"/>
+            </eAnnotations>
+          </element>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.20/@changes.4/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
+            element="form.ecore#//Widget/tooltip">
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/tooltip" featureName="name"
+              dataValue="tooltip"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/tooltip" featureName="containment"
+              dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/tooltip" featureName="eType"
+              referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Widget"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>tooltip</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"
+              eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+              defaultValueLiteral="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.20/@changes.6/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
+            element="form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition">
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"
+              featureName="name" dataValue="displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Widget"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" name="scriptAfterEvent" eType="ecore:EClass form.ecore#//GroovyScript"
+              containment="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.20/@changes.8/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
+            element="form.ecore#//Widget/afterEventExpression">
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/afterEventExpression"
+              featureName="name" dataValue="afterEventExpression"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/afterEventExpression"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/afterEventExpression"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Widget"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>afterEventExpression</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="displayAfterEventDependsOnConditionScript"
+              eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+              defaultValueLiteral="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.20/@changes.10/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
+            element="form.ecore#//Widget/displayAfterEventDependsOnConditionScript">
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/displayAfterEventDependsOnConditionScript"
+              featureName="name" dataValue="displayAfterEventDependsOnConditionScript"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/displayAfterEventDependsOnConditionScript"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/displayAfterEventDependsOnConditionScript"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Widget"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>displayAfterEventDependsOnConditionScript</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" name="inputConnectors" upperBound="-1"
+              eType="ecore:EClass process.ecore#//Connector" containment="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.20/@changes.12/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" name="outputConnectors" upperBound="-1"
+              eType="ecore:EClass process.ecore#//Connector" containment="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.20/@changes.13/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" name="afterEventConnectors" upperBound="-1"
+              eType="ecore:EClass process.ecore#//Connector" containment="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.20/@changes.14/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="helpMessage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.20/@changes.15/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
+            element="form.ecore#//Widget/helpMessage">
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/helpMessage"
+              featureName="name" dataValue="helpMessage"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/helpMessage"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/helpMessage"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Widget"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>helpMessage</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Widget" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="injectWidgetScript" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.2/@changes.20/@changes.17/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
+            element="form.ecore#//Widget/injectWidgetScript">
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/injectWidgetScript"
+              featureName="name" dataValue="injectWidgetScript"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/injectWidgetScript"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/injectWidgetScript"
+              featureName="eType" referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Widget"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>injectWidgetScript</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
+            element="form.ecore#//Widget/returnTypeModifier">
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/returnTypeModifier"
+              featureName="name" dataValue="returnTypeModifier"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Widget/returnTypeModifier"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Widget"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>returnTypeModifier</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+    </changes>
   </releases>
-  <releases/>
+  <releases>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//FormField" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="exampleMessage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.0/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//FormField" referenceName="eStructuralFeatures"
+          element="form.ecore#//FormField/exampleMessage">
+        <changes xsi:type="history:Set" element="form.ecore#//FormField/exampleMessage"
+            featureName="name" dataValue="exampleMessage"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FormField/exampleMessage"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FormField/exampleMessage"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//FormField"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>exampleMessage</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//MultipleValuatedFormField"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="defaultValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.2/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
+          referenceName="eStructuralFeatures" element="form.ecore#//MultipleValuatedFormField/defaultExpression">
+        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultExpression"
+            featureName="name" dataValue="defaultExpression"/>
+        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultExpression"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultExpression"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//MultipleValuatedFormField"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>defaultExpression</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//MultipleValuatedFormField"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="defaultValueAfterEvent" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.4/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
+          referenceName="eStructuralFeatures" element="form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent">
+        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"
+            featureName="name" dataValue="defaultExpressionAfterEvent"/>
+        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//MultipleValuatedFormField/defaultExpressionAfterEvent"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//MultipleValuatedFormField"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>defaultExpressionAfterEvent</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//MultipleValuatedFormField"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="enum" eType="ecore:EClass process.ecore#//Data"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.6/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//MultipleValuatedFormField"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="enumAfterEvent" eType="ecore:EClass process.ecore#//Data">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="documentation" value="enum used for dependencies between widget."/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.7/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//MultipleValuatedFormField"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="literals" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.8/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//MultipleValuatedFormField"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="literalsAfterEvent" upperBound="-1"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+          <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+            <details key="documentation" value="literals used on dependencies management."/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.9/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//MultipleValuatedFormField"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="defaultConnectors" upperBound="-1"
+            eType="ecore:EClass process.ecore#//Connector" containment="true"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.10/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//MultipleValuatedFormField"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="defaultAfterEventConnectors" upperBound="-1"
+            eType="ecore:EClass process.ecore#//Connector" containment="true"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.11/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//SubmitFormButton" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="scripts" upperBound="-1" eType="ecore:EClass form.ecore#//GroovyScript"
+            containment="true"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.12/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//SubmitFormButton" referenceName="eStructuralFeatures"
+          element="form.ecore#//SubmitFormButton/actions">
+        <changes xsi:type="history:Set" element="form.ecore#//SubmitFormButton/actions"
+            featureName="name" dataValue="actions"/>
+        <changes xsi:type="history:Set" element="form.ecore#//SubmitFormButton/actions"
+            featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" element="form.ecore#//SubmitFormButton/actions"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//SubmitFormButton/actions"
+            featureName="eType" referenceValue="expression.ecore#//Operation"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//SubmitFormButton"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>actions</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Operation"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>-1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Validator" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.14/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Validator" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="parameter" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+            defaultValueLiteral=""/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.15/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//Validator" referenceName="eStructuralFeatures"
+          element="form.ecore#//Validator/parameter">
+        <changes xsi:type="history:Set" element="form.ecore#//Validator/parameter"
+            featureName="name" dataValue="parameter"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Validator/parameter"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Validator/parameter"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//Validator"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>parameter</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//Validator" referenceName="eStructuralFeatures"
+          element="form.ecore#//Validator/displayName">
+        <changes xsi:type="history:Set" element="form.ecore#//Validator/displayName"
+            featureName="name" dataValue="displayName"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Validator/displayName"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Validator/displayName"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//Validator"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>displayName</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//FileWidget" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="fileData" eType="ecore:EClass process.ecore#//Data"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.18/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//FileWidget" referenceName="eStructuralFeatures"
+          element="form.ecore#//FileWidget/document">
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/document"
+            featureName="name" dataValue="document"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/document"
+            featureName="eType" referenceValue="process.ecore#//Document"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//FileWidget"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>document</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="process.ecore#//Document"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>false</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//FileWidget" referenceName="eStructuralFeatures"
+          element="form.ecore#//FileWidget/initialResourcePath">
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/initialResourcePath"
+            featureName="name" dataValue="initialResourcePath"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/initialResourcePath"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//FileWidget"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>initialResourcePath</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
+          element="form.ecore#//FileWidgetInputType">
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidgetInputType"
+            featureName="name" dataValue="FileWidgetInputType"/>
+      </changes>
+      <changes xsi:type="history:Create" target="form.ecore#//FileWidgetInputType"
+          referenceName="eLiterals" element="form.ecore#//FileWidgetInputType/Document">
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidgetInputType/Document"
+            featureName="name" dataValue="Document"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidgetInputType/Document"
+            featureName="literal" dataValue="Document"/>
+      </changes>
+      <changes xsi:type="history:Create" target="form.ecore#//FileWidgetInputType"
+          referenceName="eLiterals" element="form.ecore#//FileWidgetInputType/URL">
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidgetInputType/URL"
+            featureName="name" dataValue="URL"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidgetInputType/URL"
+            featureName="literal" dataValue="URL"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidgetInputType/URL"
+            featureName="value" dataValue="1" oldDataValue="0"/>
+      </changes>
+      <changes xsi:type="history:Create" target="form.ecore#//FileWidgetInputType"
+          referenceName="eLiterals" element="form.ecore#//FileWidgetInputType/Resource">
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidgetInputType/Resource"
+            featureName="name" dataValue="Resource"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidgetInputType/Resource"
+            featureName="literal" dataValue="Resource"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidgetInputType/Resource"
+            featureName="value" dataValue="2" oldDataValue="0"/>
+      </changes>
+      <operation name="createEnumeration">
+        <parameters name="ePackage">
+          <referenceValue element="form.ecore#/"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>FileWidgetInputType</dataValue>
+        </parameters>
+        <parameters name="literals">
+          <dataValue>Document</dataValue>
+          <dataValue>URL</dataValue>
+          <dataValue>Resource</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//FileWidget" referenceName="eStructuralFeatures"
+          element="form.ecore#//FileWidget/inputType">
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/inputType"
+            featureName="name" dataValue="inputType"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/inputType"
+            featureName="defaultValueLiteral" dataValue="URL"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/inputType"
+            featureName="eType" referenceValue="form.ecore#//FileWidgetInputType"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//FileWidget"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>inputType</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="form.ecore#//FileWidgetInputType"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue>URL</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//FileWidget" referenceName="eStructuralFeatures"
+          element="form.ecore#//FileWidget/outputDocumentName">
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/outputDocumentName"
+            featureName="name" dataValue="outputDocumentName"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/outputDocumentName"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//FileWidget"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>outputDocumentName</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//FileWidget" referenceName="eStructuralFeatures"
+          element="form.ecore#//FileWidget/updateDocument">
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/updateDocument"
+            featureName="name" dataValue="updateDocument"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/updateDocument"
+            featureName="defaultValueLiteral" dataValue="true"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/updateDocument"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//FileWidget"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>updateDocument</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue>true</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//FileWidget" referenceName="eStructuralFeatures"
+          element="form.ecore#//FileWidget/outputDocumentListExpression">
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/outputDocumentListExpression"
+            featureName="name" dataValue="outputDocumentListExpression"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/outputDocumentListExpression"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/outputDocumentListExpression"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//FileWidget"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>outputDocumentListExpression</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//FileWidget" referenceName="eStructuralFeatures"
+          element="form.ecore#//FileWidget/intialResourceList">
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/intialResourceList"
+            featureName="name" dataValue="intialResourceList"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/intialResourceList"
+            featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+        <changes xsi:type="history:Set" element="form.ecore#//FileWidget/intialResourceList"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//FileWidget"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>intialResourceList</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>-1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//ImageWidget" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="imgPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.27/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/isADocument"
+          featureName="name" dataValue="isADocument" oldDataValue="isAnAttachment"/>
+      <operation name="rename">
+        <parameters name="element">
+          <referenceValue element="form.ecore#//ImageWidget/isADocument"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>isADocument</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//ImageWidget" referenceName="eStructuralFeatures"
+          element="form.ecore#//ImageWidget/document">
+        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/document"
+            featureName="name" dataValue="document"/>
+        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/document"
+            featureName="eType" referenceValue="process.ecore#//Document"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//ImageWidget"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>document</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="process.ecore#//Document"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>false</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//ImageWidget" referenceName="eStructuralFeatures"
+          element="form.ecore#//ImageWidget/imgPath">
+        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/imgPath"
+            featureName="name" dataValue="imgPath"/>
+        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/imgPath"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//ImageWidget/imgPath"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//ImageWidget"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>imgPath</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="maxNumberOfDuplication" lowerBound="1"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+            defaultValueLiteral="10"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.31/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="minNumberOfDuplication" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+            defaultValueLiteral="2"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.32/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="displayLabelForAdd" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.33/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="tooltipForAdd" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.34/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="displayLabelForRemove" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.35/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="tooltipForRemove" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.36/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
+          element="form.ecore#//Duplicable/maxNumberOfDuplication">
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/maxNumberOfDuplication"
+            featureName="name" dataValue="maxNumberOfDuplication"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/maxNumberOfDuplication"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/maxNumberOfDuplication"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//Duplicable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>maxNumberOfDuplication</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
+          element="form.ecore#//Duplicable/minNumberOfDuplication">
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/minNumberOfDuplication"
+            featureName="name" dataValue="minNumberOfDuplication"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/minNumberOfDuplication"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/minNumberOfDuplication"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//Duplicable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>minNumberOfDuplication</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
+          element="form.ecore#//Duplicable/displayLabelForAdd">
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/displayLabelForAdd"
+            featureName="name" dataValue="displayLabelForAdd"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/displayLabelForAdd"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/displayLabelForAdd"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//Duplicable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>displayLabelForAdd</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
+          element="form.ecore#//Duplicable/tooltipForAdd">
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/tooltipForAdd"
+            featureName="name" dataValue="tooltipForAdd"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/tooltipForAdd"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/tooltipForAdd"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//Duplicable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>tooltipForAdd</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
+          element="form.ecore#//Duplicable/displayLabelForRemove">
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/displayLabelForRemove"
+            featureName="name" dataValue="displayLabelForRemove"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/displayLabelForRemove"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/displayLabelForRemove"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//Duplicable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>displayLabelForRemove</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
+          element="form.ecore#//Duplicable/tooltipForRemove">
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/tooltipForRemove"
+            featureName="name" dataValue="tooltipForRemove"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/tooltipForRemove"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Duplicable/tooltipForRemove"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//Duplicable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>tooltipForRemove</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Table" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="maxRowForPagination" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.43/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//Table" referenceName="eStructuralFeatures"
+          element="form.ecore#//Table/maxRowForPagination">
+        <changes xsi:type="history:Set" element="form.ecore#//Table/maxRowForPagination"
+            featureName="name" dataValue="maxRowForPagination"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Table/maxRowForPagination"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Table/maxRowForPagination"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//Table"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>maxRowForPagination</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Table" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="columnForInitialSelectionIndex"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.45/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//Table" referenceName="eStructuralFeatures"
+          element="form.ecore#//Table/columnForInitialSelectionIndex">
+        <changes xsi:type="history:Set" element="form.ecore#//Table/columnForInitialSelectionIndex"
+            featureName="name" dataValue="columnForInitialSelectionIndex"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Table/columnForInitialSelectionIndex"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Table/columnForInitialSelectionIndex"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//Table"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>columnForInitialSelectionIndex</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//Table" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="selectedValues" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.47/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//Table" referenceName="eStructuralFeatures"
+          element="form.ecore#//Table/selectedValues">
+        <changes xsi:type="history:Set" element="form.ecore#//Table/selectedValues"
+            featureName="name" dataValue="selectedValues"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Table/selectedValues"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//Table/selectedValues"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//Table"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>selectedValues</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="cells" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.49/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="horizontalHeader" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.50/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
+          element="form.ecore#//AbstractTable/horizontalHeader">
+        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeader"
+            featureName="name" dataValue="horizontalHeader"/>
+        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeader"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeader"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//AbstractTable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>horizontalHeader</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="verticalHeader" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.52/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
+          element="form.ecore#//AbstractTable/verticalHeader">
+        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeader"
+            featureName="name" dataValue="verticalHeader"/>
+        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeader"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeader"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//AbstractTable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>verticalHeader</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
+          element="form.ecore#//AbstractTable/tableExpression">
+        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/tableExpression"
+            featureName="name" dataValue="tableExpression"/>
+        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/tableExpression"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/tableExpression"
+            featureName="eType" referenceValue="expression.ecore#//TableExpression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//AbstractTable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>tableExpression</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//TableExpression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="minNumberOfColumn" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.55/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
+          element="form.ecore#//DynamicTable/minNumberOfColumn">
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/minNumberOfColumn"
+            featureName="name" dataValue="minNumberOfColumn"/>
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/minNumberOfColumn"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/minNumberOfColumn"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//DynamicTable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>minNumberOfColumn</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="minNumberOfRow" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.57/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
+          element="form.ecore#//DynamicTable/minNumberOfRow">
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/minNumberOfRow"
+            featureName="name" dataValue="minNumberOfRow"/>
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/minNumberOfRow"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/minNumberOfRow"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//DynamicTable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>minNumberOfRow</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="maxNumberOfColumn" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.59/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
+          element="form.ecore#//DynamicTable/maxNumberOfColumn">
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/maxNumberOfColumn"
+            featureName="name" dataValue="maxNumberOfColumn"/>
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/maxNumberOfColumn"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/maxNumberOfColumn"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//DynamicTable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>maxNumberOfColumn</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="maxNumberOfRow" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.61/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
+          element="form.ecore#//DynamicTable/maxNumberOfRow">
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/maxNumberOfRow"
+            featureName="name" dataValue="maxNumberOfRow"/>
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/maxNumberOfRow"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//DynamicTable/maxNumberOfRow"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//DynamicTable"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>maxNumberOfRow</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//MandatoryFieldsCustomization"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="mandatorySymbol" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+            defaultValueLiteral="*"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.63/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//MandatoryFieldsCustomization"
+          referenceName="eStructuralFeatures" element="form.ecore#//MandatoryFieldsCustomization/mandatorySymbol">
+        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatorySymbol"
+            featureName="name" dataValue="mandatorySymbol"/>
+        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatorySymbol"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatorySymbol"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//MandatoryFieldsCustomization"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>mandatorySymbol</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="form.ecore#//MandatoryFieldsCustomization"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="mandatoryLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+            defaultValueLiteral=""/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.65/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="form.ecore#//MandatoryFieldsCustomization"
+          referenceName="eStructuralFeatures" element="form.ecore#//MandatoryFieldsCustomization/mandatoryLabel">
+        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatoryLabel"
+            featureName="name" dataValue="mandatoryLabel"/>
+        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatoryLabel"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="form.ecore#//MandatoryFieldsCustomization/mandatoryLabel"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="form.ecore#//MandatoryFieldsCustomization"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>mandatoryLabel</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="kpi.ecore#//AbstractKPIBinding" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="request" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.67/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//AbstractKPIBinding" referenceName="eStructuralFeatures"
+          element="kpi.ecore#//AbstractKPIBinding/request">
+        <changes xsi:type="history:Set" element="kpi.ecore#//AbstractKPIBinding/request"
+            featureName="name" dataValue="request"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//AbstractKPIBinding/request"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//AbstractKPIBinding/request"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//AbstractKPIBinding"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>request</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="kpi.ecore#//KPIParameterMapping"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.69/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//KPIParameterMapping"
+          referenceName="eStructuralFeatures" element="kpi.ecore#//KPIParameterMapping/value">
+        <changes xsi:type="history:Set" element="kpi.ecore#//KPIParameterMapping/value"
+            featureName="name" dataValue="value"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//KPIParameterMapping/value"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//KPIParameterMapping/value"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//KPIParameterMapping"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>value</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="databaseConfiguration" eType="#//@releases.3/@changes.84/@changes.0/@element"
+            containment="true"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.71/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
+          element="kpi.ecore#//DatabaseKPIBinding/driverclassName">
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/driverclassName"
+            featureName="name" dataValue="driverclassName"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/driverclassName"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/driverclassName"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//DatabaseKPIBinding"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>driverclassName</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
+          element="kpi.ecore#//DatabaseKPIBinding/jdbcUrl">
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/jdbcUrl"
+            featureName="name" dataValue="jdbcUrl"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/jdbcUrl"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/jdbcUrl"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//DatabaseKPIBinding"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>jdbcUrl</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
+          element="kpi.ecore#//DatabaseKPIBinding/user">
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/user"
+            featureName="name" dataValue="user"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/user"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/user"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//DatabaseKPIBinding"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>user</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
+          element="kpi.ecore#//DatabaseKPIBinding/password">
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/password"
+            featureName="name" dataValue="password"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/password"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/password"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//DatabaseKPIBinding"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>password</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
+          element="kpi.ecore#//DatabaseKPIBinding/jndiUrl">
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/jndiUrl"
+            featureName="name" dataValue="jndiUrl"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/jndiUrl"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/jndiUrl"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//DatabaseKPIBinding"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>jndiUrl</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
+          element="kpi.ecore#//DatabaseKPIBinding/dbName">
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/dbName"
+            featureName="name" dataValue="dbName"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/dbName"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIBinding/dbName"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//DatabaseKPIBinding"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>dbName</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="kpi.ecore#//DatabaseKPIDefinition"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="defaultConfiguration" eType="#//@releases.3/@changes.84/@changes.0/@element"
+            containment="true"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.78/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIDefinition"
+          referenceName="eStructuralFeatures" element="kpi.ecore#//DatabaseKPIDefinition/defaultDriverclassName">
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultDriverclassName"
+            featureName="name" dataValue="defaultDriverclassName"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultDriverclassName"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultDriverclassName"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//DatabaseKPIDefinition"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>defaultDriverclassName</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIDefinition"
+          referenceName="eStructuralFeatures" element="kpi.ecore#//DatabaseKPIDefinition/defaultJdbcUrl">
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultJdbcUrl"
+            featureName="name" dataValue="defaultJdbcUrl"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultJdbcUrl"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultJdbcUrl"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//DatabaseKPIDefinition"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>defaultJdbcUrl</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIDefinition"
+          referenceName="eStructuralFeatures" element="kpi.ecore#//DatabaseKPIDefinition/defaultUser">
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultUser"
+            featureName="name" dataValue="defaultUser"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultUser"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultUser"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//DatabaseKPIDefinition"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>defaultUser</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIDefinition"
+          referenceName="eStructuralFeatures" element="kpi.ecore#//DatabaseKPIDefinition/defaultJNDIUrl">
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultJNDIUrl"
+            featureName="name" dataValue="defaultJNDIUrl"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultJNDIUrl"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultJNDIUrl"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//DatabaseKPIDefinition"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>defaultJNDIUrl</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIDefinition"
+          referenceName="eStructuralFeatures" element="kpi.ecore#//DatabaseKPIDefinition/defaultDBName">
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultDBName"
+            featureName="name" dataValue="defaultDBName"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultDBName"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="kpi.ecore#//DatabaseKPIDefinition/defaultDBName"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="kpi.ecore#//DatabaseKPIDefinition"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>defaultDBName</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="kpi.ecore#/" referenceName="eClassifiers">
+        <element xsi:type="ecore:EClass" name="DatabaseConfiguration">
+          <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          <eStructuralFeatures xsi:type="ecore:EAttribute" name="configuration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </element>
+      </changes>
+      <operation name="deleteClass">
+        <parameters name="eClass">
+          <referenceValue element="#//@releases.3/@changes.84/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="simulation.ecore#//SimulationData"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="expression" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.85/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="simulation.ecore#//SimulationData"
+          referenceName="eStructuralFeatures" element="simulation.ecore#//SimulationData/expression">
+        <changes xsi:type="history:Set" element="simulation.ecore#//SimulationData/expression"
+            featureName="name" dataValue="expression"/>
+        <changes xsi:type="history:Set" element="simulation.ecore#//SimulationData/expression"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="simulation.ecore#//SimulationData/expression"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="simulation.ecore#//SimulationData"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>expression</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="simulation.ecore#//DataChange" referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.3/@changes.87/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="simulation.ecore#//DataChange" referenceName="eStructuralFeatures"
+          element="simulation.ecore#//DataChange/value">
+        <changes xsi:type="history:Set" element="simulation.ecore#//DataChange/value"
+            featureName="name" dataValue="value"/>
+        <changes xsi:type="history:Set" element="simulation.ecore#//DataChange/value"
+            featureName="containment" dataValue="true" oldDataValue="false"/>
+        <changes xsi:type="history:Set" element="simulation.ecore#//DataChange/value"
+            featureName="eType" referenceValue="expression.ecore#//Expression"/>
+      </changes>
+      <operation name="newReference">
+        <parameters name="eClass">
+          <referenceValue element="simulation.ecore#//DataChange"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>value</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="expression.ecore#//Expression"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="containment">
+          <dataValue>true</dataValue>
+        </parameters>
+        <parameters name="opposite"/>
+      </operation>
+    </changes>
+  </releases>
 </history:History>
