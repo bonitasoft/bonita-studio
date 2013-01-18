@@ -17,6 +17,7 @@ public class CorrelationMigration extends CustomMigration {
 
 	@Override
 	public void migrateBefore(Model model, Metamodel metamodel)throws MigrationException{
+		System.out.println("");
 //		for (Instance correlationInstance : model.getAllInstances("process.Correlation")){
 //			final Instance correlationAssociationInstance = correlationInstance.get("correlationAssociation");
 //			final Instance correlationKeyInstance = correlationAssociationInstance.get("correlationKey");

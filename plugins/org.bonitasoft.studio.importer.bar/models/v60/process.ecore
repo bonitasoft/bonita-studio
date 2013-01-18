@@ -391,10 +391,14 @@
         eOpposite="#//ThrowMessageEvent/events"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ttl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="31104000000"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetProcessName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetElementName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="correlation" lowerBound="1"
         eType="#//Correlation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messageContent" lowerBound="1"
+        eType="ecore:EClass expression.ecore#//TableExpression" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetProcessExpression"
+        eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetElementExpression"
+        eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractTimerEvent" abstract="true"
       interface="true" eSuperTypes="#//Element">
@@ -512,9 +516,10 @@
     <eLiterals name="PREDICATES" value="2" literal="PREDICATES"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CorrelationAssociation">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="correlationKey" eType="ecore:EClass expression.ecore#//AbstractExpression"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="correlationKey" eType="ecore:EClass expression.ecore#//AbstractExpression"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="correlationExpression"
-        eType="ecore:EClass expression.ecore#//AbstractExpression"/>
+        eType="ecore:EClass expression.ecore#//AbstractExpression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Actor" eSuperTypes="#//Element">

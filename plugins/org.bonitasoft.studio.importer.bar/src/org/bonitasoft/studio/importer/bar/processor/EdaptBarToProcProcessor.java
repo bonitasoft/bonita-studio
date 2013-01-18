@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -43,17 +42,20 @@ import org.bonitasoft.studio.importer.bar.exception.IncompatibleVersionException
 import org.bonitasoft.studio.importer.bar.preferences.BarImporterPreferenceConstants;
 import org.bonitasoft.studio.importer.bar.ui.MigrationWarningWizard;
 import org.bonitasoft.studio.migration.migrator.BOSMigrator;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.emf.ecore.xmi.XMLOptions;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLOptionsImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
 import org.eclipse.emf.ecore.xml.type.AnyType;
+import org.eclipse.emf.ecore.xml.type.XMLTypeDocumentRoot;
 import org.eclipse.emf.edapt.history.Release;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.BundleClassLoader;
-import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edapt.migration.execution.ValidationLevel;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
@@ -100,22 +102,32 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 		importAttachment(archiveFile);
 		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
 
-		final Resource resource = editingDomain.getResourceSet().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
+		final Resource resource =  new XMLResourceFactoryImpl().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
+
 		if(resource == null){
 			throw new Exception("Failed to create an EMF resource for "+barProcFile.getName());
 		}
 		final Map<Object, Object> loadOptions = new HashMap<Object, Object>(editingDomain.getResourceSet().getLoadOptions());
 		//Ignore unknown features
 		loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+		XMLOptions options = new XMLOptionsImpl() ;
+		options.setProcessAnyXML(true) ;
+		loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
 		resource.load(loadOptions);
 
-		if(resource.getContents().size() > 1){
-			final EObject mainProcess = resource.getContents().get(0);
+		if(!resource.getContents().isEmpty()){
 			Object sourceVersion = null;
-			if(mainProcess instanceof AnyType){
-				sourceVersion = ((AnyType) mainProcess).getAnyAttribute().getValue(3);
-			}else if( mainProcess instanceof MainProcess){
-				sourceVersion = ((MainProcess)mainProcess).getBonitaModelVersion();
+			EObject root = resource.getContents().get(0); 
+			if(root instanceof XMLTypeDocumentRoot ){
+				if(!((XMLTypeDocumentRoot) root).getMixed().isEmpty()){
+					AnyType anyType = (AnyType) ((XMLTypeDocumentRoot)root).getMixed().get(0).getValue();
+					if(anyType != null && anyType.getMixed().size() > 1){
+						AnyType mainProc = (AnyType) anyType.getMixed().get(1).getValue();
+						if(mainProc != null && mainProc.getMixed().size() > 4){
+							sourceVersion = mainProc.getAnyAttribute().get(4).getValue();
+						}
+					}
+				}
 			}
 			if(sourceVersion == null || !sourceVersion.toString().equals(SUPPORTED_VERSION)){
 				throw new IncompatibleVersionException((String) sourceVersion,SUPPORTED_VERSION);
@@ -138,7 +150,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 	}
 
 	private void importAttachment(File archiveFile) throws IOException{
-		
+
 		ZipFile zipfile=new ZipFile(archiveFile);
 		Enumeration enumEntries = zipfile.entries();
 		ZipEntry zipEntry = null;
@@ -150,7 +162,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 				DocumentRepositoryStore store = (DocumentRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
 				store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
 			}
-			
+
 		}
 		zipfile.close();
 	}

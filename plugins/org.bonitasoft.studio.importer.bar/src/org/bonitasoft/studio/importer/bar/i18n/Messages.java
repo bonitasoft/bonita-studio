@@ -65,6 +65,10 @@ public class Messages extends NLS {
 	public static String viewPageflowProperty;
 	public static String recapPageflowProperty;
 	public static String pageFlowTransitionMigrationDescription;
+	public static String messageContentMigrationDescription;
+	public static String messagesProperty;
+	public static String targetProcessNameMigrationDescription;
+	public static String targetElementNameMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$
