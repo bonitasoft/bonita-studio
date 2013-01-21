@@ -16,12 +16,61 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
+import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.edapt.migration.Instance;
+import org.eclipse.emf.edapt.migration.Metamodel;
+import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.emf.edapt.migration.Model;
 
 /**
  * @author Romain Bioteau
  *
  */
 public class SubmitButtonMigration extends ReportCustomMigration {
+
+	private Map<String, List<Instance>> buttonActions = new HashMap<String,List<Instance>>();
+
+	@Override
+	public void migrateBefore(Model model, Metamodel metamodel)
+			throws MigrationException {
+		for(Instance button : model.getAllInstances("form.SubmitFormButton")){
+			if(!(button.getContainer().instanceOf("expression.Expression"))){
+				final List<Instance> actions = button.get("scripts");
+				if(!actions.isEmpty()){
+					final StringToExpressionConverter converter = getConverter(model);
+					final List<Instance> operations = new ArrayList<Instance>();
+					for(Instance action : actions){
+						final Instance operation = converter.parseOperation(action, String.class.getName(), false);
+						operations.add(operation);
+						model.delete(action);
+					}
+					buttonActions.put(button.getUuid(), operations);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void migrateAfter(Model model, Metamodel metamodel)
+			throws MigrationException {
+		for(Instance button : model.getAllInstances("form.SubmitFormButton")){
+			if(!(button.getContainer().instanceOf("expression.Expression"))){
+				if(buttonActions.containsKey(button.getUuid())){
+					for(Instance operation : buttonActions.get(button.getUuid())){
+						button.add("actions", operation);
+					}
+					addReportChange((String) button.get("name"),button.getEClass().getName(), button.getUuid(), Messages.buttonActionsMigrationDescription, Messages.actionProperty, IStatus.WARNING);
+				}
+			}
+		}
+	}
 
 }

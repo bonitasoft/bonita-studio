@@ -34,6 +34,7 @@ import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormButton;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
@@ -359,6 +360,21 @@ public class TestSimpleMigrationUseCase {
 	@Test
 	public void testFormFieldMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("FormFieldMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<SubmitFormButton> buttons = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.SUBMIT_FORM_BUTTON);
+		for(SubmitFormButton button : buttons){
+			assertFalse("Button actions are missing",button.getActions().isEmpty());
+		}
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+	
+	@Test
+	public void testSubmitButtonActionsMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("SubmitButtonActionMigrationUseCase--1.0.bar");
 		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());

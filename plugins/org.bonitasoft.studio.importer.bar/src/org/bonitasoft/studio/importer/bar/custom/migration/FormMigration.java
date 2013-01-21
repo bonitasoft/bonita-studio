@@ -48,7 +48,7 @@ public class FormMigration extends ReportCustomMigration {
 				final List<Instance> operations = new ArrayList<Instance>();
 				for(Instance action : actions){
 					final Instance operation = converter.parseOperation(action, String.class.getName(), false);
-					operations .add(operation);
+					operations.add(operation);
 					model.delete(action);
 				}
 				formActions.put(form.getUuid(), operations);
@@ -65,7 +65,7 @@ public class FormMigration extends ReportCustomMigration {
 				for(Instance operation : formActions.get(form.getUuid())){
 					form.add("actions", operation);
 				}
-				addReportChange((String) form.get("name"),form.getType().getEClass().getName(), form.getUuid(), Messages.formActionsMigrationDescription, Messages.actionProperty, IStatus.WARNING);
+				addReportChange((String) form.get("name"),form.getEClass().getName(), form.getUuid(), Messages.formActionsMigrationDescription, Messages.actionProperty, IStatus.WARNING);
 			}
 		}
 	}
