@@ -53,7 +53,18 @@
 	
 	<build>
 		<plugins>
-
+			<plugin>
+    			<artifactId>maven-clean-plugin</artifactId>
+    			<version>2.5</version>
+    			<configuration>
+      			<filesets>
+       			 	<fileset>
+         				<directory>lé test</directory>
+          				<followSymlinks>false</followSymlinks>
+        			</fileset>
+      			</filesets>
+    			</configuration>
+  			</plugin>
 		</plugins>
 	</build>
 	<parent>
