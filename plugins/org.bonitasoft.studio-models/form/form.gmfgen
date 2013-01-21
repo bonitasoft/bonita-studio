@@ -127,10 +127,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5163"
+          visualID="5128"
           editPartClassName="PreviousFormButtonName2EditPart"
-          itemSemanticEditPolicyClassName="PreviousFormButtonName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="PreviousFormButtonNameViewFactory">
+          itemSemanticEditPolicyClassName="PreviousFormButtonName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -286,10 +285,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5149"
+          visualID="5134"
           editPartClassName="CheckBoxSingleFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="CheckBoxSingleFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="CheckBoxSingleFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="CheckBoxSingleFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -454,10 +452,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5164"
+          visualID="5115"
           editPartClassName="ComboFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="ComboFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="ComboFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="ComboFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -572,10 +569,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5165"
+          visualID="5129"
           editPartClassName="NextFormButtonName2EditPart"
-          itemSemanticEditPolicyClassName="NextFormButtonName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="NextFormButtonNameViewFactory">
+          itemSemanticEditPolicyClassName="NextFormButtonName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -728,10 +724,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5166"
+          visualID="5117"
           editPartClassName="DateFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="DateFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="DateFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="DateFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -1023,10 +1018,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5167"
+          visualID="5118"
           editPartClassName="ListFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="ListFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="ListFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="ListFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -1141,10 +1135,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5168"
+          visualID="5130"
           editPartClassName="SubmitFormButtonName2EditPart"
-          itemSemanticEditPolicyClassName="SubmitFormButtonName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="SubmitFormButtonNameViewFactory">
+          itemSemanticEditPolicyClassName="SubmitFormButtonName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -1297,10 +1290,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5169"
+          visualID="5120"
           editPartClassName="PasswordFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="PasswordFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="PasswordFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="PasswordFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -1465,10 +1457,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5170"
+          visualID="5121"
           editPartClassName="RadioFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="RadioFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="RadioFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="RadioFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -1633,10 +1624,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5171"
+          visualID="5122"
           editPartClassName="SelectFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="SelectFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="SelectFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="SelectFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -1789,10 +1779,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5172"
+          visualID="5123"
           editPartClassName="TextFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="TextFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="TextFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="TextFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -1945,10 +1934,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5173"
+          visualID="5124"
           editPartClassName="TextAreaFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="TextAreaFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="TextAreaFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="TextAreaFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -2101,10 +2089,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5174"
+          visualID="5154"
           editPartClassName="RichTextAreaFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="RichTextAreaFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="RichTextAreaFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="RichTextAreaFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -2263,10 +2250,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5175"
+          visualID="5137"
           editPartClassName="FileWidgetName2EditPart"
-          itemSemanticEditPolicyClassName="FileWidgetName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="FileWidgetNameViewFactory">
+          itemSemanticEditPolicyClassName="FileWidgetName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -2434,10 +2420,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5176"
+          visualID="5143"
           editPartClassName="CheckBoxMultipleFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="CheckBoxMultipleFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="CheckBoxMultipleFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="CheckBoxMultipleFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -2590,10 +2575,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5177"
+          visualID="5144"
           editPartClassName="DurationFormFieldName2EditPart"
-          itemSemanticEditPolicyClassName="DurationFormFieldName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="DurationFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="DurationFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -2902,10 +2886,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5178"
+          visualID="5146"
           editPartClassName="ImageWidgetName2EditPart"
-          itemSemanticEditPolicyClassName="ImageWidgetName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="ImageWidgetNameViewFactory">
+          itemSemanticEditPolicyClassName="ImageWidgetName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -3130,10 +3113,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5179"
+          visualID="5148"
           editPartClassName="TextInfoName2EditPart"
-          itemSemanticEditPolicyClassName="TextInfoName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="TextInfoNameViewFactory">
+          itemSemanticEditPolicyClassName="TextInfoName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -3244,10 +3226,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5180"
+          visualID="5149"
           editPartClassName="FormButtonName2EditPart"
-          itemSemanticEditPolicyClassName="FormButtonName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="FormButtonNameViewFactory">
+          itemSemanticEditPolicyClassName="FormButtonName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -3454,10 +3435,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5181"
+          visualID="5152"
           editPartClassName="TableName2EditPart"
-          itemSemanticEditPolicyClassName="TableName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="TableNameViewFactory">
+          itemSemanticEditPolicyClassName="TableName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -3658,10 +3638,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5182"
+          visualID="5156"
           editPartClassName="DynamicTableName2EditPart"
-          itemSemanticEditPolicyClassName="DynamicTableName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="DynamicTableNameViewFactory">
+          itemSemanticEditPolicyClassName="DynamicTableName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -3772,10 +3751,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5183"
+          visualID="5158"
           editPartClassName="IFrameWidgetName2EditPart"
-          itemSemanticEditPolicyClassName="IFrameWidgetName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="IFrameWidgetNameViewFactory">
+          itemSemanticEditPolicyClassName="IFrameWidgetName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -3886,10 +3864,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5184"
+          visualID="5161"
           editPartClassName="HtmlWidgetName2EditPart"
-          itemSemanticEditPolicyClassName="HtmlWidgetName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="HtmlWidgetNameViewFactory">
+          itemSemanticEditPolicyClassName="HtmlWidgetName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -4054,10 +4031,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5185"
+          visualID="5162"
           editPartClassName="SuggestBoxName2EditPart"
-          itemSemanticEditPolicyClassName="SuggestBoxName2ItemSemanticEditPolicy"
-          notationViewFactoryClassName="SuggestBoxNameViewFactory">
+          itemSemanticEditPolicyClassName="SuggestBoxName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -4212,10 +4188,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5148"
+          visualID="5133"
           editPartClassName="CheckBoxSingleFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="CheckBoxSingleFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="CheckBoxSingleFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="CheckBoxSingleFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -4379,10 +4354,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5150"
+          visualID="5102"
           editPartClassName="ComboFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="ComboFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="ComboFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="ComboFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -4534,10 +4508,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5151"
+          visualID="5103"
           editPartClassName="DateFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="DateFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="DateFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="DateFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -4701,10 +4674,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5152"
+          visualID="5104"
           editPartClassName="ListFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="ListFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="ListFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="ListFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -4856,10 +4828,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5153"
+          visualID="5105"
           editPartClassName="PasswordFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="PasswordFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="PasswordFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="PasswordFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -5023,10 +4994,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5154"
+          visualID="5106"
           editPartClassName="RadioFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="RadioFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="RadioFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="RadioFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -5190,10 +5160,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5155"
+          visualID="5107"
           editPartClassName="SelectFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="SelectFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="SelectFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="SelectFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -5357,10 +5326,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5156"
+          visualID="5160"
           editPartClassName="SuggestBoxNameEditPart"
-          itemSemanticEditPolicyClassName="SuggestBoxNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="SuggestBoxNameViewFactory">
+          itemSemanticEditPolicyClassName="SuggestBoxNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -5512,10 +5480,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5157"
+          visualID="5108"
           editPartClassName="TextFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="TextFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="TextFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="TextFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -5667,10 +5634,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5158"
+          visualID="5109"
           editPartClassName="TextAreaFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="TextAreaFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="TextAreaFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="TextAreaFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -5822,10 +5788,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5159"
+          visualID="5153"
           editPartClassName="RichTextAreaFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="RichTextAreaFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="RichTextAreaFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="RichTextAreaFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -5939,10 +5904,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5160"
+          visualID="5125"
           editPartClassName="SubmitFormButtonNameEditPart"
-          itemSemanticEditPolicyClassName="SubmitFormButtonNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="SubmitFormButtonNameViewFactory">
+          itemSemanticEditPolicyClassName="SubmitFormButtonNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -6056,10 +6020,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5161"
+          visualID="5126"
           editPartClassName="NextFormButtonNameEditPart"
-          itemSemanticEditPolicyClassName="NextFormButtonNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="NextFormButtonNameViewFactory">
+          itemSemanticEditPolicyClassName="NextFormButtonNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -6173,10 +6136,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5162"
+          visualID="5127"
           editPartClassName="PreviousFormButtonNameEditPart"
-          itemSemanticEditPolicyClassName="PreviousFormButtonNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="PreviousFormButtonNameViewFactory">
+          itemSemanticEditPolicyClassName="PreviousFormButtonNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -6525,10 +6487,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5188"
+          visualID="5136"
           editPartClassName="TextInfoNameEditPart"
-          itemSemanticEditPolicyClassName="TextInfoNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="TextInfoNameViewFactory">
+          itemSemanticEditPolicyClassName="TextInfoNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -6686,10 +6647,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5189"
+          visualID="5138"
           editPartClassName="FileWidgetNameEditPart"
-          itemSemanticEditPolicyClassName="FileWidgetNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="FileWidgetNameViewFactory">
+          itemSemanticEditPolicyClassName="FileWidgetNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -6856,10 +6816,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5190"
+          visualID="5139"
           editPartClassName="CheckBoxMultipleFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="CheckBoxMultipleFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="CheckBoxMultipleFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="CheckBoxMultipleFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -7011,10 +6970,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5191"
+          visualID="5140"
           editPartClassName="ImageWidgetNameEditPart"
-          itemSemanticEditPolicyClassName="ImageWidgetNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="ImageWidgetNameViewFactory">
+          itemSemanticEditPolicyClassName="ImageWidgetNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -7321,10 +7279,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5192"
+          visualID="5142"
           editPartClassName="DurationFormFieldNameEditPart"
-          itemSemanticEditPolicyClassName="DurationFormFieldNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="DurationFormFieldNameViewFactory">
+          itemSemanticEditPolicyClassName="DurationFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -7434,10 +7391,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5193"
+          visualID="5150"
           editPartClassName="FormButtonNameEditPart"
-          itemSemanticEditPolicyClassName="FormButtonNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="FormButtonNameViewFactory">
+          itemSemanticEditPolicyClassName="FormButtonNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -7643,10 +7599,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5194"
+          visualID="5151"
           editPartClassName="TableNameEditPart"
-          itemSemanticEditPolicyClassName="TableNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="TableNameViewFactory">
+          itemSemanticEditPolicyClassName="TableNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -7846,10 +7801,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5195"
+          visualID="5155"
           editPartClassName="DynamicTableNameEditPart"
-          itemSemanticEditPolicyClassName="DynamicTableNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="DynamicTableNameViewFactory">
+          itemSemanticEditPolicyClassName="DynamicTableNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -7959,10 +7913,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5196"
+          visualID="5157"
           editPartClassName="IFrameWidgetNameEditPart"
-          itemSemanticEditPolicyClassName="IFrameWidgetNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="IFrameWidgetNameViewFactory">
+          itemSemanticEditPolicyClassName="IFrameWidgetNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
@@ -8072,10 +8025,9 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5197"
+          visualID="5159"
           editPartClassName="HtmlWidgetNameEditPart"
-          itemSemanticEditPolicyClassName="HtmlWidgetNameItemSemanticEditPolicy"
-          notationViewFactoryClassName="HtmlWidgetNameViewFactory">
+          itemSemanticEditPolicyClassName="HtmlWidgetNameItemSemanticEditPolicy">
         <diagramRunTimeClass
             href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
