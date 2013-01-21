@@ -26,6 +26,7 @@ import java.util.Map;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbench;
@@ -42,140 +43,146 @@ import org.eclipse.ui.WorkbenchException;
  */
 public class BonitaPerspectivesUtils {
 
-    private static final String VIEWS_EXTENSION_POINT = "org.bonitasoft.studio.application.PropertiesView";
+	private static final String VIEWS_EXTENSION_POINT = "org.bonitasoft.studio.application.PropertiesView";
 
-    private static final String PERSPECTIVES_EXTENSION_POINT = "org.eclipse.ui.perspectives";
+	private static final String PERSPECTIVES_EXTENSION_POINT = "org.eclipse.ui.perspectives";
 
-    private static List<String> contributedView;
+	private static List<String> contributedView;
 
-    private static List<String> allPropertiesViews;
+	private static List<String> allPropertiesViews;
 
-    private static Map<String, List<String>> contributedViewMap;
+	private static Map<String, List<String>> contributedViewMap;
 
-    private static List<AbstractPerspectiveFactory> contributedPerspectives;
+	private static List<AbstractPerspectiveFactory> contributedPerspectives;
 
-    /**
-     * @return
-     */
-    public static List<String> getContributedPropertiesViews() {
-        if (contributedView == null) {
-            contributedViewMap = new HashMap<String, List<String>>();
-            contributedView = new ArrayList<String>();
-            IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(VIEWS_EXTENSION_POINT);
-            for (IConfigurationElement extension : extensions) {
-                try {
-                    String viewId = extension.getAttribute("ViewId");
-                    String perspectiveId = extension.getAttribute("perspectiveID");
-                    contributedView.add(viewId);
-                    List<String> list = contributedViewMap.get(perspectiveId);
-                    if (list == null) {
-                        list = new ArrayList<String>();
-                        contributedViewMap.put(perspectiveId, list);
-                    }
-                    list.add(viewId);
-                } catch (Exception ex) {
-                    BonitaStudioLog.error(ex);
-                }
-            }
-        }
-        return contributedView;
-    }
+	/**
+	 * @return
+	 */
+	public static List<String> getContributedPropertiesViews() {
+		if (contributedView == null) {
+			contributedViewMap = new HashMap<String, List<String>>();
+			contributedView = new ArrayList<String>();
+			IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(VIEWS_EXTENSION_POINT);
+			for (IConfigurationElement extension : extensions) {
+				try {
+					String viewId = extension.getAttribute("ViewId");
+					String perspectiveId = extension.getAttribute("perspectiveID");
+					contributedView.add(viewId);
+					List<String> list = contributedViewMap.get(perspectiveId);
+					if (list == null) {
+						list = new ArrayList<String>();
+						contributedViewMap.put(perspectiveId, list);
+					}
+					list.add(viewId);
+				} catch (Exception ex) {
+					BonitaStudioLog.error(ex);
+				}
+			}
+		}
+		return contributedView;
+	}
 
-    public static List<String> getContributedPropertiesViews(String perspectiveId) {
-        if (contributedViewMap == null) {
-            getContributedPropertiesViews();
-        }
-        List<String> list = contributedViewMap.get(perspectiveId);
-        if(list != null){
-            return list;
-        }else{
-            return Collections.emptyList();
-        }
-    }
+	public static List<String> getContributedPropertiesViews(String perspectiveId) {
+		if (contributedViewMap == null) {
+			getContributedPropertiesViews();
+		}
+		List<String> list = contributedViewMap.get(perspectiveId);
+		if(list != null){
+			return list;
+		}else{
+			return Collections.emptyList();
+		}
+	}
 
-    public static List<String> getAllPropertiesViews() {
-        if (allPropertiesViews == null) {
-            allPropertiesViews = new ArrayList<String>();
-            allPropertiesViews.addAll(getContributedPropertiesViews());
-            allPropertiesViews.add("org.bonitasoft.studio.views.properties.process.general");
-            allPropertiesViews.add("org.bonitasoft.studio.views.properties.application");
-            allPropertiesViews.add("org.bonitasoft.studio.views.properties.form.general");
-            allPropertiesViews.add("org.bonitasoft.studio.views.properties.form.appearance");
-            allPropertiesViews.add("org.bonitasoft.studio.views.properties.process.appearance");
-        }
-        return allPropertiesViews;
-    }
+	public static List<String> getAllPropertiesViews() {
+		if (allPropertiesViews == null) {
+			allPropertiesViews = new ArrayList<String>();
+			allPropertiesViews.addAll(getContributedPropertiesViews());
+			allPropertiesViews.add("org.bonitasoft.studio.views.properties.process.general");
+			allPropertiesViews.add("org.bonitasoft.studio.views.properties.application");
+			allPropertiesViews.add("org.bonitasoft.studio.views.properties.form.general");
+			allPropertiesViews.add("org.bonitasoft.studio.views.properties.form.appearance");
+			allPropertiesViews.add("org.bonitasoft.studio.views.properties.process.appearance");
+		}
+		return allPropertiesViews;
+	}
 
-    /**
-     * Switch to the perspective with id given as parameter
-     * @param perspectiveID
-     */
-    public static synchronized void switchToPerspective(String perspectiveID){
-        IWorkbench workbench = PlatformUI.getWorkbench();
-        IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-        if (window != null) {
-            IWorkbenchPage activePage = window.getActivePage();
-            if (activePage != null) {
-                IPerspectiveDescriptor activePerspective = activePage.getPerspective();
-                String activePerspectiveID = activePerspective.getId();
-                if (!activePerspectiveID.equals(perspectiveID)) {
-                    try {
-                        workbench.showPerspective(perspectiveID, window);
-                        activePage.resetPerspective();
-                    } catch (WorkbenchException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-            }
-        }
-    }
+	/**
+	 * Switch to the perspective with id given as parameter
+	 * @param perspectiveID
+	 */
+	public static synchronized void switchToPerspective(String perspectiveID){
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+		if (window != null) {
+			final IWorkbenchPage activePage = window.getActivePage();
+			if (activePage != null) {
+				final IPerspectiveDescriptor activePerspective = activePage.getPerspective();
+				final String activePerspectiveID = activePerspective.getId();
+				if (!activePerspectiveID.equals(perspectiveID)) {
+					try {
+						workbench.showPerspective(perspectiveID, window);
+						Display.getDefault().asyncExec(new Runnable() {
 
-    /**
-     * @param perspectiveID
-     * @return if the active perspective is the one with the ID perspectiveID
-     */
-    public static boolean isPerspectiveWithIDActive(String perspectiveID){
-        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        if(activeWorkbenchWindow != null){
-            IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-            if(activePage != null){
-                IPerspectiveDescriptor perspective = activePage.getPerspective();
-                if(perspective != null){
-                    return perspective.getId().equals(perspectiveID);
-                }
-            }
-        }
-        return false;
-    }
+							@Override
+							public void run() {
+								activePage.resetPerspective();
+							}
+						});
+					} catch (WorkbenchException e) {
+						BonitaStudioLog.error(e);
+					}
+				}
+			}
+		}
+	}
 
-    /**
-     * @param part
-     * @return
-     */
-    public static String getPerspectiveId(IEditorPart part) {
-        if (contributedPerspectives == null) {
-            initializePerspectives();
-        }
-        for (AbstractPerspectiveFactory perspectiveFactory : contributedPerspectives) {
-            if(perspectiveFactory.isRelevantFor(part)){
-                return perspectiveFactory.getID();
-            }
-        }
-        return null;
-    }
+	/**
+	 * @param perspectiveID
+	 * @return if the active perspective is the one with the ID perspectiveID
+	 */
+	public static boolean isPerspectiveWithIDActive(String perspectiveID){
+		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if(activeWorkbenchWindow != null){
+			IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+			if(activePage != null){
+				IPerspectiveDescriptor perspective = activePage.getPerspective();
+				if(perspective != null){
+					return perspective.getId().equals(perspectiveID);
+				}
+			}
+		}
+		return false;
+	}
 
-    public static void initializePerspectives() {
-        contributedPerspectives = new ArrayList<AbstractPerspectiveFactory>();
-        IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(PERSPECTIVES_EXTENSION_POINT);
-        for (IConfigurationElement extension : extensions) {
-            try {
-                Object perspectiveFactory = extension.createExecutableExtension("class");
-                if(perspectiveFactory instanceof AbstractPerspectiveFactory){
-                    contributedPerspectives.add((AbstractPerspectiveFactory) perspectiveFactory);
-                }
-            } catch (Exception ex) {
-                BonitaStudioLog.error(ex);
-            }
-        }
-    }
+	/**
+	 * @param part
+	 * @return
+	 */
+	public static String getPerspectiveId(IEditorPart part) {
+		if (contributedPerspectives == null) {
+			initializePerspectives();
+		}
+		for (AbstractPerspectiveFactory perspectiveFactory : contributedPerspectives) {
+			if(perspectiveFactory.isRelevantFor(part)){
+				return perspectiveFactory.getID();
+			}
+		}
+		return null;
+	}
+
+	public static void initializePerspectives() {
+		contributedPerspectives = new ArrayList<AbstractPerspectiveFactory>();
+		IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(PERSPECTIVES_EXTENSION_POINT);
+		for (IConfigurationElement extension : extensions) {
+			try {
+				Object perspectiveFactory = extension.createExecutableExtension("class");
+				if(perspectiveFactory instanceof AbstractPerspectiveFactory){
+					contributedPerspectives.add((AbstractPerspectiveFactory) perspectiveFactory);
+				}
+			} catch (Exception ex) {
+				BonitaStudioLog.error(ex);
+			}
+		}
+	}
 }
