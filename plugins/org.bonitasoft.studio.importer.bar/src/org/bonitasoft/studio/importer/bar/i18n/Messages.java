@@ -76,6 +76,22 @@ public class Messages extends NLS {
 	public static String removeFilterMigrationDescription;
 	public static String formActionsMigrationDescription;
 	public static String actionProperty;
+	public static String widgetActionsMigrationDescription;
+	public static String widgetModifierMigrationDescription;
+	public static String widgetModifierNotSetMigrationDescription;
+	public static String widgetDataInputAtProcessLevelMigrationDescription;
+	public static String widgetDataInputMigrationDescription;
+	public static String displayLabelMigrationDescription;
+	public static String generalProperty;
+	public static String tooltipMigrationDescription;
+	public static String helpMessageMigrationDescription;
+	public static String userAidsProperty;
+	public static String displayAfterEventConditionMigrationDescription;
+	public static String contingencyProperty ;
+	public static String showImmediatelyConditionMigrationDescription;
+	public static String updateValueMigrationDescription;
+	public static String optionsProperty;
+	public static String updateSelectedValueMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

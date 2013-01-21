@@ -31,7 +31,9 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.FormButton;
 import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.ActorFilter;
@@ -123,7 +125,7 @@ public class TestSimpleMigrationUseCase {
 		assertEquals("Invalid number of constant expression",1, nbConstantExpression);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testSequenceFlowConditionMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("SequenceFlowCondition_MigrationUseCase--1.0.bar");
@@ -147,7 +149,7 @@ public class TestSimpleMigrationUseCase {
 		assertEquals("Invalid number of script expression",1, nbScriptExpression);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testRemoveDeadlineMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("DeadlineMigrationUseCase--1.0.bar");
@@ -157,7 +159,7 @@ public class TestSimpleMigrationUseCase {
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testPageflowTransitionConditionMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("PageFlowTransitionMigrationUseCase--1.0.bar");
@@ -167,7 +169,7 @@ public class TestSimpleMigrationUseCase {
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testPageflowRedirectionMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("PageFlowMigrationUseCase--1.0.bar");
@@ -177,7 +179,7 @@ public class TestSimpleMigrationUseCase {
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testRemoveConnectorsMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("RemoveConnectorMigrationUseCase--1.0.bar");
@@ -190,7 +192,7 @@ public class TestSimpleMigrationUseCase {
 		assertTrue("There should be no connector",connectors.isEmpty());
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testIterationMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("IterationMigrationUseCase--1.0.bar");
@@ -219,7 +221,7 @@ public class TestSimpleMigrationUseCase {
 		assertEquals("Invalid number of constant expression",3, nbConstantExpression);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testPortalLabelMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("PortalLabelMigrationUseCase--1.0.bar");
@@ -265,7 +267,7 @@ public class TestSimpleMigrationUseCase {
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testMessageCorrelationMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("MessageCorrelationMigrationUseCase--1.0.bar");
@@ -288,7 +290,7 @@ public class TestSimpleMigrationUseCase {
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testTimerConditionMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("TimerConditionMigration--1.0.bar");
@@ -303,7 +305,7 @@ public class TestSimpleMigrationUseCase {
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testAssignableMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("AssignableMigrationUseCase--1.0.bar");
@@ -316,7 +318,7 @@ public class TestSimpleMigrationUseCase {
 		assertTrue("There should be no actor filter",connectors.isEmpty());
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testFormActionsMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("FormActionsMigrationUseCase--1.0.bar");
@@ -328,6 +330,27 @@ public class TestSimpleMigrationUseCase {
 		List<Form> forms = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.FORM);
 		for(Form form : forms){
 			assertFalse("Form actions are missing",form.getActions().isEmpty());
+		}
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+
+	@Test
+	public void testWidgetMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("WidgetMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<Widget> widgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.WIDGET);
+		for(Widget widget : widgets){
+			if(!(widget.eContainer() instanceof Expression)){
+				if(!(widget instanceof FormButton)){
+					assertNotNull("Widget action is missing",widget.getAction());
+					assertNotNull("Widget action is missing",widget.getAction().getLeftOperand());
+					assertNotNull("Widget action is missing",widget.getAction().getRightOperand());
+				}
+			}
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}

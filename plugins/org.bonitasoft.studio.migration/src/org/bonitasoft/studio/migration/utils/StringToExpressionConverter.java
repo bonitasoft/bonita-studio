@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Model;
 import org.w3c.dom.Document;
@@ -52,12 +53,18 @@ public class StringToExpressionConverter {
 
 
 	public Instance parseOperation(Instance groovyScriptInstance,String returnType,boolean fixedReturnType) {
-		final String expressionScript = groovyScriptInstance.get("exprScript");
+		String expressionScript = groovyScriptInstance.get("exprScript");
 		final String inputScript = groovyScriptInstance.get("inputScript");
 		final Instance variable = groovyScriptInstance.get("setVar");
 		final boolean allowHTML = groovyScriptInstance.get("allowHTMLInValues");
 		final String setVarScript = groovyScriptInstance.get("setVarScript");
 
+		if(expressionScript == null || expressionScript.trim().isEmpty()){
+			if(setVarScript != null && !setVarScript.trim().isEmpty()){
+				expressionScript = "${"+FORM_FIELD_PREFIX+setVarScript+"}";
+			}
+		}
+		
 		Instance operation = model.newInstance("expression.Operation");
 		final Instance actionExpression = parse(expressionScript, returnType, fixedReturnType);
 		operation.set("rightOperand", actionExpression);
@@ -88,7 +95,7 @@ public class StringToExpressionConverter {
 		if(stringToParse == null || stringToParse.isEmpty()){ //Returns an empty expression
 			return createExpressionInstance(model,null, null, returnType, ExpressionConstants.CONSTANT_TYPE, fixedReturnType);
 		}
-
+		stringToParse = stringToParse.trim();
 		final String expressionType = guessExpressionType(stringToParse);
 		String content = stringToParse;
 		if(isAGroovyString(content)){
@@ -239,6 +246,11 @@ public class StringToExpressionConverter {
 			return Document.class.getName();
 		}
 		return String.class.getName();
+	}
+
+
+	public static int getStatusForExpression(Instance expression) {
+		return ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type")) ? IStatus.WARNING : IStatus.OK;
 	}
 
 
