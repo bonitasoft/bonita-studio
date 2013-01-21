@@ -27,6 +27,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -287,7 +289,9 @@ public class InstanceImpl extends EObjectImpl implements Instance {
                 return (V) new UpdatingList(this, attribute);
             } else if (attribute.getEType().getInstanceClass() != null && Collection.class.isAssignableFrom(attribute.getEType().getInstanceClass())) {//Patch for Notation model
                 return (V) new UpdatingList(this, attribute);
-            }else if(attribute.getEType().getInstanceClass() == null){
+            }else if(attribute.getEType() instanceof EEnum){
+            	 return (V) attribute.getDefaultValue();
+           }else if(attribute.getEType() instanceof EDataType && attribute.getEType().getInstanceClass() == null){
             	 return (V) new UpdatingList(this, attribute);
             }else if (attribute.getDefaultValue() != null) {
                 return (V) attribute.getDefaultValue();
@@ -349,7 +353,7 @@ public class InstanceImpl extends EObjectImpl implements Instance {
             }
         } else {
             //Patch for Notation model
-            if(feature.getEType() != null && feature.getEType().getInstanceClass() != null && Collection.class.isAssignableFrom(feature.getEType().getInstanceClass())){
+            if(newValue instanceof List<?> && feature.getEType() != null && feature.getEType().getInstanceClass() != null && Collection.class.isAssignableFrom(feature.getEType().getInstanceClass())){
                 Object oldValue = this.get(feature);
                 if (oldValue != newValue) {
                     if (isSet(feature) && oldValue != null) {
@@ -359,7 +363,17 @@ public class InstanceImpl extends EObjectImpl implements Instance {
                         this.add(feature, newValue);
                     }
                 }
-            }else if(feature.getEType() != null && feature.getEType().isInstance(EcorePackage.Literals.EJAVA_OBJECT)){
+            }else if(newValue instanceof List<?> && feature.getEType() != null && feature.getEType().isInstance(EcorePackage.Literals.EJAVA_OBJECT)){
+            	 Object oldValue = this.get(feature);
+                 if (oldValue != newValue) {
+                     if (isSet(feature) && oldValue != null) {
+                         this.remove(feature, oldValue);
+                     }
+                     if (newValue != null) {
+                         this.add(feature, newValue);
+                     }
+                 }
+            }else if(newValue instanceof List<?> && feature.getEType() != null && feature.getEType() instanceof EEnum){
             	 Object oldValue = this.get(feature);
                  if (oldValue != newValue) {
                      if (isSet(feature) && oldValue != null) {

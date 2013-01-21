@@ -16,7 +16,19 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
+import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.edapt.migration.Instance;
+import org.eclipse.emf.edapt.migration.Metamodel;
+import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.emf.edapt.migration.Model;
 
 /**
  * @author Romain Bioteau
@@ -24,4 +36,38 @@ import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
  */
 public class FormMigration extends ReportCustomMigration {
 
+	private Map<String, List<Instance>> formActions = new HashMap<String,List<Instance>>();
+	
+	@Override
+	public void migrateBefore(Model model, Metamodel metamodel)
+			throws MigrationException {
+		for(Instance form : model.getAllInstances("form.Form")){
+			final List<Instance> actions = form.get("scripts");
+			if(!actions.isEmpty()){
+				final StringToExpressionConverter converter = getConverter(model);
+				final List<Instance> operations = new ArrayList<Instance>();
+				for(Instance action : actions){
+					final Instance operation = converter.parseOperation(action, String.class.getName(), false);
+					operations .add(operation);
+					model.delete(action);
+				}
+				formActions.put(form.getUuid(), operations);
+			}
+			
+		}
+	}
+	
+	@Override
+	public void migrateAfter(Model model, Metamodel metamodel)
+			throws MigrationException {
+		for(Instance form : model.getAllInstances("form.Form")){
+			if(formActions.containsKey(form.getUuid())){
+				for(Instance operation : formActions.get(form.getUuid())){
+					form.add("actions", operation);
+				}
+				addReportChange((String) form.get("name"),form.getType().getEClass().getName(), form.getUuid(), Messages.formActionsMigrationDescription, Messages.actionProperty, IStatus.WARNING);
+			}
+		}
+	}
+	
 }

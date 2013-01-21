@@ -74,6 +74,8 @@ public class Messages extends NLS {
 	public static String timerConditionProperty;
 	public static String timerConditionMigrationDescription;
 	public static String removeFilterMigrationDescription;
+	public static String formActionsMigrationDescription;
+	public static String actionProperty;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

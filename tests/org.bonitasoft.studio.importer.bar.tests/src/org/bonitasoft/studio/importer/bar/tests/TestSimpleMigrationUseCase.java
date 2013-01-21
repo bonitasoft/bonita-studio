@@ -30,6 +30,8 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.ActorFilter;
@@ -312,6 +314,21 @@ public class TestSimpleMigrationUseCase {
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
 		List<ActorFilter> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ACTOR_FILTER);
 		assertTrue("There should be no actor filter",connectors.isEmpty());
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+	
+	@Test
+	public void testFormActionsMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("FormActionsMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<Form> forms = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.FORM);
+		for(Form form : forms){
+			assertFalse("Form actions are missing",form.getActions().isEmpty());
+		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
 }

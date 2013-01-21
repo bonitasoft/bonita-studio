@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Model;
@@ -129,17 +128,17 @@ public class StringToExpressionConverter {
 				}else if(index == 0){
 					validPrefix=true;
 				}
-				if(index < groovyScript.length()-1){
+				if(index + widgetName.length() < groovyScript.length()-1){
 					String suffix = groovyScript.substring(index+widgetName.length(),index+widgetName.length()+1);
 					if(!Character.isLetter(suffix.toCharArray()[0])){
 						validSuffix = true;
 					}
-				}else if(index == groovyScript.length()-1){
+				}else if(index + widgetName.length() == groovyScript.trim().length()){
 					validSuffix = true;
 				}
 				if(validPrefix && validSuffix){
 					Instance dependencyInstance = createFormFieldDependencyInstance(widget.get(widgetName));
-					expression.add(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, dependencyInstance);
+					expression.add("referencedElements", dependencyInstance);
 				}
 			}
 		}
@@ -153,7 +152,8 @@ public class StringToExpressionConverter {
 				boolean validSuffix = false;
 				if(index > 0){
 					String prefix = groovyScript.substring(index-1,index);
-					if(!Character.isLetter(prefix.toCharArray()[0])){
+					char previousChar = prefix.toCharArray()[0];
+					if(!Character.isLetter(previousChar) &&  '_' != previousChar){
 						validPrefix = true;
 					}
 				}else if(index == 0){
@@ -164,7 +164,7 @@ public class StringToExpressionConverter {
 					if(!Character.isLetter(suffix.toCharArray()[0])){
 						validSuffix = true;
 					}
-				}else if(index+dataName.length() == groovyScript.length()){
+				}else if(index+dataName.length() == groovyScript.trim().length()){
 					validSuffix = true;
 				}
 				if(validPrefix && validSuffix){

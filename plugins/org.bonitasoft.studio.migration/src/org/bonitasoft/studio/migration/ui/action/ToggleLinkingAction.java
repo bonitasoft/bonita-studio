@@ -44,20 +44,22 @@ public class ToggleLinkingAction extends AbstractToggleLinkingAction {
 	private DiagramEditor editor;
 	private StructuredViewer viewer;
 	private ISelectionChangedListener listener = new ISelectionChangedListener() {
-		
+
 		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
 			if( editor != null && viewer != null && !viewer.getSelection().isEmpty()){
 				final Change change = (Change) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 				final String uuid = change.getElementUUID();
 				EObject element = editor.getDiagram().eResource().getEObject(uuid);
-				while(element != null && !(element instanceof SequenceFlow || element instanceof Container || element instanceof FlowElement || element instanceof Widget || element instanceof Form)){
+				while(element != null && !(element instanceof Widget || element instanceof Form || element instanceof SequenceFlow || element instanceof Container || element instanceof FlowElement || element instanceof Widget || element instanceof Form)){
 					element = element.eContainer();
 				}
 				if(element != null){
 					EditPart ep = findEditPart(editor.getDiagramEditPart(), element);
-					editor.getDiagramEditPart().getViewer().select(ep);
-					PropertySelectionProvider.getInstance().fireSelectionChanged((IGraphicalEditPart) ep, null);
+					if( ep != null ){
+						editor.getDiagramEditPart().getViewer().select(ep);
+						PropertySelectionProvider.getInstance().fireSelectionChanged((IGraphicalEditPart) ep, null);
+					}
 				}
 			}
 		}
@@ -86,60 +88,60 @@ public class ToggleLinkingAction extends AbstractToggleLinkingAction {
 			viewer.addSelectionChangedListener(listener);
 			listener.selectionChanged(null);
 		}
-		
+
 	}
-	
+
 	public void setEditor(DiagramEditor editor){
 		this.editor = editor ;
 	}
-	
+
 	public void setViewer(StructuredViewer viewer){
 		this.viewer = viewer ;
 	}
-	
+
 	private static IGraphicalEditPart findEditPart(EditPart containerEditPart,EObject elementToFind) {
 
-        final EObject containerElement = ((IGraphicalEditPart) containerEditPart).resolveSemanticElement();
-        if (ModelHelper.getEObjectID( containerElement) != null && ModelHelper.getEObjectID(containerElement).equals(ModelHelper.getEObjectID(elementToFind))) {
-            return (IGraphicalEditPart) containerEditPart;
-        }
+		final EObject containerElement = ((IGraphicalEditPart) containerEditPart).resolveSemanticElement();
+		if (ModelHelper.getEObjectID( containerElement) != null && ModelHelper.getEObjectID(containerElement).equals(ModelHelper.getEObjectID(elementToFind))) {
+			return (IGraphicalEditPart) containerEditPart;
+		}
 
-        for (Object child : containerEditPart.getChildren()) {
-            if (child instanceof IGraphicalEditPart) {
-                final EObject childResolvedSemanticElement = ((IGraphicalEditPart) child).resolveSemanticElement();
-                final String eObjectID = ModelHelper.getEObjectID( childResolvedSemanticElement);
-                if (eObjectID != null && eObjectID.equals(ModelHelper.getEObjectID(elementToFind))) {
-                    return (IGraphicalEditPart) child;
-                }else{
+		for (Object child : containerEditPart.getChildren()) {
+			if (child instanceof IGraphicalEditPart) {
+				final EObject childResolvedSemanticElement = ((IGraphicalEditPart) child).resolveSemanticElement();
+				final String eObjectID = ModelHelper.getEObjectID( childResolvedSemanticElement);
+				if (eObjectID != null && eObjectID.equals(ModelHelper.getEObjectID(elementToFind))) {
+					return (IGraphicalEditPart) child;
+				}else{
 
-                    if(!((IGraphicalEditPart)child).getTargetConnections().isEmpty() || !((IGraphicalEditPart)child).getSourceConnections().isEmpty()) {
-                        for(Object ep : ((IGraphicalEditPart)child).getTargetConnections()){
-                            final EObject resolveSemanticElement = ((IGraphicalEditPart) ep).resolveSemanticElement();
-                            if(resolveSemanticElement != null){
-                                if(ModelHelper.getEObjectID( resolveSemanticElement).equals(ModelHelper.getEObjectID(elementToFind))){
-                                    return (IGraphicalEditPart) ep;
-                                }
-                            }
-                        }
+					if(!((IGraphicalEditPart)child).getTargetConnections().isEmpty() || !((IGraphicalEditPart)child).getSourceConnections().isEmpty()) {
+						for(Object ep : ((IGraphicalEditPart)child).getTargetConnections()){
+							final EObject resolveSemanticElement = ((IGraphicalEditPart) ep).resolveSemanticElement();
+							if(resolveSemanticElement != null){
+								if(ModelHelper.getEObjectID( resolveSemanticElement).equals(ModelHelper.getEObjectID(elementToFind))){
+									return (IGraphicalEditPart) ep;
+								}
+							}
+						}
 
-                        for(Object ep : ((IGraphicalEditPart)child).getSourceConnections()){
-                            final EObject resolveSemanticElement = ((IGraphicalEditPart) ep).resolveSemanticElement();
-                            if(resolveSemanticElement != null){
-                                if(ModelHelper.getEObjectID( resolveSemanticElement).equals(ModelHelper.getEObjectID(elementToFind))){
-                                    return (IGraphicalEditPart) ep;
-                                }
-                            }
-                        }
-                    }
+						for(Object ep : ((IGraphicalEditPart)child).getSourceConnections()){
+							final EObject resolveSemanticElement = ((IGraphicalEditPart) ep).resolveSemanticElement();
+							if(resolveSemanticElement != null){
+								if(ModelHelper.getEObjectID( resolveSemanticElement).equals(ModelHelper.getEObjectID(elementToFind))){
+									return (IGraphicalEditPart) ep;
+								}
+							}
+						}
+					}
 
-                    IGraphicalEditPart ep = findEditPart((EditPart) child, elementToFind);
-                    if (ep != null) {
-                        return ep;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-	
+					IGraphicalEditPart ep = findEditPart((EditPart) child, elementToFind);
+					if (ep != null) {
+						return ep;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 }
