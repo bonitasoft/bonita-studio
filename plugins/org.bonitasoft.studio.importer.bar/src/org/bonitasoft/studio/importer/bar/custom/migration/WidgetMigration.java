@@ -160,8 +160,8 @@ public class WidgetMigration extends ReportCustomMigration {
 			String description = Messages.updateValueMigrationDescription;
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				if(widget.instanceOf("form.MultipleValuatedFormField")){
-					expression.set("name", "updateSelectedValueScript");
-					description =  Messages.updateSelectedValueMigrationDescription;
+					expression.set("name", "updateAvailableValueScript");
+					description =  Messages.updateAvailableValueMigrationDescription;
 				}else{
 					expression.set("name", "updateValueScript");
 				}

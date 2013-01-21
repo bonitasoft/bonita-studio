@@ -369,6 +369,7 @@ public class TestSimpleMigrationUseCase {
 			if(!(widget.eContainer() instanceof Expression)){
 				if(!(widget instanceof FormButton)){
 					assertNotNull("Widget example message is missing",widget.getExampleMessage());
+					assertNotNull("Widget after event expresion is missing",widget.getAfterEventExpression());
 				}
 			}
 		}
