@@ -62,6 +62,10 @@
          				<directory>lé test</directory>
           				<followSymlinks>false</followSymlinks>
         			</fileset>
+        			<fileset>
+         				<directory>workspace</directory>
+          				<followSymlinks>false</followSymlinks>
+        			</fileset>
       			</filesets>
     			</configuration>
   			</plugin>
