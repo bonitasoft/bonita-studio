@@ -271,6 +271,7 @@ public class WidgetMigration extends ReportCustomMigration {
 			}else if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				if(widget.instanceOf("form.MultipleValuatedFormField")){
 					expression.set("returnType",List.class.getName());
+					expression.set("name","availableValuesScript");
 				}
 			}
 			addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.widgetDataInputMigrationDescription, Messages.dataProperty, StringToExpressionConverter.getStatusForExpression(expression));	

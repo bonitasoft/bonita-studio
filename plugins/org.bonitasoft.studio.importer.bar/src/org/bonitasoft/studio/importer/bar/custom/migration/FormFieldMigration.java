@@ -16,7 +16,17 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
+import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
+import org.eclipse.emf.edapt.migration.Instance;
+import org.eclipse.emf.edapt.migration.Metamodel;
+import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.emf.edapt.migration.Model;
 
 /**
  * @author Romain Bioteau
@@ -24,6 +34,81 @@ import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
  */
 public class FormFieldMigration extends ReportCustomMigration {
 
+	private Map<String, String> exampleScripts = new HashMap<String,String>();
+	private Map<String, String> defaultValueScripts = new HashMap<String,String>();
+
+	@Override
+	public void migrateBefore(Model model, Metamodel metamodel)
+			throws MigrationException {
+		for(Instance widget : model.getAllInstances("form.FormField")){
+			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+				storeExampleMessages(widget);
+			}
+		}
+		for(Instance widget : model.getAllInstances("form.MultipleValuatedFormField")){
+			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+				storeDefaultValues(widget);
+			}
+		}
+	}
+
+	private void storeExampleMessages(Instance widget) {
+		final String exampleScript = widget.get("exampleMessage");
+		widget.set("exampleMessage", null);
+		if(exampleScript != null && !exampleScript.trim().isEmpty()){
+			exampleScripts.put(widget.getUuid(), exampleScript);
+		}
+	}
 	
+	private void storeDefaultValues(Instance widget) {
+		final String defaultValue = widget.get("defaultValue");
+		widget.set("defaultValue", null);
+		if(defaultValue != null && !defaultValue.trim().isEmpty()){
+			defaultValueScripts.put(widget.getUuid(), defaultValue);
+		}
+	}
+	
+	@Override
+	public void migrateAfter(Model model, Metamodel metamodel)
+			throws MigrationException {
+		for(Instance widget : model.getAllInstances("form.FormField")){
+			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+				setExampleMessage(model, widget);
+			}
+		}
+		for(Instance widget : model.getAllInstances("form.MultipleValuatedFormField")){
+			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+				setDefaultValue(model, widget);
+			}
+		}
+	}
+
+	private void setExampleMessage(Model model, Instance widget) {
+		Instance expression = null;
+		if(exampleScripts.containsKey(widget.getUuid())){
+			expression = getConverter(model).parse(exampleScripts.get(widget.getUuid()), String.class.getName(), true);
+			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
+				expression.set("name", "exampleScript");
+			}
+			addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.exampleMigrationDescription, Messages.userAidsProperty, StringToExpressionConverter.getStatusForExpression(expression));
+		}else{
+			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
+		}
+		widget.set("exampleMessage", expression);
+	}
+	
+	private void setDefaultValue(Model model, Instance widget) {
+		Instance expression = null;
+		if(defaultValueScripts.containsKey(widget.getUuid())){
+			expression = getConverter(model).parse(defaultValueScripts.get(widget.getUuid()), String.class.getName(), true);
+			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
+				expression.set("name", "initialValueScript");
+			}
+			addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.initialValueMigrationDescription, Messages.dataProperty, StringToExpressionConverter.getStatusForExpression(expression));
+		}else{
+			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
+		}
+		widget.set("defaultExpression", expression);
+	}
 	
 }

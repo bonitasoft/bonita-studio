@@ -92,6 +92,8 @@ public class Messages extends NLS {
 	public static String updateValueMigrationDescription;
 	public static String optionsProperty;
 	public static String updateSelectedValueMigrationDescription;
+	public static String exampleMigrationDescription;
+	public static String initialValueMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$
