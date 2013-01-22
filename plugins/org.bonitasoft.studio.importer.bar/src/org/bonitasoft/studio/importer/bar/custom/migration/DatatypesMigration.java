@@ -36,12 +36,10 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public class DatatypesMigration extends ReportCustomMigration {
 
-	private final HashMap<Instance,Instance> attachmentDatas=new HashMap<Instance,Instance>();
+
 	
     @Override
     public void migrateBefore(Model model, Metamodel metamodel) throws MigrationException {
-    	
-        removeAttachmentData(model);
         removeAttachmentType(model);
     }
 
@@ -93,36 +91,9 @@ public class DatatypesMigration extends ReportCustomMigration {
             }
             model.delete(floatTypeInstance);
         }
-        
-        for (Instance attachmentData:attachmentDatas.keySet()){
-        	Instance process = attachmentDatas.get(attachmentData);
-        	Instance document = model.newInstance("process.Document");
-        	
-        	document.set("isInternal", true);
-        	String name = attachmentData.get("name");
-        	document.set("name",name);
-        	String defaultValue = attachmentData.get("defaultValue");
-        	document.set("defaultValueIdOfDocumentStore", defaultValue);
-        	String doc = attachmentData.get("documentation");
-        	document.set("documentation", doc);
-        	process.add("documents", document);
-        	addReportChange(name,Messages.document, process.getUuid(),Messages.documentCreationDescription,Messages.documentProperty, IStatus.WARNING);
-        	model.delete(attachmentData);
-        }
     }
 
-    protected void removeAttachmentData(Model model) {
-        for (Instance data : model.getAllInstances("process.AttachmentData")) {
-        	attachmentDatas.put(data.copy(),data.getContainer());
-            addReportChange((String) data.get("name"),
-            		ProcessPackage.Literals.DATA.getName(),
-            		data.getContainer().getUuid(), 
-            		Messages.attachmentDataRemovedDescription, 
-            		Messages.dataProperty, 
-            		IStatus.OK);
-            model.delete(data);
-        }
-    }
+
 
 }
 

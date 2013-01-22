@@ -44,7 +44,6 @@ import org.bonitasoft.studio.importer.bar.exception.IncompatibleVersionException
 import org.bonitasoft.studio.importer.bar.preferences.BarImporterPreferenceConstants;
 import org.bonitasoft.studio.importer.bar.ui.MigrationWarningWizard;
 import org.bonitasoft.studio.migration.migrator.BOSMigrator;
-import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
 import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
