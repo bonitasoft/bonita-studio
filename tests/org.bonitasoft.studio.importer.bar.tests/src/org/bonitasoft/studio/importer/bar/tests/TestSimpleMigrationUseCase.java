@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.Form;
@@ -457,6 +458,30 @@ public class TestSimpleMigrationUseCase {
 				}
 			}
 		}
+
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+	
+	@Test
+	public void testDuplicableMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("DuplicableMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<Duplicable> duplicables = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.DUPLICABLE);
+		for(Duplicable duplicable : duplicables){
+			if(!(ModelHelper.getParentWidget(duplicable).eContainer() instanceof Expression)){
+				assertNotNull("Duplicable widget label for add is not set",duplicable.getDisplayLabelForAdd().getContent());
+				assertNotNull("Duplicable widget label for remove is not set",duplicable.getDisplayLabelForRemove().getContent());
+				assertNotNull("Duplicable widget tooltip for add is not set",duplicable.getTooltipForAdd().getContent());
+				assertNotNull("Duplicable widget tooltip for remove is not set",duplicable.getTooltipForRemove().getContent());
+				assertNotNull("Duplicable widget max duplication is not set",duplicable.getMaxNumberOfDuplication().getContent());
+				assertNotNull("Duplicable widget min duplication  is not set",duplicable.getMinNumberOfDuplication().getContent());
+			}
+		}
+		
 
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}

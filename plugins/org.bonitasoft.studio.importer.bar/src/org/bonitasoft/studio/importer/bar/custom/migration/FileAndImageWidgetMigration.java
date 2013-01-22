@@ -23,11 +23,8 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
-import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.ecore.EEnumLiteral;
-import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -158,7 +155,7 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 				if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 					expression.set("name", "initialValueScript");
 				}
-				addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.initialValueMigrationDescription, Messages.dataProperty, StringToExpressionConverter.getStatusForExpression(expression));
+				addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.imgPathMigrationDescription, Messages.dataProperty, StringToExpressionConverter.getStatusForExpression(expression));
 			}
 		}else{
 			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);

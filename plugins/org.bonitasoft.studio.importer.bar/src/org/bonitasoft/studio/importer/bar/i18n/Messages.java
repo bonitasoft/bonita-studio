@@ -99,6 +99,14 @@ public class Messages extends NLS {
 	public static String validatorParameterMigrationDescription;
 	public static String validatorsProperty;
 	public static String validatorDisplayNameMigrationDescription;
+	public static String maxNumberMigrationDescription;
+	public static String minNumberMigrationDescription;
+	public static String displayLabelForAddMigrationDescription;
+	public static String displayLabelForRemoveMigrationDescription;
+	public static String tooltipForAddMigrationDescription;
+	public static String tooltipForRemoveMigrationDescription;
+	public static String appearanceProperty;
+	public static String imgPathMigrationDescription;
 	public static String changeGatewayTypeToInclusiveGatewayMigrationDescription;
 	public static String changeInclusiveGatewayMigrationDescription;
 	public static String changeParallelGatewayWithIncomingConditionsMigrationDescription;
