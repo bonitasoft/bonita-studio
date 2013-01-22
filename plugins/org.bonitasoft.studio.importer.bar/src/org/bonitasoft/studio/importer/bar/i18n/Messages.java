@@ -111,6 +111,8 @@ public class Messages extends NLS {
 	public static String changeInclusiveGatewayMigrationDescription;
 	public static String changeParallelGatewayWithIncomingConditionsMigrationDescription;
 	public static String changeParallelGatewayWithOutgoingConditionsMigrationDescription;
+	public static String mandatoryLabelMigrationDescription;
+	public static String mandatorySymbolMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

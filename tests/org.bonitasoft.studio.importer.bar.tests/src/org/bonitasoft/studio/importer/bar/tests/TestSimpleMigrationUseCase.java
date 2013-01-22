@@ -39,6 +39,7 @@ import org.bonitasoft.studio.model.form.FormButton;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.ImageWidget;
+import org.bonitasoft.studio.model.form.MandatoryFieldsCustomization;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.form.Validator;
 import org.bonitasoft.studio.model.form.Widget;
@@ -481,8 +482,26 @@ public class TestSimpleMigrationUseCase {
 				assertNotNull("Duplicable widget min duplication  is not set",duplicable.getMinNumberOfDuplication().getContent());
 			}
 		}
-		
-
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
+	
+	@Test
+	public void testMandatoryFieldsMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("MandatoryFieldsMigraitonUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<MandatoryFieldsCustomization> fields = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.MANDATORY_FIELDS_CUSTOMIZATION);
+		for(MandatoryFieldsCustomization field : fields){
+			if(ModelHelper.getParentWidget(field) != null && !(ModelHelper.getParentWidget(field).eContainer() instanceof Expression)){
+				assertNotNull("Mandatory label is not set",field.getMandatoryLabel().getContent());
+				assertNotNull("Mandatory symbol is not set",field.getMandatorySymbol().getContent());
+			}
+		}
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+	
+	
 }

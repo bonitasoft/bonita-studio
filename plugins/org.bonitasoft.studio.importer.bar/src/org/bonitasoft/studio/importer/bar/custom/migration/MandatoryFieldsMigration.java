@@ -16,7 +16,17 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
+import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
+import org.eclipse.emf.edapt.migration.Instance;
+import org.eclipse.emf.edapt.migration.Metamodel;
+import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.emf.edapt.migration.Model;
 
 /**
  * @author Romain Bioteau
@@ -24,4 +34,71 @@ import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
  */
 public class MandatoryFieldsMigration extends ReportCustomMigration {
 
+	private Map<String, String> mandatorySymbols = new HashMap<String,String>();
+	private Map<String, String> mandatoryLabels = new HashMap<String,String>();
+	
+	@Override
+	public void migrateBefore(Model model, Metamodel metamodel)
+			throws MigrationException {
+		for(Instance widget : model.getAllInstances("form.MandatoryFieldsCustomization")){
+			if(widget.getContainer() == null || !(widget.getContainer().instanceOf("expression.Expression"))){
+				storeMandatorySymbols(widget);
+				storeMandatoryLabels(widget);
+			}
+		}
+	}
+	
+	private void storeMandatorySymbols(Instance widget) {
+		final String symbol = widget.get("mandatorySymbol");
+		if(symbol != null && !symbol.isEmpty()){
+			mandatorySymbols.put(widget.getUuid(), symbol);
+		}
+	}
+
+	private void storeMandatoryLabels(Instance widget) {
+		final String label = widget.get("mandatoryLabel");
+		if(label != null && !label.isEmpty()){
+			mandatoryLabels.put(widget.getUuid(), label);
+		}
+	}
+	
+	@Override
+	public void migrateAfter(Model model, Metamodel metamodel)
+			throws MigrationException {
+		for(Instance widget : model.getAllInstances("form.MandatoryFieldsCustomization")){
+			if(widget.getContainer() == null || !(widget.getContainer().instanceOf("expression.Expression"))){
+				setMandatorySymbols(widget,model);
+				setMandatoryLabels(widget,model);
+			}
+		}
+	}
+
+	private void setMandatorySymbols(Instance widget, Model model) {
+		Instance expression = null ;
+		if(mandatorySymbols.containsKey(widget.getUuid())){
+			expression = getConverter(model).parse(mandatorySymbols.get(widget.getUuid()), String.class.getName(), true);
+			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
+				expression.set("name", "mandatorySymbolScript");
+			}
+			addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.mandatorySymbolMigrationDescription, Messages.dataProperty, StringToExpressionConverter.getStatusForExpression(expression));
+		}else{
+			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
+		}
+		widget.set("mandatorySymbol", expression);
+	}
+	
+	private void setMandatoryLabels(Instance widget, Model model) {
+		Instance expression = null ;
+		if(mandatoryLabels.containsKey(widget.getUuid())){
+			expression = getConverter(model).parse(mandatoryLabels.get(widget.getUuid()), String.class.getName(), true);
+			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
+				expression.set("name", "mandatoryLabelScript");
+			}
+			addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.mandatoryLabelMigrationDescription, Messages.dataProperty, StringToExpressionConverter.getStatusForExpression(expression));
+		}else{
+			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
+		}
+		widget.set("mandatoryLabel", expression);
+	}
+	
 }
