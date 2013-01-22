@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
@@ -36,12 +37,15 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.importer.ToProcProcessor;
 import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
 import org.bonitasoft.studio.importer.bar.exception.IncompatibleVersionException;
 import org.bonitasoft.studio.importer.bar.preferences.BarImporterPreferenceConstants;
 import org.bonitasoft.studio.importer.bar.ui.MigrationWarningWizard;
 import org.bonitasoft.studio.migration.migrator.BOSMigrator;
+import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
+import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -71,8 +75,13 @@ import org.eclipse.swt.widgets.Display;
  */
 public class EdaptBarToProcProcessor extends ToProcProcessor {
 
+	private static final String ATTACHMENTS_FOLDER = "attachments";
 	private static final String SUPPORTED_VERSION = "5.9";
 	private static final String MIGRATION_HISTORY_PATH = "models/v60/process.history";
+	private static final String FORMS_LIBS = "forms/lib";
+	private static final String VALIDATORS = "validators";
+	private static final String LIBS = "lib";
+
 	private File migratedProc;
 	private BOSMigrator migrator;
 
@@ -99,7 +108,11 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 
 		final File archiveFile = new File(URI.decode(sourceFileURL.getFile())) ;
 		final File barProcFile = getProcFormBar(archiveFile);
-		importAttachment(archiveFile);
+
+		importAttachment(archiveFile,progressMonitor);
+		importProcessJarDependencies(archiveFile,progressMonitor);
+		importFormJarDependencies(archiveFile,progressMonitor);
+
 		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
 
 		final Resource resource =  new XMLResourceFactoryImpl().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
@@ -144,22 +157,64 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 		return barProcFile;
 	}
 
+	private void importFormJarDependencies(File archiveFile,IProgressMonitor monitor) throws ZipException, IOException {
+		final DependencyRepositoryStore store = (DependencyRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+		final ZipFile zipfile = new ZipFile(archiveFile);
+		Enumeration<?> enumEntries = zipfile.entries();
+		ZipEntry zipEntry = null;
+		while (enumEntries.hasMoreElements()){
+			zipEntry=(ZipEntry)enumEntries.nextElement();
+			File currentFile = new File (zipEntry.getName());
+			if (!zipEntry.isDirectory() && zipEntry.getName().contains(FORMS_LIBS) && zipEntry.getName().endsWith(".jar") ){
+				store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+			}
+			if (!zipEntry.isDirectory() && zipEntry.getName().contains(VALIDATORS) && zipEntry.getName().endsWith(".jar") ){
+				if(store.getChild(currentFile.getName()) == null){
+					store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+				}
+				importValidatorSource(currentFile,monitor);
+			}
+		}
+		zipfile.close();
+	}
+
+
+	private void importValidatorSource(File currentFile,IProgressMonitor monitor) {
+		final ValidatorSourceRepositorySotre validatorSourceStore = (ValidatorSourceRepositorySotre)RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class);
+		// TODO Import validator sources in repository
+	}
+
+	private void importProcessJarDependencies(File archiveFile,IProgressMonitor monitor) throws ZipException, IOException {
+		final DependencyRepositoryStore store = (DependencyRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+		final ZipFile zipfile = new ZipFile(archiveFile);
+		Enumeration<?> enumEntries = zipfile.entries();
+		ZipEntry zipEntry = null;
+		while (enumEntries.hasMoreElements()){
+			zipEntry=(ZipEntry)enumEntries.nextElement();
+			File currentFile = new File (zipEntry.getName());
+			if (!zipEntry.isDirectory() && zipEntry.getName().contains(LIBS) && zipEntry.getName().endsWith(".jar") ){
+				if(store.getChild(currentFile.getName()) == null){
+					store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
+				}
+			}
+		}
+		zipfile.close();
+	}
+
 	private boolean displayMigrationWarningPopup() {
 		final IPreferenceStore store = BarImporterPlugin.getDefault().getPreferenceStore();
 		return store.getBoolean(BarImporterPreferenceConstants.DISPLAY_MIGRATION_WARNING);
 	}
 
-	private void importAttachment(File archiveFile) throws IOException{
-
+	private void importAttachment(File archiveFile,IProgressMonitor monitor) throws IOException{
+		final DocumentRepositoryStore store = (DocumentRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
 		ZipFile zipfile=new ZipFile(archiveFile);
-		Enumeration enumEntries = zipfile.entries();
+		Enumeration<?> enumEntries = zipfile.entries();
 		ZipEntry zipEntry = null;
-		String attachments = "attachments";
 		while (enumEntries.hasMoreElements()){
 			zipEntry=(ZipEntry)enumEntries.nextElement();
 			File currentFile = new File (zipEntry.getName());
-			if (!zipEntry.isDirectory() && zipEntry.getName().contains(attachments)){
-				DocumentRepositoryStore store = (DocumentRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+			if (!zipEntry.isDirectory() && zipEntry.getName().contains(ATTACHMENTS_FOLDER)){
 				store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
 			}
 

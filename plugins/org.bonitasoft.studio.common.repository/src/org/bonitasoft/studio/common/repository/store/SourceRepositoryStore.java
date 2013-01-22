@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.internal.core.SourceType;
 
 
 /**
@@ -204,9 +205,9 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
             try{
                 IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
                 IType javaType = javaProject.findType(fileName);
-                if(javaType != null){
+                if(javaType != null && javaType instanceof SourceType){
                     return (T) new SourceFileStore(fileName, this) ;
-                }else{ //package name
+                }else if(javaType == null){ //package name
                     IPackageFragment packageFragment = javaProject.findPackageFragment(getResource().getFullPath().append(fileName.replace(".","/")));
                     if(packageFragment != null){
                         return (T) new PackageFileStore(fileName, this) ;

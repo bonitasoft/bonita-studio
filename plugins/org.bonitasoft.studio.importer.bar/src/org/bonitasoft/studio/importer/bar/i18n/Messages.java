@@ -96,6 +96,9 @@ public class Messages extends NLS {
 	public static String initialValueMigrationDescription;
 	public static String updateAvailableValueMigrationDescription;
 	public static String buttonActionsMigrationDescription;
+	public static String validatorParameterMigrationDescription;
+	public static String validatorsProperty;
+	public static String validatorDisplayNameMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

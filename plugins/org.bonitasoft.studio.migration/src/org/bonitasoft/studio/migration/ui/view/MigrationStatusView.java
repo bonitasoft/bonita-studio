@@ -273,7 +273,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 		descripitonText = new Text(tableComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY | SWT.WRAP);
 		descripitonText.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		descripitonText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).create());
+		descripitonText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 60).create());
 
 	}
 
@@ -483,9 +483,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 	@Override
 	public void setFocus() {
-		if(getSite().getPage().getActiveEditor() != null){
-			getSite().getPage().getActiveEditor().setFocus();
-		}
+
 	}
 
 	@Override

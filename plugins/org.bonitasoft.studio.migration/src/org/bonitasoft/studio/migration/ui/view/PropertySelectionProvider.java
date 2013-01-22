@@ -96,6 +96,9 @@ public class PropertySelectionProvider {
 					viewPart = vr.getView(true) ;
 				}
 			}
+			if(vr.getId().equals("org.bonitasoft.studio.views.properties.form.general")){
+				viewPart = vr.getView(true) ;
+			}
 		}
 		if(viewPart != null){
 			viewPart.getViewSite().getWorkbenchWindow().getActivePage().showView(viewPart.getSite().getId()) ;

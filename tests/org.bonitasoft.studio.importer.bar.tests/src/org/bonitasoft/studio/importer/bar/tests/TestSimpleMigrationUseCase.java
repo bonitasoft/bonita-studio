@@ -28,6 +28,8 @@ import java.util.List;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Form;
@@ -35,6 +37,7 @@ import org.bonitasoft.studio.model.form.FormButton;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
+import org.bonitasoft.studio.model.form.Validator;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
@@ -45,7 +48,13 @@ import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.validators.descriptor.validator.ValidatorDescriptor;
+import org.bonitasoft.studio.validators.repository.ValidatorDescriptorFileStore;
+import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
+import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.jdt.core.IJavaProject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -356,25 +365,10 @@ public class TestSimpleMigrationUseCase {
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testFormFieldMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("FormFieldMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		List<SubmitFormButton> buttons = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.SUBMIT_FORM_BUTTON);
-		for(SubmitFormButton button : buttons){
-			assertFalse("Button actions are missing",button.getActions().isEmpty());
-		}
-		BarImporterTestUtil.assertViewsAreConsistent(resource);
-	}
-	
-	@Test
-	public void testSubmitButtonActionsMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("SubmitButtonActionMigrationUseCase--1.0.bar");
 		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
@@ -389,6 +383,51 @@ public class TestSimpleMigrationUseCase {
 				}
 			}
 		}
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+
+	@Test
+	public void testSubmitButtonActionsMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("SubmitButtonActionMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<SubmitFormButton> buttons = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.SUBMIT_FORM_BUTTON);
+		for(SubmitFormButton button : buttons){
+			assertFalse("Button actions are missing",button.getActions().isEmpty());
+		}
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+
+	@Test
+	public void testValidatorMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("ValidatorMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<Validator> validators = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.VALIDATOR);
+		final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+		final ValidatorDescriptorRepositoryStore validatorDescriptorStore = (ValidatorDescriptorRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
+		final ValidatorSourceRepositorySotre validatorSourceStore = (ValidatorSourceRepositorySotre)RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class);
+		for(Validator validator : validators){
+			if(!(ModelHelper.getParentWidget(validator).eContainer() instanceof Expression)){
+				assertNotNull("Validator error message is missing",validator.getDisplayName());
+				assertNotNull("Validator parameter is missing",validator.getParameter());
+				assertNotNull("Validator class not found in classpath",project.findType(validator.getValidatorClass()));
+				final ValidatorDescriptor validatorDescriptor = validatorDescriptorStore.getValidatorDescriptor(validator.getValidatorClass());
+				assertNotNull("Validator descriptor is missing",validatorDescriptor);
+				final ValidatorDescriptorFileStore filseSotre = (ValidatorDescriptorFileStore) validatorDescriptorStore.getChild(validatorDescriptor.getName()+"."+ValidatorDescriptorRepositoryStore.VALIDATOR_EXT);
+				assertNotNull("Validator descriptor file store is missing",filseSotre);
+				if(!filseSotre.isReadOnly()){ //Not a provided validator descriptor
+					assertNotNull("Custom validator source file is missing",validatorSourceStore.getChild(validator.getValidatorClass()));
+				}
+			}
+		}
+
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
 }
