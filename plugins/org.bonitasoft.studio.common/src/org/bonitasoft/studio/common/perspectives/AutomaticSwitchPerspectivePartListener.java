@@ -17,15 +17,9 @@
  */
 package org.bonitasoft.studio.common.perspectives;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.progress.UIJob;
 
 public final class AutomaticSwitchPerspectivePartListener implements IPartListener {
 
@@ -44,22 +38,8 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 	public void partActivated(IWorkbenchPart part) {
 		if (part instanceof IEditorPart) {
 			final String id = BonitaPerspectivesUtils.getPerspectiveId((IEditorPart) part);
-			
 			if (id != null) {
 				BonitaPerspectivesUtils.switchToPerspective(id);
-//				UIJob job = new UIJob("changePerspective") {
-//					@Override
-//					public IStatus runInUIThread(IProgressMonitor monitor) {
-//						Display.getDefault().syncExec(new Runnable() {
-//							public void run() {
-//								BonitaPerspectivesUtils.switchToPerspective(id);
-//							}
-//						});
-//						return Status.OK_STATUS;
-//					}
-//				};
-//				job.setSystem(true);
-//				job.schedule();
 			}
 		}
 	}
