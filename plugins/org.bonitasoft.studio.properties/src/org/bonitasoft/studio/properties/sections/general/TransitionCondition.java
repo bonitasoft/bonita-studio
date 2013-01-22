@@ -46,6 +46,8 @@ import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAc
 import org.bonitasoft.studio.model.process.decision.transitions.TransitionsFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
+import org.bonitasoft.studio.profiles.manager.IBonitaActivitiesCategory;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -277,16 +279,16 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
      */
     @Override
     public boolean isRelevantFor(EObject eObject) {
-        if(eObject instanceof SequenceFlow ){
-            SourceElement source =  ((SequenceFlow)eObject).getSource() ;
-            boolean sourceIdAndGateway = source instanceof ANDGateway ;
-            TargetElement target =  ((SequenceFlow)eObject).getTarget() ;
-            boolean targetIsAndGateway = target instanceof ANDGateway ;
+        if(eObject instanceof SequenceFlow && BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.DATA_MANAGEMENT)){
+    		SourceElement source =  ((SequenceFlow)eObject).getSource() ;
+    		boolean sourceIdAndGateway = source instanceof ANDGateway ;
+    		TargetElement target =  ((SequenceFlow)eObject).getTarget() ;
+    		boolean targetIsAndGateway = target instanceof ANDGateway ;
 
-            return !(eObject instanceof BoundaryEvent) && !sourceIdAndGateway && !targetIsAndGateway;
+    		return !(eObject instanceof BoundaryEvent) && !sourceIdAndGateway && !targetIsAndGateway;
 
-        }
-        return false ;
+    	}
+    	return false ;
 
     }
 
