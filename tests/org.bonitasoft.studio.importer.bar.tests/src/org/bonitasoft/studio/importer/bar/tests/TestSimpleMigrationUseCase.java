@@ -31,10 +31,13 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.FileWidget;
+import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormButton;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.ImageWidget;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.form.Validator;
 import org.bonitasoft.studio.model.form.Widget;
@@ -422,6 +425,35 @@ public class TestSimpleMigrationUseCase {
 				assertNotNull("Validator descriptor file store is missing",filseSotre);
 				if(!filseSotre.isReadOnly()){ //Not a provided validator descriptor
 					assertNotNull("Custom validator source file is missing",validatorSourceStore.getChild(validator.getValidatorClass()));
+				}
+			}
+		}
+
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+	
+	@Test
+	public void testFileAndImageWidgetMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("ValidatorMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<FileWidget> fileWidgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.FILE_WIDGET);
+		for(FileWidget fileWidget : fileWidgets){
+			if(!(ModelHelper.getParentWidget(fileWidget).eContainer() instanceof Expression)){
+				assertEquals("File widget input type is invalid", FileWidgetInputType.DOCUMENT, fileWidget.getInputType());
+				assertNotNull("File widget document is not set",fileWidget.getDocument());
+			}
+		}
+		List<ImageWidget> imageWidgets = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.IMAGE_WIDGET);
+		for(ImageWidget imageWidget : imageWidgets){
+			if(!(ModelHelper.getParentWidget(imageWidget).eContainer() instanceof Expression)){
+				if(imageWidget.isIsADocument()){
+					assertNotNull("File widget document is not set",imageWidget.getDocument());
+				}else{
+					assertNotNull("File widget document is not set",imageWidget.getImgPath().getContent());
 				}
 			}
 		}
