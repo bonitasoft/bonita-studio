@@ -28,5 +28,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.importer.bar.exception,
+Export-Package: org.bonitasoft.studio.importer.bar.custom.migration,
+ org.bonitasoft.studio.importer.bar.exception,
  org.bonitasoft.studio.importer.bar.factory

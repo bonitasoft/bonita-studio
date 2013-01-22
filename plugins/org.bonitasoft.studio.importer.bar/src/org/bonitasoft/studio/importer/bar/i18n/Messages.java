@@ -99,6 +99,10 @@ public class Messages extends NLS {
 	public static String validatorParameterMigrationDescription;
 	public static String validatorsProperty;
 	public static String validatorDisplayNameMigrationDescription;
+	public static String changeGatewayTypeToInclusiveGatewayMigrationDescription;
+	public static String changeInclusiveGatewayMigrationDescription;
+	public static String changeParallelGatewayWithIncomingConditionsMigrationDescription;
+	public static String changeParallelGatewayWithOutgoingConditionsMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$
