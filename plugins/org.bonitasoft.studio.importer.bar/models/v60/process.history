@@ -11735,6 +11735,8 @@
         </operation>
       </changes>
     </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.InclusiveGatewayMigration"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.ParallelGatewayMigration"/>
   </releases>
   <releases/>
 </history:History>
