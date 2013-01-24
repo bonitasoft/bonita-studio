@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -126,7 +127,8 @@ public class BonitaPerspectivesUtils {
 
 							@Override
 							public void run() {
-								activePage.resetPerspective();
+//								activePage.resetPerspective();
+//								PlatformUtil.closeIntro();
 							}
 						});
 					} catch (WorkbenchException e) {
