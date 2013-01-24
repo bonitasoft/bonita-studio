@@ -20,10 +20,12 @@ package org.bonitasoft.studio.simulation.properties.contributions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.AbstractPropertySectionContribution;
 import org.bonitasoft.studio.common.properties.DynamicAddRemoveLineComposite;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -151,6 +153,7 @@ public class DataChangesContribution  extends AbstractPropertySectionContributio
                 getWidgetFactory().createLabel(lineComposite, Messages.Expression);
 
                 final ExpressionViewer expressionText = new ExpressionViewer(lineComposite, SWT.BORDER,widgetFactory,editingDomain, SimulationPackage.Literals.DATA_CHANGE__VALUE);
+                expressionText.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.SIMULATION_VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE}));
                 expressionText.getControl().setLayoutData(GridDataFactory.swtDefaults().hint(250, SWT.DEFAULT).create());
                 
                 Expression selection = dataChange.getValue() ;
