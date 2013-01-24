@@ -16,7 +16,13 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.edapt.migration.Instance;
+import org.eclipse.emf.edapt.migration.Metamodel;
+import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.emf.edapt.migration.Model;
 
 /**
  * @author Romain Bioteau
@@ -24,4 +30,13 @@ import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
  */
 public class KPIMigration extends ReportCustomMigration {
 
+	@Override
+	public void migrateBefore(Model model, Metamodel metamodel)
+			throws MigrationException {
+		for(Instance kpiBinding : model.getAllInstances("kpi.AbstractKPIBinding")){
+			addReportChange((String) kpiBinding.get("name"),Messages.kpiBinding, kpiBinding.getContainer().getUuid(), Messages.removeKpiMigrationDescription, Messages.bamProperty, IStatus.ERROR);
+			model.delete(kpiBinding);
+		}
+	}
+	
 }

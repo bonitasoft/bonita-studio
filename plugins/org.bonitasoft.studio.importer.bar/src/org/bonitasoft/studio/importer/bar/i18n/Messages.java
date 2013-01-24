@@ -123,6 +123,9 @@ public class Messages extends NLS {
 	public static String maxNumberOfColumnMigrationDescription;
 	public static String maxNumberOfRowMigrationDescription;
 	public static String minNumberOfRowMigrationDescription;
+	public static String kpiBinding;
+	public static String bamProperty;
+	public static String removeKpiMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

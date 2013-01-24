@@ -44,6 +44,8 @@ import org.bonitasoft.studio.model.form.MandatoryFieldsCustomization;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.form.Validator;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
+import org.bonitasoft.studio.model.kpi.KpiPackage;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.ActorFilter;
@@ -434,7 +436,7 @@ public class TestSimpleMigrationUseCase {
 
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testFileAndImageWidgetMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("ValidatorMigrationUseCase--1.0.bar");
@@ -463,7 +465,7 @@ public class TestSimpleMigrationUseCase {
 
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testDuplicableMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("DuplicableMigrationUseCase--1.0.bar");
@@ -485,7 +487,7 @@ public class TestSimpleMigrationUseCase {
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testMandatoryFieldsMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("MandatoryFieldsMigraitonUseCase--1.0.bar");
@@ -503,7 +505,7 @@ public class TestSimpleMigrationUseCase {
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testTableMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("TableMigrationUseCase--1.0.bar");
@@ -522,6 +524,21 @@ public class TestSimpleMigrationUseCase {
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
-	
+
+
+	@Test
+	public void testKPIMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("KPIMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<AbstractKPIBinding> fields = ModelHelper.getAllItemsOfType(mainProc, KpiPackage.Literals.ABSTRACT_KPI_BINDING);
+		assertTrue("KPI should be deleted",fields.isEmpty());
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+
+
+
 }
