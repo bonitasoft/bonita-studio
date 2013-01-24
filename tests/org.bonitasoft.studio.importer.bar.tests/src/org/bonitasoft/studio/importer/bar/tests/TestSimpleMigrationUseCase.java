@@ -527,7 +527,6 @@ public class TestSimpleMigrationUseCase {
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
 
-
 	@Test
 	public void testKPIMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("KPIMigrationUseCase--1.0.bar");
