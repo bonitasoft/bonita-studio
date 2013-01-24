@@ -182,14 +182,14 @@ public class FormsExporter {
         if (mandatorySymbol != null && mandatorySymbol.getContent() != null && !mandatorySymbol.getContent().isEmpty()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(mandatorySymbol);
             builder.addMandatorySymbolExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                    engineExpression.getReturnType(), engineExpression.getInterpreter());
+                    engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
         }
         final Expression mandatoryLabel = studioProcess.getMandatoryLabel();
         if (mandatoryLabel != null && mandatoryLabel.getContent() != null && !mandatoryLabel.getContent().isEmpty()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(mandatoryLabel);
             builder.addMandatoryLabelExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                    engineExpression.getReturnType(), engineExpression.getInterpreter());
+                    engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
         }
         final AssociatedFile errorTemplate = studioProcess.getErrorTemplate();
@@ -429,7 +429,7 @@ public class FormsExporter {
             throws InvalidFormDefinitionException {
         for (final org.bonitasoft.engine.expression.Expression dependency : expression.getDependencies()) {
             builder.addDependentExpression(dependency.getName(), dependency.getContent(), dependency.getExpressionType(), dependency.getReturnType(),
-                    dependency.getInterpreter());
+                    dependency.getInterpreter().isEmpty() ? null : dependency.getInterpreter());
         }
     }
 
@@ -561,7 +561,7 @@ public class FormsExporter {
     protected void addActionExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addActionExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty()?null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
@@ -830,7 +830,7 @@ public class FormsExporter {
     protected void addTooltipExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addPopupToolTipExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
 
     }
@@ -838,7 +838,7 @@ public class FormsExporter {
     protected void addDisplayConditionExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addDisplayConditionExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
 
     }
@@ -1012,28 +1012,28 @@ public class FormsExporter {
     protected void addValueColumnIndexExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addValueColumnIndexExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
     protected void addMinColumnsExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addMinColumnsExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
     protected void addMaxColumnsExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addMaxColumnsExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
     protected void addMinRowsExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addMinRowsExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
 
     }
@@ -1041,7 +1041,7 @@ public class FormsExporter {
     protected void addMaxRowsExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addMaxRowsExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
@@ -1089,14 +1089,14 @@ public class FormsExporter {
     protected void addHorizontalHeaderExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addHorizontalHeaderExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
     protected void addVerticalHeaderExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addVerticalHeaderExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
 
     }
@@ -1167,7 +1167,7 @@ public class FormsExporter {
         if (expression != null && expression.getContent() != null) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
             builder.addValueExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                    engineExpression.getReturnType(), engineExpression.getInterpreter());
+                    engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
         }
     }
@@ -1176,7 +1176,7 @@ public class FormsExporter {
         if (expression.getContent() != null && !expression.getContent().isEmpty()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
             builder.addAvailableValuesExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                    engineExpression.getReturnType(), engineExpression.getInterpreter());
+                    engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
         }
     }
@@ -1671,10 +1671,9 @@ public class FormsExporter {
     }
 
     protected void addConfirmationMessageExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
-        final String interpreter = expression.getInterpreter();
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addConfirmationMessageExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
 
     }
@@ -1720,7 +1719,7 @@ public class FormsExporter {
     protected void addTitleExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addTitleExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
     }
 
