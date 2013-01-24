@@ -126,6 +126,8 @@ public class Messages extends NLS {
 	public static String kpiBinding;
 	public static String bamProperty;
 	public static String removeKpiMigrationDescription;
+	public static String simDataExpressionMigrationDescription;
+	public static String simDataChangeValueMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

@@ -39,6 +39,7 @@ public class StringToExpressionConverter {
 	private Model model;
 	private Map<String,Instance> data = new HashMap<String, Instance>();
 	private Map<String,Instance> widget = new HashMap<String, Instance>();
+	private boolean useSimulationDataScope = false;
 
 	public StringToExpressionConverter(Model model) {
 		Assert.isNotNull(model);
@@ -64,7 +65,7 @@ public class StringToExpressionConverter {
 				expressionScript = "${"+FORM_FIELD_PREFIX+setVarScript+"}";
 			}
 		}
-		
+
 		Instance operation = model.newInstance("expression.Operation");
 		final Instance actionExpression = parse(expressionScript, returnType, fixedReturnType);
 		operation.set("rightOperand", actionExpression);
@@ -110,7 +111,7 @@ public class StringToExpressionConverter {
 			return expression;
 		}else{
 			final Instance exp = createExpressionInstance(model,content, content, returnType, expressionType, fixedReturnType);
-			if(ExpressionConstants.VARIABLE_TYPE.equals(expressionType)){
+			if(ExpressionConstants.VARIABLE_TYPE.equals(expressionType) || ExpressionConstants.SIMULATION_VARIABLE_TYPE.equals(expressionType)){
 				resolveDataDependencies(exp, content);
 			}else if(ExpressionConstants.FORM_FIELD_TYPE.equals(expressionType)){
 				resolveWidgetDependencies(exp, content);
@@ -196,7 +197,9 @@ public class StringToExpressionConverter {
 	private String guessExpressionType(String stringToParse) {
 		if(isAGroovyString(stringToParse)){
 			final String groovyScript = stringToParse.substring(2,stringToParse.length()-1);
-			if(data.containsKey(groovyScript)){
+			if(data.containsKey(groovyScript) && useSimulationDataScope){
+				return ExpressionConstants.SIMULATION_VARIABLE_TYPE;
+			}if(data.containsKey(groovyScript) && !useSimulationDataScope){
 				return ExpressionConstants.VARIABLE_TYPE;
 			}else if(widget.containsKey(groovyScript)){
 				return ExpressionConstants.FORM_FIELD_TYPE;
@@ -254,6 +257,21 @@ public class StringToExpressionConverter {
 
 	public static int getStatusForExpression(Instance expression) {
 		return ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type")) ? IStatus.WARNING : IStatus.OK;
+	}
+
+
+	public void setUseSimulationDataScope(boolean useSimulationDataScope) {
+		this.useSimulationDataScope  = useSimulationDataScope ;
+		if(useSimulationDataScope){
+			data.clear();
+			for(Instance data : model.getAllInstances("simulation.SimulationData")){
+				this.data.put((String) data.get("name"),data);
+			}
+		}else{
+			for(Instance data : model.getAllInstances("process.Data")){
+				this.data.put((String) data.get("name"),data);
+			}
+		}
 	}
 
 

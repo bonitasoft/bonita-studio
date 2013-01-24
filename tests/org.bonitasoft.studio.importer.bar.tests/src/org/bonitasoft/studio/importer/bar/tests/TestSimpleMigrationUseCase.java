@@ -55,6 +55,8 @@ import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.simulation.SimulationData;
+import org.bonitasoft.studio.model.simulation.SimulationPackage;
 import org.bonitasoft.studio.validators.descriptor.validator.ValidatorDescriptor;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorFileStore;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
@@ -539,6 +541,19 @@ public class TestSimpleMigrationUseCase {
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
 
-
+	@Test
+	public void testSimulationDataMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("SImulationDataMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<SimulationData> data = ModelHelper.getAllItemsOfType(mainProc, SimulationPackage.Literals.SIMULATION_DATA);
+		for(SimulationData d : data){
+			assertNotNull("Missing expression on simulation data", d.getExpression());
+		}
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
 
 }
