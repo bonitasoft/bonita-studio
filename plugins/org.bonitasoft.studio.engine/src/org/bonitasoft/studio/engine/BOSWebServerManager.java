@@ -89,6 +89,7 @@ public class BOSWebServerManager {
 	protected static final String WATCHDOG_PORT_PROPERTY = "org.bonitasoft.studio.watchdog.port";
 	private static final int MIN_PORT_NUMBER = 1024;
 	private static final int MAX_PORT_NUMBER = 65535;
+	private static final int MAX_SERVER_START_TIME = 300000;
 	private ServerSocket watchdogServer;
 
 	private static BOSWebServerManager INSTANCE;
@@ -193,9 +194,14 @@ public class BOSWebServerManager {
 	}
 
 	private void waitServerRunning(IProgressMonitor monitor) {
-		while (tomcat != null && tomcat.getServerState() != IServer.STATE_STARTED) {
+		int totalTime = 0 ;
+		while (totalTime < MAX_SERVER_START_TIME && tomcat != null && tomcat.getServerState() != IServer.STATE_STARTED) {
 			try {
+				if(BonitaStudioLog.isLoggable(IStatus.OK)){
+					BonitaStudioLog.debug("Tomcat is loading : server state = "+tomcat.getServerState(), EnginePlugin.PLUGIN_ID);
+				}
 				Thread.sleep(1000);
+				totalTime = totalTime + 1000;
 			} catch (InterruptedException e) {
 				BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
 			}
