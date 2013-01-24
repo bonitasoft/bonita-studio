@@ -408,7 +408,7 @@ public class FormsExporter {
         if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
             builder.addLabelExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                    engineExpression.getReturnType(), engineExpression.getInterpreter());
+                    engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
             addExpressionDependency(builder, engineExpression);
         }
     }
@@ -595,7 +595,7 @@ public class FormsExporter {
     protected void addTransientDataExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
         final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
         builder.addTransientDataExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
+                engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter()  );
         addExpressionDependency(builder, engineExpression);
     }
 
@@ -1258,7 +1258,7 @@ public class FormsExporter {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
             if(engineExpression != null){
                 builder.addInitialValueExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                        engineExpression.getReturnType(), engineExpression.getInterpreter());
+                        engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
                 addExpressionDependency(builder, engineExpression);
             }
         }
