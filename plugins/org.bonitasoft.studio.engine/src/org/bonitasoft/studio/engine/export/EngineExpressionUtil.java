@@ -204,9 +204,6 @@ public class EngineExpressionUtil {
         if (simpleExpression.getContent() != null && !simpleExpression.getContent().isEmpty()) {
             final ExpressionBuilder exp = new ExpressionBuilder();
             String interpreter = simpleExpression.getInterpreter();
-            if (!ExpressionConstants.SCRIPT_TYPE.equals(((org.bonitasoft.studio.model.expression.Expression) expression).getType())) {
-                interpreter = null;
-            }
             String name = simpleExpression.getName();
             if(name == null || name.isEmpty()){
                 name = "<empty-name>";
