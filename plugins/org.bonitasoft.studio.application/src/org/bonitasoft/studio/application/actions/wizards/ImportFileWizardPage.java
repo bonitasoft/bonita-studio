@@ -80,11 +80,11 @@ public class ImportFileWizardPage extends WizardPage {
     @Override
     public void createControl(Composite arg0) {
         Composite mainComposite = new Composite(arg0, SWT.NONE);
-        GridLayout gridLayout = new GridLayout(1, false);
+        GridLayout gridLayout = new GridLayout(3, false);
         mainComposite.setLayout(gridLayout);
 
         Group transfoGroup = new Group(mainComposite, SWT.BORDER);
-        transfoGroup.setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
+        transfoGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
         transfoGroup.setLayout(new GridLayout(2, true));
         Label selectImportLabel = new Label(transfoGroup, SWT.NONE);
         selectImportLabel.setText(Messages.selectImportLabel);
@@ -120,12 +120,10 @@ public class ImportFileWizardPage extends WizardPage {
         final Label descriptionLabel = new Label(descComposite, SWT.WRAP);
         descriptionLabel.setLayoutData(gridData);
 
-        Composite fileComposite = new Composite(mainComposite, SWT.NONE);
-        fileComposite.setLayout(new GridLayout(3, false));
-        fileComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        Label fileLabel = new Label(fileComposite, SWT.NONE);
+   
+        Label fileLabel = new Label(mainComposite, SWT.NONE);
         fileLabel.setText(Messages.selectFileToImport);
-        final Text text = new Text(fileComposite, SWT.BORDER);
+        final Text text = new Text(mainComposite, SWT.BORDER);
         text.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
@@ -134,7 +132,7 @@ public class ImportFileWizardPage extends WizardPage {
             }
         });
         text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        final Button browseButton = new Button(fileComposite, SWT.PUSH);
+        final Button browseButton = new Button(mainComposite, SWT.PUSH);
         browseButton.setText(Messages.browseButton_label);
         browseButton.addSelectionListener(new SelectionListener() {
             @Override
@@ -159,7 +157,6 @@ public class ImportFileWizardPage extends WizardPage {
                 if(getSelectedTransfo() != null){
                     descriptionLabel.setText(getSelectedTransfo().getDescription());
                     descriptionImage.setImage(getSelectedTransfo().getImageDescription()) ;
-                    descriptionImage.getParent().getParent().pack(true) ;
                     descriptionImage.getParent().getParent().layout(true,true) ;
                 } else {
                     descriptionLabel.setText("");
