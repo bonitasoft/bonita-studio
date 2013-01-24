@@ -332,10 +332,10 @@
         defaultValueLiteral="false"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="useVerticalHeader" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="false"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="horizontalHeader" eType="ecore:EClass expression.ecore#//Expression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="verticalHeader" eType="ecore:EClass expression.ecore#//Expression"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="horizontalHeaderExpression"
+        eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="verticalHeaderExpression"
+        eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tableExpression" eType="ecore:EClass expression.ecore#//TableExpression"
         containment="true"/>
   </eClassifiers>

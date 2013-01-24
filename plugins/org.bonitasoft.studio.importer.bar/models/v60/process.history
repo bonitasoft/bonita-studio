@@ -10806,12 +10806,12 @@
       </changes>
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
-            element="form.ecore#//AbstractTable/horizontalHeader">
-          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeader"
+            element="form.ecore#//AbstractTable/horizontalHeaderExpression">
+          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeaderExpression"
               featureName="name" dataValue="horizontalHeader"/>
-          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeader"
+          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeaderExpression"
               featureName="containment" dataValue="true" oldDataValue="false"/>
-          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeader"
+          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeaderExpression"
               featureName="eType" referenceValue="expression.ecore#//Expression"/>
         </changes>
         <operation name="newReference">
@@ -10848,12 +10848,12 @@
       </changes>
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
-            element="form.ecore#//AbstractTable/verticalHeader">
-          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeader"
+            element="form.ecore#//AbstractTable/verticalHeaderExpression">
+          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeaderExpression"
               featureName="name" dataValue="verticalHeader"/>
-          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeader"
+          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeaderExpression"
               featureName="containment" dataValue="true" oldDataValue="false"/>
-          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeader"
+          <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeaderExpression"
               featureName="eType" referenceValue="expression.ecore#//Expression"/>
         </changes>
         <operation name="newReference">
@@ -11076,6 +11076,30 @@
             <dataValue>true</dataValue>
           </parameters>
           <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/verticalHeaderExpression"
+            featureName="name" dataValue="verticalHeaderExpression" oldDataValue="verticalHeader"/>
+        <operation name="rename">
+          <parameters name="element">
+            <referenceValue element="form.ecore#//AbstractTable/verticalHeaderExpression"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>verticalHeaderExpression</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Set" element="form.ecore#//AbstractTable/horizontalHeaderExpression"
+            featureName="name" dataValue="horizontalHeaderExpression" oldDataValue="horizontalHeader"/>
+        <operation name="rename">
+          <parameters name="element">
+            <referenceValue element="form.ecore#//AbstractTable/horizontalHeaderExpression"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>horizontalHeaderExpression</dataValue>
+          </parameters>
         </operation>
       </changes>
     </changes>
