@@ -47,6 +47,7 @@
 		<module>org.bonitasoft.studio.test.suite</module>
 		<module>org.bonitasoft.studio.test.suite2</module>
 		<module>org.bonitasoft.studio.test.swtbot.suite</module>
+		<module>bos-tests-p2</module>
 	</modules>
 
 
