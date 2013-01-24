@@ -84,6 +84,9 @@ public class StringToExpressionConverter {
 				leftOperand = parse("${"+setVarScript+"}", getDataReturnType(dataInstance), true);
 			}
 		}
+		if(leftOperand == null){
+			leftOperand = createExpressionInstance(model, "", "", String.class.getName(), String.class.getName(), false);
+		}
 		operation.set("leftOperand", leftOperand);
 		return operation;
 	}

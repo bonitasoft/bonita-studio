@@ -113,6 +113,16 @@ public class Messages extends NLS {
 	public static String changeParallelGatewayWithOutgoingConditionsMigrationDescription;
 	public static String mandatoryLabelMigrationDescription;
 	public static String mandatorySymbolMigrationDescription;
+	public static String verticalHeaderMigrationDescription;
+	public static String horizontalHeaderMigrationDescription;
+	public static String cellExpressionMigrationDescription;
+	public static String maxRowForPaginationMigrationDescription;
+	public static String columnForInitialIndexMigrationDescription;
+	public static String selectedValuesMigrationDescription;
+	public static String minNumberOfColumnMigrationDescription;
+	public static String maxNumberOfColumnMigrationDescription;
+	public static String maxNumberOfRowMigrationDescription;
+	public static String minNumberOfRowMigrationDescription;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

@@ -252,7 +252,9 @@ public class OperationViewer extends Composite {
                         if(!action.getOperator().getType().equals(ExpressionConstants.ASSIGNMENT_OPERATOR)){
                             operatorLink.setToolTipText(action.getOperator().getExpression()) ;
                         }
-                        actionExpressionBinding.validateTargetToModel();
+                        if(actionExpressionBinding.getTarget() != null){
+                        	actionExpressionBinding.validateTargetToModel();
+                        }
                         IStatus status = (IStatus) actionExpressionBinding.getValidationStatus().getValue();
                         actionExpression.setMessage(status.getMessage(),status.getSeverity());
                         operatorLink.getParent().layout(true,true) ;

@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.AbstractTable;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
@@ -498,6 +499,25 @@ public class TestSimpleMigrationUseCase {
 			if(ModelHelper.getParentWidget(field) != null && !(ModelHelper.getParentWidget(field).eContainer() instanceof Expression)){
 				assertNotNull("Mandatory label is not set",field.getMandatoryLabel().getContent());
 				assertNotNull("Mandatory symbol is not set",field.getMandatorySymbol().getContent());
+			}
+		}
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+	
+	@Test
+	public void testTableMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("TableMigrationUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<AbstractTable> fields = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.ABSTRACT_TABLE);
+		for(AbstractTable field : fields){
+			if( !(ModelHelper.getParentWidget(field).eContainer() instanceof Expression)){
+				assertNotNull("Table content is not set",field.getTableExpression());
+				assertNotNull("Horizontal header is not set",field.getHorizontalHeaderExpression());
+				assertNotNull("Vertical header is not set",field.getVerticalHeaderExpression());
 			}
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
