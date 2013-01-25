@@ -197,6 +197,13 @@
 				<os-jvm-flags>-XstartOnFirstThread</os-jvm-flags>
 			</properties>
 		</profile>
+		
+		<profile>
+			<id>sonar</id>
+			<modules>
+				<module>tests</module>
+			</modules>
+		</profile>
 	</profiles>
 
 
