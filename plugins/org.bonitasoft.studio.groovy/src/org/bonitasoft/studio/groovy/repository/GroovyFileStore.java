@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -19,6 +19,9 @@ package org.bonitasoft.studio.groovy.repository;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -31,6 +34,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -42,7 +46,7 @@ public class GroovyFileStore extends AbstractFileStore {
 
     private static final String UTF_8 = "UTF-8";
 
-    public GroovyFileStore(String fileName, IRepositoryStore parentStore) {
+    public GroovyFileStore(String fileName, IRepositoryStore<?> parentStore) {
         super(fileName, parentStore);
     }
 
@@ -117,16 +121,36 @@ public class GroovyFileStore extends AbstractFileStore {
 
     }
 
-    public IFile getClassFile() {
+    public List<IFile> getClassFiles() {
         if(getResource().exists()){
+        	List<IFile> res = new ArrayList<IFile>();
             IProject project = getParentStore().getResource().getProject() ;
             IFolder binFolder = project.getFolder("bin") ;
             IFile classFile = binFolder.getFile(getName().replace(".groovy",".class"));
             if (classFile.exists()) {
-                return classFile ;
+            	res.add(classFile);
+            	//Search for closure files
+				try {
+					IResource[] potentialClosureFiles = ((IFolder)classFile.getParent()).members();
+					final String fileNameWithoutEnd = classFile.getName().replaceAll(".class", "");
+					for (IResource potentialClosureFile : potentialClosureFiles) {
+						if(potentialClosureFile instanceof IFile){
+							final String name = potentialClosureFile.getName();
+							int indexOfSuffix = name.indexOf("$");
+							if(indexOfSuffix != -1){						
+								if(name.startsWith(fileNameWithoutEnd) && indexOfSuffix == fileNameWithoutEnd.length()){
+									res.add((IFile) potentialClosureFile);
+								}
+							}
+						}
+					}
+				} catch (CoreException e) {
+					BonitaStudioLog.error(e);
+				}				
+                return res;
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

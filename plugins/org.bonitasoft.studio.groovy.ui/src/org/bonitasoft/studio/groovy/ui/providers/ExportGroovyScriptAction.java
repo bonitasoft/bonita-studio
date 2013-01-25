@@ -35,6 +35,7 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 
 /**
@@ -85,7 +86,10 @@ public class ExportGroovyScriptAction extends Action implements IConfigurationEx
                 GroovyFileStore file = groovyStore.getChild(script.getValue()) ;
                 if(file != null){
                     scripts.add(file.getResource().getLocation().toFile()); //source file
-                    scripts.add(file.getClassFile().getLocation().toFile()) ; //class file
+                    List<IFile> classFiles = file.getClassFiles();
+                    for (IFile classFile : classFiles) {
+                    	scripts.add(classFile.getLocation().toFile()) ; //class file
+					}					
                 }
             }
         }
@@ -127,8 +131,11 @@ public class ExportGroovyScriptAction extends Action implements IConfigurationEx
             if(script.isExported()){
                 GroovyFileStore file = groovyStore.getChild(script.getValue()) ;
                 if(file != null){
-                    scripts.add(file.getResource().getLocation().toFile()); //source file
-                    scripts.add(file.getClassFile().getLocation().toFile()) ; //class file
+                    scripts.add(file.getResource().getLocation().toFile()); //source file                   
+                    List<IFile> classFiles = file.getClassFiles();
+                    for (IFile classFile : classFiles) {
+                    	scripts.add(classFile.getLocation().toFile()) ; //class file
+					}				
                 }
             }
         }

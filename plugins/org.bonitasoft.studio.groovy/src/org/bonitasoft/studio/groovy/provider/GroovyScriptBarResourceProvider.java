@@ -67,11 +67,13 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
                     if(((Fragment) fragment).isExported()){
                         GroovyFileStore file = store.getChild(((Fragment) fragment).getValue()) ;
                         scripts.add(file.getResource().getLocation().toFile()); //source file
-                        IFile classFile = file.getClassFile();
-                        if(classFile == null){
+                        List<IFile> classFiles = file.getClassFiles();
+                        if(classFiles.isEmpty()){
                             throw new Exception("Groovy file "+file.getName()+" has compilation failure and cannot be exported.");
                         }
-                        scripts.add(classFile.getLocation().toFile()) ; //class file
+                        for (IFile classFile : classFiles) {
+                        	scripts.add(classFile.getLocation().toFile()) ; //class file
+						}
                     }
                 }
             }
@@ -79,9 +81,11 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
 
         final ProvidedGroovyRepositoryStore providedStore = (ProvidedGroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class) ;
         for (IRepositoryFileStore file : providedStore.getChildren()) {
-            IFile classFile = ((GroovyFileStore)file).getClassFile() ;
-            if(classFile != null){
-                providedscripts.add(classFile.getLocation().toFile()) ;
+            List<IFile> classFiles = ((GroovyFileStore)file).getClassFiles() ;
+            if(!classFiles.isEmpty()){
+            	for (IFile classFile : classFiles) {
+            		providedscripts.add(classFile.getLocation().toFile()) ;
+				}
             }
         }
 
