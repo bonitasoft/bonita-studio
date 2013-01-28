@@ -3,6 +3,7 @@
 
 <product name="BOS Test Product" uid="org.bonitasoft.studio.test.product" version="6.0" useFeatures="true" includeLaunchers="true">
 
+
    <configIni use="default">
    </configIni>
 
@@ -10,11 +11,27 @@
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
+   <windowImages/>
+
+
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+
+   <vm>
+   </vm>
+
+
    <plugins>
    </plugins>
 
    <features>
-      <feature id="tests-feature" version="1.0.0.qualifier"/>
+      <feature id="tests-feature"/>
+      <feature id="tests-common-feature"/>
    </features>
 
 
