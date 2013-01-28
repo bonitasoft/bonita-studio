@@ -90,7 +90,7 @@ public class BOSEngineManager {
         return getInstance(null) ;
     }
 
-    public static BOSEngineManager getInstance(IProgressMonitor monitor){
+    public static synchronized BOSEngineManager getInstance(IProgressMonitor monitor){
         if(INSTANCE == null){
             // Setting useCaches to false avoids a memory leak of URLJarFile
             // instances
