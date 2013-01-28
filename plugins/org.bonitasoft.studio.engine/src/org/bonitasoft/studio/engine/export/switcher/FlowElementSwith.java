@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.bonitasoft.engine.bpm.model.ActivityDefinitionBuilder;
 import org.bonitasoft.engine.bpm.model.AutomaticTaskDefinitionBuilder;
+import org.bonitasoft.engine.bpm.model.BoundaryEventDefinitionBuilder;
 import org.bonitasoft.engine.bpm.model.CallActivityBuilder;
 import org.bonitasoft.engine.bpm.model.CatchMessageEventTriggerDefinitionBuilder;
 import org.bonitasoft.engine.bpm.model.EndEventDefinitionBuilder;
@@ -54,8 +55,14 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.ActorFilter;
+import org.bonitasoft.studio.model.process.BoundaryEvent;
+import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
+import org.bonitasoft.studio.model.process.BoundarySignalEvent;
+import org.bonitasoft.studio.model.process.BoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Element;
@@ -68,6 +75,7 @@ import org.bonitasoft.studio.model.process.InputMapping;
 import org.bonitasoft.studio.model.process.IntermediateCatchMessageEvent;
 import org.bonitasoft.studio.model.process.IntermediateCatchSignalEvent;
 import org.bonitasoft.studio.model.process.IntermediateCatchTimerEvent;
+import org.bonitasoft.studio.model.process.IntermediateErrorCatchEvent;
 import org.bonitasoft.studio.model.process.IntermediateThrowMessageEvent;
 import org.bonitasoft.studio.model.process.IntermediateThrowSignalEvent;
 import org.bonitasoft.studio.model.process.Lane;
@@ -122,28 +130,36 @@ public class FlowElementSwith extends AbstractProcessSwitch {
         String message =  object.getEvent() ;
         if(message != null){
             IntermediateCatchMessageEventTriggerDefinitionBuilder triggerBuilder =  eventBuilder.addMessageEventTrigger(message) ;
-            for(Operation operation : object.getMessageContent()){
-                triggerBuilder.addOperation(EngineExpressionUtil.createOperationForMessageContent(operation)) ;
-            }
-            if(object.getCorrelation() != null){
-                for(ListExpression row : object.getCorrelation().getExpressions()){
-                    List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;
-                    if(col.size() == 2){
-                        org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
-                        org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
-                        if(correlationKeyExp.getContent() != null
-                                && !correlationKeyExp.getContent().isEmpty()
-                                && valueExpression.getContent() != null
-                                && !valueExpression.getContent().isEmpty()){
-                            triggerBuilder.addCorrelation(EngineExpressionUtil.createExpression(correlationKeyExp), EngineExpressionUtil.createExpression(valueExpression)) ;
-                        }
-                    }
-                }
-            }
+            addMessageContent(object, triggerBuilder);
+            addMessageCorrelation(object, triggerBuilder);
         }
         addDescription(eventBuilder, object.getDocumentation()) ;
         return object;
     }
+
+	private void addMessageContent(AbstractCatchMessageEvent messageEvent, CatchMessageEventTriggerDefinitionBuilder triggerBuilder) {
+		for(Operation operation : messageEvent.getMessageContent()){
+		    triggerBuilder.addOperation(EngineExpressionUtil.createOperationForMessageContent(operation)) ;
+		}	
+	}
+	
+	private void addMessageCorrelation(AbstractCatchMessageEvent messageEvent, IntermediateCatchMessageEventTriggerDefinitionBuilder triggerBuilder){
+		if(messageEvent.getCorrelation() != null){
+		    for(ListExpression row : messageEvent.getCorrelation().getExpressions()){
+		        List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;
+		        if(col.size() == 2){
+		            org.bonitasoft.studio.model.expression.Expression correlationKeyExp = col.get(0);
+		            org.bonitasoft.studio.model.expression.Expression valueExpression = col.get(1);
+		            if(correlationKeyExp.getContent() != null
+		                    && !correlationKeyExp.getContent().isEmpty()
+		                    && valueExpression.getContent() != null
+		                    && !valueExpression.getContent().isEmpty()){
+		                triggerBuilder.addCorrelation(EngineExpressionUtil.createExpression(correlationKeyExp), EngineExpressionUtil.createExpression(valueExpression)) ;
+		            }
+		        }
+		    }
+		}
+	}
 
 
     @Override
@@ -390,21 +406,30 @@ public class FlowElementSwith extends AbstractProcessSwitch {
     @Override
     public FlowElement caseIntermediateCatchTimerEvent(IntermediateCatchTimerEvent timer) {
         IntermediateCatchEventDefinitionBuilder timerBuilder = builder.addIntermediateCatchEvent(timer.getName());
-       if(TimerUtil.isDuration(timer)){
-            timerBuilder.addTimerEventTriggerDefinition(TimerType.DURATION, EngineExpressionUtil.createExpression(timer.getCondition()));
-        }else{
-            if(Long.class.getName().equals(timer.getCondition().getReturnType())){
-                timerBuilder.addTimerEventTriggerDefinition(TimerType.DURATION, EngineExpressionUtil.createExpression(timer.getCondition()));
-            }else if(Date.class.getName().equals(timer.getCondition().getReturnType())){
-                timerBuilder.addTimerEventTriggerDefinition(TimerType.DATE, EngineExpressionUtil.createExpression(timer.getCondition()));
-            }
+       
+        TimerType timerType = getTimerType(timer);
+        if(timerType != null){
+        	timerBuilder.addTimerEventTriggerDefinition(timerType, EngineExpressionUtil.createExpression(timer.getCondition()));
         }
         addDescription(timerBuilder, timer.getDocumentation()) ;
         return timer;
     }
 
 
-    @Override
+    private TimerType getTimerType(IntermediateCatchTimerEvent timer) {
+    	if(TimerUtil.isDuration(timer)){
+            return TimerType.DURATION;
+        }else{
+            if(Long.class.getName().equals(timer.getCondition().getReturnType())){
+               return TimerType.DURATION;
+            }else if(Date.class.getName().equals(timer.getCondition().getReturnType())){
+                return TimerType.DATE;
+            }
+        }
+    	return null;
+	}
+
+	@Override
     public FlowElement caseEndEvent(final EndEvent endEvent) {
         final EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(endEvent.getName());
         addDescription(eventBuilder, endEvent.getDocumentation()) ;
@@ -455,9 +480,29 @@ public class FlowElementSwith extends AbstractProcessSwitch {
         addDescription(taskBuilder, activity.getDocumentation()) ;
         addDisplayDescription(taskBuilder,activity) ;
         addMultiInstantiation(taskBuilder,activity);
+        addBoundaryEvents(taskBuilder, activity);
     }
 
-    protected void addMultiInstantiation( ActivityDefinitionBuilder taskBuilder , final Activity activity) {
+    private void addBoundaryEvents(ActivityDefinitionBuilder taskBuilder, Activity activity) {
+		for(BoundaryEvent boundaryEvent :activity.getBoundaryIntermediateEvents()){
+			BoundaryEventDefinitionBuilder boundaryEventBuilder = taskBuilder.addBoundaryEvent(boundaryEvent.getName());
+			if(boundaryEvent instanceof IntermediateErrorCatchEvent){
+				boundaryEventBuilder.addErrorEventTrigger(((IntermediateErrorCatchEvent) boundaryEvent).getErrorCode());
+			} else if(boundaryEvent instanceof BoundaryMessageEvent){
+				CatchMessageEventTriggerDefinitionBuilder catchMessageEventTriggerDefinitionBuilder = boundaryEventBuilder.addMessageEventTrigger(((BoundaryMessageEvent) boundaryEvent).getEvent());
+				addMessageContent((BoundaryMessageEvent)boundaryEvent, catchMessageEventTriggerDefinitionBuilder);
+			} else if(boundaryEvent instanceof BoundaryTimerEvent){
+		        TimerType timerType = getTimerType((IntermediateCatchTimerEvent) boundaryEvent);
+		        if(timerType != null){
+		        	boundaryEventBuilder.addTimerEventTriggerDefinition(timerType, EngineExpressionUtil.createExpression(((AbstractTimerEvent) boundaryEvent).getCondition()));
+		        }
+			} else if(boundaryEvent instanceof BoundarySignalEvent){
+				boundaryEventBuilder.addSignalEventTrigger(((BoundarySignalEvent) boundaryEvent).getSignalCode());
+			}
+		}		
+	}
+
+	protected void addMultiInstantiation( ActivityDefinitionBuilder taskBuilder , final Activity activity) {
         if(activity.isIsMultiInstance()){
             final MultiInstantiation multiInstantiation = activity.getMultiInstantiation();
             final Expression completionCondition = multiInstantiation.getCompletionCondition();
