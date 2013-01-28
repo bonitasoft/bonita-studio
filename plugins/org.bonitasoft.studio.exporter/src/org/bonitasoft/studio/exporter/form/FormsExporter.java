@@ -1703,10 +1703,15 @@ public class FormsExporter {
                 builder.addLabelStyle(label_classes);
             }
         }
-
+        
+        final String cellClasses = getCSSClasses(widget, ExporterTools.PREFIX_WIDGET);
+        if (cellClasses.length() > 0) {
+            builder.addStyle(cellClasses);
+        }
+        
         final String classes = getCSSClasses(widget, ExporterTools.PREFIX_INPUT);
         if (classes.length() > 0) {
-            builder.addStyle(classes);
+            builder.addInputStyle(classes);
         }
         if (!(widget instanceof IFrameWidget) && !(widget instanceof HiddenWidget)) {
             final Expression widgetTooltip = widget.getTooltip();
