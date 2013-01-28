@@ -96,20 +96,22 @@ public class RecentProcessContentProvider implements IIntroXHTMLContentProvider 
         //            queue.add(proc);
         //        }
         //        Assert.isTrue(nbProc == queue.size());
-        for (IRepositoryFileStore proc : diagramSotre.getRecentChildren(nbProc)) {
-            Element li = doc.createElement("li");
-            Element a = doc.createElement("a");
-            li.appendChild(a);
-            a.setAttribute("href", createOpenProcessHref(proc));
-            String displayNameForLabelProvider = proc.getDisplayName();
-            a.setAttribute("title", displayNameForLabelProvider) ;
-            if (displayNameForLabelProvider.length() > 100) {
-                displayNameForLabelProvider = displayNameForLabelProvider.substring(0,100 ) + "...";
-            }
-            Text procName = doc.createTextNode(displayNameForLabelProvider);
-            a.appendChild(procName);
+        if(diagramSotre != null){
+        	for (IRepositoryFileStore proc : diagramSotre.getRecentChildren(nbProc)) {
+        		Element li = doc.createElement("li");
+        		Element a = doc.createElement("a");
+        		li.appendChild(a);
+        		a.setAttribute("href", createOpenProcessHref(proc));
+        		String displayNameForLabelProvider = proc.getDisplayName();
+        		a.setAttribute("title", displayNameForLabelProvider) ;
+        		if (displayNameForLabelProvider.length() > 100) {
+        			displayNameForLabelProvider = displayNameForLabelProvider.substring(0,100 ) + "...";
+        		}
+        		Text procName = doc.createTextNode(displayNameForLabelProvider);
+        		a.appendChild(procName);
 
-            ul.appendChild(li);
+        		ul.appendChild(li);
+        	}
         }
 
     }
