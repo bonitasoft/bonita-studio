@@ -83,5 +83,9 @@ public class BonitaStudioFontRegistry {
 			return fontRegistry.get(fontID);
 		}
 	}
+
+	public static Font getItalicFont() {
+		return getFont("italic_font", 10, SWT.ITALIC);
+	}
 	
 }
