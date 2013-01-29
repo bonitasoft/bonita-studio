@@ -53,6 +53,7 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 		bottomRight.addView("org.bonitasoft.studio.views.properties.process.general");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.application");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.process.appearance");
+		
 
 		for (String viewId : BonitaPerspectivesUtils.getContributedPropertiesViews(PROCESS_PERSPECTIVE_ID)) {
 			bottomRight.addView(viewId);
@@ -62,7 +63,7 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 		bottomRight.setProperty(VIEW_KIND, BONITA_TABS);
 
 		createLeftViewFolder(layout, editorArea);
-
+		bottomRight.addView("org.bonitasoft.studio.validation.view");
 	}
 
 	protected void createLeftViewFolder(IPageLayout layout, String editorArea) {

@@ -125,7 +125,10 @@ public class Messages extends NLS {
     public static String portAlreadyUseMsg;
     public static String updatingServerPort;
     public static String exportErrorOccuredMsg;
-
+    public static String errorValidationMessage;
+    public static String errorValidationContinueAnywayMessage;
+    public static String errorValidationInDiagramToExport;
+    
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
     }

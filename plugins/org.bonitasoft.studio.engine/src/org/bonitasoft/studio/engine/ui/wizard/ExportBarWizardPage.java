@@ -18,13 +18,19 @@ package org.bonitasoft.studio.engine.ui.wizard;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -33,6 +39,8 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
@@ -42,9 +50,12 @@ import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
@@ -73,6 +84,10 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 
 
 /**
@@ -371,6 +386,10 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         operation.setTargetFolder(getDetinationPath()) ;
         operation.setConfigurationId(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON) ;
 
+        if(!ExportBarWizardPage.validateBeforeExport(selectedProcess)){
+        	return Status.CANCEL_STATUS;
+        }
+
         for(AbstractProcess process : selectedProcess){
             if(!(process instanceof MainProcess)){
                 operation.addProcessToDeploy(process) ;
@@ -385,6 +404,56 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         }) ;
         return operation.getStatus();
     }
+
+	/**
+	 * 
+	 */
+	protected static boolean validateBeforeExport(Set<AbstractProcess> selectedList) {
+		//Validate before run
+        final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        Command cmd = cmdService.getCommand("org.bonitasoft.studio.validation.batchValidation");
+        Map<String, Object> parameters = new HashMap<String,Object>();
+        parameters.put("showReport", false);
+        Set<Diagram> diagrams = new HashSet<Diagram>();
+        for(AbstractProcess p : selectedList){
+            Resource eResource = p.eResource();
+            if(eResource!=null){
+                for(EObject e : eResource.getContents()){
+                    if(e instanceof Diagram){
+                        diagrams.add((Diagram) e);
+                    }
+                }
+            }
+        }
+        parameters.put("diagrams", diagrams);
+        try {
+            final IStatus status = (IStatus) cmd.executeWithChecks(new ExecutionEvent(cmd,parameters,null,null));
+            if(status == null || !status.isOK()){
+            	StringBuilder report = new StringBuilder("");
+            	List<String> alreadyInReport = new ArrayList<String>(selectedList.size());
+            	for(IStatus s : status.getChildren()){
+            		String fileName = s.getMessage().substring(0, s.getMessage().indexOf(":"));
+            		if(!alreadyInReport.contains(fileName)){
+            			report.append(fileName);
+            			report.append("\n");
+            			alreadyInReport.add(fileName);
+            		}
+            	}
+            	if(!FileActionDialog.getDisablePopup()){
+            		String errorMessage = Messages.errorValidationInDiagramToExport +"\n"+report+Messages.errorValidationContinueAnywayMessage ;
+            		int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,errorMessage, ValidationDialog.YES_NO).open();
+            		if(result == ValidationDialog.NO){
+            			return false;
+            		}
+
+            	}
+            }
+        } catch (Exception e) {
+            BonitaStudioLog.error(e);
+            return false;
+        }
+        return true;
+	}
 
 
 

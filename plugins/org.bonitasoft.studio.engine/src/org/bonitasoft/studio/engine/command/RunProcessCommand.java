@@ -30,6 +30,7 @@ import java.util.TreeSet;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -65,6 +66,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.progress.IProgressService;
@@ -146,9 +149,23 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
                         report.append("\n");
                     }
                     if(!FileActionDialog.getDisablePopup()){
-                        if(!MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,Messages.bind(Messages.validationFailedMessage,report.toString()))){
-                            return null;
-                        }
+
+                    	String errorMessage = Messages.errorValidationMessage +PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle()+Messages.errorValidationContinueAnywayMessage ;
+
+                		int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,errorMessage, ValidationDialog.YES_NO_SEEDETAILS).open();
+
+                		if(result == ValidationDialog.NO){
+                			return null;
+                		}else if(result == ValidationDialog.SEE_DETAILS){
+                			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                			try {
+            					activePage.showView("org.bonitasoft.studio.validation.view");
+            				} catch (PartInitException e) {
+            					BonitaStudioLog.error(e);
+            				}
+                			return null;
+                		}
+                		
                     }
                 }
             } catch (Exception e) {

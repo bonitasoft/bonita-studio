@@ -69,14 +69,14 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 		Display.getDefault().syncExec(new Runnable() {
 
 			public void run() {	
-				if(!toValidate.isEmpty()){
-					Diagram view = toValidate.iterator().next();
-					IFile target = view.eResource() != null ? WorkspaceSynchronizer.getFile(view.eResource()) : null;
-					if (target != null) {
-						ProcessMarkerNavigationProvider.deleteMarkers(target);
-						org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.deleteMarkers(target);
-					}
-				}
+//				if(!toValidate.isEmpty()){
+//					Diagram view = toValidate.iterator().next();
+//					IFile target = view.eResource() != null ? WorkspaceSynchronizer.getFile(view.eResource()) : null;
+//					if (target != null) {
+//						ProcessMarkerNavigationProvider.deleteMarkers(target);
+//						org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.deleteMarkers(target);
+//					}
+//				}
 				for(Diagram d : toValidate){
 					DiagramEditPart de = getDiagramEditPart(d);
 					if( de != null ){
@@ -150,13 +150,16 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 
 
 	private void buildMultiStatus(IFile target,MultiStatus result) throws CoreException {
+		String fileName = target.getName();
+		fileName = fileName.substring(0, fileName.lastIndexOf("."));
 		for(IMarker m : target.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, true, IResource.DEPTH_ZERO)){
 			int severity = (Integer) m.getAttribute(IMarker.SEVERITY);
 			String location =  (String) m.getAttribute(IMarker.LOCATION);
 			if(severity == IStatus.WARNING || severity == IStatus.INFO || severity == IStatus.ERROR){
 				String message = (String) m.getAttribute(IMarker.MESSAGE);
-				if(!statusExists(result, location +" : " + message)){
-					result.add(new Status(severity, Activator.PLUGIN_ID, location +" : " + message));
+				String fullMessage = fileName + ":" +location +" : " + message;
+				if(!statusExists(result,fullMessage)){
+					result.add(new Status(severity, Activator.PLUGIN_ID, fullMessage));
 				}
 			}
 		}
@@ -165,8 +168,9 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 			if(severity == IStatus.WARNING || severity == IStatus.INFO || severity == IStatus.ERROR){
 				String message = (String) m.getAttribute(IMarker.MESSAGE);
 				String location =  (String) m.getAttribute(IMarker.LOCATION);
-				if(!statusExists(result, location +" : " + message)){
-					result.add(new Status(severity, Activator.PLUGIN_ID, location +" : " + message));
+				String fullMessage = fileName + ":" +location +" : " + message;
+				if(!statusExists(result, fullMessage)){
+					result.add(new Status(severity, Activator.PLUGIN_ID, fullMessage));
 				}
 			}
 		}

@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.commands.AbstractHandler;
@@ -32,6 +33,8 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -93,14 +96,26 @@ public class BatchValidationHandler extends AbstractHandler {
     }
 
     private void showReport(IStatus status) {
-        if(status == null || !status.isOK()){
-            StringBuilder report = new StringBuilder("");
-            for(IStatus s : status.getChildren()){
-                report.append(s.getMessage());
-                report.append("\n");
-            }
-            MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,Messages.bind(Messages.validationFailedMessage,report.toString()));
-        }
+    	if(status == null || !status.isOK()){
+    		StringBuilder report = new StringBuilder("");
+    		for(IStatus s : status.getChildren()){
+    			report.append(s.getMessage());
+    			report.append("\n");
+    		}
+    		String errorMessage = Messages.validationErrorFoundMessage +PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle() ;
+
+    		int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,errorMessage, ValidationDialog.OK_SEEDETAILS).open();
+
+    		if(result == ValidationDialog.SEE_DETAILS){
+    			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    			try {
+					activePage.showView("org.bonitasoft.studio.validation.view");
+				} catch (PartInitException e) {
+					BonitaStudioLog.error(e);
+				}
+    		}
+    	}
+    	
     }
 
 }

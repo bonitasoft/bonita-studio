@@ -74,8 +74,13 @@ public class Messages extends NLS {
     public static String incompatilbeOperationReturnType;
     public static String validationFailedTitle;
     public static String validationFailedMessage;
-
-
+    
+    public static String validationViewElementColumnName;
+    public static String validationViewSeverityColumnName;
+    public static String validationViewDescriptionColumnName;
+    public static String validationViewValidateButtonLabel;
+    public static String validationErrorFoundMessage;
+    
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
