@@ -363,7 +363,11 @@ public class Messages extends NLS {
     public static String exportConnectorTitle;
 	public static String connectorSectionDescription;
 	public static String Edit;
-
+	public static String activate;
+	public static String automaticallyAddDriver;
+	public static String BonitaPreferenceDialog_DBConnectors;
+	public static String BonitaPreferencePage_DBConnectors_Description;
+	public static String databaseConnectorsProperties;
 
     /**
      * @param event

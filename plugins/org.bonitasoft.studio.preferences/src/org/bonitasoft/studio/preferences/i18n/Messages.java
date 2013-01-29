@@ -87,4 +87,7 @@ public class Messages extends NLS {
     public static String applyingLooknFeel;
     public static String defaultAppliThemeLabel;
     public static String validateBeforeRun;
+	public static String BonitaPreferenceDialog_DBConnectors;
+	public static String BonitaPreferencePage_DBConnectors_Description;
+	
 }

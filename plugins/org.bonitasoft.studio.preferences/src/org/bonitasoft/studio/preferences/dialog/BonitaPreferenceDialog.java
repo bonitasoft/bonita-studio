@@ -80,6 +80,7 @@ public class BonitaPreferenceDialog extends Dialog {
     protected static final String JAVA_PAGE_ID = "org.eclipse.jdt.debug.ui.preferences.VMPreferencePage"; //$NON-NLS-1$
     protected static final String RUN_DEPLOY_MODE_PAGE_ID = "org.bonitasoft.studio.preferences.run"; //$NON-NLS-1$
     protected static final String USERXP_SETTINGS_PAGE_ID = "org.bonitasoft.studio.preferences.userXp"; //$NON-NLS-1$
+    protected static final String DB_CONNECTORS_PAGE_ID = "org.bonitasoft.studio.preferences.dbconnectors";//$NON-NLS-1$
     protected static final String REMOTE_ENGINE_PAGE_ID = "org.bonitasoft.studio.preferences.remoteEngine"; //$NON-NLS-1$
     protected static final String WEB_BROWSER_PAGE_ID = "org.eclipse.ui.browser.preferencePage"; //$NON-NLS-1$
     protected static final String PROXY_PAGE_ID = "org.eclipse.ui.net.NetPreferences"; //$NON-NLS-1$
@@ -102,7 +103,7 @@ public class BonitaPreferenceDialog extends Dialog {
 
     private static  String[] pageIds = new String[]{USER_PROFILE_PAGE_ID,DATABASE_PAGE_ID,
         APPEARANCE_PAGE_ID,LANGUAGE_PAGE_ID,JAVA_PAGE_ID,JAVA_PAGE_ID,RUN_DEPLOY_MODE_PAGE_ID,RUN_DEPLOY_MODE_PAGE_ID,
-        USERXP_SETTINGS_PAGE_ID,REMOTE_ENGINE_PAGE_ID,WEB_BROWSER_PAGE_ID,PROXY_PAGE_ID,ADVANCED_PAGE_ID,ECLIPSE_PAGE_ID};
+        USERXP_SETTINGS_PAGE_ID, DB_CONNECTORS_PAGE_ID,REMOTE_ENGINE_PAGE_ID,WEB_BROWSER_PAGE_ID,PROXY_PAGE_ID,ADVANCED_PAGE_ID,ECLIPSE_PAGE_ID};
 
     /**
      * Create the dialog.
@@ -421,10 +422,12 @@ public class BonitaPreferenceDialog extends Dialog {
 
         createSeparator(menuComposite) ;
 
-        Composite deploymentRow = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Deployment, 3) ;
+        Composite deploymentRow = createRow(menuComposite, null, Messages.BonitaPreferenceDialog_Deployment, 4) ;
 
         ToolItem tltmRunMode = createTool(deploymentRow, null, Pics.getImage(PicsConstants.preferenceDeploy), Pics.getImage(PicsConstants.preferenceDeploydisabled), RUN_DEPLOY_MODE_PAGE_ID) ;
         ToolItem tltmUserxpSettings = createTool(deploymentRow, null, Pics.getImage(PicsConstants.preferenceLogin), Pics.getImage(PicsConstants.preferenceLogindisabled), USERXP_SETTINGS_PAGE_ID) ;
+        ToolItem tltmDBConnectors = createTool(deploymentRow, null, Pics.getImage(PicsConstants.preferenceAdvanced), Pics.getImage(PicsConstants.preferenceAdvanceddisabled), DB_CONNECTORS_PAGE_ID) ;
+
 
         if(PreferenceUtil.findNodeMatching(REMOTE_ENGINE_PAGE_ID) != null){
             ToolItem tltmRemoteEngine = createTool(deploymentRow, null, Pics.getImage(PicsConstants.preferenceRemote), Pics.getImage(PicsConstants.preferenceRemotedisabled), REMOTE_ENGINE_PAGE_ID) ;
@@ -447,6 +450,10 @@ public class BonitaPreferenceDialog extends Dialog {
 
         itemPerPreferenceNode.put(USERXP_SETTINGS_PAGE_ID, tltmUserxpSettings) ;
         labelPerPreferenceNode.put(USERXP_SETTINGS_PAGE_ID, lblUserxpSettings) ;
+        
+        Label lblDbConnectors = createItemLabel(deploymentRow, null, Messages.BonitaPreferenceDialog_DBConnectors);
+        itemPerPreferenceNode.put(DB_CONNECTORS_PAGE_ID, tltmDBConnectors);
+        labelPerPreferenceNode.put(DB_CONNECTORS_PAGE_ID, lblDbConnectors);
 
         if(PreferenceUtil.findNodeMatching(REMOTE_ENGINE_PAGE_ID) != null){
             Label lblRemoteEngine =  createItemLabel(deploymentRow, null, Messages.BonitaPreferenceDialog_Remote_Engine) ;
