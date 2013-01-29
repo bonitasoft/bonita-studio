@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -48,6 +49,7 @@ import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotr
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.impl.EStructuralFeatureImpl.SimpleFeatureMapEntry;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLOptions;
@@ -136,7 +138,13 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 					if(anyType != null && anyType.getMixed().size() > 1){
 						AnyType mainProc = (AnyType) anyType.getMixed().get(1).getValue();
 						if(mainProc != null && mainProc.getMixed().size() > 4){
-							sourceVersion = mainProc.getAnyAttribute().get(4).getValue();
+							Iterator<?> it=  mainProc.getAnyAttribute().iterator();
+							while (it.hasNext()) {
+								SimpleFeatureMapEntry object = (SimpleFeatureMapEntry) it.next();
+								if("bonitaModelVersion".equals(object.getEStructuralFeature().getName())){
+									sourceVersion = object.getValue();
+								}
+							}
 						}
 					}
 				}
