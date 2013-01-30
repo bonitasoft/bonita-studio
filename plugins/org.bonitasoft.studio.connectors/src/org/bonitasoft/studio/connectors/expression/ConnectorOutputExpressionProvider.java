@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.connectors.expression;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -44,11 +43,9 @@ import org.eclipse.swt.graphics.Image;
 public class ConnectorOutputExpressionProvider implements IExpressionProvider {
 
     private final ConnectorDefRepositoryStore store;
-    private final List<ConnectorDefinition> definitions;
 
     public ConnectorOutputExpressionProvider(){
         store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-        definitions = store.getDefinitions();
     }
 
     @Override
