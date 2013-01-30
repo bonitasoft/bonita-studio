@@ -31,6 +31,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
@@ -47,6 +48,7 @@ import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.wizard.page.AbstractConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.ConnectorOutputWizardPage;
+import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorDriversWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectConnectorDefinitionWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectEventConnectorNameAndDescWizardPage;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -85,7 +87,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefinitionContainer {
 
     private static final String CUSTOM_WIZARD_ID = "org.bonitasoft.studio.connectors.connectorWizard";
-
+    private static final String DATABASE_ID ="database";
 	protected final EObject container;
 	protected Connector connectorWorkingCopy;
 	private boolean editMode = false;
@@ -175,7 +177,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
         }
         addNameAndDescriptionPage();
         if(editMode){
-            final IDefinitionRepositoryStore definitionStore = getDefinitionStore();
+        	final IDefinitionRepositoryStore definitionStore = getDefinitionStore();
             final ConnectorDefinition definition =  definitionStore.getDefinition(connectorWorkingCopy.getDefinitionId(),connectorWorkingCopy.getDefinitionVersion()) ;
             extension = findCustomWizardExtension(definition) ;
             List<IWizardPage> pages = getPagesFor(definition) ;
@@ -412,6 +414,10 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	protected List<IWizardPage> getPagesFor(ConnectorDefinition definition) {
 		List<IWizardPage> result = new ArrayList<IWizardPage>() ;
+        if (isDatabaseConnector(definition)){
+        	result.add(new DatabaseConnectorDriversWizardPage(definition.getId()));
+        }
+		
 		if(extension != null && (!extension.hasCanBeUsedProvider() || extension.canBeUsed(definition,connectorWorkingCopy))){ //Extension page
 			for(AbstractConnectorConfigurationWizardPage p : extension.getPages()){
 				p.setMessageProvider(messageProvider) ;
@@ -476,7 +482,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		}
 		return null;
 	}
-
+	
 	@Override
 	public IWizardPage getPreviousPage(IWizardPage page) {
 		IWizardPage previousPage = super.getPreviousPage(page);
@@ -488,5 +494,15 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	public boolean isEditMode() {
 		return editMode;
+	}
+	
+	private boolean isDatabaseConnector(ConnectorDefinition def){
+		List<Category> categories = def.getCategory();
+		for (Category category:categories){
+			if (DATABASE_ID.equals(category.getId())){
+				return true;
+			}
+		}
+		return false;
 	}
 }
