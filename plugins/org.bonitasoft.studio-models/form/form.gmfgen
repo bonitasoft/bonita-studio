@@ -127,7 +127,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5128"
+          visualID="5163"
           editPartClassName="PreviousFormButtonName2EditPart"
           itemSemanticEditPolicyClassName="PreviousFormButtonName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -285,7 +285,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5134"
+          visualID="5149"
           editPartClassName="CheckBoxSingleFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="CheckBoxSingleFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -452,7 +452,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5115"
+          visualID="5164"
           editPartClassName="ComboFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="ComboFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -569,7 +569,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5129"
+          visualID="5165"
           editPartClassName="NextFormButtonName2EditPart"
           itemSemanticEditPolicyClassName="NextFormButtonName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -724,7 +724,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5117"
+          visualID="5166"
           editPartClassName="DateFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="DateFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -1018,7 +1018,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5118"
+          visualID="5167"
           editPartClassName="ListFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="ListFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -1135,7 +1135,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5130"
+          visualID="5168"
           editPartClassName="SubmitFormButtonName2EditPart"
           itemSemanticEditPolicyClassName="SubmitFormButtonName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -1290,7 +1290,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5120"
+          visualID="5169"
           editPartClassName="PasswordFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="PasswordFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -1457,7 +1457,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5121"
+          visualID="5170"
           editPartClassName="RadioFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="RadioFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -1624,7 +1624,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5122"
+          visualID="5171"
           editPartClassName="SelectFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="SelectFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -1779,7 +1779,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5123"
+          visualID="5172"
           editPartClassName="TextFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="TextFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -1934,7 +1934,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5124"
+          visualID="5173"
           editPartClassName="TextAreaFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="TextAreaFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -2089,7 +2089,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5154"
+          visualID="5174"
           editPartClassName="RichTextAreaFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="RichTextAreaFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -2250,7 +2250,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5137"
+          visualID="5175"
           editPartClassName="FileWidgetName2EditPart"
           itemSemanticEditPolicyClassName="FileWidgetName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -2420,7 +2420,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5143"
+          visualID="5176"
           editPartClassName="CheckBoxMultipleFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="CheckBoxMultipleFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -2575,7 +2575,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5144"
+          visualID="5177"
           editPartClassName="DurationFormFieldName2EditPart"
           itemSemanticEditPolicyClassName="DurationFormFieldName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -2886,7 +2886,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5146"
+          visualID="5178"
           editPartClassName="ImageWidgetName2EditPart"
           itemSemanticEditPolicyClassName="ImageWidgetName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -3113,7 +3113,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5148"
+          visualID="5179"
           editPartClassName="TextInfoName2EditPart"
           itemSemanticEditPolicyClassName="TextInfoName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -3226,7 +3226,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5149"
+          visualID="5180"
           editPartClassName="FormButtonName2EditPart"
           itemSemanticEditPolicyClassName="FormButtonName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -3435,7 +3435,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5152"
+          visualID="5181"
           editPartClassName="TableName2EditPart"
           itemSemanticEditPolicyClassName="TableName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -3638,7 +3638,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5156"
+          visualID="5182"
           editPartClassName="DynamicTableName2EditPart"
           itemSemanticEditPolicyClassName="DynamicTableName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -3751,7 +3751,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5158"
+          visualID="5183"
           editPartClassName="IFrameWidgetName2EditPart"
           itemSemanticEditPolicyClassName="IFrameWidgetName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -3864,7 +3864,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5161"
+          visualID="5184"
           editPartClassName="HtmlWidgetName2EditPart"
           itemSemanticEditPolicyClassName="HtmlWidgetName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -4031,7 +4031,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5162"
+          visualID="5185"
           editPartClassName="SuggestBoxName2EditPart"
           itemSemanticEditPolicyClassName="SuggestBoxName2ItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -4188,7 +4188,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5133"
+          visualID="5148"
           editPartClassName="CheckBoxSingleFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="CheckBoxSingleFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -4354,7 +4354,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5102"
+          visualID="5150"
           editPartClassName="ComboFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="ComboFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -4508,7 +4508,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5103"
+          visualID="5151"
           editPartClassName="DateFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="DateFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -4674,7 +4674,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5104"
+          visualID="5152"
           editPartClassName="ListFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="ListFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -4828,7 +4828,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5105"
+          visualID="5153"
           editPartClassName="PasswordFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="PasswordFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -4994,7 +4994,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5106"
+          visualID="5154"
           editPartClassName="RadioFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="RadioFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -5160,7 +5160,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5107"
+          visualID="5155"
           editPartClassName="SelectFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="SelectFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -5326,7 +5326,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5160"
+          visualID="5156"
           editPartClassName="SuggestBoxNameEditPart"
           itemSemanticEditPolicyClassName="SuggestBoxNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -5480,7 +5480,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5108"
+          visualID="5157"
           editPartClassName="TextFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="TextFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -5634,7 +5634,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5109"
+          visualID="5158"
           editPartClassName="TextAreaFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="TextAreaFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -5788,7 +5788,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5153"
+          visualID="5159"
           editPartClassName="RichTextAreaFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="RichTextAreaFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -5904,7 +5904,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5125"
+          visualID="5160"
           editPartClassName="SubmitFormButtonNameEditPart"
           itemSemanticEditPolicyClassName="SubmitFormButtonNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -6020,7 +6020,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5126"
+          visualID="5161"
           editPartClassName="NextFormButtonNameEditPart"
           itemSemanticEditPolicyClassName="NextFormButtonNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -6136,7 +6136,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5127"
+          visualID="5162"
           editPartClassName="PreviousFormButtonNameEditPart"
           itemSemanticEditPolicyClassName="PreviousFormButtonNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -6487,7 +6487,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5136"
+          visualID="5188"
           editPartClassName="TextInfoNameEditPart"
           itemSemanticEditPolicyClassName="TextInfoNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -6647,7 +6647,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5138"
+          visualID="5189"
           editPartClassName="FileWidgetNameEditPart"
           itemSemanticEditPolicyClassName="FileWidgetNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -6816,7 +6816,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5139"
+          visualID="5190"
           editPartClassName="CheckBoxMultipleFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="CheckBoxMultipleFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -6970,7 +6970,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5140"
+          visualID="5191"
           editPartClassName="ImageWidgetNameEditPart"
           itemSemanticEditPolicyClassName="ImageWidgetNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -7279,7 +7279,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5142"
+          visualID="5192"
           editPartClassName="DurationFormFieldNameEditPart"
           itemSemanticEditPolicyClassName="DurationFormFieldNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -7391,7 +7391,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5150"
+          visualID="5193"
           editPartClassName="FormButtonNameEditPart"
           itemSemanticEditPolicyClassName="FormButtonNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -7599,7 +7599,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5151"
+          visualID="5194"
           editPartClassName="TableNameEditPart"
           itemSemanticEditPolicyClassName="TableNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -7801,7 +7801,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5155"
+          visualID="5195"
           editPartClassName="DynamicTableNameEditPart"
           itemSemanticEditPolicyClassName="DynamicTableNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -7913,7 +7913,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5157"
+          visualID="5196"
           editPartClassName="IFrameWidgetNameEditPart"
           itemSemanticEditPolicyClassName="IFrameWidgetNameItemSemanticEditPolicy">
         <diagramRunTimeClass
@@ -8025,7 +8025,7 @@
         </modelElementInitializer>
       </modelFacet>
       <labels
-          visualID="5159"
+          visualID="5197"
           editPartClassName="HtmlWidgetNameEditPart"
           itemSemanticEditPolicyClassName="HtmlWidgetNameItemSemanticEditPolicy">
         <diagramRunTimeClass
