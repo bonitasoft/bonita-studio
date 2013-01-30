@@ -249,7 +249,7 @@ public class EditExpressionDialog extends TrayDialog {
             currentExpressionEditor.dispose() ;
         }
 
-        currentExpressionEditor = provider.getExpressionEditor(inputExpression);
+        currentExpressionEditor = provider.getExpressionEditor(inputExpression,context);
         if(currentExpressionEditor != null){
             currentExpressionEditor.createExpressionEditor(contentComposite) ;
             contentComposite.layout(true, true) ;

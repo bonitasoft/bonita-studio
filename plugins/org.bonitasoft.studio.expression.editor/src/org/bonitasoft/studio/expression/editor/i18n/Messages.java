@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.expression.editor.i18n;
 
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Romain Bioteau
@@ -26,6 +27,7 @@ public class Messages extends NLS {
 
     private static final String BUNDLE_NAME = "messages";//$NON-NLS-1$
 
+	
     public static String expressionTypeLabel;
     public static String removeRow;
     public static String addRow;
@@ -78,10 +80,11 @@ public class Messages extends NLS {
     public static String invalidReturnTypeBetween;
     public static String eraseExpression;
     public static String messageIdTypeLabel;
-
     public static String messageDataId;
-
     public static String availableIds;
+    public static String comparisonType;
+	public static String comparisonSupportedOperators;
+	public static String automaticResolution;
 
     private Messages() {
         // Do not instantiate

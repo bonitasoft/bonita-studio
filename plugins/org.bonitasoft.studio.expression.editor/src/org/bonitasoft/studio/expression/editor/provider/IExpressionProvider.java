@@ -41,5 +41,5 @@ public interface IExpressionProvider {
 
 	String getTypeLabel();
 
-	IExpressionEditor getExpressionEditor(Expression expression) ;
+	IExpressionEditor getExpressionEditor(Expression expression, EObject context) ;
 }

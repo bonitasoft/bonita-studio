@@ -13,5 +13,8 @@
       <expressionProvider
             providerClass="org.bonitasoft.studio.expression.editor.message.MessageIdExpressionProvider">
       </expressionProvider>
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.expression.editor.comparison.ComparisonExpressionProvider">
+      </expressionProvider>
    </extension>
 </plugin>
