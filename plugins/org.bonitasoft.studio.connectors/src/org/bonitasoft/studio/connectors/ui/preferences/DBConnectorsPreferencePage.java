@@ -133,6 +133,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		connectorListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(80,250).create());
 		final Text searchField = new Text(connectorListComposite,SWT.BORDER);
 		searchField.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		searchField.setMessage(Messages.search);
 		viewer = new TableViewer(connectorListComposite,SWT.BORDER | SWT.FULL_SELECTION);
 		viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		viewer.setLabelProvider(new DabaBaseConnectorDefinitionLabelProvider());
