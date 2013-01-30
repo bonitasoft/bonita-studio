@@ -84,7 +84,7 @@ public class JavaExpressionProvider implements IExpressionProvider {
 	}
 
 	@Override
-	public IExpressionEditor getExpressionEditor(Expression expression) {
+	public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
 		return new JavaExpressionEditor();
 	}
 

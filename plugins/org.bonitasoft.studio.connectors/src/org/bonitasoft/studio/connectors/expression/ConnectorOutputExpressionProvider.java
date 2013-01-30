@@ -132,7 +132,7 @@ public class ConnectorOutputExpressionProvider implements IExpressionProvider {
     }
 
     @Override
-    public IExpressionEditor getExpressionEditor(Expression expression) {
+    public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
         return new ConnectorOutputExpressionEditor();
     }
 

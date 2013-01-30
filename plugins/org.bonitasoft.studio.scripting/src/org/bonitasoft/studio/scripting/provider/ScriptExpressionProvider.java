@@ -95,7 +95,7 @@ public class ScriptExpressionProvider implements IExpressionProvider {
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionEditor()
 	 */
-	public IExpressionEditor getExpressionEditor(Expression expression) {
+	public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
 		return new ScriptExpressionEditor(expression) ; 
 	}
 

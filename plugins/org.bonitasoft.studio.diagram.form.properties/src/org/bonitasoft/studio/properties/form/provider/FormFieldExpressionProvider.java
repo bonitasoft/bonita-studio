@@ -157,7 +157,7 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
         return Messages.formFieldTypeLabel;
     }
 
-    public IExpressionEditor getExpressionEditor(Expression expression) {
+    public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
         return new FormFieldExpressionEditor();
     }
 

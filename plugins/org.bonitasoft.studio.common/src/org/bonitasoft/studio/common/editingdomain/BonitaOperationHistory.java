@@ -325,7 +325,7 @@ public class BonitaOperationHistory implements IOperationHistory {
 					&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null 
 					&& PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null
 					&& PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() != null) {
-				
+
 				IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
 				for (IEditorReference editorRef : editorReferences) {
 					try {
@@ -334,7 +334,7 @@ public class BonitaOperationHistory implements IOperationHistory {
 							DiagramEditor editor = (DiagramEditor) part;
 							if (editor.getEditingDomain() != null && editor.getEditingDomain().equals(editingDomain)) {
 								return;// do not dispose if the editing domain
-										// is else
+								// is else
 							}
 						}
 					} catch (Exception e) {
@@ -786,8 +786,8 @@ public class BonitaOperationHistory implements IOperationHistory {
 				if (DEBUG_OPERATION_HISTORY_APPROVAL) {
 					Tracing.printTrace("OPERATIONHISTORY", //$NON-NLS-1$
 							"Redo not approved by " + approver //$NON-NLS-1$
-									+ "for operation " + operation //$NON-NLS-1$
-									+ " approved by " + approval); //$NON-NLS-1$
+							+ "for operation " + operation //$NON-NLS-1$
+							+ " approved by " + approval); //$NON-NLS-1$
 				}
 				return approval;
 			}
@@ -842,8 +842,8 @@ public class BonitaOperationHistory implements IOperationHistory {
 				if (DEBUG_OPERATION_HISTORY_APPROVAL) {
 					Tracing.printTrace("OPERATIONHISTORY", //$NON-NLS-1$
 							"Undo not approved by " + approver //$NON-NLS-1$
-									+ "for operation " + operation //$NON-NLS-1$
-									+ " with status " + approval); //$NON-NLS-1$
+							+ "for operation " + operation //$NON-NLS-1$
+							+ " with status " + approval); //$NON-NLS-1$
 				}
 				return approval;
 			}
@@ -901,8 +901,8 @@ public class BonitaOperationHistory implements IOperationHistory {
 					if (DEBUG_OPERATION_HISTORY_APPROVAL) {
 						Tracing.printTrace("OPERATIONHISTORY", //$NON-NLS-1$
 								"Execute not approved by " + approver //$NON-NLS-1$
-										+ "for operation " + operation //$NON-NLS-1$
-										+ " with status " + approval); //$NON-NLS-1$
+								+ "for operation " + operation //$NON-NLS-1$
+								+ " with status " + approval); //$NON-NLS-1$
 					}
 					return approval;
 				}
@@ -1329,7 +1329,7 @@ public class BonitaOperationHistory implements IOperationHistory {
 				if (DEBUG_OPERATION_HISTORY_UNEXPECTED) {
 					Tracing.printTrace("OPERATIONHISTORY", //$NON-NLS-1$
 							"Open operation called while another operation is open.  old: " //$NON-NLS-1$
-									+ openComposite + "; new:  " + operation); //$NON-NLS-1$
+							+ openComposite + "; new:  " + operation); //$NON-NLS-1$
 				}
 
 				throw new IllegalStateException("Cannot open an operation while one is already open"); //$NON-NLS-1$

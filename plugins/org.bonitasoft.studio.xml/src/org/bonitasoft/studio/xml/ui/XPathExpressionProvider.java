@@ -98,7 +98,7 @@ public class XPathExpressionProvider implements IExpressionProvider {
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionEditor(org.bonitasoft.studio.model.expression.Expression)
 	 */
-	public IExpressionEditor getExpressionEditor(Expression expression) {
+	public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
 		return new XPathExpressionEditor();
 	}
 

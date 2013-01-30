@@ -155,6 +155,7 @@ public class PlatformUtil {
 				 if(BonitaStudioLog.isLoggable(IStatus.OK)){
 					 BonitaStudioLog.debug("Editor opened, intro not reloaded", Activator.PLUGIN_ID);
 				 }
+				 closeIntro();
 			 }
 		 }
 	 }
