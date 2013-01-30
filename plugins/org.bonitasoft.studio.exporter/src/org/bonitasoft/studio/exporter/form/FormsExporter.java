@@ -429,7 +429,7 @@ public class FormsExporter {
             throws InvalidFormDefinitionException {
         for (final org.bonitasoft.engine.expression.Expression dependency : expression.getDependencies()) {
             builder.addDependentExpression(dependency.getName(), dependency.getContent(), dependency.getExpressionType(), dependency.getReturnType(),
-                    dependency.getInterpreter().isEmpty() ? null : dependency.getInterpreter());
+            		(dependency.getInterpreter() !=null && !dependency.getInterpreter().isEmpty()) ?  dependency.getInterpreter() : null );
         }
     }
 
