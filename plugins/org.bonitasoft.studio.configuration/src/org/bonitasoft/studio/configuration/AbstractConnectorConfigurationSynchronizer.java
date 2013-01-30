@@ -231,6 +231,7 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
             depFragment.setType(getFragmentContainerId()) ;
             editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, connectorContainer, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, depFragment)) ;
         }
+       
     }
 
     private void removeConnectorDefinitions(Configuration configuration, AbstractProcess process,CompoundCommand cc, EditingDomain editingDomain) {

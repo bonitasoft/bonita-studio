@@ -80,6 +80,9 @@
       <repositoryStore
             class="org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore">
       </repositoryStore>
+      <repositoryStore
+            class="org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore">
+      </repositoryStore>
    </extension>
    <extension
          point="org.bonitasoft.studio.expression.expressionProvider">
@@ -184,5 +187,14 @@
       <exportConfigurationAction
             class="org.bonitasoft.studio.connectors.configuration.ExportConnectorAction">
       </exportConfigurationAction>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.bonitasoft.studio.preferences.pages.BPM"
+            class="org.bonitasoft.studio.connectors.ui.preferences.DBConnectorsPreferencePage"
+            id="org.bonitasoft.studio.preferences.dbconnectors"
+            name="DBConnectors">
+      </page>
    </extension>
 </plugin>

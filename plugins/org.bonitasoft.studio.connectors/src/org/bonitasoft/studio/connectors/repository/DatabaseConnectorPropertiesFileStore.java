@@ -38,6 +38,7 @@ public class DatabaseConnectorPropertiesFileStore extends PropertiesFileStore {
 	public final String DEFAULT="default";
 	public final String JAR_LIST="jars";
 	public final String SEPARATOR=";";
+	public final String AUTO_Add_DRIVERS = "auto";
 
 	/**
 	 * @param fileName
@@ -57,10 +58,22 @@ public class DatabaseConnectorPropertiesFileStore extends PropertiesFileStore {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	public void setAutoAddDriver(Boolean b){
+		Properties properties = getContent();
+		properties.put(AUTO_Add_DRIVERS, b.toString());
+		save(properties);
+	}
+	
+	public boolean getAutoAddDriver(){
+		Boolean b = Boolean.valueOf((String)((Properties)getContent()).get(AUTO_Add_DRIVERS));
+		return b;
+	}
+	
 	public void setDefault(String jarName){
 		 Properties properties = getContent();
 		 properties.put(DEFAULT, jarName);
+		 save(properties);
 	}
 	
 	public String getDefault(){

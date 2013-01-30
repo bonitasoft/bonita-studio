@@ -30,10 +30,14 @@ import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementat
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.DefinitionMapping;
+import org.bonitasoft.studio.model.configuration.Fragment;
+import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.kpi.DatabaseKPIBinding;
 import org.bonitasoft.studio.model.kpi.KpiPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -50,65 +54,108 @@ import org.eclipse.emf.edit.domain.EditingDomain;
  *
  */
 public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfigurationSynchronizer {
-	
-    @Override
-    public String getFragmentContainerId() {
-        return FragmentTypes.CONNECTOR ;
-    }
 
-    @Override
-    protected List<Connector> getExistingConnectors(AbstractProcess process) {
-        List<Connector> connectors = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.CONNECTOR);
-        Set<Connector> toRemove = new HashSet<Connector>();
-        for(Connector c : connectors){
-            if(c instanceof ActorFilter){
-                toRemove.add(c);
-            }
-        }
-        connectors.removeAll(toRemove);
-        return connectors;
-    }
 
-    @Override
-    protected List<ConnectorImplementation> getAllImplementations(String defId,String defVersion) {
-        final ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
-        return store.getImplementations(defId,defVersion) ;
-    }
+	private DatabaseConnectorPropertiesRepositoryStore store;
 
-    @Override
-    protected DefinitionResourceProvider getDefinitionResourceProvider() {
-        final IRepositoryStore<?> defStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-        return DefinitionResourceProvider.getInstance(defStore, ConnectorPlugin.getDefault().getBundle()) ;
-    }
-    
-    protected void addNewConnectorDefinition(Configuration configuration, AbstractProcess process,CompoundCommand cc, EditingDomain editingDomain) {
-        super.addNewConnectorDefinition(configuration, process, cc, editingDomain);
-        addNewKPIConnectorDefinition(configuration, process, cc, editingDomain);
-    }
-    
-    private void addNewKPIConnectorDefinition(Configuration configuration, AbstractProcess process, CompoundCommand cc,	EditingDomain editingDomain) {
-		List<DatabaseKPIBinding> kpiBindings = ModelHelper.getAllItemsOfType(process, KpiPackage.Literals.DATABASE_KPI_BINDING) ;
-        if(!kpiBindings.isEmpty()){
-            String defId = DB_CONNECTOR_FOR_KPI_ID ;
-            String defVersion = DB_CONNECTOR_VERSION ;
-            boolean exists = false ;
-            for(DefinitionMapping association : configuration.getDefinitionMappings()){
-                if(FragmentTypes.CONNECTOR.equals(association.getType()) && association.getDefinitionId().equals(defId) && association.getDefinitionVersion().equals(defVersion)){
-                    exists = true ;
-                    updateAssociation(configuration,association,cc,editingDomain);
-                    break ;
-                }
-            }
-            if(!exists){
-                DefinitionMapping newAssociation = ConfigurationFactory.eINSTANCE.createDefinitionMapping() ;
-                newAssociation.setDefinitionId(defId) ;
-                newAssociation.setDefinitionVersion(defVersion) ;
-                newAssociation.setType(getFragmentContainerId()) ;
-                editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__DEFINITION_MAPPINGS, newAssociation)) ;
-                updateAssociation(configuration, newAssociation, cc, editingDomain) ;
-            }
-        }
+	public ConnectorsConfigurationSynchronizer(){
+
 	}
-    
+	@Override
+	public String getFragmentContainerId() {
+		return FragmentTypes.CONNECTOR ;
+	}
+
+	@Override
+	protected List<Connector> getExistingConnectors(AbstractProcess process) {
+		List<Connector> connectors = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.CONNECTOR);
+		Set<Connector> toRemove = new HashSet<Connector>();
+		for(Connector c : connectors){
+			if(c instanceof ActorFilter){
+				toRemove.add(c);
+			}
+		}
+		connectors.removeAll(toRemove);
+		return connectors;
+	}
+
+	@Override
+	protected List<ConnectorImplementation> getAllImplementations(String defId,String defVersion) {
+		final ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
+		return store.getImplementations(defId,defVersion) ;
+	}
+
+	@Override
+	protected DefinitionResourceProvider getDefinitionResourceProvider() {
+		final IRepositoryStore<?> defStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+		return DefinitionResourceProvider.getInstance(defStore, ConnectorPlugin.getDefault().getBundle()) ;
+	}
+
+	protected void addNewConnectorDefinition(Configuration configuration, AbstractProcess process,CompoundCommand cc, EditingDomain editingDomain) {
+		super.addNewConnectorDefinition(configuration, process, cc, editingDomain);
+		addNewKPIConnectorDefinition(configuration, process, cc, editingDomain);
+	}
+
+	private void addNewKPIConnectorDefinition(Configuration configuration, AbstractProcess process, CompoundCommand cc,	EditingDomain editingDomain) {
+		List<DatabaseKPIBinding> kpiBindings = ModelHelper.getAllItemsOfType(process, KpiPackage.Literals.DATABASE_KPI_BINDING) ;
+		if(!kpiBindings.isEmpty()){
+			String defId = DB_CONNECTOR_FOR_KPI_ID ;
+			String defVersion = DB_CONNECTOR_VERSION ;
+			boolean exists = false ;
+			for(DefinitionMapping association : configuration.getDefinitionMappings()){
+				if(FragmentTypes.CONNECTOR.equals(association.getType()) && association.getDefinitionId().equals(defId) && association.getDefinitionVersion().equals(defVersion)){
+					exists = true ;
+					updateAssociation(configuration,association,cc,editingDomain);
+					break ;
+				}
+			}
+			if(!exists){
+				DefinitionMapping newAssociation = ConfigurationFactory.eINSTANCE.createDefinitionMapping() ;
+				newAssociation.setDefinitionId(defId) ;
+				newAssociation.setDefinitionVersion(defVersion) ;
+				newAssociation.setType(getFragmentContainerId()) ;
+				editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__DEFINITION_MAPPINGS, newAssociation)) ;
+				updateAssociation(configuration, newAssociation, cc, editingDomain) ;
+			}
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.configuration.AbstractConnectorConfigurationSynchronizer#updateJarDependencies(org.bonitasoft.studio.model.configuration.FragmentContainer, org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation, org.eclipse.emf.edit.domain.EditingDomain, org.eclipse.emf.common.command.CompoundCommand)
+	 */
+	@Override
+	protected void updateJarDependencies(FragmentContainer connectorContainer,
+			ConnectorImplementation implementation,
+			EditingDomain editingDomain, CompoundCommand cc) {
+		super.updateJarDependencies(connectorContainer, implementation, editingDomain,	cc);
+		store = (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class) ;
+		DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store.getChild(implementation.getDefinitionId());
+		if (fileStore !=null){
+			String defaultDriver = fileStore.getDefault();
+			List<String> jars = fileStore.getJarList();
+			boolean autoAddDriver = fileStore.getAutoAddDriver();
+			for (String jar : jars){
+				boolean exists = false ;
+				for(Fragment dep : connectorContainer.getFragments()){
+					if(dep.getValue().equals(jar)){
+						exists = true ;
+						break ;
+					}
+				}
+				if (!exists){
+					 Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment() ;
+					 if (jar.equals(defaultDriver) && autoAddDriver){
+						 depFragment.setExported(true) ;
+					 } else {
+						 depFragment.setExported(false);
+					 }
+		                depFragment.setKey(implementation.getImplementationId() +" -- " + implementation.getImplementationVersion()) ;
+		                depFragment.setValue(jar) ;
+		                depFragment.setType(getFragmentContainerId()) ;
+		                editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, connectorContainer, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, depFragment)) ;
+				}
+			}
+		}
+	}
 
 }
