@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.bonitasoft.studio.condition.ui
+Bundle-Vendor: BonitaSoft S.A.
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.bonitasoft.studio.condition.ui; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.bonitasoft.studio.condition;visibility:=reexport,
+ org.eclipse.xtext.ui,
+ org.eclipse.ui.editors;bundle-version="3.5.0",
+ org.eclipse.ui.ide;bundle-version="3.5.0",
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.ui,
+ org.eclipse.xtext.builder,
+ org.antlr.runtime,
+ org.eclipse.xtext.common.types.ui,
+ org.eclipse.xtext.ui.codetemplates.ui,
+ org.eclipse.compare,
+ org.bonitasoft.studio.model;bundle-version="1.0.0"
+Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.bonitasoft.studio.condition.ui.contentassist,
+ org.bonitasoft.studio.condition.ui.contentassist.antlr,
+ org.bonitasoft.studio.condition.ui.internal
+Bundle-Activator: org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator

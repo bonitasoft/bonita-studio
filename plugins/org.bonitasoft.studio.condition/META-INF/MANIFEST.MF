@@ -1,0 +1,38 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.bonitasoft.studio.condition
+Bundle-Vendor: BonitaSoft S.A.
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.bonitasoft.studio.condition; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext;visibility:=reexport,
+ org.eclipse.xtext.xbase;resolution:=optional;visibility:=reexport,
+ org.eclipse.xtext.generator,
+ org.apache.commons.logging;bundle-version="1.0.4";resolution:=optional,
+ org.eclipse.emf.codegen.ecore;resolution:=optional,
+ org.eclipse.emf.mwe.utils;resolution:=optional,
+ org.eclipse.emf.mwe2.launch;resolution:=optional,
+ org.eclipse.xtext.util,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.common,
+ org.antlr.runtime,
+ org.eclipse.xtext.common.types,
+ org.bonitasoft.studio.model;bundle-version="1.0.0",
+ org.bonitasoft.studio.common;bundle-version="1.0.0",
+ org.eclipse.core.runtime
+Import-Package: org.apache.log4j,
+ org.eclipse.xtext.xbase.lib
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.bonitasoft.studio.condition,
+ org.bonitasoft.studio.condition.services,
+ org.bonitasoft.studio.condition.conditionModel,
+ org.bonitasoft.studio.condition.conditionModel.impl,
+ org.bonitasoft.studio.condition.conditionModel.util,
+ org.bonitasoft.studio.condition.serializer,
+ org.bonitasoft.studio.condition.parser.antlr,
+ org.bonitasoft.studio.condition.parser.antlr.internal,
+ org.bonitasoft.studio.condition.validation,
+ org.bonitasoft.studio.condition.scoping,
+ org.bonitasoft.studio.condition.generator,
+ org.bonitasoft.studio.condition.formatting
+
