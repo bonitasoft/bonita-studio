@@ -32,7 +32,6 @@ import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Group;
 import org.bonitasoft.studio.connector.model.definition.Input;
-import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
@@ -152,19 +151,6 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                 }
 
                 List<String> outputs = new ArrayList<String>();
-                for(Output out : definition.getOutput()){
-                	try{
-                		Class outputClazz = Class.forName(out.getType());
-                		if(!(Collection.class.isAssignableFrom(outputClazz) || Serializable.class.isAssignableFrom(outputClazz))){
-                			testReport.append("\n");
-                            testReport.append("Output "+out.getName()+" with type "+out.getType()+" from "+definition.getId()+" ("+definition.getVersion()+") is not Serializable or is not a Collection");
-                		}
-                	}catch (Exception e) {
-						
-					}
-                	
-                    outputs.add(out.getName());
-                }
                 for(String outputName : outputs){
                     if(Collections.frequency(outputs, outputName) != 1){
                         testReport.append("\n");
