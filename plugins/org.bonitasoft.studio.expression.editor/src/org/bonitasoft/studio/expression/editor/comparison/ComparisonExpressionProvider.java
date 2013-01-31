@@ -3,15 +3,14 @@
  */
 package org.bonitasoft.studio.expression.editor.comparison;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
@@ -29,25 +28,16 @@ public class ComparisonExpressionProvider implements IExpressionProvider {
 	 */
 	@Override
 	public Set<Expression> getExpressions(EObject context) {
-		Set<Expression> exprs = new HashSet<Expression>();
-		if (context instanceof SequenceFlow) {
-			SequenceFlow sequenceFlow = (SequenceFlow)context;
-			Expression expr = sequenceFlow.getCondition();
-			if (expr !=null){
-				exprs.add(expr);
-			}
-		}
-			return exprs;
+		return Collections.emptySet();
 	}
-	
-	
+
+
 
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressionType()
 	 */
 	@Override
 	public String getExpressionType() {
-		// TODO Auto-generated method stub
 		return ExpressionConstants.CONDITION_TYPE;
 	}
 
@@ -80,11 +70,7 @@ public class ComparisonExpressionProvider implements IExpressionProvider {
 	 */
 	@Override
 	public boolean isRelevantFor(EObject context) {
-		if (context instanceof SequenceFlow){
-			return true;
-		} else {
-			return false;
-		}
+		return context instanceof SequenceFlow ;
 	}
 
 	/* (non-Javadoc)
@@ -92,7 +78,6 @@ public class ComparisonExpressionProvider implements IExpressionProvider {
 	 */
 	@Override
 	public String getTypeLabel() {
-		// TODO Auto-generated method stub
 		return Messages.comparisonType;
 	}
 
