@@ -261,11 +261,11 @@ public class Repository implements IRepository {
 
     protected Set<String> getNatures() {
         final Set<String> result = new HashSet<String>() ;
+        result.add("org.eclipse.xtext.ui.shared.xtextNature") ;
         result.add("org.bonitasoft.studio.common.repository.bonitaNature");
         result.add(JavaCore.NATURE_ID);
         result.add("org.eclipse.pde.PluginNature");
         result.add("org.eclipse.jdt.groovy.core.groovyNature") ;
-        result.add("org.eclipse.xtext.ui.shared.xtextNature") ;
         return result;
     }
 
