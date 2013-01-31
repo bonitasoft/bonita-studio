@@ -21,17 +21,29 @@ import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.List;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage;
+import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
+import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
@@ -47,6 +59,12 @@ import com.google.inject.Injector;
  *
  */
 public class ComparisonExpressionValidator implements IValidator {
+
+
+	private Expression inputExpression;
+	private EditingDomain domain;
+
+
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
@@ -72,6 +90,10 @@ public class ComparisonExpressionValidator implements IValidator {
 		final MultiStatus status = new MultiStatus(ExpressionEditorPlugin.PLUGIN_ID, 0, "", null);
 		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
 
+		if(issues.isEmpty()){
+			updateDependencies(resource);
+		}
+
 		for(Issue issue : issues){
 			int severity = IStatus.ERROR;
 			Severity issueSeverity = issue.getSeverity();
@@ -82,6 +104,28 @@ public class ComparisonExpressionValidator implements IValidator {
 		}
 
 		return status;
+	}
+
+	private void updateDependencies(final XtextResource resource) {
+		if(domain != null && inputExpression != null){
+			domain.getCommandStack().execute(new RemoveCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, inputExpression.getReferencedElements()));
+			Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
+			if(compareOp != null){
+				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
+				for(Expression_ProcessRef ref : references){
+					EObject dep = EcoreUtil2.resolve(ref.getValue(), (ResourceSet)null);
+					domain.getCommandStack().execute(new AddCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(dep)));
+				}
+			}
+		}
+	}
+
+	public void setInputExpression(Expression inputExpression) {
+		this.inputExpression = inputExpression;
+	}
+
+	public void setDomain(EditingDomain domain) {
+		this.domain = domain;
 	}
 
 }

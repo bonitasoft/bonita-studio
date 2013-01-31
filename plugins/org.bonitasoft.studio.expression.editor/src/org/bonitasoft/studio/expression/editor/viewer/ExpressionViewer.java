@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
+import org.bonitasoft.studio.expression.editor.comparison.ComparisonExpressionValidator;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
@@ -290,25 +291,22 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 					ExpressionProposal prop = (ExpressionProposal) proposal ;
 					updateSelection(EcoreUtil.copy((Expression) prop.getExpression()));
 				}else if(proposalAcceptanceStyle == ContentProposalAdapter.PROPOSAL_INSERT){
-					ExpressionProposal prop = (ExpressionProposal) proposal ;
-					final String keyword = ((Expression)prop.getExpression()).getContent();
-					String content = textControl.getText();
-					content = content + keyword;
-					if(editingDomain != null){
-						CompoundCommand cc = new CompoundCommand();
-						cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME, content));
-						cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT, content));
-						editingDomain.getCommandStack().execute(cc);
-					}else{
-						selectedExpression.setName(content);
-						selectedExpression.setContent(content);
-					}
-				}
-				setSelection(new StructuredSelection(selectedExpression));
-				fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, new StructuredSelection(selectedExpression))) ;
-				String text = textControl.getText();
-				if(text!= null){
-					textControl.setSelection(text.length());
+//					final String content = textControl.getText();
+//					if(editingDomain != null){
+//						CompoundCommand cc = new CompoundCommand();
+//						cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME, content));
+//						cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT, content));
+//						editingDomain.getCommandStack().execute(cc);
+//					}else{
+//						selectedExpression.setName(content);
+//						selectedExpression.setContent(content);
+//					}
+//				}
+//				setSelection(new StructuredSelection(selectedExpression));
+//				fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, new StructuredSelection(selectedExpression))) ;
+//				String text = textControl.getText();
+//				if(text!= null){
+//					textControl.setSelection(text.length());
 				}
 			}
 		}) ;
@@ -476,9 +474,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 								filteredExpressions.remove(exp) ;
 							}
 						}
-						if(selectedExpression != null && selectedExpression.isReturnTypeFixed() && selectedExpression.getReturnType() != null){
-							if(!selectedExpression.getReturnType().equals(exp.getReturnType())){
-								filteredExpressions.remove(exp) ;
+						if(!ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())){
+							if(selectedExpression != null && selectedExpression.isReturnTypeFixed() && selectedExpression.getReturnType() != null){
+								if(!selectedExpression.getReturnType().equals(exp.getReturnType())){
+									filteredExpressions.remove(exp) ;
+								}
 							}
 						}
 					}
@@ -527,6 +527,10 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			public IStatus validate(Object value) {
 				IValidator validator = validatorsForType.get(selectedExpression.getType());
 				if(validator != null){
+					if(validator instanceof ComparisonExpressionValidator){
+						((ComparisonExpressionValidator) validator).setDomain(editingDomain);
+						((ComparisonExpressionValidator) validator).setInputExpression(selectedExpression);
+					}
 					final IStatus status = validator.validate(value);
 					if(externalDataBindingContext == null){//Display error at expression editor level
 						if(status.isOK()){
@@ -548,6 +552,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 						}
 					}
 					return status;
+				}else{
+					setMessage(null, IStatus.OK);
 				}
 				return ValidationStatus.ok();
 			}
@@ -630,13 +636,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		}
 	}
 
-	//    protected void updateExpressionSelection(Object newInput){
-	//        for(Expression exp : autoCompletion.getContentProposalProvider().getExpressions()){
-	//            if(exp.getName().equals(newInput)){
-	//                updateSelection(EcoreUtil.copy(exp)) ;
-	//            }
-	//        }
-	//    }
 
 	protected String getContentFromInput(String input) {
 		if(selectedExpression.getType().equals(ExpressionConstants.SCRIPT_TYPE)){
