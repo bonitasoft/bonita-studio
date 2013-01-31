@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionCon
 import org.bonitasoft.studio.decision.ui.DecisionTableWizard;
 import org.bonitasoft.studio.decision.ui.condition.MaximizableWizardDialog;
 import org.bonitasoft.studio.decision.ui.condition.TakeTransitionLabelProvider;
+import org.bonitasoft.studio.expression.editor.comparison.ComparisonExpressionValidator;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -145,15 +146,16 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
         conditionViewer = new ExpressionViewer(client,SWT.BORDER, widgetFactory,editingDomain, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION);
+        conditionViewer.addExpressionValidator(ExpressionConstants.CONDITION_TYPE,new ComparisonExpressionValidator());
         conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.CONDITION_TYPE}));
         if(transition.getCondition() == null){
             Expression expression =  ExpressionFactory.eINSTANCE.createExpression() ;
             expression.setReturnType(Boolean.class.getName()) ;
             expression.setReturnTypeFixed(true) ;
+            expression.setType(ExpressionConstants.CONDITION_TYPE);
             editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION,expression)) ;
         }
         conditionViewer.setInput(transition) ;
-        // conditionViewer.setSelection(new StructuredSelection(transition.getCondition())) ;
         conditionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL,SWT.CENTER).grab(true, false).create());
 
         return client ;
