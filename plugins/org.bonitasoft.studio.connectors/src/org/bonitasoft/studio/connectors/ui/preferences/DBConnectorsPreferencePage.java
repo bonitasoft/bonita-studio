@@ -131,7 +131,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		final Composite connectorListComposite = new Composite(parent,SWT.NONE);
 		connectorListComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 		connectorListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(80,250).create());
-		final Text searchField = new Text(connectorListComposite,SWT.BORDER);
+		final Text searchField = new Text(connectorListComposite,SWT.BORDER|SWT.SEARCH|SWT.ICON_SEARCH|SWT.ICON_CANCEL);
 		searchField.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		searchField.setMessage(Messages.search);
 		viewer = new TableViewer(connectorListComposite,SWT.BORDER | SWT.FULL_SELECTION);
