@@ -29,6 +29,7 @@ import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.core.databinding.validation.IValidator;
@@ -58,7 +59,7 @@ import com.google.inject.Injector;
  * @author Romain Bioteau
  *
  */
-public class ComparisonExpressionValidator implements IValidator {
+public class ComparisonExpressionValidator implements IExpressionValidator {
 
 
 	private Expression inputExpression;

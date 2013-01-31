@@ -42,6 +42,7 @@ import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvide
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionToolbarContribution;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.pics.Pics;
@@ -148,7 +149,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private final Map<Integer, String> messages = new HashMap<Integer, String>();
 	private ToolBar toolbar;
 	private List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<IExpressionToolbarContribution>();
-	private Map<String,IValidator> validatorsForType = new HashMap<String,IValidator>();
+	private Map<String,IExpressionValidator> validatorsForType = new HashMap<String,IExpressionValidator>();
 
 	public ExpressionViewer(Composite composite,int style, EReference expressionReference) {
 		this(composite,style,null,null,expressionReference) ;
@@ -291,22 +292,22 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 					ExpressionProposal prop = (ExpressionProposal) proposal ;
 					updateSelection(EcoreUtil.copy((Expression) prop.getExpression()));
 				}else if(proposalAcceptanceStyle == ContentProposalAdapter.PROPOSAL_INSERT){
-//					final String content = textControl.getText();
-//					if(editingDomain != null){
-//						CompoundCommand cc = new CompoundCommand();
-//						cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME, content));
-//						cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT, content));
-//						editingDomain.getCommandStack().execute(cc);
-//					}else{
-//						selectedExpression.setName(content);
-//						selectedExpression.setContent(content);
-//					}
-//				}
-//				setSelection(new StructuredSelection(selectedExpression));
-//				fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, new StructuredSelection(selectedExpression))) ;
-//				String text = textControl.getText();
-//				if(text!= null){
-//					textControl.setSelection(text.length());
+					//					final String content = textControl.getText();
+					//					if(editingDomain != null){
+					//						CompoundCommand cc = new CompoundCommand();
+					//						cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME, content));
+					//						cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT, content));
+					//						editingDomain.getCommandStack().execute(cc);
+					//					}else{
+					//						selectedExpression.setName(content);
+					//						selectedExpression.setContent(content);
+					//					}
+					//				}
+					//				setSelection(new StructuredSelection(selectedExpression));
+					//				fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, new StructuredSelection(selectedExpression))) ;
+					//				String text = textControl.getText();
+					//				if(text!= null){
+					//					textControl.setSelection(text.length());
 				}
 			}
 		}) ;
@@ -525,12 +526,10 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 			@Override
 			public IStatus validate(Object value) {
-				IValidator validator = validatorsForType.get(selectedExpression.getType());
+				final IExpressionValidator validator = validatorsForType.get(selectedExpression.getType());
 				if(validator != null){
-					if(validator instanceof ComparisonExpressionValidator){
-						((ComparisonExpressionValidator) validator).setDomain(editingDomain);
-						((ComparisonExpressionValidator) validator).setInputExpression(selectedExpression);
-					}
+					validator.setDomain(editingDomain);
+					validator.setInputExpression(selectedExpression);
 					final IStatus status = validator.validate(value);
 					if(externalDataBindingContext == null){//Display error at expression editor level
 						if(status.isOK()){
@@ -894,7 +893,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		return nameConverter;
 	}
 
-	public void addExpressionValidator(String expressionType,IValidator comaprisonExpressionValidator) {
+	public void addExpressionValidator(String expressionType,IExpressionValidator comaprisonExpressionValidator) {
 		validatorsForType.put(expressionType,comaprisonExpressionValidator);
 	}
 }
