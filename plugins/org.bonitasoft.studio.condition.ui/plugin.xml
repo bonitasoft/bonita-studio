@@ -281,5 +281,11 @@
             extensions="cmodel">
     </provider>
   </extension>
+  <extension
+        point="org.bonitasoft.studio.expression.expressionProvider">
+     <expressionProvider
+           providerClass="org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionProvider">
+     </expressionProvider>
+  </extension>
 
 </plugin>
