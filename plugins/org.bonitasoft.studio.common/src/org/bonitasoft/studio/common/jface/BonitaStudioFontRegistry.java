@@ -62,6 +62,10 @@ public class BonitaStudioFontRegistry {
 	public static Font getPreferenceTitleFont(){
 		return getFont("bonita_preference_tilte", 12, SWT.BOLD);
 	}
+	
+	public static Font getActiveFont(){
+		return getFont("bonita_active_font",8,SWT.BOLD);
+	}
 
 	/**
 	 * @param fontID
