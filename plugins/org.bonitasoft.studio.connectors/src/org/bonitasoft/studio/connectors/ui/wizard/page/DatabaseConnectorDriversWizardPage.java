@@ -29,6 +29,11 @@ import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRe
 import org.bonitasoft.studio.connectors.ui.provider.DatabaseDriversContentProvider;
 import org.bonitasoft.studio.connectors.ui.provider.DatabaseDriversLabelProvider;
 import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -58,6 +63,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 	private DatabaseDriversLabelProvider driversLabelProvider;
 	private DatabaseConnectorPropertiesRepositoryStore store;
 	private Button automaticallyAddDriver;
+	private DataBindingContext context;
 
 	/**
 	 * @param pageName
@@ -67,7 +73,8 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 		setTitle(Messages.databaseConnectorDriversWizardPageTitle);
 		setDescription(Messages.databaseConnectorDriversWizardPageDescription);
 		this.connectorId=connectorId;
-		store= (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class) ;;
+		store= (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class) ;
+		context = new DataBindingContext();
 		driversLabelProvider = new DatabaseDriversLabelProvider();
 		String defaultDriver = getDefaultDriver(connectorId);
 		if (defaultDriver!=null){
@@ -159,6 +166,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 				driverManagerViewer.setInput(connectorId);
 			}
 		});
+		bindButtonWithViewer(remove, driverManagerViewer);
 	}
 
 
@@ -174,7 +182,7 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 				driverManagerViewer.setInput(connectorId);
 			}
 		});
-
+		bindButtonWithViewer(activate, driverManagerViewer);
 	}
 
 	private void createAutomaticallyAddDriverButton(Composite parent){
@@ -189,6 +197,24 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 				setAutoAddDriverProperty(connectorId);
 			}
 		});
+	}
+	
+	private void bindButtonWithViewer(Button button,TableViewer viewer){
+		UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
+		modelToTarget.setConverter(new Converter(Object.class,Boolean.class){
+
+			@Override
+			public Object convert(Object fromObject) {
+				if (fromObject !=null) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+
+		});
+		context.bindValue(SWTObservables.observeEnabled(button), ViewersObservables.observeSingleSelection(viewer),null,modelToTarget);
 	}
 	
 	private void removeDriver(){
