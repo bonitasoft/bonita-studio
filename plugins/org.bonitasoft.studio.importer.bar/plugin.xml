@@ -7,7 +7,7 @@
             description="%import_BAR_desc"
             filterExtensions="*.bar"
             importerFactoryClass="org.bonitasoft.studio.importer.bar.factory.BarImporterFactory"
-            inputName="Bar v5.9"
+            inputName="%import_BAR_name"
             menuIcon="icons/bos-desc.png"
             priorityDisplay="2">
       </importFactory>
