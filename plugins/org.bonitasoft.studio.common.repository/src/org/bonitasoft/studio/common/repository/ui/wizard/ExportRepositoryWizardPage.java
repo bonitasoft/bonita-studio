@@ -151,7 +151,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
         }) ;
 
         browseRepoSection.setClient(createViewer(browseRepoSection)) ;
-        browseRepoSection.setExpanded(!isZip) ;
+        browseRepoSection.setExpanded(true) ;
         createDestination(composite) ;
 
         pageSupport = WizardPageSupport.create(this, dbc) ;
