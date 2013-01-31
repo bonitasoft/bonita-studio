@@ -255,17 +255,17 @@ public class Repository implements IRepository {
         for(int i = natures.length ; i< natures.length+arryOfNatures.length; i++){
             newNatures[i] = arryOfNatures[i - natures.length] ;
         }
-
         descriptor.setNatureIds(newNatures);
         project.setDescription(descriptor, null);
     }
 
     protected Set<String> getNatures() {
-        final Set<String> result = new HashSet<String>(3) ;
+        final Set<String> result = new HashSet<String>() ;
         result.add("org.bonitasoft.studio.common.repository.bonitaNature");
         result.add(JavaCore.NATURE_ID);
         result.add("org.eclipse.pde.PluginNature");
         result.add("org.eclipse.jdt.groovy.core.groovyNature") ;
+        result.add("org.eclipse.xtext.ui.shared.xtextNature") ;
         return result;
     }
 
