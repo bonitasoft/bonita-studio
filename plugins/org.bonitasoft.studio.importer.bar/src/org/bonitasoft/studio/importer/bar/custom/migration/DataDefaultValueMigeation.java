@@ -50,49 +50,51 @@ public class DataDefaultValueMigeation extends ReportCustomMigration {
 			}
 		}
 	}
-	
+
 	@Override
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance data : model.getAllInstances("process.Data")){
-			final StringToExpressionConverter converter = getConverter(model);
-			final String uuid = data.getUuid();
-			final String defaultValue = dataDefaultValue.get(uuid);
-			Instance expression = null;
-			if(defaultValue != null){
-				final String returnType = StringToExpressionConverter.getDataReturnType(data);
-				expression = converter.parse(defaultValue, returnType, false);
-				String expressionType = expression.get("type");
-				if(ExpressionConstants.SCRIPT_TYPE.equals(expressionType)){
-					expression.set("name",data.get("name")+"DefaultValueScript");
-					List<Instance> dependencies =  expression.get("referencedElements");
-					boolean invalidDependency = false ;
-					for(Instance dependency : dependencies){
-						if(dependency.instanceOf("process.Data")){
-							List<Instance> containerData = data.getContainer().get("data");
-							for(Instance dataInstance : containerData){
-								if(dataInstance.get("name").equals(dependency.get("name"))){
-									invalidDependency = true;
-									addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueWithOtherDataDependencyMigrationDescription, Messages.dataDefaultValueProperty, IStatus.ERROR);
+			if(!data.instanceOf("process.AttachmentData")){
+				final StringToExpressionConverter converter = getConverter(model);
+				final String uuid = data.getUuid();
+				final String defaultValue = dataDefaultValue.get(uuid);
+				Instance expression = null;
+				if(defaultValue != null){
+					final String returnType = StringToExpressionConverter.getDataReturnType(data);
+					expression = converter.parse(defaultValue, returnType, false);
+					String expressionType = expression.get("type");
+					if(ExpressionConstants.SCRIPT_TYPE.equals(expressionType)){
+						expression.set("name",data.get("name")+"DefaultValueScript");
+						List<Instance> dependencies =  expression.get("referencedElements");
+						boolean invalidDependency = false ;
+						for(Instance dependency : dependencies){
+							if(dependency.instanceOf("process.Data")){
+								List<Instance> containerData = data.getContainer().get("data");
+								for(Instance dataInstance : containerData){
+									if(dataInstance.get("name").equals(dependency.get("name"))){
+										invalidDependency = true;
+										addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueWithOtherDataDependencyMigrationDescription, Messages.dataDefaultValueProperty, IStatus.ERROR);
+									}
 								}
 							}
 						}
-					}
-					if(!invalidDependency){
-						addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueMigrationDescription, Messages.dataDefaultValueProperty, IStatus.WARNING);
-					}
-				}else if(ExpressionConstants.VARIABLE_TYPE.equals(expressionType)){
-					if(data.getContainer().instanceOf("process.AbstractProcess")){
-						expression.set("type",ExpressionConstants.CONSTANT_TYPE);
-						addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueWithOtherDataDependencyMigrationDescription, Messages.dataDefaultValueProperty, IStatus.ERROR);
+						if(!invalidDependency){
+							addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueMigrationDescription, Messages.dataDefaultValueProperty, IStatus.WARNING);
+						}
+					}else if(ExpressionConstants.VARIABLE_TYPE.equals(expressionType)){
+						if(data.getContainer().instanceOf("process.AbstractProcess")){
+							expression.set("type",ExpressionConstants.CONSTANT_TYPE);
+							addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueWithOtherDataDependencyMigrationDescription, Messages.dataDefaultValueProperty, IStatus.ERROR);
+						}
+					}else{
+						addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueMigrationDescription, Messages.dataDefaultValueProperty, IStatus.OK);
 					}
 				}else{
-					addReportChange((String) data.get("name"), ProcessPackage.Literals.DATA.getName(), uuid, Messages.dataDefaultValueMigrationDescription, Messages.dataDefaultValueProperty, IStatus.OK);
+					expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
 				}
-			}else{
-				 expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
+				data.set("defaultValue", expression);
 			}
-			data.set("defaultValue", expression);
 		}
 	}
 }

@@ -171,8 +171,11 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 	        	document.set("isInternal", true);
 	        	String name = attachmentData.get("name");
 	        	document.set("name",name);
-	        	Instance defaultValue = attachmentData.get("defaultValue");
-	        	document.set("defaultValueIdOfDocumentStore", defaultValue.get("content"));
+	        	String defaultValue = attachmentData.get("barPath");
+	        	if(defaultValue != null && defaultValue.startsWith("attachments/")){
+	        		defaultValue = defaultValue.substring("attachments/".length());
+	        	}
+	        	document.set("defaultValueIdOfDocumentStore", defaultValue);
 	        	String doc = attachmentData.get("documentation");
 	        	document.set("documentation", doc);
 	        	process.add("documents", document);
