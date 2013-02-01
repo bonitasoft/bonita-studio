@@ -479,7 +479,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
         view.show();
         view.setFocus();
         view.toolbarButton("Outline").click();
-        final SWTBotTree overviewTree = bot.tree();
+        final SWTBotTree overviewTree = bot.treeWithId(BONITA_OVERVIEW_TREE_ID);
         bot.waitUntil(Conditions.widgetIsEnabled(overviewTree));
         overviewTree.setFocus();
         bot.waitUntil(new ICondition() {
