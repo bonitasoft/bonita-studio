@@ -17,8 +17,8 @@
  */
 package org.bonitasoft.studio.simulation.wizards;
 
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.ProductVersion;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.model.simulation.LoadProfile;

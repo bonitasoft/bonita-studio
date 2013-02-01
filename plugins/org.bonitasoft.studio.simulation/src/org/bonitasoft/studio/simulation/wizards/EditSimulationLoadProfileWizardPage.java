@@ -33,7 +33,6 @@ import org.bonitasoft.studio.model.simulation.SimulationFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.simulation.i18n.Messages;
-import org.bonitasoft.studio.simulation.repository.SimulationLoadProfileFileStore;
 import org.bonitasoft.studio.simulation.repository.SimulationLoadProfileRepositoryStore;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;

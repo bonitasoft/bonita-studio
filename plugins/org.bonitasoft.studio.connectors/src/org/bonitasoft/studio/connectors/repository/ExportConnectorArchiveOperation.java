@@ -31,8 +31,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.ProductVersion;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;

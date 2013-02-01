@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
-import org.bonitasoft.studio.common.repository.ProductVersion;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.resources.IFile;

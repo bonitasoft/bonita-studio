@@ -41,10 +41,8 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.exporter.application.service.IWarFactory;
 import org.bonitasoft.studio.exporter.runtime.RuntimeExportMode;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
 
 /**
  * @author Romain Bioteau

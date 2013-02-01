@@ -1,7 +1,7 @@
 package org.bonitasoft.studio.common.repository.provider;
 
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.repository.Messages;
-import org.bonitasoft.studio.common.repository.ProductVersion;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.draw2d.ColorConstants;

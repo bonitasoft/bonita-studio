@@ -41,6 +41,7 @@ import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.forms.client.model.FormFieldValue;
 import org.bonitasoft.forms.server.validator.IFormFieldValidator;
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;

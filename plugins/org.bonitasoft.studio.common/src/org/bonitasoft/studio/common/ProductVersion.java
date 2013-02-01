@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.common.repository;
+package org.bonitasoft.studio.common;
 
 /**
  * @author Romain Bioteau
@@ -36,9 +36,10 @@ public class ProductVersion {
     public static final String VERSION_5_6 = "5.6";
     public static final String VERSION_6_0 = "6.0";
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
+    public static final String VERSION_6_0_0_BETA = "6.0.0-Beta";
     //public static final String VERSION_6_0_0 = "6.0.0";
 
-    public static final String CURRENT_VERSION = VERSION_6_0_0_ALPHA;
+    public static final String CURRENT_VERSION = VERSION_6_0_0_BETA;
 
 
     public static boolean sameVersion(String version){
