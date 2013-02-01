@@ -500,7 +500,11 @@ public class SWTBotTestUtil implements SWTBotConstants{
 
             @Override
             public String getFailureMessage() {
-                return "Pool "+pool +" not found in overview tree";
+            	StringBuilder res= new StringBuilder();
+            	for(SWTBotTreeItem sti : overviewTree.getAllItems()){
+            		res.append(sti.getText()+"\n");
+            	}
+                return "Pool "+pool +" not found in overview tree.\n"+res;
             }
         },10000,500);
         final SWTBotTreeItem treeItem = overviewTree.getTreeItem("Pool "+pool);
