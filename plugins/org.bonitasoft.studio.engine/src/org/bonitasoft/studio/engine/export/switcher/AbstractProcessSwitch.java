@@ -166,7 +166,7 @@ public class AbstractProcessSwitch extends ProcessSwitch<Element> {
     		for (SearchIndex searchIndex : pool.getSearchIndexes()){
     			int i  = pool.getSearchIndexes().indexOf(searchIndex);
     			Expression expr = EngineExpressionUtil.createExpression(searchIndex.getValue());
-    			builder.setStringIndex(i, searchIndex.getName().getContent(), expr);
+    			builder.setStringIndex(i+1, searchIndex.getName().getContent(), expr);
     		}
     	}
     }
