@@ -29,6 +29,7 @@ public class Messages extends NLS {
     public static String migrationWizardTitle;
     public static String migrationWizardDescription;
     public static String importWarningMessageContent;
+    public static String importWarningMessageContentAfterPart;
 	public static String callActivityTargetNameMigrationDescription;
 	public static String callActivityTargetNameProperty;
 	public static String callActivityTargetVersionMigrationDescription;
@@ -128,6 +129,10 @@ public class Messages extends NLS {
 	public static String removeKpiMigrationDescription;
 	public static String simDataExpressionMigrationDescription;
 	public static String simDataChangeValueMigrationDescription;
+	public static String noActionRequired;
+	public static String reviewRequired;
+	public static String actionRequired;
+	
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$
