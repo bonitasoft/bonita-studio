@@ -473,7 +473,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 								filteredExpressions.remove(exp) ;
 							}
 						}
-						if(!ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())){
+						if(selectedExpression != null && !ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())){
 							if(selectedExpression != null && selectedExpression.isReturnTypeFixed() && selectedExpression.getReturnType() != null){
 								if(!selectedExpression.getReturnType().equals(exp.getReturnType())){
 									filteredExpressions.remove(exp) ;
