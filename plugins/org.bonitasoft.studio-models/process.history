@@ -7471,6 +7471,7 @@
         </parameters>
       </operation>
     </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
   </releases>
   <releases/>
 </history:History>
