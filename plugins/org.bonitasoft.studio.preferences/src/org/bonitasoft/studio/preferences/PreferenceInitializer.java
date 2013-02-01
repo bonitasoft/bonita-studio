@@ -22,7 +22,9 @@ import java.util.Locale;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
+import org.eclipse.ui.internal.util.PrefUtil;
 
 /**
  * @author Romain Bioteau
@@ -98,6 +100,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME, "Default Application") ;
         store.setDefault(BonitaPreferenceConstants.DEFAULT_ORGANIZATION, BonitaPreferenceConstants.DEFAULT_ORGANIZATION_NAME) ;
         store.setDefault(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN, true) ;
+        
+        PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.DISABLE_OPEN_EDITOR_IN_PLACE, true);
     }
 
 }
