@@ -16,10 +16,17 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
+import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.studio.model.expression.AbstractExpression;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
@@ -55,6 +62,9 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
         supportPage = WizardPageSupport.create(this, context) ;
     }
 
+    protected EMFDataBindingContext getDatabindingContext(){
+    	return context;
+    }
 
     protected abstract Control doCreateControl(Composite parent,EMFDataBindingContext context) ;
 
@@ -113,6 +123,44 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
     public void setMessageProvider(DefinitionResourceProvider messageProvider) {
         this.messageProvider = messageProvider;
     }
+    
+    protected Input getInput(String inputName) {
+		for(Input input : getDefinition().getInput()){
+			if(input.getName().equals(inputName)){
+				return input;
+			}
+		}
+		throw new IllegalArgumentException("Input "+inputName +" not found in connector definition "+getDefinition().getId());
+	}
+
+    protected ConnectorParameter getConnectorParameter(Input input) {
+		for(ConnectorParameter param : getConfiguration().getParameters()){
+			if(param.getKey().equals(input.getName())){
+				if(param.getExpression() == null){
+					param.setExpression(createExpression(input)) ;
+				}
+				return param ;
+			}
+		}
+
+		final ConnectorParameter parameter = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter() ;
+		parameter.setKey(input.getName()) ;
+		parameter.setExpression(createExpression(input)) ;
+		getConfiguration().getParameters().add(parameter) ;
+
+		return parameter ;
+	}
+
+	protected AbstractExpression createExpression(Input input) {
+		String inputClassName = input.getType() ;
+		final Expression expression = ExpressionFactory.eINSTANCE.createExpression() ;
+		expression.setReturnType(inputClassName) ;
+		expression.setReturnTypeFixed(true) ;
+		expression.setType(ExpressionConstants.CONSTANT_TYPE) ;
+		expression.setName(input.getDefaultValue()) ;
+		expression.setContent(input.getDefaultValue()) ;
+		return expression ;
+	}
 
     @Override
     public IWizardPage getPreviousPage() {
