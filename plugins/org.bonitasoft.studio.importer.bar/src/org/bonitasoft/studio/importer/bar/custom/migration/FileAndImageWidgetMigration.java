@@ -61,12 +61,6 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
     protected void removeAttachmentData(Model model) {
         for (Instance data : model.getAllInstances("process.AttachmentData")) {
         	attachmentDatas.put(data.copy(),data.getContainer());
-            addReportChange((String) data.get("name"),
-            		ProcessPackage.Literals.DATA.getName(),
-            		data.getContainer().getUuid(), 
-            		Messages.attachmentDataRemovedDescription, 
-            		Messages.dataProperty,
-            		IStatus.OK);
             model.delete(data);
         }
     }
