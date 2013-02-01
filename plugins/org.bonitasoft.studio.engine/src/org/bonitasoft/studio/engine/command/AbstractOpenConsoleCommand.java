@@ -50,7 +50,7 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 
     public static final String REFRESH_THEME_PARAMETER = "refreshTheme";
     public static final String CONSOLE_LOCALE = "locale=";
-    private static final String USER_PROFILE_ID = "2";
+    private static final String USER_PROFILE_ID = "4";
     private URL url;
     protected boolean runSynchronously;
     protected boolean refreshTheme = true ;

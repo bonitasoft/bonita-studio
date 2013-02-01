@@ -46,7 +46,7 @@ public class ApplicationURLBuilder {
 
     public static final String APPLI_PATH = "/bonita/console/homepage?"; //$NON-NLS-1$
 
-    private static final String USER_PROFILE_ID = "2";
+    private static final String USER_PROFILE_ID = "4";
 
     private static final String LOCALE_PARAM = "locale";
     private final AbstractProcess process;
@@ -75,7 +75,7 @@ public class ApplicationURLBuilder {
 
         final String loginURL = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
      //   final String runUrl = "http://"+ host+":"+ port + APPLI_PATH + token +"#?name="+process.getName()+"&version="+process.getVersion()+"&id=" + processId+"&_p=StartProcess&_pf="+USER_PROFILE_ID+"&"+LOCALE_PARAM+"="+locale;
-        final String runUrl = "http://"+ host+":"+ port + APPLI_PATH + token +"ui=form#form="+process.getName()+"--"+process.getVersion()+"$entry&process="+processId+"&mode=app";
+        final String runUrl = "http://"+ host+":"+ port + APPLI_PATH + token +"ui=form#form="+process.getName()+"--"+process.getVersion()+"$entry&process="+processId+"&mode=app"+"&_pf="+USER_PROFILE_ID;
         return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(runUrl, "UTF-8"));
     }
 
