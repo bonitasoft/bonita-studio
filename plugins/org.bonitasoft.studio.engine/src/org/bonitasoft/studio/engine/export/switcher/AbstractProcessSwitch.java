@@ -61,7 +61,6 @@ public class AbstractProcessSwitch extends ProcessSwitch<Element> {
     public static final String DB_QUERY = "script";
     public static final String DB_USER = "username";
     public static final String DB_PASSWORD = "password";
-	private static final int MAX_INDEX = 5;
 
     protected final ProcessDefinitionBuilder builder;
     protected final Set<EObject> eObjectNotExported;
