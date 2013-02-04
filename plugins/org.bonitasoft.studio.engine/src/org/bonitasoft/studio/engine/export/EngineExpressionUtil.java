@@ -139,7 +139,7 @@ public class EngineExpressionUtil {
     public static LeftOperand createLeftOperand(final org.bonitasoft.studio.model.expression.Expression leftOperand) {
         final LeftOperandBuilder builder = new LeftOperandBuilder();
         builder.createNewInstance();
-        builder.setDataName(leftOperand.getContent());
+        builder.setName(leftOperand.getContent());
         return builder.done();
     }
 
