@@ -63,6 +63,15 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
     public Image getIcon() {
         return Pics.getImage(PicsConstants.configuration);
     }
+    
+    @Override
+    public ProcessConfigurationFileStore getChild(String fileName) {
+    	ProcessConfigurationFileStore procConfFileStore = super.getChild(fileName);
+    	if(procConfFileStore == null){
+    		procConfFileStore = createRepositoryFileStore(fileName);
+    	}
+		return procConfFileStore;
+    }
 
     @Override
     public ProcessConfigurationFileStore createRepositoryFileStore(String fileName) {
