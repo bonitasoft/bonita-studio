@@ -219,6 +219,9 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 	
 	private void removeDriver(){
 		String driver = getSelectedDriver();
+		if (driver.equals(getDefaultDriver(connectorId))){
+			setDefaultDriver(connectorId, null);
+		}
 		List<String> jars = getJars();
 		jars.remove(driver);
 		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore)store.createRepositoryFileStore(connectorId);
