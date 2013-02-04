@@ -72,7 +72,12 @@ public class DatabaseConnectorPropertiesFileStore extends PropertiesFileStore {
 	
 	public void setDefault(String jarName){
 		 Properties properties = getContent();
-		 properties.put(DEFAULT, jarName);
+		 if(jarName == null){
+			 properties.remove(DEFAULT);
+		 }else{
+			 properties.put(DEFAULT, jarName);
+		 }
+		
 		 save(properties);
 	}
 	
