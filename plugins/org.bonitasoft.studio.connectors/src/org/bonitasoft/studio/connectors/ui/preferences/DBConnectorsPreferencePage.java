@@ -298,9 +298,13 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 
 	private void removeDriver(){
 		String driver = getSelectedDriver();
+		String connectorId = getSelectedConnector().getId();
+		if (driver.equals(getDefaultDriver(connectorId))){
+			setDefaultDriver(connectorId, null);
+		}
 		List<String> jars = getJars();
 		jars.remove(driver);
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore)store.createRepositoryFileStore(getSelectedConnector().getId());
+		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore)store.createRepositoryFileStore(connectorId);
 		fileStore.setJarList(jars);
 	}
 
