@@ -19,9 +19,12 @@ package org.bonitasoft.studio.connector.model.definition;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.osgi.framework.Bundle;
@@ -47,12 +50,20 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
         connectorDefList = connectorDefStore.getDefinitions();
         if (userDefinitionOnly) {
             List<ConnectorDefinition> toRemove = new ArrayList<ConnectorDefinition>();
+            final String absolutePathOfConnectorDefStoreResource = connectorDefStore.getResource().getLocation().toFile().getAbsolutePath();
             for (ConnectorDefinition definition : connectorDefList) {
-                String path = definition.eResource().getURI().toFileString();
-                if (!path.contains(connectorDefStore.getResource()
-                        .getLocation().toFile().getAbsolutePath())) {
-                    toRemove.add(definition);
-                }
+            	final Resource eResource = definition.eResource();
+            	if(eResource != null){
+            		final URI uri = eResource.getURI();
+            		if(uri != null){
+            			String path = uri.toFileString();               
+            			if (!path.contains(absolutePathOfConnectorDefStoreResource)) {
+            				toRemove.add(definition);
+            			}
+            		}
+            	} else {
+            		BonitaStudioLog.debug("A connectorDefinition is outside of a Resource: "+definition.getId(), "org.bonitasoft.studio.connectors.model.edit");
+            	}
             }
             connectorDefList.removeAll(toRemove);
         }
