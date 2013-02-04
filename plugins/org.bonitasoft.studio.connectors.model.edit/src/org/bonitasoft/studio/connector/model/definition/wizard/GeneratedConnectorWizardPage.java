@@ -33,6 +33,13 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class GeneratedConnectorWizardPage extends AbstractConnectorConfigurationWizardPage {
 
+	public GeneratedConnectorWizardPage(String pageName){
+		super(pageName);
+	}
+	
+	public GeneratedConnectorWizardPage(){
+		super();
+	}
 
     @Override
     public Control doCreateControl(final Composite parent,EMFDataBindingContext context) {

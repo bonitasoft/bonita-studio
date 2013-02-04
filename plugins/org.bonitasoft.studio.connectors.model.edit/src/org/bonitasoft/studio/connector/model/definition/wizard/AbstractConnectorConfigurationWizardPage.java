@@ -52,7 +52,11 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
     private DefinitionResourceProvider messageProvider;
 
     public AbstractConnectorConfigurationWizardPage(){
-        super(AbstractConnectorConfigurationWizardPage.class.getName()) ;
+        this(AbstractConnectorConfigurationWizardPage.class.getName()) ;
+    }
+    
+    public AbstractConnectorConfigurationWizardPage(String pageName){
+        super(pageName) ;
         context = new EMFDataBindingContext() ;
     }
 

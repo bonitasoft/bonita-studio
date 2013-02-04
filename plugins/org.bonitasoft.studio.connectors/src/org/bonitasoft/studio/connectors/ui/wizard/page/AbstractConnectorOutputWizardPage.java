@@ -42,6 +42,7 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage {
     private Connector connector;
     private EStructuralFeature outputDataFeature;
     private WizardPageSupport pageSupport;
+	private IWizardPage previousPageBackup;
 
 
     public AbstractConnectorOutputWizardPage(){
@@ -105,11 +106,21 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage {
 
     @Override
     public IWizardPage getPreviousPage() {
-        IWizard wizard = getWizard();
+        if(previousPageBackup != null){
+        	return previousPageBackup;
+        }
+    	
+    	IWizard wizard = getWizard();
         if(wizard != null){
             return wizard.getPreviousPage(this);
         }
         return super.getPreviousPage();
+    }
+    
+    @Override
+    public void setPreviousPage(IWizardPage page) {
+    	this.previousPageBackup = page;
+    	super.setPreviousPage(page);
     }
 
 }

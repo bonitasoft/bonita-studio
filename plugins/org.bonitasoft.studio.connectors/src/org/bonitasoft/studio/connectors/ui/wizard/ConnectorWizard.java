@@ -86,8 +86,8 @@ import org.eclipse.jface.wizard.IWizardPage;
  */
 public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefinitionContainer {
 
-    private static final String CUSTOM_WIZARD_ID = "org.bonitasoft.studio.connectors.connectorWizard";
-    private static final String DATABASE_ID ="database";
+	private static final String CUSTOM_WIZARD_ID = "org.bonitasoft.studio.connectors.connectorWizard";
+	private static final String DATABASE_ID ="database";
 	protected final EObject container;
 	protected Connector connectorWorkingCopy;
 	private boolean editMode = false;
@@ -99,9 +99,9 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	private DefinitionResourceProvider messageProvider;
 	private CustomWizardExtension extension;
 
-    private List<CustomWizardExtension> contributions;
+	private List<CustomWizardExtension> contributions;
 
-    private boolean useEvents = true;
+	private boolean useEvents = true;
 
 
 	public ConnectorWizard(EObject container,EStructuralFeature connectorContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID){
@@ -129,18 +129,18 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	}
 
 
-    protected void initialize() {
-        setDefaultPageImageDescriptor(Pics.getWizban()) ;
-        setNeedsProgressMonitor(true) ;
-        messageProvider = initMessageProvider();
+	protected void initialize() {
+		setDefaultPageImageDescriptor(Pics.getWizban()) ;
+		setNeedsProgressMonitor(true) ;
+		messageProvider = initMessageProvider();
 
-        initializeContainment();
+		initializeContainment();
 
-        contributions = new ArrayList<CustomWizardExtension>() ;
-        for(IConfigurationElement element :  BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(CUSTOM_WIZARD_ID)){
-            contributions.add(new CustomWizardExtension(element));
-        }
-    }
+		contributions = new ArrayList<CustomWizardExtension>() ;
+		for(IConfigurationElement element :  BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(CUSTOM_WIZARD_ID)){
+			contributions.add(new CustomWizardExtension(element));
+		}
+	}
 
 	protected void initializeContainment() {
 		if(container instanceof Element){
@@ -163,58 +163,55 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		}
 	}
 
-    protected DefinitionResourceProvider initMessageProvider() {
-        IRepositoryStore<? extends IRepositoryFileStore> store =RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-        return DefinitionResourceProvider.getInstance(store, ConnectorPlugin.getDefault().getBundle()) ;
-    }
+	protected DefinitionResourceProvider initMessageProvider() {
+		IRepositoryStore<? extends IRepositoryFileStore> store =RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+		return DefinitionResourceProvider.getInstance(store, ConnectorPlugin.getDefault().getBundle()) ;
+	}
 
 
-    @Override
-    public void addPages() {
-        if(!editMode){
-            selectionPage = getSelectionPage(connectorWorkingCopy,messageProvider) ;
-            addPage(selectionPage) ;
-        }
-        addNameAndDescriptionPage();
-        if(editMode){
-        	final IDefinitionRepositoryStore definitionStore = getDefinitionStore();
-            final ConnectorDefinition definition =  definitionStore.getDefinition(connectorWorkingCopy.getDefinitionId(),connectorWorkingCopy.getDefinitionVersion()) ;
-            extension = findCustomWizardExtension(definition) ;
-            List<IWizardPage> pages = getPagesFor(definition) ;
-            for(IWizardPage p : pages){
-                addAdditionalPage(p) ;
-            }
-            addOuputPage(definition) ;
-        }
+	@Override
+	public void addPages() {
+		if(!editMode){
+			selectionPage = getSelectionPage(connectorWorkingCopy,messageProvider) ;
+			addPage(selectionPage) ;
+		}
+		addNameAndDescriptionPage();
+		if(editMode){
+			final IDefinitionRepositoryStore definitionStore = getDefinitionStore();
+			final ConnectorDefinition definition =  definitionStore.getDefinition(connectorWorkingCopy.getDefinitionId(),connectorWorkingCopy.getDefinitionVersion()) ;
+			extension = findCustomWizardExtension(definition) ;
+			List<IWizardPage> pages = getPagesFor(definition) ;
+			for(IWizardPage p : pages){
+				addAdditionalPage(p) ;
+			}
+			addOuputPage(definition) ;
+		}
 
-    }
+	}
 
-    protected void addNameAndDescriptionPage() {
-        if(useEvents ){
-            namePage = new SelectEventConnectorNameAndDescWizardPage(container, connectorWorkingCopy,originalConnector, featureToCheckForUniqueID) ;
-        }else{
-            namePage = new SelectNameAndDescWizardPage(container, connectorWorkingCopy,originalConnector, featureToCheckForUniqueID) ;
-        }
-        addPage(namePage) ;
-    }
+	protected void addNameAndDescriptionPage() {
+		if(useEvents ){
+			namePage = new SelectEventConnectorNameAndDescWizardPage(container, connectorWorkingCopy,originalConnector, featureToCheckForUniqueID) ;
+		}else{
+			namePage = new SelectNameAndDescWizardPage(container, connectorWorkingCopy,originalConnector, featureToCheckForUniqueID) ;
+		}
+		addPage(namePage) ;
+	}
 
-    protected void setUseEvents(boolean useEvents) {
-        this.useEvents = useEvents;
-    }
+	protected void setUseEvents(boolean useEvents) {
+		this.useEvents = useEvents;
+	}
 
-    protected IDefinitionRepositoryStore getDefinitionStore() {
-        return (IDefinitionRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-    }
+	protected IDefinitionRepositoryStore getDefinitionStore() {
+		return (IDefinitionRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+	}
 
-    protected SelectConnectorDefinitionWizardPage getSelectionPage(Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
-        return new SelectConnectorDefinitionWizardPage(connectorWorkingCopy,resourceProvider);
-    }
+	protected SelectConnectorDefinitionWizardPage getSelectionPage(Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
+		return new SelectConnectorDefinitionWizardPage(connectorWorkingCopy,resourceProvider);
+	}
 
 	protected void addOuputPage(ConnectorDefinition definition) {
-		IWizardPage outputPage = getOutputPageFor(definition) ;
-		
-		//IWizardPage outputPage = getConnectorOutputPageFor(definition) ;
-		
+		final IWizardPage outputPage = getOutputPageFor(definition) ;
 		if(outputPage != null){
 			addAdditionalPage(outputPage) ;
 		}
@@ -241,7 +238,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	}
 
 
-	
+
 	protected boolean hasOutputPage(){
 		return (extension != null && !extension.useDefaultOutputPage() && extension.getOutputPage() != null) || (!getDefinition().getOutput().isEmpty());
 	}
@@ -324,7 +321,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		List<IWizardPage> pages = getPagesFor(definition) ;
 
 		//Remove already generated page in case of return
-				removeAllAdditionalPages() ;
+		removeAllAdditionalPages() ;
 		for(IWizardPage p : pages){
 			addAdditionalPage(p) ; //Additional pages control will be created lazily by the WizardContainer
 		}
@@ -414,10 +411,10 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	protected List<IWizardPage> getPagesFor(ConnectorDefinition definition) {
 		List<IWizardPage> result = new ArrayList<IWizardPage>() ;
-        if (isDatabaseConnector(definition)){
-        	result.add(new DatabaseConnectorDriversWizardPage(definition.getId()));
-        }
-		
+		if (isDatabaseConnector(definition)){
+			result.add(new DatabaseConnectorDriversWizardPage(definition.getId()));
+		}
+
 		if(extension != null && (!extension.hasCanBeUsedProvider() || extension.canBeUsed(definition,connectorWorkingCopy))){ //Extension page
 			for(AbstractConnectorConfigurationWizardPage p : extension.getPages()){
 				p.setMessageProvider(messageProvider) ;
@@ -482,7 +479,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		}
 		return null;
 	}
-	
+
 	@Override
 	public IWizardPage getPreviousPage(IWizardPage page) {
 		IWizardPage previousPage = super.getPreviousPage(page);
@@ -495,7 +492,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	public boolean isEditMode() {
 		return editMode;
 	}
-	
+
 	private boolean isDatabaseConnector(ConnectorDefinition def){
 		List<Category> categories = def.getCategory();
 		for (Category category:categories){
