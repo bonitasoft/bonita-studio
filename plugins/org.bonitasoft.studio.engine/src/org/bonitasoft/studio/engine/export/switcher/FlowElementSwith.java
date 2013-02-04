@@ -305,7 +305,7 @@ public class FlowElementSwith extends AbstractProcessSwitch {
             final LeftOperandBuilder builder = new LeftOperandBuilder() ;
             builder.createNewInstance() ;
             builder.setName(mapping.getSubprocessTarget()) ;
-            opBuilder.setVariableToSet(builder.done());
+            opBuilder.setLeftOperand(builder.done());
             opBuilder.setType(OperatorType.ASSIGNMENT);
             activityBuilder.addDataInputOperation(opBuilder.done());
         }
@@ -319,7 +319,7 @@ public class FlowElementSwith extends AbstractProcessSwitch {
             final LeftOperandBuilder builder = new LeftOperandBuilder() ;
             builder.createNewInstance() ;
             builder.setName(mapping.getProcessTarget().getName()) ;
-            opBuilder.setVariableToSet(builder.done());
+            opBuilder.setLeftOperand(builder.done());
             opBuilder.setType(OperatorType.ASSIGNMENT);
             activityBuilder.addDataOutputOperation(opBuilder.done());
         }
