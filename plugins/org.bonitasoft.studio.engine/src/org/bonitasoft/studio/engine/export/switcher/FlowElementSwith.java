@@ -580,7 +580,7 @@ public class FlowElementSwith extends AbstractProcessSwitch {
                     && operation.getRightOperand() != null
                     && operation.getRightOperand().getContent() != null){
             	if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(operation.getLeftOperand().getType())){
-            		//builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()),OperatorType.STRING_INDEX, inputType,EngineExpressionUtil.createExpression(operation.getRightOperand()));
+            		builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()), OperatorType.STRING_INDEX, null, null, EngineExpressionUtil.createExpression(operation.getRightOperand()));
             	} else {
             		builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()), OperatorType.valueOf(operation.getOperator().getType()), operation.getOperator().getExpression(),inputType, EngineExpressionUtil.createExpression(operation.getRightOperand())) ;
             	}
