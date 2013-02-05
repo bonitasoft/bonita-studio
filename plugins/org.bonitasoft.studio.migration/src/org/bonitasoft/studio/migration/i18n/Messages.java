@@ -44,7 +44,11 @@ public class Messages extends NLS {
 	public static String okStatusTooltip;
 	public static String warningStatusTooltip;
 	public static String errorStatusTooltip;
-  
+	public static String no;
+	public static String yes;
+	public static String noActionRequired;
+	public static String reviewRequired;
+	public static String actionRequired;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

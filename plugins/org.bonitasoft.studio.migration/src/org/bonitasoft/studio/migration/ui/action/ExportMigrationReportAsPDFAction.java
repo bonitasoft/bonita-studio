@@ -25,6 +25,7 @@ import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.migration.utils.PDFMigrationReportWriter;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.FileDialog;
 public class ExportMigrationReportAsPDFAction extends Action {
 
 	private Report report;
+	private TableViewer viewer;
 
 	public ExportMigrationReportAsPDFAction(){
 		super();
@@ -48,7 +50,7 @@ public class ExportMigrationReportAsPDFAction extends Action {
 	@Override
 	public void run() {
 		if(report != null){
-			final PDFMigrationReportWriter writer = new PDFMigrationReportWriter(report);
+			final PDFMigrationReportWriter writer = new PDFMigrationReportWriter(report,viewer);
 			final FileDialog dialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.SAVE);
 			dialog.setFileName(report.getName()+".pdf");
 			dialog.setFilterExtensions(new String[]{"*.pdf"});
@@ -69,5 +71,9 @@ public class ExportMigrationReportAsPDFAction extends Action {
 	
 	public void setReport(Report report) {
 		this.report = report ;
+	}
+	
+	public void setViewer(TableViewer viewer) {
+		this.viewer = viewer ;
 	}
 }

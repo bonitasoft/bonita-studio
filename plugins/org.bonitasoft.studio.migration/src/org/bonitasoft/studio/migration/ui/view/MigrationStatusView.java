@@ -130,6 +130,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		IToolBarManager toolBar = actionBars.getToolBarManager();
 		exportAction = new ExportMigrationReportAsPDFAction();
 		exportAction.setReport(getReportFromEditor(getSite().getPage().getActiveEditor()));
+		exportAction.setViewer(tableViewer);
 		dropDownMenu.add(exportAction);
 
 		linkAction = new ToggleLinkingAction();
@@ -483,7 +484,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 	@Override
 	public void setFocus() {
-
+		
 	}
 
 	@Override
