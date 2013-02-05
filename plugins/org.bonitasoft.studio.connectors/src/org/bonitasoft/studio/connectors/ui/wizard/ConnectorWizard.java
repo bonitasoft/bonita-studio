@@ -97,7 +97,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	private SelectConnectorDefinitionWizardPage selectionPage;
 	private SelectNameAndDescWizardPage namePage;
 	private DefinitionResourceProvider messageProvider;
-	private CustomWizardExtension extension;
+	protected CustomWizardExtension extension;
 
 	private List<CustomWizardExtension> contributions;
 
@@ -127,7 +127,11 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		setWindowTitle("Connectors");
 		initialize() ;
 	}
+	
 
+	protected void setEditMode(boolean isEdit) {
+		editMode = isEdit;
+	}
 
 	protected void initialize() {
 		setDefaultPageImageDescriptor(Pics.getWizban()) ;
@@ -304,7 +308,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		}
 	}
 
-	private CustomWizardExtension findCustomWizardExtension(ConnectorDefinition definition) {
+	protected CustomWizardExtension findCustomWizardExtension(ConnectorDefinition definition) {
 		int priority = 0 ;
 		CustomWizardExtension result = null ;
 		for(CustomWizardExtension ext : contributions){

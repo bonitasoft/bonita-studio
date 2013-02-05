@@ -39,6 +39,11 @@
             id="org.bonitasoft.studio.connector.testConnector"
             name="%testConnector">
       </command>
+      <command
+            defaultHandler="org.bonitasoft.studio.connectors.handler.EditConnectorConfigurationHandler"
+            id="org.bonitasoft.studio.connectors.editConnectorConfiguration"
+            name="%editConnectorConfiguration">
+      </command>
 	</extension>
    <extension
          point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
@@ -146,6 +151,14 @@
             <command
                   commandId="org.bonitasoft.studio.connectors.importConnector"
                   icon="icons/import_connector.png"
+                  style="push">
+            </command>
+            <separator
+                  name="org.bonitasoft.studio.application.connectorSeparator5"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="org.bonitasoft.studio.connectors.editConnectorConfiguration"
                   style="push">
             </command>
          	<visibleWhen
