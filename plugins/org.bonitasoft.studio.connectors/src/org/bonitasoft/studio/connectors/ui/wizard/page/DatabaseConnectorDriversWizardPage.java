@@ -149,6 +149,9 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 						setDefaultDriver(connectorId, jars.get(0));
 					}
 					setJars(connectorId,jars);
+					if(jars.size() == 1){
+						setDefaultDriver(connectorId, jars.get(0));
+					}
 					driverManagerViewer.setInput(connectorId);
 				}
 

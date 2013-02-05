@@ -17,10 +17,7 @@
  */
 package org.bonitasoft.studio.connectors.ui.provider;
 
-import java.util.List;
-
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
@@ -33,51 +30,44 @@ import org.eclipse.swt.graphics.Image;
  *
  */
 public class DabaBaseConnectorDefinitionLabelProvider extends LabelProvider {
-	
-	 private final DefinitionResourceProvider messageProvider;
-	 private final String DATABASE = "database";
 
-	    public DabaBaseConnectorDefinitionLabelProvider() {
-	    	super();
-	    	 ConnectorDefRepositoryStore connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-	         messageProvider = DefinitionResourceProvider.getInstance(connectorDefStore, ConnectorPlugin.getDefault().getBundle()) ;
-	    }
-	
-	  @Override
-	    public String getText(Object element) {
-		  if (element instanceof ConnectorDefinition) {
-					 return getLabelFor(element);
-					 
-				 }
-		  return null;
-	  }
-	  
-	  private String getLabelFor(Object element) {
-	        String desc = messageProvider
-	                .getConnectorDefinitionDescription((ConnectorDefinition) element);
-	        String connectorDefinitionLabel = messageProvider
-	                .getConnectorDefinitionLabel((ConnectorDefinition) element);
-	        if(connectorDefinitionLabel==null){
-	            connectorDefinitionLabel = ((ConnectorDefinition) element).getId();
-	        }
-	        String text = connectorDefinitionLabel
-	                + " (" + ((ConnectorDefinition) element).getVersion() + ")";
-	        return text;
-	    }
-	  
-	  @Override
-	    public Image getImage(Object element) {
-		  if (element instanceof ConnectorDefinition) {
-			  ConnectorDefinition connector = (ConnectorDefinition)element;
-			  List<Category>categories = connector.getCategory();
-			  for (Category category:categories){
-				 if (DATABASE.equals(category.getId())){
-					 return messageProvider.getCategoryIcon(category);
-				 }
-			  }
-		  }
-				 
-		  return null;
-	  }
+	private final DefinitionResourceProvider messageProvider;
+	private final String DATABASE = "database";
+
+	public DabaBaseConnectorDefinitionLabelProvider() {
+		super();
+		ConnectorDefRepositoryStore connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+		messageProvider = DefinitionResourceProvider.getInstance(connectorDefStore, ConnectorPlugin.getDefault().getBundle()) ;
+	}
+
+	@Override
+	public String getText(Object element) {
+		if (element instanceof ConnectorDefinition) {
+			return getLabelFor(element);
+
+		}
+		return null;
+	}
+
+	private String getLabelFor(Object element) {
+		String connectorDefinitionLabel = messageProvider
+				.getConnectorDefinitionLabel((ConnectorDefinition) element);
+		if(connectorDefinitionLabel==null){
+			connectorDefinitionLabel = ((ConnectorDefinition) element).getId();
+		}
+		String text = connectorDefinitionLabel
+				+ " (" + ((ConnectorDefinition) element).getVersion() + ")";
+		return text;
+	}
+
+	@Override
+	public Image getImage(Object element) {
+		if (element instanceof ConnectorDefinition) {
+			ConnectorDefinition connector = (ConnectorDefinition)element;
+			return messageProvider.getDefinitionIcon(connector);
+		}
+
+		return null;
+	}
 
 }

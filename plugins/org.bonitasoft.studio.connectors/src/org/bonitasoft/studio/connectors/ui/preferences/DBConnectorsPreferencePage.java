@@ -130,12 +130,12 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 	private void createDBConnectorsList(Composite parent){
 		final Composite connectorListComposite = new Composite(parent,SWT.NONE);
 		connectorListComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
-		connectorListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(80,250).create());
+		connectorListComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		final Text searchField = new Text(connectorListComposite,SWT.BORDER|SWT.SEARCH|SWT.ICON_SEARCH|SWT.ICON_CANCEL);
 		searchField.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		searchField.setMessage(Messages.search);
 		viewer = new TableViewer(connectorListComposite,SWT.BORDER | SWT.FULL_SELECTION);
-		viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(200, SWT.DEFAULT).create());
 		viewer.setLabelProvider(new DabaBaseConnectorDefinitionLabelProvider());
 		viewer.setContentProvider(new DatabaseConnectorDefinitionContentProvider());
 		viewer.setInput(getCategory());
@@ -226,6 +226,9 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 						setDefaultDriver(def.getId(), jars.get(0));
 					}
 					setJars(def.getId(),jars);
+					if(jars.size() == 1){
+						setDefaultDriver(def.getId(), jars.get(0));
+					}
 					driverManagerViewer.setInput(def.getId());
 				}
 

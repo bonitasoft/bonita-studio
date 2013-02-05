@@ -22,11 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
-import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.filestore.PropertiesFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -55,7 +52,6 @@ public class DatabaseConnectorPropertiesFileStore extends PropertiesFileStore {
 	 */
 	@Override
 	public Image getIcon() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -115,7 +111,6 @@ public class DatabaseConnectorPropertiesFileStore extends PropertiesFileStore {
 	 */
 	@Override
 	protected IWorkbenchPart doOpen() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -124,8 +119,7 @@ public class DatabaseConnectorPropertiesFileStore extends PropertiesFileStore {
 	 */
 	@Override
 	protected void doClose() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 
