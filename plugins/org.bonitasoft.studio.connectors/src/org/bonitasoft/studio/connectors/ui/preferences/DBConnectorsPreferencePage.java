@@ -42,9 +42,6 @@ import org.bonitasoft.studio.preferences.pages.AbstractBonitaPreferencePage;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -81,7 +78,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * @author aurelie zara 
  *
  */
-public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage, IExecutableExtension {
+public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage{
 
 	private static final int DEFAULT_BUTTON_WIDTH_HINT = 85;
 	private final String DATABASE = "database";
@@ -326,27 +323,19 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		return (String)driverSelection.getFirstElement();
 	}
 
-	@Override
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void init(IWorkbench workbench) {
 		driversLabelProvider = new DatabaseDriversLabelProvider();
 		store = (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class) ;
 		context = new DataBindingContext();
-
-
 	}
 
 
 
 	@Override
 	protected void createFieldEditors() {
-		// TODO Auto-generated method stub
+	
 
 	}
 
