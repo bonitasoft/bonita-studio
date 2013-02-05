@@ -138,7 +138,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 	}
 
     protected ConnectorParameter getConnectorParameter(Input input) {
-		for(ConnectorParameter param : getConfiguration().getParameters()){
+		for(ConnectorParameter param : configuration.getParameters()){
 			if(param.getKey().equals(input.getName())){
 				if(param.getExpression() == null){
 					param.setExpression(createExpression(input)) ;

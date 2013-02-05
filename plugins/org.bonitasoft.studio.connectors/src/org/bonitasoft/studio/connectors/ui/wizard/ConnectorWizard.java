@@ -163,6 +163,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 			@SuppressWarnings("unchecked")
 			List<EObject> connectors = (List<EObject>) containerCopy.eGet(connectorContainmentFeature) ;
+			connectors.clear();
 			connectors.add(connectorWorkingCopy) ;
 		}
 	}
