@@ -213,13 +213,18 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				SelectJarsDialog dialog = new SelectJarsDialog(getShell());
+				final ConnectorDefinition def = getSelectedConnector();
 				if (dialog.open()==Window.OK ){
 					List<String> jars = getJars();
+					int size = jars.size();
 					List<IRepositoryFileStore> selectedJars=dialog.getSelectedJars();
 					for (IRepositoryFileStore jar:selectedJars){
 						jars.add(jar.getName());
 					}
-					final ConnectorDefinition def = getSelectedConnector();
+					if (size==0  && !jars.isEmpty()){
+						driversLabelProvider.setDefaultDriver( jars.get(0));
+						setDefaultDriver(def.getId(), jars.get(0));
+					}
 					setJars(def.getId(),jars);
 					driverManagerViewer.setInput(def.getId());
 				}

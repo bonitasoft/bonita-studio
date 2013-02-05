@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
@@ -140,11 +139,15 @@ public class DatabaseConnectorDriversWizardPage extends WizardPage {
 				SelectJarsDialog dialog = new SelectJarsDialog(getShell());
 				if (dialog.open()==Window.OK ){
 					List<String> jars = getJars();
+					int size = jars.size();
 					List<IRepositoryFileStore> selectedJars=dialog.getSelectedJars();
 					for (IRepositoryFileStore jar:selectedJars){
 						jars.add(jar.getName());
 					}
-					
+					if (size==0  && !jars.isEmpty()){
+						driversLabelProvider.setDefaultDriver( jars.get(0));
+						setDefaultDriver(connectorId, jars.get(0));
+					}
 					setJars(connectorId,jars);
 					driverManagerViewer.setInput(connectorId);
 				}
