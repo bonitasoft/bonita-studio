@@ -46,6 +46,7 @@ import org.bonitasoft.engine.exception.InvalidExpressionException;
 import org.bonitasoft.engine.expression.ExpressionBuilder;
 import org.bonitasoft.engine.expression.ExpressionInterpreter;
 import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.TimerUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -578,7 +579,11 @@ public class FlowElementSwith extends AbstractProcessSwitch {
                     && operation.getLeftOperand().getContent() != null
                     && operation.getRightOperand() != null
                     && operation.getRightOperand().getContent() != null){
-                builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()), OperatorType.valueOf(operation.getOperator().getType()), operation.getOperator().getExpression(),inputType, EngineExpressionUtil.createExpression(operation.getRightOperand())) ;
+            	if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(operation.getLeftOperand().getType())){
+            		//builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()),OperatorType.STRING_INDEX, inputType,EngineExpressionUtil.createExpression(operation.getRightOperand()));
+            	} else {
+            		builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()), OperatorType.valueOf(operation.getOperator().getType()), operation.getOperator().getExpression(),inputType, EngineExpressionUtil.createExpression(operation.getRightOperand())) ;
+            	}
             }
         }
     }
