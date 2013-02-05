@@ -46,7 +46,7 @@ public class EditConnectorConfigurationHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		EditConnectorConfigurationWizard editConfigurationWizard = new EditConnectorConfigurationWizard((EObject)null, getConnectorFeature(), getConnectorFeatureToCheckUniqueID());
-		 WizardDialog selectDialog = new CustomWizardDialog(Display.getCurrent().getActiveShell(),editConfigurationWizard,Messages.Edit) ;
+		 WizardDialog selectDialog = new WizardDialog(Display.getCurrent().getActiveShell(),editConfigurationWizard); ;
 	    selectDialog.open();
 		return null;
 	}
