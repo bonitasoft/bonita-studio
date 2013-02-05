@@ -25,8 +25,10 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -35,6 +37,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
+import org.eclipse.ui.progress.UIJob;
 
 /**
  * @author Baptiste Mesta
@@ -123,14 +126,20 @@ public class BonitaPerspectivesUtils {
 				if (!activePerspectiveID.equals(perspectiveID)) {
 					try {
 						workbench.showPerspective(perspectiveID, window);
-						Display.getDefault().asyncExec(new Runnable() {
-
+						UIJob job = new UIJob("changePerspective") {
 							@Override
-							public void run() {
-//								activePage.resetPerspective();
-//								PlatformUtil.closeIntro();
+							public IStatus runInUIThread(IProgressMonitor monitor) {
+								Display.getDefault().syncExec(new Runnable() {
+									public void run() {
+										activePage.resetPerspective();
+									}
+								});
+								return Status.OK_STATUS;
 							}
-						});
+						};
+						job.setSystem(true);
+						job.schedule();
+						
 					} catch (WorkbenchException e) {
 						BonitaStudioLog.error(e);
 					}
