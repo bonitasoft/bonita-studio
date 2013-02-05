@@ -32,6 +32,7 @@ public interface ExpressionConstants {
     String JAVA_TYPE = "JAVA_TYPE";
 
     String ASSIGNMENT_OPERATOR = OperatorType.ASSIGNMENT.name() ;
+    String SEARCH_INDEX_OPERATOR = OperatorType.STRING_INDEX.name();
     String JAVA_METHOD_OPERATOR = OperatorType.JAVA_METHOD.name() ;
     String XPATH_UPDATE_OPERATOR = OperatorType.XPATH_UPDATE_QUERY.name() ;
     
