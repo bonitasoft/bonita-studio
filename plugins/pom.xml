@@ -29,6 +29,7 @@
 		<module>org.bonitasoft.studio.common.repository</module>
 		<module>org.bonitasoft.studio.configuration</module>
 		<module>org.bonitasoft.studio.connectors</module>
+		<module>org.bonitasoft.studio.connectors.database.drivers</module>
 		<module>org.bonitasoft.studio.connectors.model</module>
 		<module>org.bonitasoft.studio.condition</module>
 		<module>org.bonitasoft.studio.condition.ui</module>
