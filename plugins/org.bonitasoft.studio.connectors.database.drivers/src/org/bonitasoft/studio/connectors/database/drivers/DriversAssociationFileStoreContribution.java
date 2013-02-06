@@ -37,10 +37,10 @@ public class DriversAssociationFileStoreContribution implements
 	private static final String MYSQL_DEFINITION_ID = "database-mysql";
 	private static final String MYSQL_DRIVER_JARNAME = "mysql-connector-java-5.1.23-bin.jar";
 	
-	private static final String POSTGRES_DEFINITION_ID = "database-postgres";
+	private static final String POSTGRES_DEFINITION_ID = "database-postgresql";
 	private static final String POSTGRES_DRIVER_JARNAME = "postgresql-9.2-1002.jdbc4.jar";
 	
-	private static final String SQLSERVER_DEFINITION_ID = "database-sqlserver";
+	private static final String SQLSERVER_DEFINITION_ID = "database-mssqlserver";
 	private static final String SQLSERVER_DRIVER_JARNAME = "sqljdbc4.jar";
 	
 	private static final String ORACLE_DEFINITION_ID = "database-oracle";
