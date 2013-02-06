@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
@@ -135,5 +138,19 @@ public abstract class ExtensibleWizard extends Wizard {
             return null;
         }
         return pages.get(index - 1);
+    }
+    
+    @Override
+    public void dispose() {
+    	super.dispose();
+    	 // notify pages
+        for (int i = 0; i < additionalPages.size(); i++) {
+			try {
+	            ((IWizardPage) additionalPages.get(i)).dispose();
+			} catch (Exception e) {
+				Status status = new Status(IStatus.ERROR, Policy.JFACE, IStatus.ERROR, e.getMessage(), e);
+				Policy.getLog().log(status);
+			}
+        }
     }
 }
