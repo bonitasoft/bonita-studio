@@ -22,24 +22,30 @@ import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
 
 
 public class ConditionModelJavaValidator extends AbstractConditionModelJavaValidator {
 
+	private ResourceSet rSet;
+
 	@Check
 	public void checkCompatibleTypes(Operation_Compare operation){
- 		final String errorMessage = new ConditionModelSwitch<String>(){
-			
+		final String errorMessage = new ConditionModelSwitch<String>(){
+
 			public String caseUnary_Operation(org.bonitasoft.studio.condition.conditionModel.Unary_Operation object) {
 				return validateUnaryOperation(object.getValue());
 			}
-			
+
 			public String caseOperation(Operation object) {
 				return compareExpressionsType(object.getLeft(),object.getRight());
 			}
-			
+
 		}.doSwitch(operation.getOp());
 		if(errorMessage != null){
 			error(errorMessage,operation.eContainingFeature());
@@ -80,8 +86,21 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
 
 	private String getDataType(Expression_ProcessRef e){
 		EObject proxy = e.getValue();
-		EObject data = EcoreUtil2.resolve(proxy, (ResourceSet)null);
-	
+		rSet = null;
+		if(proxy.eIsProxy() && EcoreUtil.getURI(proxy).lastSegment().endsWith(".proc")){
+			Display.getDefault().syncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+					rSet = editor.getDiagramEditPart().resolveSemanticElement().eResource().getResourceSet();
+				}
+			});
+		}
+		EObject data = EcoreUtil2.resolve(proxy, rSet);
+		if(rSet != null){
+			rSet.getResources().remove(e.eResource());
+		}
 		if (data instanceof JavaObjectData){
 			JavaObjectData javaData = (JavaObjectData)data;
 			String className = javaData.getClassName();
