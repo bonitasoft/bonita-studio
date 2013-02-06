@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.IntermediateCatchTimerEvent;
+import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.eclipse.swt.SWT;
 
@@ -555,7 +555,7 @@ public class TimerUtil {
         return script;
     }
 
-    public static boolean isDuration(IntermediateCatchTimerEvent timer) {
+    public static boolean isDuration(AbstractTimerEvent timer) {
         Expression exp = timer.getCondition();
         if(exp != null){
             return DateUtil.isDuration(exp.getContent());
