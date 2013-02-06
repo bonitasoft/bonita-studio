@@ -41,8 +41,6 @@ import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -76,7 +74,6 @@ public class AbstractProcessSwitch extends ProcessSwitch<Element> {
         addActors(builder,object);
         addData(builder,object) ;
         addConnector(builder, object) ;
-        addSearchIndex(builder, object);
         addKPIBinding(builder, object);
         return object;
     }
@@ -158,19 +155,6 @@ public class AbstractProcessSwitch extends ProcessSwitch<Element> {
                 }
             }
         }
-    }
-    
-    protected void addSearchIndex(final ProcessDefinitionBuilder builder, final AbstractProcess process){
-    	if (process instanceof Pool){
-    		Pool pool = (Pool)process;
-    		for (SearchIndex searchIndex : pool.getSearchIndexes()){
-    			int i  = pool.getSearchIndexes().indexOf(searchIndex);
-    			Expression expr = EngineExpressionUtil.createExpression(searchIndex.getValue());
-    			if(!searchIndex.getName().getContent().isEmpty()){
-    				builder.setStringIndex(i+1, searchIndex.getName().getContent(), expr);
-    			}
-    		}
-    	}
     }
 
     protected void addDescription(final DescriptionBuilder builder ,final String description){
