@@ -18,6 +18,7 @@ package org.bonitasoft.studio.condition.ui.expression;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,11 +28,14 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage;
 import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
+import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -87,7 +91,17 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 		} catch (IOException e1) {
 			BonitaStudioLog.error(e1, ExpressionEditorPlugin.PLUGIN_ID);
 		}
-
+		final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
+		final List<String> accessibleObjects = new ArrayList<String>();
+		for(Data d : ModelHelper.getAccessibleData(inputExpression)){
+			accessibleObjects.add(ModelHelper.getEObjectID(d));
+		}
+		for(Parameter p : ModelHelper.getParentProcess(inputExpression).getParameters()){
+			accessibleObjects.add(ModelHelper.getEObjectID(p));
+		}
+		globalScopeProvider.setAccessibleEObjects(accessibleObjects);
+		
+		
 		final MultiStatus status = new MultiStatus(ExpressionEditorPlugin.PLUGIN_ID, 0, "", null);
 		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
 
