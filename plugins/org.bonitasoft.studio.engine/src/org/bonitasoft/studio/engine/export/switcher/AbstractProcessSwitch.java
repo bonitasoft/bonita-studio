@@ -64,6 +64,7 @@ public class AbstractProcessSwitch extends ProcessSwitch<Element> {
 
     protected final ProcessDefinitionBuilder builder;
     protected final Set<EObject> eObjectNotExported;
+    
 
     public AbstractProcessSwitch(ProcessDefinitionBuilder processBuilder,Set<EObject> eObjectNotExported){
         builder = processBuilder ;
@@ -165,7 +166,7 @@ public class AbstractProcessSwitch extends ProcessSwitch<Element> {
     		for (SearchIndex searchIndex : pool.getSearchIndexes()){
     			int i  = pool.getSearchIndexes().indexOf(searchIndex);
     			Expression expr = EngineExpressionUtil.createExpression(searchIndex.getValue());
-    			if(searchIndex.getName().getContent().isEmpty()){
+    			if(!searchIndex.getName().getContent().isEmpty()){
     				builder.setStringIndex(i+1, searchIndex.getName().getContent(), expr);
     			}
     		}

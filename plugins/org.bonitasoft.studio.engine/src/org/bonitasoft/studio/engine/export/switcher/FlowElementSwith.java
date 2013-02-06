@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.engine.export.switcher;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -84,6 +85,8 @@ import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
 import org.bonitasoft.studio.model.process.OperationContainer;
 import org.bonitasoft.studio.model.process.OutputMapping;
+import org.bonitasoft.studio.model.process.Pool;
+import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.StartEvent;
 import org.bonitasoft.studio.model.process.StartMessageEvent;
 import org.bonitasoft.studio.model.process.StartSignalEvent;
@@ -570,7 +573,7 @@ public class FlowElementSwith extends AbstractProcessSwitch {
     }
 
     protected void addOperation(ActivityDefinitionBuilder builder,OperationContainer activity) {
-        for(Operation operation : activity.getOperations()){
+    	for(Operation operation : activity.getOperations()){
             String inputType = null ;
             if(!operation.getOperator().getInputTypes().isEmpty()){
                 inputType = operation.getOperator().getInputTypes().get(0) ;
@@ -580,7 +583,27 @@ public class FlowElementSwith extends AbstractProcessSwitch {
                     && operation.getRightOperand() != null
                     && operation.getRightOperand().getContent() != null){
             	if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(operation.getLeftOperand().getType())){
-            		builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()), OperatorType.STRING_INDEX, null, null, EngineExpressionUtil.createExpression(operation.getRightOperand()));
+            		// get the pool to get the list of searchIndex list
+            		Pool pool = null;
+            		if(activity.eContainer() instanceof Pool){
+            			pool = (Pool) activity.eContainer();
+            		}else if(activity.eContainer().eContainer() instanceof Pool){
+            			pool = (Pool) activity.eContainer().eContainer();
+            		}
+            		// get the searchIndex list
+            		List<SearchIndex> searchIndexList = new ArrayList<SearchIndex>();
+            		if(pool!=null){
+            			searchIndexList = pool.getSearchIndexes();
+            		}
+            		int idx=1;
+            		for(SearchIndex searchIdx : searchIndexList){
+            			// get the related searchIndex to set the operation
+            			if(searchIdx.getName().getContent().equals(operation.getLeftOperand().getName())){
+            				builder.addOperation(EngineExpressionUtil.createLeftOperandIndex(idx), OperatorType.STRING_INDEX, null, null, EngineExpressionUtil.createExpression(operation.getRightOperand()));
+            				break;
+            			}
+            			idx++;
+            		}
             	} else {
             		builder.addOperation(EngineExpressionUtil.createLeftOperand(operation.getLeftOperand()), OperatorType.valueOf(operation.getOperator().getType()), operation.getOperator().getExpression(),inputType, EngineExpressionUtil.createExpression(operation.getRightOperand())) ;
             	}

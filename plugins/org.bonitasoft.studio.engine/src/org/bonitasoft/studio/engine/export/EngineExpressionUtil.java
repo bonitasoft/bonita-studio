@@ -143,6 +143,13 @@ public class EngineExpressionUtil {
         return builder.done();
     }
 
+    public static LeftOperand createLeftOperandIndex(final int i) {
+        final LeftOperandBuilder builder = new LeftOperandBuilder();
+        builder.createNewInstance();
+        builder.setName(String.valueOf(i));
+        return builder.done();
+    }
+
     public static Expression createExpression(final org.bonitasoft.studio.model.expression.AbstractExpression expression) {
         if (expression instanceof org.bonitasoft.studio.model.expression.Expression) {
             return buildSimpleEngineExpression(expression);
