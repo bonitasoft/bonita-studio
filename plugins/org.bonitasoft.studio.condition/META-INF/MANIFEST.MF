@@ -19,7 +19,9 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.xtext.common.types,
  org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.bonitasoft.studio.common;bundle-version="1.0.0",
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.gmf.runtime.diagram.ui
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

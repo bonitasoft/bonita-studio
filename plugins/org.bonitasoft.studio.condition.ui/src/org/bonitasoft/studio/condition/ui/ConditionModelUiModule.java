@@ -3,6 +3,8 @@
  */
 package org.bonitasoft.studio.condition.ui;
 
+import org.bonitasoft.studio.condition.ui.contentassist.NoSpellingReconciler;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -12,4 +14,8 @@ public class ConditionModelUiModule extends org.bonitasoft.studio.condition.ui.A
 	public ConditionModelUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 	}
+	public Class<? extends IReconciler> bindIReconciler() {
+		return NoSpellingReconciler.class;
+	}
+	
 }

@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.data.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,8 @@ import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -33,7 +36,9 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -44,6 +49,7 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
  * @author Romain Bioteau
@@ -149,7 +155,11 @@ public class DataWizard extends Wizard {
 		}else{
 			editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy)) ;
 		}
-		
+		try {
+			RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.EMPTY_MAP,null);
+		} catch (CoreException e) {
+			BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
+		}
 		
 		return true;
 	}

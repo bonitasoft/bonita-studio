@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.data.ui.property.section;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +27,7 @@ import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.commands.MoveDataCommand;
 import org.bonitasoft.studio.data.i18n.Messages;
@@ -43,6 +45,8 @@ import org.eclipse.core.databinding.ObservablesManager;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.databinding.edit.IEMFEditListProperty;
@@ -73,6 +77,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.eclipse.xtext.ui.XtextProjectHelper;
 
 /**
  * 
@@ -211,6 +216,11 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
                         }
                         getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), selection));
                         tableViewer.refresh() ;
+                        try {
+                			RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.EMPTY_MAP,null);
+                		} catch (CoreException e) {
+                			BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
+                		}
                     }
                 }
             }
