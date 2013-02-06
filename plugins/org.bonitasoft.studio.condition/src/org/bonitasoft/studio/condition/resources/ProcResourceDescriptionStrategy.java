@@ -16,9 +16,8 @@
  */
 package org.bonitasoft.studio.condition.resources;
 
-import java.util.Collection;
-
-import org.eclipse.emf.ecore.EClass;
+import org.bonitasoft.studio.model.parameter.ParameterPackage;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -29,22 +28,15 @@ import org.eclipse.xtext.util.IAcceptor;
  * @author Romain Bioteau
  *
  */
-public class ProcResourceDescriptionStrategy extends
-DefaultResourceDescriptionStrategy implements
-IDefaultResourceDescriptionStrategy {
+public class ProcResourceDescriptionStrategy extends DefaultResourceDescriptionStrategy implements IDefaultResourceDescriptionStrategy {
 
-	private Collection<EClass> eClasses;
 
 	@Override
 	public boolean createEObjectDescriptions(EObject eObject,
 			IAcceptor<IEObjectDescription> acceptor) {
-		if(eClasses == null || eClasses.contains(eObject.eClass())){
+		if(ProcessPackage.Literals.DATA.equals(eObject.eClass())|| ParameterPackage.Literals.PARAMETER.equals(eObject.eClass())){
 			return super.createEObjectDescriptions(eObject, acceptor);
 		}
 		return true;
-	}
-
-	public void setEClasses(Collection<EClass> eClasses) {
-		this.eClasses = eClasses;
 	}
 }

@@ -16,13 +16,7 @@
  */
 package org.bonitasoft.studio.condition.resources;
 
-import java.util.Collection;
-import java.util.HashSet;
-
-import org.bonitasoft.studio.model.parameter.ParameterPackage;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.xtext.resource.DescriptionUtils;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
@@ -33,16 +27,9 @@ import org.eclipse.xtext.resource.impl.SimpleResourceDescriptionsBasedContainerM
 public class ProcResourceServiceProvider extends GenericResourceServiceProvider implements IResourceServiceProvider {
 
 	private DefaultResourceDescriptionManager resourceDescriptionManager = new ProcResourceDescriptionManager();
-	private static Collection<EClass> eClasses;
-	static{
-		eClasses = new HashSet<EClass>();
-		eClasses.add(ProcessPackage.Literals.DATA);
-		eClasses.add(ParameterPackage.Literals.PARAMETER);
-	}
 	
 	public ProcResourceServiceProvider(){
 		ProcResourceDescriptionStrategy startegy = new ProcResourceDescriptionStrategy();
-		startegy.setEClasses(eClasses);
 		resourceDescriptionManager.setStrategy(startegy);
 		resourceDescriptionManager.setDescriptionUtils(new DescriptionUtils());
 		resourceDescriptionManager.setContainerManager(new SimpleResourceDescriptionsBasedContainerManager());
