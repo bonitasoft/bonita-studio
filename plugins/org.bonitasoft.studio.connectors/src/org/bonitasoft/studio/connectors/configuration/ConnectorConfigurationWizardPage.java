@@ -199,7 +199,7 @@ public class ConnectorConfigurationWizardPage extends WizardPage implements IPro
                 editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl()) ;
             }
             CompoundCommand cc = new CompoundCommand() ;
-            CONNECTORS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, impl, cc, editingDomain) ;
+            CONNECTORS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, impl, cc, editingDomain,false) ;
             editingDomain.getCommandStack().execute(cc) ;
             if(dispose){
                 adapterFactory.dispose() ;

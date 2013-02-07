@@ -106,7 +106,7 @@ public class ActorFilterConfigurationWizardPage extends ConnectorConfigurationWi
                 editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl()) ;
             }
             CompoundCommand cc = new CompoundCommand() ;
-            ACTOR_FILTERS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, impl, cc, editingDomain) ;
+            ACTOR_FILTERS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, impl, cc, editingDomain,false) ;
             editingDomain.getCommandStack().execute(cc) ;
             if(dispose){
                 adapterFactory.dispose() ;

@@ -126,14 +126,14 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 	@Override
 	protected void updateJarDependencies(FragmentContainer connectorContainer,
 			ConnectorImplementation implementation,
-			EditingDomain editingDomain, CompoundCommand cc) {
-		super.updateJarDependencies(connectorContainer, implementation, editingDomain,	cc);
+			EditingDomain editingDomain, CompoundCommand cc,boolean forceDriver) {
+		super.updateJarDependencies(connectorContainer, implementation, editingDomain,	cc,forceDriver);
 		store = (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class) ;
 		DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store.getChild(implementation.getDefinitionId());
 		if (fileStore !=null){
 			String defaultDriver = fileStore.getDefault();
 			List<String> jars = fileStore.getJarList();
-			boolean autoAddDriver = fileStore.getAutoAddDriver();
+			boolean autoAddDriver = fileStore.getAutoAddDriver() || forceDriver;
 			for (String jar : jars){
 				boolean exists = false ;
 				for(Fragment dep : connectorContainer.getFragments()){

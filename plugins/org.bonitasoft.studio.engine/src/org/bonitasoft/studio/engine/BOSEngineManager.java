@@ -25,10 +25,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.xbean.classloader.NonLockingJarFileClassLoader;
+import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.LoginAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.TenantAPIAccessor;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.InvalidSessionException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.session.APISession;
@@ -289,5 +291,10 @@ public class BOSEngineManager {
         }
         return new NonLockingJarFileClassLoader("Bonita Engine CLassloader", urls.toArray(new URL[]{}));
     }
+
+	public IdentityAPI getIdentityAPI(APISession session) throws InvalidSessionException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+		return TenantAPIAccessor.getIdentityAPI(session);
+	}
+
 
 }

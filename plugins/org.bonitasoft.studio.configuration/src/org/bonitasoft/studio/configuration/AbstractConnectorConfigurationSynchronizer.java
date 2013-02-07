@@ -127,7 +127,7 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
         cc.append(SetCommand.create(editingDomain, association, ConfigurationPackage.Literals.DEFINITION_MAPPING__IMPLEMENTATION_ID, implID)) ;
         cc.append(SetCommand.create(editingDomain, association, ConfigurationPackage.Literals.DEFINITION_MAPPING__IMPLEMENTATION_VERSION, implVersion)) ;
         if(implementation != null){
-            updateConnectorDependencies(configuration,association,implementation,cc,editingDomain) ;
+            updateConnectorDependencies(configuration,association,implementation,cc,editingDomain,false) ;
             importImplementationDependencies(implementation) ;
         }
     }
@@ -151,7 +151,7 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
 
     protected abstract DefinitionResourceProvider getDefinitionResourceProvider();
 
-    public void updateConnectorDependencies(Configuration configuration, DefinitionMapping association, ConnectorImplementation implementation,CompoundCommand cc, EditingDomain editingDomain) {
+    public void updateConnectorDependencies(Configuration configuration, DefinitionMapping association, ConnectorImplementation implementation,CompoundCommand cc, EditingDomain editingDomain,boolean forceDriver) {
         Assert.isNotNull(implementation) ;
         String id =  implementation.getImplementationId() ;
         String version =  implementation.getImplementationVersion() ;
@@ -176,14 +176,14 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
         for(FragmentContainer fc : container.getChildren()){
             if(fc.getId().equals(implementationId)){
                 exists = true ;
-                updateJarDependencies(fc,implementation,editingDomain,cc) ;
+                updateJarDependencies(fc,implementation,editingDomain,cc,forceDriver) ;
             }
         }
         if(!exists){
             FragmentContainer connectorContainer = ConfigurationFactory.eINSTANCE.createFragmentContainer() ;
             connectorContainer.setId(implementationId) ;
             editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__CHILDREN, connectorContainer)) ;
-            updateJarDependencies(connectorContainer,implementation,editingDomain,cc) ;
+            updateJarDependencies(connectorContainer,implementation,editingDomain,cc,forceDriver) ;
         }
 
     }
@@ -197,7 +197,7 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
         return null;
     }
 
-    protected void updateJarDependencies(FragmentContainer connectorContainer, ConnectorImplementation implementation, EditingDomain editingDomain, CompoundCommand cc) {
+    protected void updateJarDependencies(FragmentContainer connectorContainer, ConnectorImplementation implementation, EditingDomain editingDomain, CompoundCommand cc,boolean forceDriver) {
         for(String jar : implementation.getJarDependencies().getJarDependency()){
             boolean exists = false ;
             for(Fragment dep : connectorContainer.getFragments()){

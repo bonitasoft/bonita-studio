@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.engine.api.ProcessAPI;
-import org.bonitasoft.engine.api.TenantAPIAccessor;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.model.ActivationState;
 import org.bonitasoft.engine.bpm.model.ConnectorEvent;
@@ -51,6 +50,8 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.configuration.ConnectorsConfigurationSynchronizer;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
+import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
@@ -116,9 +117,10 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         ProcessAPI processApi = null;
         long procId = -1;
         try {
-            session = BOSEngineManager.getInstance().loginDefaultTenant(monitor) ;
-            processApi =TenantAPIAccessor.getProcessAPI(session);
+            session = BOSEngineManager.getInstance().loginTenant("william.jobs", "bpm", monitor);
+            processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             Assert.isNotNull(processApi) ;
+            processApi.getNumberOfProcesses();
             final AbstractProcess proc = createAbstractProcess(implementation);
 
             final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
@@ -133,8 +135,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             processApi.enableProcess(procId) ;
 
             result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(), inputParameters, inputValues, procId);
-
-
         }catch (Exception e) {
             e.printStackTrace();
             BonitaStudioLog.error(e);
@@ -155,42 +155,61 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     }
 
     private void configureProcess(Configuration configuration, ConnectorImplementation implem) {
-        for(DefinitionMapping association : configuration.getDefinitionMappings()){
+    	final DatabaseConnectorPropertiesRepositoryStore dbStore = (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
+        final DatabaseConnectorPropertiesFileStore file = (DatabaseConnectorPropertiesFileStore) dbStore.getChild(implem.getDefinitionId());
+        String driver = null;
+        boolean addDriver = false;
+        if(file != null){
+        	 driver = file.getDefault();
+        	if(driver != null){
+        		  final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
+        		  if(libFolder.getFile(driver).exists()){
+        			  addDriver = true;
+        		  }else{
+        			  throw new IllegalStateException("Database driver jar "+driver+" not found in repository");
+        		  }
+        	}else{
+        		throw new IllegalStateException("No active database driver configured for this connector");
+        	}
+        }
+    	
+    	for(DefinitionMapping association : configuration.getDefinitionMappings()){
             if(FragmentTypes.CONNECTOR.equals(association.getType())){
                 if(association.getDefinitionId().equals(implem.getDefinitionId())){
                     association.setImplementationId(implem.getImplementationId());
                     association.setImplementationVersion(implem.getImplementationVersion());
                     CompoundCommand cc = new CompoundCommand();
                     AdapterFactoryEditingDomain domain = createEditingDomain();
-                    CONNECTORS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, implem, cc, domain) ;
+                    CONNECTORS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, implem, cc, domain,addDriver) ;
                     domain.getCommandStack().execute(cc);
                     break;
                 }
             }
         }
         //Add jars from managed jars to dependency list of the process used to test the connector
-        for(FragmentContainer fc : configuration.getProcessDependencies()){
-            if(FragmentTypes.OTHER.equals(fc.getId())){
-                final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
-                if(libFolder.exists()){
-                    try {
-                        for(IResource f : libFolder.members()){
-                            if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar")){
-                                Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
-                                fragment.setExported(true);
-                                fragment.setKey(f.getName());
-                                fragment.setValue(f.getName());
-                                fragment.setType(FragmentTypes.JAR);
-                                AdapterFactoryEditingDomain domain = createEditingDomain();
-                                domain.getCommandStack().execute(AddCommand.create(domain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, fragment));
-                            }
-                        }
-                    } catch (CoreException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-            }
-        }
+        
+//        for(FragmentContainer fc : configuration.getProcessDependencies()){
+//            if(FragmentTypes.OTHER.equals(fc.getId())){
+//                final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
+//                if(libFolder.exists()){
+//                    try {
+//                        for(IResource f : libFolder.members()){
+//                            if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar")){
+//                                Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
+//                                fragment.setExported(true);
+//                                fragment.setKey(f.getName());
+//                                fragment.setValue(f.getName());
+//                                fragment.setType(FragmentTypes.JAR);
+//                                AdapterFactoryEditingDomain domain = createEditingDomain();
+//                                domain.getCommandStack().execute(AddCommand.create(domain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, fragment));
+//                            }
+//                        }
+//                    } catch (CoreException e) {
+//                        BonitaStudioLog.error(e);
+//                    }
+//                }
+//            }
+//        }
     }
 
     private AdapterFactoryEditingDomain createEditingDomain() {

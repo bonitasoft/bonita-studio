@@ -46,6 +46,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -53,124 +54,126 @@ import org.eclipse.swt.widgets.Display;
  */
 public class InstallOrganizationHandler extends AbstractHandler {
 
-    private static final String PROFILE_ID = "profileId";
-    private static final String USER_ID = "userId";
-    private static final String USER_PROFILE_NAME = "User";
+	private static final String PROFILE_ID = "profileId";
+	private static final String USER_ID = "userId";
+	private static final String USER_PROFILE_NAME = "User";
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
-    @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        if(event != null){
-            String id = event.getParameter("artifact") ;
-            IRepositoryStore organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
-            IRepositoryFileStore file = organizationStore.getChild(id) ;
-            if(file != null){
-                APISession session = null;
-                try{
-                    session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
-                    IdentityAPI identityAPI = TenantAPIAccessor.getIdentityAPI(session) ;
-                    identityAPI.deleteOrganization() ;
-                    File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(),"tmpOrganizationFile.xml") ;
-                    tmpFile.delete() ;
-                    file.export(tmpFile.getAbsolutePath()) ;
-                    String content = getFileContent(tmpFile) ;
-                    tmpFile.delete() ;
-                    identityAPI.importOrganization(content) ;
-                }catch(final Exception e){
-                    Display.getDefault().syncExec(new Runnable() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 */
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		if(event != null){
+			String id = event.getParameter("artifact") ;
+			IRepositoryStore organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
+			IRepositoryFileStore file = organizationStore.getChild(id) ;
+			if(file != null){
+				APISession session = null;
+				try{
+					session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
+					IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session) ;
+					identityAPI.deleteOrganization() ;
+					File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(),"tmpOrganizationFile.xml") ;
+					tmpFile.delete() ;
+					file.export(tmpFile.getAbsolutePath()) ;
+					String content = getFileContent(tmpFile) ;
+					tmpFile.delete() ;
+					identityAPI.importOrganization(content) ;
+				}catch(final Exception e){
+					if(PlatformUI.isWorkbenchRunning()){
+						Display.getDefault().asyncExec(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error", "An error occured during synchronization", e).open() ;
-                        }
+							@Override
+							public void run() {
+								new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error", "An error occured during synchronization", e).open() ;
+							}
 
-                    }) ;
-                    throw new ExecutionException("", e) ;
-                }finally{
-                    if(session != null){
-                        BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
-                    }
-                }
+						}) ;
+					}
+					throw new ExecutionException("", e) ;
+				}finally{
+					if(session != null){
+						BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
+					}
+				}
 
-                session = null;
-                try{
-                    session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
-                    IdentityAPI identityAPI = TenantAPIAccessor.getIdentityAPI(session) ;
-                    CommandAPI commandApi =  TenantAPIAccessor.getCommandAPI(session) ;
-                    applyAllProfileToUsers(identityAPI,commandApi) ;
-                }catch (final Exception e) {
-                    Display.getDefault().syncExec(new Runnable() {
+				session = null;
+				try{
+					session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
+					IdentityAPI identityAPI = TenantAPIAccessor.getIdentityAPI(session) ;
+					CommandAPI commandApi =  TenantAPIAccessor.getCommandAPI(session) ;
+					applyAllProfileToUsers(identityAPI,commandApi) ;
+				}catch (final Exception e) {
+					Display.getDefault().syncExec(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error", "An error occured during synchronization", e).open() ;
-                        }
+						@Override
+						public void run() {
+							new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error", "An error occured during synchronization", e).open() ;
+						}
 
-                    }) ;
-                    throw new ExecutionException("", e) ;
-                }finally{
-                    if(session != null){
-                        BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
-                    }
-                }
+					}) ;
+					throw new ExecutionException("", e) ;
+				}finally{
+					if(session != null){
+						BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
+					}
+				}
 
-            }else{
-                throw new ExecutionException("Organization : "+ id +" not found !") ;
-            }
-        }
-        return null;
-    }
+			}else{
+				throw new ExecutionException("Organization : "+ id +" not found !") ;
+			}
+		}
+		return null;
+	}
 
-    protected void applyAllProfileToUsers(IdentityAPI identityAPI, CommandAPI commandApi) throws Exception {
-        final Map<String, Serializable> searchParameters = new HashMap<String, Serializable>();
-        searchParameters.put("fromIndex", 0);
-        searchParameters.put("numberOfProfiles", Integer.MAX_VALUE);
-        searchParameters.put("field", "name");
-        searchParameters.put("order", "DESC");
+	protected void applyAllProfileToUsers(IdentityAPI identityAPI, CommandAPI commandApi) throws Exception {
+		final Map<String, Serializable> searchParameters = new HashMap<String, Serializable>();
+		searchParameters.put("fromIndex", 0);
+		searchParameters.put("numberOfProfiles", Integer.MAX_VALUE);
+		searchParameters.put("field", "name");
+		searchParameters.put("order", "DESC");
 
-        final List<Long> profiles = new ArrayList<Long>() ;
-        final List<Map<String, Serializable>> searchedProfiles = (List<Map<String, Serializable>>) commandApi.execute("searchProfile", searchParameters);
-        for(Map<String, Serializable> profile : searchedProfiles){
-            if(USER_PROFILE_NAME.equals(profile.get("name"))){
-                long profileId =  (Long) profile.get("id") ;
-                profiles.add(profileId) ;
-            }
-        }
+		final List<Long> profiles = new ArrayList<Long>() ;
+		final List<Map<String, Serializable>> searchedProfiles = (List<Map<String, Serializable>>) commandApi.execute("searchProfile", searchParameters);
+		for(Map<String, Serializable> profile : searchedProfiles){
+			if(USER_PROFILE_NAME.equals(profile.get("name"))){
+				long profileId =  (Long) profile.get("id") ;
+				profiles.add(profileId) ;
+			}
+		}
 
-        List<User> users = identityAPI.getUsers(0, Integer.MAX_VALUE, UserCriterion.USER_NAME_ASC) ;
-        for(User u : users){
-            long id =  u.getId() ;
-            for(Long profile : profiles){
-                final Map<String, Serializable> addProfileMemberParams = new HashMap<String, Serializable>();
-                addProfileMemberParams.put(PROFILE_ID, profile);
-                addProfileMemberParams.put(USER_ID, id);
-                commandApi.execute("addProfileMember", addProfileMemberParams);
-            }
-        }
-    }
+		List<User> users = identityAPI.getUsers(0, Integer.MAX_VALUE, UserCriterion.USER_NAME_ASC) ;
+		for(User u : users){
+			long id =  u.getId() ;
+			for(Long profile : profiles){
+				final Map<String, Serializable> addProfileMemberParams = new HashMap<String, Serializable>();
+				addProfileMemberParams.put(PROFILE_ID, profile);
+				addProfileMemberParams.put(USER_ID, id);
+				commandApi.execute("addProfileMember", addProfileMemberParams);
+			}
+		}
+	}
 
-    private String getFileContent(File file){
-        try
-        {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder sb = new StringBuilder();
-            String line = ""; //$NON-NLS-1$
-            while((line = reader.readLine()) != null)
-            {
-                sb.append(line);
-                sb.append(SWT.CR);
-            }
-            reader.close();
+	private String getFileContent(File file){
+		try
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			StringBuilder sb = new StringBuilder();
+			String line = ""; //$NON-NLS-1$
+			while((line = reader.readLine()) != null)
+			{
+				sb.append(line);
+				sb.append(SWT.CR);
+			}
+			reader.close();
 
-            return sb.toString() ;
-        }
-        catch (IOException ioe)
-        {
-            BonitaStudioLog.error(ioe);
-        }
-        return null;
-    }
+			return sb.toString() ;
+		}
+		catch (IOException ioe)
+		{
+			BonitaStudioLog.error(ioe);
+		}
+		return null;
+	}
 
 }
