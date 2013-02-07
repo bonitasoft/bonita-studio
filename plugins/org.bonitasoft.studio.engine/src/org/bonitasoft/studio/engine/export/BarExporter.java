@@ -34,7 +34,6 @@ import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.engine.bpm.model.DesignProcessDefinition;
-import org.bonitasoft.engine.exception.BonitaRuntimeException;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -242,8 +241,10 @@ public class BarExporter {
             String id = ModelHelper.getEObjectID(process) ;
             IRepositoryFileStore file = processConfStore.getChild(id+".conf") ;
             if(file == null){
-                //FIXME warn user that there is no configuration for the process
-                throw new BonitaRuntimeException("Unable to run process"+ process.getName()+", you must first configure it (configuration id "+configurationId+" not found)");
+            	file = processConfStore.createRepositoryFileStore(id+".conf");
+            	 configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
+                 configuration.setName(configurationId) ;
+                 file.save(configuration);
             }
             configuration = (Configuration) file.getContent();
         }else{
