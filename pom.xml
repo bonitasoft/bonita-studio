@@ -18,6 +18,7 @@
 		<filters.version>6.0.Beta.4-SNAPSHOT</filters.version>
 		<jacoco.reportDir>${user.home}/jacoco/</jacoco.reportDir>
 		<jacoco.file>${user.home}/jacoco-studio.exec</jacoco.file>
+		<jacoco.version>0.6.0.201210061924</jacoco.version>
 		<!-- Sonar -->
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
