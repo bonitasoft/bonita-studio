@@ -37,7 +37,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -66,10 +65,8 @@ import com.google.inject.Injector;
  */
 public class ComparisonExpressionValidator implements IExpressionValidator {
 
-
 	private Expression inputExpression;
 	private EditingDomain domain;
-
 
 
 	/* (non-Javadoc)
@@ -130,11 +127,23 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 			if(compareOp != null){
 				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
 				for(Expression_ProcessRef ref : references){
-					EObject dep = EcoreUtil2.resolve(ref.getValue(), (ResourceSet)null);
+					EObject dep = resolveProxy(ref);
 					domain.getCommandStack().execute(new AddCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(dep)));
 				}
 			}
 		}
+	}
+
+	private EObject resolveProxy(Expression_ProcessRef ref) {
+		ResourceSet rSet = null;
+		if(ref.eIsProxy() && EcoreUtil.getURI(ref).lastSegment().endsWith(".proc")){
+			rSet =inputExpression.eResource().getResourceSet();
+		}
+		EObject dep = EcoreUtil2.resolve(ref, rSet);
+		if(rSet != null){
+			rSet.getResources().remove(ref.eResource());
+		}
+		return dep;
 	}
 
 	public void setInputExpression(Expression inputExpression) {

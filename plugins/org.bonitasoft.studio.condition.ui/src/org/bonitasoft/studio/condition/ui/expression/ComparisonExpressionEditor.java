@@ -246,10 +246,22 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 		if(compareOp != null){
 			List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
 			for(Expression_ProcessRef ref : references){
-				EObject dep = EcoreUtil2.resolve(ref.getValue(), (ResourceSet)null);
+				EObject dep = resolveProxy((Expression_ProcessRef) ref.getValue());
 				inputExpression.getReferencedElements().add(EcoreUtil.copy(dep));
 			}
 		}
+	}
+	
+	private EObject resolveProxy(Expression_ProcessRef ref) {
+		ResourceSet rSet = null;
+		if(ref.eIsProxy() && EcoreUtil.getURI(ref).lastSegment().endsWith(".proc")){
+			rSet =inputExpression.eResource().getResourceSet();
+		}
+		EObject dep = EcoreUtil2.resolve(ref, rSet);
+		if(rSet != null){
+			rSet.getResources().remove(ref.eResource());
+		}
+		return dep;
 	}
 
 	protected void createReturnTypeComposite(Composite parent){

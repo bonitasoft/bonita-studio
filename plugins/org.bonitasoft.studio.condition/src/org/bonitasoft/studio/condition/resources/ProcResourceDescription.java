@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -87,8 +86,6 @@ implements IResourceDescription {
 			if(part != null){
 				if(part instanceof DiagramEditor){
 					Resource activeResource =  ((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement().eResource();
-					BonitaStudioLog.warning("Editor resource URI :"+activeResource.getURI(), "org.bonitasoft.studio.condition");
-					BonitaStudioLog.warning("Repository resource URI :"+resource.getURI(), "org.bonitasoft.studio.condition");
 					if(activeResource != null && resource.getURI().equals(activeResource.getURI())){
 						resource = activeResource;
 					}
