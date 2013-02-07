@@ -16,6 +16,7 @@
 		<connector.version>6.0.Beta.4-SNAPSHOT</connector.version>
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
 		<filters.version>6.0.Beta.4-SNAPSHOT</filters.version>
+		<jacoco.reportDir>${user.home}/jacoco/</jacoco.reportDir>
 		<jacoco.file>${user.home}/jacoco-studio.exec</jacoco.file>
 		<!-- Sonar -->
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
@@ -161,13 +162,12 @@
 					<includes>
 						<include>org.bonitasoft.studio.*</include>
 					</includes>
-					<destFile>${jacoco.file}</destFile>
-					<dataFile>${jacoco.file}</dataFile>
-					<append>true</append>
+					<destFile>${sonar.jacoco.reportPath}</destFile>
+					
 				</configuration>
 				<executions>
 					<execution>
-						<id>pre-test</id>
+						<id>prepare-agent</id>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
@@ -178,6 +178,10 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<configuration>
+							<dataFile>${sonar.jacoco.reportPath}</dataFile>
+							<outputDirectory>${jacoco.reportDir}</outputDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
