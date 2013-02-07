@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -76,7 +77,8 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 	 */
 	@Override
 	public IStatus validate(Object value) {
-		if(value == null || value.toString().isEmpty()){
+		
+		if(value == null || value.toString().isEmpty() || !ExpressionConstants.CONDITION_TYPE.equals(inputExpression.getType())){
 			return ValidationStatus.ok();
 		}
 		final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
