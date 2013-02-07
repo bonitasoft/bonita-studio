@@ -57,6 +57,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.internal.core.IInternalDebugCoreConstants;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
@@ -220,6 +221,7 @@ public class BOSWebServerManager {
 			 workingCopy = conf.getWorkingCopy();
 		}
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,getVMArgs());
+		workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE, Platform.getLogFileLocation().toFile().getAbsolutePath());
 		workingCopy.doSave();
 	}
 
