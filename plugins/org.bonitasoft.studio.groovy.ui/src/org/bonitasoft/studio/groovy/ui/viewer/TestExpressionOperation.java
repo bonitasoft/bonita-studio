@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.engine.api.ProcessAPI;
-import org.bonitasoft.engine.api.TenantAPIAccessor;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.model.ProcessDefinition;
 import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
@@ -81,7 +80,7 @@ public class TestExpressionOperation implements IRunnableWithProgress {
         long procId = -1 ;
         try {
             session = BOSEngineManager.getInstance().loginDefaultTenant(monitor) ;
-            processApi =TenantAPIAccessor.getProcessAPI(session);
+            processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             Assert.isNotNull(processApi) ;
             final AbstractProcess proc = createAbstractProcess();
 

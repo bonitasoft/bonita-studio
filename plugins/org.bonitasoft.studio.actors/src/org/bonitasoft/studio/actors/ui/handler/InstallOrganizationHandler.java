@@ -100,8 +100,8 @@ public class InstallOrganizationHandler extends AbstractHandler {
 				session = null;
 				try{
 					session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
-					IdentityAPI identityAPI = TenantAPIAccessor.getIdentityAPI(session) ;
-					CommandAPI commandApi =  TenantAPIAccessor.getCommandAPI(session) ;
+					IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session) ;
+					CommandAPI commandApi =   BOSEngineManager.getInstance().getCommandAPI(session) ;
 					applyAllProfileToUsers(identityAPI,commandApi) ;
 				}catch (final Exception e) {
 					Display.getDefault().syncExec(new Runnable() {

@@ -18,7 +18,6 @@
 package org.bonitasoft.studio.tests.attachment;
 
 import org.bonitasoft.engine.api.ProcessAPI;
-import org.bonitasoft.engine.api.TenantAPIAccessor;
 import org.bonitasoft.engine.bpm.model.ProcessInstance;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -47,7 +46,7 @@ public class TestRunWithDocument extends SWTBotGefTestCase {
     protected void runAndCheckResult() throws Exception {
         new RunProcessCommand(true).execute(new ExecutionEvent());
         APISession session = BOSEngineManager.getInstance().loginDefaultTenant(new NullProgressMonitor());
-        ProcessAPI processAPI = TenantAPIAccessor.getProcessAPI(session) ;
+        ProcessAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session) ;
         long processDefinitionId = processAPI.getProcessDefinitionId("ProcessWithAttachment", "1.0");
         final ProcessInstance instance = processAPI.startProcess(processDefinitionId);
 

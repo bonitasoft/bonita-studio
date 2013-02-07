@@ -21,7 +21,6 @@ import junit.framework.TestCase;
 
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProcessManagementAPI;
-import org.bonitasoft.engine.api.TenantAPIAccessor;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.actors.model.organization.Group;
 import org.bonitasoft.studio.actors.model.organization.Organization;
@@ -70,7 +69,7 @@ public class TestCheckTenantAfterStartup extends TestCase {
 
 
     public void testOrganizationSynchronization() throws Exception {
-        final IdentityAPI identityAPI = TenantAPIAccessor.getIdentityAPI(session);
+        final IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session);
 
         final String activeOrganization = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(ActorsPreferenceConstants.DEFAULT_ORGANIZATION) ;
         final OrganizationRepositoryStore store = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
