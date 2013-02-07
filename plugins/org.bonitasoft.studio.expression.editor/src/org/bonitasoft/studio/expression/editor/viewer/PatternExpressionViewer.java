@@ -101,7 +101,7 @@ public class PatternExpressionViewer extends Composite {
 		hintDecoration.setShowOnlyOnFocus(true);
 		hintDecoration.hide();
 
-	
+
 		viewer.setDocument(new Document());
 		patternLineStyle = new PatternLineStyleListener(viewer.getDocument());
 		viewer.getTextWidget().addLineStyleListener(patternLineStyle) ;
@@ -151,12 +151,17 @@ public class PatternExpressionViewer extends Composite {
 					for(Expression exp : filteredExpressions){
 						IRegion index;
 						try {
+							int i = 0;
 							index = finder.find(0,exp.getName(), true, true, true, false);
-							if (index != null) {
-								if(!addedExp.contains(exp.getName())){
-									patternExpression.getReferencedElements().add(EcoreUtil.copy(exp));
-									addedExp.add(exp.getName());
+							while (index != null) {
+								if(PatternLineStyleListener.isNotEscapeWord(content, index.getOffset())){
+									if(!addedExp.contains(exp.getName())){
+										patternExpression.getReferencedElements().add(EcoreUtil.copy(exp));
+										addedExp.add(exp.getName());
+									}
 								}
+								i = i + index.getLength();
+								index = finder.find(i,exp.getName(), true, true, true, false);
 							}
 						} catch (final BadLocationException e1) {
 							// Just ignore them

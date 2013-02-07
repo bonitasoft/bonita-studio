@@ -41,8 +41,10 @@ public class PatternLineStyleListener implements LineStyleListener {
 
 	private Set<Expression> expressions = new HashSet<Expression>();
 	private FindReplaceDocumentAdapter finder;
+	private IDocument document;
 
 	public PatternLineStyleListener(IDocument document) {
+		this.document = document;
 		finder = new FindReplaceDocumentAdapter(document);
 	}
 
@@ -74,7 +76,9 @@ public class PatternLineStyleListener implements LineStyleListener {
 					IRegion index = null;
 					index = finder.find(i, exp.getName(), true, true, true, false);
 					while(index != null){
-						styles.add(new StyleRange(index.getOffset(), index.getLength(), Display.getDefault().getSystemColor(color), null,SWT.BOLD));
+						if(PatternLineStyleListener.isNotEscapeWord(document.get(), index.getOffset())){
+							styles.add(new StyleRange(index.getOffset(), index.getLength(), Display.getDefault().getSystemColor(color), null,SWT.BOLD));
+						}
 						i = i + index.getLength();
 						index = finder.find(i, exp.getName(), true, true, true, false);
 					}
