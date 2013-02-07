@@ -18,6 +18,7 @@
 		<bonita.home.dir>${basedir}/bonita</bonita.home.dir>
 		<javadoc.dir>${basedir}/javadoc</javadoc.dir>
 		<lib.dir>lib</lib.dir>
+		<tomcat.version>6.0.35</tomcat.version>
 	</properties>
 
 	<dependencies>
@@ -320,7 +321,7 @@
 								<!-- Configure tomcat bundle resoruce -->
 								<move todir="${tomcat.bundle.dir}">
 									<fileset
-										dir="${tomcat.bundle.dir}/BOS-${bundle.version}-Tomcat-6.0.35/" />
+										dir="${tomcat.bundle.dir}/BOS-${bundle.version}-Tomcat-${tomcat.version}/" />
 								</move>
 								<concat append="true"
 									destfile="${tomcat.bundle.dir}/conf/catalina.properties">java.awt.headless=true</concat>
