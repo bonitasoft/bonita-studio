@@ -16,8 +16,8 @@
 		<connector.version>6.0.Beta.4-SNAPSHOT</connector.version>
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
 		<filters.version>6.0.Beta.4-SNAPSHOT</filters.version>
-		<jacoco.reportDir>${user.home}/jacoco/</jacoco.reportDir>
-		<jacoco.file>${user.home}/jacoco-studio.exec</jacoco.file>
+		<jacoco.reportDir>../${project.artifactId}/target/jacoco/</jacoco.reportDir>
+		<jacoco.file>../${project.artifactId}/target/jacoco-studio.exec</jacoco.file>
 		<jacoco.version>0.6.0.201210061924</jacoco.version>
 		<!-- Sonar -->
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
@@ -28,7 +28,7 @@
 			code coverage. -->
 		<sonar.jacoco.reportPath>${jacoco.file}</sonar.jacoco.reportPath>
 		<sonar.surefire.reportsPath>../${project.artifactId}.tests/target/surefire-reports/</sonar.surefire.reportsPath>
-		<sonar.jacoco.itReportPath>${user.home}/jacoco-it.exec</sonar.jacoco.itReportPath>
+		<sonar.jacoco.itReportPath>../${project.artifactId}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
 	</properties>
 
 	<modules>
