@@ -42,6 +42,7 @@ import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
@@ -117,7 +118,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         ProcessAPI processApi = null;
         long procId = -1;
         try {
-            session = BOSEngineManager.getInstance().loginTenant("william.jobs", "bpm", monitor);
+            session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
             processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             Assert.isNotNull(processApi) ;
             processApi.getNumberOfProcesses();
