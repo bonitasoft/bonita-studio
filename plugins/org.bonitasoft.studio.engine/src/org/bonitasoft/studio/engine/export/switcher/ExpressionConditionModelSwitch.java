@@ -65,7 +65,7 @@ public class ExpressionConditionModelSwitch extends ConditionModelSwitch<Express
 	
 	@Override
 	public Expression caseExpression_ProcessRef(Expression_ProcessRef object) {
-		EObject resolvedProxy = resolveProxy((Expression_ProcessRef) object.getValue());
+		EObject resolvedProxy = resolveProxy(object.getValue());
 		for(EObject dep : studioExpression.getReferencedElements()){
 			if(dep instanceof Data && resolvedProxy instanceof Data){
 				if(((Data) dep).getName().equals(((Data) resolvedProxy).getName())){
@@ -80,7 +80,7 @@ public class ExpressionConditionModelSwitch extends ConditionModelSwitch<Express
 		return null;
 	}
 	
-	private EObject resolveProxy(Expression_ProcessRef ref) {
+	private EObject resolveProxy(EObject ref) {
 		ResourceSet rSet = null;
 		if(ref.eIsProxy() && EcoreUtil.getURI(ref).lastSegment().endsWith(".proc")){
 			rSet = studioExpression.eResource().getResourceSet();
