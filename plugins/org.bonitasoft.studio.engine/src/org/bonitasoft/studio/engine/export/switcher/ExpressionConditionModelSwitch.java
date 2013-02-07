@@ -28,6 +28,7 @@ import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
@@ -64,7 +65,7 @@ public class ExpressionConditionModelSwitch extends ConditionModelSwitch<Express
 	
 	@Override
 	public Expression caseExpression_ProcessRef(Expression_ProcessRef object) {
-		EObject resolvedProxy = EcoreUtil2.resolve(object.getValue(),(ResourceSet)null);
+		EObject resolvedProxy = resolveProxy((Expression_ProcessRef) object.getValue());
 		for(EObject dep : studioExpression.getReferencedElements()){
 			if(dep instanceof Data && resolvedProxy instanceof Data){
 				if(((Data) dep).getName().equals(((Data) resolvedProxy).getName())){
@@ -77,6 +78,18 @@ public class ExpressionConditionModelSwitch extends ConditionModelSwitch<Express
 			}
 		}
 		return null;
+	}
+	
+	private EObject resolveProxy(Expression_ProcessRef ref) {
+		ResourceSet rSet = null;
+		if(ref.eIsProxy() && EcoreUtil.getURI(ref).lastSegment().endsWith(".proc")){
+			rSet = studioExpression.eResource().getResourceSet();
+		}
+		EObject dep = EcoreUtil2.resolve(ref, rSet);
+		if(rSet != null){
+			rSet.getResources().remove(ref.eResource());
+		}
+		return dep;
 	}
 	
 }
