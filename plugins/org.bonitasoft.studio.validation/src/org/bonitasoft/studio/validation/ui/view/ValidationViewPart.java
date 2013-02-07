@@ -39,11 +39,13 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -135,7 +137,11 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 		tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
 		tableViewer.getTable().setHeaderVisible(true);
 		tableViewer.getTable().setLinesVisible(true);
-
+		TableLayout layout = new TableLayout();
+		layout.addColumnData(new ColumnWeightData(1));
+		layout.addColumnData(new ColumnWeightData(5));
+		layout.addColumnData(new ColumnWeightData(11));
+		tableViewer.getTable().setLayout(layout);
 		addSeverityDescriptionColumn();
 		addElementNameColumn();
 		addErrorDescriptionColumn();
@@ -173,7 +179,6 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 	 */
 	private void addElementNameColumn(){
 		TableViewerColumn elements = new TableViewerColumn(tableViewer, SWT.NONE);
-		elements.getColumn().setWidth(200);
 		elements.getColumn().setText(Messages.validationViewElementColumnName);
 		elements.setLabelProvider(new ColumnLabelProvider(){
 			@Override
@@ -215,12 +220,8 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 
 	}
 
-	/**
-	 * 	
-	 */
 	private void addErrorDescriptionColumn(){
 		TableViewerColumn elements = new TableViewerColumn(tableViewer, SWT.NONE);
-		elements.getColumn().setWidth(200);
 		elements.getColumn().setText(Messages.validationViewDescriptionColumnName);
 		elements.setLabelProvider(new ColumnLabelProvider(){
 			@Override
@@ -236,19 +237,12 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 		});
 	}
 
-	/**
-	 * 
-	 */
+
 	private void addSeverityDescriptionColumn(){
 		severityColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-		severityColumn.getColumn().setWidth(80);
 		severityColumn.getColumn().setText(Messages.validationViewSeverityColumnName);
 		severityColumn.setLabelProvider(new SeverityColumnLabelProvider());
-		
-		
-		
 	}
-
 
 
 	@Override
