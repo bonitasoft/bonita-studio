@@ -127,14 +127,14 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 			if(compareOp != null){
 				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
 				for(Expression_ProcessRef ref : references){
-					EObject dep = resolveProxy(ref);
+					EObject dep = resolveProxy(ref.getValue());
 					domain.getCommandStack().execute(new AddCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(dep)));
 				}
 			}
 		}
 	}
 
-	private EObject resolveProxy(Expression_ProcessRef ref) {
+	private EObject resolveProxy(EObject ref) {
 		ResourceSet rSet = null;
 		if(ref.eIsProxy() && EcoreUtil.getURI(ref).lastSegment().endsWith(".proc")){
 			rSet =inputExpression.eResource().getResourceSet();
