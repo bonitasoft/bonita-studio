@@ -82,7 +82,6 @@ import org.junit.runners.Suite;
     TestDuplicate.class,
     CopyPasteTests.class,
     TestCreateValidatorWizard.class,
-    TestBonitaGroovyEditorDialog.class,
     TestLifeCycleWidget.class,
     ConnectorConfigurationTest.class,
     TestConnectorExpression.class,
@@ -95,7 +94,8 @@ import org.junit.runners.Suite;
     TestSave.class,
     TestMoveBetweenLane.class,
     MigrationReporTest.class,
-    TestTimer.class
+    TestTimer.class,
+    TestBonitaGroovyEditorDialog.class
 })
 public class AllSWTBotTests2 {
 
