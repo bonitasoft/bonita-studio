@@ -87,8 +87,8 @@ implements IResourceDescription {
 			if(part != null){
 				if(part instanceof DiagramEditor){
 					Resource activeResource =  ((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement().eResource();
-					BonitaStudioLog.warning("Editor resource URI :"+activeResource.getURI(), "");
-					BonitaStudioLog.warning("Repository resource URI :"+resource.getURI(), "");
+					BonitaStudioLog.warning("Editor resource URI :"+activeResource.getURI(), "org.bonitasoft.studio.condition");
+					BonitaStudioLog.warning("Repository resource URI :"+resource.getURI(), "org.bonitasoft.studio.condition");
 					if(activeResource != null && resource.getURI().equals(activeResource.getURI())){
 						resource = activeResource;
 					}
