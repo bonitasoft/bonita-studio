@@ -51,6 +51,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory;
@@ -534,6 +536,9 @@ public class SWTBotTestUtil implements SWTBotConstants{
             }else if(expressionType==ExpressionConstants.CONSTANT_TYPE){
                 bot.textWithLabel("Condition").setText(condition);
                 bot.sleep(600);
+            } else if (expressionType==ExpressionConstants.CONDITION_TYPE){
+            	bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
+            	setComparisonExpression(bot,condition);
             }else{
                 Assert.assertTrue("Error: Expression type "+expressionType+  " is not supported.", false);
             }
@@ -542,12 +547,41 @@ public class SWTBotTestUtil implements SWTBotConstants{
 
 
     }
+    
+    /**
+     * @param bot
+     * @param condition
+     * warning : sequence flow properties must be displayed before using this method
+     */
+    public static void initializeComparisonExpression(SWTGefBot bot, String condition){
+    	bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
+    	setComparisonExpression(bot, condition);
+    }
 
-    public static Keyboard getKeybord(){
+    /**
+	 * @param bot
+	 * @param condition
+	 */
+	private static void setComparisonExpression(SWTGefBot bot, String condition) {
+		bot.waitUntil(Conditions.shellIsActive(editExpression));
+        bot.tableWithLabel(expressionTypeLabel).select("Comparison");
+        bot.sleep(1000);
+        bot.styledText().setText(condition);
+        	}
+	
+	
+	public static StyleRange getTextStyleInEditExpressionDialog(SWTGefBot bot,String expressionType, int line,int column){
+	    bot.sleep(1000);
+		return bot.styledText().getStyle(line,column);
+	}
+	
+	public static Keyboard getKeybord(){
         SWTBotPreferences.KEYBOARD_LAYOUT = "EN_US";
         return KeyboardFactory.getSWTKeyboard();
     }
 
+	
+	
     public static void pressEnter(){
         getKeybord().pressShortcut(Keystrokes.CR);
     }
