@@ -60,6 +60,7 @@ import org.bonitasoft.studio.tests.TestFullScenario;
 import org.bonitasoft.studio.tests.TestPathSize;
 import org.bonitasoft.studio.tests.TestVersion;
 import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
+import org.bonitasoft.studio.tests.conditions.TestConditions;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
 import org.bonitasoft.studio.workspace.test.TestInitialWorkspace;
 import org.eclipse.core.runtime.CoreException;
@@ -84,6 +85,7 @@ import org.junit.runners.Suite;
     TestFunctionRepository.class,
     TestFullScenario.class, // Must be the first to manipulate processes of the suite
     TestSubprocess.class,
+    TestConditions.class,
     TestPathSize.class,
     TestImportConnector.class,
     TestImportActorFilter.class,
