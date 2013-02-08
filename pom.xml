@@ -182,7 +182,7 @@
 						</goals>
 						<configuration>
 							<dataFile>${sonar.jacoco.reportPath}</dataFile>
-							<outputDirectory>${jacoco.reportDir}</outputDirectory>
+							<outputDirectory>${sonar.jacoco.reportDir}</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
