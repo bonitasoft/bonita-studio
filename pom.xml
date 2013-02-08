@@ -16,8 +16,8 @@
 		<connector.version>6.0.Beta.4-SNAPSHOT</connector.version>
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
 		<filters.version>6.0.Beta.4-SNAPSHOT</filters.version>
-		<jacoco.reportDir>../${project.artifactId}/target/jacoco/</jacoco.reportDir>
-		<jacoco.file>../${project.artifactId}/target/jacoco-studio.exec</jacoco.file>
+		<jacoco.reportDir>../${user.home}/target/jacoco/</jacoco.reportDir>
+		<jacoco.file>../${user.home}/target/jacoco-studio.exec</jacoco.file>
 		<jacoco.version>0.6.0.201210061924</jacoco.version>
 		<!-- Sonar -->
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
@@ -27,8 +27,8 @@
 			add up information in the same report, so that, it will give the cross-module 
 			code coverage. -->
 		<sonar.jacoco.reportPath>${jacoco.file}</sonar.jacoco.reportPath>
-		<sonar.surefire.reportsPath>../${project.artifactId}.tests/target/surefire-reports/</sonar.surefire.reportsPath>
-		<sonar.jacoco.itReportPath>../${project.artifactId}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
+		<sonar.surefire.reportsPath>../${user.home}.tests/target/surefire-reports/</sonar.surefire.reportsPath>
+		<sonar.jacoco.itReportPath>../${user.home}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
 	</properties>
 
 	<modules>
