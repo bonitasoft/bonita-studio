@@ -98,7 +98,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		} else {
 			assertFalse(validErrorMessage,styles.underline);
 		}
-		bot.button(IDialogConstants.OK_LABEL).click(); 
+		bot.button(IDialogConstants.CANCEL_LABEL).click(); 
 	}
 
 	private void testValidConditionExpression(String condition, String expressionType){
