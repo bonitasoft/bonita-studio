@@ -176,7 +176,7 @@
 					</execution>
 					<execution>
 						<id>report</id>
-						<phase>site</phase>
+						<phase>test</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
