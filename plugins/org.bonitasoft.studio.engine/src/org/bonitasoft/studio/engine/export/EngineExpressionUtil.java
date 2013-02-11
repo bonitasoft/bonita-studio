@@ -240,8 +240,11 @@ public class EngineExpressionUtil {
 			}else{
 				exp.createNewInstance(name);
 				exp.setContent(simpleExpression.getContent());
-				exp.setExpressionType(toEngineExpressionType(simpleExpression));
-				exp.setInterpreter(interpreter);
+				final String engineExpressionType = toEngineExpressionType(simpleExpression);
+				exp.setExpressionType(engineExpressionType);
+				if(ExpressionConstants.SCRIPT_TYPE.equals(engineExpressionType)){
+					exp.setInterpreter(interpreter);
+				}
 				exp.setReturnType(simpleExpression.getReturnType());
 				exp.setDependencies(createDependenciesList(simpleExpression));
 				try {
