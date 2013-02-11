@@ -20,7 +20,7 @@
 		<jacoco.file>${user.home}/target/jacoco-studio.exec</jacoco.file>
 		<jacoco.version>0.6.0.201210061924</jacoco.version>
 		<!-- Sonar -->
-		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		<sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<!-- The destination file for the code coverage report has to be set to 
 			the same value in the parent pom and in each module pom. Then JaCoCo will 
