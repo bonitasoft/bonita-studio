@@ -18,6 +18,7 @@ package org.bonitasoft.studio.data.provider;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,7 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.XMLData;
@@ -39,12 +41,16 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -60,6 +66,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -72,6 +80,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor impleme
     private Expression editorInputExpression;
     private Composite mainComposite;
     private Text typeText;
+	private IObservableValue returnTypeObservable =null;
 
 
     @Override
@@ -127,8 +136,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor impleme
         typeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create()) ;
 
         typeText = new Text(typeComposite, SWT.BORDER | SWT.READ_ONLY) ;
-        typeText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create()) ;
-
+        typeText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).indent(10, 0).create()) ;
     }
 
     protected void handleSpecificDatatypeEdition(Data data) {
@@ -175,7 +183,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor impleme
 
         IObservableValue contentObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT) ;
         IObservableValue nameObservable = EMFObservables.observeValue( inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME) ;
-        IObservableValue returnTypeObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
+        returnTypeObservable  = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
         IObservableValue referenceObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS) ;
 
         UpdateValueStrategy selectionToName = new UpdateValueStrategy() ;
@@ -263,6 +271,36 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor impleme
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), returnTypeObservable,selectionToReturnType,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER))  ;
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), referenceObservable,selectionToReferencedData,referencedDataToSelection)  ;
         dataBindingContext.bindValue(SWTObservables.observeText(typeText, SWT.Modify), returnTypeObservable)  ;
+
+        if(context instanceof DateFormField){
+
+        	final ControlDecoration cd = new ControlDecoration(typeText, SWT.TOP | SWT.LEFT);
+        	//cd.setImage(Pics.getImage(PicsConstants.error)) ;
+        	cd.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
+        	cd.setDescriptionText("It is recommanded to use Return type ad String or Date for Date Widget") ;
+        	cd.setShowOnlyOnFocus(false) ;
+        	if(typeText.getText().equals(Date.class.getName()) || typeText.getText().equals(String.class.getName())){
+        		cd.hide();
+        	}else{
+        		cd.show();
+        	}
+
+        	returnTypeObservable.addValueChangeListener(new IValueChangeListener() {
+
+        		@Override
+        		public void handleValueChange(ValueChangeEvent event) {
+                	if(typeText.getText().equals(Date.class.getName()) || typeText.getText().equals(String.class.getName())){
+                		cd.hide();
+                	}else{
+                		cd.show();
+                	}	
+
+        		}
+        	});
+
+
+        }
+    
     }
 
 
@@ -283,5 +321,13 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor impleme
     @Override
     public Control getTextControl() {
         return null;
+    }
+    
+    @Override
+    public void dispose() {
+    	super.dispose();
+    	if(returnTypeObservable !=null){
+    		returnTypeObservable.dispose();
+    	}
     }
 }

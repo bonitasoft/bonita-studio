@@ -7472,6 +7472,7 @@
       </operation>
     </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FixedReturnTypeExpressionMigration"/>
   </releases>
   <releases/>
 </history:History>

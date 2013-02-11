@@ -92,15 +92,23 @@ public class NamingUtils {
     }
 
     public static Expression generateConstantExpression(String name){
+       return generateConstantExpression( name, false);
+    }
+
+    public static Expression generateConstantExpression(String name, boolean returnTypeFixed){
+       return generateConstantExpression(name, String.class.getName(), returnTypeFixed);
+    }
+    
+    public static Expression generateConstantExpression(String name, String typeName, boolean returnTypeFixed){
         Expression expr = ExpressionFactory.eINSTANCE.createExpression();
         expr.setName(name);
         expr.setContent(name);
         expr.setType(ExpressionConstants.CONSTANT_TYPE);
-        expr.setReturnType(String.class.getName());
-        expr.setReturnTypeFixed(true);
-        return expr;
+        expr.setReturnType(typeName);
+        expr.setReturnTypeFixed(returnTypeFixed);
+       return expr;
     }
-
+    
     public String generateName(Element newItem, Element existingItem) {
         Adapter adapter = new ProcessItemProviderAdapterFactory().createAdapter(newItem);
         ItemProviderAdapter itemProvider = (ItemProviderAdapter) adapter;

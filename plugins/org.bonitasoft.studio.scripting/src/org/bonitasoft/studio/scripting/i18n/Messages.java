@@ -33,6 +33,7 @@ public class Messages extends NLS {
     public static String propagationDescriptionHint;
     public static String returnType;
     public static String browse;
+    public static String dateWidgetReturnTypeWarning;
 
     private Messages() {
         // Do not instantiate

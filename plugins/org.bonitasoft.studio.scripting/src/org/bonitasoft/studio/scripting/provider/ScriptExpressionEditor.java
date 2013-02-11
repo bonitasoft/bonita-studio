@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.scripting.provider;
 
+import java.util.Date;
+
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -24,6 +26,9 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.DateFormField;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.scripting.extensions.IScriptLanguageProvider;
 import org.bonitasoft.studio.scripting.extensions.ScriptLanguageService;
 import org.bonitasoft.studio.scripting.i18n.Messages;
@@ -44,7 +49,9 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogTray;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -53,6 +60,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -63,6 +71,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -78,6 +88,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
     private ComboViewer typeCombo;
     private Button browseClassesButton;
     private Expression inputExpression;
+	private IObservableValue returnTypeModelObservable = null;
     public ScriptExpressionEditor(Expression expression) {
         if(expression.getInterpreter() == null || expression.getInterpreter().isEmpty()){
             expression.setInterpreter(ScriptLanguageService.getInstance().getDefaultLanguage()) ;
@@ -145,6 +156,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 
     protected void createReturnTypeComposite(Composite parent) {
         Composite typeComposite = new Composite(parent,SWT.NONE) ;
+        GridData listBoxData = new GridData(GridData.FILL_HORIZONTAL);
         typeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         GridLayout gl = new GridLayout(3,false) ;
         gl.marginWidth = 0 ;
@@ -156,7 +168,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         typeLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create()) ;
 
         typeCombo = new ComboViewer(typeComposite, SWT.BORDER) ;
-        typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create()) ;
+        typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).indent(10, 0).create()) ;
         typeCombo.setContentProvider(new ExpressionReturnTypeContentProvider()) ;
         typeCombo.setLabelProvider(new LabelProvider()) ;
         typeCombo.setSorter(new ViewerSorter(){
@@ -211,7 +223,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME) ;
         IObservableValue interpreterModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__INTERPRETER) ;
         //        IObservableValue propagationModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__PROPAGATE_VARIABLE_CHANGE) ;
-
+        
         UpdateValueStrategy opposite = new UpdateValueStrategy() ;
         opposite.setConverter(new Converter(Boolean.class,Boolean.class) {
 
@@ -240,13 +252,43 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         }else{
             typeCombo.setInput(new Object()) ;
         }
-        IObservableValue returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
+        returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
         dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable) ;
         dataBindingContext.bindValue(SWTObservables.observeText(typeCombo.getCombo()), returnTypeModelObservable) ;
+        
+        if(context instanceof DateFormField){
+
+        	final ControlDecoration cd = new ControlDecoration(typeCombo.getCombo(), SWT.TOP | SWT.LEFT);
+        	cd.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
+        	cd.setDescriptionText(Messages.dateWidgetReturnTypeWarning) ;
+        	cd.setShowOnlyOnFocus(false) ;
+        	if(typeCombo.getCombo().getText().equals(Date.class.getName()) || typeCombo.getCombo().getText().equals(String.class.getName())){
+        		cd.hide();
+        	}else{
+        		cd.show();
+        	}
+
+        	returnTypeModelObservable.addValueChangeListener(new IValueChangeListener() {
+
+        		@Override
+        		public void handleValueChange(ValueChangeEvent event) {
+                	if(typeCombo.getCombo().getText().equals(Date.class.getName()) || typeCombo.getCombo().getText().equals(String.class.getName())){
+                		cd.hide();
+                	}else{
+                		cd.show();
+                	}	
+
+        		}
+        	});
+
+
+        }
         typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed()) ;
         browseClassesButton.setEnabled(!inputExpression.isReturnTypeFixed()) ;
     }
 
+    
+    
     @Override
     public void addListener(Listener listener) {
         super.addListener(listener);
@@ -263,6 +305,9 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
         super.dispose();
         if(editor != null){
             editor.dispose();
+        }
+        if(returnTypeModelObservable != null){
+        	returnTypeModelObservable.dispose();
         }
     }
 

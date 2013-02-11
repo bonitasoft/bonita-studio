@@ -31,6 +31,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
+import org.bonitasoft.studio.model.form.CheckBoxSingleFormField;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.Form;
@@ -215,10 +216,16 @@ public class AddFormCommand extends AbstractTransactionalCommand {
                 if(key instanceof Data){
                     Data data = (Data)key;
                     currentExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data)) ;
+                    
+                    if(tempWidget instanceof CheckBoxSingleFormField){
+                    	currentExpression.setReturnTypeFixed(true);
+                    }                    
+                    
                     if (data.getDataType() instanceof EnumType && tempWidget instanceof MultipleValuatedFormField) {
                         ((MultipleValuatedFormField) tempWidget).setDefaultExpression(currentExpression);
                         currentExpression = ExpressionHelper.createExpressionFromEnumType((EnumType) data.getDataType());
                     }
+
                     if(!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool)){ //Do not set input expression if we are in an instantiation form
                         ((FormField) tempWidget).setInputExpression(currentExpression);
                     }

@@ -75,6 +75,7 @@ public class Messages extends NLS {
     public static String variableType;
     public static String name;
     public static String returnType;
+    public static String dateWidgetReturnTypeWarning;
     public static String javaType;
     public static String browseJava;
     public static String attachementRepository;
