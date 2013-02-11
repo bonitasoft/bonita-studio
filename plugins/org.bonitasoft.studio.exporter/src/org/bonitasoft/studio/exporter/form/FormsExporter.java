@@ -1257,8 +1257,13 @@ public class FormsExporter {
         if (expression != null && expression.getContent() != null) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
             if(engineExpression != null){
-                builder.addInitialValueExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                        engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
+                final String interpreter = engineExpression.getInterpreter();
+				builder.addInitialValueExpression(
+						engineExpression.getName(),
+						engineExpression.getContent(),
+						engineExpression.getExpressionType(),
+                        engineExpression.getReturnType(),
+                        interpreter == null || interpreter.isEmpty() ? null : interpreter);
                 addExpressionDependency(builder, engineExpression);
             }
         }
