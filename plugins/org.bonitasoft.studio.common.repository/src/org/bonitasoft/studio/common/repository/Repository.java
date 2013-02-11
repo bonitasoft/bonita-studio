@@ -54,6 +54,7 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.internal.events.BuildManager;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
@@ -70,6 +71,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
@@ -198,6 +200,14 @@ public class Repository implements IRepository {
                 }
 
             }) ;
+            try {
+            	/*Avoid XtextBuilder to be built in the same time*/
+				Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+			} catch (OperationCanceledException e1) {
+				BonitaStudioLog.error(e1);
+			} catch (InterruptedException e1) {
+				BonitaStudioLog.error(e1);
+			}
             IConfigurationElement[] elements =  BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(REPOSITORY_STORE_EXTENSION_POINT_ID) ;
             for(IConfigurationElement configuration : elements){
                 try {
