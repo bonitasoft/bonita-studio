@@ -78,25 +78,6 @@
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<version>0.6.0.201210061924</version>
 				</plugin>
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-surefire-plugin</artifactId>
-					<version>${tychoVersion}</version>
-					<configuration>
-						<useUIHarness>false</useUIHarness>
-						<forkMode>pertest</forkMode>
-						<includes>
-							<include>**/*AllTests*</include>
-							<include>**/*AllTestsStress*</include>
-							<include>**/*AllTests2*</include>
-							<include>**/*AllMigrationTests*</include>
-							<include>**/*AllTestsAfterReboot*</include>
-							<include>**/*AllSWTBotTests*</include>
-							<include>**/*AllSWTBotTests2*</include>
-						</includes>
-
-					</configuration>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 
