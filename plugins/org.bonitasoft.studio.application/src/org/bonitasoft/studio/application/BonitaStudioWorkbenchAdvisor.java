@@ -302,34 +302,36 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
     public boolean preShutdown() {
         boolean returnValue =  super.preShutdown();
         if(returnValue){
-            try {
-                boolean closeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true) ;
-                if(closeEditor){
-                    PlatformUI.getWorkbench().getProgressService().run(true, false, new IRunnableWithProgress() {
+        	try {
+        		if(PlatformUI.isWorkbenchRunning()){
+        			boolean closeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true) ;
+        			if(closeEditor){
+        				PlatformUI.getWorkbench().getProgressService().run(true, false, new IRunnableWithProgress() {
 
-                        @Override
-                        public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
-                            monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN) ;
-                            IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.application.preshutdown"); //$NON-NLS-1$
-                            IPreShutdownContribution contrib = null;
-                            for (IConfigurationElement elem : elements){
-                                try {
-                                    contrib = (IPreShutdownContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-                                } catch (CoreException e) {
-                                    BonitaStudioLog.error(e);
-                                }
-                                contrib.execute();
-                            }
-                            if(BOSEngineManager.getInstance().isRunning()){
-                                BOSEngineManager.getInstance().stop() ;
-                            }
-                            FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
-                            monitor.done() ;
-                        }
-                    }) ;
-                }
-                return closeEditor ;
-            } catch (Exception e){
+        					@Override
+        					public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
+        						monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN) ;
+        						IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.application.preshutdown"); //$NON-NLS-1$
+        						IPreShutdownContribution contrib = null;
+        						for (IConfigurationElement elem : elements){
+        							try {
+        								contrib = (IPreShutdownContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
+        							} catch (CoreException e) {
+        								BonitaStudioLog.error(e);
+        							}
+        							contrib.execute();
+        						}
+        						if(BOSEngineManager.getInstance().isRunning()){
+        							BOSEngineManager.getInstance().stop() ;
+        						}
+        						FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
+        						monitor.done() ;
+        					}
+        				}) ;
+        			}
+        			return closeEditor ;
+        		}
+        	} catch (Exception e){
                 BonitaStudioLog.error(e) ;
             }
         }
