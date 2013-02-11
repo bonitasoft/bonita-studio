@@ -87,13 +87,13 @@
 						<useUIHarness>false</useUIHarness>
 						<forkMode>pertest</forkMode>
 						<includes>
-							<include>**/*AllTests.java</include>
-							<include>**/*AllTestsStress.java</include>
-							<include>**/*AllTests2.java</include>
-							<include>**/*AllMigrationTests.java</include>
-							<include>**/*AllTestsAfterReboot.java</include>
-							<include>**/*AllSWTBotTests.java</include>
-							<include>**/*AllSWTBotTests2.java</include>
+							<include>**/*AllTests*</include>
+							<include>**/*AllTestsStress*</include>
+							<include>**/*AllTests2*</include>
+							<include>**/*AllMigrationTests*</include>
+							<include>**/*AllTestsAfterReboot*</include>
+							<include>**/*AllSWTBotTests*</include>
+							<include>**/*AllSWTBotTests*</include>
 						</includes>
 
 					</configuration>
