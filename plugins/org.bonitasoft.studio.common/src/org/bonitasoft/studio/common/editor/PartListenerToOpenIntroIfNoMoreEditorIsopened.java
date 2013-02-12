@@ -33,15 +33,10 @@ public class PartListenerToOpenIntroIfNoMoreEditorIsopened implements IPartListe
 	}
 
 	public void partClosed(IWorkbenchPartReference partRef) {
-		// IWorkbenchPart part = partRef.getPart(false);//FIXME only add it once
-		// on the startup
-		// if(part.equals(editorPart)){
 		IWorkbenchPart part = partRef.getPart(false);
 		if (part instanceof IEditorPart) {
 			PlatformUtil.openIntroIfNoOtherEditorOpen();
 		}
-		// part.getSite().getPage().removePartListener(this);
-		// }
 	}
 
 	public void partActivated(IWorkbenchPartReference partRef) {
@@ -67,7 +62,6 @@ public class PartListenerToOpenIntroIfNoMoreEditorIsopened implements IPartListe
 
 	public void partOpened(IWorkbenchPartReference partRef) {
 		IWorkbenchPart part = partRef.getPart(false);
-
 		if (part instanceof IEditorPart) {
 			PlatformUtil.closeIntro();
 		}

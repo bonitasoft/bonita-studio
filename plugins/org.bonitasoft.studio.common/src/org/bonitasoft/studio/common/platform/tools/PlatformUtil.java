@@ -33,7 +33,6 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.bonitasoft.studio.common.Activator;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.filesystem.EFS;
@@ -43,7 +42,6 @@ import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
@@ -90,30 +88,35 @@ public class PlatformUtil {
 		if(page.isPageZoomed()){
 			page.toggleZoom(page.getActivePartReference());
 		}
-
 	}
 
 	public static void closeIntro() {
-		final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if(window != null){
-			final IWorkbenchPage activePage = window.getActivePage();
-			if(activePage != null){
-				final IWorkbenchPart part = activePage.getActivePart() ;
-				if(part != null){
-					final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
-					if(introManager != null){
-						if(introManager.getIntro()!=null){
-							introManager.closeIntro(introManager.getIntro());
-						}else{
-							final IViewPart view = activePage.findView("org.eclipse.ui.internal.introview");
-							if(view != null){
-								PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view);
+		Display.getDefault().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if(window != null){
+					final IWorkbenchPage activePage = window.getActivePage();
+					if(activePage != null){
+						final IWorkbenchPart part = activePage.getActivePart() ;
+						if(part != null){
+							final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
+							if(introManager != null){
+								if(introManager.getIntro()!=null){
+									introManager.closeIntro(introManager.getIntro());
+								}else{
+									final IViewPart view = activePage.findView("org.eclipse.ui.internal.introview");
+									if(view != null){
+										PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view);
+									}
+								}
 							}
 						}
 					}
 				}
 			}
-		}
+		});
 	}
 
 	/**
