@@ -25,8 +25,8 @@ import java.util.Collections;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.i18n.Messages;
@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
@@ -46,7 +45,7 @@ public class ExportBarOperation  {
     private final ArrayList<AbstractProcess> processes;
     protected String configurationId;
     private String targetFolderPath;
-    private IStatus status;
+    public IStatus status = Status.OK_STATUS;
 
     public ExportBarOperation() {
         processes = new ArrayList<AbstractProcess>() ;
@@ -78,11 +77,6 @@ public class ExportBarOperation  {
         status = Status.OK_STATUS ;
 
         for (final AbstractProcess process : processes) {
-            String diagramId = "NOT_IN_A_DIAGRAM" ;
-            EObject diagram = process.eContainer() ;
-            if(diagram instanceof MainProcess){
-                diagramId = ((AbstractProcess) diagram).getName() +"--"+((AbstractProcess) diagram).getVersion() ;
-            }
             final File targetFolder = new File(targetFolderPath) ;
             if(!targetFolder.exists()){
                 targetFolder.mkdirs() ;
@@ -103,9 +97,7 @@ public class ExportBarOperation  {
                 return status ;
             }
         }
-
         monitor.done() ;
-
         return status;
     }
 
@@ -120,7 +112,7 @@ public class ExportBarOperation  {
             status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, ex.getMessage(), ex)  ;
             return status;
         }
-        return Status.OK_STATUS;
+        return status;
     }
 
 
