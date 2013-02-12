@@ -42,6 +42,7 @@ public class TestBugsSWTBot extends SWTBotGefTestCase {
         properties.bot().button("Edit",1).click();
         SWTBotEditor activeEditor = bot.activeEditor();
         assertEquals("org.eclipse.wst.html.core.htmlsource.source",activeEditor.getReference().getId());
+        activeEditor.close();
     }
 
     @Override
