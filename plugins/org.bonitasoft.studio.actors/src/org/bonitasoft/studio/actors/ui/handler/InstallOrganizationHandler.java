@@ -28,7 +28,6 @@ import java.util.Map;
 
 import org.bonitasoft.engine.api.CommandAPI;
 import org.bonitasoft.engine.api.IdentityAPI;
-import org.bonitasoft.engine.api.TenantAPIAccessor;
 import org.bonitasoft.engine.identity.User;
 import org.bonitasoft.engine.identity.UserCriterion;
 import org.bonitasoft.engine.session.APISession;
@@ -56,7 +55,6 @@ public class InstallOrganizationHandler extends AbstractHandler {
 
 	private static final String PROFILE_ID = "profileId";
 	private static final String USER_ID = "userId";
-	private static final String USER_PROFILE_NAME = "User";
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -136,10 +134,8 @@ public class InstallOrganizationHandler extends AbstractHandler {
 		final List<Long> profiles = new ArrayList<Long>() ;
 		final List<Map<String, Serializable>> searchedProfiles = (List<Map<String, Serializable>>) commandApi.execute("searchProfile", searchParameters);
 		for(Map<String, Serializable> profile : searchedProfiles){
-			if(USER_PROFILE_NAME.equals(profile.get("name"))){
-				long profileId =  (Long) profile.get("id") ;
-				profiles.add(profileId) ;
-			}
+			long profileId =  (Long) profile.get("id") ;
+			profiles.add(profileId) ;
 		}
 
 		List<User> users = identityAPI.getUsers(0, Integer.MAX_VALUE, UserCriterion.USER_NAME_ASC) ;
