@@ -57,7 +57,7 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
     			ExpressionConstants.CONSTANT_TYPE,
     			ExpressionConstants.VARIABLE_TYPE,
     			ExpressionConstants.SCRIPT_TYPE,
-    			ExpressionConstants.FORM_FIELD_TYPE
+    			ExpressionConstants.PARAMETER_TYPE
         }) ;
 
         AvailableExpressionTypeFilter dataFilter =  new AvailableExpressionTypeFilter(new String[]{
