@@ -74,6 +74,14 @@
 					<version>1.2.1</version>
 				</plugin>
 				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<version>${tycho.version}</version>
+					<configuration>
+						<useUIHarness>false</useUIHarness>
+					</configuration>
+				</plugin>
+				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<version>0.6.0.201210061924</version>
@@ -141,9 +149,7 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<configuration>
-					<includes>
-						<include>org.bonitasoft.studio.*</include>
-					</includes>
+				
 					<destFile>${sonar.jacoco.reportPath}</destFile>
 					
 				</configuration>
