@@ -221,7 +221,8 @@ public class BOSWebServerManager {
 			 workingCopy = conf.getWorkingCopy();
 		}
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,getVMArgs());
-		workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE, Platform.getLogFileLocation().toFile().getAbsolutePath());
+		workingCopy.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_FILE, Platform.getLogFileLocation().toFile().getAbsolutePath());
+		workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE,true);
 		workingCopy.doSave();
 	}
 
