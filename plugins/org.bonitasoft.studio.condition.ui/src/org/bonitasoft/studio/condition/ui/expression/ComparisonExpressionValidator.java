@@ -136,7 +136,7 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 
 	private EObject resolveProxy(EObject ref) {
 		ResourceSet rSet = null;
-		if(ref.eIsProxy() && EcoreUtil.getURI(ref).lastSegment().endsWith(".proc")){
+		if(ref.eIsProxy()){
 			rSet =inputExpression.eResource().getResourceSet();
 		}
 		EObject dep = EcoreUtil2.resolve(ref, rSet);

@@ -33,9 +33,6 @@ import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.databinding.validation.ValidationStatus;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -77,6 +74,9 @@ import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
+import org.eclipse.xtext.validation.CheckMode;
+import org.eclipse.xtext.validation.IResourceValidator;
+import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Injector;
 
@@ -99,9 +99,11 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 	private AdapterFactoryLabelProvider adapterLabelProvider;
 	private Expression inputExpression;
 	private XtextResource resource;
+	private Resource eResource;
 
 	public ComparisonExpressionEditor(Resource eResource, EObject context) {
 		this.context = context;
+		this.eResource = eResource;
 		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		adapterLabelProvider  = new AdapterFactoryLabelProvider(adapterFactory) ;
 	}
@@ -242,20 +244,25 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
 	protected void updateDependencies() {
 		inputExpression.getReferencedElements().clear();
-		Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
-		if(compareOp != null){
-			List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
-			for(Expression_ProcessRef ref : references){
-				EObject dep = resolveProxy(ref.getValue());
-				inputExpression.getReferencedElements().add(EcoreUtil.copy(dep));
+		final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
+		final IResourceValidator xtextResourceChecker =	injector.getInstance(IResourceValidator.class);
+		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
+		if(issues.isEmpty()){//Validation is OK
+			Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
+			if(compareOp != null){
+				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
+				for(Expression_ProcessRef ref : references){
+					EObject dep = resolveProxy(ref.getValue());
+					inputExpression.getReferencedElements().add(EcoreUtil.copy(dep));
+				}
 			}
 		}
 	}
-	
+
 	private EObject resolveProxy(EObject ref) {
 		ResourceSet rSet = null;
-		if(ref.eIsProxy() && EcoreUtil.getURI(ref).lastSegment().endsWith(".proc")){
-			rSet =inputExpression.eResource().getResourceSet();
+		if(ref.eIsProxy()){
+			rSet = eResource.getResourceSet();
 		}
 		EObject dep = EcoreUtil2.resolve(ref, rSet);
 		if(rSet != null){
@@ -302,7 +309,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 				if(ComparisonExpressionEditor.this.inputExpression.isAutomaticDependencies()){
 					updateDependencies();
 				}
-				
+
 				return fromObject;
 			}
 		});
@@ -324,46 +331,35 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 		dependencySection.setExpanded(!automaticResolutionButton.getSelection());
 
 		addDependencyButton.setEnabled(!inputExpression.isAutomaticDependencies()) ;
-		UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-		targetToModel.setAfterConvertValidator(new IValidator() {
-
-			@Override
-			public IStatus validate(Object value) {
-				if(value == null || value.toString().isEmpty()){
-					return ValidationStatus.error(Messages.returnTypeIsMandatory);
-				}
-				return ValidationStatus.ok();
-			}
-		});
-		ControlDecorationSupport.create(dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable,targetToModel,null),SWT.LEFT) ;
+		ControlDecorationSupport.create(dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable),SWT.LEFT) ;
 		typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed()) ;
-		
-	     final ExpressionContentProvider provider = new ExpressionContentProvider() ;
-	        provider.setContext(context);
 
-	        final Set<Expression> filteredExpressions = new HashSet<Expression>() ;
-	        Expression[] expressions = provider.getExpressions();
-	        EObject input =  provider.getContext() ;
-	        if(expressions != null){
-	            filteredExpressions.addAll(Arrays.asList(expressions)) ;
-	            if(input != null && viewerTypeFilters != null){
-	                for(Expression exp : expressions) {
-	                    for(ViewerFilter filter : viewerTypeFilters){
-	                        if(filter != null && !filter.select(comparisonEditor.getViewer(), input, exp)){
-	                            filteredExpressions.remove(exp) ;
-	                        }
-	                    }
-	                }
-	            }
-	        }
+		final ExpressionContentProvider provider = new ExpressionContentProvider() ;
+		provider.setContext(context);
 
-	        addDependencyButton.addSelectionListener(new SelectionAdapter() {
-	            @Override
-	            public void widgetSelected(SelectionEvent e) {
-	                SelectDependencyDialog dialog =	new SelectDependencyDialog(Display.getDefault().getActiveShell(),filteredExpressions, ComparisonExpressionEditor.this.inputExpression.getReferencedElements()) ;
-	                dialog.open()  ;
-	            }
-	        }) ;
+		final Set<Expression> filteredExpressions = new HashSet<Expression>() ;
+		Expression[] expressions = provider.getExpressions();
+		EObject input =  provider.getContext() ;
+		if(expressions != null){
+			filteredExpressions.addAll(Arrays.asList(expressions)) ;
+			if(input != null && viewerTypeFilters != null){
+				for(Expression exp : expressions) {
+					for(ViewerFilter filter : viewerTypeFilters){
+						if(filter != null && !filter.select(comparisonEditor.getViewer(), input, exp)){
+							filteredExpressions.remove(exp) ;
+						}
+					}
+				}
+			}
+		}
+
+		addDependencyButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				SelectDependencyDialog dialog =	new SelectDependencyDialog(Display.getDefault().getActiveShell(),filteredExpressions, ComparisonExpressionEditor.this.inputExpression.getReferencedElements()) ;
+				dialog.open()  ;
+			}
+		}) ;
 	}
 
 	/* (non-Javadoc)
