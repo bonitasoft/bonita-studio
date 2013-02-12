@@ -244,6 +244,8 @@ public class EngineExpressionUtil {
 				exp.setExpressionType(engineExpressionType);
 				if(ExpressionConstants.SCRIPT_TYPE.equals(engineExpressionType)){
 					exp.setInterpreter(interpreter);
+				} else {
+					exp.setInterpreter("");
 				}
 				exp.setReturnType(simpleExpression.getReturnType());
 				exp.setDependencies(createDependenciesList(simpleExpression));
