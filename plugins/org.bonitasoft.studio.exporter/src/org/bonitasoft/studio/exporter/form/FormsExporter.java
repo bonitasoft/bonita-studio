@@ -1650,10 +1650,7 @@ public class FormsExporter {
                 builder.addConfirmationLayout(ExporterTools.getTemplateWarPath(entryPageFlow, TemplateType.CONFIRMATION));
             }
         }
-        final Expression confirmationMessage = entryPageFlow.getConfirmationMessage();
-        if (!formPages.isEmpty() && confirmationMessage != null && confirmationMessage.getContent() != null && !confirmationMessage.getContent().isEmpty()) {
-            addConfirmationMessageExpression(builder, confirmationMessage);
-        }
+
         if (!formPages.isEmpty()) {
             addFirstPageId(ProcessPackage.Literals.PAGE_FLOW__FORM, entryPageFlow, builder);
         }
