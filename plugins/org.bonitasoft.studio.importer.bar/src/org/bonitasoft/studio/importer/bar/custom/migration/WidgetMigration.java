@@ -61,8 +61,6 @@ public class WidgetMigration extends ReportCustomMigration {
 					if(inputScript != null && !inputScript.trim().isEmpty()){
 						widgetInputs.put(widget.getUuid(), inputScript);
 					}
-				}else{
-					System.out.println("no script");
 				}
 				storeDisplayLabels(widget);
 				storeTooltips(widget);
