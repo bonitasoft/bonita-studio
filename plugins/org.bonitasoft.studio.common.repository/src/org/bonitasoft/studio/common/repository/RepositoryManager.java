@@ -155,6 +155,8 @@ public class RepositoryManager {
     public void setRepository(String repositoryName) {
         if(repository != null && repository.getName().equals(repositoryName)){
             return;
+        }else{
+        	repository.close();
         }
         repository = getRepository(repositoryName) ;
         if(repository == null){
