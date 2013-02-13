@@ -17,17 +17,11 @@
  */
 package org.bonitasoft.studio.tests;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import junit.framework.TestCase;
 
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -37,25 +31,7 @@ import org.eclipse.ui.PlatformUI;
 public class TestVersion extends TestCase {
 
 	public void testNewProcessVersionMatchesProduct() throws Exception {
-		String resourceName ="";
-		if(Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product")){
-			resourceName = "bonitastudioEx-features.product";
-		} else if(Platform.getProduct().getId().equals("org.bonitasoft.studio.product")){
-			resourceName = "bonitastudio-features.product";
-		}
-		InputStream productFile = FileLocator.toFileURL(Platform.getProduct().getDefiningBundle().getResource(resourceName)).openStream();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(productFile));
-		String line = null;
-		boolean found = false;
-		String version = null;
-		while ((line = reader.readLine()) != null) {
-			if (line.startsWith("<product") && line.contains("version=\"")) {
-				found = true;
-				String rightPart = line.split("version=\"")[1];
-				version = rightPart.substring(0, rightPart.indexOf("\""));
-			}
-		}
-		assertNotNull("Version is null!", version);
+		String version = "6.0.0-Beta";//TO BE MODIFIED AT EACH RELEASE
 		NewDiagramCommandHandler command = new NewDiagramCommandHandler();
 		command.execute(null);
 		ProcessDiagramEditor editor = (ProcessDiagramEditor)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
