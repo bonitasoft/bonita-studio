@@ -50,7 +50,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.internal.handlers.SaveHandler;
 
 
@@ -73,6 +72,7 @@ public class SaveCommandHandler extends SaveHandler {
 			boolean changed = false;
 			if(editorPart instanceof DiagramEditor){
 				DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
+				
 				if(editorPart instanceof ProcessDiagramEditor){
 					DiagramEditPart diagram = ((ProcessDiagramEditor) editorPart).getDiagramEditPart();
 					proc = (MainProcess) diagram.resolveSemanticElement() ;
@@ -132,15 +132,25 @@ public class SaveCommandHandler extends SaveHandler {
 						}
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(newEditorOfDiagram);
 					}else{
-						editorPart.doSave(Repository.NULL_PROGRESS_MONITOR);
+						EObject root = ((DiagramEditor)editorPart).getDiagramEditPart().resolveSemanticElement();
+						Resource res = root.eResource();
+						if(res != null){
+							final String procFile = URI.decode(res.getURI().lastSegment());
+							final DiagramFileStore fileStore =diagramStore.getChild(procFile);
+							if(fileStore != null){
+								fileStore.save(editorPart);
+							}
+						}else{
+							editorPart.doSave(Repository.NULL_PROGRESS_MONITOR);
+						}
+						
+						
 					}
 				} catch (Exception ex) {
 					BonitaStudioLog.error(ex);
 				}
-
-			}
-			else {//in case of the editor doesn't have a good handler defined (like xml design editor)
-			editorPart.doSave(Repository.NULL_PROGRESS_MONITOR);
+			}else {//in case of the editor doesn't have a good handler defined (like xml design editor)
+				editorPart.doSave(Repository.NULL_PROGRESS_MONITOR);
 			}
 		}
 
