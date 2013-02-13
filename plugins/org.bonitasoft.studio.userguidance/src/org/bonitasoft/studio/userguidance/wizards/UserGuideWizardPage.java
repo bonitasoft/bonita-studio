@@ -144,29 +144,31 @@ public class UserGuideWizardPage extends WizardPage {
                 }
             }
         });
-
-        Link synchroniezLink = new Link(leftComposite, SWT.NONE) ;
-        synchroniezLink.setText("<A>"+Messages.synchronize+"</A>") ;
-        synchroniezLink.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.TOP).create()) ;
-        synchroniezLink.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-                IProgressService progress = PlatformUI.getWorkbench().getProgressService() ;
-                try {
-                    progress.run(false, false, new DocSynchronizer()) ;
-                } catch (InvocationTargetException e) {
-                    BonitaStudioLog.error(e) ;
-                    new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.synchronizationErrorTitle, Messages.synchronizationErrorMessage, new Status(IStatus.ERROR, UserGuidancePlugin.PLUGIN_ID, e.getMessage(), e), Status.ERROR).open() ;
-                } catch (InterruptedException e) {
-                    BonitaStudioLog.error(e) ;
-                    new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.synchronizationErrorTitle, Messages.synchronizationErrorMessage, new Status(IStatus.ERROR, UserGuidancePlugin.PLUGIN_ID, e.getMessage(), e), Status.ERROR).open() ;
-                }
-                String url = webBrowser.getUrl() ;
-                if(url != null){
-                    webBrowser.setUrl(url) ;
-                }
-            }
-        });
+        
+        Label filler = new Label(leftComposite, SWT.NONE);
+        
+//        Link synchroniezLink = new Link(leftComposite, SWT.NONE) ;
+//        synchroniezLink.setText("<A>"+Messages.synchronize+"</A>") ;
+//        synchroniezLink.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.TOP).create()) ;
+//        synchroniezLink.addSelectionListener(new SelectionAdapter() {
+//            @Override
+//            public void widgetSelected(SelectionEvent event) {
+//                IProgressService progress = PlatformUI.getWorkbench().getProgressService() ;
+//                try {
+//                    progress.run(false, false, new DocSynchronizer()) ;
+//                } catch (InvocationTargetException e) {
+//                    BonitaStudioLog.error(e) ;
+//                    new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.synchronizationErrorTitle, Messages.synchronizationErrorMessage, new Status(IStatus.ERROR, UserGuidancePlugin.PLUGIN_ID, e.getMessage(), e), Status.ERROR).open() ;
+//                } catch (InterruptedException e) {
+//                    BonitaStudioLog.error(e) ;
+//                    new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.synchronizationErrorTitle, Messages.synchronizationErrorMessage, new Status(IStatus.ERROR, UserGuidancePlugin.PLUGIN_ID, e.getMessage(), e), Status.ERROR).open() ;
+//                }
+//                String url = webBrowser.getUrl() ;
+//                if(url != null){
+//                    webBrowser.setUrl(url) ;
+//                }
+//            }
+//        });
 
 
         Composite buttonContainer = new Composite(leftComposite, SWT.NONE) ;
