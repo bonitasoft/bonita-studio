@@ -167,9 +167,6 @@ public class BOSWebServerManager {
 				final String mode = EnginePlugin.getDefault().getPreferenceStore().getString(EnginePreferenceConstants.TOMCAT_START_MODE);
 				tomcat.start(mode,monitor);
 				waitServerRunning(monitor);
-				if(BonitaStudioLog.isLoggable(IStatus.OK)){
-					BonitaStudioLog.debug("Tomcat started.", EnginePlugin.PLUGIN_ID);
-				}
 			} catch (CoreException e) {
 				BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
 			}
@@ -198,15 +195,20 @@ public class BOSWebServerManager {
 		int totalTime = 0 ;
 		while (totalTime < MAX_SERVER_START_TIME && tomcat != null && tomcat.getServerState() != IServer.STATE_STARTED) {
 			try {
-				if(BonitaStudioLog.isLoggable(IStatus.OK)){
-					BonitaStudioLog.debug("Tomcat is loading : server state = "+tomcat.getServerState(), EnginePlugin.PLUGIN_ID);
-				}
 				Thread.sleep(1000);
 				totalTime = totalTime + 1000;
 			} catch (InterruptedException e) {
 				BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
 			}
 		}
+		if(BonitaStudioLog.isLoggable(IStatus.OK)){
+			if(tomcat.getServerState() == IServer.STATE_STARTED){
+				BonitaStudioLog.debug("Tomcat server started.", EnginePlugin.PLUGIN_ID);
+			}else{
+				BonitaStudioLog.debug("Tomcat failed to start.", EnginePlugin.PLUGIN_ID);	
+			}
+		}
+		
 	}
 
 	protected void createLaunchConfiguration(IServer server,IProgressMonitor monitor) throws CoreException {
