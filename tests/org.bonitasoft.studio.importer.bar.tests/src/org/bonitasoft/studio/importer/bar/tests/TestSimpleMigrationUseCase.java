@@ -430,9 +430,10 @@ public class TestSimpleMigrationUseCase {
 				assertNotNull("Validator descriptor is missing",validatorDescriptor);
 				final ValidatorDescriptorFileStore filseSotre = (ValidatorDescriptorFileStore) validatorDescriptorStore.getChild(validatorDescriptor.getName()+"."+ValidatorDescriptorRepositoryStore.VALIDATOR_EXT);
 				assertNotNull("Validator descriptor file store is missing",filseSotre);
-				if(!filseSotre.isReadOnly()){ //Not a provided validator descriptor
-					assertNotNull("Custom validator source file is missing",validatorSourceStore.getChild(validator.getValidatorClass()));
-				}
+//				UNCOMMENT WHEN IMPLEMENTED
+//				if(!filseSotre.isReadOnly()){ //Not a provided validator descriptor
+//					assertNotNull("Custom validator source file is missing",validatorSourceStore.getChild(validator.getValidatorClass()));
+//				}
 			}
 		}
 
