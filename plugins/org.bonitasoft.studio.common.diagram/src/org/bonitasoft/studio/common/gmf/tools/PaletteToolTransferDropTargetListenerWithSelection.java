@@ -34,6 +34,7 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Aurelien Pupier
@@ -104,8 +105,12 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 					// basically, the editpart has been deleted when this 
 					// code is being executed. (see RATLC00527114)
 					if ( editPart.isActive() ) {
-						editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
+						//ISSUE WITH PROPERTIES PAGE AND EXCLUSIVE EDITING DOMAIN
+						//editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
+						
 						revealEditPart((EditPart)editparts.get(0));
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().setFocus();
+						editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
 					}
 				}
 			});
