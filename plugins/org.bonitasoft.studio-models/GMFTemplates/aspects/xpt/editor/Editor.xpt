@@ -275,13 +275,6 @@ public void dispose() {
 	if(rulerComposite!= null){
 		rulerComposite.dispose();
 	}
-	
-	if(org.eclipse.ui.PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
-		org.eclipse.ui.IEditorReference[] editors = org.eclipse.ui.PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-			if (editors.length == 0 && org.bonitasoft.studio.common.platform.tools.PlatformUtil.isABonitaProduct(org.eclipse.core.runtime.Platform.getProduct().getId())) {
-				org.eclipse.ui.PlatformUI.getWorkbench().getIntroManager().showIntro(org.eclipse.ui.PlatformUI.getWorkbench().getActiveWorkbenchWindow(), false);
-		}
-	}
 }
 «ENDDEFINE»
 

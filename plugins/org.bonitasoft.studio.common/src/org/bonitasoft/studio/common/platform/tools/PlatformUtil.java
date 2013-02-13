@@ -477,4 +477,27 @@ public class PlatformUtil {
 		return false;
 	}
 
+	public static boolean isIntroOpen() {
+		final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if(window != null){
+			final IWorkbenchPage activePage = window.getActivePage();
+			if(activePage != null){
+				final IWorkbenchPart part = activePage.getActivePart() ;
+				if(part != null){
+					final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
+					if(introManager != null){
+						if(introManager.getIntro()!=null){
+							return true;
+						}else{
+							final IViewPart view = activePage.findView("org.eclipse.ui.internal.introview");
+							return view != null;
+						}
+					}
+				}
+			}
+			
+		}
+		return false;
+	}
+
 }

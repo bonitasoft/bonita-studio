@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -131,7 +132,13 @@ public class BonitaPerspectivesUtils {
 							public IStatus runInUIThread(IProgressMonitor monitor) {
 								Display.getDefault().syncExec(new Runnable() {
 									public void run() {
+										boolean isIntroOpened = PlatformUtil.isIntroOpen();
 										activePage.resetPerspective();
+										if(isIntroOpened){
+											PlatformUtil.openIntro();
+										}else{
+											PlatformUtil.closeIntro();
+										}
 									}
 								});
 								return Status.OK_STATUS;
