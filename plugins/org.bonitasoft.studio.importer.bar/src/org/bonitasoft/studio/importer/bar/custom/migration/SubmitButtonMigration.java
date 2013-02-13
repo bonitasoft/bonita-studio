@@ -45,7 +45,7 @@ public class SubmitButtonMigration extends ReportCustomMigration {
 			if(!(button.getContainer().instanceOf("expression.Expression"))){
 				final List<Instance> actions = button.get("scripts");
 				if(!actions.isEmpty()){
-					final StringToExpressionConverter converter = getConverter(model);
+					final StringToExpressionConverter converter = getConverter(model,getScope(button));
 					final List<Instance> operations = new ArrayList<Instance>();
 					for(Instance action : actions){
 						final Instance operation = converter.parseOperation(action, String.class.getName(), false);

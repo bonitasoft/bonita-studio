@@ -62,7 +62,7 @@ public class PageFlowMigration extends ReportCustomMigration {
 			final List<Instance> actions = pageFlow.get("entryRedirectionActions");
 			List<Instance> operations = new ArrayList<Instance>();
 			for(Instance groovyScript : actions){
-				final StringToExpressionConverter converter = getConverter(model);
+				final StringToExpressionConverter converter = getConverter(model,getScope(pageFlow));
 				Instance operation = converter.parseOperation(groovyScript, String.class.getName(), true);
 				operations.add(operation);
 				model.delete(groovyScript);
@@ -119,7 +119,7 @@ public class PageFlowMigration extends ReportCustomMigration {
 	private void setPageFlowTransitionCondition(Instance pageFlowTransition,Model model) {
 		Instance expression = null; 
 		if(pageFlowTransitionConditions.containsKey(pageFlowTransition.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(pageFlowTransition));
 			final String url = pageFlowTransitionConditions.get(pageFlowTransition.getUuid());
 			expression = converter.parse(url, Boolean.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
@@ -145,7 +145,7 @@ public class PageFlowMigration extends ReportCustomMigration {
 	private void setRecapRedirectionURL(Instance pageFlow, Model model) {
 		Instance expression = null; 
 		if(recapRedirectionUrls.containsKey(pageFlow.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(pageFlow));
 			final String url = recapRedirectionUrls.get(pageFlow.getUuid());
 			expression = converter.parse(url, String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
@@ -161,7 +161,7 @@ public class PageFlowMigration extends ReportCustomMigration {
 	private void setViewRedirectionURL(Instance pageFlow, Model model) {
 		Instance expression = null; 
 		if(viewRedirectionUrls.containsKey(pageFlow.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(pageFlow));
 			final String url = viewRedirectionUrls.get(pageFlow.getUuid());
 			expression = converter.parse(url, String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
@@ -187,7 +187,7 @@ public class PageFlowMigration extends ReportCustomMigration {
 	private void setEntryRedirectionURL(Instance pageFlow, Model model) {
 		Instance expression = null; 
 		if(entryRedirectionUrls.containsKey(pageFlow.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(pageFlow));
 			final String url = entryRedirectionUrls.get(pageFlow.getUuid());
 			expression = converter.parse(url, String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
@@ -203,7 +203,7 @@ public class PageFlowMigration extends ReportCustomMigration {
 	private void setConfirmationMessage(Instance pageFlow, Model model) {
 		Instance expression = null; 
 		if(confirmationMessages.containsKey(pageFlow.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(pageFlow));
 			final String confirmationMessage = confirmationMessages.get(pageFlow.getUuid());
 			expression = converter.parse(confirmationMessage, String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){

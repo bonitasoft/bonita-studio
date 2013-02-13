@@ -111,7 +111,7 @@ public class ValidatorMigration extends ReportCustomMigration {
 	private void setParameter(Instance validator, Model model) {
 		Instance expression = null;
 		if(validatorParameters.containsKey(validator.getUuid())){
-			expression = getConverter(model).parse(validatorParameters.get(validator.getUuid()), String.class.getName(), false);
+			expression = getConverter(model,getScope(validator)).parse(validatorParameters.get(validator.getUuid()), String.class.getName(), false);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "parameterScript");
 			}
@@ -125,7 +125,7 @@ public class ValidatorMigration extends ReportCustomMigration {
 	private void setDisplayName(Instance validator, Model model) {
 		Instance expression = null;
 		if(validatorLabels.containsKey(validator.getUuid())){
-			expression = getConverter(model).parse(validatorLabels.get(validator.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(validator)).parse(validatorLabels.get(validator.getUuid()), String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "errorMessageScript");
 			}

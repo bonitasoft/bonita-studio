@@ -36,7 +36,7 @@ public class CorrelationMigration extends ReportCustomMigration {
 				final String correlationExpression = association.get("correlationExpression");
 				if(correlationKey != null || correlationExpression != null){
 					final Instance rowInstance = model.newInstance("expression.ListExpression");
-					final StringToExpressionConverter converter = getConverter(model);
+					final StringToExpressionConverter converter = getConverter(model,getScope(correlationInstance));
 					Instance keyExpression = null ; 
 					if(correlationKey != null && !correlationKey.isEmpty()){
 						keyExpression = converter.parse(correlationKey, String.class.getName(), true);

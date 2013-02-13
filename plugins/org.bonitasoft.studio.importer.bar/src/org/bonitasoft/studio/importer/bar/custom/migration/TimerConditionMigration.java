@@ -53,7 +53,7 @@ public class TimerConditionMigration extends ReportCustomMigration {
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance timer : model.getAllInstances("process.AbstractTimerEvent")){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(timer));
 			final String uuid = timer.getUuid();
 			final String timerCondition = timerConditions.get(uuid);
 			Instance expression = null;

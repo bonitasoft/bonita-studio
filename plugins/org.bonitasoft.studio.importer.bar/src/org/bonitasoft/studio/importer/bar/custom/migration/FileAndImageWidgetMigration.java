@@ -145,7 +145,7 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 				}
 				expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
 			}else{
-				expression = getConverter(model).parse(imgPath, String.class.getName(), true);
+				expression = getConverter(model,getScope(widget)).parse(imgPath, String.class.getName(), true);
 				if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 					expression.set("name", "initialValueScript");
 				}

@@ -141,7 +141,7 @@ public class TabeMigration extends ReportCustomMigration {
 				if(!row.isEmpty()){
 					Instance listExpression = model.newInstance("expression.ListExpression");
 					for(String value : row){
-						final Instance expression = getConverter(model).parse(value, String.class.getName(), false);
+						final Instance expression = getConverter(model,getScope(widget)).parse(value, String.class.getName(), false);
 						if(ExpressionConstants.VARIABLE_TYPE.equals(expression.get("type"))){
 							expression.set("returnType",StringToExpressionConverter.getDataReturnType(((List<Instance>) expression.get("referencedElements")).get(0)));
 						}else if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
@@ -206,7 +206,7 @@ public class TabeMigration extends ReportCustomMigration {
 	private void setMinNumberOfRows(Instance widget, Model model) {
 		Instance expression = null ;
 		if(minNumberOfRows.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(minNumberOfRows.get(widget.getUuid()), Integer.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(minNumberOfRows.get(widget.getUuid()), Integer.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "minRowScript");
 			}
@@ -220,7 +220,7 @@ public class TabeMigration extends ReportCustomMigration {
 	private void setMaxNumberOfRows(Instance widget, Model model) {
 		Instance expression = null ;
 		if(maxNumberOfRows.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(maxNumberOfRows.get(widget.getUuid()), Integer.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(maxNumberOfRows.get(widget.getUuid()), Integer.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "maxRowScript");
 			}
@@ -234,7 +234,7 @@ public class TabeMigration extends ReportCustomMigration {
 	private void setMinNumberOfColumns(Instance widget, Model model) {
 		Instance expression = null ;
 		if(minNumberOfColumns.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(minNumberOfColumns.get(widget.getUuid()), Integer.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(minNumberOfColumns.get(widget.getUuid()), Integer.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "minColumnScript");
 			}
@@ -248,7 +248,7 @@ public class TabeMigration extends ReportCustomMigration {
 	private void setMaxNumberOfColumns(Instance widget, Model model) {
 		Instance expression = null ;
 		if(maxNumberOfColumns.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(maxNumberOfColumns.get(widget.getUuid()), Integer.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(maxNumberOfColumns.get(widget.getUuid()), Integer.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "maxColumnScript");
 			}
@@ -262,7 +262,7 @@ public class TabeMigration extends ReportCustomMigration {
 	private void setMaxRowForPaginations(Instance widget, Model model) {
 		Instance expression = null ;
 		if(maxRowForPaginations.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(maxRowForPaginations.get(widget.getUuid()), Integer.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(maxRowForPaginations.get(widget.getUuid()), Integer.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "maxRowScript");
 			}
@@ -276,7 +276,7 @@ public class TabeMigration extends ReportCustomMigration {
 	private void setColumnForInitialIndexes(Instance widget, Model model) {
 		Instance expression = null ;
 		if(columnForInitialIndexes.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(columnForInitialIndexes.get(widget.getUuid()), Integer.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(columnForInitialIndexes.get(widget.getUuid()), Integer.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "columnForInitialSelectionIndexScript");
 			}
@@ -290,7 +290,7 @@ public class TabeMigration extends ReportCustomMigration {
 	private void setSelectedValues(Instance widget, Model model) {
 		Instance expression = null ;
 		if(selectedValues.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(selectedValues.get(widget.getUuid()), List.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(selectedValues.get(widget.getUuid()), List.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "selectedValuesScript");
 			}
@@ -313,7 +313,7 @@ public class TabeMigration extends ReportCustomMigration {
 	private void setVerticalHeaders(Instance widget, Model model) {
 		Instance expression = null ;
 		if(verticalHeaders.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(verticalHeaders.get(widget.getUuid()), List.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(verticalHeaders.get(widget.getUuid()), List.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "verticalHeaderScript");
 			}
@@ -327,7 +327,7 @@ public class TabeMigration extends ReportCustomMigration {
 	private void setHorizontalHeaders(Instance widget, Model model) {
 		Instance expression = null ;
 		if(horizontalHeaders.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(horizontalHeaders.get(widget.getUuid()), List.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(horizontalHeaders.get(widget.getUuid()), List.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "horizontalHeaderScript");
 			}

@@ -56,7 +56,7 @@ public class DataDefaultValueMigeation extends ReportCustomMigration {
 			throws MigrationException {
 		for(Instance data : model.getAllInstances("process.Data")){
 			if(!data.instanceOf("process.AttachmentData")){
-				final StringToExpressionConverter converter = getConverter(model);
+				final StringToExpressionConverter converter = getConverter(model,getScope(data));
 				final String uuid = data.getUuid();
 				final String defaultValue = dataDefaultValue.get(uuid);
 				Instance expression = null;

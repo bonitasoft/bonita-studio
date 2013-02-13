@@ -76,7 +76,7 @@ public class MandatoryFieldsMigration extends ReportCustomMigration {
 	private void setMandatorySymbols(Instance widget, Model model) {
 		Instance expression = null ;
 		if(mandatorySymbols.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(mandatorySymbols.get(widget.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(mandatorySymbols.get(widget.getUuid()), String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "mandatorySymbolScript");
 			}
@@ -90,7 +90,7 @@ public class MandatoryFieldsMigration extends ReportCustomMigration {
 	private void setMandatoryLabels(Instance widget, Model model) {
 		Instance expression = null ;
 		if(mandatoryLabels.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(mandatoryLabels.get(widget.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(mandatoryLabels.get(widget.getUuid()), String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "mandatoryLabelScript");
 			}

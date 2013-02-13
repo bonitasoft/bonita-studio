@@ -23,6 +23,7 @@ import org.bonitasoft.studio.migration.model.report.Change;
 import org.bonitasoft.studio.migration.model.report.MigrationReportFactory;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.eclipse.emf.edapt.migration.CustomMigration;
+import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Model;
 
 /**
@@ -50,7 +51,20 @@ public abstract class ReportCustomMigration extends CustomMigration implements I
 		return changes;
 	}
 	
-	public StringToExpressionConverter getConverter(Model model) {
-		return new StringToExpressionConverter(model);
+	public StringToExpressionConverter getConverter(Model model,Instance container) {
+		return new StringToExpressionConverter(model,container);
+	}
+	
+	/**
+	 * 
+	 * @param element
+	 * @return the parent process instance
+	 */
+	protected Instance getScope(Instance element){
+		Instance container = element;
+		while(container != null && !container.instanceOf("process.AbstractProcess")){
+			container = container.getContainer();
+		}
+		return container;
 	}
 }

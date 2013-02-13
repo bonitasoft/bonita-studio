@@ -89,7 +89,7 @@ ReportCustomMigration {
 	private void setLoopMaximum(Instance activity,Model model) {
 		Instance expression = null; 
 		if(loopMaximums.containsKey(activity.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(activity));
 			final String maximum = loopMaximums.get(activity.getUuid());
 			expression = converter.parse(maximum, Integer.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
@@ -105,7 +105,7 @@ ReportCustomMigration {
 	private void setLoopCondition(Instance activity,Model model) {
 		Instance expression = null; 
 		if(loopConditions.containsKey(activity.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(activity));
 			String condition = loopConditions.get(activity.getUuid());
 			condition = "${" + condition + "}";
 			expression = converter.parse(condition, Boolean.class.getName(), true);

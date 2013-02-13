@@ -97,7 +97,7 @@ public class FormFieldMigration extends ReportCustomMigration {
 	private void setExampleMessage(Model model, Instance widget) {
 		Instance expression = null;
 		if(exampleScripts.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(exampleScripts.get(widget.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(exampleScripts.get(widget.getUuid()), String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "exampleScript");
 			}
@@ -111,7 +111,7 @@ public class FormFieldMigration extends ReportCustomMigration {
 	private void setDefaultValue(Model model, Instance widget) {
 		Instance expression = null;
 		if(defaultValueScripts.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(defaultValueScripts.get(widget.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(defaultValueScripts.get(widget.getUuid()), String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "initialValueScript");
 			}
@@ -125,7 +125,7 @@ public class FormFieldMigration extends ReportCustomMigration {
 	private void setDefaultValueAfterEvent(Model model, Instance widget) {
 		Instance expression = null;
 		if(defaultValueAfterEventScripts.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(defaultValueAfterEventScripts.get(widget.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(defaultValueAfterEventScripts.get(widget.getUuid()), String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "updateSelectedValueScript");
 			}

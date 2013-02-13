@@ -74,7 +74,7 @@ public class PortalLabelsMigration extends ReportCustomMigration {
 	private void setDynamicLabel(Instance flowElement,Model model) {
 		Instance expression = null; 
 		if(dynamicLabel.containsKey(flowElement.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(flowElement));
 			final String condition = dynamicLabel.get(flowElement.getUuid());
 			expression = converter.parse(condition, String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
@@ -90,7 +90,7 @@ public class PortalLabelsMigration extends ReportCustomMigration {
 	private void setDynamicDescription(Instance flowElement,Model model) {
 		Instance expression = null; 
 		if(dynamicDescription.containsKey(flowElement.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(flowElement));
 			final String condition = dynamicDescription.get(flowElement.getUuid());
 			expression = converter.parse(condition, String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
@@ -106,7 +106,7 @@ public class PortalLabelsMigration extends ReportCustomMigration {
 	private void setStepSummary(Instance flowElement,Model model) {
 		Instance expression = null; 
 		if(stepSummary.containsKey(flowElement.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(flowElement));
 			final String condition = stepSummary.get(flowElement.getUuid());
 			expression = converter.parse(condition, String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){

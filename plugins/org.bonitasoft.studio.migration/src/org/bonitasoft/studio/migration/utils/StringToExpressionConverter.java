@@ -41,15 +41,28 @@ public class StringToExpressionConverter {
 	private Map<String,Instance> widget = new HashMap<String, Instance>();
 	private boolean useSimulationDataScope = false;
 
-	public StringToExpressionConverter(Model model) {
+	public StringToExpressionConverter(Model model, Instance container) {
 		Assert.isNotNull(model);
 		this.model = model ;
 		for(Instance data : model.getAllInstances("process.Data")){
-			this.data.put((String) data.get("name"),data);
+			if(isInScope(container,data) && data.get("dataType") != null){
+				this.data.put((String) data.get("name"),data);
+			}
 		}
 		for(Instance widget : model.getAllInstances("form.Widget")){
-			this.widget.put(FORM_FIELD_PREFIX+widget.get("name"),widget);
+			if(isInScope(container,widget)){
+				this.widget.put(FORM_FIELD_PREFIX+widget.get("name"),widget);
+			}
 		}
+	}
+
+
+	public static boolean isInScope(Instance container, Instance element) {
+		Instance current=element;
+		while(current!= null && !container.equals(current.getContainer())){
+			current = current.getContainer();
+		}
+		return current != null && container.equals(current.getContainer());
 	}
 
 

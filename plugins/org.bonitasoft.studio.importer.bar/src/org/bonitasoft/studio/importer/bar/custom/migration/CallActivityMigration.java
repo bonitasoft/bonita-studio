@@ -51,7 +51,7 @@ public class CallActivityMigration extends ReportCustomMigration {
             String subprocessName = callActivity.get("subprocessName");
             String subprocessVersion = callActivity.get("subprocessVersion");
 
-           final StringToExpressionConverter converter = getConverter(model);
+           final StringToExpressionConverter converter = getConverter(model,getScope(callActivity));
            final Instance nameExp = converter.parse(subprocessName,String.class.getName(),true);
         
             callActivity.set("calledActivityName", nameExp);

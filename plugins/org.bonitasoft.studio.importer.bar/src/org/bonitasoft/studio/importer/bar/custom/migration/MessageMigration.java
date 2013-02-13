@@ -98,7 +98,7 @@ public class MessageMigration extends ReportCustomMigration {
 	private void setTargetProcessExpression(Instance message, Model model) {
 		Instance expression = null; 
 		if(targetProcessNameConditions.containsKey(message.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(message));
 			final String script = targetProcessNameConditions.get(message.getUuid());
 			expression = converter.parse(script, String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
@@ -116,7 +116,7 @@ public class MessageMigration extends ReportCustomMigration {
 	private void setTargetElementExpression(Instance message, Model model) {
 		Instance expression = null; 
 		if(targetElementNameConditions.containsKey(message.getUuid())){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(message));
 			final String url = targetElementNameConditions.get(message.getUuid());
 			expression = converter.parse(url, String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){

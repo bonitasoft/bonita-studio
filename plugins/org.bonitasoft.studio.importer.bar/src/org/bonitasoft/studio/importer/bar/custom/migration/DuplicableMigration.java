@@ -118,7 +118,7 @@ public class DuplicableMigration extends ReportCustomMigration {
 	private void setMaxNumberOfDuplications(Instance widget, Model model) {
 		Instance expression = null ;
 		if(maxNumberOfDuplications.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(maxNumberOfDuplications.get(widget.getUuid()), Integer.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(maxNumberOfDuplications.get(widget.getUuid()), Integer.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "maxNumberScript");
 			}
@@ -132,7 +132,7 @@ public class DuplicableMigration extends ReportCustomMigration {
 	private void setMinNumberOfDuplications(Instance widget, Model model) {
 		Instance expression = null ;
 		if(minNumberOfDuplications.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(minNumberOfDuplications.get(widget.getUuid()), Integer.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(minNumberOfDuplications.get(widget.getUuid()), Integer.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "minNumberScript");
 			}
@@ -146,7 +146,7 @@ public class DuplicableMigration extends ReportCustomMigration {
 	private void setDisplayLabelForAdds(Instance widget, Model model) {
 		Instance expression = null ;
 		if(displayLabelForAdds.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(displayLabelForAdds.get(widget.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(displayLabelForAdds.get(widget.getUuid()), String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "labelForAddScript");
 			}
@@ -160,7 +160,7 @@ public class DuplicableMigration extends ReportCustomMigration {
 	private void setDisplayLabelForRemoves(Instance widget, Model model) {
 		Instance expression = null ;
 		if(displayLabelForRemoves.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(displayLabelForRemoves.get(widget.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(displayLabelForRemoves.get(widget.getUuid()), String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "labelForRemoveScript");
 			}
@@ -174,7 +174,7 @@ public class DuplicableMigration extends ReportCustomMigration {
 	private void setTooltipForAdds(Instance widget, Model model) {
 		Instance expression = null ;
 		if(tooltipForAdds.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(tooltipForAdds.get(widget.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(tooltipForAdds.get(widget.getUuid()), String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "tooltipForAddScript");
 			}
@@ -188,7 +188,7 @@ public class DuplicableMigration extends ReportCustomMigration {
 	private void setTooltipForRemoves(Instance widget, Model model) {
 		Instance expression = null ;
 		if(tooltipForRemoves.containsKey(widget.getUuid())){
-			expression = getConverter(model).parse(tooltipForRemoves.get(widget.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(tooltipForRemoves.get(widget.getUuid()), String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "tooltipForRemoveScript");
 			}

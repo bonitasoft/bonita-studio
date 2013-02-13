@@ -54,7 +54,7 @@ public class SequenceFlowConditionMigration extends ReportCustomMigration {
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance sequenceFlow : model.getAllInstances("process.SequenceFlow")){
-			final StringToExpressionConverter converter = getConverter(model);
+			final StringToExpressionConverter converter = getConverter(model,getScope(sequenceFlow));
 			final String uuid = sequenceFlow.getUuid();
 			String condition = sequenceFlowConditions.get(uuid);
 			Instance expression = null;

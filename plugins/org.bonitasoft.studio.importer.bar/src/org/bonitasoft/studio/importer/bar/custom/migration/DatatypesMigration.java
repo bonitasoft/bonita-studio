@@ -70,22 +70,22 @@ public class DatatypesMigration extends ReportCustomMigration {
 		Instance doubleDataType = null;
 		for (Instance mainProcess : model.getAllInstances("process.MainProcess")) {
 			List<Object> datatypes = mainProcess.get("datatypes");
-			doubleDataType = model.newInstance("process.DoubleType");
-			doubleDataType.set("name", DataTypeLabels.doubleDataType);
-			datatypes.add(doubleDataType);
+//			doubleDataType = model.newInstance("process.DoubleType");
+//			doubleDataType.set("name", DataTypeLabels.doubleDataType);
+//			datatypes.add(doubleDataType);
 			Instance longDataType = model.newInstance("process.LongType");
 			longDataType.set("name", DataTypeLabels.longDataType);
 			datatypes.add(longDataType);
 		}
 
 
-
-		for (Instance data : model.getAllInstances("process.Data")) {
-			Instance datatype = data.get("dataType");
-			if(datatype != null && datatype.instanceOf("process.FloatType")){
-				data.set("dataType", doubleDataType);
-			}   
-		}
+//
+//		for (Instance data : model.getAllInstances("process.Data")) {
+//			Instance datatype = data.get("dataType");
+//			if(datatype != null && datatype.instanceOf("process.FloatType")){
+//				data.set("dataType", doubleDataType);
+//			}   
+//		}
 
 		for (Instance mainProcess : model.getAllInstances("process.MainProcess")) {
 			Instance floatTypeInstance = null;
@@ -95,7 +95,7 @@ public class DatatypesMigration extends ReportCustomMigration {
 					floatTypeInstance = (Instance) datatype;
 				}
 			}
-			model.delete(floatTypeInstance);
+			floatTypeInstance.migrate("process.DoubleType");
 		}
 	}
 

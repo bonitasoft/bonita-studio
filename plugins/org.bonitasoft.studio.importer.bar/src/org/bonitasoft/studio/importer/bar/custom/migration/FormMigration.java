@@ -44,7 +44,7 @@ public class FormMigration extends ReportCustomMigration {
 		for(Instance form : model.getAllInstances("form.Form")){
 			final List<Instance> actions = form.get("scripts");
 			if(!actions.isEmpty()){
-				final StringToExpressionConverter converter = getConverter(model);
+				final StringToExpressionConverter converter = getConverter(model,getScope(form));
 				final List<Instance> operations = new ArrayList<Instance>();
 				for(Instance action : actions){
 					final Instance operation = converter.parseOperation(action, String.class.getName(), false);

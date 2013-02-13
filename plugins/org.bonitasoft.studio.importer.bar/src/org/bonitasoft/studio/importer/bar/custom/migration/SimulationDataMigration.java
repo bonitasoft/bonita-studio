@@ -70,7 +70,7 @@ public class SimulationDataMigration extends ReportCustomMigration {
 	private void setExpressions(Instance data, Model model) {
 		Instance expression = null ;
 		if(expressions.containsKey(data.getUuid())){
-			expression = getConverter(model).parse(expressions.get(data.getUuid()), String.class.getName(), false);
+			expression = getConverter(model,getScope(data)).parse(expressions.get(data.getUuid()), String.class.getName(), false);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "expressionScript");
 			}
@@ -84,7 +84,7 @@ public class SimulationDataMigration extends ReportCustomMigration {
 	private void setValues(Instance widget, Model model) {
 		Instance expression = null ;
 		if(values.containsKey(widget.getUuid())){
-			StringToExpressionConverter converter = getConverter(model);
+			StringToExpressionConverter converter = getConverter(model,getScope(widget));
 			converter.setUseSimulationDataScope(true);
 			expression = converter.parse(values.get(widget.getUuid()), String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
