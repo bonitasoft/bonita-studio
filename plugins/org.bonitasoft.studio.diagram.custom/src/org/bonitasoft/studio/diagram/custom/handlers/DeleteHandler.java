@@ -22,29 +22,39 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.EventSubProcessPool;
+import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
+import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.common.ui.URIEditorInput;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
+import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
 /**
  * @author Aurelien Pupier
@@ -69,6 +79,12 @@ public class DeleteHandler extends AbstractHandler {
 					}
 					if(((IGraphicalEditPart) item).resolveSemanticElement() instanceof Lane){
 						lanes.add((Lane) ((IGraphicalEditPart) item).resolveSemanticElement()) ;
+					}
+					if (((IGraphicalEditPart) item).resolveSemanticElement() instanceof PageFlow) {
+
+						PageFlow element = (PageFlow)((IGraphicalEditPart) item).resolveSemanticElement();
+						List<Form> forms =element.getForm();
+						closeFormsRelatedToDiagramElement(forms);
 					}
 					if(item instanceof ShapeCompartmentEditPart){
 						newSelection.add((IGraphicalEditPart) ((IGraphicalEditPart) item).getParent()) ;
@@ -102,6 +118,22 @@ public class DeleteHandler extends AbstractHandler {
 				cc.append(SetCommand.create(domain, task, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE, true)) ;
 			}
 			domain.getCommandStack().execute(cc) ;
+		}
+	}
+	
+	private void closeFormsRelatedToDiagramElement(List<Form> forms){
+		for (Form form:forms){
+			URI uri = EcoreUtil.getURI(form);
+			List<IEditorPart> editors =(List<IEditorPart>)EditorService.getInstance().getRegisteredEditorParts();
+			for (IEditorPart editor:editors){
+				if (editor instanceof FormDiagramEditor){
+					FormDiagramEditor formEditor = (FormDiagramEditor)editor;
+					Form availableform= (Form)formEditor.getDiagramEditPart().resolveSemanticElement();
+					if (availableform.equals(form)){
+						((FormDiagramEditor) editor).close(false);
+					}
+				}
+			}
 		}
 	}
 
