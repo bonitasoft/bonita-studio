@@ -232,7 +232,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
                     testReport.append("Connector definition not found for implementation "+resourceName);
                 }
 
-                if(implementation.getJarDependencies().getJarDependency().isEmpty()){
+                if(implementation.getJarDependencies() == null || implementation.getJarDependencies().getJarDependency().isEmpty()){
                     testReport.append("\n");
                     testReport.append("Missing jar dependencies for "+resourceName);
                 }
