@@ -185,22 +185,23 @@ public class DeployProcessOperation  {
         ProcessDefinition def = null ;
         try {
             def = processApi.deploy(bar) ;
+           
         }  catch (ProcessDeployException e) {
             if(process != null){
                 BonitaStudioLog.log("Error when trying to deploy the process named: "+ process.getName());
                 BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
             }
             StringBuilder sb = new StringBuilder();
-            final List<BonitaException> exceptions = e.getExceptions();
-            if(exceptions != null){
-                for(BonitaException ex : exceptions){
-                    sb.append(ex.getMessage());
-                    sb.append("\n");
-                }
-                return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, sb.toString(),e);
-            }else{
+//            final List<BonitaException> exceptions = e.getExceptions();
+//            if(exceptions != null){
+//                for(BonitaException ex : exceptions){
+//                    sb.append(ex.getMessage());
+//                    sb.append("\n");
+//                }
+//                return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, sb.toString(),e);
+//            }else{
                 return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(),e);
-            }
+//            }
         } catch (Exception e1){
             if(process != null){
                 BonitaStudioLog.error("Error when trying to deploy the process named: "+ process.getName(),EnginePlugin.PLUGIN_ID);
