@@ -243,6 +243,7 @@ public class OperationsComposite extends Composite {
 
 		UpdateValueStrategy actionExpressionUpdateStrategy = null;
 		if (operationReturnTypeValidator != null) {
+			operationReturnTypeValidator.setDataExpression((Expression) ((IStructuredSelection) storageComboViewer.getSelection()).getFirstElement());
 			final IStatus status = operationReturnTypeValidator.validate(action.getRightOperand());
 			actionExpression.setMessage(status.getMessage(),status.getSeverity());
 			actionExpressionUpdateStrategy = new UpdateValueStrategy();
