@@ -939,14 +939,15 @@ public class BPMNToProc extends ToProcProcessor {
                 TSequenceFlow sequenceFlow = (TSequenceFlow) flowElement;
 
                 /* Search the graphical BPMNEdge */
-                BPMNEdge edge = getBPMNEdgeFor(sequenceFlow.getId());
+                final String sequenceFlowID = sequenceFlow.getId();
+				BPMNEdge edge = getBPMNEdgeFor(sequenceFlowID);
                 PointList bendpoints = new PointList();
                 if (edge != null) {
                     /* Convert WayPoints to PointList */
                     EList<org.omg.spec.dd.dc.Point> wayPoints = edge
                             .getWaypoint();
                     Point containerLocation = getContainerLocationFor(
-                            sequenceFlow.getId()).getNegated();
+                            sequenceFlowID).getNegated();
                     for (int i = 0; i < wayPoints.size(); i++) {
                         org.omg.spec.dd.dc.Point ddp = wayPoints.get(i);
                         bendpoints.insertPoint(new Point((int) ddp.getX(),
@@ -967,19 +968,19 @@ public class BPMNToProc extends ToProcProcessor {
                                 .getFlowElement()) {
                             if (sourceRef.equals(tFlowElement.getId())) {
                                 if (tFlowElement instanceof TInclusiveGateway) {
-                                    if (sequenceFlow.getId().equals(
+                                    if (sequenceFlowID.equals(
                                             ((TInclusiveGateway) tFlowElement)
                                             .getDefault())) {
                                         isDefault = true;
                                     }
                                 } else if (tFlowElement instanceof TExclusiveGateway) {
-                                    if (sequenceFlow.getId().equals(
+                                    if (sequenceFlowID.equals(
                                             ((TExclusiveGateway) tFlowElement)
                                             .getDefault())) {
                                         isDefault = true;
                                     }
                                 } else if (tFlowElement instanceof TComplexGateway) {
-                                    if (sequenceFlow.getId().equals(
+                                    if (sequenceFlowID.equals(
                                             ((TComplexGateway) tFlowElement)
                                             .getDefault())) {
                                         isDefault = true;
