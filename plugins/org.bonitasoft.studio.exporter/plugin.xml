@@ -69,6 +69,7 @@
       <menuContribution
             locationURI="menu:org.bonitasoft.studio.processusMenu?after=org.bonitasoft.studio.application.separator5">
          <menu
+               id="org.bonitasoft.studio.exporter.exportAs"
                label="%exportAs">
             <dynamic
                   class="org.bonitasoft.studio.exporter.extension.ExporterFactoryContributions"
