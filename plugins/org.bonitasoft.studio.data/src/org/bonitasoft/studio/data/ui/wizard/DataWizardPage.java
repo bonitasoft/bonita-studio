@@ -163,6 +163,8 @@ public class DataWizardPage extends WizardPage {
     private Text classText;
     private IViewerObservableValue observeSingleSelectionTypeCombo;
     private IViewerObservableValue observeSingleSelectionDefaultValueExpression;
+    private Object oldTypeObservableValue = null;
+    final private String multipleReturnType = List.class.getName();
 
     private final ViewerFilter typeViewerFilter = new ViewerFilter() {
 
@@ -368,7 +370,7 @@ public class DataWizardPage extends WizardPage {
                     final String returnType = (String) returnTypeObservable.getValue();
                     boolean isMultiple =  (Boolean) multipleObservable.getValue();
                     if(isMultiple){
-                        if(returnType != null && !returnType.isEmpty() && !isReturnTypeCompatible(Collection.class.getName(), returnType)){
+                        if(returnType != null && !returnType.isEmpty() && !isReturnTypeCompatible(multipleReturnType, returnType)){
                             return ValidationStatus.error(Messages.dataWizardPageReturnTypeNotCorresponding);
                         }
                         return ValidationStatus.ok();
@@ -448,9 +450,11 @@ public class DataWizardPage extends WizardPage {
             @Override
             public Object convert(Object input) {
                 if((Boolean)input){
+                	oldTypeObservableValue = typeObservable.getValue();
                     typeObservable.setValue(ExpressionConstants.SCRIPT_TYPE);
-                    return List.class.getName();
+                    return multipleReturnType;
                 }else{
+                	typeObservable.setValue(oldTypeObservableValue);
                     return getSelectedReturnType();
                 }
             }
@@ -578,7 +582,7 @@ public class DataWizardPage extends WizardPage {
 
     private String getSelectedReturnType() {
         if(data.isMultiple()){
-            return Collection.class.getName();
+            return multipleReturnType;
         }
         IViewerObservableValue selectedType = ViewersObservables.observeSingleSelection(typeCombo);
         DataType type = (DataType) selectedType.getValue();
