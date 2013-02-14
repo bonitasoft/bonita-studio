@@ -1449,11 +1449,11 @@ rule__Operation_Equals__Group__2__Impl
     }
 :
 (
-{ before(grammarAccess.getOperation_EqualsAccess().getEqualsSignKeyword_2()); }
+{ before(grammarAccess.getOperation_EqualsAccess().getEqualsSignEqualsSignKeyword_2()); }
 
-	'=' 
+	'==' 
 
-{ after(grammarAccess.getOperation_EqualsAccess().getEqualsSignKeyword_2()); }
+{ after(grammarAccess.getOperation_EqualsAccess().getEqualsSignEqualsSignKeyword_2()); }
 )
 
 ;

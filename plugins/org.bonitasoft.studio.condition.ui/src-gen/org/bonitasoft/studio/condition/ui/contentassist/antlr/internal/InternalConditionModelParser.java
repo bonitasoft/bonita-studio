@@ -22,7 +22,7 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalConditionModelParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_DOUBLE", "RULE_LONG", "RULE_STRING", "RULE_ID", "RULE_BOOLEAN", "RULE_WS", "RULE_DATE", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_ANY_OTHER", "'<='", "'<'", "'>='", "'>'", "'!='", "'='", "'!'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_DOUBLE", "RULE_LONG", "RULE_STRING", "RULE_ID", "RULE_BOOLEAN", "RULE_WS", "RULE_DATE", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_ANY_OTHER", "'<='", "'<'", "'>='", "'>'", "'!='", "'=='", "'!'"
     };
     public static final int RULE_BOOLEAN=8;
     public static final int RULE_ID=7;
@@ -3871,21 +3871,21 @@ public class InternalConditionModelParser extends AbstractInternalContentAssistP
 
 
     // $ANTLR start "rule__Operation_Equals__Group__2__Impl"
-    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1446:1: rule__Operation_Equals__Group__2__Impl : ( '=' ) ;
+    // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1446:1: rule__Operation_Equals__Group__2__Impl : ( '==' ) ;
     public final void rule__Operation_Equals__Group__2__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1450:1: ( ( '=' ) )
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1451:1: ( '=' )
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1450:1: ( ( '==' ) )
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1451:1: ( '==' )
             {
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1451:1: ( '=' )
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1452:1: '='
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1451:1: ( '==' )
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:1452:1: '=='
             {
-             before(grammarAccess.getOperation_EqualsAccess().getEqualsSignKeyword_2()); 
+             before(grammarAccess.getOperation_EqualsAccess().getEqualsSignEqualsSignKeyword_2()); 
             match(input,20,FOLLOW_20_in_rule__Operation_Equals__Group__2__Impl2926); 
-             after(grammarAccess.getOperation_EqualsAccess().getEqualsSignKeyword_2()); 
+             after(grammarAccess.getOperation_EqualsAccess().getEqualsSignEqualsSignKeyword_2()); 
 
             }
 

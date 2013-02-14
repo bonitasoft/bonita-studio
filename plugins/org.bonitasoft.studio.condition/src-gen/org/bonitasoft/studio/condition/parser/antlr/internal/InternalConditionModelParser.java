@@ -21,7 +21,7 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalConditionModelParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_DOUBLE", "RULE_LONG", "RULE_STRING", "RULE_ID", "RULE_BOOLEAN", "RULE_WS", "RULE_DATE", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_ANY_OTHER", "'<='", "'<'", "'>='", "'>'", "'!='", "'='", "'!'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_DOUBLE", "RULE_LONG", "RULE_STRING", "RULE_ID", "RULE_BOOLEAN", "RULE_WS", "RULE_DATE", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_ANY_OTHER", "'<='", "'<'", "'>='", "'>'", "'!='", "'=='", "'!'"
     };
     public static final int RULE_BOOLEAN=8;
     public static final int RULE_ID=7;
@@ -1457,7 +1457,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleOperation_Equals"
-    // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:594:1: ruleOperation_Equals returns [EObject current=null] : ( () ( (lv_left_1_0= ruleExpression_Terminal ) ) otherlv_2= '=' ( (lv_right_3_0= ruleExpression_Terminal ) ) ) ;
+    // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:594:1: ruleOperation_Equals returns [EObject current=null] : ( () ( (lv_left_1_0= ruleExpression_Terminal ) ) otherlv_2= '==' ( (lv_right_3_0= ruleExpression_Terminal ) ) ) ;
     public final EObject ruleOperation_Equals() throws RecognitionException {
         EObject current = null;
 
@@ -1470,11 +1470,11 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:597:28: ( ( () ( (lv_left_1_0= ruleExpression_Terminal ) ) otherlv_2= '=' ( (lv_right_3_0= ruleExpression_Terminal ) ) ) )
-            // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:598:1: ( () ( (lv_left_1_0= ruleExpression_Terminal ) ) otherlv_2= '=' ( (lv_right_3_0= ruleExpression_Terminal ) ) )
+            // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:597:28: ( ( () ( (lv_left_1_0= ruleExpression_Terminal ) ) otherlv_2= '==' ( (lv_right_3_0= ruleExpression_Terminal ) ) ) )
+            // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:598:1: ( () ( (lv_left_1_0= ruleExpression_Terminal ) ) otherlv_2= '==' ( (lv_right_3_0= ruleExpression_Terminal ) ) )
             {
-            // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:598:1: ( () ( (lv_left_1_0= ruleExpression_Terminal ) ) otherlv_2= '=' ( (lv_right_3_0= ruleExpression_Terminal ) ) )
-            // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:598:2: () ( (lv_left_1_0= ruleExpression_Terminal ) ) otherlv_2= '=' ( (lv_right_3_0= ruleExpression_Terminal ) )
+            // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:598:1: ( () ( (lv_left_1_0= ruleExpression_Terminal ) ) otherlv_2= '==' ( (lv_right_3_0= ruleExpression_Terminal ) ) )
+            // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:598:2: () ( (lv_left_1_0= ruleExpression_Terminal ) ) otherlv_2= '==' ( (lv_right_3_0= ruleExpression_Terminal ) )
             {
             // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:598:2: ()
             // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:599:5: 
@@ -1520,7 +1520,7 @@ public class InternalConditionModelParser extends AbstractInternalAntlrParser {
 
             otherlv_2=(Token)match(input,20,FOLLOW_20_in_ruleOperation_Equals1293); 
 
-                	newLeafNode(otherlv_2, grammarAccess.getOperation_EqualsAccess().getEqualsSignKeyword_2());
+                	newLeafNode(otherlv_2, grammarAccess.getOperation_EqualsAccess().getEqualsSignEqualsSignKeyword_2());
                 
             // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:626:1: ( (lv_right_3_0= ruleExpression_Terminal ) )
             // ../org.bonitasoft.studio.condition/src-gen/org/bonitasoft/studio/condition/parser/antlr/internal/InternalConditionModel.g:627:1: (lv_right_3_0= ruleExpression_Terminal )

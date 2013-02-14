@@ -619,9 +619,9 @@ ruleOperation_Equals returns [EObject current=null]
 	    }
 
 )
-)	otherlv_2='=' 
+)	otherlv_2='==' 
     {
-    	newLeafNode(otherlv_2, grammarAccess.getOperation_EqualsAccess().getEqualsSignKeyword_2());
+    	newLeafNode(otherlv_2, grammarAccess.getOperation_EqualsAccess().getEqualsSignEqualsSignKeyword_2());
     }
 (
 (

@@ -45,7 +45,7 @@ Operation_Not_Equals returns Operation :
 
 Operation_Equals returns Operation :
 	{Operation_Equals}
-	left=(Expression_Terminal) '=' right=(Expression_Terminal)
+	left=(Expression_Terminal) '==' right=(Expression_Terminal)
 ;
 
 Operation_Unary returns Unary_Operation :

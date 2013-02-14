@@ -153,10 +153,11 @@ public class InternalConditionModelLexer extends Lexer {
         try {
             int _type = T__20;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:16:7: ( '=' )
-            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:16:9: '='
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:16:7: ( '==' )
+            // ../org.bonitasoft.studio.condition.ui/src-gen/org/bonitasoft/studio/condition/ui/contentassist/antlr/internal/InternalConditionModel.g:16:9: '=='
             {
-            match('='); 
+            match("=="); 
+
 
             }
 
@@ -1057,26 +1058,26 @@ public class InternalConditionModelLexer extends Lexer {
 
     protected DFA17 dfa17 = new DFA17(this);
     static final String DFA17_eotS =
-        "\1\uffff\1\21\1\23\1\25\2\uffff\2\31\2\17\1\37\1\17\1\uffff\2\17"+
-        "\11\uffff\1\31\1\uffff\1\31\3\uffff\1\37\1\uffff\1\37\4\uffff\2"+
-        "\31\1\51\2\uffff\1\54\1\31\1\uffff\1\54";
+        "\1\uffff\1\21\1\23\1\25\1\17\1\uffff\2\31\2\17\1\37\1\17\1\uffff"+
+        "\2\17\11\uffff\1\31\1\uffff\1\31\3\uffff\1\37\1\uffff\1\37\4\uffff"+
+        "\2\31\1\51\2\uffff\1\54\1\31\1\uffff\1\54";
     static final String DFA17_eofS =
         "\56\uffff";
     static final String DFA17_minS =
-        "\1\0\3\75\2\uffff\1\162\1\141\1\0\1\60\1\56\1\101\1\uffff\1\0\1"+
+        "\1\0\4\75\1\uffff\1\162\1\141\1\0\1\60\1\56\1\101\1\uffff\1\0\1"+
         "\52\11\uffff\1\165\1\uffff\1\154\2\0\1\uffff\1\56\1\uffff\1\56\4"+
         "\uffff\1\145\1\163\2\0\1\uffff\1\60\1\145\1\uffff\1\60";
     static final String DFA17_maxS =
-        "\1\uffff\3\75\2\uffff\1\162\1\141\1\uffff\2\71\1\172\1\uffff\1\uffff"+
+        "\1\uffff\4\75\1\uffff\1\162\1\141\1\uffff\2\71\1\172\1\uffff\1\uffff"+
         "\1\57\11\uffff\1\165\1\uffff\1\154\2\uffff\1\uffff\1\71\1\uffff"+
         "\1\71\4\uffff\1\145\1\163\2\uffff\1\uffff\1\172\1\145\1\uffff\1"+
         "\172";
     static final String DFA17_acceptS =
-        "\4\uffff\1\6\1\10\6\uffff\1\15\2\uffff\1\22\1\1\1\2\1\3\1\4\1\5"+
-        "\1\7\1\6\1\10\1\uffff\1\15\3\uffff\1\12\1\uffff\1\13\1\uffff\1\14"+
-        "\1\17\1\20\1\21\4\uffff\1\12\2\uffff\1\11\1\uffff";
+        "\5\uffff\1\10\6\uffff\1\15\2\uffff\1\22\1\1\1\2\1\3\1\4\1\5\1\7"+
+        "\1\6\1\10\1\uffff\1\15\3\uffff\1\12\1\uffff\1\13\1\uffff\1\14\1"+
+        "\17\1\20\1\21\4\uffff\1\12\2\uffff\1\11\1\uffff";
     static final String DFA17_specialS =
-        "\1\0\7\uffff\1\3\4\uffff\1\4\15\uffff\1\1\1\5\12\uffff\1\6\1\2\5"+
+        "\1\2\7\uffff\1\0\4\uffff\1\6\15\uffff\1\5\1\3\12\uffff\1\4\1\1\5"+
         "\uffff}>";
     static final String[] DFA17_transitionS = {
             "\11\17\2\5\2\17\1\5\22\17\1\5\1\3\1\15\4\17\1\10\5\17\1\11\1"+
@@ -1085,7 +1086,7 @@ public class InternalConditionModelLexer extends Lexer {
             "\1\20",
             "\1\22",
             "\1\24",
-            "",
+            "\1\26",
             "",
             "\1\30",
             "\1\32",
@@ -1167,6 +1168,32 @@ public class InternalConditionModelLexer extends Lexer {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
+                        int LA17_8 = input.LA(1);
+
+                        s = -1;
+                        if ( (LA17_8=='\\') ) {s = 27;}
+
+                        else if ( ((LA17_8>='\u0000' && LA17_8<='&')||(LA17_8>='(' && LA17_8<='[')||(LA17_8>=']' && LA17_8<='\uFFFF')) ) {s = 28;}
+
+                        else if ( (LA17_8=='\'') ) {s = 29;}
+
+                        else s = 15;
+
+                        if ( s>=0 ) return s;
+                        break;
+                    case 1 : 
+                        int LA17_40 = input.LA(1);
+
+                        s = -1;
+                        if ( (LA17_40=='\'') ) {s = 29;}
+
+                        else if ( (LA17_40=='\\') ) {s = 27;}
+
+                        else if ( ((LA17_40>='\u0000' && LA17_40<='&')||(LA17_40>='(' && LA17_40<='[')||(LA17_40>=']' && LA17_40<='\uFFFF')) ) {s = 28;}
+
+                        if ( s>=0 ) return s;
+                        break;
+                    case 2 : 
                         int LA17_0 = input.LA(1);
 
                         s = -1;
@@ -1202,55 +1229,7 @@ public class InternalConditionModelLexer extends Lexer {
 
                         if ( s>=0 ) return s;
                         break;
-                    case 1 : 
-                        int LA17_27 = input.LA(1);
-
-                        s = -1;
-                        if ( (LA17_27=='\'') ) {s = 39;}
-
-                        else if ( (LA17_27=='\"'||LA17_27=='\\'||LA17_27=='b'||LA17_27=='f'||LA17_27=='n'||LA17_27=='r'||(LA17_27>='t' && LA17_27<='u')) ) {s = 40;}
-
-                        else if ( ((LA17_27>='\u0000' && LA17_27<='!')||(LA17_27>='#' && LA17_27<='&')||(LA17_27>='(' && LA17_27<='[')||(LA17_27>=']' && LA17_27<='a')||(LA17_27>='c' && LA17_27<='e')||(LA17_27>='g' && LA17_27<='m')||(LA17_27>='o' && LA17_27<='q')||LA17_27=='s'||(LA17_27>='v' && LA17_27<='\uFFFF')) ) {s = 41;}
-
-                        if ( s>=0 ) return s;
-                        break;
-                    case 2 : 
-                        int LA17_40 = input.LA(1);
-
-                        s = -1;
-                        if ( (LA17_40=='\'') ) {s = 29;}
-
-                        else if ( (LA17_40=='\\') ) {s = 27;}
-
-                        else if ( ((LA17_40>='\u0000' && LA17_40<='&')||(LA17_40>='(' && LA17_40<='[')||(LA17_40>=']' && LA17_40<='\uFFFF')) ) {s = 28;}
-
-                        if ( s>=0 ) return s;
-                        break;
                     case 3 : 
-                        int LA17_8 = input.LA(1);
-
-                        s = -1;
-                        if ( (LA17_8=='\\') ) {s = 27;}
-
-                        else if ( ((LA17_8>='\u0000' && LA17_8<='&')||(LA17_8>='(' && LA17_8<='[')||(LA17_8>=']' && LA17_8<='\uFFFF')) ) {s = 28;}
-
-                        else if ( (LA17_8=='\'') ) {s = 29;}
-
-                        else s = 15;
-
-                        if ( s>=0 ) return s;
-                        break;
-                    case 4 : 
-                        int LA17_13 = input.LA(1);
-
-                        s = -1;
-                        if ( ((LA17_13>='\u0000' && LA17_13<='\uFFFF')) ) {s = 34;}
-
-                        else s = 15;
-
-                        if ( s>=0 ) return s;
-                        break;
-                    case 5 : 
                         int LA17_28 = input.LA(1);
 
                         s = -1;
@@ -1262,13 +1241,35 @@ public class InternalConditionModelLexer extends Lexer {
 
                         if ( s>=0 ) return s;
                         break;
-                    case 6 : 
+                    case 4 : 
                         int LA17_39 = input.LA(1);
 
                         s = -1;
                         if ( ((LA17_39>='\u0000' && LA17_39<='\uFFFF')) ) {s = 34;}
 
                         else s = 41;
+
+                        if ( s>=0 ) return s;
+                        break;
+                    case 5 : 
+                        int LA17_27 = input.LA(1);
+
+                        s = -1;
+                        if ( (LA17_27=='\'') ) {s = 39;}
+
+                        else if ( (LA17_27=='\"'||LA17_27=='\\'||LA17_27=='b'||LA17_27=='f'||LA17_27=='n'||LA17_27=='r'||(LA17_27>='t' && LA17_27<='u')) ) {s = 40;}
+
+                        else if ( ((LA17_27>='\u0000' && LA17_27<='!')||(LA17_27>='#' && LA17_27<='&')||(LA17_27>='(' && LA17_27<='[')||(LA17_27>=']' && LA17_27<='a')||(LA17_27>='c' && LA17_27<='e')||(LA17_27>='g' && LA17_27<='m')||(LA17_27>='o' && LA17_27<='q')||LA17_27=='s'||(LA17_27>='v' && LA17_27<='\uFFFF')) ) {s = 41;}
+
+                        if ( s>=0 ) return s;
+                        break;
+                    case 6 : 
+                        int LA17_13 = input.LA(1);
+
+                        s = -1;
+                        if ( ((LA17_13>='\u0000' && LA17_13<='\uFFFF')) ) {s = 34;}
+
+                        else s = 15;
 
                         if ( s>=0 ) return s;
                         break;

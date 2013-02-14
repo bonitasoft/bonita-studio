@@ -295,15 +295,15 @@ public class ConditionModelGrammarAccess extends AbstractGrammarElementFinder {
 		private final Action cOperation_EqualsAction_0 = (Action)cGroup.eContents().get(0);
 		private final Assignment cLeftAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cLeftExpression_TerminalParserRuleCall_1_0 = (RuleCall)cLeftAssignment_1.eContents().get(0);
-		private final Keyword cEqualsSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Keyword cEqualsSignEqualsSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Assignment cRightAssignment_3 = (Assignment)cGroup.eContents().get(3);
 		private final RuleCall cRightExpression_TerminalParserRuleCall_3_0 = (RuleCall)cRightAssignment_3.eContents().get(0);
 		
 		//Operation_Equals returns Operation:
-		//	{Operation_Equals} left=Expression_Terminal "=" right=Expression_Terminal;
+		//	{Operation_Equals} left=Expression_Terminal "==" right=Expression_Terminal;
 		public ParserRule getRule() { return rule; }
 
-		//{Operation_Equals} left=Expression_Terminal "=" right=Expression_Terminal
+		//{Operation_Equals} left=Expression_Terminal "==" right=Expression_Terminal
 		public Group getGroup() { return cGroup; }
 
 		//{Operation_Equals}
@@ -315,8 +315,8 @@ public class ConditionModelGrammarAccess extends AbstractGrammarElementFinder {
 		//Expression_Terminal
 		public RuleCall getLeftExpression_TerminalParserRuleCall_1_0() { return cLeftExpression_TerminalParserRuleCall_1_0; }
 
-		//"="
-		public Keyword getEqualsSignKeyword_2() { return cEqualsSignKeyword_2; }
+		//"=="
+		public Keyword getEqualsSignEqualsSignKeyword_2() { return cEqualsSignEqualsSignKeyword_2; }
 
 		//right=Expression_Terminal
 		public Assignment getRightAssignment_3() { return cRightAssignment_3; }
@@ -677,7 +677,7 @@ public class ConditionModelGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Operation_Equals returns Operation:
-	//	{Operation_Equals} left=Expression_Terminal "=" right=Expression_Terminal;
+	//	{Operation_Equals} left=Expression_Terminal "==" right=Expression_Terminal;
 	public Operation_EqualsElements getOperation_EqualsAccess() {
 		return (pOperation_Equals != null) ? pOperation_Equals : (pOperation_Equals = new Operation_EqualsElements());
 	}
