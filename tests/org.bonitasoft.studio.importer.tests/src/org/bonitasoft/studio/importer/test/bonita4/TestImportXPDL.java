@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.importer.test.bonita4;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -261,6 +262,22 @@ public class TestImportXPDL extends TestCase {
         }
         assertEquals("Wrong subflow name", "subflow", subprocess.getCalledActivityName().getContent());
         assertEquals("Wrong number of gateways", 2, gateways.size());
+    }
+    
+    @Test
+    public void testImportWithWhiteSpace() throws IOException{
+    	File destFile = new File("dest" + System.currentTimeMillis() + ".proc");
+        destFile.createNewFile();
+        destFile.deleteOnExit();
+        URL xpdlResource = FileLocator.toFileURL(getClass().getResource("Approval Workflow.xpdl"));
+        XPDLToProc xpdlToProc = new XPDLToProc();
+        destFile = xpdlToProc.createDiagram(xpdlResource,  new NullProgressMonitor());
+        
+        ResourceSet resourceSet = new ResourceSetImpl();
+        Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
+        MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
+        
+        assertNotNull("xpdl diagram \"Approval workflow\" was not exported correctly",mainProcess);
     }
 
     @Ignore
