@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.form.Info;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -44,6 +45,12 @@ public class OperationReturnTypesValidator implements IValidator {
             EObject container = ((Expression) expression).eContainer() ;
             if(container instanceof Operation){
                 final Operation operation = (Operation) container;
+                
+                EObject parent = operation.eContainer();
+                if(parent instanceof Info){
+                	   return ValidationStatus.ok();
+                }
+                
                 if(!ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operation.getOperator().getType())){
                     return ValidationStatus.ok();
                 }
