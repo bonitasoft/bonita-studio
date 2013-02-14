@@ -94,32 +94,37 @@ public class PackageFileStore extends AbstractFileStore {
     public void exportAsJar(String absoluteTargetFilePath, boolean includeSources) {
         final JarPackageData jarPackakeData = new JarPackageData() ;
         final IPackageFragment packageFragment = getPackageFragment() ;
-        final List<Object> toExport = new ArrayList<Object>() ;
-        try {
-            for(ICompilationUnit cunit : packageFragment.getCompilationUnits()){
-                toExport.add(cunit) ;
-            }
-        } catch (Exception e2) {
-            BonitaStudioLog.error(e2) ;
+        if(packageFragment==null){
+        	throw new RuntimeException("Error while exporting as JAR : package Fragment is null");
         }
+        
+        	final List<Object> toExport = new ArrayList<Object>() ;
+        	try {
+        		for(ICompilationUnit cunit : packageFragment.getCompilationUnits()){
+        			toExport.add(cunit) ;
+        		}
+        	} catch (Exception e2) {
+        		BonitaStudioLog.error(e2) ;
+        	}
 
-        jarPackakeData.setBuildIfNeeded(true) ;
-        jarPackakeData.setJarLocation(Path.fromOSString(absoluteTargetFilePath)) ;
-        jarPackakeData.setCompress(true) ;
-        jarPackakeData.setElements(toExport.toArray(new Object[toExport.size()])) ;
-        jarPackakeData.setExportErrors(true) ;
-        jarPackakeData.setDeprecationAware(true) ;
-        jarPackakeData.setExportClassFiles(true) ;
-        jarPackakeData.setExportJavaFiles(includeSources) ;
-        jarPackakeData.setGenerateManifest(true) ;
-        jarPackakeData.setOverwrite(true) ;
+        	jarPackakeData.setBuildIfNeeded(true) ;
+        	jarPackakeData.setJarLocation(Path.fromOSString(absoluteTargetFilePath)) ;
+        	jarPackakeData.setCompress(true) ;
+        	jarPackakeData.setElements(toExport.toArray(new Object[toExport.size()])) ;
+        	jarPackakeData.setExportErrors(true) ;
+        	jarPackakeData.setDeprecationAware(true) ;
+        	jarPackakeData.setExportClassFiles(true) ;
+        	jarPackakeData.setExportJavaFiles(includeSources) ;
+        	jarPackakeData.setGenerateManifest(true) ;
+        	jarPackakeData.setOverwrite(true) ;
 
-        final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null) ;
-        try {
-            runnable.run(Repository.NULL_PROGRESS_MONITOR) ;
-        } catch (Exception e){
-            BonitaStudioLog.error(e) ;
-        }
+        	final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null) ;
+        	try {
+        		runnable.run(Repository.NULL_PROGRESS_MONITOR) ;
+        	} catch (Exception e){
+        		BonitaStudioLog.error(e) ;
+        	}
+        
     }
 
     public IPackageFragment getPackageFragment() {
