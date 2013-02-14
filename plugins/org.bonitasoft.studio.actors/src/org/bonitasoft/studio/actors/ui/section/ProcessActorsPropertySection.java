@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -103,7 +103,18 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
         setAsInitiatorButton =  createInitiatorButton(buttonsComposite,widgetFactory) ;
         removeButton = createRemoveButton(buttonsComposite,widgetFactory) ;
 
-        actorsViewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL) ;
+        createTable(widgetFactory, mainComposite, statusControl);
+        
+        widgetFactory.createLabel(mainComposite, "");
+        widgetFactory.createLabel(mainComposite, Messages.initiatorExplanation);
+
+        updateButtons() ;
+    }
+
+
+	protected void createTable(TabbedPropertySheetWidgetFactory widgetFactory,
+			Composite mainComposite, final CLabel statusControl) {
+		actorsViewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL) ;
         widgetFactory.adapt(actorsViewer.getTable(),false,false) ;
         actorsViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         actorsViewer.setContentProvider(new ObservableListContentProvider());
@@ -197,9 +208,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
 
         TableColumnSorter sorter = new TableColumnSorter(actorsViewer) ;
         sorter.setColumn(column) ;
-
-        updateButtons() ;
-    }
+	}
 
 
     private Button createRemoveButton(Composite buttonsComposite, TabbedPropertySheetWidgetFactory widgetFactory) {
