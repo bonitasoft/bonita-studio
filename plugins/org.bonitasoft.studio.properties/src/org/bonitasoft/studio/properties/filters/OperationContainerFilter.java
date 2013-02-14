@@ -18,7 +18,6 @@ package org.bonitasoft.studio.properties.filters;
 
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.OperationContainer;
-import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
 import org.bonitasoft.studio.profiles.manager.IBonitaActivitiesCategory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -42,8 +41,7 @@ public class OperationContainerFilter implements IFilter {
                 return false ;
             }
             return BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.CONNECTORS)
-                    && model instanceof OperationContainer
-                    && !(model instanceof CallActivity) ;
+                    && model instanceof OperationContainer /*&& !(model instanceof CallActivity)*/ ;
         }
         return false;
     }
