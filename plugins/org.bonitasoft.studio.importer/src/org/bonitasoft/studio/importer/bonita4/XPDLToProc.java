@@ -95,7 +95,7 @@ public class XPDLToProc extends ToProcProcessor {
             builder = new ProcBuilder(progressMonitor) ;
             ResourceSet resourceSet = new ResourceSetImpl();
             resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("xpdl", new Xpdl1ResourceFactoryImpl());
-            URI sourceURI = URI.createFileURI(new File(sourceURL.getFile()).getAbsolutePath()) ;
+            URI sourceURI = URI.createFileURI(new File(URI.decode(sourceURL.getFile())).getAbsolutePath()) ;
             Resource resource = resourceSet.getResource(sourceURI, true);
             final DocumentRoot docRoot = (DocumentRoot) resource.getContents().get(0);
             final PackageType xpdlPackage = docRoot.getPackage();
