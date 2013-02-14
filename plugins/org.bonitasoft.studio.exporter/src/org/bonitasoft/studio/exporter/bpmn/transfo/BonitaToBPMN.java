@@ -160,6 +160,7 @@ import org.omg.spec.bpmn.model.TBoundaryEvent;
 import org.omg.spec.bpmn.model.TCallActivity;
 import org.omg.spec.bpmn.model.TCallableElement;
 import org.omg.spec.bpmn.model.TCollaboration;
+import org.omg.spec.bpmn.model.TComplexGateway;
 import org.omg.spec.bpmn.model.TDataInput;
 import org.omg.spec.bpmn.model.TDataInputAssociation;
 import org.omg.spec.bpmn.model.TDataObject;
@@ -169,11 +170,13 @@ import org.omg.spec.bpmn.model.TDefinitions;
 import org.omg.spec.bpmn.model.TDocumentation;
 import org.omg.spec.bpmn.model.TEndEvent;
 import org.omg.spec.bpmn.model.TErrorEventDefinition;
+import org.omg.spec.bpmn.model.TExclusiveGateway;
 import org.omg.spec.bpmn.model.TExpression;
 import org.omg.spec.bpmn.model.TFlowElement;
 import org.omg.spec.bpmn.model.TFormalExpression;
 import org.omg.spec.bpmn.model.TGateway;
 import org.omg.spec.bpmn.model.TImport;
+import org.omg.spec.bpmn.model.TInclusiveGateway;
 import org.omg.spec.bpmn.model.TInputOutputSpecification;
 import org.omg.spec.bpmn.model.TInputSet;
 import org.omg.spec.bpmn.model.TInterface;
@@ -777,6 +780,15 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
                     edge.setId(ModelHelper.getEObjectID(editPart.getNotationView()));
                     bpmnPlane.getDiagramElement().add(edge);
+                    if(bonitaFlow instanceof Gateway && source instanceof TGateway){
+                    	if(source instanceof TInclusiveGateway){
+                    		((TInclusiveGateway) source).setDefault(bpmnFlow.getId());
+                    	} else if(source instanceof TExclusiveGateway){
+                    		((TExclusiveGateway) source).setDefault(bpmnFlow.getId());
+                    	} else if(source instanceof TComplexGateway){
+                    		((TComplexGateway) source).setDefault(bpmnFlow.getId());
+                    	}
+                    }
                 } else {
                     BonitaStudioLog.log("Can't create the sequence flow named "+bonitaFlow.getName()+" because we can't find the target "+bonitaFlow.getTarget().getName());
                 }
@@ -1525,19 +1537,19 @@ public class BonitaToBPMN implements IBonitaTransformer {
     protected TFlowElement createGateway(FlowElement child) {
         TFlowElement res = null;
         if (child instanceof XORGateway) {
-            TGateway bpmnGateway = ModelFactory.eINSTANCE.createTExclusiveGateway();
+            TExclusiveGateway bpmnGateway = ModelFactory.eINSTANCE.createTExclusiveGateway();        
             res = bpmnGateway;
         } else if (child instanceof ANDGateway) {
             TGateway bpmnGateway = ModelFactory.eINSTANCE.createTParallelGateway();
             res = bpmnGateway;
         } else if (child instanceof InclusiveGateway) {
-            TGateway bpmnGateway = ModelFactory.eINSTANCE.createTInclusiveGateway();
+            TInclusiveGateway bpmnGateway = ModelFactory.eINSTANCE.createTInclusiveGateway();   
             res = bpmnGateway;
         }
         return res;
     }
 
-    protected TFlowElement createActivity(FlowElement child) {
+	protected TFlowElement createActivity(FlowElement child) {
         // Tasks
         TFlowElement res = null;
         if (child instanceof CallActivity) {
