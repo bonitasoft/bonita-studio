@@ -21,6 +21,7 @@ import org.bonitasoft.studio.connectors.test.swtbot.TestLoadSaveConnectorConfigu
 import org.bonitasoft.studio.connectors.test.swtbot.TestTextAreaInConnectorWizard;
 import org.bonitasoft.studio.diagram.test.DiagramTests;
 import org.bonitasoft.studio.diagram.test.FormsDiagramTests;
+import org.bonitasoft.studio.diagram.test.TestDeleteTaskWithForm;
 import org.bonitasoft.studio.diagram.test.TestOpenDiagram;
 import org.bonitasoft.studio.diagram.test.TestUndoRedoStackLimit;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -90,7 +91,8 @@ import org.junit.runners.Suite;
     TestPageTemplate.class,
     TestData.class,
     TestUndoRedoStackLimit.class,
-    TestOpenDiagram.class
+    TestOpenDiagram.class,
+    TestDeleteTaskWithForm.class
 })
 public class AllSWTBotTests {
 
