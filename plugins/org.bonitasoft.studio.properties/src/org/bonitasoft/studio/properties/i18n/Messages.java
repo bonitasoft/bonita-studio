@@ -817,6 +817,7 @@ public class Messages extends NLS {
 	public static String oneCorrelationAtLeastNeeded;
 	public static String valueShouldBeDefined;
 	public static String idShouldBeDefined;
+	public static String conditionExpresssionHelpMessage;
 
 
 
