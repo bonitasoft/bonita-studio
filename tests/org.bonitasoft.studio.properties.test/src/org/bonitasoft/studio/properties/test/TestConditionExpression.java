@@ -64,7 +64,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		bot.button(IDialogConstants.OK_LABEL).click();
 		
 		testValidConditionExpression("1234555<122233445",ExpressionConstants.CONDITION_TYPE);
-		testValidConditionExpression("123444.345345=324234324.23423432",ExpressionConstants.CONDITION_TYPE);
+		testValidConditionExpression("123444.345345==324234324.23423432",ExpressionConstants.CONDITION_TYPE);
 		testValidConditionExpression("123.567777>=234234234324",ExpressionConstants.CONDITION_TYPE);
 
 		testValidConditionExpression("myData<\"myString\"",ExpressionConstants.CONDITION_TYPE);
@@ -133,7 +133,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 			operatorIndex = condition.indexOf(">=");
 			return new Point(0,operatorIndex);
 		} else if (condition.contains("=")){
-			operatorIndex = condition.indexOf("=");
+			operatorIndex = condition.indexOf("==");
 			return new Point(0,operatorIndex);
 		}  else if (condition.contains("!=")){
 			operatorIndex = condition.indexOf("!=");
@@ -159,7 +159,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 			operatorIndex = condition.indexOf(">=");
 			return new Point(operatorIndex+3,condition.length()-1);
 		} else if (condition.contains("=")){
-			operatorIndex = condition.indexOf("=");
+			operatorIndex = condition.indexOf("==");
 			return new Point(operatorIndex+2,condition.length()-1);
 		}  else if (condition.contains("!=")){
 			operatorIndex = condition.indexOf("!=");
