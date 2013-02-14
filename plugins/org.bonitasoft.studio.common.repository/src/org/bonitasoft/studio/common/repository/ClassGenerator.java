@@ -224,7 +224,7 @@ public class ClassGenerator {
                 field.delete(true, monitor) ;
             }
 
-            String fieldDefinition = "protected final String " + fieldName + " = \""+ input.getName() + "\" ;";
+            String fieldDefinition = "protected final static String " + fieldName + " = \""+ input.getName() + "\" ;";
             classType.createField(fieldDefinition, null, true, null);
 
             final String getterName = "get"+NamingUtils.toJavaIdentifier(input.getName(),true) ;
