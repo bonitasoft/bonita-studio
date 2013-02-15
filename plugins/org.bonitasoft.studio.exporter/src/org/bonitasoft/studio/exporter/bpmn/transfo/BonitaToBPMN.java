@@ -780,7 +780,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
                     edge.setId(ModelHelper.getEObjectID(editPart.getNotationView()));
                     bpmnPlane.getDiagramElement().add(edge);
-                    if(bonitaFlow instanceof Gateway && source instanceof TGateway){
+                    if(bonitaFlow instanceof SequenceFlow && source instanceof TGateway){
                     	if(source instanceof TInclusiveGateway){
                     		((TInclusiveGateway) source).setDefault(bpmnFlow.getId());
                     	} else if(source instanceof TExclusiveGateway){
