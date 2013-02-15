@@ -563,9 +563,10 @@ public class DataWizardPage extends WizardPage {
         }
 
         final Expression exp = data.getDefaultValue();
-        if(!(exp.getType().equals(ExpressionConstants.VARIABLE_TYPE) || exp.getType().equals(ExpressionConstants.PARAMETER_TYPE))){
+        final String expType = exp.getType();
+		if(!(ExpressionConstants.VARIABLE_TYPE.equals(expType) || ExpressionConstants.PARAMETER_TYPE.equals(expType))){
             if(dataType instanceof DateType){
-                if(!exp.getReturnType().equals(String.class.getName())){
+                if(!String.class.getName().equals(exp.getReturnType())){
                     exp.setReturnType(getSelectedReturnType());
                 }
             }else{
