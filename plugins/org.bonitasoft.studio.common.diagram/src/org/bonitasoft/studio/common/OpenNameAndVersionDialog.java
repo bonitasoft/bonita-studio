@@ -65,6 +65,7 @@ public class OpenNameAndVersionDialog extends Dialog {
     private final String typeLabel;
     private boolean isDiagram = false;
     private MainProcess diagram;
+	private boolean diagramNameOrVersionChangeMandatory=false;
    
 
     protected OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram,IRepositoryStore diagramStore) {
@@ -78,6 +79,7 @@ public class OpenNameAndVersionDialog extends Dialog {
         typeLabel = Messages.diagram.toLowerCase();
         this.diagram = diagram;
     }
+    
 
     public OpenNameAndVersionDialog(Shell parentShell,MainProcess diagram, String poolName, String versionName,IRepositoryStore diagramStore) {
         super(parentShell);
@@ -88,6 +90,20 @@ public class OpenNameAndVersionDialog extends Dialog {
         this.diagramStore = diagramStore ;
         typeLabel = Messages.Pool_title.toLowerCase();
         this.diagram=diagram;
+    }
+    
+    public OpenNameAndVersionDialog(Shell parentShell,MainProcess diagram,IRepositoryStore diagramStore,boolean diagramNameOrVersionChangeMandatory) {
+        super(parentShell);
+        isDiagram  = true;
+        isDiagram  = true;
+        diagramName = diagram.getName();
+        diagramVersion = diagram.getVersion();
+        srcName = diagram.getName();
+        srcVersion = diagram.getVersion();
+        this.diagramStore = diagramStore ;
+        typeLabel = Messages.Pool_title.toLowerCase();
+        this.diagram=diagram;
+		this.diagramNameOrVersionChangeMandatory = diagramNameOrVersionChangeMandatory;
     }
 
     @Override
@@ -144,6 +160,9 @@ public class OpenNameAndVersionDialog extends Dialog {
                 if(isDiagram){
                     final String newDiagramFilename = NamingUtils.toDiagramFilename(name, version);
                     IRepositoryFileStore fileStore = diagramStore.getChild(newDiagramFilename);
+                    if (diagramNameOrVersionChangeMandatory && srcName.equals(name) && srcVersion.equals(version)){
+                    	return ValidationStatus.error(Messages.diagramNameOrVersionMustBeChanged);
+                    }
                     if(fileStore != null && !srcName.equals(name) && !srcVersion.equals(version)){
                         return ValidationStatus.error(Messages.bind(Messages.diagramAlreadyExists,typeLabel));
                     }

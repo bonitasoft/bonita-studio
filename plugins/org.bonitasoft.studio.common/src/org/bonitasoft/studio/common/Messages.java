@@ -303,5 +303,6 @@ public class Messages extends NLS {
 	public static String deleteConfirmationMsg;
 
 	public static String seeDetailsButtonLabel;
+	public static String diagramNameOrVersionMustBeChanged;
 
 }

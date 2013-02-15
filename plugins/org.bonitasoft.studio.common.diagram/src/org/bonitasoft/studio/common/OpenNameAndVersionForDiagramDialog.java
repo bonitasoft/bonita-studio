@@ -94,6 +94,13 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
             pools.add(new ProcessesNameVersion(pool));
         }
     }
+    
+    public OpenNameAndVersionForDiagramDialog(Shell parentShell, MainProcess diagram,IRepositoryStore diagramStore,boolean diagramNameOrVersionChangeMandatory) {
+        super(parentShell, diagram,diagramStore,diagramNameOrVersionChangeMandatory);
+        for(AbstractProcess pool : ModelHelper.getAllProcesses(diagram)){
+            pools.add(new ProcessesNameVersion(pool));
+        }
+    }
 
     @Override
     protected void configureShell(Shell newShell) {

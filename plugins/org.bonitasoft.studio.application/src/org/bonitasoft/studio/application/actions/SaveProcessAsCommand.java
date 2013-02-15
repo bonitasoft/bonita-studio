@@ -104,7 +104,7 @@ public class SaveProcessAsCommand extends AbstractHandler {
         MainProcess process = (MainProcess) ((IGraphicalEditPart)processEditor.getDiagramEditPart()).resolveSemanticElement();
         newProcessLabel = process.getName();
         newProcessVersion = process.getVersion();
-        OpenNameAndVersionForDiagramDialog dialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(), ModelHelper.getMainProcess(process),diagramStore) ;
+        OpenNameAndVersionForDiagramDialog dialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(), ModelHelper.getMainProcess(process),diagramStore,true) ;
         if (dialog.open() == Dialog.OK ) {
             newProcessLabel = dialog.getDiagramName() ;
             newProcessVersion = dialog.getDiagramVersion() ;
