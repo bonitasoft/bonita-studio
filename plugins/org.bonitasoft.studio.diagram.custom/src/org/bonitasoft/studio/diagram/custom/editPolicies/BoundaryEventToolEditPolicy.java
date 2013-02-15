@@ -195,10 +195,6 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
                 layer.remove(fig);
             }
         }
-        if (iconImage != null && !iconImage.isDisposed()) {
-            iconImage.dispose();
-        }
-
     }
 
     /*
@@ -365,9 +361,7 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
     public void deactivate() {
         super.deactivate();
         zoomManager.removeZoomListener(this) ;
-        if (iconImage != null && !iconImage.isDisposed()) {
-            iconImage.dispose();
-        }
+        iconImage = null;
         referenceFigure = null;
         toolImage = null;
         toolBarFigure = null;

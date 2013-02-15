@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -205,10 +205,6 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
                 layer.remove(fig);
             }
         }
-        if(iconImage != null && !iconImage.isDisposed()){
-            iconImage.dispose();
-        }
-
     }
 
 
@@ -684,9 +680,7 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
     public void deactivate() {
         super.deactivate();
         zoomManager.removeZoomListener(this);
-        if(iconImage != null && !iconImage.isDisposed()){
-            iconImage.dispose();
-        }
+        iconImage = null;
         referenceFigure = null;
         toolImage = null;
         moreToolImage = null ;
