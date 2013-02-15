@@ -21,9 +21,9 @@ import org.bonitasoft.studio.diagram.test.TestSave;
 import org.bonitasoft.studio.engine.test.bar.BarExporterTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNConnectorExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNExportTests;
+import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.groovy.tests.TestBonitaGroovyEditorDialog;
 import org.bonitasoft.studio.migration.tests.MigrationReporTest;
-import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.test.TestMultiInstantiation;
@@ -75,6 +75,7 @@ import org.junit.runners.Suite;
     TestConvertToMessage.class,
     ExtractAsSubprocessTest.class,
     BPMNExportTests.class,
+    BPMNSequenceFlowDefaultFlowExportImportTest.class,
     SharedEditingDomainTests.class,
     TestBoundariesCreation.class,
     TestResources.class,
