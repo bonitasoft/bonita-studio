@@ -100,21 +100,22 @@ public class ExporterTools {
     }
 
     public static String getTemplateWarFileName(Element element, TemplateType templateType) {
+    	final String id = ModelHelper.getEObjectID(element);
         switch (templateType) {
             case PAGE:
                 return getPageTemplateWarFileName((Form) element);
 
             case ERROR:
-                return (element).getName() + "_error_template.html"; //$NON-NLS-1$
+                return id + "_error_template.html"; //$NON-NLS-1$
             case WELCOME:
-                return (element).getName() + "_welcome_page.html"; //$NON-NLS-1$
+                return id + "_welcome_page.html"; //$NON-NLS-1$
 
             case CONFIRMATION:
                 // af.setWarPath("html/" + pageFlow.getName() +
                 // "_confirmation_template.html");
                 // we use a process so we put it in process template
                 if (element instanceof AbstractProcess) {
-                    return element.getName() + "_confirmation_template.html"; //$NON-NLS-1$
+                    return id + "_confirmation_template.html"; //$NON-NLS-1$
                 } else {
                     AbstractProcess process = null;
                     EObject container = element.eContainer();
@@ -124,13 +125,18 @@ public class ExporterTools {
                     if (container != null) {
                         process = (AbstractProcess) container;
                     }
-                    return (process != null ? process.getName() + "_" : "") + element.getName() + "_confirmation_template.html"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+                    String procId="" ;
+                    if(process!= null){
+                    	  procId = ModelHelper.getEObjectID(process)+"_";
+                    }
+                   
+                    return procId + id + "_confirmation_template.html"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
                 }
 
             case PROCESS:
-                return element.getName() + "_process_template.html"; //$NON-NLS-1$
+                return id + "_process_template.html"; //$NON-NLS-1$
             case HOST_PAGE:
-                return element.getName() + "_host_page.html";
+                return id + "_host_page.html";
             default:
                 return ""; //$NON-NLS-1$
         }
