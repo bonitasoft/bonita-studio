@@ -346,6 +346,9 @@ public class BOSWebServerManager {
 		args.append("-Xmx512m");
 		args.append(" ");
 		args.append("-XX:MaxPermSize=256m");
+		if("true".equals(System.getProperty("tomcat.debug.mode"))){
+			args.append("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8500");
+		}
 		addSystemProperty(args, "catalina.home", "\""+tomcatInstanceLocation+"\"");
 		addSystemProperty(args, "wtp.deploy", "\""+tomcatInstanceLocation+File.separatorChar+"webapps\"");
 		addSystemProperty(args, "java.endorsed.dirs", "\""+tomcatInstanceLocation+File.separatorChar+"endorsed\"");
@@ -353,7 +356,7 @@ public class BOSWebServerManager {
 		addSystemProperty(args, "java.util.logging.manager", "org.apache.juli.ClassLoaderLogManager");
 		addSystemProperty(args, "java.util.logging.config.file", "\""+tomcatInstanceLocation+File.separatorChar+"conf"+File.separatorChar+"logging.properties\"");
 		addSystemProperty(args, "file.encoding", "UTF-8");
-		if(!isPortAvailable(WATCHDOG_PORT)){
+		if(!isPortAvailable(WATCHDOG_PORT)){    
 			int oldPort = WATCHDOG_PORT;
 			WATCHDOG_PORT = getNextAvailable(WATCHDOG_PORT);
 			BonitaStudioLog.debug("Port "+oldPort+" is not availble for server watchdog, studio will use next available port : "+WATCHDOG_PORT,EnginePlugin.PLUGIN_ID);
