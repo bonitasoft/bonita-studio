@@ -60,7 +60,7 @@ public class MigrationWarningWizardPage extends WizardPage {
         textArea.setText(Messages.importWarningMessageContent);
         
         final Composite captionComposite = new Composite(mainComposite,SWT.NONE);
-        captionComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        captionComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(SWT.DEFAULT,15).create());
         captionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         
         final CLabel noActionRequiredLabel = new CLabel(captionComposite,SWT.NONE);
