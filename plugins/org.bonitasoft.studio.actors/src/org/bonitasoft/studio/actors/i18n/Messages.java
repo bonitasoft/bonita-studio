@@ -273,6 +273,7 @@ public class Messages extends NLS {
     public static String deleteActorsTitleMessage;
     public static String managerCycleDetected;
 	public static String initiatorExplanation;
+	public static String nameTooLong;
 
 
 

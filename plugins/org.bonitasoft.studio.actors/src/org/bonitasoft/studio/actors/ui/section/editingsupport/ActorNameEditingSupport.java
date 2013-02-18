@@ -70,6 +70,9 @@ public class ActorNameEditingSupport extends EditingSupport {
                 if(input.isEmpty()){
                     return Messages.nameIsEmpty;
                 }
+                if (input.length()>50){
+                	return Messages.nameTooLong;
+                }
                 Actor actor = (Actor) element ;
                 AbstractProcess process = ModelHelper.getParentProcess(actor) ;
                 for(Actor a : process.getActors()){
