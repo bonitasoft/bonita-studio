@@ -22,11 +22,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.viewer.TestGroovyScriptUtil;
@@ -43,7 +41,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -55,7 +52,6 @@ public class TestVariableGroup extends Composite {
 
     private static final String NULL_RESULT = "null";
     private static final String LIST = "List";
-    private static final String ATTACHMENT = "AttachmentInstance";
 
     private Map<Label, Control> widgetMap;
     private final Composite group;
@@ -196,44 +192,6 @@ public class TestVariableGroup extends Composite {
                 }
 
                 widgetMap.put(varLabel, varValueCombo);
-            }else if(var.getValue().equals(ATTACHMENT)){
-                final Composite c = new Composite(group, SWT.NONE);
-                gd = new GridData(GridData.FILL_HORIZONTAL);
-                c.setLayoutData(gd);
-                c.setLayout(new GridLayout(2, false));
-
-                final Text varValueText = new Text(c, SWT.BORDER);
-                gd = new GridData(GridData.FILL_HORIZONTAL);
-                varValueText.setLayoutData(gd);
-
-                Button browseButton = new Button(c, SWT.FLAT);
-                browseButton.setText(Messages.browseButtonLabel);
-                browseButton.addSelectionListener(new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        FileDialog fd = new FileDialog(c.getShell(), SWT.OPEN);
-                        String res = fd.open();
-
-                        if(res != null){
-                            varValueText.setText(res);
-                        }
-                    }
-
-                });
-
-
-                widgetMap.put(varLabel, varValueText);
-
-//            }else if(var.getKey().equals(GroovyUtil.USER_LOCALE)){
-//                Combo varValueCombo = new Combo(group, SWT.READ_ONLY);
-//                gd = new GridData(GridData.FILL_HORIZONTAL);
-//                varValueCombo.setLayoutData(gd);
-//                for(Locale l : 	Locale.getAvailableLocales()){
-//                    varValueCombo.add(l.getLanguage());
-//                }
-//
-//                widgetMap.put(varLabel, varValueCombo);
             }else{
 
                 Text varValueText = new Text(group, SWT.BORDER);

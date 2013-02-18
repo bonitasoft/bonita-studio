@@ -203,19 +203,19 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor impleme
 
             @Override
             public Object convert(Object data) {
-                if(((Data)data).isMultiple()){
-                    if(editorInputExpression.getContent() != null){
-                        return editorInputExpression.getContent() ;
-                    }
-                }else if(data instanceof XMLData){
-                    if(editorInputExpression.getContent() != null){
-                        return editorInputExpression.getContent() ;
-                    }
-                }else if(data instanceof JavaObjectData){
-                    if(editorInputExpression.getContent() != null){
-                        return editorInputExpression.getContent() ;
-                    }
-                }
+//                if(((Data)data).isMultiple()){
+//                    if(editorInputExpression.getContent() != null){
+//                        return editorInputExpression.getContent() ;
+//                    }
+//                }else if(data instanceof XMLData){
+//                    if(editorInputExpression.getContent() != null){
+//                        return editorInputExpression.getContent() ;
+//                    }
+//                }else if(data instanceof JavaObjectData){
+//                    if(editorInputExpression.getContent() != null){
+//                        return editorInputExpression.getContent() ;
+//                    }
+//                }
                 return ((Data) data).getName();
             }
 

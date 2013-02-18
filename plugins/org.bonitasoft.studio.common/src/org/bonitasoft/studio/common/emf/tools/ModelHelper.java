@@ -1453,8 +1453,8 @@ public class ModelHelper {
         return result;
     }
 
-    public static Element getPageFlow(Widget w) {
-        return (Element) ModelHelper.getForm(w).eContainer();
+    public static PageFlow getPageFlow(Widget w) {
+        return (PageFlow) ModelHelper.getForm(w).eContainer();
     }
 
     public static List<Widget> getAllWidgetInsidePageFlow(PageFlow pageFlow) {

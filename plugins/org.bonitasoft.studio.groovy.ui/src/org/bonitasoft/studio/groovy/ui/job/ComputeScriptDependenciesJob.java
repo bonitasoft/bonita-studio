@@ -53,134 +53,156 @@ import org.eclipse.jface.text.IRegion;
  */
 public class ComputeScriptDependenciesJob extends Job {
 
-    private final Map<String, List<EObject>> cache;
+	private final Map<String, List<EObject>> cache;
 
-    private List<ScriptVariable> nodes;
+	private List<ScriptVariable> nodes;
 
-    private EObject context;
+	private EObject context;
 
-    private IDocument document;
+	private IDocument document;
 
-    public ComputeScriptDependenciesJob(final IDocument document) {
-        super(ComputeScriptDependenciesJob.class.getName());
-        cache = new HashMap<String, List<EObject>>();
-        this.document = document;
-    }
+	public ComputeScriptDependenciesJob(final IDocument document) {
+		super(ComputeScriptDependenciesJob.class.getName());
+		cache = new HashMap<String, List<EObject>>();
+		this.document = document;
+	}
 
-    @Override
-    protected IStatus run(final IProgressMonitor monitor) {
-        final String expression = document.get();
-        if (cache.get(expression) == null) {
-            final Set<String> foundVariable = new HashSet<String>();
-            final FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(document);
-            for (final ScriptVariable f : nodes) {
-                IRegion index;
-                try {
-                    index = finder.find(0, f.getName(), true, true, true, false);
-                    if (index != null) {
-                        foundVariable.add(f.getName());
-                    }
-                } catch (final BadLocationException e) {
-                    // Just ignore them
-                }
-            }
+	@Override
+	protected IStatus run(final IProgressMonitor monitor) {
+		final String expression = document.get();
+		if (cache.get(expression) == null) {
+			final Set<String> foundVariable = new HashSet<String>();
+			final FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(document);
+			for (final ScriptVariable f : nodes) {
+				IRegion index;
+				try {
+					index = finder.find(0, f.getName(), true, true, true, false);
+					while (index != null && !foundVariable.contains(f.getName())) {
+						if (index != null && !isInAStringExpression(f.getName(),index,expression)) {
+							foundVariable.add(f.getName());
+						}
+						index = finder.find(index.getOffset()+index.getLength(), f.getName(), true, true, true, false);
+					}
+				} catch (final BadLocationException e) {
+					// Just ignore them
+				}
+			}
 
-            final List<EObject> deps = new ArrayList<EObject>();
-            variablesloop: for (final String name : foundVariable) {
-                final AbstractProcess process = ModelHelper.getParentProcess(context);
-                final Expression engineConstantExpression = GroovyUtil.getEngineConstantExpression(name);
-                if (engineConstantExpression != null) {
-                    deps.add(EcoreUtil.copy(engineConstantExpression));
-                    continue variablesloop;
-                }
-                if (process != null) {
-                    for (final Parameter p : process.getParameters()) {
-                        if (p.getName().equals(name)) {
-                            deps.add(EcoreUtil.copy(p));
-                            continue variablesloop;
-                        }
-                    }
-                }
+			final List<EObject> deps = new ArrayList<EObject>();
+			variablesloop: for (final String name : foundVariable) {
+				final AbstractProcess process = ModelHelper.getParentProcess(context);
+				final Expression engineConstantExpression = GroovyUtil.getEngineConstantExpression(name);
+				if (engineConstantExpression != null) {
+					deps.add(EcoreUtil.copy(engineConstantExpression));
+					continue variablesloop;
+				}
+				if (process != null) {
+					for (final Parameter p : process.getParameters()) {
+						if (p.getName().equals(name)) {
+							deps.add(EcoreUtil.copy(p));
+							continue variablesloop;
+						}
+					}
+				}
 
-                for (final Data d : ModelHelper.getAccessibleData(context, true)) {
-                    if (d.getName().equals(name)) {
-                        deps.add(EcoreUtil.copy(d));
-                        continue variablesloop;
-                    }
-                }
-                if (context instanceof Widget) {
-                    if (name.startsWith("field_") && ((Widget) context).getName().equals(name.substring("field_".length()))) {
-                        deps.add(EcoreUtil.copy(context));
-                        continue variablesloop;
-                    }
-                }
+				for (final Data d : ModelHelper.getAccessibleData(context, true)) {
+					if (d.getName().equals(name)) {
+						deps.add(EcoreUtil.copy(d));
+						continue variablesloop;
+					}
+				}
+				if (context instanceof Widget) {
+					if (name.startsWith("field_") && ((Widget) context).getName().equals(name.substring("field_".length()))) {
+						deps.add(EcoreUtil.copy(context));
+						continue variablesloop;
+					}
+				}
 
-                if (context instanceof Form) {
-                    for (final Form f : ((PageFlow) context.eContainer()).getForm()) {
-                        for (final Widget w : f.getWidgets()) {
-                            if (w instanceof FormField && name.startsWith("field_") && w.getName().equals(name.substring("field_".length()))) {
-                                deps.add(EcoreUtil.copy(w));
-                                continue variablesloop;
-                            }
-                        }
-                    }
-                }
+				if (context instanceof Form) {
+					for (final Form f : ((PageFlow) context.eContainer()).getForm()) {
+						for (final Widget w : f.getWidgets()) {
+							if (w instanceof FormField && name.startsWith("field_") && w.getName().equals(name.substring("field_".length()))) {
+								deps.add(EcoreUtil.copy(w));
+								continue variablesloop;
+							}
+						}
+					}
+				}
 
-                if (context instanceof Connector) {
-                    final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
-                    for (final Expression e : provider.getExpressions(context)) {
-                        if (e.getName().equals(name)) {
-                            deps.add(EcoreUtil.copy(e.getReferencedElements().get(0)));
-                            continue variablesloop;
-                        }
-                    }
-                }
+				if (context instanceof Connector) {
+					final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
+					for (final Expression e : provider.getExpressions(context)) {
+						if (e.getName().equals(name)) {
+							deps.add(EcoreUtil.copy(e.getReferencedElements().get(0)));
+							continue variablesloop;
+						}
+					}
+				}
 
-                if (context instanceof SimulationDataContainer) {
-                    final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(
-                            ExpressionConstants.SIMULATION_VARIABLE_TYPE);
-                    if (provider != null) {
-                        for (final Expression e : provider.getExpressions(context)) {
-                            if (e.getName().equals(name)) {
-                                deps.add(EcoreUtil.copy(e.getReferencedElements().get(0)));
-                                continue variablesloop;
-                            }
-                        }
-                    }
-                }
+				if (context instanceof SimulationDataContainer) {
+					final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(
+							ExpressionConstants.SIMULATION_VARIABLE_TYPE);
+					if (provider != null) {
+						for (final Expression e : provider.getExpressions(context)) {
+							if (e.getName().equals(name)) {
+								deps.add(EcoreUtil.copy(e.getReferencedElements().get(0)));
+								continue variablesloop;
+							}
+						}
+					}
+				}
 
-            }
-            cache.put(expression, deps);
-        }
-        return Status.OK_STATUS;
-    }
+			}
+			cache.put(expression, deps);
+		}
+		return Status.OK_STATUS;
+	}
 
-    public List<EObject> getDependencies(final String expression) {
-        return cache.get(expression);
-    }
+	private boolean isInAStringExpression(String name, IRegion index,String expression) {
+		if(index.getOffset() > 0){
+			int nbStringChars1 = 0;
+			int nbStringChars2 = 0;
 
-    public List<ScriptVariable> getNodes() {
-        return nodes;
-    }
+			for(int i = 0 ; i<index.getOffset();i++){
+				char c = expression.charAt(i);
+				if('"' == c){
+					nbStringChars1++;
+				}else if('\'' == c){
+					nbStringChars2++;
+				}
+			}
+			return !(nbStringChars1 % 2 == 0 && nbStringChars2 % 2 == 0);
 
-    public void setNodes(final List<ScriptVariable> nodes) {
-        this.nodes = new ArrayList<ScriptVariable>(nodes);
-        this.nodes.addAll(GroovyUtil.getBonitaVariables(context));
-    }
+		}
+		return false;
+	}
 
-    public EObject getContext() {
-        return context;
-    }
+	public List<EObject> getDependencies(final String expression) {
+		return cache.get(expression);
+	}
 
-    public void setContext(final EObject context) {
-        this.context = context;
-    }
+	public List<ScriptVariable> getNodes() {
+		return nodes;
+	}
 
-    public IDocument getDocument() {
-        return document;
-    }
+	public void setNodes(final List<ScriptVariable> nodes) {
+		this.nodes = new ArrayList<ScriptVariable>(nodes);
+		this.nodes.addAll(GroovyUtil.getBonitaVariables(context));
+	}
 
-    public void setDocument(final IDocument document) {
-        this.document = document;
-    }
+	public EObject getContext() {
+		return context;
+	}
+
+	public void setContext(final EObject context) {
+		this.context = context;
+	}
+
+	public IDocument getDocument() {
+		return document;
+	}
+
+	public void setDocument(final IDocument document) {
+		this.document = document;
+	}
 }

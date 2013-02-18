@@ -78,6 +78,7 @@ public class TestExpressionOperation implements IRunnableWithProgress {
         APISession session = null;
         ProcessAPI processApi = null;
         long procId = -1 ;
+        ClassLoader cl = Thread.currentThread().getContextClassLoader() ;
         try {
             session = BOSEngineManager.getInstance().loginDefaultTenant(monitor) ;
             processApi = BOSEngineManager.getInstance().getProcessAPI(session);
@@ -113,10 +114,14 @@ public class TestExpressionOperation implements IRunnableWithProgress {
             procId = def.getId();
             processApi.enableProcess(procId) ;
             expression.setReturnType(Object.class.getName());
+            Thread.currentThread().setContextClassLoader(RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader());
             result = processApi.evaluateExpressionOnProcessDefinition(EngineExpressionUtil.createExpression(expression), inputValues , procId);
         }catch (Exception e) {
             result = e;
         }finally{
+        	if(cl != null){
+        		Thread.currentThread().setContextClassLoader(cl);
+        	}
             if(processApi != null && procId != -1){
                 try{
                     processApi.disableProcess(procId) ;

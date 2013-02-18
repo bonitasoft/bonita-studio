@@ -52,6 +52,7 @@ import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorDriversW
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectConnectorDefinitionWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectEventConnectorNameAndDescWizardPage;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
@@ -78,6 +79,7 @@ import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardPage;
 
 /**
@@ -102,6 +104,12 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	private List<CustomWizardExtension> contributions;
 
 	private boolean useEvents = true;
+	private ViewerFilter expressionTypeFilter = new AvailableExpressionTypeFilter(new String[]{
+            ExpressionConstants.CONSTANT_TYPE,
+            ExpressionConstants.VARIABLE_TYPE,
+            ExpressionConstants.SCRIPT_TYPE,
+            ExpressionConstants.PARAMETER_TYPE
+    }) ;
 
 
 	public ConnectorWizard(EObject container,EStructuralFeature connectorContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID){
@@ -448,7 +456,12 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		wizPage.setDefinition(def) ;
 		wizPage.setElementContainer(container) ;
 		wizPage.setPage(page) ;
+		wizPage.setExpressionTypeFilter(getExpressionTypeFilter());
 		return wizPage ;
+	}
+
+	protected ViewerFilter getExpressionTypeFilter() {
+		return expressionTypeFilter;
 	}
 
 	/* (non-Javadoc)

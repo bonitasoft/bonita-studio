@@ -119,23 +119,6 @@ public class SubProcessPropertySectionContribution implements IExtensibleGridPro
         }
 
         dbc.bindValue(ViewersObservables.observeSingleSelection(versionViewer), EMFEditObservables.observeValue(editingDomain, subprocess, ProcessPackage.Literals.CALL_ACTIVITY__CALLED_ACTIVITY_VERSION));
-
-        //        versionCombo.addListener(SWT.Modify, new Listener() {
-        //
-        //            public void handleEvent(Event event) {
-        //                if (!versionCombo.getText().equals(subprocess.getSubprocessVersion())) {
-        //                    if(!(versionCombo.getText().equals(Messages.latestLabel) && subprocess.getSubprocessVersion()==null)){
-        //                        if(versionCombo.getText().equals(Messages.latestLabel)){
-        //                            editingDomain.getCommandStack().execute(new SetCommand(editingDomain, subprocess, ProcessPackage.Literals.CALL_ACTIVITY__SUBPROCESS_VERSION,null));
-        //                        }else{
-        //                            editingDomain.getCommandStack().execute(new SetCommand(editingDomain, subprocess, ProcessPackage.Literals.CALL_ACTIVITY__SUBPROCESS_VERSION, versionCombo.getText()));
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        });
-
-
     }
 
     /* (non-Javadoc)

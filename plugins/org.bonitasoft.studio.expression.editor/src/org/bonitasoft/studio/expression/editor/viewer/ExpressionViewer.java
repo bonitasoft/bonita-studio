@@ -289,23 +289,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				if(proposalAcceptanceStyle == ContentProposalAdapter.PROPOSAL_REPLACE){
 					ExpressionProposal prop = (ExpressionProposal) proposal ;
 					updateSelection(EcoreUtil.copy((Expression) prop.getExpression()));
-				}else if(proposalAcceptanceStyle == ContentProposalAdapter.PROPOSAL_INSERT){
-					//					final String content = textControl.getText();
-					//					if(editingDomain != null){
-					//						CompoundCommand cc = new CompoundCommand();
-					//						cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME, content));
-					//						cc.append(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT, content));
-					//						editingDomain.getCommandStack().execute(cc);
-					//					}else{
-					//						selectedExpression.setName(content);
-					//						selectedExpression.setContent(content);
-					//					}
-					//				}
-					//				setSelection(new StructuredSelection(selectedExpression));
-					//				fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, new StructuredSelection(selectedExpression))) ;
-					//				String text = textControl.getText();
-					//				if(text!= null){
-					//					textControl.setSelection(text.length());
 				}
 			}
 		}) ;
@@ -462,6 +445,18 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private Set<Expression> getFilteredExpressions() {
 		Set<Expression> filteredExpressions = new TreeSet<Expression>(new ExpressionComparator());
 		if (expressionNatureProvider!=null){
+			if(!(expressionNatureProvider instanceof ExpressionContentProvider)){
+				final ExpressionContentProvider provider =  new ExpressionContentProvider();
+				if(context == null){
+					provider.setContext((EObject) getInput());
+				}else{
+					provider.setContext(context);
+				}
+				Expression[] expressions = provider.getExpressions();
+				if(expressions != null){
+					filteredExpressions.addAll(Arrays.asList(expressions)) ;
+				}
+			}
 			Expression[] expressions = expressionNatureProvider.getExpressions();
 			EObject input =  expressionNatureProvider.getContext() ;
 			if(expressions != null){

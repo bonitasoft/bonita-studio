@@ -48,7 +48,7 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 
 		// Bottom right.
 		IFolderLayout bottomRight = layout.createFolder(
-				"bottomRight", IPageLayout.RIGHT, (float) 0.33,//$NON-NLS-1$
+				"bottomRight", IPageLayout.RIGHT, (float) 0.3,//$NON-NLS-1$
 				"bottomLeft");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.process.general");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.application");

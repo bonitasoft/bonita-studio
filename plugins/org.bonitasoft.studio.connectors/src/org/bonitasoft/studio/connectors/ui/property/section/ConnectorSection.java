@@ -194,7 +194,10 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 
             @Override
             public void handleEvent(Event event) {
-                new WizardDialog(Display.getDefault().getActiveShell(),new ConnectorContainerSwitchWizard(getEditingDomain(),ModelHelper.getParentProcess(getEObject()))).open();
+            	final WizardDialog dialog =  new WizardDialog(Display.getDefault().getActiveShell(),new ConnectorContainerSwitchWizard(getEditingDomain(),ModelHelper.getParentProcess(getEObject())));
+                if(dialog.open() == Dialog.OK){
+                    tableViewer.refresh();
+                }
             }
         });
         return switchContainerButton;

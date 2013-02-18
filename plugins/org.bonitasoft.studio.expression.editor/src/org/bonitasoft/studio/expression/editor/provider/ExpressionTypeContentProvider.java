@@ -49,7 +49,7 @@ public class ExpressionTypeContentProvider implements IStructuredContentProvider
             expressionTypes.add(ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.SCRIPT_TYPE));
         }else{
             for(IExpressionProvider provider : ExpressionEditorService.getInstance().getExpressionProviders()){
-                if(provider.isRelevantFor((EObject)context)){
+                if(provider.getExpressionEditor(null, (EObject) context) != null && provider.isRelevantFor((EObject)context)){
                     expressionTypes.add(provider) ;
                 }
             }

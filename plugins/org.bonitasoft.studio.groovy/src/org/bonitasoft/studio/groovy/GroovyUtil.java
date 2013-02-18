@@ -298,6 +298,7 @@ public class GroovyUtil {
         result.add(ExpressionConstants.ROOT_PROCESS_INSTANCE_ID);
         result.add(ExpressionConstants.PARENT_PROCESS_INSTANCE_ID);
         result.add(ExpressionConstants.ACTIVITY_INSTANCE_ID);
+        result.add(ExpressionConstants.LOGGED_USER_ID);
         if (context instanceof Activity) {
             if (((Activity) context).isIsMultiInstance()) {
                 result.add(ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES);
@@ -462,20 +463,15 @@ public class GroovyUtil {
 
     public static ScriptVariable createScriptVariable(final Widget widget) {
         String type = String.class.getName();
+    	if( widget.getReturnTypeModifier() != null ){
+    		type =  widget.getReturnTypeModifier() ;
+		}else{
+			type =  widget.getAssociatedReturnType() ;
+		}
         if (widget instanceof FormField) {
-            if (widget instanceof CheckBoxSingleFormField) {
-                type = Boolean.class.getName();
-            } else if (widget instanceof CheckBoxMultipleFormField) {
-                type = List.class.getName();
-            } else if (widget instanceof DateFormField) {
-                type = Date.class.getName();
-            } else if (widget instanceof DurationFormField) {
-                type = Long.class.getName();
-            } else if (widget instanceof Group) {
+            if (widget instanceof Group) {
                 type = Map.class.getName();
-            } else if (widget instanceof MultipleValuatedFormField) {
-                type = List.class.getName();
-            } else if (widget instanceof DynamicTable) {
+            }  else if (widget instanceof DynamicTable) {
                 type = List.class.getName();
             }
         } else if (widget instanceof NextFormButton) {

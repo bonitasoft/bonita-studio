@@ -30,6 +30,7 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -50,6 +51,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
     private final EMFDataBindingContext context;
     private WizardPageSupport supportPage;
     private DefinitionResourceProvider messageProvider;
+    private ViewerFilter connectorExpressionContentTypeFilter ;
 
     public AbstractConnectorConfigurationWizardPage(){
         this(AbstractConnectorConfigurationWizardPage.class.getName()) ;
@@ -174,6 +176,15 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
         }
         return super.getPreviousPage();
     }
+
+	public ViewerFilter getExpressionTypeFilter() {
+		return connectorExpressionContentTypeFilter;
+	}
+
+	public void setExpressionTypeFilter(
+			ViewerFilter connectorExpressionContentTypeFilter) {
+		this.connectorExpressionContentTypeFilter = connectorExpressionContentTypeFilter;
+	}
 
 
 }

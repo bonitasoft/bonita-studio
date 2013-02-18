@@ -48,6 +48,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -154,7 +155,12 @@ public class DefinitionResourceProvider {
         if (definition == null) {
             return null;
         }
-        Resource emfResource = definition.eResource();
+        IRepositoryFileStore fileStore = store.getChild(NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), true));
+        if(fileStore == null){
+        	return null;
+        }
+        
+        Resource emfResource = ((ConnectorDefinition)fileStore.getContent()).eResource();
         if (emfResource == null) {
             return null;
         }
@@ -555,10 +561,9 @@ public class DefinitionResourceProvider {
         String label = getCategoryLabel(categoryDef, category.getId());
         if (category.getId().equals(label)) {// Try to find a provided category
             // label
-            List<Category> categories = getAllCategoriesWithId(category.getId());
-            for (Category c : categories) {
-                categoryDef = (ConnectorDefinition) c.eContainer();
-                label = getCategoryLabel(categoryDef, c.getId());
+            List<ConnectorDefinition> definitions = getAllDefinitionWithCategotyId(category.getId());
+            for (ConnectorDefinition def : definitions) {
+                label = getCategoryLabel(def, category.getId());
                 if (!category.getId().equals(label)) {
                     return label;
                 }
@@ -567,7 +572,22 @@ public class DefinitionResourceProvider {
         return label;
     }
 
-    private List<Category> getAllCategoriesWithId(String id) {
+    private List<ConnectorDefinition> getAllDefinitionWithCategotyId(String id) {
+		if(store instanceof IDefinitionRepositoryStore){
+			final List<ConnectorDefinition> result = new ArrayList<ConnectorDefinition>();
+			for(ConnectorDefinition def : ((IDefinitionRepositoryStore) store).getDefinitions()){
+				for(Category c : def.getCategory()){
+					if(c.getId().equals(id)){
+						result.add(def);
+					}
+				}
+			}
+			return result;
+		}
+		return Collections.emptyList();
+	}
+
+	private List<Category> getAllCategoriesWithId(String id) {
         List<Category> result = new ArrayList<Category>();
         for (Category cat : categories) {
             if (cat.getId().equals(id)) {
@@ -687,4 +707,8 @@ public class DefinitionResourceProvider {
         }
         return null;
     }
+
+	public void removeCategoryLabel(Properties messages, Category c) {
+		messages.remove(c.getId() + "." + category);
+	}
 }

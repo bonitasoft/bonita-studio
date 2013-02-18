@@ -742,11 +742,11 @@ public class ExpressionCollectionViewer {
     }
 
     protected void updateButtons() {
-        if (addRowButton != null) {
+        if (addRowButton != null && !addRowButton.isDisposed()) {
             addRowButton.setEnabled(viewer.getTable().isEnabled()
                     && (minNbRow == 0 || getNbRows() < minNbRow));
         }
-        if (removeRowButton != null && viewer.getSelection() != null) {
+        if (removeRowButton != null && !removeRowButton.isDisposed() &&  viewer.getSelection() != null) {
             removeRowButton.setEnabled(viewer.getTable().isEnabled()
                     && (!viewer.getSelection().isEmpty() || viewer
                             .isCellEditorActive()));

@@ -91,6 +91,7 @@ public class BOSWebServerManager {
 	private static final int MIN_PORT_NUMBER = 1024;
 	private static final int MAX_PORT_NUMBER = 65535;
 	private static final int MAX_SERVER_START_TIME = 300000;
+	private static final String TOMCAT_LOG_FILE = "tomcat.log";
 	private ServerSocket watchdogServer;
 
 	private static BOSWebServerManager INSTANCE;
@@ -224,9 +225,14 @@ public class BOSWebServerManager {
 			 workingCopy = conf.getWorkingCopy();
 		}
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,getVMArgs());
-		workingCopy.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_FILE, Platform.getLogFileLocation().toFile().getAbsolutePath());
+		workingCopy.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_FILE, getTomcatLogFile());
 		workingCopy.setAttribute(IDebugUIConstants.ATTR_APPEND_TO_FILE,true);
 		workingCopy.doSave();
+	}
+
+	protected String getTomcatLogFile() {
+		File parentDir = Platform.getLogFileLocation().toFile().getParentFile();
+		return new File(parentDir,TOMCAT_LOG_FILE).getAbsolutePath();
 	}
 
 	protected void configureConsolePreferences() {

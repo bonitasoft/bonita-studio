@@ -86,7 +86,10 @@ public class ComparisonExpressionProvider implements IExpressionProvider {
 	 */
 	@Override
 	public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
-		return new ComparisonExpressionEditor(context.eResource(),context);
+		if(context != null){
+			return new ComparisonExpressionEditor(context.eResource(),context);
+		}
+		return null;
 	}
 
 }

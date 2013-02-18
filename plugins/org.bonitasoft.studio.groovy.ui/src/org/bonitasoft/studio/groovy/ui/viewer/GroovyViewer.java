@@ -55,8 +55,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaMarkerAnnotation;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.Position;
@@ -86,266 +88,297 @@ import org.eclipse.ui.texteditor.TextOperationAction;
  */
 public class GroovyViewer {
 
-    public static final String CONTEXT_DATA_KEY = "context";
-    public static final String BONITA_KEYWORDS_DATA_KEY = "bonita.keywords";
-    public static final String PROCESS_VARIABLES_DATA_KEY = "process.variables";
-    public static final int MAX_SCRIPT_LENGTH = 65535;
-    private BonitaGroovyEditor editor;
-    private IEditorInput input;
-    private List<ScriptVariable> nodes;
-    private IHandlerActivation fHandlerActivation;
-    private AbstractHandler triggerAssistantHandler;
-    private boolean isComputing = false;
-    private GroovyFileStore tmpGroovyFileStore;
+	public static final String CONTEXT_DATA_KEY = "context";
+	public static final String BONITA_KEYWORDS_DATA_KEY = "bonita.keywords";
+	public static final String PROCESS_VARIABLES_DATA_KEY = "process.variables";
+	public static final int MAX_SCRIPT_LENGTH = 65535;
+	private BonitaGroovyEditor editor;
+	private IEditorInput input;
+	private List<ScriptVariable> nodes;
+	private IHandlerActivation fHandlerActivation;
+	private AbstractHandler triggerAssistantHandler;
+	private boolean isComputing = false;
+	private GroovyFileStore tmpGroovyFileStore;
+	private boolean contextInitialized = false;
 
-    public GroovyViewer(final Composite mainComposite) {
-        this(mainComposite, null);
-    }
+	public GroovyViewer(final Composite mainComposite) {
+		this(mainComposite, null);
+	}
 
-    public GroovyViewer(final Composite mainComposite, final IEditorInput input) {
-        IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
-        groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING,false) ;
-        groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING,false);
-        if (input == null) {
-            final ProvidedGroovyRepositoryStore store = (ProvidedGroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class);
-            tmpGroovyFileStore = store.createRepositoryFileStore("script"+System.currentTimeMillis()+".groovy");
-            tmpGroovyFileStore.save("");
-            this.input = new FileEditorInput(tmpGroovyFileStore.getResource());
-        } else {
-            this.input = input;
-        }
+	public GroovyViewer(final Composite mainComposite, final IEditorInput input) {
+		IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
+		groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING,false) ;
+		groovyStore.setValue(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING,false);
+		if (input == null) {
+			final ProvidedGroovyRepositoryStore store = (ProvidedGroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class);
+			tmpGroovyFileStore = store.createRepositoryFileStore("script"+System.currentTimeMillis()+".groovy");
+			tmpGroovyFileStore.save("");
+			this.input = new FileEditorInput(tmpGroovyFileStore.getResource());
+		} else {
+			this.input = input;
+		}
 
-        editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
-        try {
-            editor.getDocumentProvider().connect(input);
-            editor.init(new DummyEditorSite(mainComposite.getShell(), editor), this.input);
-            editor.createPartControl(mainComposite);
-            editor.createJavaSourceViewerConfiguration();
-        } catch (final Exception e1) {
-            BonitaStudioLog.error(e1);
-        }
+		editor = new BonitaGroovyEditor(GroovyPlugin.getDefault().getPreferenceStore());
+		try {
+			editor.getDocumentProvider().connect(input);
+			editor.init(new DummyEditorSite(mainComposite.getShell(), editor), this.input);
+			editor.createPartControl(mainComposite);
+			editor.createJavaSourceViewerConfiguration();
+		} catch (final Exception e1) {
+			BonitaStudioLog.error(e1);
+		}
 
-        getSourceViewer().getTextWidget().setTextLimit(MAX_SCRIPT_LENGTH);
+		getSourceViewer().getTextWidget().setTextLimit(MAX_SCRIPT_LENGTH);
 
 
-        // Set up content assist in the viewer
-        triggerAssistantHandler = new AbstractHandler() {
+		// Set up content assist in the viewer
+		triggerAssistantHandler = new AbstractHandler() {
 
-            @Override
-            public Object execute(final ExecutionEvent event) throws ExecutionException {
-                if (getSourceViewer().canDoOperation(ISourceViewer.CONTENTASSIST_PROPOSALS)) {
-                    getSourceViewer().doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
-                }
-                return null;
-            }
-        };
+			@Override
+			public Object execute(final ExecutionEvent event) throws ExecutionException {
+				if (getSourceViewer().canDoOperation(ISourceViewer.CONTENTASSIST_PROPOSALS)) {
+					getSourceViewer().doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
+				}
+				return null;
+			}
+		};
 
-        getSourceViewer().getTextWidget().addKeyListener(new KeyListener() {
+		getSourceViewer().getTextWidget().addKeyListener(new KeyListener() {
 
-            @Override
-            public void keyReleased(final KeyEvent e) {
-                if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'z') {
-                    final TextOperationAction action = new TextOperationAction(
-                            ResourceBundle.getBundle("org.eclipse.ui.texteditor.ConstructedEditorMessages"), "Editor.Undo.", editor, ITextOperationTarget.UNDO); //$NON-NLS-1$ //$NON-NLS-2$
-                    action.run();
-                } else if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'y') {
-                    final TextOperationAction action = new TextOperationAction(
-                            ResourceBundle.getBundle("org.eclipse.ui.texteditor.ConstructedEditorMessages"), "Editor.Redo.", editor, ITextOperationTarget.REDO); //$NON-NLS-1$ //$NON-NLS-2$
-                    action.run();
-                }
-            }
+			@Override
+			public void keyReleased(final KeyEvent e) {
+				if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'z') {
+					final TextOperationAction action = new TextOperationAction(
+							ResourceBundle.getBundle("org.eclipse.ui.texteditor.ConstructedEditorMessages"), "Editor.Undo.", editor, ITextOperationTarget.UNDO); //$NON-NLS-1$ //$NON-NLS-2$
+					action.run();
+				} else if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'y') {
+					final TextOperationAction action = new TextOperationAction(
+							ResourceBundle.getBundle("org.eclipse.ui.texteditor.ConstructedEditorMessages"), "Editor.Redo.", editor, ITextOperationTarget.REDO); //$NON-NLS-1$ //$NON-NLS-2$
+					action.run();
+				}
+			}
 
-            @Override
-            public void keyPressed(final KeyEvent e) {
-                if (e.keyCode == SWT.DEL) {
-                    final TextOperationAction action = new TextOperationAction(
-                            ResourceBundle.getBundle("org.eclipse.ui.texteditor.ConstructedEditorMessages"), "Editor.Delete.", editor, ITextOperationTarget.DELETE); //$NON-NLS-1$ //$NON-NLS-2$
-                    action.run();
-                } else if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'i') {
-                    final BonitaFormatGroovyAction action = new BonitaFormatGroovyAction(editor.getEditorSite(), FormatKind.FORMAT, editor, editor
-                            .getGroovyCompilationUnit());
-                    action.run();
-                }
-            }
-        });
-        enableContextAssitShortcut();
+			@Override
+			public void keyPressed(final KeyEvent e) {
+				if (e.keyCode == SWT.DEL) {
+					final TextOperationAction action = new TextOperationAction(
+							ResourceBundle.getBundle("org.eclipse.ui.texteditor.ConstructedEditorMessages"), "Editor.Delete.", editor, ITextOperationTarget.DELETE); //$NON-NLS-1$ //$NON-NLS-2$
+					action.run();
+				} else if ((e.stateMask == SWT.CTRL || e.stateMask == SWT.COMMAND) && e.keyCode == 'i') {
+					final BonitaFormatGroovyAction action = new BonitaFormatGroovyAction(editor.getEditorSite(), FormatKind.FORMAT, editor, editor
+							.getGroovyCompilationUnit());
+					action.run();
+				}
+			}
+		});
+		enableContextAssitShortcut();
 
-        getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, GroovyUtil.getBonitaKeyWords(null));
-        getSourceViewer().getTextWidget().addModifyListener(new ModifyListener() {
+		getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, GroovyUtil.getBonitaKeyWords(null));
+		getSourceViewer().getDocument().addDocumentListener(new IDocumentListener() {
 
-            private Object previousContent;
+			private Object previousContent;
 
-            @Override
-            public void modifyText(final ModifyEvent e) {
-                final String currentContent = getSourceViewer().getDocument().get();
-                if (!isComputing && !currentContent.equals(previousContent)) {
-                    previousContent = currentContent;
-                    isComputing = true;
-                    final IAnnotationModel model = getSourceViewer().getAnnotationModel();
-                    final List<ScriptVariable> emptyList = Collections.emptyList();
-                    final Map<String, Serializable> result = TestGroovyScriptUtil.createVariablesMap(getGroovyCompilationUnit(), emptyList);
-                    final Set<String> knowVariables = new HashSet<String>();
-                    if (nodes != null) {
-                        for (final ScriptVariable n : nodes) {
-                            knowVariables.add(n.getName());
-                        }
-                    }
-                    knowVariables.addAll(BonitaSyntaxHighlighting.BONITA_KEYWORDS);
-                    final Iterator<?> it = model.getAnnotationIterator();
-                    while (it.hasNext()) {
-                        final Object annotation = it.next();
-                        model.removeAnnotation((Annotation) annotation);
-                    }
-                    for (final Entry<String, Serializable> entry : result.entrySet()) {
-                        if (!knowVariables.contains(entry.getKey())) {
-                            createAnnotation(entry.getKey());
-                        }
-                    }
-                    isComputing = false;
-                }
+			@Override
+			public void documentChanged(DocumentEvent event) {
+				if(contextInitialized){
+					final String currentContent = event.getText();
+					if (!isComputing && !currentContent.equals(previousContent)) {
+						previousContent = currentContent;
+						isComputing = true;
+						final IAnnotationModel model = getSourceViewer().getAnnotationModel();
+						final List<ScriptVariable> emptyList = Collections.emptyList();
+						final Map<String, Serializable> result = TestGroovyScriptUtil.createVariablesMap(getGroovyCompilationUnit(), emptyList);
+						final Set<String> knowVariables = new HashSet<String>();
+						if (nodes != null) {
+							for (final ScriptVariable n : nodes) {
+								knowVariables.add(n.getName());
+							}
+						}
+						knowVariables.addAll(BonitaSyntaxHighlighting.BONITA_KEYWORDS);
+						final Iterator<?> it = model.getAnnotationIterator();
+						while (it.hasNext()) {
+							final Object annotation = it.next();
+							model.removeAnnotation((Annotation) annotation);
+						}
+						for (final Entry<String, Serializable> entry : result.entrySet()) {
+							if (!knowVariables.contains(entry.getKey())) {
+								createAnnotation(entry.getKey());
+							}
+						}
+						isComputing = false;
+					}
+				}
+			}
 
-            }
-        });
-        mainComposite.getShell().addDisposeListener(new DisposeListener() {
+			@Override
+			public void documentAboutToBeChanged(DocumentEvent event) {
 
-            @Override
-            public void widgetDisposed(DisposeEvent e) {
-                dispose();
-            }
-        });
-    }
+			}
+		});
+		mainComposite.getShell().addDisposeListener(new DisposeListener() {
 
-    public void enableContextAssitShortcut() {
-        final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getAdapter(IHandlerService.class);
-        fHandlerActivation = handlerService.activateHandler(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, triggerAssistantHandler);
-    }
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				dispose();
+			}
+		});
+	}
 
-    public void disableContextAssitShortcut() {
-        if (fHandlerActivation != null) {
-            final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getAdapter(IHandlerService.class);
-            if(handlerService != null){
-                handlerService.deactivateHandler(fHandlerActivation);
-            }
-            fHandlerActivation.clearResult();
-        }
-    }
+	public void enableContextAssitShortcut() {
+		final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getAdapter(IHandlerService.class);
+		fHandlerActivation = handlerService.activateHandler(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS, triggerAssistantHandler);
+	}
 
-    public IDocument getDocument() {
-        return editor.getDocumentProvider().getDocument(input);
-    }
+	public void disableContextAssitShortcut() {
+		if (fHandlerActivation != null) {
+			final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getAdapter(IHandlerService.class);
+			if(handlerService != null){
+				handlerService.deactivateHandler(fHandlerActivation);
+			}
+			fHandlerActivation.clearResult();
+		}
+	}
 
-    @SuppressWarnings("restriction")
-    public SourceViewer getSourceViewer() {
-        return (SourceViewer) editor.getViewer();
-    }
+	public IDocument getDocument() {
+		return editor.getDocumentProvider().getDocument(input);
+	}
 
-    public void setLayoutData(final Object layoutData) {
-        getSourceViewer().getTextWidget().setLayoutData(layoutData);
-    }
+	@SuppressWarnings("restriction")
+	public SourceViewer getSourceViewer() {
+		return (SourceViewer) editor.getViewer();
+	}
 
-    public void setContext(final EObject context, final ViewerFilter[] filters) {
-        nodes = new ArrayList<ScriptVariable>();
+	public void setLayoutData(final Object layoutData) {
+		getSourceViewer().getTextWidget().setLayoutData(layoutData);
+	}
 
-        final ExpressionContentProvider provider = new ExpressionContentProvider();
-        provider.setContext(context);
+	public void setContext(final EObject context, final ViewerFilter[] filters) {
+		nodes = new ArrayList<ScriptVariable>();
 
-        final Set<Expression> filteredExpressions = new HashSet<Expression>();
-        final Expression[] expressions = provider.getExpressions();
-        final EObject input = provider.getContext();
-        if (expressions != null) {
-            filteredExpressions.addAll(Arrays.asList(expressions));
-            if (input != null && filters != null) {
-                for (final Expression exp : expressions) {
-                    for (final ViewerFilter filter : filters) {
-                        if (filter != null && !filter.select(getSourceViewer(), input, exp)) {
-                            filteredExpressions.remove(exp);
-                        }
-                    }
-                }
-            }
-        }
+		final ExpressionContentProvider provider = new ExpressionContentProvider();
+		provider.setContext(context);
 
-        for (final Expression e : filteredExpressions) {
-            final ScriptVariable v = GroovyUtil.createScriptVariable(e);
-            if (context != null && ExpressionConstants.PARAMETER_TYPE.equals(e.getType())) {
-                final AbstractProcess proc = ModelHelper.getParentProcess(context);
-                final ProcessConfigurationRepositoryStore store = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(
-                        ProcessConfigurationRepositoryStore.class);
-                final ProcessConfigurationFileStore fileStore = store.getChild(ModelHelper.getEObjectID(proc) + "."
-                        + ProcessConfigurationRepositoryStore.CONF_EXT);
-                if (fileStore != null) {
-                    final Configuration c = fileStore.getContent();
-                    for (final Parameter p : c.getParameters()) {
-                        if (p.getName().equals(v.getName())) {
-                            v.setDefaultValue(p.getValue());
-                        }
-                    }
-                }
-            }
-            if (v != null) {
-                nodes.add(v);
-            }
-        }
+		final Set<Expression> filteredExpressions = new HashSet<Expression>();
+		final Expression[] expressions = provider.getExpressions();
+		final EObject input = provider.getContext();
+		if (expressions != null) {
+			filteredExpressions.addAll(Arrays.asList(expressions));
+			if (input != null && filters != null) {
+				for (final Expression exp : expressions) {
+					for (final ViewerFilter filter : filters) {
+						if (filter != null && !filter.select(getSourceViewer(), input, exp)) {
+							filteredExpressions.remove(exp);
+						}
+					}
+				}
+			}
+		}
 
-        // Add context in TextWidget to access it in content assist
-        getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, nodes);
-        getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, GroovyUtil.getBonitaKeyWords(context));
-        getSourceViewer().getTextWidget().setData(CONTEXT_DATA_KEY, context);
-    }
+		for (final Expression e : filteredExpressions) {
+			final ScriptVariable v = GroovyUtil.createScriptVariable(e);
+			if (context != null && ExpressionConstants.PARAMETER_TYPE.equals(e.getType())) {
+				final AbstractProcess proc = ModelHelper.getParentProcess(context);
+				final ProcessConfigurationRepositoryStore store = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(
+						ProcessConfigurationRepositoryStore.class);
+				final ProcessConfigurationFileStore fileStore = store.getChild(ModelHelper.getEObjectID(proc) + "."
+						+ ProcessConfigurationRepositoryStore.CONF_EXT);
+				if (fileStore != null) {
+					final Configuration c = fileStore.getContent();
+					for (final Parameter p : c.getParameters()) {
+						if (p.getName().equals(v.getName())) {
+							v.setDefaultValue(p.getValue());
+						}
+					}
+				}
+			}
+			if (v != null) {
+				nodes.add(v);
+			}
+		}
 
-    public List<ScriptVariable> getFieldNodes() {
-        return nodes;
-    }
+		// Add context in TextWidget to access it in content assist
+		getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, nodes);
+		getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, GroovyUtil.getBonitaKeyWords(context));
+		getSourceViewer().getTextWidget().setData(CONTEXT_DATA_KEY, context);
+		contextInitialized  = true;
+	}
 
-    public void dispose() {
-        if(tmpGroovyFileStore != null){
-            tmpGroovyFileStore.delete();
-        }
+	public List<ScriptVariable> getFieldNodes() {
+		return nodes;
+	}
 
-        disableContextAssitShortcut();
-        if( editor.getViewer() != null &&  editor.getViewer().getTextWidget() != null){
-            editor.getViewer().getTextWidget().dispose();
-            editor.dispose();
-        }
-    }
+	public void dispose() {
+		if(tmpGroovyFileStore != null){
+			tmpGroovyFileStore.delete();
+		}
 
-    public GroovyCompilationUnit getGroovyCompilationUnit() {
-        return editor.getGroovyCompilationUnit();
-    }
+		disableContextAssitShortcut();
+		if( editor.getViewer() != null &&  editor.getViewer().getTextWidget() != null){
+			editor.getViewer().getTextWidget().dispose();
+			editor.dispose();
+		}
+	}
 
-    public void setInput(final IEditorInput input) {
-        try {
-            this.input = input;
-            editor.getDocumentProvider().connect(input);
-        } catch (final CoreException e) {
-            BonitaStudioLog.error(e);
-        }
-    }
+	public GroovyCompilationUnit getGroovyCompilationUnit() {
+		return editor.getGroovyCompilationUnit();
+	}
 
-    public void setFieldNodes(final List<ScriptVariable> fieldNodes) {
-        nodes = fieldNodes;
-        getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, fieldNodes);
-    }
+	public void setInput(final IEditorInput input) {
+		try {
+			this.input = input;
+			editor.getDocumentProvider().connect(input);
+		} catch (final CoreException e) {
+			BonitaStudioLog.error(e);
+		}
+	}
 
-    private void createAnnotation(final String key) {
-        if (getSourceViewer() != null) {
-            final IAnnotationModel model = getSourceViewer().getAnnotationModel();
-            final FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(getSourceViewer().getDocument());
-            try {
-                IRegion region = finder.find(0, key, true, true, true, false);
-                while (region != null) {
-                    final Position position = new Position(region.getOffset(), region.getLength());
-                    model.addAnnotation(new Annotation(JavaMarkerAnnotation.WARNING_ANNOTATION_TYPE, false, createDescription(key)), position);
-                    region = finder.find(position.getOffset() + position.getLength(), key, true, true, true, false);
-                }
-            } catch (final BadLocationException e) {
+	public void setFieldNodes(final List<ScriptVariable> fieldNodes) {
+		nodes = fieldNodes;
+		getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, fieldNodes);
+	}
 
-            }
-        }
-    }
+	private void createAnnotation(final String key) {
+		if (getSourceViewer() != null) {
+			final IAnnotationModel model = getSourceViewer().getAnnotationModel();
+			final FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(getSourceViewer().getDocument());
+			final String expression = getSourceViewer().getDocument().get();
+			try {
+				IRegion region = finder.find(0, key, true, true, true, false);
+				while (region != null) {
+					final Position position = new Position(region.getOffset(), region.getLength());
+					if(!isInAStringExpression(key, region,expression)){
+						model.addAnnotation(new Annotation(JavaMarkerAnnotation.WARNING_ANNOTATION_TYPE, false, createDescription(key)), position);
+					}
+					region = finder.find(position.getOffset() + position.getLength(), key, true, true, true, false);
 
-    private String createDescription(final String key) {
-        return key +" "+ Messages.groovyUnresolved;
-    }
+				}
+			} catch (final BadLocationException e) {
+
+			}
+		}
+	}
+
+	private boolean isInAStringExpression(String name, IRegion index,String expression) {
+		if(index.getOffset() > 0){
+			int nbStringChars1 = 0;
+			int nbStringChars2 = 0;
+
+			for(int i = 0 ; i<index.getOffset();i++){
+				char c = expression.charAt(i);
+				if('"' == c){
+					nbStringChars1++;
+				}else if('\'' == c){
+					nbStringChars2++;
+				}
+			}
+			return !(nbStringChars1 % 2 == 0 && nbStringChars2 % 2 == 0);
+
+		}
+		return false;
+	}
+
+	private String createDescription(final String key) {
+		return key +" "+ Messages.groovyUnresolved;
+	}
 
 }

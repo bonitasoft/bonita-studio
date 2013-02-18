@@ -138,7 +138,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
             IFolder targetFoler = defStore.getResource() ;
             IFile iconFile = targetFoler.getFile(definitionWorkingCopy.getIcon()) ;
             try{
-                if(iconFile.exists()){
+                if(iconFile.exists() && !iconFile.getLocation().toFile().getAbsolutePath().equals(imageFile.getAbsolutePath())){
                     iconFile.delete(true, Repository.NULL_PROGRESS_MONITOR) ;
                 }
                 BufferedImage image = ImageIO.read(imageFile) ;

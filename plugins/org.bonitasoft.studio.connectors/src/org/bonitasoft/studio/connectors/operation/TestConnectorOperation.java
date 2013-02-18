@@ -117,6 +117,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         APISession session = null;
         ProcessAPI processApi = null;
         long procId = -1;
+        ClassLoader cl = Thread.currentThread().getContextClassLoader() ;
         try {
             session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
             processApi = BOSEngineManager.getInstance().getProcessAPI(session);
@@ -134,13 +135,17 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             ProcessDefinition def = processApi.deploy(businessArchive);
             procId = def.getId();
             processApi.enableProcess(procId) ;
-
+           
+            Thread.currentThread().setContextClassLoader(RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader());
             result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(), inputParameters, inputValues, procId);
         }catch (Exception e) {
             e.printStackTrace();
             BonitaStudioLog.error(e);
             throw new InvocationTargetException(e);
         }finally{
+        	if(cl != null){
+        		Thread.currentThread().setContextClassLoader(cl);
+        	}
             if(processApi != null && procId != -1){
                 try{
                     processApi.disableProcess(procId) ;
@@ -202,7 +207,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 //                                fragment.setValue(f.getName());
 //                                fragment.setType(FragmentTypes.JAR);
 //                                AdapterFactoryEditingDomain domain = createEditingDomain();
-//                                domain.getCommandStack().execute(AddCommand.create(domain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, fragment));
+//                             //   domain.getCommandStack().execute(AddCommand.create(domain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, fragment));
 //                            }
 //                        }
 //                    } catch (CoreException e) {

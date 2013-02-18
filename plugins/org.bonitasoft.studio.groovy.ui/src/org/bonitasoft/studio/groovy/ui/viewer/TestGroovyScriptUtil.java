@@ -73,8 +73,6 @@ public class TestGroovyScriptUtil {
 
     public static final String OBJECT = "Object"; //$NON-NLS-1$
 
-    public static final String ATTACHMENT = "AttachmentInstance"; //$NON-NLS-1$
-
     public static final String BOOLEAN = "Boolean"; //$NON-NLS-1$
 
     public static final String DATE = "Date"; //$NON-NLS-1$
@@ -99,7 +97,6 @@ public class TestGroovyScriptUtil {
         TYPES.add(FLOAT);
         TYPES.add(DATE);
         TYPES.add(BOOLEAN);
-        TYPES.add(ATTACHMENT);
         TYPES.add(OBJECT);
 
         PROVIDED_VARIABLES = new HashSet<String>();
@@ -109,6 +106,7 @@ public class TestGroovyScriptUtil {
         PROVIDED_VARIABLES.add(ExpressionConstants.PROCESS_DEFINITION_ID.getEngineName());
         PROVIDED_VARIABLES.add(ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineName());
         PROVIDED_VARIABLES.add(ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineName());
+        PROVIDED_VARIABLES.add(ExpressionConstants.LOGGED_USER_ID.getEngineName());
     }
 
     public static Map<String, Serializable> getVariableValues(final GroovyCompilationUnit unit, final List<ScriptVariable> nodes,
@@ -142,9 +140,7 @@ public class TestGroovyScriptUtil {
                          variableMap.put(varKey, new Integer(widgetValueText));
                      } else if (varValueString.equals(STRING)) {
                          variableMap.put(varKey, widgetValueText);
-                     } else if (varValueString.equals(ATTACHMENT)) {
-                         variableMap.put(varKey, widgetValueText);
-                     } else if (varValueString.equals(BOOLEAN)) {
+                     }  else if (varValueString.equals(BOOLEAN)) {
                          variableMap.put(varKey, Boolean.valueOf(widgetValueText));
                      } else if (varValueString.equals(FLOAT)) {
                          variableMap.put(varKey, new Float(widgetValueText));

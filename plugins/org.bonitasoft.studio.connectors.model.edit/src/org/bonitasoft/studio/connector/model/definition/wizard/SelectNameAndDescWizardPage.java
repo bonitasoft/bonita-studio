@@ -131,7 +131,7 @@ public class SelectNameAndDescWizardPage extends WizardPage implements IWizardPa
             }
         }) ;
 
-        context.bindValue(SWTObservables.observeText(nameText, SWT.Modify), EMFObservables.observeValue(connector, ProcessPackage.Literals.ELEMENT__NAME),nameStrategy,null) ;
+        context.bindValue(SWTObservables.observeDelayedValue(200, SWTObservables.observeText(nameText, SWT.Modify)), EMFObservables.observeValue(connector, ProcessPackage.Literals.ELEMENT__NAME),nameStrategy,null) ;
         context.bindValue(SWTObservables.observeText(descText, SWT.Modify), EMFObservables.observeValue(connector, ProcessPackage.Literals.ELEMENT__DOCUMENTATION)) ;
 
         return composite;

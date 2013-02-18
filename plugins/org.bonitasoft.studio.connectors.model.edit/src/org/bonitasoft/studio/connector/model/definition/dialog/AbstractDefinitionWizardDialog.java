@@ -119,17 +119,12 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
                         	connectorWizard.recreateConnectorConfigurationPages(def) ;
                         } else {
                         	IWizardPage[] wizardPages = getWizard().getPages();
-                        	for (IWizardPage iWizardPage : wizardPages) {
-                        		if(iWizardPage instanceof AbstractConnectorConfigurationWizardPage){
-                        			((AbstractConnectorConfigurationWizardPage) iWizardPage).setConfiguration(connectorConfigurationToLoad);
-                        			
-                        			//((AbstractConnectorConfigurationWizardPage) iWizardPage).reload();
-                        			iWizardPage.isPageComplete();
-                        		}
-							}
-                        	
-                        	//connectorWizard.recreateConnectorConfigurationPages(def) ;
-                        	//showPage(getCurrentPage().getPreviousPage());
+                        	if(wizardPages.length > 1){
+                        		IWizardPage firstPage = wizardPages[1];
+                        		showPage(firstPage);
+                        		connectorWizard.recreateConnectorConfigurationPages(def) ;
+                        		//showPage(firstPage.getNextPage());
+                        	}
                         }
                         
                         updateButtons() ;
