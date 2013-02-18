@@ -17,14 +17,22 @@
  */
 package org.bonitasoft.studio.common.properties;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.PropertyException;
+import javax.xml.bind.ValidationEventHandler;
+import javax.xml.bind.Validator;
+
 import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.TextAnnotation;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -62,9 +70,13 @@ public class DescriptionPropertySectionContribution implements IExtensibleGridPr
 		rd.width = 300;
 		rd.height = 60;
 		text.setLayoutData(rd);
-
+		
 		context = new EMFDataBindingContext();
-		context.bindValue(SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify)), EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__DOCUMENTATION));	
+		UpdateValueStrategy strategy = new UpdateValueStrategy();
+		strategy.setBeforeSetValidator(new InputLengthValidator(Messages.GeneralSection_Description, 255));
+	//	context.bindValue(SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify)), EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),strategy,null);
+		ControlDecorationSupport.create(context.bindValue(SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify)), EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),strategy,null), SWT.LEFT|SWT.TOP);
+		
 	}
 
 	/*
