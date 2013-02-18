@@ -20,6 +20,7 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -131,8 +132,12 @@ public class SelectNameAndDescWizardPage extends WizardPage implements IWizardPa
             }
         }) ;
 
-        context.bindValue(SWTObservables.observeDelayedValue(200, SWTObservables.observeText(nameText, SWT.Modify)), EMFObservables.observeValue(connector, ProcessPackage.Literals.ELEMENT__NAME),nameStrategy,null) ;
-        context.bindValue(SWTObservables.observeText(descText, SWT.Modify), EMFObservables.observeValue(connector, ProcessPackage.Literals.ELEMENT__DOCUMENTATION)) ;
+
+        context.bindValue(SWTObservables.observeText(nameText, SWT.Modify), EMFObservables.observeValue(connector, ProcessPackage.Literals.ELEMENT__NAME),nameStrategy,null);
+        UpdateValueStrategy descStrategy = new UpdateValueStrategy();
+        descStrategy.setBeforeSetValidator(new InputLengthValidator(Messages.dataDescriptionLabel, 255));
+        context.bindValue(SWTObservables.observeText(descText, SWT.Modify), EMFObservables.observeValue(connector, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),descStrategy,null) ;
+
 
         return composite;
     }
