@@ -110,7 +110,7 @@ public class PortalLabelsMigration extends ReportCustomMigration {
 			final String condition = stepSummary.get(flowElement.getUuid());
 			expression = converter.parse(condition, String.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
-				expression.set("name", "loopConditionScript");
+				expression.set("name", "desciptionAfterCompletionScript");
 			}
 			addReportChange((String) flowElement.get("name"),flowElement.getType().getEClass().getName(), flowElement.getUuid(),Messages.stepSummaryMigrationDescription, Messages.portalProperty,ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type")) ? IStatus.WARNING : IStatus.OK);
 		}else{
