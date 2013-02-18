@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.actors.ui.section.editingsupport;
 
+import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
@@ -26,6 +27,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -57,6 +59,17 @@ public class ActorDescripitonEditingSupport extends EditingSupport {
 	@Override
 	protected CellEditor getCellEditor(final Object element) {
 		TextCellEditor editor = new TextCellEditor((Composite) getViewer().getControl(), SWT.NONE) ; 
+		editor.setValidator(new ICellEditorValidator() {
+			
+			@Override
+			public String isValid(Object value) {
+				String desc = (String)value;
+				if (desc.length()>255){
+					return Messages.descTooLong;
+				}
+				return null;
+			}
+		});
 		return  editor;
 	}
 
@@ -89,6 +102,7 @@ public class ActorDescripitonEditingSupport extends EditingSupport {
 		this.transactionalEditingDomain = transactionalEditingDomain;
 	}
 
+	
 
 
 }

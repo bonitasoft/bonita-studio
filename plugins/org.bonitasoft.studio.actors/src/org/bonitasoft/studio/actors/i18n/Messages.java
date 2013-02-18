@@ -274,6 +274,7 @@ public class Messages extends NLS {
     public static String managerCycleDetected;
 	public static String initiatorExplanation;
 	public static String nameTooLong;
+	public static String descTooLong;
 
 
 
