@@ -101,7 +101,7 @@ public class DeleteHandler extends AbstractHandler {
 						GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run() ;
 					}
 				} else {
-					upadateLaneItems() ;
+					//upadateLaneItems() ;
 					GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run();
 				}
 
