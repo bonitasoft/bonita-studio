@@ -54,7 +54,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * 
- * @author Baptiste Mesta
+ * @author Romain Bioteau
  *
  */
 public class WidgetModifierContribution implements IExtensibleGridPropertySectionContribution,ISelectionChangedListener {
@@ -67,7 +67,6 @@ public class WidgetModifierContribution implements IExtensibleGridPropertySectio
 
     public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
         dataBindingContext = new EMFDataBindingContext();
-        //        final Composite mainComposite = widgetFactory.createComposite(composite, SWT.NONE);
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
         final ComboViewer modifiersCombo = new ComboViewer(composite,SWT.READ_ONLY | SWT.BORDER);
