@@ -282,6 +282,9 @@ public class WidgetMigration extends ReportCustomMigration {
 	}
 
 	private void setReturnTypeModifier(Instance widget) {
+		if(!widget.instanceOf("form.TextFormField")){
+			return;
+		}
 		final Instance operation = widget.get("action");
 		boolean added = false ; 
 		if(operation != null){

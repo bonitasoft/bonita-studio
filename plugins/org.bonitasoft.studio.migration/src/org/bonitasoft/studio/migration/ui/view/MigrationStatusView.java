@@ -281,7 +281,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 	protected void addElementNameColumn() {
 		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
 		column.getColumn().setText(Messages.name);
-		column.getColumn().setAlignment(SWT.CENTER);
+		column.getColumn().setAlignment(SWT.LEFT);
 		column.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -317,9 +317,9 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 	}
 
 	protected void addElementTypeColumn() {
-		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.CENTER);
+		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
 		column.getColumn().setText(Messages.elementType);
-		column.getColumn().setAlignment(SWT.CENTER);
+		column.getColumn().setAlignment(SWT.LEFT);
 		column.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {
@@ -357,7 +357,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 	protected void addPropertyColumn() {
 		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
 		column.getColumn().setText(Messages.property);
-		column.getColumn().setAlignment(SWT.CENTER);
+		column.getColumn().setAlignment(SWT.LEFT);
 		column.setLabelProvider(new ColumnLabelProvider(){
 			@Override
 			public String getText(Object element) {

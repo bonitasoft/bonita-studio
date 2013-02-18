@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.migration.utils;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +41,7 @@ public class StringToExpressionConverter {
 	private Map<String,Instance> data = new HashMap<String, Instance>();
 	private Map<String,Instance> widget = new HashMap<String, Instance>();
 	private boolean useSimulationDataScope = false;
+	private Instance container;
 
 	public StringToExpressionConverter(Model model, Instance container) {
 		Assert.isNotNull(model);
@@ -75,7 +77,12 @@ public class StringToExpressionConverter {
 
 		if(expressionScript == null || expressionScript.trim().isEmpty()){
 			if(setVarScript != null && !setVarScript.trim().isEmpty()){
-				expressionScript = "${"+FORM_FIELD_PREFIX+setVarScript+"}";
+				Instance widget = getParentWidget(groovyScriptInstance);
+				String widgetName = setVarScript;
+				if(widget != null){
+					 widgetName = widget.get("name");
+				}
+				expressionScript = "${"+FORM_FIELD_PREFIX+widgetName+"}";
 			}
 		}
 
@@ -104,6 +111,15 @@ public class StringToExpressionConverter {
 		operation.set("leftOperand", leftOperand);
 		return operation;
 	}
+
+	private Instance getParentWidget(Instance groovyScriptInstance) {
+		Instance current = groovyScriptInstance;
+		while (current != null && !current.instanceOf("form.Widget")) {
+			current = current.getContainer();
+		}
+		return current;
+	}
+
 
 	public Instance parse(String stringToParse,String returnType,boolean fixedReturnType) {
 		if(returnType == null || returnType.isEmpty()){//Default return type is String
@@ -263,6 +279,8 @@ public class StringToExpressionConverter {
 			return Long.class.getName();
 		}else if(dataype.instanceOf("process.XMLType")){
 			return Document.class.getName();
+		}else if(dataype.instanceOf("process.DateType")){
+			return Date.class.getName();
 		}
 		return String.class.getName();
 	}
