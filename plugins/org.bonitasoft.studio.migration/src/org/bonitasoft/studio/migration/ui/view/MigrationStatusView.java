@@ -167,7 +167,14 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);				
-				MessageDialogWithToggle mdwt = MessageDialogWithToggle.openYesNoQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Complete import", " You are about to exit from the import report for this process diagram.\n You will not be able to return to the import report.\n Click OK to exit, or cancel to keep the report.", "Export the import status report", true, MigrationPlugin.getDefault().getPreferenceStore(), "toggleStateForImportExportStatus");
+				MessageDialogWithToggle mdwt = MessageDialogWithToggle.openYesNoQuestion(
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+						Messages.completeImport,
+						Messages.completeImportMessage,
+						Messages.completeImportToggleMessage,
+						true,
+						MigrationPlugin.getDefault().getPreferenceStore(),
+						"toggleStateForImportExportStatus");
 				if(IDialogConstants.YES_ID == mdwt.getReturnCode()){
 					if(mdwt.getToggleState()){
 						exportAction.run();

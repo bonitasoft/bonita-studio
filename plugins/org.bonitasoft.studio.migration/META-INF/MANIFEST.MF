@@ -23,6 +23,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.migration,
+ org.bonitasoft.studio.migration.i18n;x-friends:="org.bonitasoft.studio.migration.tests",
  org.bonitasoft.studio.migration.migrator,
  org.bonitasoft.studio.migration.model.report,
  org.bonitasoft.studio.migration.utils

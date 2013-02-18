@@ -49,6 +49,8 @@ public class Messages extends NLS {
 	public static String noActionRequired;
 	public static String reviewRequired;
 	public static String actionRequired;
+	public static String completeImportMessage;
+	public static String completeImportToggleMessage;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

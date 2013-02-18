@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.migration.i18n.Messages;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.ecore.EObject;
@@ -63,8 +64,8 @@ public class MigrationReporTest extends SWTBotGefTestCase {
 		op.setArchiveFile(FileLocator.toFileURL(url).getFile());
 		op.run(Repository.NULL_PROGRESS_MONITOR);
 		
-		bot.viewById("org.bonitasoft.studio.migration.view").bot().button("Complete").click();
-		bot.waitUntil(Conditions.shellIsActive("Complete import"));
+		bot.viewById("org.bonitasoft.studio.migration.view").bot().button(Messages.completeImport).click();
+		bot.waitUntil(Conditions.shellIsActive(Messages.completeImport));
 		bot.checkBox().deselect();
 		bot.button(IDialogConstants.YES_LABEL).click();
 		
