@@ -17,11 +17,15 @@
 package org.bonitasoft.studio.importer.test.bos;
 
 import java.io.File;
+import java.io.IOException;
 
 import junit.framework.TestCase;
 
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
@@ -52,6 +56,22 @@ public class TestBOSArchiveImport extends TestCase {
         assertTrue(status.getMessage(),status.isOK());
 
     }
+    
+    public void testImportSeveralDiagrams() throws IOException {
+    	 final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
+         File file = new File(FileLocator.toFileURL(TestBOSArchiveImport.class.getResource("severalDiagramsImportTest.bos")).getFile());
+         operation.setArchiveFile(file.getAbsolutePath());
+         IStatus status = operation.run(new NullProgressMonitor());
+         assertNotNull(status);
+         assertTrue(status.getMessage(),status.isOK());
+         DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class);
+         DiagramFileStore  diagram1 = store.getDiagram("diagram1", "1.0");
+         assertNotNull("diagram1 was not imported correctly",diagram1);
+         DiagramFileStore diagram2 = store.getDiagram("diagram2","1.0");
+         assertNotNull("diagram2 was not imported correctly",diagram2);
+         DiagramFileStore diagram3 = store.getDiagram("diagram3","1.0");
+         assertNotNull("diagram2 was not imported correctly",diagram3);
+        		 }
 
     public void testImportBOSArchiveDemoProcess() throws Exception {
         final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
