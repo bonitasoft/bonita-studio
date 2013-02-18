@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
+ * Copyright (C) 2009-2013 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,6 @@ import java.util.Map;
 import org.bonitasoft.studio.application.coolbar.SaveCoolbarItem;
 import org.bonitasoft.studio.application.coolbar.SeparatorCoolbarItem;
 import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.common.editor.PartListenerToOpenIntroIfNoMoreEditorIsopened;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -38,7 +37,6 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -377,7 +375,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor i
         IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         activeWorkbenchWindow.getSelectionService().addSelectionListener(this) ;
         activeWorkbenchWindow.getActivePage().addPartListener(new AutomaticSwitchPerspectivePartListener());
-        activeWorkbenchWindow.getActivePage().addPartListener(new PartListenerToOpenIntroIfNoMoreEditorIsopened());
         activeWorkbenchWindow.getActivePage().addPartListener(new IPartListener(){
 
             @Override

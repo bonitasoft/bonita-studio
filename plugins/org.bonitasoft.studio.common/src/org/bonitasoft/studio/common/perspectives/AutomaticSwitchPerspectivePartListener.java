@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
+ * Copyright (C) 2010-2013 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,30 +17,61 @@
  */
 package org.bonitasoft.studio.common.perspectives;
 
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartReference;
 
-public final class AutomaticSwitchPerspectivePartListener implements IPartListener {
+public final class AutomaticSwitchPerspectivePartListener implements IPartListener2 {
 
-	public void partOpened(IWorkbenchPart part) {
+	@Override
+	public void partActivated(IWorkbenchPartReference partRef) {
+		
 	}
 
-	public void partDeactivated(IWorkbenchPart part) {
+	@Override
+	public void partBroughtToTop(IWorkbenchPartReference partRef) {
+	
 	}
 
-	public void partClosed(IWorkbenchPart part) {
-	}
-
-	public void partBroughtToTop(IWorkbenchPart part) {
-	}
-
-	public void partActivated(IWorkbenchPart part) {
+	@Override
+	public void partClosed(IWorkbenchPartReference partRef) {
+		IWorkbenchPart part = partRef.getPart(false);
 		if (part instanceof IEditorPart) {
+			PlatformUtil.openIntroIfNoOtherEditorOpen();
+		}
+	}
+
+	@Override
+	public void partDeactivated(IWorkbenchPartReference partRef) {
+	
+	}
+
+	@Override
+	public void partOpened(IWorkbenchPartReference partRef) {
+		IWorkbenchPart part = partRef.getPart(false);
+		if (part instanceof IEditorPart) {
+			PlatformUtil.closeIntro();
 			final String id = BonitaPerspectivesUtils.getPerspectiveId((IEditorPart) part);
 			if (id != null) {
 				BonitaPerspectivesUtils.switchToPerspective(id);
 			}
 		}
+	}
+
+	@Override
+	public void partHidden(IWorkbenchPartReference partRef) {
+		
+	}
+
+	@Override
+	public void partVisible(IWorkbenchPartReference partRef) {
+		
+	}
+
+	@Override
+	public void partInputChanged(IWorkbenchPartReference partRef) {
+	
 	}
 }
