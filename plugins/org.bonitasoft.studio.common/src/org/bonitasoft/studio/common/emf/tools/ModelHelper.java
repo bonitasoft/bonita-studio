@@ -1788,7 +1788,7 @@ public class ModelHelper {
         return flowElement != null ? (FlowElement) flowElement : null;
     }
 
-    public static EObject getParentWidget(EObject eObject) {
+    public static Widget getParentWidget(EObject eObject) {
         EObject widget = eObject;
         while (widget != null && !(widget instanceof Widget)) {
             widget = widget.eContainer();
