@@ -23,6 +23,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -277,8 +278,9 @@ public class ImplementationWizardPage extends NewTypeWizardPage implements ISele
 
         final Text descriptionText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
         descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).span(2, 1).create());
-
-        context.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DESCRIPTION)) ;
+        UpdateValueStrategy descStrategy = new UpdateValueStrategy();
+        descStrategy.setBeforeSetValidator(new InputLengthValidator(Messages.description, 255));
+        context.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DESCRIPTION),descStrategy,null) ;
 
         createClassAndPackageName(mainComposite) ;
         createDependenciesViewer(mainComposite) ;
