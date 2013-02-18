@@ -27,6 +27,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
@@ -205,9 +206,9 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 
 		final Text descriptionText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
 		descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 60).span(2, 1).create());
-
-		context.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), PojoProperties.value(DefinitionInformationWizardPage.class, "definitionDescription").observe(this)) ;
-
+        UpdateValueStrategy descStrategy=new UpdateValueStrategy();
+        descStrategy.setBeforeSetValidator(new InputLengthValidator(Messages.description, 255));
+        context.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), PojoProperties.value(DefinitionInformationWizardPage.class, "definitionDescription").observe(this),descStrategy,null) ;
 
 		final Label iconLabel = new Label(mainComposite, SWT.NONE);
 		iconLabel.setText(Messages.iconLabel);
