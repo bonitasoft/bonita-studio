@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -44,6 +45,7 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionToolbarContri
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;
@@ -174,7 +176,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 	protected void createControl(Composite composite, int style, TabbedPropertySheetWidgetFactory widgetFactory) {
 		if(widgetFactory != null){
-
 			control = widgetFactory.createComposite(composite, SWT.INHERIT_DEFAULT) ;
 		}else{
 			control = new Composite(composite, SWT.INHERIT_DEFAULT) ;
@@ -288,7 +289,17 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				int proposalAcceptanceStyle = autoCompletion.getContentProposalAdapter().getProposalAcceptanceStyle();
 				if(proposalAcceptanceStyle == ContentProposalAdapter.PROPOSAL_REPLACE){
 					ExpressionProposal prop = (ExpressionProposal) proposal ;
-					updateSelection(EcoreUtil.copy((Expression) prop.getExpression()));
+					final Expression copy = EcoreUtil.copy((Expression) prop.getExpression());
+					if(copy.getType().equals(ExpressionConstants.FORM_FIELD_TYPE)){
+						final Widget w = ModelHelper.getParentWidget(copy);
+						if(w != null){
+							final String returnTypeModifier = w.getReturnTypeModifier();
+							if(returnTypeModifier != null){
+								copy.setReturnType(returnTypeModifier);
+							}
+						}
+					}
+					updateSelection(copy);
 				}
 			}
 		}) ;
@@ -305,7 +316,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	}
 
 	protected void openEditDialog() {
-
 		final Object input = getInput();
 		EObject editInput = context;
 		if(input != null){
@@ -325,9 +335,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression))) ;
 		}
 	}
-
-
-
 
 	protected void fireExpressionEditorChanged(SelectionChangedEvent selectionChangedEvent) {
 		for(ISelectionChangedListener listener : expressionEditorListener){
@@ -380,7 +387,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				if(editingDomain == null){
 					editingDomain = TransactionUtil.getEditingDomain(selectedExpression);
 				}
-
 				final StructuredSelection selection2 = new StructuredSelection(selectedExpression);
 				fireSelectionChanged(new SelectionChangedEvent(this, selection2)) ;
 				for(IExpressionToolbarContribution contribution : toolbarContributions){
