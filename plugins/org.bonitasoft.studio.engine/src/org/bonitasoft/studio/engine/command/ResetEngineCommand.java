@@ -62,7 +62,7 @@ public class ResetEngineCommand extends AbstractHandler {
                         List<ProcessDeploymentInfo> processes = processManagementAPI.getProcesses(0,nbProcess , ProcessDefinitionCriterion.DEFAULT) ;
                         List<Long> processIds = new ArrayList<Long>() ;
                         for(ProcessDeploymentInfo info : processes){
-                            processIds.add(info.getId()) ;
+                            processIds.add(info.getProcessId()) ;
                         }
                         processManagementAPI.deleteProcesses(processIds);
                     }
