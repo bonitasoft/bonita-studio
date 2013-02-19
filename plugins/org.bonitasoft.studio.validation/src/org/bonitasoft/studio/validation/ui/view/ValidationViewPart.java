@@ -49,6 +49,9 @@ import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
@@ -77,6 +80,8 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 	private ValidationViewAction validateAction;
 	
 	
+	
+	
 	/**
 	 * 
 	 */
@@ -94,8 +99,9 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 
 
 		createTopComposite(mainComposite);
-		createTableComposite(mainComposite);
 		createValidateButton(mainComposite);
+		createTableComposite(mainComposite);
+		
 
 		ISelectionService ss = getSite().getWorkbenchWindow().getSelectionService();
 		ss.addPostSelectionListener(this);
@@ -110,15 +116,29 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 	}
 
 	private void createValidateButton(Composite mainComposite) {
-
-		IActionBars actionBars = getViewSite().getActionBars();
-		IToolBarManager toolBar = actionBars.getToolBarManager();
+		
 		IWorkbenchPage activePage =  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		validateAction = new ValidationViewAction();
 		validateAction.setActivePage(activePage);
 		validateAction.setTableViewer(tableViewer);
 		
-		toolBar.add(validateAction);
+		
+		Composite buttonComposite = new Composite(mainComposite,SWT.NONE);
+		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().margins(15,5).create());
+		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		Button validateButton=new Button(buttonComposite,SWT.FLAT);
+		validateButton.setLayoutData(GridDataFactory.fillDefaults().create());
+		validateButton.setText(Messages.validationViewValidateButtonLabel);
+		validateButton.addSelectionListener(new SelectionAdapter() {
+			/* (non-Javadoc)
+			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			 */
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				validateAction.run();
+			}
+		});
+
 		
 
 	}
