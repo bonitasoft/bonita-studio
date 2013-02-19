@@ -31,12 +31,15 @@ import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.edit.policies.LaneItemSemanticEditPolicy;
+import org.bonitasoft.studio.model.process.diagram.part.ValidateAction;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.transaction.Transaction;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
@@ -47,14 +50,17 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.commands.core.command.CompositeTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.EditElementCommand;
+import org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -137,21 +143,24 @@ public class CustomLaneItemSemanticEditPolicy extends LaneItemSemanticEditPolicy
 		View view = (View) getHost().getModel();
 		CompositeTransactionalCommand cmd = new CompositeTransactionalCommand(
 				getEditingDomain(), null);
-		cmd.setTransactionNestingEnabled(false);
+		cmd.setTransactionNestingEnabled(true);
 
-	
+
 		Lane lane = (Lane)((IGraphicalEditPart)getHost()).resolveSemanticElement();
 		for(Element element : lane.getElements()){
 			if(element instanceof Task) {
-				EditElementCommand eec = new EditElementCommand("Update actors in Lane",
+				EditElementCommand eec = new SetValueCommand(new SetRequest(element, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE, true)){
 
-						element,
-						new SetRequest(element, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE, true)){
+					/* (non-Javadoc)
+					 * @see org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand#doUndo(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
+					 */
 					@Override
-					protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
+					protected IStatus doUndo(IProgressMonitor monitor,
 							IAdaptable info) throws ExecutionException {
-						((Task)getElementToEdit()).setOverrideActorsOfTheLane(true);
-						return CommandResult.newOKCommandResult(getElementToEdit());
+						IStatus status = super.doUndo(monitor, info);
+						DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+						ValidateAction.runValidation(editor.getDiagram());
+						return status;
 					}
 				};
 
