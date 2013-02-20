@@ -16,7 +16,6 @@
 
 	<modules>
 		<module>org.bonitasoft.studio.console.libs</module>
-		<module>org.bonitasoft.studio-models</module>
 		<module>org.bonitasoft.studio.simulation.libs</module>
 		<module>org.bonitasoft.studio.model</module>
 		<module>org.bonitasoft.studio.model.edit</module>
