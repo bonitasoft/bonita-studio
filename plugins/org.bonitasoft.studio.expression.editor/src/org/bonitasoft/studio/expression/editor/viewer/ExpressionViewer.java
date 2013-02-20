@@ -136,7 +136,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private boolean withConnector=false;
 	private List<IExpressionValidationListener> validationListeners = new ArrayList<IExpressionValidationListener>();
 	private ToolItem eraseControl;
-	private int curentValidationStatus = IStatus.OK;
 
 	/**
 	 * @return the eraseControl
@@ -588,18 +587,15 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				targetToModelNameStrategy,
 				null) ;
 
-		observeDelayedValue.addValueChangeListener(new IValueChangeListener() {
+		expressionBinding.getValidationStatus().addValueChangeListener(new IValueChangeListener() {
 			
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
-				final Entry<Integer, String> currentMessage = getMessageToDisplay();
-				int newStatus = IStatus.OK;
-				if(currentMessage != null ){
-					newStatus =currentMessage.getKey();
-				}
-				fireValidationStatusChanged(newStatus);
+				IStatus status = (IStatus) event.diff.getNewValue();
+				fireValidationStatusChanged(status.getSeverity());
 			}
 		});
+
 		UpdateValueStrategy modelToTargetTypeStrategy = new UpdateValueStrategy();
 		modelToTargetTypeStrategy.setConverter(new Converter(String.class,Boolean.class){
 
