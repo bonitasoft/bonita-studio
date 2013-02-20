@@ -36,7 +36,7 @@
            toolbarPosition="10">
      </coolbarItem>
      <coolbarItem
-           class="org.bonitasoft.studio.engine.coolbar.OpenUserXPCoolbarItem"
+           class="org.bonitasoft.studio.engine.coolbar.OpenPortalCoolbarItem"
            priority="0"
            toolbarPosition="12">
      </coolbarItem>

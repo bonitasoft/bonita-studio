@@ -21,14 +21,13 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -39,10 +38,7 @@ import org.eclipse.swt.widgets.ToolItem;
  */
 public class PrintCoolbarItem implements IBonitaContributionItem {
 
-
 	private PrintCommandHandler handler;
-	private Image smallImage;
-	private Image smallDisabledImage;
 
 	public PrintCoolbarItem(){
 		this.handler = new PrintCommandHandler() ;
@@ -51,14 +47,7 @@ public class PrintCoolbarItem implements IBonitaContributionItem {
 	 * @see org.eclipse.jface.action.IContributionItem#dispose()
 	 */
 	@Override
-	public void dispose() {
-		if(smallImage != null){
-			smallImage.dispose() ;
-		}
-		if(smallDisabledImage != null){
-			smallDisabledImage.dispose() ;
-		}
-	}
+	public void dispose() {	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Composite)
@@ -192,13 +181,11 @@ public class PrintCoolbarItem implements IBonitaContributionItem {
 		item.setToolTipText(Messages.PrintProcessButtonLabel) ;
 		if(iconSize < 0 ){
 			item.setText(Messages.PrintProcessButtonLabel) ;
-			item.setImage(Pics.getImage("/editIcons/print.png")) ;
-			item.setDisabledImage(Pics.getImage("/editIcons/print_disabled.png"));
+			item.setImage(Pics.getImage(PicsConstants.coolbar_print_48)) ;
+			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_print_disabled_48));
 		}else{
-			smallImage = new Image(Display.getDefault(),Pics.getImage("/editIcons/print.png").getImageData().scaledTo(iconSize, iconSize));
-			smallDisabledImage = new Image(Display.getDefault(),Pics.getImage("/editIcons/print_disabled.png").getImageData().scaledTo(iconSize, iconSize)) ;
-			item.setImage(smallImage);
-			item.setDisabledImage(smallDisabledImage);
+			item.setImage(Pics.getImage(PicsConstants.coolbar_print_16)) ;
+			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_print_disabled_16));
 		}
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override

@@ -20,16 +20,15 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -41,18 +40,12 @@ import org.eclipse.ui.commands.ICommandService;
  *
  */
 public class OpenDiagramCoolbarItem implements IBonitaContributionItem {
-
-	private Image smallImage;
-
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IContributionItem#dispose()
 	 */
 	@Override
-	public void dispose() {
-		if(smallImage != null){
-			smallImage.dispose() ;
-		}
-	}
+	public void dispose() {}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Composite)
@@ -193,10 +186,11 @@ public class OpenDiagramCoolbarItem implements IBonitaContributionItem {
 		item.setToolTipText(Messages.OpenProcessButtonLabel) ;
 		if(iconSize < 0 ){
 			item.setText(Messages.OpenProcessButtonLabel) ;
-			item.setImage(Pics.getImage("/editIcons/open.png")) ;
+			item.setImage(Pics.getImage(PicsConstants.coolbar_open_48)) ;
+			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_open_disabled_48));
 		}else{
-			smallImage = new Image(Display.getDefault(),Pics.getImage("/editIcons/open.png").getImageData().scaledTo(iconSize, iconSize));
-			item.setImage(smallImage);
+			item.setImage(Pics.getImage(PicsConstants.coolbar_open_16)) ;
+			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_open_disabled_16));
 		}
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override

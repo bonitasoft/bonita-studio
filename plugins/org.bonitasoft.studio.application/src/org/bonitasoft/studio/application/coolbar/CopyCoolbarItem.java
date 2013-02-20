@@ -20,6 +20,7 @@ import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.action.IContributionManager;
@@ -28,10 +29,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -44,191 +43,178 @@ import org.eclipse.ui.commands.ICommandService;
  */
 public class CopyCoolbarItem implements IBonitaContributionItem,ISelectionChangedListener {
 
-    private Image smallImage;
-    private Image smallDisabledImage;
-    private ToolItem item;
+	private ToolItem item;
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#dispose()
-     */
-    @Override
-    public void dispose() {
-        if(smallImage != null){
-            smallImage.dispose() ;
-        }
-        if(smallDisabledImage != null){
-            smallDisabledImage.dispose() ;
-        }
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#dispose()
+	 */
+	@Override
+	public void dispose() {  }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Composite)
-     */
-    @Override
-    public void fill(Composite parent) {}
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	public void fill(Composite parent) {}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Menu, int)
-     */
-    @Override
-    public void fill(Menu parent, int index) {}
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.Menu, int)
+	 */
+	@Override
+	public void fill(Menu parent, int index) {}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.ToolBar, int)
-     */
-    @Override
-    public void fill(ToolBar parent, int index) {
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.ToolBar, int)
+	 */
+	@Override
+	public void fill(ToolBar parent, int index) {
 
-    }
+	}
 
-    private Command getCommand() {
-        ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
-        Command cmd = service.getCommand("org.eclipse.ui.edit.copy") ;
-        return cmd;
-    }
+	private Command getCommand() {
+		ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
+		Command cmd = service.getCommand("org.eclipse.ui.edit.copy") ;
+		return cmd;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.CoolBar, int)
-     */
-    @Override
-    public void fill(CoolBar parent, int index) {}
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#fill(org.eclipse.swt.widgets.CoolBar, int)
+	 */
+	@Override
+	public void fill(CoolBar parent, int index) {}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#getId()
-     */
-    @Override
-    public String getId() {
-        return "org.bonitasoft.studio.coolbar.copy";
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#getId()
+	 */
+	@Override
+	public String getId() {
+		return "org.bonitasoft.studio.coolbar.copy";
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-        Command cmd = getCommand();
-        return cmd.isEnabled();
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#isEnabled()
+	 */
+	@Override
+	public boolean isEnabled() {
+		Command cmd = getCommand();
+		return cmd.isEnabled();
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isDirty()
-     */
-    @Override
-    public boolean isDirty() {
-        return false;
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#isDirty()
+	 */
+	@Override
+	public boolean isDirty() {
+		return false;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isDynamic()
-     */
-    @Override
-    public boolean isDynamic() {
-        return false;
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#isDynamic()
+	 */
+	@Override
+	public boolean isDynamic() {
+		return false;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isGroupMarker()
-     */
-    @Override
-    public boolean isGroupMarker() {
-        return false;
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#isGroupMarker()
+	 */
+	@Override
+	public boolean isGroupMarker() {
+		return false;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isSeparator()
-     */
-    @Override
-    public boolean isSeparator() {
-        return false;
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#isSeparator()
+	 */
+	@Override
+	public boolean isSeparator() {
+		return false;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#isVisible()
-     */
-    @Override
-    public boolean isVisible() {
-        return true;
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#isVisible()
+	 */
+	@Override
+	public boolean isVisible() {
+		return true;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#saveWidgetState()
-     */
-    @Override
-    public void saveWidgetState() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#saveWidgetState()
+	 */
+	@Override
+	public void saveWidgetState() {
 
 
-    }
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#setParent(org.eclipse.jface.action.IContributionManager)
-     */
-    @Override
-    public void setParent(IContributionManager parent) {
-
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#setVisible(boolean)
-     */
-    @Override
-    public void setVisible(boolean visible) {
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#setParent(org.eclipse.jface.action.IContributionManager)
+	 */
+	@Override
+	public void setParent(IContributionManager parent) {
 
 
-    }
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#update()
-     */
-    @Override
-    public void update() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#setVisible(boolean)
+	 */
+	@Override
+	public void setVisible(boolean visible) {
 
 
-    }
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.action.IContributionItem#update(java.lang.String)
-     */
-    @Override
-    public void update(String id) {
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#update()
+	 */
+	@Override
+	public void update() {
 
-    }
 
-    @Override
-    public void fill(ToolBar toolbar, int index, int iconSize) {
-        item = new ToolItem(toolbar,  SWT.PUSH) ;
-        item.setToolTipText(Messages.CopyButtonLabel) ;
-        Image icon = Pics.getImage("/editIcons/copy.png") ;
-        Image disabledIcon = Pics.getImage("/editIcons/copy_disabled.png") ;
-        if(iconSize < 0){
-            item.setText(Messages.CopyButtonLabel) ;
-            item.setImage(icon) ;
-            item.setDisabledImage(disabledIcon);
-        }else{
-            smallImage = new Image(Display.getDefault(),icon.getImageData().scaledTo(iconSize, iconSize));
-            smallDisabledImage = new Image(Display.getDefault(),disabledIcon.getImageData().scaledTo(iconSize, iconSize)) ;
-            item.setImage(smallImage);
-            item.setDisabledImage(smallDisabledImage);
-        }
-        item.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                Command cmd = getCommand();
-                try {
-                    cmd.executeWithChecks(new ExecutionEvent());
-                } catch (Exception ex) {
-                    BonitaStudioLog.error(ex);
-                }
-            }
-        }) ;
+	}
 
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IContributionItem#update(java.lang.String)
+	 */
+	@Override
+	public void update(String id) {
 
-    @Override
-    public void selectionChanged(SelectionChangedEvent arg0) {
-        if (item!=null && !item.isDisposed()){
-            item.setEnabled(getCommand().isEnabled());
-        }
-    }
+	}
+
+	@Override
+	public void fill(ToolBar toolbar, int index, int iconSize) {
+		item = new ToolItem(toolbar,  SWT.PUSH) ;
+		item.setToolTipText(Messages.CopyButtonLabel) ;
+		if(iconSize < 0){
+			item.setText(Messages.CopyButtonLabel) ;
+			item.setImage(Pics.getImage(PicsConstants.coolbar_copy_48)) ;
+			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_copy_disabled_48));
+		}else{
+			item.setImage(Pics.getImage(PicsConstants.coolbar_copy_16)) ;
+			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_copy_disabled_16));
+		}
+		item.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Command cmd = getCommand();
+				try {
+					cmd.executeWithChecks(new ExecutionEvent());
+				} catch (Exception ex) {
+					BonitaStudioLog.error(ex);
+				}
+			}
+		}) ;
+
+	}
+
+	@Override
+	public void selectionChanged(SelectionChangedEvent arg0) {
+		if (item!=null && !item.isDisposed()){
+			item.setEnabled(getCommand().isEnabled());
+		}
+	}
 
 }

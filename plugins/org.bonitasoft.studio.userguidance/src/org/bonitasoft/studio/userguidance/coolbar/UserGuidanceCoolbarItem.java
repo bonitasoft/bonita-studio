@@ -19,6 +19,7 @@ package org.bonitasoft.studio.userguidance.coolbar;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.userguidance.i18n.Messages;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -26,10 +27,8 @@ import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -42,16 +41,11 @@ import org.eclipse.ui.commands.ICommandService;
  */
 public class UserGuidanceCoolbarItem implements IBonitaContributionItem {
 
-	private Image smallImage;
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.action.IContributionItem#dispose()
 	 */
 	@Override
 	public void dispose() {
-		if(smallImage != null){
-			smallImage.dispose() ;
-		}
 	}
 
 	/* (non-Javadoc)
@@ -193,10 +187,11 @@ public class UserGuidanceCoolbarItem implements IBonitaContributionItem {
 		item.setToolTipText(Messages.UserGuidance) ;
 		if(iconSize < 0 ){
 			item.setText(Messages.UserGuidance) ;
-			item.setImage(Pics.getImage("/editIcons/user_guidance.png")) ;
+			item.setImage(Pics.getImage(PicsConstants.coolbar_guidance_48)) ;
+			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_guidance_disabled_48)) ;
 		}else{
-			smallImage = new Image(Display.getDefault(),Pics.getImage("/editIcons/user_guidance.png").getImageData().scaledTo(iconSize, iconSize));
-			item.setImage(smallImage);
+			item.setImage(Pics.getImage(PicsConstants.coolbar_guidance_16));
+			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_guidance_disabled_16)) ;
 		}
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
