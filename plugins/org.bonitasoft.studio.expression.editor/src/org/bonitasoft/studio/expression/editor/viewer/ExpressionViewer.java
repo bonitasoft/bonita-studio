@@ -74,6 +74,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
@@ -133,7 +134,16 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private EObject context;
 	private final List<ISelectionChangedListener> expressionEditorListener = new ArrayList<ISelectionChangedListener>();
 	private boolean withConnector=false;
+	private List<IExpressionValidationListener> validationListeners = new ArrayList<IExpressionValidationListener>();
+	private ToolItem eraseControl;
+	private int curentValidationStatus = IStatus.OK;
 
+	/**
+	 * @return the eraseControl
+	 */
+	public ToolItem getEraseControl() {
+		return eraseControl;
+	}
 
 	protected final DisposeListener disposeListener = new DisposeListener() {
 
@@ -234,7 +244,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	}
 
 	protected ToolItem createEraseToolItem(ToolBar tb) {
-		final ToolItem eraseControl = new ToolItem(tb, SWT.PUSH);
+		eraseControl = new ToolItem(tb, SWT.PUSH);
 		eraseControl.setImage(Pics.getImage(PicsConstants.clear));
 		eraseControl.setToolTipText(Messages.eraseExpression);
 
@@ -243,14 +253,18 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		eraseControl.addListener(SWT.Selection,new Listener() {
 			@Override
 			public void handleEvent(Event event) {
+				String type = selectedExpression.getType();
+				if(!ExpressionConstants.CONDITION_TYPE.equals(type)){
+					type=ExpressionConstants.CONSTANT_TYPE;
+				}
 				if(editingDomain != null){
-					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
+					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, type));
 					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME,""));
 					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT,""));
 					editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,selectedExpression.getReferencedElements()));
 					editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONNECTORS,selectedExpression.getConnectors()));
 				}else{
-					selectedExpression.setType(ExpressionConstants.CONSTANT_TYPE);
+					selectedExpression.setType(type);
 					selectedExpression.setName("");
 					selectedExpression.setContent("");
 					selectedExpression.getReferencedElements().clear();
@@ -536,6 +550,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				final IExpressionValidator validator = validatorsForType.get(selectedExpression.getType());
 				if(validator != null){
 					validator.setDomain(editingDomain);
+					validator.setContext(context);
 					validator.setInputExpression(selectedExpression);
 					final IStatus status = validator.validate(value);
 					if(externalDataBindingContext == null){//Display error at expression editor level
@@ -566,13 +581,25 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		});
 		targetToModelNameStrategy.setConverter(getNameConverter());
 
+		final ISWTObservableValue observeDelayedValue = SWTObservables.observeDelayedValue(500, SWTObservables.observeText(textControl, SWT.Modify));
 		expressionBinding = internalDataBindingContext.bindValue(
-				SWTObservables.observeDelayedValue(500, SWTObservables.observeText(textControl, SWT.Modify)),
+				observeDelayedValue,
 				nameObservable,
 				targetToModelNameStrategy,
 				null) ;
 
-
+		observeDelayedValue.addValueChangeListener(new IValueChangeListener() {
+			
+			@Override
+			public void handleValueChange(ValueChangeEvent event) {
+				final Entry<Integer, String> currentMessage = getMessageToDisplay();
+				int newStatus = IStatus.OK;
+				if(currentMessage != null ){
+					newStatus =currentMessage.getKey();
+				}
+				fireValidationStatusChanged(newStatus);
+			}
+		});
 		UpdateValueStrategy modelToTargetTypeStrategy = new UpdateValueStrategy();
 		modelToTargetTypeStrategy.setConverter(new Converter(String.class,Boolean.class){
 
@@ -831,10 +858,15 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		}else{
 			messages.put(messageKind,message) ;
 		}
-
 		refresh();
 	}
 
+
+	protected void fireValidationStatusChanged(int newStatus) {
+		for(IExpressionValidationListener listener : validationListeners){
+			listener.validationStatusChanged(newStatus);
+		}
+	}
 
 	@Override
 	protected void handleDispose(DisposeEvent event) {
@@ -902,5 +934,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 	public void addExpressionValidator(String expressionType,IExpressionValidator comaprisonExpressionValidator) {
 		validatorsForType.put(expressionType,comaprisonExpressionValidator);
+	}
+	
+	public void addExpressionValidationListener(IExpressionValidationListener listener) {
+		if(!validationListeners.contains(listener)){
+			validationListeners.add(listener);
+		}
 	}
 }
