@@ -67,6 +67,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     TestBugsSWTBot.class,
     DiagramTests.class,
+    TestConditionExpression.class,
     TestConfigurationDialog.class,
     OrganizationCreationTest.class,
     ActorDefinitionTranslationsTest.class,
@@ -83,7 +84,6 @@ import org.junit.runners.Suite;
     TestTextAreaInConnectorWizard.class,
     SWTBotConnectorExportTests.class,
     SWTBotConnectorDefinitionTest.class,
-    TestConditionExpression.class,
     TestThrowCatchMessage.class,
     TestWebPurchase.class,
     TestAddValidatorToProcessAndRun.class,
