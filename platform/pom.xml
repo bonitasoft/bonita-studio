@@ -11,7 +11,7 @@
 	
 	<properties>
 		<tychoVersion>0.16.0</tychoVersion>
-		<tychoExtrasVersion>0.16.0</tychoExtrasVersion>
+		<tychoExtrasVersion>0.16.0-SNAPSHOT</tychoExtrasVersion>
 	</properties>
 
 	<build>
