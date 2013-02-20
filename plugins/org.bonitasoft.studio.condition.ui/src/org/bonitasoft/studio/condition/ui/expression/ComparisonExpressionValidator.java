@@ -36,6 +36,7 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -67,14 +68,14 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 
 	private Expression inputExpression;
 	private EditingDomain domain;
-
+	private EObject context;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
 	 */
 	@Override
 	public IStatus validate(Object value) {
-		
+
 		if(value == null || value.toString().isEmpty() || !ExpressionConstants.CONDITION_TYPE.equals(inputExpression.getType())){
 			return ValidationStatus.ok();
 		}
@@ -92,15 +93,19 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 		}
 		final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
 		final List<String> accessibleObjects = new ArrayList<String>();
-		for(Data d : ModelHelper.getAccessibleData(inputExpression)){
+		for(Data d : ModelHelper.getAccessibleData(context)){
 			accessibleObjects.add(ModelHelper.getEObjectID(d));
 		}
-		for(Parameter p : ModelHelper.getParentProcess(inputExpression).getParameters()){
-			accessibleObjects.add(ModelHelper.getEObjectID(p));
+
+		AbstractProcess process =  ModelHelper.getParentProcess(context);
+		if(process != null){
+			for(Parameter p : process.getParameters()){
+				accessibleObjects.add(ModelHelper.getEObjectID(p));
+			}
 		}
 		globalScopeProvider.setAccessibleEObjects(accessibleObjects);
-		
-		
+
+
 		final MultiStatus status = new MultiStatus(ExpressionEditorPlugin.PLUGIN_ID, 0, "", null);
 		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
 
@@ -131,13 +136,23 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 					domain.getCommandStack().execute(new AddCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(dep)));
 				}
 			}
+		}else if(inputExpression != null){
+			inputExpression.getReferencedElements().clear();
+			Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
+			if(compareOp != null){
+				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
+				for(Expression_ProcessRef ref : references){
+					EObject dep = resolveProxy(ref.getValue());
+					inputExpression.getReferencedElements().add(EcoreUtil.copy(dep));
+				}
+			}
 		}
 	}
 
 	private EObject resolveProxy(EObject ref) {
 		ResourceSet rSet = null;
 		if(ref.eIsProxy()){
-			rSet =inputExpression.eResource().getResourceSet();
+			rSet =context.eResource().getResourceSet();
 		}
 		EObject dep = EcoreUtil2.resolve(ref, rSet);
 		if(rSet != null){
@@ -152,6 +167,11 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 
 	public void setDomain(EditingDomain domain) {
 		this.domain = domain;
+	}
+
+	@Override
+	public void setContext(EObject context) {
+		this.context = context;
 	}
 
 }
