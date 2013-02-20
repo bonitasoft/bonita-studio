@@ -19,6 +19,7 @@ package org.bonitasoft.studio.actors.tests.SWTbot;
  */
 import junit.framework.Assert;
 
+import org.bonitasoft.studio.actors.i18n.Messages;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -43,7 +44,7 @@ public class SWTBotActorFilterUtil {
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
 		bot.menu("Development").menu("Actor filters").menu("New definition...")
 		.click();
-		bot.waitUntil(Conditions.shellIsActive("New actor filter definition"),10000);
+		bot.waitUntil(Conditions.shellIsActive(Messages.newFilterDefinition),10000);
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class SWTBotActorFilterUtil {
 		bot.menu("Development").menu("Actor filters")
 		.menu("New implementation...").click();
 		bot.waitUntil(Conditions
-				.shellIsActive("New actor filter implementation"),10000);
+				.shellIsActive(Messages.newFilterImplementation),10000);
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class SWTBotActorFilterUtil {
 	public static void activateNewOrganizationWizard(SWTBot bot) {
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Organization")),10000);
 		bot.menu("Organization").menu("Manage...").click();
-		bot.waitUntil(Conditions.shellIsActive("Manage organizations"),10000);
+		bot.waitUntil(Conditions.shellIsActive(Messages.manageOrganizationTitle),10000);
 	}
 
 	/**
@@ -82,7 +83,7 @@ public class SWTBotActorFilterUtil {
 	public static void activateExportOrganizationWizard(SWTBot bot) {
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Organization")),10000);
 		bot.menu("Organization").menu("Export...").click();
-		bot.waitUntil(Conditions.shellIsActive("Export organization"),10000);
+		bot.waitUntil(Conditions.shellIsActive(Messages.exportOrganizationTitle),10000);
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class SWTBotActorFilterUtil {
 	public static void activateSynchronizeOrganizationWizard(SWTBot bot) {
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Organization")),10000);
 		bot.menu("Organization").menu("Publish...").click();
-		bot.waitUntil(Conditions.shellIsActive("Synchronize organization"),10000);
+		bot.waitUntil(Conditions.shellIsActive(Messages.synchronizeOrganizationTitle),10000);
 	}
 
 	/**

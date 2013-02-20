@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
@@ -64,7 +64,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         final String[] membership3 = { "/Group1/Group2/Group4", "Role3" };
         membershipList2.add(membership3);
         SWTBotActorFilterUtil.activateNewOrganizationWizard(bot);
-        final SWTBotShell shell = bot.shell("Manage organizations");
+        final SWTBotShell shell = bot.shell(Messages.manageOrganizationTitle);
         bot.button(Messages.add).click();
         bot.table(0).select(organizationName);
         bot.button(IDialogConstants.NEXT_LABEL).click();
@@ -77,37 +77,37 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         bot.button(Messages.addSubGroup).click();
         bot.button(Messages.addParentGroup).click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
-        bot.button("Add").click();
-        bot.button("Add").click();
-        bot.button("Add").click();
+        bot.button(Messages.add).click();
+        bot.button(Messages.add).click();
+        bot.button(Messages.add).click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
         addNewUSer("user1",firstName1, lastName1,"", membershipList1);
         SWTBotTable table = bot.table();
         assertEquals("First Name " + firstName1 + " in table should be edited",
-                firstName1, table.cell(0, "First name"));
+                firstName1, table.cell(0, Messages.firstName));
         assertEquals("Last Name " + lastName1 + " in table should be edited",
-                lastName1, table.cell(0, "Last name"));
+                lastName1, table.cell(0, Messages.lastName));
         addNewUSer("user2",firstName2, lastName2,"user1", membershipList2);
         assertEquals("First Name " + firstName2 + " in table should be edited",
-                firstName2, table.cell(1, "First name"));
+                firstName2, table.cell(1, Messages.firstName));
         assertEquals("Last Name " + lastName2 + " in table should be edited",
-                lastName2, table.cell(1, "Last name"));
+                lastName2, table.cell(1, Messages.lastName));
         addNewUSer("user3",firstName3, lastName3,"user2", membershipList2);
         assertEquals("First Name " + firstName3 + " in table should be edited",
-                firstName3, table.cell(2, "First name"));
+                firstName3, table.cell(2, Messages.firstName));
         assertEquals("Last Name " + lastName3 + " in table should be edited",
-                lastName3, table.cell(2, "Last name"));
+                lastName3, table.cell(2, Messages.lastName));
 
         bot.table().select(0);
-        bot.comboBoxWithLabel("Manager").setSelection("user3");
+        bot.comboBoxWithLabel(Messages.manager).setSelection("user3");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),10000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        bot.waitUntil(Conditions.shellIsActive("Organization validation failed"),10000);
+        bot.waitUntil(Conditions.shellIsActive(Messages.organizationValidationFailed),10000);
         bot.button(IDialogConstants.OK_LABEL).click();
 
         bot.table().select(0);
-        bot.comboBoxWithLabel("Manager").setSelection("");
+        bot.comboBoxWithLabel(Messages.manager).setSelection("");
 
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),10000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
@@ -131,17 +131,17 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
 
     private void addNewUSer(String username,String firstName, String lastName,String manager,
             List<String[]> memberShip) {
-        bot.button("Add").click();
-        bot.tabItem("General").activate();
-        bot.textWithLabel("Username").setText(username);
+        bot.button(Messages.add).click();
+        bot.tabItem(Messages.general).activate();
+        bot.textWithLabel(Messages.userName).setText(username);
         if(manager != null && !manager.isEmpty()){
-            bot.comboBoxWithLabel("Manager").setSelection(manager);
+            bot.comboBoxWithLabel(Messages.manager).setSelection(manager);
         }
-        bot.textWithLabel("First name").setText(firstName);
-        bot.textWithLabel("Last name").setText(lastName);
-        bot.tabItem("Membership").activate();
+        bot.textWithLabel(Messages.firstName).setText(firstName);
+        bot.textWithLabel(Messages.lastName).setText(lastName);
+        bot.tabItem(Messages.membership).activate();
         for (int i = 0; i < memberShip.size(); i++) {
-            bot.button("Add membership...").click();
+            bot.button(Messages.addMembership).click();
             bot.comboBoxWithLabel("Group", i * 2).setSelection(
                     memberShip.get(i)[0]);
             bot.comboBoxWithLabel("Role", i * 2).setSelection(
@@ -152,8 +152,8 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
     private void synchronizeOrganization(String organizationName) {
         SWTBotActorFilterUtil.activateSynchronizeOrganizationWizard(bot);
         bot.table().select(organizationName);
-        bot.button("Synchronize").click();
-        bot.waitUntil(Conditions.shellIsActive("Synchronize information"),
+        bot.button(Messages.synchronize).click();
+        bot.waitUntil(Conditions.shellIsActive(Messages.synchronizeOrganizationTitle),
                 1500000);
         bot.button(IDialogConstants.OK_LABEL).click();
     }
@@ -202,23 +202,23 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
 
         Assert.assertEquals("Error : wrong number of added users", nbUsers+1, table.rowCount());
 
-        bot.textWithLabel("Username").setText("elton.john");
-        bot.textWithLabel("Password").setText("bpm");
+        bot.textWithLabel(Messages.userName).setText("elton.john");
+        bot.textWithLabel(Messages.password).setText("bpm");
 
 
-        bot.comboBoxWithLabel("Manager").setSelection("william.jobs");
-        Assert.assertEquals("Error: Manager is not selected","william.jobs", bot.comboBoxWithLabel("Manager").getText());
+        bot.comboBoxWithLabel(Messages.manager).setSelection("william.jobs");
+        Assert.assertEquals("Error: Manager is not selected","william.jobs", bot.comboBoxWithLabel(Messages.manager).getText());
 
         bot.tabItem("General").activate();
-        bot.textWithLabel("First name").setText("Elton");
-        bot.textWithLabel("Last name").setText("John");
+        bot.textWithLabel(Messages.firstName).setText("Elton");
+        bot.textWithLabel(Messages.lastName).setText("John");
 
-        Assert.assertEquals("Error: First name user is not setted","Elton", bot.textWithLabel("First name").getText());
-        Assert.assertEquals("Error: Last name user is not setted","John", bot.textWithLabel("Last name").getText());
+        Assert.assertEquals("Error: First name user is not setted","Elton", bot.textWithLabel(Messages.firstName).getText());
+        Assert.assertEquals("Error: Last name user is not setted","John", bot.textWithLabel(Messages.lastName).getText());
 
 
-        bot.tabItem("Membership").activate();
-        bot.button("Add membership...").click();
+        bot.tabItem(Messages.membership).activate();
+        bot.button(Messages.addMembership).click();
         bot.comboBoxWithLabel("Group").setSelection("/acme");
         bot.comboBoxWithLabel("Role").setSelection("member");
 
