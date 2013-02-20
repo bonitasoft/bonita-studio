@@ -332,6 +332,14 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			Expression newExpression = dialog.getExpression();
 			updateSelection(newExpression) ;
 			setSelection(new StructuredSelection(selectedExpression));
+			if(editingDomain == null){
+				selectedExpression.setReturnType(newExpression.getReturnType());
+				selectedExpression.setType(newExpression.getType());
+			}else{
+				editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, newExpression.getReturnType()));
+				editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, newExpression.getType()));
+			}
+			refresh();
 			fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression))) ;
 		}
 	}
