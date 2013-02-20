@@ -31,6 +31,7 @@ import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.identity.User;
 import org.bonitasoft.engine.identity.UserCriterion;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
@@ -59,49 +60,61 @@ public class InstallOrganizationHandler extends AbstractHandler {
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		if(event != null){
 			String id = event.getParameter("artifact") ;
 			IRepositoryStore organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
 			IRepositoryFileStore file = organizationStore.getChild(id) ;
-			if(file != null){
-				APISession session = null;
-				try{
-					session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
-					IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session) ;
-					identityAPI.deleteOrganization() ;
-					File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(),"tmpOrganizationFile.xml") ;
-					tmpFile.delete() ;
-					file.export(tmpFile.getAbsolutePath()) ;
-					String content = getFileContent(tmpFile) ;
-					tmpFile.delete() ;
-					identityAPI.importOrganization(content) ;
-				}catch(final Exception e){
-					if(PlatformUI.isWorkbenchRunning()){
-						Display.getDefault().asyncExec(new Runnable() {
-
-							@Override
-							public void run() {
-								new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error", "An error occured during synchronization", e).open() ;
-							}
-
-						}) ;
-					}
-					throw new ExecutionException("", e) ;
-				}finally{
-					if(session != null){
-						BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
-					}
+			if(file == null){
+				BonitaStudioLog.warning("Organization : "+ id +" not found !",ActorsPlugin.PLUGIN_ID) ;
+				List<IRepositoryFileStore> organizationFiles = organizationStore.getChildren();
+				if(organizationFiles.isEmpty()){
+					BonitaStudioLog.warning("No organization found in repository",ActorsPlugin.PLUGIN_ID) ;
+					return null;
+				}else{
+					file = organizationFiles.get(0) ;
 				}
+			}
+			BonitaStudioLog.info("Loading organization "+file.getDisplayName()+" in portal...",ActorsPlugin.PLUGIN_ID) ;
+			APISession session = null;
+			try{
+				session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
+				IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session) ;
+				identityAPI.deleteOrganization() ;
+				File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(),"tmpOrganizationFile.xml") ;
+				tmpFile.delete() ;
+				file.export(tmpFile.getAbsolutePath()) ;
+				String content = getFileContent(tmpFile) ;
+				tmpFile.delete() ;
+				identityAPI.importOrganization(content) ;
+			}catch(final Exception e){
+				if(PlatformUI.isWorkbenchRunning()){
+					Display.getDefault().asyncExec(new Runnable() {
 
-				session = null;
-				try{
-					session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
-					IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session) ;
-					CommandAPI commandApi =   BOSEngineManager.getInstance().getCommandAPI(session) ;
-					applyAllProfileToUsers(identityAPI,commandApi) ;
-				}catch (final Exception e) {
+						@Override
+						public void run() {
+							new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error", "An error occured during synchronization", e).open() ;
+						}
+
+					}) ;
+				}
+				throw new ExecutionException("", e) ;
+			}finally{
+				if(session != null){
+					BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
+				}
+			}
+
+			session = null;
+			try{
+				session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
+				IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session) ;
+				CommandAPI commandApi =   BOSEngineManager.getInstance().getCommandAPI(session) ;
+				applyAllProfileToUsers(identityAPI,commandApi) ;
+			}catch (final Exception e) {
+				if(PlatformUI.isWorkbenchRunning()){
 					Display.getDefault().syncExec(new Runnable() {
 
 						@Override
@@ -110,16 +123,15 @@ public class InstallOrganizationHandler extends AbstractHandler {
 						}
 
 					}) ;
-					throw new ExecutionException("", e) ;
-				}finally{
-					if(session != null){
-						BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
-					}
 				}
-
-			}else{
-				throw new ExecutionException("Organization : "+ id +" not found !") ;
+				throw new ExecutionException("", e) ;
+			}finally{
+				if(session != null){
+					BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
+				}
 			}
+
+
 		}
 		return null;
 	}
