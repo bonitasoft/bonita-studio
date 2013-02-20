@@ -20,7 +20,6 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.connectors.expression.DataExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.filter.HiddenExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -41,15 +40,15 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
         final Composite mainComposite = new Composite(parent, SWT.NONE) ;
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
-        AvailableExpressionTypeFilter leftFilter =  new AvailableExpressionTypeFilter(new String[]{ //list of hidden types
+        final AvailableExpressionTypeFilter leftFilter =  new AvailableExpressionTypeFilter(new String[]{ //list of hidden types
                 ExpressionConstants.VARIABLE_TYPE}) ;
-        AvailableExpressionTypeFilter rightFilter =  new AvailableExpressionTypeFilter(new String[]{ //list of hidden types
+        final AvailableExpressionTypeFilter rightFilter =  new AvailableExpressionTypeFilter(new String[]{ //list of hidden types
         		 ExpressionConstants.CONSTANT_TYPE,
         		ExpressionConstants.CONNECTOR_OUTPUT_TYPE,
                 ExpressionConstants.SCRIPT_TYPE
         }) ;
 
-        OperationsComposite lineComposite = new OperationsComposite(null, mainComposite, rightFilter, leftFilter) ;
+        final OperationsComposite lineComposite = new OperationsComposite(null, mainComposite, rightFilter, leftFilter,false) ;
         lineComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         lineComposite.setEObject(getConnector()) ;
         lineComposite.setContext(context) ;

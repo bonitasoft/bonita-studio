@@ -31,10 +31,16 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvide
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -54,8 +60,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
@@ -74,7 +78,7 @@ public class PatternExpressionViewer extends Composite {
 	private List<Expression> filteredExpressions;
 	private PatternLineStyleListener patternLineStyle;
 	private ControlDecoration hintDecoration;
-
+	private ComputePatternDependenciesJob dependencyJob;
 
 	public PatternExpressionViewer(Composite parent, int style) {
 		super(parent, style);
@@ -139,39 +143,32 @@ public class PatternExpressionViewer extends Composite {
 			}
 		});
 
-		viewer.getTextWidget().addModifyListener(new ModifyListener() {
+
+
+		ISWTObservableValue observable = SWTObservables.observeDelayedValue(200, SWTObservables.observeText(getTextControl(), SWT.Modify));
+		observable.addValueChangeListener(new IValueChangeListener() {
 
 			@Override
-			public void modifyText(ModifyEvent e) {
-				patternExpression.getReferencedElements().clear();
-				String content = viewer.getDocument().get();
-				if(content != null && !content.isEmpty()){
-					final FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(viewer.getDocument());
-					final Set<String> addedExp = new HashSet<String>();
-					for(Expression exp : filteredExpressions){
-						IRegion index;
-						try {
-							int i = 0;
-							index = finder.find(0,exp.getName(), true, true, true, false);
-							while (index != null) {
-								if(PatternLineStyleListener.isNotEscapeWord(content, index.getOffset())){
-									if(!addedExp.contains(exp.getName())){
-										patternExpression.getReferencedElements().add(EcoreUtil.copy(exp));
-										addedExp.add(exp.getName());
-									}
-								}
-								i = i + index.getLength();
-								index = finder.find(i,exp.getName(), true, true, true, false);
-							}
-						} catch (final BadLocationException e1) {
-							// Just ignore them
-						}
-					}
-				}
+			public void handleValueChange(ValueChangeEvent event) {
+				updateExpressionDependencies();
 			}
 		});
+
 		helpDecoration.show();
 	}
+
+	private void updateExpressionDependencies() {
+		dependencyJob.schedule();
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		if(dependencyJob != null){
+			dependencyJob.cancel();
+		}
+	}
+
 
 	/** Check if a word is contained as a sub-word in each element of a list of expressions
 	 * 
@@ -217,6 +214,35 @@ public class PatternExpressionViewer extends Composite {
 		Set<Expression> expressionSet = new HashSet<Expression>(filteredExpressions);
 		contentAssisProcessor.setExpressions(expressionSet);
 		patternLineStyle.setExpressions(expressionSet);
+		dependencyJob = new ComputePatternDependenciesJob(viewer.getDocument(),filteredExpressions) ;
+		dependencyJob.addJobChangeListener(new IJobChangeListener() {
+
+			@Override
+			public void aboutToRun(IJobChangeEvent event) {}
+
+			@Override
+			public void awake(IJobChangeEvent event) {}
+
+			@Override
+			public void done(IJobChangeEvent event) {
+				if(dependencyJob != null){
+					List<EObject> deps = dependencyJob.getDependencies(viewer.getDocument().get()) ;
+					patternExpression.getReferencedElements().clear() ;
+					if(deps != null && !deps.isEmpty()){
+						patternExpression.getReferencedElements().addAll(deps) ;
+					}
+				}
+			}
+
+			@Override
+			public void running(IJobChangeEvent event) {}
+
+			@Override
+			public void scheduled(IJobChangeEvent event) {}
+
+			@Override
+			public void sleeping(IJobChangeEvent event) {}
+		});
 	}
 
 	private List<Expression> getFilteredExpressions() {

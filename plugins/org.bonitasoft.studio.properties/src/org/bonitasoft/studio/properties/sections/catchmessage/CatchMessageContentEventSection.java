@@ -71,7 +71,7 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         createAutoFillButton(aTabbedPropertySheetPage);
         validator= new MessageContentExpressionValidator();
-        alc = new OperationsComposite(aTabbedPropertySheetPage,mainComposite,new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.MESSAGE_ID_TYPE}), new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE}) ,validator);
+        alc = new OperationsComposite(aTabbedPropertySheetPage,mainComposite,new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.MESSAGE_ID_TYPE}), new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE}) ,validator,false);
         //        ActionExpressionNatureProvider actionExprNatureProvider = new ActionExpressionNatureProvider();
         //        actionExprNatureProvider.setContext(getEObject());
         //        alc.setActionExpressionNatureContentProvider(actionExprNatureProvider);

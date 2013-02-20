@@ -118,11 +118,13 @@ public class OperationsComposite extends Composite {
 	private IExpressionNatureProvider actionExpressionNatureProvider;
 	private IValidator actionExpressionsValidator;
 	private final OperationReturnTypesValidator operationReturnTypeValidator;
+	private boolean displayStorageExpressionType;
 
 	public OperationsComposite(TabbedPropertySheetPage tabbedPropertySheetPage,
 			Composite mainComposite, ViewerFilter actionExpressionFilter,
-			ViewerFilter storageExpressionFilter) {
+			ViewerFilter storageExpressionFilter,boolean displayStorageExpressionType) {
 		super(mainComposite, SWT.NONE);
+		this.displayStorageExpressionType = displayStorageExpressionType;
 		this.mainComposite = mainComposite;
 		operationReturnTypeValidator = new OperationReturnTypesValidator();
 		if (tabbedPropertySheetPage != null) {
@@ -176,9 +178,9 @@ public class OperationsComposite extends Composite {
 	public OperationsComposite(TabbedPropertySheetPage tabbedPropertySheetPage,
 			Composite mainComposite, ViewerFilter actionExpressionFilter,
 			ViewerFilter storageExpressionFilter,
-			IValidator actionExpressionsValidator) {
+			IValidator actionExpressionsValidator,boolean displayStorageExpressionType) {
 		this(tabbedPropertySheetPage, mainComposite, actionExpressionFilter,
-				storageExpressionFilter);
+				storageExpressionFilter,displayStorageExpressionType);
 		this.actionExpressionsValidator = actionExpressionsValidator;
 	}
 
@@ -474,13 +476,18 @@ public class OperationsComposite extends Composite {
 		final ComboViewer storageComboViewer = new ComboViewer(this, SWT.BORDER
 				| SWT.READ_ONLY);
 		storageComboViewer.getControl().setLayoutData(
-				GridDataFactory.fillDefaults().grab(true, false).create());
+				GridDataFactory.fillDefaults().grab(false, false).hint(250, SWT.DEFAULT).create());
 		storageComboViewer.setContentProvider(new ObservableListContentProvider());
 		storageComboViewer.setLabelProvider(new ExpressionLabelProvider() {
 			@Override
 			public String getText(Object expression) {
-				return super.getText(expression) + " ("
-						+ ((Expression) expression).getReturnType() + ") -- "+((Expression)expression).getType();
+				if(displayStorageExpressionType){
+					return super.getText(expression) + " ("
+							+ ((Expression) expression).getReturnType() + ") -- "+((Expression)expression).getType();
+				}else{
+					return super.getText(expression) + " ("
+							+ ((Expression) expression).getReturnType() + ")";
+				}
 			}
 		});
 

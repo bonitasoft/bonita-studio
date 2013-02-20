@@ -280,7 +280,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			createFieldLabel(composite,SWT.TOP,object.getId(),input.isMandatory()) ;
 
 			final PatternExpressionViewer viewer =  new PatternExpressionViewer(composite,SWT.NONE);
-			viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
+			viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create()) ;
 			viewer.addFilter(connectorExpressionContentTypeFilter);
 
 			Expression exp = (Expression) parameter.getExpression();

@@ -152,7 +152,7 @@ public class WidgetMigration extends ReportCustomMigration {
 			}
 		}
 	}
-	
+
 	private void setScriptAfterEvents(Instance widget, Model model) {
 		Instance expression = null ;
 		if(scriptAfterEvents.containsKey(widget.getUuid())){
@@ -172,7 +172,7 @@ public class WidgetMigration extends ReportCustomMigration {
 		}
 		widget.set("afterEventExpression", expression);
 	}
-	
+
 	private void setInjectWidgetScripts(Instance widget, Model model) {
 		Instance expression = null ;
 		if(injectWidgetScripts.containsKey(widget.getUuid())){
@@ -186,7 +186,7 @@ public class WidgetMigration extends ReportCustomMigration {
 		}
 		widget.set("injectWidgetScript", expression);
 	}
-	
+
 	private void setDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndConditions(Instance widget, Model model) {
 		Instance expression = null;
 		if(displayDependentWidgetOnlyAfterFirstEventTriggeredAndConditions.containsKey(widget.getUuid())){
@@ -200,7 +200,7 @@ public class WidgetMigration extends ReportCustomMigration {
 		}
 		widget.set("displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition", expression);
 	}
-	
+
 	private void setDisplayAfterEventDependsOnConditionScripts(Instance widget, Model model) {
 		Instance expression = null;
 		if(displayAfterEventDependsOnConditionScripts.containsKey(widget.getUuid())){
@@ -228,7 +228,7 @@ public class WidgetMigration extends ReportCustomMigration {
 		}
 		widget.set("helpMessage", expression);
 	}
-	
+
 	private void setTooltips(Instance widget, Model model) {
 		Instance expression = null ;
 		if(widgetTooltips.containsKey(widget.getUuid())){
@@ -242,7 +242,7 @@ public class WidgetMigration extends ReportCustomMigration {
 		}
 		widget.set("tooltip", expression);
 	}
-	
+
 	private void setDisplayLabels(Instance widget, Model model) {
 		Instance expression = null;
 		if(widgetDisplayLabels.containsKey(widget.getUuid())){
@@ -308,8 +308,11 @@ public class WidgetMigration extends ReportCustomMigration {
 
 	private void setWidgetActions(Instance widget) {
 		if(widgetActions.containsKey(widget.getUuid())){
-			widget.set("action", widgetActions.get(widget.getUuid()));
-			addReportChange((String) widget.get("name"),widget.getType().getEClass().getName(), widget.getUuid(), Messages.widgetActionsMigrationDescription, Messages.dataProperty, IStatus.WARNING);
+			Instance action = widgetActions.get(widget.getUuid());
+			widget.set("action", action);
+			if(!widget.instanceOf("form.Info")){
+				addReportChange((String) widget.get("name"),widget.getType().getEClass().getName(), widget.getUuid(), Messages.widgetActionsMigrationDescription, Messages.dataProperty, StringToExpressionConverter.getStatusForExpression((Instance) action.get("rightOperand")));
+			}
 		}
 	}
 

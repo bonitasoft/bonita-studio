@@ -65,7 +65,7 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
                 ExpressionConstants.SEARCH_INDEX_TYPE
         }) ;
 
-        return new OperationsComposite(tabbedPropertySheetPage, parent, actionFilter, dataFilter);
+        return new OperationsComposite(tabbedPropertySheetPage, parent, actionFilter, dataFilter,true);
     }
 
     @Override

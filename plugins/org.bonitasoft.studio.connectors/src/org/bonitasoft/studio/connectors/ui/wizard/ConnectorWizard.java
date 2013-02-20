@@ -63,6 +63,7 @@ import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Element;
@@ -110,6 +111,14 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
             ExpressionConstants.SCRIPT_TYPE,
             ExpressionConstants.PARAMETER_TYPE
     }) ;
+	private ViewerFilter formExpressionTypeFilter = new AvailableExpressionTypeFilter(new String[]{
+            ExpressionConstants.CONSTANT_TYPE,
+            ExpressionConstants.VARIABLE_TYPE,
+            ExpressionConstants.SCRIPT_TYPE,
+            ExpressionConstants.PARAMETER_TYPE,
+            ExpressionConstants.FORM_FIELD_TYPE
+    }) ;
+
 
 
 	public ConnectorWizard(EObject container,EStructuralFeature connectorContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID){
@@ -434,6 +443,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 				p.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
 				p.setDefinition(definition) ;
 				p.setElementContainer(container) ;
+				p.setExpressionTypeFilter(getExpressionTypeFilter());
 				result.add(p) ;
 			}
 			if(extension.useDefaultGeneratedPages()){
@@ -461,6 +471,9 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	}
 
 	protected ViewerFilter getExpressionTypeFilter() {
+		if(container instanceof Form){
+			return formExpressionTypeFilter;
+		}
 		return expressionTypeFilter;
 	}
 

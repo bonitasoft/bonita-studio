@@ -20,8 +20,8 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.migration.model.report.Change;
 import org.bonitasoft.studio.migration.ui.view.PropertySelectionProvider;
 import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.SequenceFlow;
@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -41,27 +42,45 @@ import org.eclipse.jface.viewers.StructuredViewer;
  */
 public class ToggleLinkingAction extends AbstractToggleLinkingAction {
 
+	public static final String PROCESS_ID = "org.bonitasoft.studio.diagram"; //$NON-NLS-1$
+	public static final String FORM_ID = "org.bonitasoft.studio.diagram.form"; //$NON-NLS-1$
+	
 	private DiagramEditor editor;
 	private StructuredViewer viewer;
 	private ISelectionChangedListener listener = new ISelectionChangedListener() {
 
 		@Override
 		public void selectionChanged(SelectionChangedEvent event) {
-			if( editor != null && viewer != null && !viewer.getSelection().isEmpty()){
-				final Change change = (Change) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-				final String uuid = change.getElementUUID();
-				EObject element = editor.getDiagram().eResource().getEObject(uuid);
-				while(element != null && !(element instanceof Widget || element instanceof Form || element instanceof SequenceFlow || element instanceof Container || element instanceof FlowElement || element instanceof Widget || element instanceof Form)){
-					element = element.eContainer();
-				}
-				if(element != null){
-					EditPart ep = findEditPart(editor.getDiagramEditPart(), element);
-					if( ep != null ){
-						editor.getDiagramEditPart().getViewer().select(ep);
-						PropertySelectionProvider.getInstance().fireSelectionChanged((IGraphicalEditPart) ep, null);
+			Display.getDefault().asyncExec(new Runnable() {
+				
+				@Override
+				public void run() {
+					if( editor != null && viewer != null && !viewer.getSelection().isEmpty()){
+						final Change change = (Change) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+						final String uuid = change.getElementUUID();
+						EObject element = editor.getDiagram().eResource().getEObject(uuid);
+						if(PROCESS_ID.equals(editor.getContributorId())){
+							while(element != null && !(element instanceof SequenceFlow || element instanceof Container || element instanceof FlowElement)){
+								element = element.eContainer();
+							}
+						}else if(FORM_ID.equals(editor.getContributorId())){
+							while(element != null && !(element instanceof Widget || element instanceof Form  || element instanceof Group ||  element instanceof Widget)){
+								element = element.eContainer();
+							}
+						}else{
+							return;
+						}
+						
+						if(element != null){
+							EditPart ep = findEditPart(editor.getDiagramEditPart(), element);
+							if( ep != null ){
+								editor.getDiagramEditPart().getViewer().select(ep);
+								PropertySelectionProvider.getInstance().fireSelectionChanged((IGraphicalEditPart) ep, null);
+							}
+						}
 					}
 				}
-			}
+			});
 		}
 	};
 

@@ -62,7 +62,7 @@ public class FormActionsPropertySection extends AbstractBonitaDescriptionSection
     			ExpressionConstants.FORM_FIELD_TYPE
         }) ;
 
-        final OperationsComposite operationsComposite = new OperationsComposite(tabbedPropertySheetPage, mainComposite, actionFilter, new ExpressionViewerVariableFilter());
+        final OperationsComposite operationsComposite = new OperationsComposite(tabbedPropertySheetPage, mainComposite, actionFilter, new ExpressionViewerVariableFilter(),false);
 		operationsComposite.setStorageExpressionContentProvider(new DataExpressionProviderForFormOutput());
         return operationsComposite;
     }

@@ -16,7 +16,9 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -42,6 +44,13 @@ public class PatternLineStyleListener implements LineStyleListener {
 	private Set<Expression> expressions = new HashSet<Expression>();
 	private FindReplaceDocumentAdapter finder;
 	private IDocument document;
+	private static Map<String,Integer> supportedTypes ;
+	static{
+		supportedTypes = new HashMap<String,Integer>();
+		supportedTypes.put(ExpressionConstants.VARIABLE_TYPE, SWT.COLOR_DARK_RED);
+		supportedTypes.put(ExpressionConstants.PARAMETER_TYPE, SWT.COLOR_DARK_GREEN);
+		supportedTypes.put(ExpressionConstants.FORM_FIELD_TYPE, SWT.COLOR_DARK_GRAY);
+	}
 
 	public PatternLineStyleListener(IDocument document) {
 		this.document = document;
@@ -54,33 +63,31 @@ public class PatternLineStyleListener implements LineStyleListener {
 	@Override
 	public void lineGetStyle(LineStyleEvent event) {
 		Vector<StyleRange> styles = new Vector<StyleRange>();
-
-		addExpressionStyles( event,  styles, ExpressionConstants.VARIABLE_TYPE, SWT.COLOR_DARK_RED);
-		addExpressionStyles( event,  styles, ExpressionConstants.PARAMETER_TYPE, SWT.COLOR_DARK_GREEN);
-		addExpressionStyles( event,  styles, ExpressionConstants.FORM_FIELD_TYPE, SWT.COLOR_DARK_CYAN);
+		addExpressionStyles( event,  styles);
 		event.styles = styles.toArray(new StyleRange[styles.size()]);
 	}
 
-	/**
-	 * 
-	 * @param event
-	 * @param styles
-	 * @param type
-	 * @param color
-	 */
-	protected void addExpressionStyles(LineStyleEvent event, Vector<StyleRange> styles, String type, int color){
+
+	protected void addExpressionStyles(LineStyleEvent event, Vector<StyleRange> styles){
+		int lineOffset = event.lineOffset;
+		int lineLenght = event.lineText.length();
+		final String content = document.get();
 		for (Expression exp : expressions) {
-			if(type.equals(exp.getType())){
+			if(supportedTypes.keySet().contains(exp.getType())){
 				try {
-					int i = 0 ;
+					int i = lineOffset ;
 					IRegion index = null;
 					index = finder.find(i, exp.getName(), true, true, true, false);
 					while(index != null){
-						if(PatternLineStyleListener.isNotEscapeWord(document.get(), index.getOffset())){
-							styles.add(new StyleRange(index.getOffset(), index.getLength(), Display.getDefault().getSystemColor(color), null,SWT.BOLD));
+						if(PatternLineStyleListener.isNotEscapeWord(content, index.getOffset())){
+							styles.add(new StyleRange(index.getOffset(), index.getLength(), Display.getDefault().getSystemColor(supportedTypes.get(exp.getType())), null,SWT.BOLD));
 						}
 						i = i + index.getLength();
-						index = finder.find(i, exp.getName(), true, true, true, false);
+						if(i < lineOffset+lineLenght){
+							index = finder.find(i, exp.getName(), true, true, true, false);
+						}else{
+							index = null;
+						}
 					}
 				} catch (BadLocationException e) {
 					// Ignore
@@ -89,30 +96,13 @@ public class PatternLineStyleListener implements LineStyleListener {
 		}
 	}
 
-
-	public static boolean isValidKeyWord(String expName, String content, int indexOf) {
-		return isStartingWord(indexOf) || isNotEscapeWord(content, indexOf);
-	}
-
-	protected static boolean isNextCharacterAWhiteSpace(String expName, String content, int indexOf) {
-		return Character.isWhitespace(content.charAt(indexOf+expName.length()));
-	}
-
-	protected static boolean isFinishingWord(String expName, String content, int indexOf) {
-		return indexOf+expName.length()+1 > content.length();
-	}
-
-	protected static boolean isPreviousCharacterAWhiteSpace(String content, int indexOf) {
-		return Character.isWhitespace(content.charAt(indexOf-1));
-	}
-
 	protected static boolean isNotEscapeWord(String content, int indexOf) {
-		return content.charAt(indexOf-1) != '\\';
+		if(indexOf-1>-1){
+			return content.charAt(indexOf-1) != '\\';
+		}
+		return true;
 	}
 
-	protected static boolean isStartingWord(int indexOf) {
-		return indexOf-1 < 0;
-	}
 
 	public void setExpressions(Set<Expression> expressions) {
 		this.expressions = expressions ;

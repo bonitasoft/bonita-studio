@@ -90,7 +90,7 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
                 ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.PATTERN_TYPE,
+                ExpressionConstants.FORM_FIELD_TYPE,
                 ExpressionConstants.I18N_TYPE})) ;
         if(widget instanceof CheckBoxSingleFormField){
             expressionViewer.setMessage(Messages.data_tooltip_boolean,IStatus.INFO);

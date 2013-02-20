@@ -30,9 +30,9 @@ import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceReposi
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -93,9 +93,7 @@ public class OpenDiagramWizardPage extends WizardPage implements IWizardPage {
         composite.setLayout(new GridLayout(2, true));
         //Composite repositoryComposite = new Composite(composite, SWT.NONE);
         ifileTree = new FilteredTree(composite, SWT.MULTI | SWT.BORDER, new PatternFilter(), false);
-        GridData processesListLayoutData = new GridData(SWT.FILL, SWT.TOP, true, false,2,1);
-        processesListLayoutData.heightHint = 250;
-        ifileTree.setLayoutData(processesListLayoutData);
+        ifileTree.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(SWT.DEFAULT, 250).create());
         ifileTree.getViewer().setContentProvider(new DiagramTreeContentProvider());
         
         
