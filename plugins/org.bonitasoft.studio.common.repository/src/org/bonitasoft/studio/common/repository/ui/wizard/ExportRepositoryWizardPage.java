@@ -50,6 +50,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -99,6 +100,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
     private WizardPageSupport pageSupport;
 
     private final String defaultFileName;
+    private ViewerFilter[] filters={};
 
     /**
      * @param input
@@ -160,8 +162,10 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
     protected Control createViewer(final Composite composite) {
         treeViewer = new CheckboxRepositoryTreeViewer(composite, SWT.BORDER | SWT.V_SCROLL);
+        treeViewer.setFilters(filters);
         treeViewer.setInput(input) ;
         treeViewer.getControl().setLayoutData(GridDataFactory.swtDefaults().grab(true, false).span(3, 1).hint(SWT.DEFAULT, 150).create());
+
 
         final IObservableSet checkedElementsObservable =  ViewersObservables.observeCheckedElements(treeViewer,Object.class) ;
         final MultiValidator notEmptyValidator = new MultiValidator() {
@@ -472,6 +476,10 @@ public class ExportRepositoryWizardPage extends WizardPage {
         }
     }
 
+    public void setViewerFilter(ViewerFilter[] filters){
+    	this.filters = filters;
+    }
+    
     /**
      *  Hook method for saving widget values for restoration by the next instance
      *  of this class.
@@ -556,4 +564,5 @@ public class ExportRepositoryWizardPage extends WizardPage {
         this.selectedFiles = selectedFiles;
     }
 
+   
 }

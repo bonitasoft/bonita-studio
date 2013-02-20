@@ -34,11 +34,11 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
 public class ExportRepositoryWizard extends Wizard {
 
     public List<IRepositoryStore<? extends IRepositoryFileStore>> stores ;
-    private ExportRepositoryWizardPage mainPage;
-    private final boolean isZip;
-    private final String wizardTitle;
-    private Set<Object> defaultSelectedFiles;
-    private final String defaultFileName;
+    protected ExportRepositoryWizardPage mainPage;
+    protected final boolean isZip;
+    protected final String wizardTitle;
+    protected Set<Object> defaultSelectedFiles;
+    protected final String defaultFileName;
 
     public ExportRepositoryWizard(List<IRepositoryStore<? extends IRepositoryFileStore>> stores, boolean isZip,Set<Object> defaultSelectedFiles,String defaultFileName,String wizardTitle){
         this.stores = stores ;
