@@ -44,6 +44,7 @@ public class DecisionTableWizard extends Wizard {
 	public DecisionTableWizard(Element container, DecisionTable table) {
 		this.container = container;
 		setTable(table);
+		setWindowTitle(Messages.wizardPageTitle);
 	}
 	
 	private void setTable(DecisionTable table) {

@@ -17,15 +17,19 @@
  */
 package org.bonitasoft.studio.decision.core;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.decision.DecisionTable;
 import org.bonitasoft.studio.model.process.decision.DecisionTableAction;
-import org.bonitasoft.studio.model.process.decision.DecisionTableCondition;
 import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
 import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
-import org.eclipse.swt.SWT;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * @author Mickael Istria
@@ -42,18 +46,21 @@ public class DecisionTableUtil {
      */
     public static Expression toGroovyScriptExpression(final DecisionTable decisionTable) {
         StringBuilder builder = new StringBuilder();
+        List<Object> listReferencedElements = new ArrayList<Object>();
         for (DecisionTableLine line : decisionTable.getLines()) {
-            builder.append("if (");
-            for (DecisionTableCondition condition : line.getConditions()) {
+            builder.append(" if (");
+            for (Expression condition : line.getConditions()) {
                 builder.append("(");
                 builder.append(toGroovyCondition(condition));
                 builder.append(")");
                 builder.append(CONDITION_SEPARATOR);
+                listReferencedElements.addAll(EcoreUtil.copyAll(condition.getReferencedElements()));
             }
             builder.delete(builder.length() - CONDITION_SEPARATOR.length(), builder.length());
             builder.append(") { ");
             builder.append(toGroovyAction(line.getAction()));
-            builder.append(";" + SWT.CR + "}" + SWT.CR);
+            builder.append(";" + "}");
+            builder.append("\n");
         }
         builder.append(toGroovyAction(decisionTable.getDefaultAction()));
         builder.append(";");
@@ -61,9 +68,11 @@ public class DecisionTableUtil {
         String script =  builder.toString() ;
         final Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
         exp.setType(ExpressionConstants.SCRIPT_TYPE) ;
+        exp.setInterpreter(ExpressionConstants.GROOVY);
         exp.setContent(script) ;
         exp.setName("Descision Table Script") ;
         exp.setReturnType(Boolean.class.getName()) ;
+        exp.getReferencedElements().addAll((Collection<? extends EObject>) listReferencedElements);
         return exp;
     }
 
@@ -83,8 +92,8 @@ public class DecisionTableUtil {
      * @param condition
      * @return
      */
-    private static String toGroovyCondition(final DecisionTableCondition condition) {
-        return "(" + condition.getOperand1() + ") " + condition.getOperator() + " (" + condition.getOperand2() + ")";
+    private static String toGroovyCondition(final Expression condition) {
+        return condition.getContent() ;
     }
 
 }

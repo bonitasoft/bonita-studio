@@ -20,15 +20,23 @@ package org.bonitasoft.studio.decision.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.condition.ui.expression.ComparisonExpressionValidator;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
+import org.bonitasoft.studio.expression.editor.viewer.IExpressionValidationListener;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.decision.DecisionFactory;
 import org.bonitasoft.studio.model.process.decision.DecisionTable;
 import org.bonitasoft.studio.model.process.decision.DecisionTableAction;
-import org.bonitasoft.studio.model.process.decision.DecisionTableCondition;
 import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -41,8 +49,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
@@ -57,14 +63,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.emf.databinding.EMFDataBindingContext;
 
 /**
  * @author Mickael Istria
@@ -103,9 +110,11 @@ public class DecisionTableWizardPage extends WizardPage {
 	 */
 	private static final Color GRAY = new Color(Display.getCurrent(), 140, 140, 140);
 
+	private TransactionalEditingDomain editingDomain;
 	private DecisionTableLine lineWorkingCopy;
 	private DecisionTableLine toEditLine;
-	
+	private EMFDataBindingContext dataBindingContext;
+
 	private Element container;
 	private DecisionTableWizard wizard;
 
@@ -131,7 +140,7 @@ public class DecisionTableWizardPage extends WizardPage {
 	private Composite linePlaceHolder;
 
 	private DecisionTableGridPaintListener zebraGridPaintListener;
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -140,10 +149,10 @@ public class DecisionTableWizardPage extends WizardPage {
 				&& wizard.getPossibleDefaultTableActions().length > 0) {
 			decisionTable.setDefaultAction(wizard.getPossibleDefaultTableActions()[0]);
 		}
-		
+
 		Composite res = new Composite(arg0, SWT.NONE);
 		res.setLayout(new GridLayout(1, false));
-		
+
 		Group gridGroup = new Group(res, SWT.NONE);
 		gridGroup.setText(Messages.table);
 		gridGroup.setLayout(new GridLayout(1, false));
@@ -172,7 +181,7 @@ public class DecisionTableWizardPage extends WizardPage {
 		lineParentScrollable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		linePlaceHolder = new Composite(lineParentScrollable, SWT.NONE);
 		lineParentScrollable.setContent(linePlaceHolder);
-		
+
 		Composite buttonComposite = new Composite(editLineGroup, SWT.NONE);
 		buttonComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.DEFAULT, true, true));
 		buttonComposite.setLayout(new GridLayout(3, false));
@@ -186,14 +195,15 @@ public class DecisionTableWizardPage extends WizardPage {
 				refresh(true, true);
 			}
 		});
-		
+
 		updateLineButton.setEnabled(false);
-		
+
 		refreshGrid();
 		refreshLine();
-		
+
 		setControl(res);
 	}
+
 
 	/**
 	 * 
@@ -213,7 +223,7 @@ public class DecisionTableWizardPage extends WizardPage {
 			gridParentScrollable.setMinSize(size);
 		}
 	}
-	
+
 	protected void refreshLine() {
 		if (linePlaceHolder != null) {
 			for (Control child : linePlaceHolder.getChildren()) {
@@ -240,20 +250,19 @@ public class DecisionTableWizardPage extends WizardPage {
 			label.setText(Messages.selectALine);
 			return placeHolder;
 		}
-		
-		placeHolder.setLayout(new GridLayout(7, false));
-		
-		final List<Text> operands = new ArrayList<Text>();
-		final List<Combo> operators = new ArrayList<Combo>();
+
+		placeHolder.setLayout(new GridLayout(6, false));
+
+		final List<ExpressionViewer> operands = new ArrayList<ExpressionViewer>();
 
 		GridData iconButtonGridData = new GridData(SWT.CENTER, SWT.CENTER, false, false);
 		iconButtonGridData.widthHint = iconButtonGridData.heightHint = 16;
-		
+
 		final int nbConditions = lineWorkingCopy.getConditions().size();
 		for (int i = 0; i < nbConditions; i++) {
 			final int index = i;
-			final DecisionTableCondition cond = lineWorkingCopy.getConditions().get(index);
-			
+			final Expression cond = lineWorkingCopy.getConditions().get(index);
+
 			if (index != 0) {
 				Label andLabel = new Label(placeHolder, SWT.NONE);
 				andLabel.setText(Messages.and);
@@ -261,7 +270,7 @@ public class DecisionTableWizardPage extends WizardPage {
 			} else {
 				new Composite(placeHolder, SWT.NONE).setLayoutData(new GridData(0, 0));
 			}
-			
+
 			Composite cross = createImageButton(placeHolder, Pics.getImage(PicsConstants.remove));
 			cross.setLayoutData(iconButtonGridData);
 			cross.addMouseListener(new MouseAdapter() {
@@ -269,10 +278,10 @@ public class DecisionTableWizardPage extends WizardPage {
 				public void mouseDown(MouseEvent e) {
 					lineWorkingCopy.getConditions().remove(index);
 					refresh(false, true);
-					
+
 				}
 			});
-			
+
 			if (i != 0) {
 				Composite upComposite = createImageButton(placeHolder, Pics.getImage(PicsConstants.arrowUp));
 				upComposite.setLayoutData(iconButtonGridData);
@@ -286,7 +295,7 @@ public class DecisionTableWizardPage extends WizardPage {
 			} else {
 				new Composite(placeHolder, SWT.NONE).setLayoutData(new GridData(0, 0));
 			}
-			
+
 			if (i != nbConditions - 1) {
 				Composite downComposite = createImageButton(placeHolder, Pics.getImage(PicsConstants.arrowDown));
 				downComposite.setLayoutData(iconButtonGridData);
@@ -300,89 +309,62 @@ public class DecisionTableWizardPage extends WizardPage {
 			} else {
 				new Composite(placeHolder, SWT.NONE).setLayoutData(new GridData(0, 0));
 			}
-		
-			final Text op1widget = new Text(placeHolder, SWT.BORDER);		
-			op1widget.setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).create()) ;
-			if (cond.getOperand1() != null) {
-				op1widget.setText(cond.getOperand1());
-			}
-			op1widget.addModifyListener(new ModifyListener() {
-				
-				public void modifyText(ModifyEvent e) {
-					cond.setOperand1(op1widget.getText());
-					
-				}
-			});
 			
-			final ComboViewer opCombo = new ComboViewer(placeHolder, SWT.READ_ONLY);
-			opCombo.setContentProvider(new ArrayContentProvider());
-			opCombo.add("=="); opCombo.add("!=");
-			opCombo.add("<"); opCombo.add(">");
-			opCombo.add("<="); opCombo.add(">=");
-			opCombo.addSelectionChangedListener(new ISelectionChangedListener() {
-				public void selectionChanged(SelectionChangedEvent arg0) {
-					cond.setOperator( (String) ((IStructuredSelection)arg0.getSelection()).getFirstElement());
-				}
-			});
-			opCombo.setLabelProvider(symbolsLabelProvider);
-			opCombo.setInput(new String[] { "==", "!=", "<", ">", "<=", ">="});
-			if (cond.getOperator() != null) {
-				opCombo.setSelection(new StructuredSelection(cond.getOperator()));
-			}
-			
-			final Text op2widget = new Text(placeHolder, SWT.BORDER);
-			op2widget.setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).create()) ;
+			final ExpressionViewer op1widget = new ExpressionViewer(placeHolder, SWT.BORDER,null);
+			op1widget.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(500, SWT.DEFAULT).grab(true, false).span(2, 1).create());
+			op1widget.addExpressionValidator(ExpressionConstants.CONDITION_TYPE,new ComparisonExpressionValidator());
+			op1widget.addExpressionValidationListener(new IExpressionValidationListener(){
 
-//			op2widget.getSuperCombo().add("true", 0) ;
-//			op2widget.getSuperCombo().add("false", 1) ;
-			if (cond.getOperand2() != null) {
-				op2widget.setText(cond.getOperand2());
-			}
-			op2widget.addModifyListener(new ModifyListener() {
-				
-				public void modifyText(ModifyEvent e) {
-					cond.setOperand2(op2widget.getText());
-					
+				@Override
+				public void validationStatusChanged(int newStatus) {
+					updateButtons(operands);
+				}
+
+			});
+			op1widget.setContext(container);
+			op1widget.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONDITION_TYPE}));
+			op1widget.setInput(lineWorkingCopy);
+			op1widget.setSelection(new StructuredSelection(cond));
+			op1widget.getEraseControl().addListener(SWT.Selection, new Listener() {
+
+				@Override
+				public void handleEvent(Event event) {
+					updateButtons(operands);
 				}
 			});
-			
 			operands.add(op1widget);
-			operands.add(op2widget);
-			operators.add(opCombo.getCombo());
-			
-			for (Text operand : operands) {
-				operand.addModifyListener(new ModifyListener() {
-					
-					public void modifyText(ModifyEvent e) {
-						updateButtons(operands, operators);
-					}
-				});
-			}
-			for (Combo operator : operators) {
-				operator.addSelectionListener(new SelectionAdapter() {
+
+			for (ExpressionViewer operand : operands) {
+				operand.addExpressionEditorChangedListener(new ISelectionChangedListener() {
+
 					@Override
-					public void widgetSelected(SelectionEvent e) {
-						updateButtons(operands, operators);
+					public void selectionChanged(SelectionChangedEvent event) {
+						updateButtons(operands);
 					}
-				});
+				});	
 			}
 		}
-		
-		
 		Link addConditionLink = new Link(linePlaceHolder, SWT.NONE);
 		addConditionLink.setText("<A>" + Messages.addCondition + "</A>");
 		addConditionLink.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				lineWorkingCopy.getConditions().add(DecisionFactory.eINSTANCE.createDecisionTableCondition());
+				final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+				exp.setReturnType(Boolean.class.getName());
+				exp.setReturnTypeFixed(true);
+				exp.setType(ExpressionConstants.CONDITION_TYPE);
+
+
+				lineWorkingCopy.getConditions().add(exp);
 				updateLineButton.setEnabled(false);
 				refresh(false, true);
 			}
 		});
-		
-		updateButtons(operands, operators) ;
-		
+
+		updateButtons(operands) ;
+
 		return placeHolder;
+
 	}
 
 
@@ -391,13 +373,12 @@ public class DecisionTableWizardPage extends WizardPage {
 	 * @param operators
 	 * @return
 	 */
-	protected void updateButtons(List<Text> operands, List<Combo> operators) {
+	protected void updateButtons(List<ExpressionViewer> operands) {
 		boolean oneIsEmpty = false;
-		for (Text operand : operands) {
-			oneIsEmpty |= (operand.getText() == null || operand.getText().length() == 0);
-		}
-		for (Combo operator : operators) {
-			oneIsEmpty |= (operator.getText() == null || operator.getText().length() == 0);
+		for (ExpressionViewer operand : operands) {
+			oneIsEmpty = oneIsEmpty || operand.getSelection() == null || operand.getMessage(IStatus.ERROR)!=null;
+			oneIsEmpty = oneIsEmpty || ((Expression)((StructuredSelection)operand.getSelection()).getFirstElement()).getContent() == null;
+			oneIsEmpty = oneIsEmpty || ((Expression)((StructuredSelection)operand.getSelection()).getFirstElement()).getContent().isEmpty();
 		}
 		updateLineButton.setEnabled(!oneIsEmpty && toEditLine != null);
 	}
@@ -412,8 +393,8 @@ public class DecisionTableWizardPage extends WizardPage {
 		if (refreshLine) {
 			refreshLine();
 		}
-	//	gridParentScrollable.getParent().getParent().getParent().pack(true);
-	//	gridParentScrollable.getParent().getParent().getParent().layout(true);
+		//	gridParentScrollable.getParent().getParent().getParent().pack(true);
+		//	gridParentScrollable.getParent().getParent().getParent().layout(true);
 		gridParentScrollable.getShell().pack(true) ;
 		gridParentScrollable.getShell().layout(true) ;
 		getContainer().updateButtons();
@@ -437,7 +418,7 @@ public class DecisionTableWizardPage extends WizardPage {
 		final GridLayout layout = new GridLayout(nbColumns, false);
 		gridPlaceholder.setLayout(layout);
 		gridPlaceholder.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT, false, false));
-		
+
 		{ 
 			Composite filler = new Composite(gridPlaceholder, SWT.NONE);
 			GridData fillerLayoutData = new GridData(0, 0);
@@ -450,7 +431,7 @@ public class DecisionTableWizardPage extends WizardPage {
 				conditionsLabel.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, conditionsLabel));
 				conditionsLabel.setLayoutData(new GridData(SWT.CENTER, SWT.NONE, false, false, 2 * nbMaxConditions - 1, 1));
 			}
-			
+
 			new Composite(gridPlaceholder, SWT.NONE).setLayoutData(new GridData(0,0)) ;
 
 			Label decisionLabel = new Label(gridPlaceholder, SWT.NONE);
@@ -458,18 +439,18 @@ public class DecisionTableWizardPage extends WizardPage {
 			decisionLabel.setText(Messages.decision);
 			decisionLabel.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, decisionLabel));
 		}
-		
-		
+
+
 		final GridData iconButtonLayoutData = new GridData(SWT.RIGHT, SWT.CENTER, false, false);
 		iconButtonLayoutData.heightHint = DELETE_SIZE;
 		iconButtonLayoutData.widthHint = DELETE_SIZE;
 		final GridData oneCellFillerLayoutData = new GridData(0, 0);
 		final GridData andLayoutData = new GridData(SWT.FILL, SWT.CENTER, false, false);
-		
+
 		for (int i = 0; i < decisionTable.getLines().size(); i++) {
 			final int index = i;
 			final DecisionTableLine line = decisionTable.getLines().get(i);
-			
+
 			if (line != toEditLine) {
 				Composite editLineComposite = createImageButton(gridPlaceholder, Pics.getImage(PicsConstants.edit));
 				editLineComposite.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, editLineComposite));
@@ -488,7 +469,7 @@ public class DecisionTableWizardPage extends WizardPage {
 			} else {
 				new Composite(gridPlaceholder, SWT.NONE).setLayoutData(new GridData(0, 0)) ;
 			}
-			
+
 			Composite deleteLineComposite = createImageButton(gridPlaceholder, Pics.getImage(PicsConstants.remove));
 			deleteLineComposite.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, deleteLineComposite)); 
 			deleteLineComposite.setLayoutData(iconButtonLayoutData);
@@ -500,7 +481,7 @@ public class DecisionTableWizardPage extends WizardPage {
 					}
 				}
 			});
-			
+
 			if (index != 0) {
 				Composite lineUpComposite = createImageButton(gridPlaceholder, Pics.getImage(PicsConstants.arrowUp));
 				lineUpComposite.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, lineUpComposite)); 
@@ -517,7 +498,7 @@ public class DecisionTableWizardPage extends WizardPage {
 			} else {
 				new Composite(gridPlaceholder, SWT.NONE).setLayoutData(oneCellFillerLayoutData);
 			}
-			
+
 			if (i != decisionTable.getLines().size() - 1) {
 				Composite lineDownComposite = createImageButton(gridPlaceholder, Pics.getImage(PicsConstants.arrowDown));
 				lineDownComposite.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, lineDownComposite));
@@ -534,16 +515,16 @@ public class DecisionTableWizardPage extends WizardPage {
 			} else {
 				new Composite(gridPlaceholder, SWT.NONE).setLayoutData(oneCellFillerLayoutData);
 			}
-			
+
 			if(!line.getConditions().isEmpty()){
 				new Composite(gridPlaceholder, SWT.NONE).setLayoutData(new GridData(0, 20));
 			}
-			
+
 			Label andLabel = null;
-			for (DecisionTableCondition cond : line.getConditions()) {
+			for (Expression cond : line.getConditions()) {
 				Label condLabel = new Label(gridPlaceholder, SWT.NONE);
 				condLabel.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, condLabel)); 
-				String stringCondition = cond.getOperand1() + " " + symbolsLabelProvider.getText(cond.getOperator()) + " " + cond.getOperand2();
+				String stringCondition = cond.getContent();
 				if (stringCondition.length() > 15) {
 					condLabel.setToolTipText(stringCondition);
 					stringCondition = stringCondition.substring(0, 12) + "...";
@@ -558,7 +539,7 @@ public class DecisionTableWizardPage extends WizardPage {
 			if (andLabel != null) {
 				andLabel.dispose();
 			}
-			
+
 			if (line.getConditions().size() < nbMaxConditions) {
 				Composite filler = new Composite(gridPlaceholder, SWT.NONE);
 				int nbColumnsToFill = 0;
@@ -571,21 +552,21 @@ public class DecisionTableWizardPage extends WizardPage {
 				gd.widthHint = gd.heightHint = 0;
 				filler.setLayoutData(gd);
 			}
-			
+
 			if(line.getConditions().isEmpty()){
 				Label condLabel = new Label(gridPlaceholder, SWT.NONE);
 				condLabel.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, condLabel)); 
 				condLabel.setText(Messages.noConditionDefined) ;
 				condLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false,1,1)) ;
 			}
-			
+
 			Composite arrow = createImageButton(gridPlaceHolder, Pics.getImage(PicsConstants.arrowRight));
 			arrow.setBackground(zebraGridPaintListener.getColorForControl(gridPlaceholder, arrow)); 
 			final GridData arrowlayoutData = new GridData(16, 16);
 			arrowlayoutData.horizontalAlignment = SWT.RIGHT;
 			arrowlayoutData.grabExcessHorizontalSpace = true ;
 			arrow.setLayoutData(arrowlayoutData);
-			
+
 			final ComboViewer lineValueCombo = new ComboViewer(gridPlaceholder, SWT.READ_ONLY);
 			lineValueCombo.setContentProvider(new ArrayContentProvider());
 			if (wizard.getActionsComparer() != null) {
@@ -602,7 +583,7 @@ public class DecisionTableWizardPage extends WizardPage {
 			});
 			lineValueCombo.getControl().setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
 		}
-		
+
 		{ // ADD LINE
 			Link addRowLink = new Link(gridPlaceholder, SWT.TRANSPARENT);
 			addRowLink.setText("<A>" + Messages.addRow + "</A>");
@@ -626,7 +607,7 @@ public class DecisionTableWizardPage extends WizardPage {
 			layoutData.heightHint = layoutData.heightHint = 0;
 			filler.setLayoutData(layoutData);
 		}
-		
+
 		{ // DEFAULT
 			Label defaultLabel = new Label(gridPlaceholder, SWT.NONE);
 			defaultLabel.setText(Messages.defaultLine);
@@ -644,7 +625,7 @@ public class DecisionTableWizardPage extends WizardPage {
 			arrowlayoutData.horizontalAlignment = SWT.END;
 			arrowlayoutData.grabExcessHorizontalSpace = true;
 			arrow.setLayoutData(arrowlayoutData);
-			
+
 			final ComboViewer defaultValueCombo = new ComboViewer(gridPlaceholder, SWT.READ_ONLY);
 			defaultValueCombo.setContentProvider(new ArrayContentProvider());
 			if (wizard.getActionsComparer() != null) {
@@ -663,8 +644,8 @@ public class DecisionTableWizardPage extends WizardPage {
 			});
 			defaultValueCombo.getControl().setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
 		}	
-	
-		
+
+
 		return gridPlaceholder;
 	}
 
@@ -682,8 +663,8 @@ public class DecisionTableWizardPage extends WizardPage {
 			decisionTable.getLines().remove(line);
 			zebraGridPaintListener.setSelectedRow(decisionTable.getLines().indexOf(toEditLine)) ;
 		}
-		
-		
+
+
 		refresh(true, true);
 	}
 
@@ -695,10 +676,10 @@ public class DecisionTableWizardPage extends WizardPage {
 	public Canvas createImageButton(Composite parent, final Image image) {
 		final Canvas deleteButton = new Canvas(parent, SWT.TRANSPARENT);
 		deleteButton.addPaintListener(new PaintListener() {
-	      public void paintControl(PaintEvent e) {
-	        e.gc.drawImage(image, 0, 0, 16, 16, 0, 0, DELETE_SIZE, DELETE_SIZE);
-	      }
-	    });
+			public void paintControl(PaintEvent e) {
+				e.gc.drawImage(image, 0, 0, 16, 16, 0, 0, DELETE_SIZE, DELETE_SIZE);
+			}
+		});
 		return deleteButton;
 	}
 
@@ -718,7 +699,7 @@ public class DecisionTableWizardPage extends WizardPage {
 		toEditLine = newLine;
 		updateLineButton.setEnabled(true);
 	}
-	
+
 	@Override
 	public boolean isPageComplete() {
 		for(DecisionTableLine line : decisionTable.getLines()){
@@ -730,5 +711,5 @@ public class DecisionTableWizardPage extends WizardPage {
 		setErrorMessage(null);
 		return super.isPageComplete();
 	}
-	
+
 }

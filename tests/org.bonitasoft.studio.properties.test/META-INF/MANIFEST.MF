@@ -31,6 +31,7 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.properties.test
 Import-Package: org.bonitasoft.studio.common.emf.tools,
  org.bonitasoft.studio.common.repository,
+ org.bonitasoft.studio.decision.ui,
  org.bonitasoft.studio.diagram.custom,
  org.bonitasoft.studio.model.process,
  org.eclipse.gmf.runtime.diagram.ui.editparts

@@ -20,11 +20,12 @@ package org.bonitasoft.studio.decision.core.test;
 import groovy.lang.GroovyShell;
 import junit.framework.TestCase;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.decision.core.DecisionTableUtil;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.decision.DecisionFactory;
 import org.bonitasoft.studio.model.process.decision.DecisionTable;
-import org.bonitasoft.studio.model.process.decision.DecisionTableCondition;
 import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
 import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
 import org.bonitasoft.studio.model.process.decision.transitions.TransitionsFactory;
@@ -46,20 +47,17 @@ public class TestDecisionTableToGroovy extends TestCase {
 		{
 			DecisionTableLine line = DecisionFactory.eINSTANCE.createDecisionTableLine();
 			decisionTable.getLines().add(line);
-			DecisionTableCondition condition1 = DecisionFactory.eINSTANCE.createDecisionTableCondition();
-			condition1.setOperand1("1"); condition1.setOperand2("1"); condition1.setOperator("==");
-			DecisionTableCondition condition2 = DecisionFactory.eINSTANCE.createDecisionTableCondition();
-			condition2.setOperand1("1"); condition2.setOperand2("1"); condition2.setOperator("==");
+			Expression condition1 = createNewComparisonExpression("1==1");
+			
+			Expression condition2 = createNewComparisonExpression("1==1");
 			line.getConditions().add(condition2);
 			line.setAction(EcoreUtil.copy(takeTransition));
 		}
 		{
 			DecisionTableLine line = DecisionFactory.eINSTANCE.createDecisionTableLine();
 			decisionTable.getLines().add(line);
-			DecisionTableCondition condition1 = DecisionFactory.eINSTANCE.createDecisionTableCondition();
-			condition1.setOperand1("1"); condition1.setOperand2("1"); condition1.setOperator("==");
-			DecisionTableCondition condition2 = DecisionFactory.eINSTANCE.createDecisionTableCondition();
-			condition2.setOperand1("1"); condition2.setOperand2("1"); condition2.setOperator("==");
+			Expression condition1 = createNewComparisonExpression("1==1");
+			Expression condition2 = createNewComparisonExpression("1==1");
 			line.getConditions().add(condition2);
 			line.setAction(EcoreUtil.copy(takeTransition));
 		}
@@ -69,6 +67,15 @@ public class TestDecisionTableToGroovy extends TestCase {
 		assertTrue((Boolean)shell.evaluate(groovy.getContent()));
 	}
 	
+	private Expression createNewComparisonExpression(String script) {
+		Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+		exp.setReturnType(Boolean.class.getName());
+		exp.setReturnTypeFixed(true);
+		exp.setType(ExpressionConstants.CONDITION_TYPE);
+		exp.setContent(script);
+		return exp;
+	}
+
 	public void testSimpleDecisionKO() {
 		final TakeTransitionAction takeTransition = TransitionsFactory.eINSTANCE.createTakeTransitionAction();
 		takeTransition.setTakeTransition(true);
@@ -78,9 +85,8 @@ public class TestDecisionTableToGroovy extends TestCase {
 		DecisionTable decisionTable = DecisionFactory.eINSTANCE.createDecisionTable();
 		DecisionTableLine line = DecisionFactory.eINSTANCE.createDecisionTableLine();
 		decisionTable.getLines().add(line);
-		DecisionTableCondition condition = DecisionFactory.eINSTANCE.createDecisionTableCondition();
+		Expression condition = createNewComparisonExpression("1==2");
 		line.setAction(takeTransition);
-		condition.setOperand1("1"); condition.setOperand2("2"); condition.setOperator("==");
 		line.getConditions().add(condition);
 		decisionTable.setDefaultAction(dontTakeTransition);
 		Expression groovy = DecisionTableUtil.toGroovyScriptExpression(decisionTable);

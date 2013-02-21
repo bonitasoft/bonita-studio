@@ -8,5 +8,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit,
  org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.bonitasoft.studio.decision.core;bundle-version="1.0.0",
- org.codehaus.groovy
+ org.codehaus.groovy,
+ org.bonitasoft.studio.common;bundle-version="1.0.0"
 Export-Package: org.bonitasoft.studio.decision.core.test

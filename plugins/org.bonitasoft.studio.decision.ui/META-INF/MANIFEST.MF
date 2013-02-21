@@ -25,3 +25,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.decision.ui,
  org.bonitasoft.studio.decision.ui.condition
+Import-Package: org.bonitasoft.studio.condition.ui.expression,
+ org.eclipse.emf.databinding

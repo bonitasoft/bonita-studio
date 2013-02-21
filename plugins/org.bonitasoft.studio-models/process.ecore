@@ -569,14 +569,9 @@
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="DecisionTableLine">
       <eStructuralFeatures xsi:type="ecore:EReference" name="conditions" upperBound="-1"
-          eType="#//decision/DecisionTableCondition" containment="true"/>
+          eType="ecore:EClass expression.ecore#//Expression" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="action" eType="#//decision/DecisionTableAction"
           containment="true"/>
-    </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="DecisionTableCondition">
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="operand1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="operator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="operand2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="DecisionTableAction" abstract="true"/>
     <eSubpackages name="transitions" nsURI="http://www.bonitasoft.org/ns/studio/process/decision/transitions"
