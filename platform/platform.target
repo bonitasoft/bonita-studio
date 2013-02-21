@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?><target includeMode="feature" name="platform" sequenceNumber="41">
+<?pde version="3.6"?>
+
+<target includeMode="feature" name="platform" sequenceNumber="43">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
-<unit id="com.sun.syndication.source" version="0.9.0.v200803061811"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/"/>
+<unit id="org.uguess.tribix.feature.group" version="2.5.2.201107181644"/>
+<repository location="http://tribix.sourceforge.net/update"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="2.2.2.I20110602-1700"/>
-<unit id="org.polarion.eclipse.team.svn.connector.svnkit15.feature.group" version="2.2.2.I20110602-1700"/>
-<unit id="org.polarion.eclipse.team.svn.connector.svnkit16.feature.group" version="2.2.2.I20110602-1700"/>
-<unit id="org.polarion.eclipse.team.svn.connector.source.feature.group" version="2.2.2.I20110602-1700"/>
-<repository location="http://community.polarion.com/projects/subversive/download/eclipse/2.0/indigo-site/"/>
+<unit id="org.eclipse.gmf.sdk.experimental.feature.group" version="1.2.0.201108160853"/>
+<unit id="org.eclipse.gmf.sdk.feature.group" version="2.4.0.201108160853"/>
+<unit id="org.eclipse.gmf.tooling.feature.group" version="2.4.0.201108160853"/>
+<repository location="http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases-2.4.0/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.xtend.m2e.feature.group" version="2.3.1.v201208210947"/>
@@ -23,10 +23,6 @@
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.uguess.tribix.feature.group" version="2.5.2.201107181644"/>
-<repository location="http://tribix.sourceforge.net/update"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
 <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
 <unit id="org.eclipse.swtbot.ide.feature.group" version="2.0.5.20111003_1754-3676ac8-dev-e36"/>
@@ -36,10 +32,16 @@
 <repository location="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.gmf.sdk.experimental.feature.group" version="1.2.0.201108160853"/>
-<unit id="org.eclipse.gmf.sdk.feature.group" version="2.4.0.201108160853"/>
-<unit id="org.eclipse.gmf.tooling.feature.group" version="2.4.0.201108160853"/>
-<repository location="http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases-2.4.0/"/>
+<unit id="org.eclipse.emf.edapt.recorder.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.edapt.recorder.sdk.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.edapt.runtime.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.edapt.runtime.sdk.feature.feature.group" version="0.0.0"/>
+<repository location="http://download.eclipse.org/edapt/update-site/"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
+<unit id="com.sun.syndication.source" version="0.9.0.v200803061811"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="0.0.0"/>
@@ -52,16 +54,23 @@
 <repository location="http://download.eclipse.org/modeling/emft/texo/updates/interim"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.edapt.recorder.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.emf.edapt.recorder.sdk.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.emf.edapt.runtime.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.emf.edapt.runtime.sdk.feature.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/edapt/update-site/"/>
+<unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="2.2.2.I20110602-1700"/>
+<unit id="org.polarion.eclipse.team.svn.connector.svnkit15.feature.group" version="2.2.2.I20110602-1700"/>
+<unit id="org.polarion.eclipse.team.svn.connector.svnkit16.feature.group" version="2.2.2.I20110602-1700"/>
+<unit id="org.polarion.eclipse.team.svn.connector.source.feature.group" version="2.2.2.I20110602-1700"/>
+<repository location="http://community.polarion.com/projects/subversive/download/eclipse/2.0/indigo-site/"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.codehaus.groovy18.feature.feature.group" version="2.7.2.xx-RELEASE-20121219-0800-e37"/>
+<unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.7.2.xx-RELEASE-20121219-0800-e37"/>
+<repository location="http://dist.springsource.org/release/GRECLIPSE/e3.7/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.feature.group" version="3.7.2.v20120213-BDF9E9bGTzuHh03p2c0AWvmC3Ltk"/>
 <unit id="org.eclipse.team.svn.resource.ignore.rules.jdt.feature.group" version="0.7.9.I20110602-1700"/>
 <unit id="org.eclipse.team.svn.feature.group" version="0.7.9.I20110819-1700"/>
+<unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.9.2.v201109161655-7I9O7XFE9Jfxu0wIxMQtoLz0X-dE"/>
+<unit id="org.eclipse.datatools.sdk.feature.feature.group" version="1.9.2.v201109161655-7PA37eFEpPYv5_Ae3-6EjC5ZX4e5"/>
 <unit id="org.eclipse.rcp.source.feature.group" version="3.7.2.v20120120-1424-9DB5FmnFq5JCf1UA38R-kz0S0272"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.7.2.v20120130-0943"/>
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.7.1.R37x_v20110907-7M7W8i8eNV4WsRkue-4Vq4J6pCyW"/>
@@ -88,16 +97,6 @@
 <unit id="org.eclipse.jst.webpageeditor.feature.feature.group" version="2.3.6.v201201181342-46AB9oB5885D6R5D86"/>
 <unit id="org.eclipse.wst.server_adapters.feature.feature.group" version="3.2.100.v20110303-51EoAkF77g8HBSc"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.10.1.v201208161415-7I9e7GFE9JgB7ngIxQtPITxSGQER"/>
-<unit id="org.eclipse.datatools.sdk.feature.feature.group" version="1.10.1.v201208161415-7PAO7MFEpPZ56X3j7z0oZGcDIWFs"/>
-<repository location="http://download.eclipse.org/datatools/updates"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.codehaus.groovy18.feature.feature.group" version="2.7.2.xx-RELEASE-20121219-0800-e37"/>
-<unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.7.2.xx-RELEASE-20121219-0800-e37"/>
-<repository location="http://dist.springsource.org/release/GRECLIPSE/e3.7/"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
