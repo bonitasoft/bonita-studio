@@ -41,7 +41,6 @@ import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.TargetElement;
 import org.bonitasoft.studio.model.process.decision.DecisionTable;
 import org.bonitasoft.studio.model.process.decision.DecisionTableAction;
-import org.bonitasoft.studio.model.process.decision.DecisionTableCondition;
 import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
 import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
 import org.bonitasoft.studio.model.process.decision.transitions.TransitionsFactory;
