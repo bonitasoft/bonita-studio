@@ -33,7 +33,7 @@
 						</goals>
 						<configuration>
 							<targetFiles>
-								<param>ws/platform.target</param>
+								<param>platform.target</param>
 							</targetFiles>
 							<failOnError>true</failOnError>
 						</configuration>
