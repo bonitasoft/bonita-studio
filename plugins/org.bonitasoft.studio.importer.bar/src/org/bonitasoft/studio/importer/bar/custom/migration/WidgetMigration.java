@@ -55,7 +55,7 @@ public class WidgetMigration extends ReportCustomMigration {
 				if(action != null){
 					final String inputScript = action.get("inputScript");
 					final StringToExpressionConverter converter = getConverter(model,getScope(widget));
-					final Instance operation = converter.parseOperation(action, getDefaultReturnTypeForWidget(widget), false);
+					final Instance operation = converter.parseOperation(action, String.class.getName(), false);
 					model.delete(action);
 					widgetActions.put(widget.getUuid(), operation);
 					if(inputScript != null && !inputScript.trim().isEmpty()){
@@ -74,7 +74,8 @@ public class WidgetMigration extends ReportCustomMigration {
 	}
 
 	private String getDefaultReturnTypeForWidget(Instance widget) {
-		if(widget.instanceOf("form.CheckBoxMultipleFormField")){
+		if(widget.instanceOf("form.CheckBoxMultipleFormField")
+				|| widget.instanceOf("form.DynamicTable")){
 			return List.class.getName();
 		}
 		return String.class.getName();
@@ -321,6 +322,12 @@ public class WidgetMigration extends ReportCustomMigration {
 	private void setWidgetActions(Instance widget) {
 		if(widgetActions.containsKey(widget.getUuid())){
 			Instance action = widgetActions.get(widget.getUuid());
+			Instance actionExp = action.get("rightOperand");
+			if(actionExp != null){
+				if(ExpressionConstants.FORM_FIELD_TYPE.equals(actionExp.get("type"))){
+					actionExp.set("returnType", getDefaultReturnTypeForWidget(widget));
+				}
+			}
 			widget.set("action", action);
 			if(!widget.instanceOf("form.Info")){
 				addReportChange((String) widget.get("name"),widget.getType().getEClass().getName(), widget.getUuid(), Messages.widgetActionsMigrationDescription, Messages.dataProperty, StringToExpressionConverter.getStatusForExpression((Instance) action.get("rightOperand")));
