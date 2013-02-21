@@ -33,7 +33,7 @@
 						</goals>
 						<configuration>
 							<targetFiles>
-								<param>${project.artifactId}.target</param>
+								<param>platform.target</param>
 							</targetFiles>
 							<failOnError>true</failOnError>
 						</configuration>
