@@ -289,7 +289,9 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 				 try{
 					 ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
 					 org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save") ;
-					 c.executeWithChecks(new ExecutionEvent()) ;
+					 if(c.isEnabled()){
+						 c.executeWithChecks(new ExecutionEvent()) ;
+					 }
 				 }catch (Exception e) {
 					 BonitaStudioLog.error(e) ;
 				 }
