@@ -35,7 +35,7 @@
 							<targetFiles>
 								<param>platform.target</param>
 							</targetFiles>
-							<failOnError>true</failOnError>
+							<failOnError>false</failOnError>
 						</configuration>
 					</execution>
 				</executions>
@@ -83,6 +83,7 @@
 							<groupId>org.bonitasoft.studio</groupId>
 							<artifactId>platform</artifactId>
 							<version>6.0-SNAPSHOT</version>
+							<classifier>platform</classifier>
 						</artifact>
 					</target>
 				</configuration>
