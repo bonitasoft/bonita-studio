@@ -102,13 +102,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
     private final String defaultFileName;
     private ViewerFilter[] filters={};
 
-    /**
-     * @param input
-     * @param isZip
-     * @param showImages TODO
-     * @param selectAllByDefault TODO
-     * @param pageName
-     */
+
     public ExportRepositoryWizardPage(Object input, boolean isZip, final String defaultFileName ,final String wizardTitle) {
         super(ExportRepositoryWizardPage.class.getName());
         this.isZip = isZip;
@@ -133,9 +127,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         composite.setLayout(new GridLayout(3,false));
 
-
         final Section browseRepoSection = new Section(composite, Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE);
-        browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(3, 1).hint(SWT.DEFAULT,300).create()) ;
+        browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,browseRepoSection.isExpanded()).span(3, 1).hint(SWT.DEFAULT,300).create()) ;
         browseRepoSection.setText(Messages.browseRepository) ;
         browseRepoSection.addExpansionListener(new IExpansionListener() {
 
@@ -144,6 +137,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
             @Override
             public void expansionStateChanged(ExpansionEvent event) {
+            	browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,browseRepoSection.isExpanded()).span(3, 1).hint(SWT.DEFAULT,300).create()) ;
                 Point defaultSize = getShell().getSize() ;
                 Point size = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true) ;
                 getShell().setSize(defaultSize.x, size.y) ;
@@ -164,7 +158,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
         treeViewer = new CheckboxRepositoryTreeViewer(composite, SWT.BORDER | SWT.V_SCROLL);
         treeViewer.setFilters(filters);
         treeViewer.setInput(input) ;
-        treeViewer.getControl().setLayoutData(GridDataFactory.swtDefaults().grab(true, false).span(3, 1).hint(SWT.DEFAULT, 150).create());
+        treeViewer.getControl().setLayoutData(GridDataFactory.swtDefaults().grab(true, true).span(3, 1).hint(SWT.DEFAULT, 150).create());
 
 
         final IObservableSet checkedElementsObservable =  ViewersObservables.observeCheckedElements(treeViewer,Object.class) ;
