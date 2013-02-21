@@ -50,7 +50,6 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 
     public static final String REFRESH_THEME_PARAMETER = "refreshTheme";
     public static final String CONSOLE_LOCALE = "locale=";
-    private static final String USER_PROFILE_ID = "4";
     private URL url;
     protected boolean runSynchronously;
     protected boolean refreshTheme = true ;
@@ -145,8 +144,8 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
         final String password = store.getString(BonitaPreferenceConstants.USER_PASSWORD);
         final String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
         final String loginUrl = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-        final String consoleURl = "http://"+host+":"+ port + getURLRelativePath() +"locale="+locale+"&_pf="+USER_PROFILE_ID;
-        return loginUrl+"&redirectURL="+URLEncoder.encode(consoleURl, "UTF-8");
+        final String consoleURl = "http://"+host+":"+ port + getURLRelativePath() +"locale="+locale;
+        return loginUrl+"&redirectUrl="+URLEncoder.encode(consoleURl, "UTF-8");
     }
 
     /**
