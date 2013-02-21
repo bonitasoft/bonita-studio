@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -38,7 +39,7 @@ import org.eclipse.emf.edapt.migration.Model;
  * @author Florine Boudin
  *
  */
-public class DecisionTableMigration extends CustomMigration {
+public class DecisionTableMigration extends ReportCustomMigration {
 
 
 	//List<List<Instance>> newConditionList = new ArrayList<List<Instance>>();
@@ -62,7 +63,7 @@ public class DecisionTableMigration extends CustomMigration {
 				String s = op1+operator+op2;
 
 				Instance exp = StringToExpressionConverter.createExpressionInstance(model, s, s, Boolean.class.getName(), ExpressionConstants.CONDITION_TYPE, true) ;
-				exp.set("referencedElements", new ArrayList<Instance>());
+				getConverter(model, getScope(condition)).resolveDataDependencies(exp);
 				list.add(exp);
 				model.delete(condition);
 			}
@@ -78,6 +79,7 @@ public class DecisionTableMigration extends CustomMigration {
 			List<Instance> listCondition = instance.get("conditions");
 
 			listCondition.addAll((Collection<? extends Instance>) map.get(instance.getUuid()));
+			
 		}
 
 	}

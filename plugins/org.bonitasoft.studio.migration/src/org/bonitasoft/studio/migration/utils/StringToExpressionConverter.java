@@ -18,6 +18,7 @@ package org.bonitasoft.studio.migration.utils;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -136,44 +137,45 @@ public class StringToExpressionConverter {
 		}
 		if(ExpressionConstants.SCRIPT_TYPE.equals(expressionType)){
 			final Instance expression = createExpressionInstance(model,"migratedScript", content, returnType, ExpressionConstants.SCRIPT_TYPE, fixedReturnType);
-			resolveScriptDependencies(expression,content);
+			resolveScriptDependencies(expression);
 			return expression;
 		}else{
 			final Instance exp = createExpressionInstance(model,content, content, returnType, expressionType, fixedReturnType);
 			if(ExpressionConstants.VARIABLE_TYPE.equals(expressionType) || ExpressionConstants.SIMULATION_VARIABLE_TYPE.equals(expressionType)){
-				resolveDataDependencies(exp, content);
+				resolveDataDependencies(exp);
 			}else if(ExpressionConstants.FORM_FIELD_TYPE.equals(expressionType)){
-				resolveWidgetDependencies(exp, content);
+				resolveWidgetDependencies(exp);
 			}
 			return exp;
 		}
 	}
 
-	private void resolveScriptDependencies(Instance expression, String groovyScript) {
-		resolveDataDependencies(expression,groovyScript);
-		resolveWidgetDependencies(expression,groovyScript);
+	public void resolveScriptDependencies(Instance expression) {
+		resolveDataDependencies(expression);
+		resolveWidgetDependencies(expression);
 	}
 
-	private void resolveWidgetDependencies(Instance expression, String groovyScript) {
+	public void resolveWidgetDependencies(Instance expression) {
+		final String content = expression.get("content");
 		for(String widgetName : widget.keySet()){
-			if(groovyScript.contains(widgetName)){
-				int index = groovyScript.indexOf(widgetName);
+			if(content.contains(widgetName)){
+				int index = content.indexOf(widgetName);
 				boolean validPrefix = false;
 				boolean validSuffix = false;
 				if(index > 0){
-					String prefix = groovyScript.substring(index-1,index);
+					String prefix = content.substring(index-1,index);
 					if(!Character.isLetter(prefix.toCharArray()[0])){
 						validPrefix = true;
 					}
 				}else if(index == 0){
 					validPrefix=true;
 				}
-				if(index + widgetName.length() < groovyScript.length()-1){
-					String suffix = groovyScript.substring(index+widgetName.length(),index+widgetName.length()+1);
+				if(index + widgetName.length() < content.length()-1){
+					String suffix = content.substring(index+widgetName.length(),index+widgetName.length()+1);
 					if(!Character.isLetter(suffix.toCharArray()[0])){
 						validSuffix = true;
 					}
-				}else if(index + widgetName.length() == groovyScript.trim().length()){
+				}else if(index + widgetName.length() == content.trim().length()){
 					validSuffix = true;
 				}
 				if(validPrefix && validSuffix){
@@ -184,14 +186,15 @@ public class StringToExpressionConverter {
 		}
 	}
 
-	private void resolveDataDependencies(Instance expression, String groovyScript) {
+	public void resolveDataDependencies(Instance expression) {
+		final String content = expression.get("content");
 		for(String dataName : data.keySet()){
-			if(groovyScript.contains(dataName)){
-				int index = groovyScript.indexOf(dataName);
+			if(content.contains(dataName)){
+				int index = content.indexOf(dataName);
 				boolean validPrefix = false;
 				boolean validSuffix = false;
 				if(index > 0){
-					String prefix = groovyScript.substring(index-1,index);
+					String prefix = content.substring(index-1,index);
 					char previousChar = prefix.toCharArray()[0];
 					if(!Character.isLetter(previousChar) &&  '_' != previousChar){
 						validPrefix = true;
@@ -199,21 +202,41 @@ public class StringToExpressionConverter {
 				}else if(index == 0){
 					validPrefix=true;
 				}
-				if(index + dataName.length() < groovyScript.length()-1){
-					String suffix = groovyScript.substring(index+dataName.length(),index+dataName.length()+1);
+				if(index + dataName.length() < content.length()-1){
+					String suffix = content.substring(index+dataName.length(),index+dataName.length()+1);
 					if(!Character.isLetter(suffix.toCharArray()[0])){
 						validSuffix = true;
 					}
-				}else if(index+dataName.length() == groovyScript.trim().length()){
+				}else if(index+dataName.length() == content.trim().length()){
 					validSuffix = true;
 				}
 				if(validPrefix && validSuffix){
 					Instance dependencyInstance = createVariableDependencyInstance(data.get(dataName));
-					expression.add("referencedElements", dependencyInstance);
+					List<Instance> instList = expression.get("referencedElements");
+					if(!dependancyAlreadyExists(instList, dependencyInstance)){
+						expression.add("referencedElements", dependencyInstance);
+					}
 				}
 			}
 		}
 	}
+
+	/** Check an Instance already exist in a Instance list
+	 * 
+	 * @param instList
+	 * @param dependencyInstance
+	 * @return
+	 */
+	private boolean dependancyAlreadyExists(List<Instance> instList, Instance dependencyInstance) {
+		String dataName = dependencyInstance.get("name");
+		for(Instance instance : instList){
+			if(instance.get("name").equals(dataName)){
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	private Instance createFormFieldDependencyInstance(Instance widgetInstance) {
 		return widgetInstance.copy();

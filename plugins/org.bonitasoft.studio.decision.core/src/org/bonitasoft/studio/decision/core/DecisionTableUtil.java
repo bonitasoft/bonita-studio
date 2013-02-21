@@ -18,12 +18,12 @@
 package org.bonitasoft.studio.decision.core;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.decision.DecisionTable;
 import org.bonitasoft.studio.model.process.decision.DecisionTableAction;
 import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
@@ -72,7 +72,29 @@ public class DecisionTableUtil {
         exp.setContent(script) ;
         exp.setName("Descision Table Script") ;
         exp.setReturnType(Boolean.class.getName()) ;
-        exp.getReferencedElements().addAll((Collection<? extends EObject>) listReferencedElements);
+        
+        // parsed existing elements referenced to do not have only once each reference
+        for(Object ref : listReferencedElements){
+        	if( ref instanceof Data ){
+        		Data data = (Data) ref;
+        		String dataName = data.getName();
+        		boolean addRef = true;
+        		for(Object obj : exp.getReferencedElements()){
+        			if(obj instanceof Data){
+        				Data dataObj = (Data)obj;
+        				String dataObjName = dataObj.getName();
+        				if(dataObjName.equals(dataName)){
+        					addRef = false;
+        				}
+        			}
+        		}
+        		if(addRef){
+        			exp.getReferencedElements().add((EObject)ref);
+        		}
+        	}else{
+        		throw new RuntimeException();
+        	}
+        }
         return exp;
     }
 
