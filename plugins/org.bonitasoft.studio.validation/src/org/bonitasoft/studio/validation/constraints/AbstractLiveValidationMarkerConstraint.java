@@ -92,6 +92,7 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
 			updateValidationMarkersOnDiagram(status,ctx);
 		}else{ //Batch
 			status = performBatchValidation(ctx);
+			updateValidationMarkersOnDiagram(status, ctx);
 		}
 		return status;
 	}

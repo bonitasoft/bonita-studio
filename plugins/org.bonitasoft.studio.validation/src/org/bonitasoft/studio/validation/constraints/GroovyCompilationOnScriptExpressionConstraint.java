@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.validation.constraints;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.validation.i18n.Messages;
@@ -45,6 +46,7 @@ public class GroovyCompilationOnScriptExpressionConstraint  extends AbstractLive
 	protected IStatus performBatchValidation(IValidationContext context) {
 		final EObject eObj = context.getTarget();
 		if (eObj instanceof Expression 
+				&& !ModelHelper.isAnExpressionCopy((Expression) eObj)
 				&& ExpressionConstants.SCRIPT_TYPE.equals(((Expression) eObj).getType()) 
 				&& ExpressionConstants.GROOVY.equals(((Expression) eObj).getInterpreter()))  {
 			final Expression expression = (Expression) eObj;
