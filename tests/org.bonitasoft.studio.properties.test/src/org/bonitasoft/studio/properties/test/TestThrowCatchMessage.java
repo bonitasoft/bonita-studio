@@ -138,9 +138,9 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase {
         SWTBotTestUtil.selectTabbedPropertyView(bot, messageContentSectionTitle);
         bot.button(Messages.autoFillMessageContent).click();
         bot.waitUntil(Conditions.widgetIsEnabled(bot.comboBox()),5000);
-        assertEquals(bot.comboBox(0).selection(),messageContent1+" ("+String.class.getName()+")"+" -- TYPE_VARIABLE");
-        assertEquals(bot.comboBox(1).selection(),messageContent2+" ("+String.class.getName()+")"+" -- TYPE_VARIABLE");
-        assertEquals(bot.comboBox(2).selection(),messageContent3+" ("+String.class.getName()+")"+" -- TYPE_VARIABLE");
+        assertEquals(bot.comboBox(0).selection(),messageContent1+" ("+String.class.getName()+")");
+        assertEquals(bot.comboBox(1).selection(),messageContent2+" ("+String.class.getName()+")");
+        assertEquals(bot.comboBox(2).selection(),messageContent3+" ("+String.class.getName()+")");
         bot.waitUntil(Conditions.widgetIsEnabled(bot.text()),5000);
         //index for expression viewer start at index 1 because of the description in the form widget section
         assertEquals(messageContent1,bot.text(1).getText());
