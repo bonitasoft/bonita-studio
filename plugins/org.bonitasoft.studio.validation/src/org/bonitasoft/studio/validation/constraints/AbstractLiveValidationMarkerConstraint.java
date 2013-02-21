@@ -26,7 +26,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.process.Assignable;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Container;
@@ -36,6 +35,7 @@ import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
+import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -150,7 +150,14 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
 
 	protected abstract IStatus performBatchValidation(IValidationContext context);
 
-	protected abstract String getMarkerType(DiagramEditor editor);
+	protected String getMarkerType(DiagramEditor editor){
+		if(editor instanceof ProcessDiagramEditor){
+			 return ProcessMarkerNavigationProvider.MARKER_TYPE;
+		}else if (editor instanceof FormDiagramEditor){
+			 return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
+		}
+		return null;
+	}
 
 	protected abstract String getConstraintId();
 

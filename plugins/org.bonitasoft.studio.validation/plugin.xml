@@ -767,6 +767,21 @@
                   </event>
                </target>
             </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.GroovyCompilationOnScriptExpressionConstraint"
+                  id="org.bonitasoft.studio.validation.constraint.groovyCompilationFailure"
+                  lang="java"
+                  mode="Batch"
+                  name="Groovy script compilation failures"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Expression">
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">
