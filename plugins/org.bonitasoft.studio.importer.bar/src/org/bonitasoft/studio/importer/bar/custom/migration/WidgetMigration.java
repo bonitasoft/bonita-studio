@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,12 @@ public class WidgetMigration extends ReportCustomMigration {
 		if(widget.instanceOf("form.CheckBoxMultipleFormField")
 				|| widget.instanceOf("form.DynamicTable")){
 			return List.class.getName();
+		}
+		if(widget.instanceOf("form.CheckBoxSingleFormField")){
+			return Boolean.class.getName();
+		}
+		if(widget.instanceOf("form.DateFormField")){
+			return Date.class.getName();
 		}
 		return String.class.getName();
 	}
