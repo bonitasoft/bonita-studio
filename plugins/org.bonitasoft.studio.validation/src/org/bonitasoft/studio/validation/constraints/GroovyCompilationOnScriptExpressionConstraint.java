@@ -52,7 +52,7 @@ public class GroovyCompilationOnScriptExpressionConstraint  extends AbstractLive
 			final GroovySnippetCompiler compiler = new GroovySnippetCompiler(new GroovyProjectFacade(RepositoryManager.getInstance().getCurrentRepository().getJavaProject()));
 			final CompilationResult result = compiler.compileForErrors(scriptText, null);
 			CategorizedProblem[] problems =  result.getAllProblems();
-			if(problems.length > 0){
+			if(problems != null && problems.length > 0){
 				StringBuilder sb = new StringBuilder();
 				for(CategorizedProblem problem : problems){
 					sb.append(problem.getMessage());
