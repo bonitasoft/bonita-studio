@@ -55,7 +55,7 @@ public class WidgetMigration extends ReportCustomMigration {
 				if(action != null){
 					final String inputScript = action.get("inputScript");
 					final StringToExpressionConverter converter = getConverter(model,getScope(widget));
-					final Instance operation = converter.parseOperation(action, String.class.getName(), false);
+					final Instance operation = converter.parseOperation(action, getDefaultReturnTypeForWidget(widget), false);
 					model.delete(action);
 					widgetActions.put(widget.getUuid(), operation);
 					if(inputScript != null && !inputScript.trim().isEmpty()){
@@ -71,6 +71,13 @@ public class WidgetMigration extends ReportCustomMigration {
 				storeInjectWidgetScripts(widget);
 			}
 		}
+	}
+
+	private String getDefaultReturnTypeForWidget(Instance widget) {
+		if(widget.instanceOf("form.CheckBoxMultipleFormField")){
+			return List.class.getName();
+		}
+		return String.class.getName();
 	}
 
 	private void storeDisplayLabels(Instance widget) {
@@ -289,20 +296,25 @@ public class WidgetMigration extends ReportCustomMigration {
 		boolean added = false ; 
 		if(operation != null){
 			final Instance leftOperand = operation.get("leftOperand");
+			final Instance rightOperand = operation.get("rightOperand");
 			if(leftOperand != null){
 				final List<Instance> elements = leftOperand.get("referencedElements");
 				if(!elements.isEmpty()){
 					final Instance dataInstance = elements.get(0);
 					if(dataInstance.instanceOf("process.Data")){
-						widget.set("returnTypeModifier", StringToExpressionConverter.getDataReturnType(dataInstance));
+						String returnType = StringToExpressionConverter.getDataReturnType(dataInstance);
+						widget.set("returnTypeModifier", returnType);
+						if(rightOperand != null){
+							rightOperand.set("returnType", returnType);
+						}
 						added = true ;
 						addReportChange((String) widget.get("name"),widget.getType().getEClass().getName(), widget.getUuid(), Messages.widgetModifierMigrationDescription, Messages.dataProperty, IStatus.OK);
 					}
 				}
 			}
 		}
-		if(!added && !widget.instanceOf("form.FormButton")){
-			addReportChange((String) widget.get("name"),widget.getType().getEClass().getName(), widget.getUuid(), Messages.widgetModifierNotSetMigrationDescription, Messages.dataProperty, IStatus.ERROR);
+		if(!added){
+			widget.set("returnTypeModifier", String.class.getName());
 		}
 	}
 
