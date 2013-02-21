@@ -47,14 +47,5 @@ public class CustomDecisionItemProviderAdapterFactory extends DecisionItemProvid
 
 		return decisionTableActionItemProvider;
 	}
-	
-	@Override
-	public Adapter createDecisionTableConditionAdapter() {
-		if (decisionTableConditionItemProvider == null) {
-			decisionTableConditionItemProvider = new CustomDecisionTableConditionItemProvider(this) ;
-		}
 
-		return decisionTableConditionItemProvider;
-	}
-	
 }
