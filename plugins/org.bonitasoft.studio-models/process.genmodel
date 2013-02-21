@@ -811,11 +811,6 @@
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//decision/DecisionTableLine/conditions"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//decision/DecisionTableLine/action"/>
       </genClasses>
-      <genClasses ecoreClass="process.ecore#//decision/DecisionTableCondition">
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//decision/DecisionTableCondition/operand1"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//decision/DecisionTableCondition/operator"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//decision/DecisionTableCondition/operand2"/>
-      </genClasses>
       <genClasses image="false" ecoreClass="process.ecore#//decision/DecisionTableAction"/>
       <nestedGenPackages prefix="Transitions" basePackage="org.bonitasoft.studio.model.process.decision"
           disposableProviderFactory="true" ecorePackage="process.ecore#//decision/transitions">
