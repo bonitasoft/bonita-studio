@@ -13,7 +13,7 @@
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>6.0-Beta-SNAPSHOT</bundle.version>
 		<engine.version>6.0.Beta.5</engine.version>
-		<connector.version>6.0.Beta.4-SNAPSHOT</connector.version>
+		<connector.version>6.0.0-Beta-SNAPSHOT</connector.version>
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
 		<filters.version>6.0.Beta.4-SNAPSHOT</filters.version>
 		<jacoco.reportDir>${user.home}/target/jacoco/</jacoco.reportDir>
