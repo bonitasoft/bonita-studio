@@ -109,6 +109,7 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 	    bot.button("Remove").click();
 	    bot.button(IDialogConstants.CANCEL_LABEL).click();
 	    bot.button(IDialogConstants.FINISH_LABEL).click();
+	    bot.saveAllEditors();
 	    ConnectorConfRepositoryStore store = (ConnectorConfRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
 	    assertEquals("no configuration should be in connector configuration repository store",store.getChildren().size(),0);
 	}
