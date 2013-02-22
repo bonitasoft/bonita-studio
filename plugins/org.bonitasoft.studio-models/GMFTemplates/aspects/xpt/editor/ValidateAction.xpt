@@ -37,19 +37,19 @@
 		«getDiagramEditorUtilQualifiedClassName()».LazyElement2ViewMap element2ViewMap = new «getDiagramEditorUtilQualifiedClassName()».LazyElement2ViewMap(
 						diagramEditPart.getDiagramView(),
 						collectTargetElements(rootStatus, new «EXPAND CodeStyle::G('java.util.HashSet', 'org.eclipse.emf.ecore.EObject')»(), allStatuses));
-			final java.util.List<org.bonitasoft.studio.common.Pair<java.lang.String, java.lang.String>> createdMarkers = new java.util.ArrayList<org.bonitasoft.studio.common.Pair<java.lang.String,java.lang.String>>();
+		final java.util.List<org.bonitasoft.studio.common.Triple<String, String, String>> createdMarkers = new java.util.ArrayList<org.bonitasoft.studio.common.Triple<String,String,String>>();
 		for (java.util.Iterator it = allStatuses.iterator(); it.hasNext();) {
 			org.eclipse.emf.validation.model.IConstraintStatus nextStatus =
 					(org.eclipse.emf.validation.model.IConstraintStatus) it.next();
 			String constraintId = nextStatus.getConstraint().getDescriptor().getId();
 			org.eclipse.gmf.runtime.notation.View view = «getDiagramEditorUtilQualifiedClassName()».findView(
 					diagramEditPart, nextStatus.getTarget(), element2ViewMap);			
-			final org.bonitasoft.studio.common.Pair<java.lang.String, java.lang.String> pair = new org.bonitasoft.studio.common.Pair<java.lang.String, java.lang.String>(constraintId, nextStatus.getMessage());
-			if(!createdMarkers.contains(pair)){
+			final org.bonitasoft.studio.common.Triple<String, String, String> triple = new org.bonitasoft.studio.common.Triple<String, String, String>(constraintId, nextStatus.getMessage(),view.eResource().getURIFragment(view));
+			if(!createdMarkers.contains(triple)){
 				addMarker(constraintId,diagramEditPart.getViewer(), target, view.eResource().getURIFragment(view), 
 						org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil.getQualifiedName(nextStatus.getTarget(), true), 
 						nextStatus.getMessage(), nextStatus.getSeverity());
-				createdMarkers.add(pair);
+				createdMarkers.add(triple);
 			}
 		}
 	}
