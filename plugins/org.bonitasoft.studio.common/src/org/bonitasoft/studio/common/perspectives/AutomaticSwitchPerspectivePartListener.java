@@ -58,7 +58,9 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 	public void partOpened(IWorkbenchPartReference partRef) {
 		IWorkbenchPart part = partRef.getPart(false);
 		if (part instanceof IEditorPart) {
-			PlatformUtil.closeIntro();
+			if(PlatformUtil.isIntroOpen()){
+				PlatformUtil.closeIntro();
+			}
 			final String id = BonitaPerspectivesUtils.getPerspectiveId((IEditorPart) part);
 			if (id != null) {
 				BonitaPerspectivesUtils.switchToPerspective(id);
