@@ -273,7 +273,7 @@ public class PicsConstants {
     
     public static String coolbar_configure_48 = "coolbar/48/configure.png";
     public static String coolbar_configure_disabled_48 = "coolbar/48/configure_disabled.png";
-    public static String coolbar_configure_16 = "coolbar/16/configure_.png";
+    public static String coolbar_configure_16 = "coolbar/16/configure.png";
     public static String coolbar_configure_disabled_16 = "coolbar/16/configure_disabled.png";
     
     public static String coolbar_copy_48 = "coolbar/48/copy.png";
