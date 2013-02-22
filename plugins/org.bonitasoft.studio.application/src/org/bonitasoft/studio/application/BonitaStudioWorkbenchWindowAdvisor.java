@@ -103,7 +103,16 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor i
 
     @Override
     public ActionBarAdvisor createActionBarAdvisor(IActionBarConfigurer configurer) {
-        return new ActionBarAdvisor(configurer);
+        return new ActionBarAdvisor(configurer){
+        	@Override
+        	protected void makeActions(IWorkbenchWindow window) {
+        		super.makeActions(window);
+        		register(ActionFactory.UNDO.create(window));
+        		register(ActionFactory.REDO.create(window));
+        		register(ActionFactory.PREFERENCES.create(window));
+        		register(ActionFactory.ABOUT.create(window));
+        	}
+        };
     }
 
 
@@ -113,15 +122,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor i
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
         Rectangle displaySize = Display.getDefault().getBounds();
         configurer.setInitialSize(new Point(displaySize.width, displaySize.height));
-
-        IMenuManager mainMenu = configurer.getActionBarConfigurer().getMenuManager();
-        MenuManager hidedMenu = new MenuManager("ToHide", null);
-
-        mainMenu.add(hidedMenu);
-        hidedMenu.add(ActionFactory.PREFERENCES.create(configurer.getWindow()));
-        hidedMenu.add(ActionFactory.ABOUT.create(configurer.getWindow()));
-        hidedMenu.setVisible(false) ;
-        hidedMenu.dispose();
 
         BonitaProfilesManager.getInstance().setActiveProfile(BonitaProfilesManager.getInstance().getActiveProfile(),false) ;
         //Register to activity manager
