@@ -35,7 +35,6 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Shape;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -53,7 +52,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
@@ -70,22 +68,13 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 
 	public static String ID = "org.bonitasoft.studio.validation.view";
 
-	
-	
-	
-	
 	private TableViewer tableViewer;
 	private ISelectionProvider selectionProvider;
 	private TableViewerColumn severityColumn;
 	private ValidationViewAction validateAction;
-	
-	
-	
-	
-	/**
-	 * 
-	 */
+
 	public ValidationViewPart() {
+	
 	}
 
 	/* (non-Javadoc)
@@ -96,7 +85,6 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 0, 5).create());
 		
-
 
 		createTopComposite(mainComposite);
 		createValidateButton(mainComposite);
