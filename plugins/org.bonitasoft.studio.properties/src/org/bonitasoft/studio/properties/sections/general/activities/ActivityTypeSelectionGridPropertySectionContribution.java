@@ -114,9 +114,11 @@ public class ActivityTypeSelectionGridPropertySectionContribution implements IEx
 						for(IViewReference vr : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences() ){
 							if(vr.getId().startsWith("org.bonitasoft.studio.views.properties")){
 								IViewPart viewPart = vr.getView(false) ;
-								IPropertySheetPage page = (IPropertySheetPage) viewPart.getAdapter(IPropertySheetPage.class);
-								if(page != null){
-									page.selectionChanged(editor, ((ProcessDiagramEditor)editor).getDiagramGraphicalViewer().getSelection());
+								if(viewPart != null){
+									IPropertySheetPage page = (IPropertySheetPage) viewPart.getAdapter(IPropertySheetPage.class);
+									if(page != null){
+										page.selectionChanged(editor, ((ProcessDiagramEditor)editor).getDiagramGraphicalViewer().getSelection());
+									}
 								}
 							}
 						}
