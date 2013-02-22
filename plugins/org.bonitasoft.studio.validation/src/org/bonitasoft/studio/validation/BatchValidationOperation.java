@@ -75,6 +75,12 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 //					if (target != null) {
 //						ProcessMarkerNavigationProvider.deleteMarkers(target);
 //						org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.deleteMarkers(target);
+//						try {
+//							target.findMarkers("org.bonitasoft.studio.diagram.diagnostic", false, IResource.DEPTH_INFINITE);
+//						} catch (CoreException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
 //					}
 //				}
 				for(Diagram d : toValidate){

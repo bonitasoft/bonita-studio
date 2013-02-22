@@ -89,11 +89,11 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
 		}
 		if (eType != EMFEventType.NULL) { //LIVE
 			status = performLiveValidation(ctx);
-			updateValidationMarkersOnDiagram(status,ctx);
+			updateValidationMarkersOnDiagram(status, ctx);
 		}else{ //Batch
 			status = performBatchValidation(ctx);
-			updateValidationMarkersOnDiagram(status, ctx);
 		}
+		
 		return status;
 	}
 
