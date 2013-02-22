@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
@@ -40,6 +41,10 @@ import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.emf.ecore.xmi.XMLOptions;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLOptionsImpl;
 import org.eclipse.emf.edapt.history.Release;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.ReleaseUtils;
@@ -145,6 +150,17 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
     }
 
     private Release getRelease(Migrator targetMigrator, Resource resource) {
+    	final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
+		//Ignore unknown features
+		loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+		XMLOptions options = new XMLOptionsImpl() ;
+		options.setProcessAnyXML(true) ;
+		loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
+		try {
+			resource.load(loadOptions);
+		} catch (IOException e) {
+			BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
+		}
 		for(Release release : targetMigrator.getReleases()){
 			for(EObject root : resource.getContents()){
 				if(root instanceof MainProcess){
