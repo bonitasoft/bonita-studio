@@ -333,6 +333,11 @@ public class WidgetMigration extends ReportCustomMigration {
 			if(actionExp != null){
 				if(ExpressionConstants.FORM_FIELD_TYPE.equals(actionExp.get("type"))){
 					actionExp.set("returnType", getDefaultReturnTypeForWidget(widget));
+				}else if(ExpressionConstants.SCRIPT_TYPE.equals(actionExp.get("type"))){
+					Instance leftExp = action.get("leftOperand");
+					if(leftExp!= null){
+						actionExp.set("returnType",leftExp.get("returnType"));
+					}
 				}
 			}
 			widget.set("action", action);

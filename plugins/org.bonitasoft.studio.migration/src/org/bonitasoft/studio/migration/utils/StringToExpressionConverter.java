@@ -281,9 +281,7 @@ public class StringToExpressionConverter {
 
 	public static String getDataReturnType(Instance data) {
 		final Instance dataype = data.get("dataType");
-		if(dataype.instanceOf("process.StringType")){
-			return String.class.getName();
-		}else if(dataype.instanceOf("process.IntegerType")){
+		 if(dataype.instanceOf("process.IntegerType")){
 			return Integer.class.getName();
 		}else if(dataype.instanceOf("process.BooleanType")){
 			return Boolean.class.getName();
