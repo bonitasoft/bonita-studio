@@ -35,7 +35,6 @@ import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowConditionExport
 import org.bonitasoft.studio.exporter.tests.form.TestFormsExporter;
 import org.bonitasoft.studio.exporter.tests.preview.TestPreviewForm;
 import org.bonitasoft.studio.importer.test.bos.TestBOSArchiveImport;
-import org.bonitasoft.studio.migration.tests.MigrationReporTest;
 import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -43,6 +42,7 @@ import org.bonitasoft.studio.simulation.tests.TestSimulationResourceRepository;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.TestURLs;
+import org.bonitasoft.studio.tests.api.TestBonitaAPI;
 import org.bonitasoft.studio.tests.bug.TestBugs;
 import org.bonitasoft.studio.tests.data.TestDataRefactor;
 import org.bonitasoft.studio.tests.perspectives.TestAutomaticSwitchPerspective;
@@ -88,6 +88,7 @@ import org.junit.runners.Suite;
     BPMNDataExportImportTest.class,
     BPMNSequenceFlowConditionExportImportTest.class,
     TestDataRefactor.class,
+    TestBonitaAPI.class,
     // keep it at the end because if it fails it might be in an infinite loop
     TestDeployCommand.class,
     MigrationReportPDFExportTest.class,

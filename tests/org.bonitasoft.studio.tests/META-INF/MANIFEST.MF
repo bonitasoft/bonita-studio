@@ -61,8 +61,10 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.bonitasoft.studio.validators.test;bundle-version="1.0.0",
  org.bonitasoft.studio.test.swtbot.util;bundle-version="1.0.0",
  org.bonitasoft.studio.expressions.test;bundle-version="1.0.0",
- org.bonitasoft.studio.dependencies;bundle-version="1.0.0"
+ org.bonitasoft.studio.dependencies;bundle-version="1.0.0",
+ org.bonitasoft.studio.xml;bundle-version="1.0.0"
 Export-Package: org.bonitasoft.studio.tests,
+ org.bonitasoft.studio.tests.api,
  org.bonitasoft.studio.tests.attachment,
  org.bonitasoft.studio.tests.bug,
  org.bonitasoft.studio.tests.conditions,

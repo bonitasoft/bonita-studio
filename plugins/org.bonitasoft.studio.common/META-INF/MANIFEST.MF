@@ -44,6 +44,7 @@ Import-Package: org.bonitasoft.console.common.server.preferences.constants,
  org.bonitasoft.engine.util,
  org.bonitasoft.forms.client.model
 Export-Package: org.bonitasoft.studio.common,
+ org.bonitasoft.studio.common.api,
  org.bonitasoft.studio.common.databinding,
  org.bonitasoft.studio.common.databinding.converter,
  org.bonitasoft.studio.common.editingdomain,

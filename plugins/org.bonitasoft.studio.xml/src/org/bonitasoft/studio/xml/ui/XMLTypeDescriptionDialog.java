@@ -18,19 +18,15 @@
 package org.bonitasoft.studio.xml.ui;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.xml.Messages;
+import org.bonitasoft.studio.xml.api.XSDImport;
 import org.bonitasoft.studio.xml.repository.XSDFileStore;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -47,7 +43,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 
 /**
  * @author Mickael Istria
@@ -141,18 +136,7 @@ public class XMLTypeDescriptionDialog extends Dialog {
 				fd.setText(Messages.selectXSDToImport);
 				if (fd.open() != null) {
 					for (String fileName : fd.getFileNames()) {
-						File file = new File(fd.getFilterPath() + File.separator + fileName);
-						IRepositoryFileStore fileStore = xsdStore.createRepositoryFileStore(fileName);
-						Resource resource = new XSDResourceFactoryImpl().createResource(URI.createFileURI(file.getAbsolutePath())) ;
-						try {
-							resource.load(Collections.EMPTY_MAP) ;
-						} catch (IOException e1) {
-							BonitaStudioLog.error(e1) ;
-						}
-						if(!resource.getContents().isEmpty()){
-							XSDSchema content = (XSDSchema) resource.getContents().get(0) ;
-							fileStore.save(content) ;
-						}
+						XSDImport.importXSD(fd.getFilterPath() + File.separator + fileName);
 					}
 					items.clear();
 					for (IRepositoryFileStore artifact : xsdStore.getChildren()) {
