@@ -18,17 +18,14 @@
 
 package org.bonitasoft.studio.connectors.ui;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
-import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider;
@@ -38,8 +35,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -51,7 +46,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.w3c.dom.Document;
 
@@ -61,17 +55,14 @@ import org.w3c.dom.Document;
  */
 public class TestConnectorResultDialog extends Dialog {
 
-    private static final String VALUES_FIELD_NAME = "values"; //$NON-NLS-1$
-    private static final String CAPTIONS_FILED_NAME = "captions"; //$NON-NLS-1$
     private static final String RESULTS_TITLE = Messages.resultTitleLabel ;
-    private static final String BACK_LABEL = Messages.backLabel ;
-
+    private static final String BACK_LABEL = IDialogConstants.BACK_LABEL;
+    
     private Map<String, Object> testResultAsMap ;
     private Set<String> testResultAsSet;
     private Composite mainComposite ;
     private ListViewer listViewer;
     private Throwable resultExecption;
-    private TableViewer tableViewer;
 
     @SuppressWarnings("unchecked")
     public TestConnectorResultDialog(Shell parentShell,Object testResult) {
@@ -85,7 +76,6 @@ public class TestConnectorResultDialog extends Dialog {
             resultExecption = (Throwable)testResult ;
         }
     }
-    @SuppressWarnings("unchecked")
     @Override
     protected Control createDialogArea(Composite parent) {
         mainComposite = new Composite(parent,SWT.NONE);
@@ -96,36 +86,8 @@ public class TestConnectorResultDialog extends Dialog {
             Iterator<Entry<String, Object>> it = testResultAsMap.entrySet().iterator();
             while (it.hasNext()) {
                 Entry<String, Object> entry = it.next();
-
-                boolean isRowSet = false ;
-                Field captionsField = null ;
-                Field valuesField  = null ;
-                List<String> captions = null ;
-                List<String> values = null ;
-                try {
-                    if(entry.getValue() != null && entry.getValue().getClass().getDeclaredField(CAPTIONS_FILED_NAME) != null && entry.getValue().getClass().getDeclaredField(VALUES_FIELD_NAME) != null){
-                        isRowSet = true ;
-                        captionsField =  entry.getValue().getClass().getDeclaredField(CAPTIONS_FILED_NAME);
-                        captions = new ArrayList<String>();
-                        captionsField.setAccessible(true);
-                        captions = (List<String>) captionsField.get(entry.getValue() );
-
-                        values = new ArrayList<String>();
-                        valuesField =  entry.getValue().getClass().getDeclaredField(VALUES_FIELD_NAME);
-                        valuesField.setAccessible(true);
-                        values = (List<String>) valuesField.get(entry.getValue() );
-                    }else{
-                        isRowSet = false ;
-                    }
-
-                } catch (Exception e) {
-                    isRowSet = false ;
-                }
-
-                //                if(isRowSet){
-                //                    createTableViewer(mainComposite,captions,values);
-                //                }else{
-                new Label(mainComposite, SWT.NONE).setText(entry.getKey());
+                final Label outputLabel = new Label(mainComposite, SWT.NONE);
+                outputLabel.setText(entry.getKey());
                 Object value = entry.getValue();
                 if(value == null || value instanceof String || value instanceof Long || value instanceof Integer){//TODO check other types
                     Text text = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL) ;
@@ -252,21 +214,21 @@ public class TestConnectorResultDialog extends Dialog {
         return parent;
     }
 
-    // This will create the columns for the table
-    private void createColumns(TableViewer viewer, List<String> captions) {
-
-
-        for (int i = 0; i < captions.size(); i++) {
-            TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
-            column.getColumn().setText(captions.get(i));
-            column.getColumn().setWidth(100);
-            column.getColumn().setResizable(true);
-            column.getColumn().setMoveable(true);
-        }
-        Table table = viewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-    }
+//    // This will create the columns for the table
+//    private void createColumns(TableViewer viewer, List<String> captions) {
+//
+//
+//        for (int i = 0; i < captions.size(); i++) {
+//            TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
+//            column.getColumn().setText(captions.get(i));
+//            column.getColumn().setWidth(100);
+//            column.getColumn().setResizable(true);
+//            column.getColumn().setMoveable(true);
+//        }
+//        Table table = viewer.getTable();
+//        table.setHeaderVisible(true);
+//        table.setLinesVisible(true);
+//    }
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {

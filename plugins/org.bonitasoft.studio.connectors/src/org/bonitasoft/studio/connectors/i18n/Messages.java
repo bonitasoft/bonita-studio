@@ -371,6 +371,10 @@ public class Messages extends NLS {
 	public static String databaseConnectorDriversWizardPageTitle;
 	public static String databaseConnectorDriversWizardPageDescription;
 	public static String selectConnectorConfigurationWizardPageTitle;
+	public static String resultTitleLabel;
+	public static String testConnectorPOJOWarning;
+	public static String exceptionFound;
+	public static String successMessage;
 
     /**
      * @param event
