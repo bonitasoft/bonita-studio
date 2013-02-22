@@ -40,6 +40,7 @@ import org.bonitasoft.studio.model.form.SingleValuatedFormField;
 import org.bonitasoft.studio.model.form.SuggestBox;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
+import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -64,7 +65,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -243,13 +247,15 @@ public class FormFielTypeSelectionGridPropertySectionContribution implements IEx
 									.getFirstElement();
 
 							GMFTools.convert(targetEClass, node, new FormFieldsElementTypeResolver(), GMFTools.FORM_DIAGRAM);
-							tabbedPropertySheetPage.selectionChanged(editor, (((FormDiagramEditor) (editor)).getDiagramGraphicalViewer().getSelection()));
-
-							// workaround for bug 1983
-							// since display label is in the model of message
-							// and hidden widget (model issue) we can't remove
-							// it with the convert command
-							// node.refresh();
+							for(IViewReference vr : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences() ){
+								if(vr.getId().startsWith("org.bonitasoft.studio.views.properties")){
+									IViewPart viewPart = vr.getView(false) ;
+									IPropertySheetPage page = (IPropertySheetPage) viewPart.getAdapter(IPropertySheetPage.class);
+									if(page != null){
+										page.selectionChanged(editor, ((ProcessDiagramEditor)editor).getDiagramGraphicalViewer().getSelection());
+									}
+								}
+							}
 						}
 					} else {
 						combo.setSelection(new StructuredSelection(last));
