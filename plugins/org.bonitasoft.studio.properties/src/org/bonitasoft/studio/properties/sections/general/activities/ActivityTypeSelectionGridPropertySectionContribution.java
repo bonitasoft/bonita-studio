@@ -42,7 +42,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -52,154 +55,161 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  */
 public class ActivityTypeSelectionGridPropertySectionContribution implements IExtensibleGridPropertySectionContribution {
 
-    public static final String ACTIVITY_TYPE__TASK = Messages.activityType_task;
-    public static final String ACTIVITY_TYPE__CALL_ACTVITY = Messages.activityType_callActivity;
-    private static final String ACTIVITY_TYPE__SYSTEM = Messages.activityType_abstractTask;
-    private static final String ACTIVITY_TYPE__RECEIVE_TASK = Messages.activityType_receiveTask;
-    private static final String ACTIVITY_TYPE__SEND_TASK = Messages.activityType_sendTask;
-    private static final String ACTIVITY_TYPE__SERVICE_TASK = Messages.activityType_serviceTask;
-    private static final String ACTIVITY_TYPE__SCRIPT_TASK = Messages.activityType_scriptTask;
-    private ComboViewer combo;
-    private Activity activity;
-    private GraphicalEditPart node;
-    private final TabbedPropertySheetPage tabbedPropertySheetPage;
+	public static final String ACTIVITY_TYPE__TASK = Messages.activityType_task;
+	public static final String ACTIVITY_TYPE__CALL_ACTVITY = Messages.activityType_callActivity;
+	private static final String ACTIVITY_TYPE__SYSTEM = Messages.activityType_abstractTask;
+	private static final String ACTIVITY_TYPE__RECEIVE_TASK = Messages.activityType_receiveTask;
+	private static final String ACTIVITY_TYPE__SEND_TASK = Messages.activityType_sendTask;
+	private static final String ACTIVITY_TYPE__SERVICE_TASK = Messages.activityType_serviceTask;
+	private static final String ACTIVITY_TYPE__SCRIPT_TASK = Messages.activityType_scriptTask;
+	private ComboViewer combo;
+	private Activity activity;
+	private GraphicalEditPart node;
 
-    public ActivityTypeSelectionGridPropertySectionContribution(TabbedPropertySheetPage tabbedPropertySheetPage) {
-        this.tabbedPropertySheetPage = tabbedPropertySheetPage ;
-    }
+	public ActivityTypeSelectionGridPropertySectionContribution(TabbedPropertySheetPage tabbedPropertySheetPage) {
 
-    @Override
-    public void refresh() {
-        if (activity != null && combo != null) {
-            EClass eClass = activity.eClass();
-            if (eClass.equals(ProcessPackage.Literals.TASK)) {
-                combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__TASK));
-            } else if (eClass.equals(ProcessPackage.Literals.CALL_ACTIVITY)) {
-                combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__CALL_ACTVITY));
-            } else if (eClass.equals(ProcessPackage.Literals.ACTIVITY)) {
-                combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__SYSTEM));
-            }else if (eClass.equals(ProcessPackage.Literals.RECEIVE_TASK)) {
-                combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__RECEIVE_TASK));
-            }else if (eClass.equals(ProcessPackage.Literals.SEND_TASK)) {
-                combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__SEND_TASK));
-            }else if (eClass.equals(ProcessPackage.Literals.SERVICE_TASK)) {
-                combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__SERVICE_TASK));
-            }else if (eClass.equals(ProcessPackage.Literals.SCRIPT_TASK)) {
-                combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__SCRIPT_TASK));
-            }
-        }
-    }
+	}
 
-    /**
-     * @param aTabbedPropertySheetPage
-     * @param parent
-     */
-    private void createActivitySelectionCombo(Composite parent, TabbedPropertySheetWidgetFactory widgetFactory) {
-        combo = new ComboViewer(parent, SWT.READ_ONLY);
-        combo.setContentProvider(new ArrayContentProvider());
-        combo.setLabelProvider(new LabelProvider());
-        combo.setInput(new String[]{ACTIVITY_TYPE__TASK,ACTIVITY_TYPE__SYSTEM,ACTIVITY_TYPE__CALL_ACTVITY,ACTIVITY_TYPE__RECEIVE_TASK,ACTIVITY_TYPE__SEND_TASK,ACTIVITY_TYPE__SERVICE_TASK,ACTIVITY_TYPE__SCRIPT_TASK});
-        combo.addSelectionChangedListener(new ISelectionChangedListener() {
+	@Override
+	public void refresh() {
+		if (activity != null && combo != null) {
+			EClass eClass = activity.eClass();
+			if (eClass.equals(ProcessPackage.Literals.TASK)) {
+				combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__TASK));
+			} else if (eClass.equals(ProcessPackage.Literals.CALL_ACTIVITY)) {
+				combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__CALL_ACTVITY));
+			} else if (eClass.equals(ProcessPackage.Literals.ACTIVITY)) {
+				combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__SYSTEM));
+			}else if (eClass.equals(ProcessPackage.Literals.RECEIVE_TASK)) {
+				combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__RECEIVE_TASK));
+			}else if (eClass.equals(ProcessPackage.Literals.SEND_TASK)) {
+				combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__SEND_TASK));
+			}else if (eClass.equals(ProcessPackage.Literals.SERVICE_TASK)) {
+				combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__SERVICE_TASK));
+			}else if (eClass.equals(ProcessPackage.Literals.SCRIPT_TASK)) {
+				combo.setSelection(new StructuredSelection(ACTIVITY_TYPE__SCRIPT_TASK));
+			}
+		}
+	}
 
-            @Override
-            public void selectionChanged(SelectionChangedEvent arg0) {
-                if (toBeConverted()) {
-                    EClass targetEClass = getTargetEClass();
-                    IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-                    if(editor instanceof ProcessDiagramEditor){
-                        node = (GraphicalEditPart) ((IStructuredSelection)((ProcessDiagramEditor)editor).getDiagramGraphicalViewer().getSelection()).getFirstElement() ;
-                        GMFTools.convert(targetEClass, node, new BonitaNodesElementTypeResolver(),GMFTools.PROCESS_DIAGRAM);
-                        tabbedPropertySheetPage.selectionChanged(editor, ((ProcessDiagramEditor)editor).getDiagramGraphicalViewer().getSelection());
-                    }
-                }
+	/**
+	 * @param aTabbedPropertySheetPage
+	 * @param parent
+	 */
+	private void createActivitySelectionCombo(Composite parent, TabbedPropertySheetWidgetFactory widgetFactory) {
+		combo = new ComboViewer(parent, SWT.READ_ONLY);
+		combo.setContentProvider(new ArrayContentProvider());
+		combo.setLabelProvider(new LabelProvider());
+		combo.setInput(new String[]{ACTIVITY_TYPE__TASK,ACTIVITY_TYPE__SYSTEM,ACTIVITY_TYPE__CALL_ACTVITY,ACTIVITY_TYPE__RECEIVE_TASK,ACTIVITY_TYPE__SEND_TASK,ACTIVITY_TYPE__SERVICE_TASK,ACTIVITY_TYPE__SCRIPT_TASK});
+		combo.addSelectionChangedListener(new ISelectionChangedListener() {
 
-            }
-        });
+			@Override
+			public void selectionChanged(SelectionChangedEvent arg0) {
+				if (toBeConverted()) {
+					EClass targetEClass = getTargetEClass();
+					IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+					if(editor instanceof ProcessDiagramEditor){
+						node = (GraphicalEditPart) ((IStructuredSelection)((ProcessDiagramEditor)editor).getDiagramGraphicalViewer().getSelection()).getFirstElement() ;
+						GMFTools.convert(targetEClass, node, new BonitaNodesElementTypeResolver(),GMFTools.PROCESS_DIAGRAM);
+						for(IViewReference vr : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences() ){
+							if(vr.getId().startsWith("org.bonitasoft.studio.views.properties")){
+								IViewPart viewPart = vr.getView(false) ;
+								IPropertySheetPage page = (IPropertySheetPage) viewPart.getAdapter(IPropertySheetPage.class);
+								if(page != null){
+									page.selectionChanged(editor, ((ProcessDiagramEditor)editor).getDiagramGraphicalViewer().getSelection());
+								}
+							}
+						}
+					}
+				}
+
+			}
+		});
 
 
-    }
+	}
 
-    private boolean toBeConverted() {
-        return ! activity.eClass().equals(getTargetEClass());
-    }
+	private boolean toBeConverted() {
+		return ! activity.eClass().equals(getTargetEClass());
+	}
 
-    private EClass getTargetEClass() {
-        String text = (String) ((IStructuredSelection) combo.getSelection()).getFirstElement();
-        if (text.equals(ACTIVITY_TYPE__CALL_ACTVITY)) {
-            return ProcessPackage.Literals.CALL_ACTIVITY;
-        } else if (text.equals(ACTIVITY_TYPE__TASK)) {
-            return ProcessPackage.Literals.TASK;
-        } else if (text.equals(ACTIVITY_TYPE__SYSTEM)) {
-            return ProcessPackage.Literals.ACTIVITY;
-        } else if(text.equals(ACTIVITY_TYPE__RECEIVE_TASK)){
-            return ProcessPackage.Literals.RECEIVE_TASK;
-        } else if (text.equals(ACTIVITY_TYPE__SEND_TASK)){
-            return ProcessPackage.Literals.SEND_TASK;
-        }else if (text.equals(ACTIVITY_TYPE__SERVICE_TASK)){
-            return ProcessPackage.Literals.SERVICE_TASK;
-        }else if (text.equals(ACTIVITY_TYPE__SCRIPT_TASK)){
-            return ProcessPackage.Literals.SCRIPT_TASK;
-        }
-        return ProcessPackage.Literals.ACTIVITY;
-    }
+	private EClass getTargetEClass() {
+		String text = (String) ((IStructuredSelection) combo.getSelection()).getFirstElement();
+		if (text.equals(ACTIVITY_TYPE__CALL_ACTVITY)) {
+			return ProcessPackage.Literals.CALL_ACTIVITY;
+		} else if (text.equals(ACTIVITY_TYPE__TASK)) {
+			return ProcessPackage.Literals.TASK;
+		} else if (text.equals(ACTIVITY_TYPE__SYSTEM)) {
+			return ProcessPackage.Literals.ACTIVITY;
+		} else if(text.equals(ACTIVITY_TYPE__RECEIVE_TASK)){
+			return ProcessPackage.Literals.RECEIVE_TASK;
+		} else if (text.equals(ACTIVITY_TYPE__SEND_TASK)){
+			return ProcessPackage.Literals.SEND_TASK;
+		}else if (text.equals(ACTIVITY_TYPE__SERVICE_TASK)){
+			return ProcessPackage.Literals.SERVICE_TASK;
+		}else if (text.equals(ACTIVITY_TYPE__SCRIPT_TASK)){
+			return ProcessPackage.Literals.SCRIPT_TASK;
+		}
+		return ProcessPackage.Literals.ACTIVITY;
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory)
-     */
-    @Override
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection page) {
-        composite.setLayout(new RowLayout());
-        createActivitySelectionCombo(composite, widgetFactory);
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory)
+	 */
+	@Override
+	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection page) {
+		composite.setLayout(new RowLayout());
+		createActivitySelectionCombo(composite, widgetFactory);
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#getLabel()
-     */
-    @Override
-    public String getLabel() {
-        return Messages.activityType;
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#getLabel()
+	 */
+	@Override
+	public String getLabel() {
+		return Messages.activityType;
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
-     */
-    @Override
-    public boolean isRelevantFor(EObject eObject) {
-        return eObject instanceof Activity && !(eObject instanceof SubProcessEvent);
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
+	 */
+	@Override
+	public boolean isRelevantFor(EObject eObject) {
+		return eObject instanceof Activity && !(eObject instanceof SubProcessEvent);
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.EObject)
-     */
-    @Override
-    public void setEObject(EObject object) {
-        activity = (Activity)object;
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.EObject)
+	 */
+	@Override
+	public void setEObject(EObject object) {
+		activity = (Activity)object;
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
-     */
-    @Override
-    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
+	 */
+	@Override
+	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
 
-    }
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#setSelection(org.eclipse.jface.viewers.ISelection)
-     */
-    @Override
-    public void setSelection(ISelection selection) {
-        if(((IStructuredSelection)selection).getFirstElement() instanceof GraphicalEditPart) {
-            node = (GraphicalEditPart) ((IStructuredSelection)selection).getFirstElement();
-        }
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#setSelection(org.eclipse.jface.viewers.ISelection)
+	 */
+	@Override
+	public void setSelection(ISelection selection) {
+		if(((IStructuredSelection)selection).getFirstElement() instanceof GraphicalEditPart) {
+			node = (GraphicalEditPart) ((IStructuredSelection)selection).getFirstElement();
+		}
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
-     */
-    @Override
-    public void dispose() {
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
+	 */
+	@Override
+	public void dispose() {
 
-    }
+	}
 
 }
