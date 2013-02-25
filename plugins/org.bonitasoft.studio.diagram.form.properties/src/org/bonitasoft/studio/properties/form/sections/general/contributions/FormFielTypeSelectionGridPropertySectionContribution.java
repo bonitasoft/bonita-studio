@@ -250,7 +250,7 @@ public class FormFielTypeSelectionGridPropertySectionContribution implements IEx
 									if(viewPart != null){
 										IPropertySheetPage page = (IPropertySheetPage) viewPart.getAdapter(IPropertySheetPage.class);
 										if(page != null){
-											page.selectionChanged(editor, ((ProcessDiagramEditor)editor).getDiagramGraphicalViewer().getSelection());
+											page.selectionChanged(editor, ((FormDiagramEditor)editor).getDiagramGraphicalViewer().getSelection());
 										}
 									}
 								}
