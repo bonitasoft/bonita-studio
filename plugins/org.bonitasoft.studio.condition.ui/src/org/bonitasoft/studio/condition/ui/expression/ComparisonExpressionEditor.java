@@ -124,10 +124,13 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 	}
 
 	protected void createHeader(Composite parent){
-		final CLabel supportedOperators = new CLabel(parent,SWT.NONE);
+		Composite header = new Composite(parent,SWT.NONE);
+		header.setLayout(GridLayoutFactory.fillDefaults().create());
+		header.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		final CLabel supportedOperators = new CLabel(header,SWT.WRAP);
 		supportedOperators.setText(Messages.comparisonSupportedOperators);
 		supportedOperators.setFont(BonitaStudioFontRegistry.getItalicFont());
-
+		
 	}
 
 	@SuppressWarnings("restriction")
