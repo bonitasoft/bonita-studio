@@ -126,7 +126,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 	protected void createHeader(Composite parent){
 		Composite header = new Composite(parent,SWT.NONE);
 		header.setLayout(GridLayoutFactory.fillDefaults().create());
-		header.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		header.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		final CLabel supportedOperators = new CLabel(header,SWT.WRAP);
 		supportedOperators.setText(Messages.comparisonSupportedOperators);
 		supportedOperators.setFont(BonitaStudioFontRegistry.getItalicFont());
