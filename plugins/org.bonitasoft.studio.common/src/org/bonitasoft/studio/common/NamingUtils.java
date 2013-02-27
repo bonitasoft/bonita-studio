@@ -131,8 +131,8 @@ public class NamingUtils {
                     mainContainer = mainContainer.eContainer();
                 }
             }
-        } else if (newItem instanceof BoundaryEvent) {
-            mainContainer = newItem.eContainer();
+//        } else if (newItem instanceof BoundaryEvent) {
+//            mainContainer = newItem.eContainer();
         } else {
             mainContainer = process;
         }
