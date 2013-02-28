@@ -32,6 +32,7 @@ import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -158,7 +159,9 @@ IExtensibleGridPropertySectionContribution {
 		}
 
 		// Set
+		CompoundCommand cc = new CompoundCommand();
 		SetCommand setCommand = new SetCommand(editingDomain, eObject, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__EVENT, eventName) ;
+		cc.append(setCommand);
 		editingDomain.getCommandStack().execute(setCommand) ;
 
 
@@ -188,7 +191,7 @@ IExtensibleGridPropertySectionContribution {
 			String procName = ModelHelper.getParentProcessIncludedEmbedded(catchMessage).getName();
 			SetCommand cmd = new SetCommand(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION, ExpressionHelper.createConstantExpression(procName, String.class.getName()));
 			editingDomain.getCommandStack().execute(cmd) ;
-			cmd = new SetCommand(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_ELEMENT_EXPRESSION,catchMessage.getName());
+			cmd = new SetCommand(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_ELEMENT_EXPRESSION,ExpressionHelper.createConstantExpression(catchMessage.getName(), String.class.getName()));
 			editingDomain.getCommandStack().execute(cmd) ;
 			MessageFlowFactory.createMessageFlow(editingDomain,event, (ThrowMessageEvent)event.eContainer(), (AbstractCatchMessageEvent)messageEventPart.resolveSemanticElement(), editor.getDiagramEditPart());
 		}
