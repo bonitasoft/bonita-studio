@@ -92,10 +92,16 @@ public class AbstractProcessSwitch extends ProcessSwitch<Element> {
         for (Connector connector : element.getConnectors()) {
             if(!eObjectNotExported.contains(connector)){
                 final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(connector.getName(), connector.getDefinitionId(), connector.getDefinitionVersion(), ConnectorEvent.valueOf(connector.getEvent()));
+                if(connector.isIgnoreErrors()){
+                	connectorBuilder.ignoreError();
+                }else if(connector.isThrowErrorEvent()){
+                	connectorBuilder.throwErrorEventWhenFailed(connector.getNamedError());
+                }
                 for(ConnectorParameter parameter : connector.getConfiguration().getParameters()){
                     final Expression inputExpression = EngineExpressionUtil.createExpression(parameter.getExpression());
                     if(inputExpression != null){
                         connectorBuilder.addInput(parameter.getKey(), inputExpression) ;
+                      
                     }else{
                         if(BonitaStudioLog.isLoggable(IStatus.OK)){
                             BonitaStudioLog.debug("Expression of input "+parameter.getKey() +" is null for connector "+connector.getName(), EnginePlugin.PLUGIN_ID);
