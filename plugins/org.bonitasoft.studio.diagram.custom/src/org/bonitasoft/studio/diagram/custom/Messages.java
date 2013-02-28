@@ -71,5 +71,6 @@ public class Messages extends NLS {
     public static String localConfigurationFor;
     public static String applicationResourcesFor;
 	public static String migrationOngoing;
+	public static String deleteMessageFlow;
 
 }

@@ -23,9 +23,12 @@ import java.util.List;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.EventSubProcessPool;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.Message;
+import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -39,6 +42,7 @@ import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -71,6 +75,8 @@ public class DeleteHandler extends AbstractHandler {
 			if (currentSelection.getFirstElement() instanceof IGraphicalEditPart) {
 				lanes.clear() ;
 				boolean containsPool = false;
+				boolean isMessageFlow = false;
+				MessageFlow flow  = null;
 				List<IGraphicalEditPart> newSelection = new ArrayList<IGraphicalEditPart>() ;
 				for (Object item : currentSelection.toArray()) {
 					if (((IGraphicalEditPart) item).resolveSemanticElement() instanceof Pool
@@ -85,6 +91,13 @@ public class DeleteHandler extends AbstractHandler {
 						PageFlow element = (PageFlow)((IGraphicalEditPart) item).resolveSemanticElement();
 						List<Form> forms =element.getForm();
 						closeFormsRelatedToDiagramElement(forms);
+					} 
+					if  (((IGraphicalEditPart) item).resolveSemanticElement() instanceof MessageFlow) {
+						isMessageFlow = true;
+						flow = (MessageFlow)((IGraphicalEditPart) item).resolveSemanticElement();
+						
+						//removeMessageFlow(flow);
+						
 					}
 					if(item instanceof ShapeCompartmentEditPart){
 						newSelection.add((IGraphicalEditPart) ((IGraphicalEditPart) item).getParent()) ;
@@ -101,8 +114,16 @@ public class DeleteHandler extends AbstractHandler {
 						GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run() ;
 					}
 				} else {
-					//upadateLaneItems() ;
+					if (isMessageFlow){
+					
+						if (MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.deleteDialogTitle,
+								Messages.bind(Messages.deleteMessageFlow,flow.getName()))){
+							removeMessage(flow);
+							GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run();
+						}
+					} else {
 					GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run();
+					}
 				}
 
 			}
@@ -137,6 +158,21 @@ public class DeleteHandler extends AbstractHandler {
 		}
 	}
 
+	
+	public void removeMessage(MessageFlow flow){
+		AbstractCatchMessageEvent catchEvent = flow.getTarget();
+		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(catchEvent) ;
+		CompoundCommand cc = new CompoundCommand();
+		List<Message> messages =flow.getSource().getEvents();
+		for (Message message:messages){
+			if (flow.getName().equals(message.getName())){
+				cc.append(RemoveCommand.create(domain, flow.getSource(),ProcessPackage.Literals.THROW_MESSAGE_EVENT__EVENTS, message));
+				break;
+			}
+		}
+		cc.append(SetCommand.create(domain,catchEvent,ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT__EVENT,null));
+		domain.getCommandStack().execute(cc);
+	}
 	/**
 	 * disable for MainProcess
 	 * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
