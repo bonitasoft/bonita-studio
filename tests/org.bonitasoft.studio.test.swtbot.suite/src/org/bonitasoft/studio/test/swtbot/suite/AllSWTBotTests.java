@@ -11,7 +11,6 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.test.swtbot.TestConfigurationDialog;
-import org.bonitasoft.studio.configuration.test.swtbot.TestProcessDependencies;
 import org.bonitasoft.studio.connectors.test.exporter.SWTBotConnectorExportTests;
 import org.bonitasoft.studio.connectors.test.swtbot.ConnectorDefinitionTranslationsTest;
 import org.bonitasoft.studio.connectors.test.swtbot.ConnectorDefinitionWizardPageTest;
