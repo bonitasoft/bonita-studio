@@ -420,7 +420,7 @@ public class FlowElementSwith extends AbstractProcessSwitch {
     }
 
 
-    private TimerType getTimerType(IntermediateCatchTimerEvent timer) {
+    private TimerType getTimerType(AbstractTimerEvent timer) {
     	if(TimerUtil.isDuration(timer)){
             return TimerType.DURATION;
         }else{
@@ -496,7 +496,7 @@ public class FlowElementSwith extends AbstractProcessSwitch {
 				CatchMessageEventTriggerDefinitionBuilder catchMessageEventTriggerDefinitionBuilder = boundaryEventBuilder.addMessageEventTrigger(((BoundaryMessageEvent) boundaryEvent).getEvent());
 				addMessageContent((BoundaryMessageEvent)boundaryEvent, catchMessageEventTriggerDefinitionBuilder);
 			} else if(boundaryEvent instanceof BoundaryTimerEvent){
-		        TimerType timerType = getTimerType((IntermediateCatchTimerEvent) boundaryEvent);
+		        TimerType timerType = getTimerType((BoundaryTimerEvent) boundaryEvent);
 		        if(timerType != null){
 		        	boundaryEventBuilder.addTimerEventTriggerDefinition(timerType, EngineExpressionUtil.createExpression(((AbstractTimerEvent) boundaryEvent).getCondition()));
 		        }
