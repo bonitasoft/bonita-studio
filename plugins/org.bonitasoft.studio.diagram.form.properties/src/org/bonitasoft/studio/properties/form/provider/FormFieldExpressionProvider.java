@@ -106,7 +106,19 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 					}
 				}
 			}
-		}
+		}else if(relevantParent instanceof PageFlow){
+            // get all fields from pageflow
+            final PageFlow pageFlow = (PageFlow) relevantParent;
+            if(pageFlow != null){
+                for (Form f : pageFlow.getForm()){
+                    for (Widget w : f.getWidgets()) {
+                        if (w instanceof FormField || w instanceof NextFormButton){
+                            result.add( createExpression(w) ) ;
+                        }
+                    }
+                }
+            }
+        }
 
 
 		return result;
