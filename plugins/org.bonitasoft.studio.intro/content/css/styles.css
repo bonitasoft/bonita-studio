@@ -1,9 +1,17 @@
 @charset "utf-8";
 
+@font-face { 	font-family: "SignikaSemibold"; 	src: url('../fonts/Signika-Semibold.ttf'); }
+@font-face { 	font-family: "SignikaRegular"; 	src: url('../fonts/Signika-Regular.ttf'); }
+@font-face { 	font-family: "SignikaLight"; 	src: url('../fonts/Signika-Light.ttf'); }
+@font-face { 	font-family: "SignikaSemibold"; 	src: url('../fonts/Signika-Semibold.eot'); }
+@font-face { 	font-family: "SignikaRegular"; 	src: url('../fonts/Signika-Regular.eot'); }
+@font-face { 	font-family: "SignikaLight"; 	src: url('../fonts/Signika-Light.eot'); }
+
 body {
 	margin:0px;
-	font-family: Calibri, Arial, sans-serif;
-	font-size: 12px;
+	font-family: "SignikaRegular", Calibri, Arial, sans-serif;
+	font-size: 14px;
+	color: #1B465F;
 }
 
 a {
@@ -46,16 +54,17 @@ div#template-gen {
 h1 {
 	font-size: 20px;
 	font-weight: bold;
-	color: #e31917;
+	color: #DD052B;
 	margin-top: 0px;
 	margin-bottom: 4px;
 	padding-left: 45px;
 }
 
 h2 {
+	font-family: "SignikaSemibold";
 	font-size: 18px;
 	font-weight: lighter;
-	color: #e31917;
+	color: #DD052B;
 	border-bottom: 1px solid #999;
 	margin-left: 10px;
 	padding-top: 0px;
@@ -67,7 +76,7 @@ h2 {
 h2 {
 	font-size: 18px;
 	font-weight: lighter;
-	color: #e31917;
+	color: #DD052B;
 	border-bottom: 1px solid #999;
 	margin-left: 10px;
 	padding-top: 0px;
@@ -77,7 +86,8 @@ h2 {
 
 
 h2 a {
-	color: #e31917;
+	font-family: "SignikaSemibold";
+	color: #DD052B;
 	display: block;
 	background-image: url(../images/more.png);
 	background-repeat: no-repeat;
@@ -298,7 +308,7 @@ div#feature10 {
 	display: block; 
 	width: 100%; 
 	height: 130px;
-	background: url(../images/play-off.png) no-repeat 98px 25px;
+	background: url(../images/play-off.png) no-repeat 130px 25px;
 }
 
 div.caption {
@@ -374,7 +384,7 @@ div.caption p {
 
 #actions li a {
 	padding-top: 80px;
-	color: #000000;
+	color: #1B465F;
 }
 
 #new-process a {
@@ -413,7 +423,7 @@ div.caption p {
 
 #actions li a {
 	display: block;
-	background-position: center;
+	background-position: top;
 	background-repeat: no-repeat
 }
 
@@ -427,27 +437,27 @@ div.caption p {
 }
 
 #news li a, #recently-modified li a, #example li a, #run li a, #documentation li a, #training li a, #forums li a, #articles li a, #resources li a {
-	color: #000000;
+	color: #1B465F;
 	background-image: url(../images/list.png);
 	background-position: 6px 3px;
 }
 
 #news li a:hover, #recently-modified li a:hover, #example li a:hover, #run li a:hover, #documentation li a:hover, #training li a:hover, #forums li a:hover, #articles li a:hover, #resources li a:hover {
-	color: #000000;
+	color: #1B465F;
 	background-color: #f3f3f3;
 	display:block;
 }
 
 #news li a, #recently-modified li a:visited, #example li a:visited, #run li a:visited, #documentation li a:visited, #training li a:visited, #forums li a:visited, #articles li a:visited, #resources li a:visited {
-	color: #000000;
+	color: #1B465F;
 }
 
 #recently-modified li a:active, #example li a:active, #run li a:active, #documentation li a:active, #training li a:active, #forums li a:active, #articles li a:active, #resources li a:active {
-	color: #e31917;
+	color: #DD052B;
 }
 
 #recently-modified li a:link, #example li a:link, #run li a:link, #documentation li a:link, #training li a:link, #forums li a:link, #articles li  a:link, #resources li a:link {
-	color: #000000;
+	color: #1B465F;
 }
 
 #news li span.rssDesc, #resources li span.rssDesc, #training li span.rssDesc {
@@ -467,7 +477,7 @@ div.caption p {
 
 div.logo {
 	float: left;
-	padding-left: 20px
+	padding-left: 30px
 }
 
 div.logo a img {
