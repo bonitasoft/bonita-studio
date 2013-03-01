@@ -95,8 +95,7 @@ import org.junit.runners.Suite;
     TestData.class,
     TestUndoRedoStackLimit.class,
     TestOpenDiagram.class,
-    TestDeleteTaskWithForm.class,
-    TestProcessDependencies.class
+    TestDeleteTaskWithForm.class
 })
 public class AllSWTBotTests {
 

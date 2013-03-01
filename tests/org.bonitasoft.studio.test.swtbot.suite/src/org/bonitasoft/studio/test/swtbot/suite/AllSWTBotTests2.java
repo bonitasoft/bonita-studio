@@ -7,6 +7,7 @@ import org.bonitasoft.studio.commands.test.ExtractAsSubprocessTest;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.configuration.test.swtbot.TestProcessDependencies;
 import org.bonitasoft.studio.connectors.test.swtbot.ConnectorConfigurationTest;
 import org.bonitasoft.studio.data.test.DataSWTBotTests;
 import org.bonitasoft.studio.diagram.form.custom.tests.TestBug1682;
@@ -96,7 +97,8 @@ import org.junit.runners.Suite;
     TestMoveBetweenLane.class,
     MigrationReporTest.class,
     TestTimer.class,
-    TestBonitaGroovyEditorDialog.class
+    TestBonitaGroovyEditorDialog.class,
+    TestProcessDependencies.class
 })
 public class AllSWTBotTests2 {
 
