@@ -134,7 +134,7 @@ public class MigrationReconstructor extends ReconstructorBase {
 	@Override
 	public void startRelease(Release originalRelease) {
 		if (isEnabled()) {
-			monitor.subTask("Release " + originalRelease.getNumber());
+			monitor.subTask("");
 		}
 	}
 
