@@ -21,8 +21,10 @@ import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -93,7 +95,18 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
 				@Override
 				public void run() {
 					DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-					rSet = editor.getDiagramEditPart().resolveSemanticElement().eResource().getResourceSet();
+					if(editor != null){
+						final DiagramEditPart diagramEditPart = editor.getDiagramEditPart();
+						if(diagramEditPart != null){
+							final EObject resolveSemanticElement = diagramEditPart.resolveSemanticElement();
+							if(resolveSemanticElement != null){
+								final Resource eResource = resolveSemanticElement.eResource();
+								if(eResource != null){
+									rSet = eResource.getResourceSet();
+								}
+							}
+						}						
+					}
 				}
 			});
 		}
