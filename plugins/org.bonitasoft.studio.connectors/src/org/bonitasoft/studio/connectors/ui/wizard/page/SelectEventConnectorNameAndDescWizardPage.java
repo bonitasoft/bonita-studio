@@ -23,7 +23,9 @@ import org.bonitasoft.engine.bpm.model.ConnectorEvent;
 import org.bonitasoft.studio.common.widgets.LifeCycleWidget;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connectors.i18n.Messages;
+import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -110,7 +112,11 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
         final Combo connectorFailsCombo = new Combo(composite, SWT.READ_ONLY);
         connectorFailsCombo.add(Messages.connectorFails_crash);
         connectorFailsCombo.add(Messages.connectorFails_ignore);
-        connectorFailsCombo.add(Messages.connectorFails_throwEvent);
+
+        // Throw Event are not allowed in Connector in forms
+        if(!(container instanceof Form || container instanceof SubmitFormButton )){
+        	connectorFailsCombo.add(Messages.connectorFails_throwEvent);
+        }
 
         UpdateValueStrategy ignoreEventStrategyTarget = new UpdateValueStrategy() ;
         ignoreEventStrategyTarget.setConverter(new Converter(String.class,Boolean.class) {
