@@ -23,6 +23,7 @@ import java.util.Set;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
@@ -33,6 +34,8 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -132,6 +135,14 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
                 BonitaStudioLog.error(e);
             }
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, this)) ;
+        }else{
+        	Display.getDefault().syncExec(new Runnable() {
+				
+				@Override
+				public void run() {
+					MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle,Messages.bind(Messages.readOnlyFileWarning,getDisplayName()));
+				}
+			});
         }
     }
 

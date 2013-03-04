@@ -129,6 +129,9 @@ public final class Messages extends NLS {
 
     public static String current;
 
+    public static String readOnlyFileTitle;
+    public static String readOnlyFileWarning;
+
 
 
 
