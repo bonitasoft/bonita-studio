@@ -113,6 +113,7 @@ import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.ThrowLinkEvent;
+import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.process.XORGateway;
@@ -513,12 +514,26 @@ public class BonitaToBPMN implements IBonitaTransformer {
         bpmnPlane.getDiagramElement().add(processShape);
 
         populateWithData(pool, bpmnProcess);//create data before in order to have them accessible after
+        populateWithMessage(pool, bpmnProcess);
         populate(childPart, bpmnProcess, null);
         populateWithSequenceFlow(childPart, bpmnProcess);
 
     }
 
-    private void populateWithSignals(TDefinitions definitions) {
+    private void populateWithMessage(Pool pool, TProcess bpmnProcess) {
+		//messageMap.clear();
+		List<ThrowMessageEvent> thowMessageEvents = ModelHelper.getAllItemsOfType(pool, ProcessPackage.eINSTANCE.getThrowMessageEvent()) ;
+		for (ThrowMessageEvent throwMessageEvent : thowMessageEvents) {
+			for(Message message : throwMessageEvent.getEvents()){
+				TMessage tMessage = ModelFactory.eINSTANCE.createTMessage();
+				tMessage.setId(EcoreUtil.getID(message));
+//				tMessage.setItemRef(value)
+//				message.getMessageContent().getExpressions()
+			}
+		}
+	}
+
+	private void populateWithSignals(TDefinitions definitions) {
         definitions.getRootElement().addAll(tSignals);
     }
 
@@ -1238,6 +1253,12 @@ public class BonitaToBPMN implements IBonitaTransformer {
             bpmnStart.getEventDefinition().add(eventDef);
             final String eventId = ((StartMessageEvent)child).getEvent() != null ?((StartMessageEvent)child).getEvent() + EcoreUtil.generateUUID() :EcoreUtil.generateUUID();
             eventDef.setId("event-def"+eventId);
+            EList<Operation> messageContent = ((StartMessageEvent) child).getMessageContent();
+			if(messageContent.size() > 0){
+//            	createOperation
+//            	eventDef.setOperationRef(value)
+//            	bpmnStart.
+            }
             res = bpmnStart;
         } else if (child instanceof StartSignalEvent) {
             TStartEvent bpmnStart = ModelFactory.eINSTANCE.createTStartEvent();
@@ -1308,9 +1329,10 @@ public class BonitaToBPMN implements IBonitaTransformer {
             TIntermediateThrowEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateThrowEvent();
             for (Message bonitaEventDef : bonitaEvent.getEvents()) {
                 TMessageEventDefinition eventDef = ModelFactory.eINSTANCE.createTMessageEventDefinition();
-                final String name = EcoreUtil.generateUUID();
+                final String name = bonitaEventDef.getName();
                 eventDef.setId(name);
-                eventDef.setMessageRef(QName.valueOf(name));
+//                TMessage tMessage = createMessage(bonitaEventDef);
+//                eventDef.setMessageRef(QName.valueOf(tMessage.getId()));
                 final String eventDefId = eventDef.getId();
                 if(eventDefId != null){
                     bpmnEvent.getEventDefinitionRef().add(QName.valueOf(eventDefId));
@@ -1373,7 +1395,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
         return res;
     }
 
-    protected void dataMappingWithCallActivity(CallActivity callActivity,
+	protected void dataMappingWithCallActivity(CallActivity callActivity,
             TCallActivity ca) {
         TDataInputAssociation dia = ModelFactory.eINSTANCE.createTDataInputAssociation();
         dia.setId(EcoreUtil.generateUUID());

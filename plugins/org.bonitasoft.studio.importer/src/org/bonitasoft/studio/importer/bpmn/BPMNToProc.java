@@ -67,6 +67,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -168,6 +169,7 @@ public class BPMNToProc extends ToProcProcessor {
     private File result;
     protected Map<String, Actor> participants;
     protected Map<String, String> dataNameByItemDefinition = new HashMap<String, String>();
+    protected Map<String, TEventDefinition> idOfEventDefinitions = new HashMap<String, TEventDefinition>();
     protected Map<String, ShapeNodeEditPart> editParts;
     protected MainProcessEditPart diagramPart;
     private String JAVA_XMLNS = "java";// put java by default
@@ -378,8 +380,10 @@ public class BPMNToProc extends ToProcProcessor {
         this.definitions = definitions;
         subProcesses = new Stack<TSubProcess>();
         bpmnProcess = new ArrayList<TProcess>();
+               
         Point location = new Point(5, 500);
         rootElements = definitions.getRootElement();
+        initEventDefinitions();
         for (TRootElement el : rootElements) {
             if (el instanceof TProcess) {
                 bpmnProcess.add((TProcess) el);
@@ -405,7 +409,19 @@ public class BPMNToProc extends ToProcProcessor {
 
     }
 
-    /**
+    private void initEventDefinitions() {
+    	for (TRootElement el : rootElements) {
+    		TreeIterator<EObject> eAllContents = el.eAllContents();
+    		while (eAllContents.hasNext()) {
+				EObject eObject = (EObject) eAllContents.next();
+				if(eObject instanceof TEventDefinition){
+					idOfEventDefinitions.put(((TEventDefinition) eObject).getId(), (TEventDefinition) eObject);
+				}				
+			}
+    	}		
+	}
+
+	/**
      * @param el
      * @throws Exception
      */
@@ -2074,23 +2090,26 @@ public class BPMNToProc extends ToProcProcessor {
 
             } else {
                 if (((TCatchEvent) flowNode).getEventDefinition().size() > 0) {
-
                     for (TEventDefinition e : ((TCatchEvent) flowNode)
                             .getEventDefinition()) {
-                        if (e instanceof TMessageEventDefinition) {
-                            return EventType.INTERMEDIATE_CATCH_MESSAGE;
-                        } else if (e instanceof TTimerEventDefinition) {
-                            return EventType.INTERMEDIATE_CATCH_TIMER;
-                        } else if (e instanceof TLinkEventDefinition) {
-                            return EventType.INTERMEDIATE_CATCH_LINK;
-                        } else if (e instanceof TSignalEventDefinition) {
-                            return EventType.INTERMEDIATE_CATCH_SIGNAL;
+                        EventType res = getCorrespondingIntermediateEventType(e);
+                        if(res != null){
+                        	return res;
                         }
-
                     }
+                } else {
+                	EList<QName> eventDefinitionRef = ((TCatchEvent) flowNode).getEventDefinitionRef();
+					if(eventDefinitionRef.size() > 0){
+                		for (QName qNameEventDefRef : eventDefinitionRef) {
+                			TEventDefinition eventDefinition = findCorrespondingEventDefinition(qNameEventDefRef);
+                			 EventType res = getCorrespondingIntermediateEventType(eventDefinition);
+                             if(res != null){
+                             	return res;
+                             }
+						}
+                	}
                 }
             }
-
         }
         if (flowNode instanceof TThrowEvent) {
             if (flowNode instanceof TEndEvent) {
@@ -2128,6 +2147,24 @@ public class BPMNToProc extends ToProcProcessor {
         }
         return null;
     }
+    
+	private TEventDefinition findCorrespondingEventDefinition(QName qNameEventDefRef) {
+		return idOfEventDefinitions.get(qNameEventDefRef.getLocalPart());
+	}
+
+	private EventType getCorrespondingIntermediateEventType(TEventDefinition e) {
+		if (e instanceof TMessageEventDefinition) {
+		    return EventType.INTERMEDIATE_CATCH_MESSAGE;
+		} else if (e instanceof TTimerEventDefinition) {
+		    return EventType.INTERMEDIATE_CATCH_TIMER;
+		} else if (e instanceof TLinkEventDefinition) {
+		    return EventType.INTERMEDIATE_CATCH_LINK;
+		} else if (e instanceof TSignalEventDefinition) {
+		    return EventType.INTERMEDIATE_CATCH_SIGNAL;
+		} else {
+			return null;
+		}
+	}
 
     /**
      * @param flowNode
