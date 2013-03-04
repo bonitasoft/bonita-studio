@@ -783,6 +783,19 @@
                </target>
             </constraint>
             <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.EndingPageflowConstraint"
+                  id="org.bonitasoft.studio.validation.endingPageflowConstraint"
+                  isEnabledByDefault="true"
+                  lang="java"
+                  mode="Batch"
+                  name="ending pageflow"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+            </constraint>
+            <constraint
                   class="org.bonitasoft.studio.validation.constraints.BPMN2ValidationConstraint"
                   id="org.bonitasoft.studio.validation.constraints.bpmn2"
                   lang="java"
