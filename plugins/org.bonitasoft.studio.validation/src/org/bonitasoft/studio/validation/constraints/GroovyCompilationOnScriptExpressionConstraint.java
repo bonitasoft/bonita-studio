@@ -23,8 +23,11 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Widget;
+import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.codehaus.groovy.eclipse.core.compiler.GroovySnippetCompiler;
@@ -43,6 +46,8 @@ import org.eclipse.jdt.internal.compiler.CompilationResult;
 public class GroovyCompilationOnScriptExpressionConstraint  extends AbstractLiveValidationMarkerConstraint {
 
 	private static final String CONSTRAINT_ID = "org.bonitasoft.studio.validation.constraint.groovyCompilationFailure";
+	private static final String GROOVY_DEF_ID = "scripting-groovy";
+	private static final Object SCRIPT_PARAMETER = "script";
 
 	@Override
 	protected IStatus performLiveValidation(IValidationContext context) {
@@ -56,23 +61,40 @@ public class GroovyCompilationOnScriptExpressionConstraint  extends AbstractLive
 				&& !ModelHelper.isAnExpressionCopy((Expression) eObj)
 				&& ExpressionConstants.SCRIPT_TYPE.equals(((Expression) eObj).getType()) 
 				&& ExpressionConstants.GROOVY.equals(((Expression) eObj).getInterpreter()))  {
-			final Expression expression = (Expression) eObj;
-			String scriptText = expression.getContent();
-			final GroovySnippetCompiler compiler = new GroovySnippetCompiler(new GroovyProjectFacade(RepositoryManager.getInstance().getCurrentRepository().getJavaProject()));
-			final CompilationResult result = compiler.compileForErrors(scriptText, null);
-			CategorizedProblem[] problems =  result.getAllProblems();
-			if(problems != null && problems.length > 0){
-				StringBuilder sb = new StringBuilder();
-				for(CategorizedProblem problem : problems){
-					sb.append(problem.getMessage());
-					sb.append(", ");
+			return evaluateExpression(context, eObj);
+		}else if(eObj instanceof Connector){
+			Connector connector = (Connector) eObj;
+			String defId = connector.getDefinitionId();
+			if(GROOVY_DEF_ID.equals(defId)){
+				for(ConnectorParameter parameter :connector.getConfiguration().getParameters()){
+					if(SCRIPT_PARAMETER.equals(parameter.getKey())){
+						final AbstractExpression exp =  parameter.getExpression();
+						if(exp instanceof Expression && !ModelHelper.isAnExpressionCopy((Expression) exp)){
+							return evaluateExpression(context, exp);
+						}
+					}
 				}
-				sb.delete(sb.length()-2, sb.length());
-				return context.createFailureStatus(new Object[] { Messages.bind(Messages.groovyCompilationProblem,expression.getName(),sb.toString())});
-			}else{
-				return context.createSuccessStatus();
 			}
 		}
+		return context.createSuccessStatus();
+	}
+
+	private IStatus evaluateExpression(IValidationContext context,final EObject eObj) {
+		final Expression expression = (Expression) eObj;
+		String scriptText = expression.getContent();
+		final GroovySnippetCompiler compiler = new GroovySnippetCompiler(new GroovyProjectFacade(RepositoryManager.getInstance().getCurrentRepository().getJavaProject()));
+		final CompilationResult result = compiler.compileForErrors(scriptText, null);
+		CategorizedProblem[] problems =  result.getAllProblems();
+		if(problems != null && problems.length > 0){
+			StringBuilder sb = new StringBuilder();
+			for(CategorizedProblem problem : problems){
+				sb.append(problem.getMessage());
+				sb.append(", ");
+			}
+			sb.delete(sb.length()-2, sb.length());
+			return context.createFailureStatus(new Object[] { Messages.bind(Messages.groovyCompilationProblem,expression.getName(),sb.toString())});
+		}
+		
 		return context.createSuccessStatus();
 	}
 

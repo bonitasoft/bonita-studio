@@ -781,19 +781,9 @@
                <target
                      class="Expression">
                </target>
-            </constraint>
-            <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.EndingPageflowConstraint"
-                  id="org.bonitasoft.studio.validation.endingPageflowConstraint"
-                  isEnabledByDefault="true"
-                  lang="java"
-                  mode="Batch"
-                  name="ending pageflow"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
+               <target
+                     class="Connector">
+               </target>
             </constraint>
             <constraint
                   class="org.bonitasoft.studio.validation.constraints.BPMN2ValidationConstraint"
