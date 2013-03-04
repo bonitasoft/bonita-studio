@@ -54,6 +54,10 @@ public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore 
      */
     @Override
     public IRepositoryFileStore createRepositoryFileStore(String processUUID) {
+    	IFile f = getResource().getFile(processUUID);
+    	if(f.exists() && f.getLocation().toFile().isFile()){
+    		return null;
+    	}
         return new ApplicationResourceFileStore(processUUID, this);
     }
 

@@ -46,6 +46,8 @@ import org.bonitasoft.studio.engine.export.switcher.ExpressionConditionModelSwit
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.studio.model.form.Duplicable;
+import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
@@ -132,7 +134,16 @@ public class EngineExpressionUtil {
 		exp.createNewInstance(ExporterTools.FIELD_IDENTIFIER + element.getName());
 		exp.setContent(ExporterTools.FIELD_IDENTIFIER + element.getName());
 		exp.setExpressionType(ExpressionConstants.FORM_FIELD_TYPE);
-		exp.setReturnType(element.getAssociatedReturnType());
+		if(element instanceof Duplicable && (((Duplicable)element).isDuplicate())){
+				exp.setReturnType(List.class.getName());
+		}else{
+			if(element instanceof TextFormField && element.getReturnTypeModifier() != null){
+				exp.setReturnType(element.getReturnTypeModifier());
+			}else{
+				exp.setReturnType(element.getAssociatedReturnType());
+			}
+		}
+		
 		try {
 			return exp.done();
 		} catch (final InvalidExpressionException e) {// TODO should throw the exception and show it in UI?

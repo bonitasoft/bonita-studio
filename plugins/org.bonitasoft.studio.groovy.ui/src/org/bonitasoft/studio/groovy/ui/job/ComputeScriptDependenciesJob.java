@@ -47,6 +47,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.ui.internal.quickaccess.EditorElement;
 
 /**
  * @author Romain Bioteau
@@ -112,19 +113,26 @@ public class ComputeScriptDependenciesJob extends Job {
 					}
 				}
 				if (context instanceof Widget) {
-					if (name.startsWith("field_") && ((Widget) context).getName().equals(name.substring("field_".length()))) {
-						deps.add(EcoreUtil.copy(context));
-						continue variablesloop;
+					if (name.startsWith("field_")) {
+						IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.FORM_FIELD_TYPE);
+						for(Expression exp : provider.getExpressions(context)){
+							if(exp.getName().equals(name)){
+								deps.add(EcoreUtil.copy(exp.getReferencedElements().get(0)));
+								continue variablesloop;
+							}
+						}
 					}
 				}
 
 				if (context instanceof Form) {
-					for (final Form f : ((PageFlow) context.eContainer()).getForm()) {
-						for (final Widget w : f.getWidgets()) {
-							if (w instanceof FormField && name.startsWith("field_") && w.getName().equals(name.substring("field_".length()))) {
-								deps.add(EcoreUtil.copy(w));
+					if (name.startsWith("field_")) {
+						IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.FORM_FIELD_TYPE);
+						for(Expression exp : provider.getExpressions(context)){
+							if (exp.getName().equals(name)) {
+								deps.add(EcoreUtil.copy(exp.getReferencedElements().get(0)));
 								continue variablesloop;
 							}
+
 						}
 					}
 				}

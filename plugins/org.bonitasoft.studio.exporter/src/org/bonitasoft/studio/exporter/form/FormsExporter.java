@@ -987,7 +987,7 @@ public class FormsExporter {
                 }
             }
         }
-
+     
         addReadOnlyBehavior(builder, widget, isViewForm);
         addTableInitialValue(abstractTable, builder);
         addTableVerticalHeader(abstractTable, builder);
@@ -1157,7 +1157,7 @@ public class FormsExporter {
             }
         } else {
             final Expression tableInputExpression = table.getInputExpression();
-            if (tableInputExpression != null && tableInputExpression.getContent() != null) {
+            if (tableInputExpression != null && tableInputExpression.getContent() != null && !tableInputExpression.getContent().isEmpty()) {
                 addAvailableValuesExpression(builder, tableInputExpression);
             }
         }
@@ -1254,7 +1254,7 @@ public class FormsExporter {
     }
 
     protected void addInitialValueExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
-        if (expression != null && expression.getContent() != null) {
+        if (expression != null && expression.getContent() != null && !expression.getContent().isEmpty()) {
             final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
             if(engineExpression != null){
                 final String interpreter = engineExpression.getInterpreter();
