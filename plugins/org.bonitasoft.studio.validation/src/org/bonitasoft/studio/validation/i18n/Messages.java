@@ -81,6 +81,9 @@ public class Messages extends NLS {
     public static String validationViewValidateButtonLabel;
     public static String validationErrorFoundMessage;
 	public static String groovyCompilationProblem;
+	public static String connectableElementIsNotAScriptorServiceTask;
+	public static String tooManyConnectorsDefined;
+
     
     static {
         // initialize resource bundle

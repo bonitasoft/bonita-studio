@@ -782,6 +782,36 @@
                      class="Expression">
                </target>
             </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.BPMN2ValidationConstraint"
+                  id="org.bonitasoft.studio.validation.constraints.bpmn2"
+                  lang="java"
+                  mode="Batch"
+                  name="BPMN2 compliance"
+                  severity="INFO"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="ConnectableElement">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.ex.constraints.PageFlowEndingConstraint"
+                  id="org.bonitasoft.studio.validation.ex.constraint.pageflow"
+                  lang="java"
+                  mode="Batch"
+                  name="Pageflow"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="PageFlow">
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">

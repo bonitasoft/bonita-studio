@@ -83,10 +83,8 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 	public void createPartControl(Composite parent) {
 
 		Composite mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 0, 5).create());
-		
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(5, 0, 3, 1).create());
 
-		createTopComposite(mainComposite);
 		createValidateButton(mainComposite);
 		createTableComposite(mainComposite);
 		
@@ -112,9 +110,9 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 		
 		
 		Composite buttonComposite = new Composite(mainComposite,SWT.NONE);
-		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().margins(15,5).create());
+		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0,0).create());
 		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		Button validateButton=new Button(buttonComposite,SWT.FLAT);
+		Button validateButton = new Button(buttonComposite,SWT.PUSH);
 		validateButton.setLayoutData(GridDataFactory.fillDefaults().create());
 		validateButton.setText(Messages.validationViewValidateButtonLabel);
 		validateButton.addSelectionListener(new SelectionAdapter() {
@@ -159,9 +157,6 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 		tableViewer.setInput(activeEditor);
 
 		tableViewer.addSelectionChangedListener(this);
-
-
-	
 	}
 
 	/* (non-Javadoc)
@@ -172,19 +167,6 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 	}
 
 
-	/**
-	 * 
-	 * @param mainComposite
-	 */
-	protected void createTopComposite(Composite mainComposite) {
-		final Composite topComposite = new Composite(mainComposite, SWT.NONE);
-		topComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(5, 5, 5, 0).create());
-		topComposite.setLayoutData(GridDataFactory.fillDefaults().create());
-	}
-
-	/**
-	 * 
-	 */
 	private void addElementNameColumn(){
 		TableViewerColumn elements = new TableViewerColumn(tableViewer, SWT.NONE);
 		elements.getColumn().setText(Messages.validationViewElementColumnName);
