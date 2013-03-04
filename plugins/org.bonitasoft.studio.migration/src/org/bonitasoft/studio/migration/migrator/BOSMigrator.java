@@ -28,10 +28,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.migration.i18n.Messages;
 import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.IOperationHistory;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -64,9 +70,10 @@ import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edapt.migration.execution.MigratorCommandLine;
 import org.eclipse.emf.edapt.migration.execution.ValidationLevel;
 import org.eclipse.emf.edapt.migration.execution.WrappedMigrationException;
-import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -185,10 +192,11 @@ public class BOSMigrator  {
 	    final Resource resource = editingDomain.getResourceSet().createResource(uri);
 	    try {
 			resource.load(Collections.EMPTY_MAP);
-			RecordingCommand cmd = new RecordingCommand(editingDomain) {
+			AbstractEMFOperation emfOperation = new AbstractEMFOperation(editingDomain, "Update report") {
 				
 				@Override
-				protected void doExecute() {
+				protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info)
+						throws ExecutionException {
 					final Report report = getReport();
 					String diagramName = "";
 					for(EObject root : resource.getContents()){
@@ -206,9 +214,15 @@ public class BOSMigrator  {
 					}
 					
 					resource.getContents().add(report);
+					return Status.OK_STATUS;
 				}
 			};
-			editingDomain.getCommandStack().execute(cmd);
+			IOperationHistory history = PlatformUI.getWorkbench().getOperationSupport().getOperationHistory();
+			try {
+				history.execute(emfOperation, monitor, null);
+			} catch (ExecutionException e) {
+				BonitaStudioLog.error(e);
+			}
 			resource.save(Collections.emptyMap());
 			resource.unload();
 			editingDomain.dispose();
