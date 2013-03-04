@@ -20,7 +20,6 @@ package org.bonitasoft.studio.validation.constraints.process;
 import java.util.List;
 
 import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormButton;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.PageFlow;
@@ -80,8 +79,7 @@ public class EndingPageflowConstraint extends
 	 */
 	@Override
 	protected String getConstraintId() {
-		// TODO Auto-generated method stub
-		return null;
+		return "org.bonitasoft.studio.validation.endingPageflowConstraint";
 	}
 
 }
