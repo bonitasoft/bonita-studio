@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.intro.actions.OpenSpecificProcessAction;
 import org.eclipse.swt.widgets.Composite;
@@ -103,13 +104,21 @@ public class RecentProcessContentProvider implements IIntroXHTMLContentProvider 
         		li.appendChild(a);
         		a.setAttribute("href", createOpenProcessHref(proc));
         		String displayNameForLabelProvider = proc.getDisplayName();
+        		DiagramFileStore diagram = (DiagramFileStore)proc;
+        		
         		a.setAttribute("title", displayNameForLabelProvider) ;
-        		if (displayNameForLabelProvider.length() > 100) {
-        			displayNameForLabelProvider = displayNameForLabelProvider.substring(0,100 ) + "...";
+        		if (displayNameForLabelProvider.length() > 82) {
+        			displayNameForLabelProvider = displayNameForLabelProvider.substring(0,82 ) + "...";
         		}
         		Text procName = doc.createTextNode(displayNameForLabelProvider);
         		a.appendChild(procName);
-
+        		if (diagram.getMigrationReport()!=null){
+        			Element style = doc.createElement("font");
+        			a.appendChild(style);
+        			style.setAttribute("color", "#01A8CE");
+        			Text migrationOngoing=doc.createTextNode(" Migration ongoing");
+        			style.appendChild(migrationOngoing);
+        		}
         		ul.appendChild(li);
         	}
         }
