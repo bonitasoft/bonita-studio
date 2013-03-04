@@ -199,6 +199,13 @@ public class TestConnectorResultDialog extends Dialog {
                 exception = exception.concat(e.toString()+"\n"); //$NON-NLS-1$
                 e = e.getCause() ;
             }
+            
+            if(exception.contains("engine.exception.ClassLoaderException")
+            		&& exception.contains("unserializable output")){
+            	exception = "The connector contains an unserializable output. You can't use the wizard currently.\n"
+            		+"The workaround is to use a dedicated test processes with the connector and modify the connector outputs and store them in data in order to display them in a form.\n"
+            		+"Then, you will have just to Run the process.\n\n" + exception; 
+            }
 
             text.setText(exception);
             text.setEditable(false);
