@@ -115,6 +115,7 @@ public class AbstractProcessSwitch extends ProcessSwitch<Element> {
                     }
                     if(outputOpeartion.getLeftOperand() != null
                             && outputOpeartion.getLeftOperand().getContent() != null
+                            && !outputOpeartion.getLeftOperand().getContent().isEmpty()
                             && outputOpeartion.getRightOperand() != null
                             && outputOpeartion.getRightOperand().getContent() != null){
                         connectorBuilder.addOutput(

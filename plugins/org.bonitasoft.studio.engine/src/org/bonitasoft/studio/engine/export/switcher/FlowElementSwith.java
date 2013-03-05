@@ -68,6 +68,7 @@ import org.bonitasoft.studio.model.process.BoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.EndErrorEvent;
 import org.bonitasoft.studio.model.process.EndEvent;
 import org.bonitasoft.studio.model.process.EndMessageEvent;
 import org.bonitasoft.studio.model.process.EndSignalEvent;
@@ -440,6 +441,14 @@ public class FlowElementSwith extends AbstractProcessSwitch {
         return endEvent;
     }
 
+	@Override
+	public Element caseEndErrorEvent(EndErrorEvent endErrorEvent) {
+		EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(endErrorEvent.getName());
+        eventBuilder.addErrorEventTrigger(endErrorEvent.getErrorCode());
+        addDescription(eventBuilder, endErrorEvent.getDocumentation()) ;
+        return endErrorEvent;
+	}
+	
     @Override
     public FlowElement caseEndTerminatedEvent(final EndTerminatedEvent endTerminatedEvent) {
         EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(endTerminatedEvent.getName());

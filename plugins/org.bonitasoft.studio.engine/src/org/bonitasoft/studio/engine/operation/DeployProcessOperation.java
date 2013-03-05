@@ -107,7 +107,13 @@ public class DeployProcessOperation  {
 
 
     public URL getUrlFor(AbstractProcess process,IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException{
-        return new ApplicationURLBuilder(process,processIdsMap.get(process),configurationId).toURL(monitor);
+        long pId = 0 ;
+        for(AbstractProcess p : processIdsMap.keySet()){
+        	if(p.getName().equals(process.getName()) && p.getVersion().equals(process.getVersion())){
+        		pId =processIdsMap.get(p);
+        	}
+        }
+    	return new ApplicationURLBuilder(process,pId,configurationId).toURL(monitor);
     }
 
 
