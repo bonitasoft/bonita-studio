@@ -804,7 +804,7 @@ public class FormsExporter {
     }
 
     protected void addModifierReturnType(final IFormBuilder builder, final Widget widget) throws InvalidFormDefinitionException {
-        if(widget.getReturnTypeModifier() != null){
+    	if(widget instanceof TextFormField && widget.getReturnTypeModifier() != null){
             builder.addFieldOutputType(widget.getReturnTypeModifier());
         }
     }

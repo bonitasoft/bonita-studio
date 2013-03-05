@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -54,6 +54,9 @@ public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore 
      */
     @Override
     public IRepositoryFileStore createRepositoryFileStore(String processUUID) {
+    	if(processUUID.contains(".")){
+    		return null;
+    	}
     	IFile f = getResource().getFile(processUUID);
     	if(f.exists() && f.getLocation().toFile().isFile()){
     		return null;

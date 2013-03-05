@@ -30,6 +30,7 @@ import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.NextFormButton;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
+import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.form.WidgetDependency;
 import org.bonitasoft.studio.model.process.PageFlow;
@@ -137,7 +138,7 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 		exp.setType(getExpressionType()) ;
 		exp.setContent("field_"+w.getName()) ;
 		exp.setName("field_"+w.getName()) ;
-		if(w.getReturnTypeModifier() != null ){
+		if(w instanceof TextFormField && w.getReturnTypeModifier() != null ){
 			exp.setReturnType(w.getReturnTypeModifier()) ;
 		}else{
 			exp.setReturnType(w.getAssociatedReturnType()) ;

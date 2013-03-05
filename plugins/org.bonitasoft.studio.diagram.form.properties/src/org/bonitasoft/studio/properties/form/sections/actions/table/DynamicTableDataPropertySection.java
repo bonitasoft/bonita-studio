@@ -28,11 +28,11 @@ import org.bonitasoft.studio.model.form.FormPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -56,7 +56,6 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
     private Button limitMaxColumnButton;
     private ExpressionViewer textOrDataMaxColumn;
     private Composite outputComposite;
-    private DynamicTable lastEObject;
 
     @Override
     public void createControls(Composite parent,
@@ -145,28 +144,7 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
 
     @Override
     public void refresh() {
-        if (getEObject() != null && !getEObject().equals(lastEObject)) {
-            disposeDataBinding();
-            lastEObject = getEObject();
-            if (isOuputActivated()) {
-                outputComposite.setVisible(true);
-                //    contrib.dispose();
-                contrib.setEditingDomain(getEditingDomain());
-                contrib.setEObject(lastEObject);
-                contrib.superBind();
-            } else {
-                outputComposite.setVisible(false);
-            }
-//            textOrDataMaxRow.setElement(lastEObject);
-//            textOrDataMinRow.setElement(lastEObject);
-//            textOrDataMinColumn.setElement(lastEObject);
-//            textOrDataMaxColumn.setElement(lastEObject);
-
-//            textOrDataMaxRow.reset();
-//            textOrDataMinRow.reset();
-//            textOrDataMinColumn.reset();
-//            textOrDataMaxColumn.reset();
-        }
+    
         super.refresh();
     }
 
@@ -197,7 +175,6 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
         		minNumberOfColumn.setReturnTypeFixed(true);
         		getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__MIN_NUMBER_OF_COLUMN, minNumberOfColumn));
         	}
-        	textOrDataMinColumn.setSelection(new StructuredSelection(minNumberOfColumn));
         }
         if(dynamicTable != null){
         	Expression maxNumberOfColumn = dynamicTable.getMaxNumberOfColumn();
@@ -207,7 +184,6 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
         		maxNumberOfColumn.setReturnTypeFixed(true);
         		getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__MAX_NUMBER_OF_COLUMN, maxNumberOfColumn));
         	}
-        	textOrDataMaxColumn.setSelection(new StructuredSelection(maxNumberOfColumn));
         }
         
         /*
@@ -254,7 +230,6 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
         		minNumberOfRow.setReturnTypeFixed(true);
         		getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__MIN_NUMBER_OF_ROW, minNumberOfRow));
         	}
-        	textOrDataMinRow.setSelection(new StructuredSelection(minNumberOfRow));
         }
         
         if(dynamicTable != null){
@@ -265,7 +240,6 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
         		maxNumberOfRow.setReturnTypeFixed(true);
         		getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), dynamicTable, FormPackage.Literals.DYNAMIC_TABLE__MAX_NUMBER_OF_ROW, maxNumberOfRow));
         	}
-        	textOrDataMaxRow.setSelection(new StructuredSelection(maxNumberOfRow));
         }
         
         /*
@@ -301,7 +275,25 @@ public class DynamicTableDataPropertySection extends AbstractTableDataPropertySe
 
 	@Override
 	public String getSectionDescription() {
-		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	protected void setEObject(EObject object) {
+	    this.eObject = object;
+		if (getEObject() != null && !getEObject().equals(lastKnownObject)) {
+            disposeDataBinding();
+            lastKnownObject = getEObject();
+            if (isOuputActivated()) {
+                outputComposite.setVisible(true);
+                contrib.setEditingDomain(getEditingDomain());
+                contrib.setEObject(lastKnownObject);
+                contrib.superBind();
+            } else {
+                outputComposite.setVisible(false);
+            }
+            updateViewerInput() ;
+            refreshDataBinding();
+        }
 	}
 }

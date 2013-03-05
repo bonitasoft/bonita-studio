@@ -31,6 +31,7 @@ import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpression
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -184,7 +185,7 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
         IConverter returnTypeConverter = new Converter(Widget.class,String.class){
 
             public Object convert(Object widget) {
-                if(((Widget) widget).getReturnTypeModifier() != null){
+                if(widget instanceof TextFormField && ((Widget) widget).getReturnTypeModifier() != null){
                     return ((Widget) widget).getReturnTypeModifier();
                 }
                 return ((Widget) widget).getAssociatedReturnType()  ;

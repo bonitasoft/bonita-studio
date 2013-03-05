@@ -20,7 +20,7 @@ package org.bonitasoft.studio.properties.form.sections.actions.table;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.widgets.MagicComposite;
-import org.bonitasoft.studio.expression.editor.filter.HiddenExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.IExpressionModeListener;
@@ -41,6 +41,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -100,11 +101,7 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
     @Override
     public void refresh() {
         super.refresh();
-        if (getEObject() != null && getEObject() != lastKnownObject) {
-            disposeDataBinding();
-            updateViewerInput() ;
-            refreshDataBinding();
-        }
+        
     }
 
 
@@ -152,8 +149,13 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
             dataBindingContext.bindValue(SWTObservables.observeSelection(rightHeaderButton), EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.ABSTRACT_TABLE__RIGHT_COLUMN_IS_HEADER));
             dataBindingContext.bindValue(SWTObservables.observeSelection(bottomHeaderButton), EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.ABSTRACT_TABLE__LAST_ROW_IS_HEADER));
 
-
-
+            dataBindingContext.bindValue( ViewersObservables.observeSingleSelection(tableVerticalHeaders), EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.ABSTRACT_TABLE__VERTICAL_HEADER_EXPRESSION));
+            dataBindingContext.bindValue( ViewersObservables.observeSingleSelection(tableHorizontalHeaders), EMFEditObservables.observeValue(getEditingDomain(), getEObject(), FormPackage.Literals.ABSTRACT_TABLE__HORIZONTAL_HEADER_EXPRESSION));
+            if(table.isInitializedUsingCells()){
+                tableViewer.setSelection(table.getTableExpression()) ;
+            }else{
+                tableViewer.setSelection(table.getInputExpression()) ;
+            }
         }
     }
 
@@ -229,7 +231,8 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
         Composite tableHorizontalHeadersComposite = widgetFactory.createComposite(headersValueComposite);
         tableHorizontalHeadersComposite.setLayout(new GridLayout(3, false));
         tableHorizontalHeadersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-        tableHorizontalHeaders = new ExpressionViewer(tableHorizontalHeadersComposite,SWT.BORDER, widgetFactory, getEditingDomain(), FormPackage.Literals.ABSTRACT_TABLE__VERTICAL_HEADER_EXPRESSION) ;
+        tableHorizontalHeaders = new ExpressionViewer(tableHorizontalHeadersComposite,SWT.BORDER, widgetFactory, getEditingDomain(), FormPackage.Literals.ABSTRACT_TABLE__HORIZONTAL_HEADER_EXPRESSION) ;
+        tableHorizontalHeaders.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE}));
         tableHorizontalHeaders.setMessage(Messages.data_tooltip_tableHeaders,IStatus.INFO) ;
         tableHorizontalHeaders.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create());
 
@@ -245,7 +248,8 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
         Composite tableVerticalHeadersComposite = widgetFactory.createComposite(headersValueComposite);
         tableVerticalHeadersComposite.setLayout(new GridLayout(3, false));
         tableVerticalHeadersComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-        tableVerticalHeaders = new ExpressionViewer(tableVerticalHeadersComposite,SWT.BORDER, widgetFactory, getEditingDomain(), FormPackage.Literals.ABSTRACT_TABLE__HORIZONTAL_HEADER_EXPRESSION) ;
+        tableVerticalHeaders = new ExpressionViewer(tableVerticalHeadersComposite,SWT.BORDER, widgetFactory, getEditingDomain(), FormPackage.Literals.ABSTRACT_TABLE__VERTICAL_HEADER_EXPRESSION) ;
+        tableVerticalHeaders.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE}));
         tableVerticalHeaders.setMessage(Messages.data_tooltip_tableHeaders,IStatus.INFO) ;
         tableVerticalHeaders.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).align(SWT.FILL, SWT.CENTER).create());
 
@@ -275,11 +279,7 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
 
             tableViewer.setInput(table) ;
             tableViewer.setEditingDomain(getEditingDomain());
-            if(table.isInitializedUsingCells()){
-                tableViewer.setSelection(tableInput) ;
-            }else{
-                tableViewer.setSelection(input) ;
-            }
+         
         }
 
         if(tableHorizontalHeaders != null && !tableHorizontalHeaders.getControl().isDisposed()){
@@ -291,7 +291,6 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
                 editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, table, FormPackage.Literals.ABSTRACT_TABLE__HORIZONTAL_HEADER_EXPRESSION, input));
             }
             tableHorizontalHeaders.setInput(table) ;
-            tableHorizontalHeaders.setSelection(new StructuredSelection(input)) ;
         }
 
         if(tableVerticalHeaders != null && !tableVerticalHeaders.getControl().isDisposed()){
@@ -303,7 +302,6 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
                 editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, table, FormPackage.Literals.ABSTRACT_TABLE__VERTICAL_HEADER_EXPRESSION, input));
             }
             tableVerticalHeaders.setInput(table) ;
-            tableVerticalHeaders.setSelection(new StructuredSelection(input)) ;
         }
     }
 
@@ -318,6 +316,12 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
         if(contrib != null){
             contrib.setEditingDomain(getEditingDomain()) ;
             contrib.setEObject(getEObject()) ;
+        }
+        if (object != null && !object.equals(lastKnownObject)) {
+            disposeDataBinding();
+            updateViewerInput() ;
+            refreshDataBinding();
+            lastKnownObject = (AbstractTable) eObject;
         }
     }
 
