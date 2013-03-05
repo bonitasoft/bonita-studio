@@ -791,10 +791,6 @@ public class SWTBotTestUtil implements SWTBotConstants{
     	bot.button(IDialogConstants.NEXT_LABEL).click();
     	
     	// 6th page
-    	Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
-    	bot.button(IDialogConstants.NEXT_LABEL).click();
-    	
-    	// 7th page
     	Assert.assertTrue("Error : Next button is not enable in Connectors Wizard.", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
     	bot.button(IDialogConstants.FINISH_LABEL).click();
      	
