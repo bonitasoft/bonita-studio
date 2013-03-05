@@ -268,9 +268,12 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 	 * @return the migration report if exists otherwise returns null
 	 */
 	public Report getMigrationReport(){
-		for(EObject root : getEMFResource().getContents()){
-			if(root instanceof Report){
-				return (Report) root;
+		final Resource emfResource = getEMFResource();
+		if(emfResource != null){
+			for(EObject root : emfResource.getContents()){
+				if(root instanceof Report){
+					return (Report) root;
+				}
 			}
 		}
 		return null;
