@@ -107,3 +107,49 @@
 	}
 «ENDAROUND»
 
+«AROUND validate FOR gmfgen::GenDiagram-»
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private static void validate(org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart diagramEditPart,
+			org.eclipse.gmf.runtime.notation.View view) {
+		«IF editorGen.application = null-»
+		org.eclipse.core.resources.IFile target = view.eResource() != null ?
+				org.eclipse.emf.workspace.util.WorkspaceSynchronizer.getFile(view.eResource()) : null;
+		//if (target != null) {
+		//	«getMarkerNavigationProviderQualifiedClassName()».deleteMarkers(target);
+		//}
+		«ELSE-»
+		org.eclipse.gmf.runtime.notation.View target = view;
+		«EXPAND xpt::editor::ValidationMarker::qualifiedClassName».removeAllMarkers(diagramEditPart.getViewer());
+		«ENDIF-»
+		org.eclipse.emf.common.util.Diagnostic diagnostic = runEMFValidator(view);
+		createMarkers(target, diagnostic, diagramEditPart);
+		org.eclipse.emf.validation.service.IBatchValidator validator =
+				(org.eclipse.emf.validation.service.IBatchValidator)
+						org.eclipse.emf.validation.service.ModelValidationService.getInstance().newValidator(
+								org.eclipse.emf.validation.model.EvaluationMode.BATCH);
+		validator.setIncludeLiveConstraints(true);
+		if (view.isSetElement() && view.getElement() != null) {
+			org.eclipse.core.runtime.IStatus status = validator.validate(view.getElement());
+			createMarkers(target, status, diagramEditPart);
+		}
+«IF shouldRunValidateOnDiagram(editorGen.audits)-»
+«IF hasDiagramElementTargetRule(editorGen.audits)-»
+		validator.setTraversalStrategy(«getValidationProviderQualifiedClassName()».getNotationTraversalStrategy(validator));
+«ENDIF-»
+		org.eclipse.core.runtime.IStatus status = validator.validate(view);
+		createMarkers(target, status, diagramEditPart);
+«ENDIF-»
+		«IF editorGen.application <> null and validationDecorators-»
+		«getValidationDecoratorProviderQualifiedClassName()».refreshDecorators(view);
+		for (java.util.Iterator it = view.eAllContents(); it.hasNext();) {
+			org.eclipse.emf.ecore.EObject next = (org.eclipse.emf.ecore.EObject) it.next();
+			if (next instanceof org.eclipse.gmf.runtime.notation.View) {
+				«getValidationDecoratorProviderQualifiedClassName()».refreshDecorators(
+						(org.eclipse.gmf.runtime.notation.View) next);
+			}
+		}
+		«ENDIF-»
+	}
+«ENDAROUND»
+

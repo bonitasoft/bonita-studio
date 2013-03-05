@@ -24,6 +24,8 @@ import java.util.Set;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.validation.BatchValidationOperation;
 import org.bonitasoft.studio.validation.i18n.Messages;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.action.Action;
@@ -72,8 +74,14 @@ public class ValidationViewAction extends Action {
 	public void run() {
 		Set<Diagram> toValidate = new HashSet<Diagram>();
 		final IEditorPart ieditor = activePage.getActiveEditor();
-		if(ieditor instanceof DiagramEditor){
-			toValidate.add( ((DiagramEditor) ieditor).getDiagram());
+		if(ieditor instanceof DiagramEditor ){
+		
+			Resource resource = ((DiagramEditor) ieditor).getDiagramEditPart().resolveSemanticElement().eResource();
+			for(EObject content : resource.getContents()){
+				if(content instanceof Diagram){
+					toValidate.add((Diagram) content);
+				}
+			}
 		}
 		final BatchValidationOperation validateOperation = new BatchValidationOperation();
 		validateOperation.setDiagramToValidate(toValidate);

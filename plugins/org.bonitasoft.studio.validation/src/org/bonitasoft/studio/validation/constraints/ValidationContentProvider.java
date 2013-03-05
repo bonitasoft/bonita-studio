@@ -17,15 +17,23 @@
  */
 package org.bonitasoft.studio.validation.constraints;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
+import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.ui.URIEditorInput;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -58,6 +66,9 @@ public class ValidationContentProvider implements IStructuredContentProvider{
 
 	@Override
 	public Object[] getElements(Object inputElement) {
+		
+		
+		
 		if(inputElement instanceof DiagramEditor && !(inputElement instanceof FormDiagramEditor)){
 			final IEditorInput input  = ((DiagramEditor) inputElement).getEditorInput();
 			if(input instanceof FileEditorInput){
@@ -83,7 +94,18 @@ public class ValidationContentProvider implements IStructuredContentProvider{
 				}
 				if(dfs!=null){
 					try {
-						return dfs.getResource().findMarkers("org.bonitasoft.studio.diagram.form.diagnostic", false, IResource.DEPTH_INFINITE);
+
+						List<IMarker> markerList = new ArrayList<IMarker>();
+						IMarker[] markerTab = (IMarker[]) dfs.getResource().findMarkers("org.bonitasoft.studio.diagram.form.diagnostic", false, IResource.DEPTH_INFINITE);
+						for(int i=0; i<markerTab.length; i++ ){
+							Marker m = (Marker)markerTab[i];
+							String location = (String) m.getAttribute("location");
+							if(location.matches(".*::"+input.getName()+"::.*")){
+								markerList.add(m);
+							}
+						}
+						return markerList.toArray();
+					
 					} catch (CoreException e) {
 						BonitaStudioLog.error(e);
 						return null;

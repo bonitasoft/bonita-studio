@@ -83,11 +83,23 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 //						}
 //					}
 //				}
+
+				if(!toValidate.isEmpty()){
+					Diagram d = toValidate.iterator().next();
+					DiagramEditPart de = getDiagramEditPart(d);
+					EObject resolvedSemanticElement = de.resolveSemanticElement();
+					if(resolvedSemanticElement instanceof Form){
+						IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
+						if (target != null) {
+							ProcessMarkerNavigationProvider.deleteMarkers(target);
+						}
+					}
+				}
 				for(Diagram d : toValidate){
 					DiagramEditPart de = getDiagramEditPart(d);
 					if( de != null ){
 						EObject resolvedSemanticElement = de.resolveSemanticElement();
-						if(resolvedSemanticElement instanceof MainProcess){
+						if(resolvedSemanticElement instanceof MainProcess ){
 							ValidateAction.runValidation(de,d);
 						}else if(resolvedSemanticElement instanceof Form){
 							org.bonitasoft.studio.model.process.diagram.form.part.ValidateAction.runValidation(de, d);
