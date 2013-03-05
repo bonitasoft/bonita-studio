@@ -213,6 +213,8 @@ public abstract class FileStoreSelectDialog extends Dialog {
             public void widgetSelected(SelectionEvent e) {
                 super.widgetSelected(e);
                 ((IRepositoryFileStore) ((StructuredSelection) fileStoreListViewer.getSelection()).getFirstElement()).delete();
+                AbstractRepositoryStore<IRepositoryFileStore> ars = (AbstractRepositoryStore<IRepositoryFileStore>)RepositoryManager.getInstance().getRepositoryStore(getRepositoryStoreClass());
+                fileStoreListViewer.setInput(ars.getChildren());
             }
         });
     }
