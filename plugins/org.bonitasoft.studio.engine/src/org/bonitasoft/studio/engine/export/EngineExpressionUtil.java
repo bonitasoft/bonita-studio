@@ -76,7 +76,7 @@ public class EngineExpressionUtil {
 			builder.setOperatorInputType(operation.getOperator().getInputTypes().get(0));
 		}
 		builder.setRightOperand(createExpression(operation.getRightOperand()));
-		builder.setVariableToSet(createLeftOperand(operation.getLeftOperand()));
+		builder.setLeftOperand(createLeftOperand(operation.getLeftOperand()));
 		return builder.done();
 	}
 
@@ -99,7 +99,7 @@ public class EngineExpressionUtil {
 		rightOperand.setType(ExpressionConstants.VARIABLE_TYPE);
 
 		builder.setRightOperand(createExpression(rightOperand));
-		builder.setVariableToSet(createLeftOperand(operation.getLeftOperand()));
+		builder.setLeftOperand(createLeftOperand(operation.getLeftOperand()));
 		return builder.done();
 	}
 
