@@ -51,6 +51,7 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -58,7 +59,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
 import org.eclipse.xtext.util.StringInputStream;
-import org.eclipse.xtext.validation.IResourceValidator;
 
 import com.google.inject.Injector;
 
@@ -72,8 +72,9 @@ public class EngineExpressionUtil {
 		builder.createNewInstance();
 		builder.setType(OperatorType.valueOf(operation.getOperator().getType()));
 		builder.setOperator(operation.getOperator().getExpression());
-		if (!operation.getOperator().getInputTypes().isEmpty()) {
-			builder.setOperatorInputType(operation.getOperator().getInputTypes().get(0));
+		final EList<String> operatorInputTypes = operation.getOperator().getInputTypes();
+		if (!operatorInputTypes.isEmpty()) {
+			builder.setOperatorInputType(operatorInputTypes.get(0));
 		}
 		builder.setRightOperand(createExpression(operation.getRightOperand()));
 		builder.setLeftOperand(createLeftOperand(operation.getLeftOperand()));
@@ -92,8 +93,9 @@ public class EngineExpressionUtil {
 		builder.createNewInstance();
 		builder.setType(OperatorType.valueOf(operation.getOperator().getType()));
 		builder.setOperator(operation.getOperator().getExpression());
-		if (!operation.getOperator().getInputTypes().isEmpty()) {
-			builder.setOperatorInputType(operation.getOperator().getInputTypes().get(0));
+		final EList<String> operatorInputTypes = operation.getOperator().getInputTypes();
+		if (!operatorInputTypes.isEmpty()) {
+			builder.setOperatorInputType(operatorInputTypes.get(0));
 		}
 		final org.bonitasoft.studio.model.expression.Expression rightOperand = EcoreUtil.copy(operation.getRightOperand());
 		rightOperand.setType(ExpressionConstants.VARIABLE_TYPE);
@@ -316,7 +318,6 @@ public class EngineExpressionUtil {
 
 	public static Operation_Compare parseConditionExpression(String content) {
 		final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
-		final IResourceValidator xtextResourceChecker =	injector.getInstance(IResourceValidator.class);
 		final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
 		final ResourceSet resourceSet = xtextResourceSetProvider.get(RepositoryManager.getInstance().getCurrentRepository().getProject());
 		final XtextResource resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
