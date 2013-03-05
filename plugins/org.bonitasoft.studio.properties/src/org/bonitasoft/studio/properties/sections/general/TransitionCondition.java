@@ -155,6 +155,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
             expression.setType(ExpressionConstants.CONDITION_TYPE);
             editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION,expression)) ;
         }
+        conditionViewer.setContext(transition);
         conditionViewer.setInput(transition) ;
         conditionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL,SWT.CENTER).grab(true, false).create());
 
