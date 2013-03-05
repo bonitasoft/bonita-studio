@@ -167,7 +167,11 @@ public class DesignProcessDefinitionBuilder {
         if(process instanceof Pool){
             List<Document> documents = ((Pool) process).getDocuments();
             for (Document document : documents) {
-                DocumentDefinitionBuilder documentBuilder = processBuilder.addDocumentDefinition(document.getName(), document.getName());
+            	String fileName = document.getName(); 
+            	if(document.isIsInternal()){
+            		fileName = document.getDefaultValueIdOfDocumentStore();
+            	 }
+                DocumentDefinitionBuilder documentBuilder = processBuilder.addDocumentDefinition(document.getName(),fileName);
                 documentBuilder.addDescription(document.getDocumentation());
                 final Expression mimeType = document.getMimeType();
                 if(mimeType != null){
