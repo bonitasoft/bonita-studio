@@ -54,7 +54,6 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.internal.events.BuildManager;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IContainer;
@@ -64,6 +63,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -72,7 +72,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
@@ -126,10 +125,12 @@ public class Repository implements IRepository {
 			if(!project.exists()){
 				project.create(NULL_PROGRESS_MONITOR);
 			}
+			disableBuild();
 			open() ;
 			initializeProject(project);
 			initRepositoryStores() ;
 			initClasspath(project) ;
+			enableBuild();
 		}catch(Exception e){
 			BonitaStudioLog.error(e);
 		}
@@ -192,7 +193,7 @@ public class Repository implements IRepository {
 	@SuppressWarnings("unchecked")
 	protected void initRepositoryStores() {
 		if(stores == null || stores.isEmpty()){
-			disableBuild() ;
+			disableBuild();
 			stores = new TreeMap<Class<?>,IRepositoryStore<? extends IRepositoryFileStore>>(new Comparator<Class<?>>() {
 
 				@Override
@@ -201,14 +202,6 @@ public class Repository implements IRepository {
 				}
 
 			}) ;
-			try {
-				/*Avoid XtextBuilder to be built in the same time*/
-				Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
-			} catch (OperationCanceledException e1) {
-				BonitaStudioLog.error(e1);
-			} catch (InterruptedException e1) {
-				BonitaStudioLog.error(e1);
-			}
 			IConfigurationElement[] elements =  BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(REPOSITORY_STORE_EXTENSION_POINT_ID) ;
 			for(IConfigurationElement configuration : elements){
 				try {
@@ -219,15 +212,30 @@ public class Repository implements IRepository {
 					BonitaStudioLog.error(e) ;
 				}
 			}
-			enableBuild() ;
 		}
 	}
 
 	public static void enableBuild() {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceDescription desc = workspace.getDescription();
+		desc.setAutoBuilding(true);
+		try {
+			workspace.setDescription(desc);
+		} catch (CoreException e) {
+			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+		}
 		RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,true);
 	}
 
 	public static  void disableBuild() {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceDescription desc = workspace.getDescription();
+		desc.setAutoBuilding(false);
+		try {
+			workspace.setDescription(desc);
+		} catch (CoreException e) {
+			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+		}
 		RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,false);
 	}
 
@@ -431,6 +439,7 @@ public class Repository implements IRepository {
 	public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(Class<?> repositoryStoreClass) {
 		if(stores == null || stores.isEmpty()){
 			initRepositoryStores() ;
+			enableBuild();
 		}
 		return stores.get(repositoryStoreClass);
 	}
@@ -475,6 +484,7 @@ public class Repository implements IRepository {
 	public List<IRepositoryStore<? extends IRepositoryFileStore>> getAllStores() {
 		if(stores == null){
 			initRepositoryStores() ;
+			enableBuild();
 		}
 		List<IRepositoryStore<? extends IRepositoryFileStore>> result = new ArrayList<IRepositoryStore<? extends IRepositoryFileStore>>(stores.values()) ;
 		Collections.sort(result, new RepositoryStoreComparator()) ;
