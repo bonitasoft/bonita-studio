@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.simulation.properties.sections;
 
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.simulation.i18n.Messages;
 import org.bonitasoft.studio.simulation.properties.contributions.ResourceAssignmentContribution;
 
 /**
@@ -36,8 +37,7 @@ public class ResourceAssignmentExtensibleGridPropertySection extends
 
 	@Override
 	public String getSectionDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return Messages.simulationTaskResourceDescription;
 	}
 
 

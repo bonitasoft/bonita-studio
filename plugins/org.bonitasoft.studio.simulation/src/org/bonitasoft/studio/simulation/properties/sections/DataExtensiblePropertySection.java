@@ -18,6 +18,8 @@
 package org.bonitasoft.studio.simulation.properties.sections;
 
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.model.simulation.SimulationActivity;
+import org.bonitasoft.studio.simulation.i18n.Messages;
 import org.bonitasoft.studio.simulation.properties.contributions.DataChangesContribution;
 import org.bonitasoft.studio.simulation.properties.contributions.DataContribution;
 import org.bonitasoft.studio.simulation.properties.contributions.TransitionDataContribution;
@@ -39,9 +41,10 @@ public class DataExtensiblePropertySection extends
 
 	@Override
 	public String getSectionDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		if(eObject instanceof SimulationActivity){
+			return Messages.simulationTaskDataDescription;
+		}
+		return Messages.simulationProcessDataDescription;	}
 
 
 	

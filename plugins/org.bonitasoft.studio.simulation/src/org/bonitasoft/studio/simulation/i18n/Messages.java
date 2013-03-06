@@ -219,6 +219,11 @@ public class Messages extends NLS {
     public static String returnType;
     public static String simulationVariableType;
 	public static String notAProba;
+	public static String simulationTaskResourceDescription;
+	public static String simulationTaskGeneralDescription;
+	public static String simulationTaskDataDescription;
+	public static String simulationProcessGeneralDescription;
+	public static String simulationProcessDataDescription;
 
 
 
