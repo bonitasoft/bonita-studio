@@ -24,7 +24,6 @@ import org.bonitasoft.engine.bpm.model.AutomaticTaskDefinition;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 
@@ -37,7 +36,6 @@ public class TestJavaDoc extends TestCase {
     public void testHasJavaDoc() throws CoreException {
     	
         final IRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
-        currentRepository.getProject().build(IncrementalProjectBuilder.FULL_BUILD , null);
 		final IJavaProject javaProject = currentRepository.getJavaProject();
         final String javadoc = javaProject.findType(AutomaticTaskDefinition.class.getName()).getAttachedJavadoc(Repository.NULL_PROGRESS_MONITOR);
         assertNotNull("JavaDoc not working for bonita-common", javadoc);
