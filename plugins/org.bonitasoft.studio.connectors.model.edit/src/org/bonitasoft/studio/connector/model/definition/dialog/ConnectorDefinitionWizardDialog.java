@@ -20,6 +20,7 @@ package org.bonitasoft.studio.connector.model.definition.dialog;
 import java.util.List;
 
 import org.bonitasoft.studio.common.jface.ExtensibleWizard;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.wizard.DefinitionPageWizardPage;
@@ -41,6 +42,7 @@ public class ConnectorDefinitionWizardDialog extends WizardDialog {
 
 
     private final DefinitionResourceProvider messageProvider;
+    private boolean askWhenShellCloses = true && !FileActionDialog.getDisablePopup();
 
     public ConnectorDefinitionWizardDialog(Shell parentShell, IWizard newWizard,DefinitionResourceProvider messageProvider) {
         super(parentShell, newWizard);
@@ -118,12 +120,16 @@ public class ConnectorDefinitionWizardDialog extends WizardDialog {
      */
     @Override
     protected boolean canHandleShellCloseEvent() {
-        Boolean close = MessageDialog.openQuestion(getShell(), org.bonitasoft.studio.common.Messages.handleShellCloseEventTitle, org.bonitasoft.studio.common.Messages.handleShellCloseEventMessage);
-        if(close){
-            return super.canHandleShellCloseEvent();
-        } else {
-            return false;
-        }
+    	if(askWhenShellCloses){
+    		Boolean close = MessageDialog.openQuestion(getShell(), org.bonitasoft.studio.common.Messages.handleShellCloseEventTitle, org.bonitasoft.studio.common.Messages.handleShellCloseEventMessage);
+    		if(close){
+    			return super.canHandleShellCloseEvent();
+    		} else {
+    			return false;
+    		}
+    	} else {
+    		return true;
+    	}
     }
 
     @Override
