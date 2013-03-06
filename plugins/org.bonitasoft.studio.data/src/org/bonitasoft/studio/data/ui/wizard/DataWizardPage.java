@@ -456,7 +456,6 @@ public class DataWizardPage extends WizardPage {
 					defaultValueViewer.refresh();
 					return multipleReturnType;
 				}else{
-
 					typeObservable.setValue(ExpressionConstants.CONSTANT_TYPE);
 					interpreterObservable.setValue(null);
 					defaultValueViewer.refresh();
