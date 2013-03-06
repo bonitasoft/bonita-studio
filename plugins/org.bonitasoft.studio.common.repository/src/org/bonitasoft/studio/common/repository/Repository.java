@@ -215,7 +215,7 @@ public class Repository implements IRepository {
 		}
 	}
 
-	public static void enableBuild() {
+	public void enableBuild() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceDescription desc = workspace.getDescription();
 		desc.setAutoBuilding(true);
@@ -225,9 +225,14 @@ public class Repository implements IRepository {
 			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
 		}
 		RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,true);
+		try {
+			getProject().build(IncrementalProjectBuilder.FULL_BUILD,NULL_PROGRESS_MONITOR);
+		} catch (CoreException e) {
+			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+		}
 	}
 
-	public static  void disableBuild() {
+	public void disableBuild() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceDescription desc = workspace.getDescription();
 		desc.setAutoBuilding(false);
