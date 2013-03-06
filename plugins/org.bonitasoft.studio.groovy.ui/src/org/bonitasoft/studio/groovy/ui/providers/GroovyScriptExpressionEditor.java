@@ -356,14 +356,12 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         this.inputExpression = inputExpression ;
         this.context = context ;
 
-        IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT) ;
         IObservableValue dependenciesModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS) ;
         IObservableValue autoDepsModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__AUTOMATIC_DEPENDENCIES) ;
 
         inputExpression.setType(ExpressionConstants.SCRIPT_TYPE);
         inputExpression.setInterpreter(ExpressionConstants.GROOVY);
 
-        groovyViewer.getDocument().set(inputExpression.getContent()) ;
         groovyViewer.setContext(context,filters) ;
         nodes = groovyViewer.getFieldNodes() ;
 

@@ -17,7 +17,6 @@ package org.bonitasoft.studio.data.ui.wizard;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -163,7 +162,6 @@ public class DataWizardPage extends WizardPage {
 	private Text classText;
 	private IViewerObservableValue observeSingleSelectionTypeCombo;
 	private IViewerObservableValue observeSingleSelectionDefaultValueExpression;
-	private Object oldTypeObservableValue = null;
 	final private String multipleReturnType = List.class.getName();
 
 	private final ViewerFilter typeViewerFilter = new ViewerFilter() {
