@@ -43,10 +43,7 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 
 	@Override
 	public void partClosed(IWorkbenchPartReference partRef) {
-		IWorkbenchPart part = partRef.getPart(false);
-		if (part instanceof IEditorPart) {
-			PlatformUtil.openIntroIfNoOtherEditorOpen();
-		}
+		PlatformUtil.openIntroIfNoOtherEditorOpen();
 	}
 
 	@Override
