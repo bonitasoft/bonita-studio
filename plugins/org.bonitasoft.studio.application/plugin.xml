@@ -777,6 +777,9 @@
             class="org.bonitasoft.studio.application.contribution.StudioPropertiesContributor"
             priority="0">
       </contribution>
+      <contribution
+            class="org.bonitasoft.studio.application.contribution.CheckJavaVersionPostStartupContribution">
+      </contribution>
    </extension>
    <extension
          id="id1"

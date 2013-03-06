@@ -22,6 +22,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Export-Package: org.bonitasoft.studio.preferences,
+ org.bonitasoft.studio.preferences.dialog,
  org.bonitasoft.studio.preferences.extension,
  org.bonitasoft.studio.preferences.pages
 Bundle-ClassPath: .

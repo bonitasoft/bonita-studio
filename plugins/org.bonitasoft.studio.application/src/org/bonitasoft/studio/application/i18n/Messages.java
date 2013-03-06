@@ -245,6 +245,10 @@ public class Messages extends NLS {
 
     public static String duplicatingDiagram;
 
+	public static String jreNotFoundTitle;
+
+	public static String jreNotFoundMessage;
+
 
 
     static {
