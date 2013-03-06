@@ -352,7 +352,7 @@ public class BOSWebServerManager {
 		args.append("-Xmx512m");
 		args.append(" ");
 		args.append("-XX:MaxPermSize=256m");
-		if("true".equals(System.getProperty("tomcat.debug.mode"))){
+		if("true".equals(System.getProperty("bonita.tomcat.debug.mode"))){
 			args.append("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8500");
 		}
 		addSystemProperty(args, "catalina.home", "\""+tomcatInstanceLocation+"\"");
