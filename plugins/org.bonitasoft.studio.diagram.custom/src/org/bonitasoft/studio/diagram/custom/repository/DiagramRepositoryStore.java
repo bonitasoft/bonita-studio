@@ -66,217 +66,218 @@ import org.eclipse.swt.graphics.Image;
  */
 public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFileStore> {
 
-    private static final String STORE_NAME = "diagrams" ;
-    private static final Set<String> extensions = new HashSet<String>() ;
-    static{
-        extensions.add("proc") ;
-    }
+	private static final String STORE_NAME = "diagrams" ;
+	private static final Set<String> extensions = new HashSet<String>() ;
+	static{
+		extensions.add("proc") ;
+	}
 
-    private AdapterFactoryLabelProvider labelProvider;
+	private AdapterFactoryLabelProvider labelProvider;
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.IRepositoryStore#getName()
-     */
-    public String getName() {
-        return STORE_NAME;
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.IRepositoryStore#getName()
+	 */
+	public String getName() {
+		return STORE_NAME;
+	}
 
-    public String getDisplayName() {
-        return Messages.diagrams;
-    }
+	public String getDisplayName() {
+		return Messages.diagrams;
+	}
 
-    public Image getIcon() {
-        return Pics.getImage(PicsConstants.diagram);
-    }
+	public Image getIcon() {
+		return Pics.getImage(PicsConstants.diagram);
+	}
 
-    @Override
-    public DiagramFileStore createRepositoryFileStore(String fileName) {
-        return new DiagramFileStore(fileName,this)  ;
-    }
+	@Override
+	public DiagramFileStore createRepositoryFileStore(String fileName) {
+		return new DiagramFileStore(fileName,this)  ;
+	}
 
-    public List<AbstractProcess> getAllProcesses() {
-        List<AbstractProcess> processes = new ArrayList<AbstractProcess>() ;
-        for(IRepositoryFileStore file : getChildren()){
-            processes.addAll(((DiagramFileStore)file).getProcesses()) ;
-        }
-        return processes ;
-    }
+	public List<AbstractProcess> getAllProcesses() {
+		List<AbstractProcess> processes = new ArrayList<AbstractProcess>() ;
+		for(IRepositoryFileStore file : getChildren()){
+			processes.addAll(((DiagramFileStore)file).getProcesses()) ;
+		}
+		return processes ;
+	}
 
-    public Set<String> getCompatibleExtensions() {
-        return extensions  ;
-    }
+	public Set<String> getCompatibleExtensions() {
+		return extensions  ;
+	}
 
-    public List<AbstractProcess> findProcesses(String processName) {
-        List<AbstractProcess> result = new ArrayList<AbstractProcess>() ;
-        for(AbstractProcess proc : getAllProcesses()){
-            if(proc.getName().equals(processName)){
-                result.add(proc) ;
-            }
-        }
-        return result;
-    }
+	public List<AbstractProcess> findProcesses(String processName) {
+		List<AbstractProcess> result = new ArrayList<AbstractProcess>() ;
+		for(AbstractProcess proc : getAllProcesses()){
+			if(proc.getName().equals(processName)){
+				result.add(proc) ;
+			}
+		}
+		return result;
+	}
 
-    public AbstractProcess findProcess(String processName, String processVersion) {
-        if(processVersion != null && !processVersion.trim().isEmpty()){
-            for(AbstractProcess proc : getAllProcesses()){
-                if(proc.getName().equals(processName)
-                        && proc.getVersion().equals(processVersion)){
-                    return proc;
-                }
-            }
-        } else {
-            //return the process  with the higher version
-            AbstractProcess currentHigher = null;
-            for(AbstractProcess proc : getAllProcesses()){
-                if(proc.getName().equals(processName)){
-                    if(currentHigher == null || proc.getVersion().compareTo(currentHigher.getVersion()) > 0){
-                        currentHigher = proc;
-                    }
-                }
-            }
-            return currentHigher;
-        }
-        return null;
-    }
+	public AbstractProcess findProcess(String processName, String processVersion) {
+		if(processVersion != null && !processVersion.trim().isEmpty()){
+			for(AbstractProcess proc : getAllProcesses()){
+				if(proc.getName().equals(processName)
+						&& proc.getVersion().equals(processVersion)){
+					return proc;
+				}
+			}
+		} else {
+			//return the process  with the higher version
+					AbstractProcess currentHigher = null;
+			for(AbstractProcess proc : getAllProcesses()){
+				if(proc.getName().equals(processName)){
+					if(currentHigher == null || proc.getVersion().compareTo(currentHigher.getVersion()) > 0){
+						currentHigher = proc;
+					}
+				}
+			}
+			return currentHigher;
+		}
+		return null;
+	}
 
-    public  List<DiagramFileStore> getRecentChildren(int nbResult) {
-        refresh() ;
+	public  List<DiagramFileStore> getRecentChildren(int nbResult) {
+		refresh() ;
 
-        List<DiagramFileStore> result = new ArrayList<DiagramFileStore>() ;
-        List<IResource> resources = new ArrayList<IResource>() ;
-        IFolder folder = getResource();
-        try {
-            for(IResource r : folder.members()){
-                if(r.getFileExtension() != null && getCompatibleExtensions().contains(r.getFileExtension())){
-                    resources.add(r);
-                }
-            }
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e) ;
-        }
-
-
-        Collections.sort(resources, new Comparator<IResource>() {
-            public int compare(IResource arg0, IResource arg1) {
-                final long lastModifiedArg1 = arg1.getLocation().toFile().lastModified();
-                final long lastModifiedArg0 = arg0.getLocation().toFile().lastModified();
-                return Long.valueOf(lastModifiedArg1).compareTo(Long.valueOf(lastModifiedArg0));
-            }
-        }) ;
-
-        for(int i=0; i<nbResult;i++){
-            if(resources.size() > i){
-                result.add(createRepositoryFileStore(resources.get(i).getName()));
-            }
-        }
+		List<DiagramFileStore> result = new ArrayList<DiagramFileStore>() ;
+		List<IResource> resources = new ArrayList<IResource>() ;
+		IFolder folder = getResource();
+		try {
+			for(IResource r : folder.members()){
+				if(r.getFileExtension() != null && getCompatibleExtensions().contains(r.getFileExtension())){
+					resources.add(r);
+				}
+			}
+		} catch (CoreException e) {
+			BonitaStudioLog.error(e) ;
+		}
 
 
-        return result;
-    }
+		Collections.sort(resources, new Comparator<IResource>() {
+			public int compare(IResource arg0, IResource arg1) {
+				final long lastModifiedArg1 = arg1.getLocation().toFile().lastModified();
+				final long lastModifiedArg0 = arg0.getLocation().toFile().lastModified();
+				return Long.valueOf(lastModifiedArg1).compareTo(Long.valueOf(lastModifiedArg0));
+			}
+		}) ;
 
-    public DiagramFileStore getDiagram(String name, String version) {
-        for(DiagramFileStore diagram : getChildren()){
-            MainProcess diagramModel = diagram.getContent() ;
-            if(diagramModel.getName().equals(name) && diagramModel.getVersion().equals(version)){
-                return diagram ;
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    protected DiagramFileStore doImportIResource(String fileName, IResource resource) {
-        DiagramFileStore fileStore = super.doImportIResource(fileName, resource);
-        return fileStore;
-    }
-
-    @Override
-    protected DiagramFileStore doImportInputStream(String fileName, InputStream inputStream) {
-        final CopyInputStream copyIs = new CopyInputStream(inputStream);
-        final InputStream originalStream = copyIs.getCopy();
-        final String newFileName = getValidFileName(fileName,copyIs.getCopy());
-        copyIs.close();
-        return super.doImportInputStream(newFileName, originalStream);
-    }
+		for(int i=0; i<nbResult;i++){
+			if(resources.size() > i){
+				result.add(createRepositoryFileStore(resources.get(i).getName()));
+			}
+		}
 
 
-    protected String getValidFileName(final String fileName,final InputStream is) {
-        FileOutputStream fos = null;
-        File tmpFile = null ;
-        try{
-            tmpFile = File.createTempFile("tmp", fileName, ProjectUtil.getBonitaStudioWorkFolder());
-            fos = new FileOutputStream(tmpFile);
-            FileUtil.copy(is, fos);
-            final ResourceSet rSet = new ResourceSetImpl();
+		return result;
+	}
 
-            final Resource resource = rSet.createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
-            final Map<Object, Object> loadOptions = new HashMap<Object, Object>(rSet.getLoadOptions());
-            //Ignore unknown features
-            loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
-            resource.load(loadOptions);
-            EObject mainProcess = resource.getContents().get(0);
-            if(mainProcess instanceof MainProcess){
-                return NamingUtils.toDiagramFilename(((MainProcess) mainProcess).getName(), ((MainProcess) mainProcess).getVersion());
-            }
-        }catch (Exception e) {
-            BonitaStudioLog.error(e, Activator.PLUGIN_ID);
-        }finally{
-            if(fos != null){
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    BonitaStudioLog.error(e,Activator.PLUGIN_ID);
-                }
-            }
-            if(is != null){
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    BonitaStudioLog.error(e,Activator.PLUGIN_ID);
-                }
-            }
-            if(tmpFile != null && tmpFile.exists()){
-                tmpFile.delete();
-            }
-        }
-        return fileName;
-    }
+	public DiagramFileStore getDiagram(String name, String version) {
+		for(DiagramFileStore diagram : getChildren()){
+			MainProcess diagramModel = diagram.getContent() ;
+			if(diagramModel.getName().equals(name) && diagramModel.getVersion().equals(version)){
+				return diagram ;
+			}
+		}
 
-    public Set<String> getAllProcessIds() {
-        Set<String> resut = new HashSet<String>() ;
-        for(AbstractProcess process : getAllProcesses()){
-            resut.add(ModelHelper.getEObjectID(process)) ;
-        }
-        return resut;
-    }
+		return null;
+	}
 
-    public AbstractProcess getProcessByUUID(String processUUID) {
-        for(AbstractProcess process : getAllProcesses()){
-            final String id = ModelHelper.getEObjectID(process);
-            if(processUUID.equals(id)){
-                return process;
-            }
-        }
-        return null;
-    }
+	@Override
+	protected DiagramFileStore doImportIResource(String fileName, IResource resource) {
+		DiagramFileStore fileStore = super.doImportIResource(fileName, resource);
+		return fileStore;
+	}
 
-    @Override
-    public AdapterFactoryLabelProvider getLabelProvider() {
-        if(labelProvider == null){
-            ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-            adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-            adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-            adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
-            adapterFactory.addAdapterFactory(new NotationAdapterFactory()) ;
-            labelProvider = new AdapterFactoryLabelProvider(adapterFactory);
-        }
-        return labelProvider;
-    }
+	@Override
+	protected DiagramFileStore doImportInputStream(String fileName, InputStream inputStream) {
+		final CopyInputStream copyIs = new CopyInputStream(inputStream);
+		final InputStream originalStream = copyIs.getCopy();
+		final String newFileName = getValidFileName(fileName,copyIs.getCopy());
+		copyIs.close();
+		return super.doImportInputStream(newFileName, originalStream);
+	}
 
-    @Override
-    protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
-        adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
-        adapterFactory.addAdapterFactory(new NotationAdapterFactory()) ;
-    }
+
+	protected String getValidFileName(final String fileName,final InputStream is) {
+		FileOutputStream fos = null;
+		File tmpFile = null ;
+		try{
+			tmpFile = File.createTempFile("tmp", fileName, ProjectUtil.getBonitaStudioWorkFolder());
+			fos = new FileOutputStream(tmpFile);
+			FileUtil.copy(is, fos);
+			final ResourceSet rSet = new ResourceSetImpl();
+
+			final Resource resource = rSet.createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
+			final Map<Object, Object> loadOptions = new HashMap<Object, Object>(rSet.getLoadOptions());
+			//Ignore unknown features
+			loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+			resource.load(loadOptions);
+			EObject mainProcess = resource.getContents().get(0);
+			if(mainProcess instanceof MainProcess){
+				return NamingUtils.toDiagramFilename(((MainProcess) mainProcess).getName(), ((MainProcess) mainProcess).getVersion());
+			}
+		}catch (Exception e) {
+			BonitaStudioLog.error(e, Activator.PLUGIN_ID);
+		}finally{
+			if(fos != null){
+				try {
+					fos.close();
+				} catch (IOException e) {
+					BonitaStudioLog.error(e,Activator.PLUGIN_ID);
+				}
+			}
+			if(is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
+					BonitaStudioLog.error(e,Activator.PLUGIN_ID);
+				}
+			}
+			if(tmpFile != null && tmpFile.exists()){
+				tmpFile.delete();
+			}
+		}
+		return fileName;
+	}
+
+	public Set<String> getAllProcessIds() {
+		Set<String> resut = new HashSet<String>() ;
+		for(AbstractProcess process : getAllProcesses()){
+			resut.add(ModelHelper.getEObjectID(process)) ;
+		}
+		return resut;
+	}
+
+	public AbstractProcess getProcessByUUID(String processUUID) {
+		for(AbstractProcess process : getAllProcesses()){
+			final String id = ModelHelper.getEObjectID(process);
+			if(processUUID.equals(id)){
+				return process;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public AdapterFactoryLabelProvider getLabelProvider() {
+		if(labelProvider != null){
+			labelProvider.dispose();
+		}
+		final ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
+		adapterFactory.addAdapterFactory(new NotationAdapterFactory()) ;
+		labelProvider = new AdapterFactoryLabelProvider(adapterFactory);
+		return labelProvider;
+	}
+
+	@Override
+	protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
+		adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
+		adapterFactory.addAdapterFactory(new NotationAdapterFactory()) ;
+	}
 }
