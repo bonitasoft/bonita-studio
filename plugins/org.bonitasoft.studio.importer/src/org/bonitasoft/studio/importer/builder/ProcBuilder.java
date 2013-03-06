@@ -636,7 +636,7 @@ public class ProcBuilder implements IProcBuilder {
         IElementType type = resolveGatewayType(gatewayType) ;
         Element createdElement = createShape(id,currentContainer,location,size,type);
 
-        commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getElement_Name(),id)) ;
+        commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getElement_Name(),name)) ;
 
         currentStep = createdElement ;
         currentElement = createdElement ;
@@ -678,7 +678,7 @@ public class ProcBuilder implements IProcBuilder {
             }
         }
 
-        commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getElement_Name(), id)) ;
+        commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getElement_Name(), name)) ;
 
 
         processIds.put((AbstractProcess) createdElement, id) ;
