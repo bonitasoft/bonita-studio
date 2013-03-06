@@ -37,13 +37,16 @@ public class DriversAssociationFileStoreContribution implements
 	private static final String MYSQL_DEFINITION_ID = "database-mysql";
 	private static final String MYSQL_DRIVER_JARNAME = "mysql-connector-java-5.1.23-bin.jar";
 	
-	private static final String POSTGRES_DEFINITION_ID = "database-postgresql";
+	private static final String POSTGRES_DEFINITION_ID = "database-postgresql92";
 	private static final String POSTGRES_DRIVER_JARNAME = "postgresql-9.2-1002.jdbc4.jar";
 	
-	private static final String SQLSERVER_DEFINITION_ID = "database-mssqlserver";
+	private static final String SQLSERVER_2008_DEFINITION_ID = "database-mssqlserver2008";
 	private static final String SQLSERVER_DRIVER_JARNAME = "sqljdbc4.jar";
+	private static final String SQLSERVER_2012_DEFINITION_ID = "database-mssqlserver2012";
+
 	
-	private static final String ORACLE_DEFINITION_ID = "database-oracle";
+	private static final String ORACLE_11G_DEFINITION_ID = "database-oracle11g";
+	private static final String ORACLE_10G_DEFINITION_ID = "database-oracle10g";
 	private static final String ORACLE_DRIVER_JARNAME = "ojdbc6.jar";
 	
 	private static final String H2_DEFINITION_ID = "database-h2";
@@ -63,8 +66,10 @@ public class DriversAssociationFileStoreContribution implements
 	public void execute(IRepositoryStore<? extends IRepositoryFileStore> repository) {
 		createDatabaseDriverAssociation(repository,MYSQL_DEFINITION_ID,MYSQL_DRIVER_JARNAME);
 		createDatabaseDriverAssociation(repository, POSTGRES_DEFINITION_ID, POSTGRES_DRIVER_JARNAME);
-		createDatabaseDriverAssociation(repository, SQLSERVER_DEFINITION_ID, SQLSERVER_DRIVER_JARNAME);
-		createDatabaseDriverAssociation(repository, ORACLE_DEFINITION_ID, ORACLE_DRIVER_JARNAME);
+		createDatabaseDriverAssociation(repository, SQLSERVER_2008_DEFINITION_ID, SQLSERVER_DRIVER_JARNAME);
+		createDatabaseDriverAssociation(repository, SQLSERVER_2012_DEFINITION_ID, SQLSERVER_DRIVER_JARNAME);
+		createDatabaseDriverAssociation(repository, ORACLE_11G_DEFINITION_ID, ORACLE_DRIVER_JARNAME);
+		createDatabaseDriverAssociation(repository, ORACLE_10G_DEFINITION_ID, ORACLE_DRIVER_JARNAME);
 		createDatabaseDriverAssociation(repository, H2_DEFINITION_ID, H2_DRIVER_JARNAME);
 		createDatabaseDriverAssociation(repository, HSQLDB_DEFINITION_ID, HSQLDB_DRIVER_JARNAME);
 		createGenericDriverList(repository);
