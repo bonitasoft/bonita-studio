@@ -84,6 +84,7 @@ public class Messages extends NLS {
 	public static String validation_errorEndingPageflow;
 	public static String connectableElementIsNotAScriptorServiceTask;
 	public static String tooManyConnectorsDefined;
+	public static String missingDefaultSequenceFlow;
 
 
     
