@@ -42,192 +42,192 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Membership extends EObject {
 	/**
-     * Returns the value of the '<em><b>User Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>User Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>User Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>User Name</em>' attribute.
-     * @see #setUserName(String)
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_UserName()
-     * @model dataType="org.eclipse.emf.ecore.xml.type.String"
-     *        extendedMetaData="kind='element' name='userName'"
-     * @generated
-     */
+	 * @return the value of the '<em>User Name</em>' attribute.
+	 * @see #setUserName(String)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_UserName()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='userName'"
+	 * @generated
+	 */
 	String getUserName();
 
 	/**
-     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getUserName <em>User Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getUserName <em>User Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>User Name</em>' attribute.
-     * @see #getUserName()
-     * @generated
-     */
+	 * @param value the new value of the '<em>User Name</em>' attribute.
+	 * @see #getUserName()
+	 * @generated
+	 */
 	void setUserName(String value);
 
 	/**
-     * Returns the value of the '<em><b>Role Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Role Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Role Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Role Name</em>' attribute.
-     * @see #setRoleName(String)
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_RoleName()
-     * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='roleName'"
-     * @generated
-     */
+	 * @return the value of the '<em>Role Name</em>' attribute.
+	 * @see #setRoleName(String)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_RoleName()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='roleName'"
+	 * @generated
+	 */
 	String getRoleName();
 
 	/**
-     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getRoleName <em>Role Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getRoleName <em>Role Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Role Name</em>' attribute.
-     * @see #getRoleName()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Role Name</em>' attribute.
+	 * @see #getRoleName()
+	 * @generated
+	 */
 	void setRoleName(String value);
 
 	/**
-     * Returns the value of the '<em><b>Group Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Group Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Group Name</em>' attribute.
-     * @see #setGroupName(String)
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_GroupName()
-     * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='element' name='groupName'"
-     * @generated
-     */
+	 * @return the value of the '<em>Group Name</em>' attribute.
+	 * @see #setGroupName(String)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_GroupName()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='element' name='groupName'"
+	 * @generated
+	 */
 	String getGroupName();
 
 	/**
-     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getGroupName <em>Group Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getGroupName <em>Group Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Group Name</em>' attribute.
-     * @see #getGroupName()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Group Name</em>' attribute.
+	 * @see #getGroupName()
+	 * @generated
+	 */
 	void setGroupName(String value);
 
 	/**
-     * Returns the value of the '<em><b>Group Parent Path</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group Parent Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Group Parent Path</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Group Parent Path</em>' attribute.
-     * @see #setGroupParentPath(String)
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_GroupParentPath()
-     * @model dataType="org.eclipse.emf.ecore.xml.type.String"
-     *        extendedMetaData="kind='element' name='groupParentPath'"
-     * @generated
-     */
+	 * @return the value of the '<em>Group Parent Path</em>' attribute.
+	 * @see #setGroupParentPath(String)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_GroupParentPath()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='groupParentPath'"
+	 * @generated
+	 */
 	String getGroupParentPath();
 
 	/**
-     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getGroupParentPath <em>Group Parent Path</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getGroupParentPath <em>Group Parent Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Group Parent Path</em>' attribute.
-     * @see #getGroupParentPath()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Group Parent Path</em>' attribute.
+	 * @see #getGroupParentPath()
+	 * @generated
+	 */
 	void setGroupParentPath(String value);
 
     /**
-     * Returns the value of the '<em><b>Assigned By</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Assigned By</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Assigned By</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Assigned By</em>' attribute.
-     * @see #setAssignedBy(String)
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_AssignedBy()
-     * @model dataType="org.eclipse.emf.ecore.xml.type.String"
-     *        extendedMetaData="kind='element' name='assignedBy'"
-     * @generated
-     */
+	 * @return the value of the '<em>Assigned By</em>' attribute.
+	 * @see #setAssignedBy(String)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_AssignedBy()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='assignedBy'"
+	 * @generated
+	 */
     String getAssignedBy();
 
     /**
-     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedBy <em>Assigned By</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedBy <em>Assigned By</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Assigned By</em>' attribute.
-     * @see #getAssignedBy()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Assigned By</em>' attribute.
+	 * @see #getAssignedBy()
+	 * @generated
+	 */
     void setAssignedBy(String value);
 
     /**
-     * Returns the value of the '<em><b>Assigned Date</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Assigned Date</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Assigned Date</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Assigned Date</em>' attribute.
-     * @see #isSetAssignedDate()
-     * @see #unsetAssignedDate()
-     * @see #setAssignedDate(long)
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_AssignedDate()
-     * @model unsettable="true" dataType="org.eclipse.emf.ecore.xml.type.Long"
-     *        extendedMetaData="kind='element' name='assignedDate'"
-     * @generated
-     */
+	 * @return the value of the '<em>Assigned Date</em>' attribute.
+	 * @see #isSetAssignedDate()
+	 * @see #unsetAssignedDate()
+	 * @see #setAssignedDate(long)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMembership_AssignedDate()
+	 * @model unsettable="true" dataType="org.eclipse.emf.ecore.xml.type.Long"
+	 *        extendedMetaData="kind='element' name='assignedDate'"
+	 * @generated
+	 */
     long getAssignedDate();
 
     /**
-     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedDate <em>Assigned Date</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedDate <em>Assigned Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Assigned Date</em>' attribute.
-     * @see #isSetAssignedDate()
-     * @see #unsetAssignedDate()
-     * @see #getAssignedDate()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Assigned Date</em>' attribute.
+	 * @see #isSetAssignedDate()
+	 * @see #unsetAssignedDate()
+	 * @see #getAssignedDate()
+	 * @generated
+	 */
     void setAssignedDate(long value);
 
     /**
-     * Unsets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedDate <em>Assigned Date</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Unsets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedDate <em>Assigned Date</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #isSetAssignedDate()
-     * @see #getAssignedDate()
-     * @see #setAssignedDate(long)
-     * @generated
-     */
+	 * @see #isSetAssignedDate()
+	 * @see #getAssignedDate()
+	 * @see #setAssignedDate(long)
+	 * @generated
+	 */
     void unsetAssignedDate();
 
     /**
-     * Returns whether the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedDate <em>Assigned Date</em>}' attribute is set.
-     * <!-- begin-user-doc -->
+	 * Returns whether the value of the '{@link org.bonitasoft.studio.actors.model.organization.Membership#getAssignedDate <em>Assigned Date</em>}' attribute is set.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return whether the value of the '<em>Assigned Date</em>' attribute is set.
-     * @see #unsetAssignedDate()
-     * @see #getAssignedDate()
-     * @see #setAssignedDate(long)
-     * @generated
-     */
+	 * @return whether the value of the '<em>Assigned Date</em>' attribute is set.
+	 * @see #unsetAssignedDate()
+	 * @see #getAssignedDate()
+	 * @see #setAssignedDate(long)
+	 * @generated
+	 */
     boolean isSetAssignedDate();
 
 } // Membership

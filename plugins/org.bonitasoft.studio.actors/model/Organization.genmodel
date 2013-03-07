@@ -88,6 +88,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//User/professionalData"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//User/metaDatas"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/userName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/enabled"/>
     </genClasses>
     <genClasses ecoreClass="Organization.ecore#//Users">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//Users/user"/>

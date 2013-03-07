@@ -39,20 +39,20 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Memberships extends EObject {
 	/**
-     * Returns the value of the '<em><b>Membership</b></em>' containment reference list.
-     * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.Membership}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Membership</b></em>' containment reference list.
+	 * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.Membership}.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Membership</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Membership</em>' containment reference list.
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMemberships_Membership()
-     * @model containment="true"
-     *        extendedMetaData="kind='element' name='membership'"
-     * @generated
-     */
+	 * @return the value of the '<em>Membership</em>' containment reference list.
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getMemberships_Membership()
+	 * @model containment="true"
+	 *        extendedMetaData="kind='element' name='membership'"
+	 * @generated
+	 */
 	EList<Membership> getMembership();
 
 } // Memberships

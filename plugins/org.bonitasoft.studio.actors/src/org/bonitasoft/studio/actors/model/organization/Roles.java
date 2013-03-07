@@ -39,20 +39,20 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Roles extends EObject {
 	/**
-     * Returns the value of the '<em><b>Role</b></em>' containment reference list.
-     * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.Role}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Role</b></em>' containment reference list.
+	 * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.Role}.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Role</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Role</em>' containment reference list.
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRoles_Role()
-     * @model containment="true"
-     *        extendedMetaData="kind='element' name='role'"
-     * @generated
-     */
+	 * @return the value of the '<em>Role</em>' containment reference list.
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRoles_Role()
+	 * @model containment="true"
+	 *        extendedMetaData="kind='element' name='role'"
+	 * @generated
+	 */
 	EList<Role> getRole();
 
 } // Roles

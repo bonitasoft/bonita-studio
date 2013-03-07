@@ -35,208 +35,208 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  */
 public class OrganizationFactoryImpl extends EFactoryImpl implements OrganizationFactory {
 	/**
-     * Creates the default factory implementation.
-     * <!-- begin-user-doc -->
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public static OrganizationFactory init() {
-        try {
-            OrganizationFactory theOrganizationFactory = (OrganizationFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.bonitasoft.org/ns/organization/6.0"); 
-            if (theOrganizationFactory != null) {
-                return theOrganizationFactory;
-            }
-        }
-        catch (Exception exception) {
-            EcorePlugin.INSTANCE.log(exception);
-        }
-        return new OrganizationFactoryImpl();
-    }
+		try {
+			OrganizationFactory theOrganizationFactory = (OrganizationFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.bonitasoft.org/ns/organization/6.0"); 
+			if (theOrganizationFactory != null) {
+				return theOrganizationFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new OrganizationFactoryImpl();
+	}
 
 	/**
-     * Creates an instance of the factory.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public OrganizationFactoryImpl() {
-        super();
-    }
+		super();
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public EObject create(EClass eClass) {
-        switch (eClass.getClassifierID()) {
-            case OrganizationPackage.CONTACT_DATA: return createContactData();
-            case OrganizationPackage.DOCUMENT_ROOT: return createDocumentRoot();
-            case OrganizationPackage.GROUP: return createGroup();
-            case OrganizationPackage.GROUPS: return createGroups();
-            case OrganizationPackage.MEMBERSHIP: return createMembership();
-            case OrganizationPackage.MEMBERSHIPS: return createMemberships();
-            case OrganizationPackage.METADATA: return createMetadata();
-            case OrganizationPackage.META_DATAS_TYPE: return createMetaDatasType();
-            case OrganizationPackage.ORGANIZATION: return createOrganization();
-            case OrganizationPackage.ROLE: return createRole();
-            case OrganizationPackage.ROLES: return createRoles();
-            case OrganizationPackage.USER: return createUser();
-            case OrganizationPackage.USERS: return createUsers();
-            default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eClass.getClassifierID()) {
+			case OrganizationPackage.CONTACT_DATA: return createContactData();
+			case OrganizationPackage.DOCUMENT_ROOT: return createDocumentRoot();
+			case OrganizationPackage.GROUP: return createGroup();
+			case OrganizationPackage.GROUPS: return createGroups();
+			case OrganizationPackage.MEMBERSHIP: return createMembership();
+			case OrganizationPackage.MEMBERSHIPS: return createMemberships();
+			case OrganizationPackage.METADATA: return createMetadata();
+			case OrganizationPackage.META_DATAS_TYPE: return createMetaDatasType();
+			case OrganizationPackage.ORGANIZATION: return createOrganization();
+			case OrganizationPackage.ROLE: return createRole();
+			case OrganizationPackage.ROLES: return createRoles();
+			case OrganizationPackage.USER: return createUser();
+			case OrganizationPackage.USERS: return createUsers();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public ContactData createContactData() {
-        ContactDataImpl contactData = new ContactDataImpl();
-        return contactData;
-    }
+		ContactDataImpl contactData = new ContactDataImpl();
+		return contactData;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public DocumentRoot createDocumentRoot() {
-        DocumentRootImpl documentRoot = new DocumentRootImpl();
-        return documentRoot;
-    }
+		DocumentRootImpl documentRoot = new DocumentRootImpl();
+		return documentRoot;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Group createGroup() {
-        GroupImpl group = new GroupImpl();
-        return group;
-    }
+		GroupImpl group = new GroupImpl();
+		return group;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Groups createGroups() {
-        GroupsImpl groups = new GroupsImpl();
-        return groups;
-    }
+		GroupsImpl groups = new GroupsImpl();
+		return groups;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Membership createMembership() {
-        MembershipImpl membership = new MembershipImpl();
-        return membership;
-    }
+		MembershipImpl membership = new MembershipImpl();
+		return membership;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Memberships createMemberships() {
-        MembershipsImpl memberships = new MembershipsImpl();
-        return memberships;
-    }
+		MembershipsImpl memberships = new MembershipsImpl();
+		return memberships;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Metadata createMetadata() {
-        MetadataImpl metadata = new MetadataImpl();
-        return metadata;
-    }
+		MetadataImpl metadata = new MetadataImpl();
+		return metadata;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public MetaDatasType createMetaDatasType() {
-        MetaDatasTypeImpl metaDatasType = new MetaDatasTypeImpl();
-        return metaDatasType;
-    }
+		MetaDatasTypeImpl metaDatasType = new MetaDatasTypeImpl();
+		return metaDatasType;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Organization createOrganization() {
-        OrganizationImpl organization = new OrganizationImpl();
-        return organization;
-    }
+		OrganizationImpl organization = new OrganizationImpl();
+		return organization;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Role createRole() {
-        RoleImpl role = new RoleImpl();
-        return role;
-    }
+		RoleImpl role = new RoleImpl();
+		return role;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Roles createRoles() {
-        RolesImpl roles = new RolesImpl();
-        return roles;
-    }
+		RolesImpl roles = new RolesImpl();
+		return roles;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public User createUser() {
-        UserImpl user = new UserImpl();
-        return user;
-    }
+		UserImpl user = new UserImpl();
+		return user;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public Users createUsers() {
-        UsersImpl users = new UsersImpl();
-        return users;
-    }
+		UsersImpl users = new UsersImpl();
+		return users;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public OrganizationPackage getOrganizationPackage() {
-        return (OrganizationPackage)getEPackage();
-    }
+		return (OrganizationPackage)getEPackage();
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @deprecated
-     * @generated
-     */
+	 * @deprecated
+	 * @generated
+	 */
 	@Deprecated
 	public static OrganizationPackage getPackage() {
-        return OrganizationPackage.eINSTANCE;
-    }
+		return OrganizationPackage.eINSTANCE;
+	}
 
 } //OrganizationFactoryImpl

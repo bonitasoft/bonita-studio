@@ -50,118 +50,118 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class MembershipsImpl extends EObjectImpl implements Memberships {
 	/**
-     * The cached value of the '{@link #getMembership() <em>Membership</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getMembership() <em>Membership</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getMembership()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMembership()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<Membership> membership;
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	protected MembershipsImpl() {
-        super();
-    }
+		super();
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	protected EClass eStaticClass() {
-        return OrganizationPackage.Literals.MEMBERSHIPS;
-    }
+		return OrganizationPackage.Literals.MEMBERSHIPS;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public EList<Membership> getMembership() {
-        if (membership == null) {
-            membership = new EObjectContainmentEList<Membership>(Membership.class, this, OrganizationPackage.MEMBERSHIPS__MEMBERSHIP);
-        }
-        return membership;
-    }
+		if (membership == null) {
+			membership = new EObjectContainmentEList<Membership>(Membership.class, this, OrganizationPackage.MEMBERSHIPS__MEMBERSHIP);
+		}
+		return membership;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case OrganizationPackage.MEMBERSHIPS__MEMBERSHIP:
-                return ((InternalEList<?>)getMembership()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case OrganizationPackage.MEMBERSHIPS__MEMBERSHIP:
+				return ((InternalEList<?>)getMembership()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case OrganizationPackage.MEMBERSHIPS__MEMBERSHIP:
-                return getMembership();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case OrganizationPackage.MEMBERSHIPS__MEMBERSHIP:
+				return getMembership();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case OrganizationPackage.MEMBERSHIPS__MEMBERSHIP:
-                getMembership().clear();
-                getMembership().addAll((Collection<? extends Membership>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case OrganizationPackage.MEMBERSHIPS__MEMBERSHIP:
+				getMembership().clear();
+				getMembership().addAll((Collection<? extends Membership>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public void eUnset(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.MEMBERSHIPS__MEMBERSHIP:
-                getMembership().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.MEMBERSHIPS__MEMBERSHIP:
+				getMembership().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.MEMBERSHIPS__MEMBERSHIP:
-                return membership != null && !membership.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.MEMBERSHIPS__MEMBERSHIP:
+				return membership != null && !membership.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //MembershipsImpl

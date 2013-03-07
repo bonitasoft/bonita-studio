@@ -52,6 +52,7 @@
 			<xsd:element minOccurs="0" name="title" type="xsd:string"/>
 			<xsd:element minOccurs="0" name="jobTitle" type="xsd:string"/>
 			<xsd:element minOccurs="0" name="manager" type="xsd:string"/>
+			<xsd:element minOccurs="0" name="enabled" type="xsd:boolean"/>
 			<xsd:element minOccurs="0" name="personalData" type="ContactData"/>
 			<xsd:element minOccurs="0" name="professionalData" type="ContactData"/>
 			<xsd:element minOccurs="0" name="metaDatas">

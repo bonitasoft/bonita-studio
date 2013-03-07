@@ -50,118 +50,118 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class UsersImpl extends EObjectImpl implements Users {
 	/**
-     * The cached value of the '{@link #getUser() <em>User</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getUser() <em>User</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getUser()
-     * @generated
-     * @ordered
-     */
+	 * @see #getUser()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<User> user;
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	protected UsersImpl() {
-        super();
-    }
+		super();
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	protected EClass eStaticClass() {
-        return OrganizationPackage.Literals.USERS;
-    }
+		return OrganizationPackage.Literals.USERS;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public EList<User> getUser() {
-        if (user == null) {
-            user = new EObjectContainmentEList<User>(User.class, this, OrganizationPackage.USERS__USER);
-        }
-        return user;
-    }
+		if (user == null) {
+			user = new EObjectContainmentEList<User>(User.class, this, OrganizationPackage.USERS__USER);
+		}
+		return user;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case OrganizationPackage.USERS__USER:
-                return ((InternalEList<?>)getUser()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case OrganizationPackage.USERS__USER:
+				return ((InternalEList<?>)getUser()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case OrganizationPackage.USERS__USER:
-                return getUser();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case OrganizationPackage.USERS__USER:
+				return getUser();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case OrganizationPackage.USERS__USER:
-                getUser().clear();
-                getUser().addAll((Collection<? extends User>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case OrganizationPackage.USERS__USER:
+				getUser().clear();
+				getUser().addAll((Collection<? extends User>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public void eUnset(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.USERS__USER:
-                getUser().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.USERS__USER:
+				getUser().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.USERS__USER:
-                return user != null && !user.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.USERS__USER:
+				return user != null && !user.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //UsersImpl

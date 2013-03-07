@@ -50,118 +50,118 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class RolesImpl extends EObjectImpl implements Roles {
 	/**
-     * The cached value of the '{@link #getRole() <em>Role</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRole() <em>Role</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getRole()
-     * @generated
-     * @ordered
-     */
+	 * @see #getRole()
+	 * @generated
+	 * @ordered
+	 */
 	protected EList<Role> role;
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	protected RolesImpl() {
-        super();
-    }
+		super();
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	protected EClass eStaticClass() {
-        return OrganizationPackage.Literals.ROLES;
-    }
+		return OrganizationPackage.Literals.ROLES;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public EList<Role> getRole() {
-        if (role == null) {
-            role = new EObjectContainmentEList<Role>(Role.class, this, OrganizationPackage.ROLES__ROLE);
-        }
-        return role;
-    }
+		if (role == null) {
+			role = new EObjectContainmentEList<Role>(Role.class, this, OrganizationPackage.ROLES__ROLE);
+		}
+		return role;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case OrganizationPackage.ROLES__ROLE:
-                return ((InternalEList<?>)getRole()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case OrganizationPackage.ROLES__ROLE:
+				return ((InternalEList<?>)getRole()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case OrganizationPackage.ROLES__ROLE:
-                return getRole();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case OrganizationPackage.ROLES__ROLE:
+				return getRole();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case OrganizationPackage.ROLES__ROLE:
-                getRole().clear();
-                getRole().addAll((Collection<? extends Role>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case OrganizationPackage.ROLES__ROLE:
+				getRole().clear();
+				getRole().addAll((Collection<? extends Role>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public void eUnset(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.ROLES__ROLE:
-                getRole().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.ROLES__ROLE:
+				getRole().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.ROLES__ROLE:
-                return role != null && !role.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.ROLES__ROLE:
+				return role != null && !role.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //RolesImpl

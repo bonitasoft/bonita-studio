@@ -39,20 +39,20 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Groups extends EObject {
 	/**
-     * Returns the value of the '<em><b>Group</b></em>' containment reference list.
-     * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.Group}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Group</b></em>' containment reference list.
+	 * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.Group}.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Group</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Group</em>' containment reference list.
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getGroups_Group()
-     * @model containment="true"
-     *        extendedMetaData="kind='element' name='group'"
-     * @generated
-     */
+	 * @return the value of the '<em>Group</em>' containment reference list.
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getGroups_Group()
+	 * @model containment="true"
+	 *        extendedMetaData="kind='element' name='group'"
+	 * @generated
+	 */
 	EList<Group> getGroup();
 
 } // Groups

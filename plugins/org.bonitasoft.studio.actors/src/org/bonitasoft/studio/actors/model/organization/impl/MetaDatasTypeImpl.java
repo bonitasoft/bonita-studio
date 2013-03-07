@@ -50,118 +50,118 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class MetaDatasTypeImpl extends EObjectImpl implements MetaDatasType {
     /**
-     * The cached value of the '{@link #getMetaData() <em>Meta Data</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getMetaData() <em>Meta Data</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getMetaData()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMetaData()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<Metadata> metaData;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected MetaDatasTypeImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return OrganizationPackage.Literals.META_DATAS_TYPE;
-    }
+		return OrganizationPackage.Literals.META_DATAS_TYPE;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<Metadata> getMetaData() {
-        if (metaData == null) {
-            metaData = new EObjectContainmentEList<Metadata>(Metadata.class, this, OrganizationPackage.META_DATAS_TYPE__META_DATA);
-        }
-        return metaData;
-    }
+		if (metaData == null) {
+			metaData = new EObjectContainmentEList<Metadata>(Metadata.class, this, OrganizationPackage.META_DATAS_TYPE__META_DATA);
+		}
+		return metaData;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case OrganizationPackage.META_DATAS_TYPE__META_DATA:
-                return ((InternalEList<?>)getMetaData()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case OrganizationPackage.META_DATAS_TYPE__META_DATA:
+				return ((InternalEList<?>)getMetaData()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case OrganizationPackage.META_DATAS_TYPE__META_DATA:
-                return getMetaData();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case OrganizationPackage.META_DATAS_TYPE__META_DATA:
+				return getMetaData();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case OrganizationPackage.META_DATAS_TYPE__META_DATA:
-                getMetaData().clear();
-                getMetaData().addAll((Collection<? extends Metadata>)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case OrganizationPackage.META_DATAS_TYPE__META_DATA:
+				getMetaData().clear();
+				getMetaData().addAll((Collection<? extends Metadata>)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.META_DATAS_TYPE__META_DATA:
-                getMetaData().clear();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.META_DATAS_TYPE__META_DATA:
+				getMetaData().clear();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.META_DATAS_TYPE__META_DATA:
-                return metaData != null && !metaData.isEmpty();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.META_DATAS_TYPE__META_DATA:
+				return metaData != null && !metaData.isEmpty();
+		}
+		return super.eIsSet(featureID);
+	}
 
 } //MetaDatasTypeImpl

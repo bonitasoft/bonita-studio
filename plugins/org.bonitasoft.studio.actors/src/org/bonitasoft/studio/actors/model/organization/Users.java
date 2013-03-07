@@ -39,20 +39,20 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Users extends EObject {
 	/**
-     * Returns the value of the '<em><b>User</b></em>' containment reference list.
-     * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.User}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>User</b></em>' containment reference list.
+	 * The list contents are of type {@link org.bonitasoft.studio.actors.model.organization.User}.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>User</em>' containment reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>User</em>' containment reference list.
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getUsers_User()
-     * @model containment="true" required="true"
-     *        extendedMetaData="kind='element' name='user'"
-     * @generated
-     */
+	 * @return the value of the '<em>User</em>' containment reference list.
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getUsers_User()
+	 * @model containment="true" required="true"
+	 *        extendedMetaData="kind='element' name='user'"
+	 * @generated
+	 */
 	EList<User> getUser();
 
 } // Users

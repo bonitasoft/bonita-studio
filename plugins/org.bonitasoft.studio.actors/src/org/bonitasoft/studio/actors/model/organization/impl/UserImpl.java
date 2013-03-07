@@ -58,6 +58,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getProfessionalData <em>Professional Data</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getMetaDatas <em>Meta Datas</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getUserName <em>User Name</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#isEnabled <em>Enabled</em>}</li>
  * </ul>
  * </p>
  *
@@ -65,769 +66,856 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class UserImpl extends EObjectImpl implements User {
 	/**
-     * The default value of the '{@link #getPassword() <em>Password</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getPassword() <em>Password</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getPassword()
-     * @generated
-     * @ordered
-     */
+	 * @see #getPassword()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String PASSWORD_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getPassword() <em>Password</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getPassword() <em>Password</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getPassword()
-     * @generated
-     * @ordered
-     */
+	 * @see #getPassword()
+	 * @generated
+	 * @ordered
+	 */
 	protected String password = PASSWORD_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getFirstName() <em>First Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getFirstName() <em>First Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getFirstName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getFirstName()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String FIRST_NAME_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getFirstName() <em>First Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getFirstName() <em>First Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getFirstName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getFirstName()
+	 * @generated
+	 * @ordered
+	 */
 	protected String firstName = FIRST_NAME_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getLastName() <em>Last Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getLastName() <em>Last Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getLastName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getLastName()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String LAST_NAME_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getLastName() <em>Last Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getLastName() <em>Last Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getLastName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getLastName()
+	 * @generated
+	 * @ordered
+	 */
 	protected String lastName = LAST_NAME_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getIconName() <em>Icon Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getIconName() <em>Icon Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getIconName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getIconName()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String ICON_NAME_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getIconName() <em>Icon Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getIconName() <em>Icon Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getIconName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getIconName()
+	 * @generated
+	 * @ordered
+	 */
 	protected String iconName = ICON_NAME_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getIconPath() <em>Icon Path</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getIconPath() <em>Icon Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getIconPath()
-     * @generated
-     * @ordered
-     */
+	 * @see #getIconPath()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String ICON_PATH_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getIconPath() <em>Icon Path</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getIconPath() <em>Icon Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getIconPath()
-     * @generated
-     * @ordered
-     */
+	 * @see #getIconPath()
+	 * @generated
+	 * @ordered
+	 */
 	protected String iconPath = ICON_PATH_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getTitle() <em>Title</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getTitle() <em>Title</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getTitle()
-     * @generated
-     * @ordered
-     */
+	 * @see #getTitle()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String TITLE_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getTitle() <em>Title</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getTitle()
-     * @generated
-     * @ordered
-     */
+	 * @see #getTitle()
+	 * @generated
+	 * @ordered
+	 */
 	protected String title = TITLE_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getJobTitle() <em>Job Title</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getJobTitle() <em>Job Title</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getJobTitle()
-     * @generated
-     * @ordered
-     */
+	 * @see #getJobTitle()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String JOB_TITLE_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getJobTitle() <em>Job Title</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getJobTitle() <em>Job Title</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getJobTitle()
-     * @generated
-     * @ordered
-     */
+	 * @see #getJobTitle()
+	 * @generated
+	 * @ordered
+	 */
 	protected String jobTitle = JOB_TITLE_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getManager() <em>Manager</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getManager() <em>Manager</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getManager()
-     * @generated
-     * @ordered
-     */
+	 * @see #getManager()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String MANAGER_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getManager() <em>Manager</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getManager() <em>Manager</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getManager()
-     * @generated
-     * @ordered
-     */
+	 * @see #getManager()
+	 * @generated
+	 * @ordered
+	 */
 	protected String manager = MANAGER_EDEFAULT;
 
 	/**
-     * The cached value of the '{@link #getPersonalData() <em>Personal Data</em>}' containment reference.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getPersonalData() <em>Personal Data</em>}' containment reference.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getPersonalData()
-     * @generated
-     * @ordered
-     */
+	 * @see #getPersonalData()
+	 * @generated
+	 * @ordered
+	 */
 	protected ContactData personalData;
 
 	/**
-     * The cached value of the '{@link #getProfessionalData() <em>Professional Data</em>}' containment reference.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getProfessionalData() <em>Professional Data</em>}' containment reference.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getProfessionalData()
-     * @generated
-     * @ordered
-     */
+	 * @see #getProfessionalData()
+	 * @generated
+	 * @ordered
+	 */
 	protected ContactData professionalData;
 
 	/**
-     * The cached value of the '{@link #getMetaDatas() <em>Meta Datas</em>}' containment reference.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getMetaDatas() <em>Meta Datas</em>}' containment reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getMetaDatas()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMetaDatas()
+	 * @generated
+	 * @ordered
+	 */
     protected MetaDatasType metaDatas;
 
     /**
-     * The default value of the '{@link #getUserName() <em>User Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getUserName() <em>User Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getUserName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getUserName()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String USER_NAME_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getUserName() <em>User Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getUserName() <em>User Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getUserName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getUserName()
+	 * @generated
+	 * @ordered
+	 */
 	protected String userName = USER_NAME_EDEFAULT;
 
 	/**
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #isEnabled() <em>Enabled</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
-	protected UserImpl() {
-        super();
-    }
+	 * @see #isEnabled()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean ENABLED_EDEFAULT = false;
 
 	/**
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isEnabled() <em>Enabled</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @see #isEnabled()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean enabled = ENABLED_EDEFAULT;
+
+	/**
+	 * This is true if the Enabled attribute has been set.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean enabledESet;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected UserImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	protected EClass eStaticClass() {
-        return OrganizationPackage.Literals.USER;
-    }
+		return OrganizationPackage.Literals.USER;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getPassword() {
-        return password;
-    }
+		return password;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setPassword(String newPassword) {
-        String oldPassword = password;
-        password = newPassword;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PASSWORD, oldPassword, password));
-    }
+		String oldPassword = password;
+		password = newPassword;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PASSWORD, oldPassword, password));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getFirstName() {
-        return firstName;
-    }
+		return firstName;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setFirstName(String newFirstName) {
-        String oldFirstName = firstName;
-        firstName = newFirstName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__FIRST_NAME, oldFirstName, firstName));
-    }
+		String oldFirstName = firstName;
+		firstName = newFirstName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__FIRST_NAME, oldFirstName, firstName));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getLastName() {
-        return lastName;
-    }
+		return lastName;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setLastName(String newLastName) {
-        String oldLastName = lastName;
-        lastName = newLastName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__LAST_NAME, oldLastName, lastName));
-    }
+		String oldLastName = lastName;
+		lastName = newLastName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__LAST_NAME, oldLastName, lastName));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getIconName() {
-        return iconName;
-    }
+		return iconName;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setIconName(String newIconName) {
-        String oldIconName = iconName;
-        iconName = newIconName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__ICON_NAME, oldIconName, iconName));
-    }
+		String oldIconName = iconName;
+		iconName = newIconName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__ICON_NAME, oldIconName, iconName));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getIconPath() {
-        return iconPath;
-    }
+		return iconPath;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setIconPath(String newIconPath) {
-        String oldIconPath = iconPath;
-        iconPath = newIconPath;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__ICON_PATH, oldIconPath, iconPath));
-    }
+		String oldIconPath = iconPath;
+		iconPath = newIconPath;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__ICON_PATH, oldIconPath, iconPath));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getTitle() {
-        return title;
-    }
+		return title;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setTitle(String newTitle) {
-        String oldTitle = title;
-        title = newTitle;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__TITLE, oldTitle, title));
-    }
+		String oldTitle = title;
+		title = newTitle;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__TITLE, oldTitle, title));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getJobTitle() {
-        return jobTitle;
-    }
+		return jobTitle;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setJobTitle(String newJobTitle) {
-        String oldJobTitle = jobTitle;
-        jobTitle = newJobTitle;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__JOB_TITLE, oldJobTitle, jobTitle));
-    }
+		String oldJobTitle = jobTitle;
+		jobTitle = newJobTitle;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__JOB_TITLE, oldJobTitle, jobTitle));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getManager() {
-        return manager;
-    }
+		return manager;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setManager(String newManager) {
-        String oldManager = manager;
-        manager = newManager;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__MANAGER, oldManager, manager));
-    }
+		String oldManager = manager;
+		manager = newManager;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__MANAGER, oldManager, manager));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public ContactData getPersonalData() {
-        return personalData;
-    }
+		return personalData;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public NotificationChain basicSetPersonalData(ContactData newPersonalData, NotificationChain msgs) {
-        ContactData oldPersonalData = personalData;
-        personalData = newPersonalData;
-        if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PERSONAL_DATA, oldPersonalData, newPersonalData);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
-        }
-        return msgs;
-    }
+		ContactData oldPersonalData = personalData;
+		personalData = newPersonalData;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PERSONAL_DATA, oldPersonalData, newPersonalData);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setPersonalData(ContactData newPersonalData) {
-        if (newPersonalData != personalData) {
-            NotificationChain msgs = null;
-            if (personalData != null)
-                msgs = ((InternalEObject)personalData).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PERSONAL_DATA, null, msgs);
-            if (newPersonalData != null)
-                msgs = ((InternalEObject)newPersonalData).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PERSONAL_DATA, null, msgs);
-            msgs = basicSetPersonalData(newPersonalData, msgs);
-            if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PERSONAL_DATA, newPersonalData, newPersonalData));
-    }
+		if (newPersonalData != personalData) {
+			NotificationChain msgs = null;
+			if (personalData != null)
+				msgs = ((InternalEObject)personalData).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PERSONAL_DATA, null, msgs);
+			if (newPersonalData != null)
+				msgs = ((InternalEObject)newPersonalData).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PERSONAL_DATA, null, msgs);
+			msgs = basicSetPersonalData(newPersonalData, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PERSONAL_DATA, newPersonalData, newPersonalData));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public ContactData getProfessionalData() {
-        return professionalData;
-    }
+		return professionalData;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public NotificationChain basicSetProfessionalData(ContactData newProfessionalData, NotificationChain msgs) {
-        ContactData oldProfessionalData = professionalData;
-        professionalData = newProfessionalData;
-        if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PROFESSIONAL_DATA, oldProfessionalData, newProfessionalData);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
-        }
-        return msgs;
-    }
+		ContactData oldProfessionalData = professionalData;
+		professionalData = newProfessionalData;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PROFESSIONAL_DATA, oldProfessionalData, newProfessionalData);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setProfessionalData(ContactData newProfessionalData) {
-        if (newProfessionalData != professionalData) {
-            NotificationChain msgs = null;
-            if (professionalData != null)
-                msgs = ((InternalEObject)professionalData).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PROFESSIONAL_DATA, null, msgs);
-            if (newProfessionalData != null)
-                msgs = ((InternalEObject)newProfessionalData).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PROFESSIONAL_DATA, null, msgs);
-            msgs = basicSetProfessionalData(newProfessionalData, msgs);
-            if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PROFESSIONAL_DATA, newProfessionalData, newProfessionalData));
-    }
+		if (newProfessionalData != professionalData) {
+			NotificationChain msgs = null;
+			if (professionalData != null)
+				msgs = ((InternalEObject)professionalData).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PROFESSIONAL_DATA, null, msgs);
+			if (newProfessionalData != null)
+				msgs = ((InternalEObject)newProfessionalData).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PROFESSIONAL_DATA, null, msgs);
+			msgs = basicSetProfessionalData(newProfessionalData, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PROFESSIONAL_DATA, newProfessionalData, newProfessionalData));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public MetaDatasType getMetaDatas() {
-        return metaDatas;
-    }
+		return metaDatas;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public NotificationChain basicSetMetaDatas(MetaDatasType newMetaDatas, NotificationChain msgs) {
-        MetaDatasType oldMetaDatas = metaDatas;
-        metaDatas = newMetaDatas;
-        if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__META_DATAS, oldMetaDatas, newMetaDatas);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
-        }
-        return msgs;
-    }
+		MetaDatasType oldMetaDatas = metaDatas;
+		metaDatas = newMetaDatas;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__META_DATAS, oldMetaDatas, newMetaDatas);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setMetaDatas(MetaDatasType newMetaDatas) {
-        if (newMetaDatas != metaDatas) {
-            NotificationChain msgs = null;
-            if (metaDatas != null)
-                msgs = ((InternalEObject)metaDatas).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__META_DATAS, null, msgs);
-            if (newMetaDatas != null)
-                msgs = ((InternalEObject)newMetaDatas).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__META_DATAS, null, msgs);
-            msgs = basicSetMetaDatas(newMetaDatas, msgs);
-            if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__META_DATAS, newMetaDatas, newMetaDatas));
-    }
+		if (newMetaDatas != metaDatas) {
+			NotificationChain msgs = null;
+			if (metaDatas != null)
+				msgs = ((InternalEObject)metaDatas).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__META_DATAS, null, msgs);
+			if (newMetaDatas != null)
+				msgs = ((InternalEObject)newMetaDatas).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__META_DATAS, null, msgs);
+			msgs = basicSetMetaDatas(newMetaDatas, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__META_DATAS, newMetaDatas, newMetaDatas));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getUserName() {
-        return userName;
-    }
+		return userName;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setUserName(String newUserName) {
-        String oldUserName = userName;
-        userName = newUserName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__USER_NAME, oldUserName, userName));
-    }
+		String oldUserName = userName;
+		userName = newUserName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__USER_NAME, oldUserName, userName));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setEnabled(boolean newEnabled) {
+		boolean oldEnabled = enabled;
+		enabled = newEnabled;
+		boolean oldEnabledESet = enabledESet;
+		enabledESet = true;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__ENABLED, oldEnabled, enabled, !oldEnabledESet));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void unsetEnabled() {
+		boolean oldEnabled = enabled;
+		boolean oldEnabledESet = enabledESet;
+		enabled = ENABLED_EDEFAULT;
+		enabledESet = false;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.UNSET, OrganizationPackage.USER__ENABLED, oldEnabled, ENABLED_EDEFAULT, oldEnabledESet));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isSetEnabled() {
+		return enabledESet;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case OrganizationPackage.USER__PERSONAL_DATA:
-                return basicSetPersonalData(null, msgs);
-            case OrganizationPackage.USER__PROFESSIONAL_DATA:
-                return basicSetProfessionalData(null, msgs);
-            case OrganizationPackage.USER__META_DATAS:
-                return basicSetMetaDatas(null, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case OrganizationPackage.USER__PERSONAL_DATA:
+				return basicSetPersonalData(null, msgs);
+			case OrganizationPackage.USER__PROFESSIONAL_DATA:
+				return basicSetProfessionalData(null, msgs);
+			case OrganizationPackage.USER__META_DATAS:
+				return basicSetMetaDatas(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case OrganizationPackage.USER__PASSWORD:
-                return getPassword();
-            case OrganizationPackage.USER__FIRST_NAME:
-                return getFirstName();
-            case OrganizationPackage.USER__LAST_NAME:
-                return getLastName();
-            case OrganizationPackage.USER__ICON_NAME:
-                return getIconName();
-            case OrganizationPackage.USER__ICON_PATH:
-                return getIconPath();
-            case OrganizationPackage.USER__TITLE:
-                return getTitle();
-            case OrganizationPackage.USER__JOB_TITLE:
-                return getJobTitle();
-            case OrganizationPackage.USER__MANAGER:
-                return getManager();
-            case OrganizationPackage.USER__PERSONAL_DATA:
-                return getPersonalData();
-            case OrganizationPackage.USER__PROFESSIONAL_DATA:
-                return getProfessionalData();
-            case OrganizationPackage.USER__META_DATAS:
-                return getMetaDatas();
-            case OrganizationPackage.USER__USER_NAME:
-                return getUserName();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case OrganizationPackage.USER__PASSWORD:
+				return getPassword();
+			case OrganizationPackage.USER__FIRST_NAME:
+				return getFirstName();
+			case OrganizationPackage.USER__LAST_NAME:
+				return getLastName();
+			case OrganizationPackage.USER__ICON_NAME:
+				return getIconName();
+			case OrganizationPackage.USER__ICON_PATH:
+				return getIconPath();
+			case OrganizationPackage.USER__TITLE:
+				return getTitle();
+			case OrganizationPackage.USER__JOB_TITLE:
+				return getJobTitle();
+			case OrganizationPackage.USER__MANAGER:
+				return getManager();
+			case OrganizationPackage.USER__PERSONAL_DATA:
+				return getPersonalData();
+			case OrganizationPackage.USER__PROFESSIONAL_DATA:
+				return getProfessionalData();
+			case OrganizationPackage.USER__META_DATAS:
+				return getMetaDatas();
+			case OrganizationPackage.USER__USER_NAME:
+				return getUserName();
+			case OrganizationPackage.USER__ENABLED:
+				return isEnabled();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case OrganizationPackage.USER__PASSWORD:
-                setPassword((String)newValue);
-                return;
-            case OrganizationPackage.USER__FIRST_NAME:
-                setFirstName((String)newValue);
-                return;
-            case OrganizationPackage.USER__LAST_NAME:
-                setLastName((String)newValue);
-                return;
-            case OrganizationPackage.USER__ICON_NAME:
-                setIconName((String)newValue);
-                return;
-            case OrganizationPackage.USER__ICON_PATH:
-                setIconPath((String)newValue);
-                return;
-            case OrganizationPackage.USER__TITLE:
-                setTitle((String)newValue);
-                return;
-            case OrganizationPackage.USER__JOB_TITLE:
-                setJobTitle((String)newValue);
-                return;
-            case OrganizationPackage.USER__MANAGER:
-                setManager((String)newValue);
-                return;
-            case OrganizationPackage.USER__PERSONAL_DATA:
-                setPersonalData((ContactData)newValue);
-                return;
-            case OrganizationPackage.USER__PROFESSIONAL_DATA:
-                setProfessionalData((ContactData)newValue);
-                return;
-            case OrganizationPackage.USER__META_DATAS:
-                setMetaDatas((MetaDatasType)newValue);
-                return;
-            case OrganizationPackage.USER__USER_NAME:
-                setUserName((String)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case OrganizationPackage.USER__PASSWORD:
+				setPassword((String)newValue);
+				return;
+			case OrganizationPackage.USER__FIRST_NAME:
+				setFirstName((String)newValue);
+				return;
+			case OrganizationPackage.USER__LAST_NAME:
+				setLastName((String)newValue);
+				return;
+			case OrganizationPackage.USER__ICON_NAME:
+				setIconName((String)newValue);
+				return;
+			case OrganizationPackage.USER__ICON_PATH:
+				setIconPath((String)newValue);
+				return;
+			case OrganizationPackage.USER__TITLE:
+				setTitle((String)newValue);
+				return;
+			case OrganizationPackage.USER__JOB_TITLE:
+				setJobTitle((String)newValue);
+				return;
+			case OrganizationPackage.USER__MANAGER:
+				setManager((String)newValue);
+				return;
+			case OrganizationPackage.USER__PERSONAL_DATA:
+				setPersonalData((ContactData)newValue);
+				return;
+			case OrganizationPackage.USER__PROFESSIONAL_DATA:
+				setProfessionalData((ContactData)newValue);
+				return;
+			case OrganizationPackage.USER__META_DATAS:
+				setMetaDatas((MetaDatasType)newValue);
+				return;
+			case OrganizationPackage.USER__USER_NAME:
+				setUserName((String)newValue);
+				return;
+			case OrganizationPackage.USER__ENABLED:
+				setEnabled((Boolean)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public void eUnset(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.USER__PASSWORD:
-                setPassword(PASSWORD_EDEFAULT);
-                return;
-            case OrganizationPackage.USER__FIRST_NAME:
-                setFirstName(FIRST_NAME_EDEFAULT);
-                return;
-            case OrganizationPackage.USER__LAST_NAME:
-                setLastName(LAST_NAME_EDEFAULT);
-                return;
-            case OrganizationPackage.USER__ICON_NAME:
-                setIconName(ICON_NAME_EDEFAULT);
-                return;
-            case OrganizationPackage.USER__ICON_PATH:
-                setIconPath(ICON_PATH_EDEFAULT);
-                return;
-            case OrganizationPackage.USER__TITLE:
-                setTitle(TITLE_EDEFAULT);
-                return;
-            case OrganizationPackage.USER__JOB_TITLE:
-                setJobTitle(JOB_TITLE_EDEFAULT);
-                return;
-            case OrganizationPackage.USER__MANAGER:
-                setManager(MANAGER_EDEFAULT);
-                return;
-            case OrganizationPackage.USER__PERSONAL_DATA:
-                setPersonalData((ContactData)null);
-                return;
-            case OrganizationPackage.USER__PROFESSIONAL_DATA:
-                setProfessionalData((ContactData)null);
-                return;
-            case OrganizationPackage.USER__META_DATAS:
-                setMetaDatas((MetaDatasType)null);
-                return;
-            case OrganizationPackage.USER__USER_NAME:
-                setUserName(USER_NAME_EDEFAULT);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.USER__PASSWORD:
+				setPassword(PASSWORD_EDEFAULT);
+				return;
+			case OrganizationPackage.USER__FIRST_NAME:
+				setFirstName(FIRST_NAME_EDEFAULT);
+				return;
+			case OrganizationPackage.USER__LAST_NAME:
+				setLastName(LAST_NAME_EDEFAULT);
+				return;
+			case OrganizationPackage.USER__ICON_NAME:
+				setIconName(ICON_NAME_EDEFAULT);
+				return;
+			case OrganizationPackage.USER__ICON_PATH:
+				setIconPath(ICON_PATH_EDEFAULT);
+				return;
+			case OrganizationPackage.USER__TITLE:
+				setTitle(TITLE_EDEFAULT);
+				return;
+			case OrganizationPackage.USER__JOB_TITLE:
+				setJobTitle(JOB_TITLE_EDEFAULT);
+				return;
+			case OrganizationPackage.USER__MANAGER:
+				setManager(MANAGER_EDEFAULT);
+				return;
+			case OrganizationPackage.USER__PERSONAL_DATA:
+				setPersonalData((ContactData)null);
+				return;
+			case OrganizationPackage.USER__PROFESSIONAL_DATA:
+				setProfessionalData((ContactData)null);
+				return;
+			case OrganizationPackage.USER__META_DATAS:
+				setMetaDatas((MetaDatasType)null);
+				return;
+			case OrganizationPackage.USER__USER_NAME:
+				setUserName(USER_NAME_EDEFAULT);
+				return;
+			case OrganizationPackage.USER__ENABLED:
+				unsetEnabled();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.USER__PASSWORD:
-                return PASSWORD_EDEFAULT == null ? password != null : !PASSWORD_EDEFAULT.equals(password);
-            case OrganizationPackage.USER__FIRST_NAME:
-                return FIRST_NAME_EDEFAULT == null ? firstName != null : !FIRST_NAME_EDEFAULT.equals(firstName);
-            case OrganizationPackage.USER__LAST_NAME:
-                return LAST_NAME_EDEFAULT == null ? lastName != null : !LAST_NAME_EDEFAULT.equals(lastName);
-            case OrganizationPackage.USER__ICON_NAME:
-                return ICON_NAME_EDEFAULT == null ? iconName != null : !ICON_NAME_EDEFAULT.equals(iconName);
-            case OrganizationPackage.USER__ICON_PATH:
-                return ICON_PATH_EDEFAULT == null ? iconPath != null : !ICON_PATH_EDEFAULT.equals(iconPath);
-            case OrganizationPackage.USER__TITLE:
-                return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
-            case OrganizationPackage.USER__JOB_TITLE:
-                return JOB_TITLE_EDEFAULT == null ? jobTitle != null : !JOB_TITLE_EDEFAULT.equals(jobTitle);
-            case OrganizationPackage.USER__MANAGER:
-                return MANAGER_EDEFAULT == null ? manager != null : !MANAGER_EDEFAULT.equals(manager);
-            case OrganizationPackage.USER__PERSONAL_DATA:
-                return personalData != null;
-            case OrganizationPackage.USER__PROFESSIONAL_DATA:
-                return professionalData != null;
-            case OrganizationPackage.USER__META_DATAS:
-                return metaDatas != null;
-            case OrganizationPackage.USER__USER_NAME:
-                return USER_NAME_EDEFAULT == null ? userName != null : !USER_NAME_EDEFAULT.equals(userName);
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.USER__PASSWORD:
+				return PASSWORD_EDEFAULT == null ? password != null : !PASSWORD_EDEFAULT.equals(password);
+			case OrganizationPackage.USER__FIRST_NAME:
+				return FIRST_NAME_EDEFAULT == null ? firstName != null : !FIRST_NAME_EDEFAULT.equals(firstName);
+			case OrganizationPackage.USER__LAST_NAME:
+				return LAST_NAME_EDEFAULT == null ? lastName != null : !LAST_NAME_EDEFAULT.equals(lastName);
+			case OrganizationPackage.USER__ICON_NAME:
+				return ICON_NAME_EDEFAULT == null ? iconName != null : !ICON_NAME_EDEFAULT.equals(iconName);
+			case OrganizationPackage.USER__ICON_PATH:
+				return ICON_PATH_EDEFAULT == null ? iconPath != null : !ICON_PATH_EDEFAULT.equals(iconPath);
+			case OrganizationPackage.USER__TITLE:
+				return TITLE_EDEFAULT == null ? title != null : !TITLE_EDEFAULT.equals(title);
+			case OrganizationPackage.USER__JOB_TITLE:
+				return JOB_TITLE_EDEFAULT == null ? jobTitle != null : !JOB_TITLE_EDEFAULT.equals(jobTitle);
+			case OrganizationPackage.USER__MANAGER:
+				return MANAGER_EDEFAULT == null ? manager != null : !MANAGER_EDEFAULT.equals(manager);
+			case OrganizationPackage.USER__PERSONAL_DATA:
+				return personalData != null;
+			case OrganizationPackage.USER__PROFESSIONAL_DATA:
+				return professionalData != null;
+			case OrganizationPackage.USER__META_DATAS:
+				return metaDatas != null;
+			case OrganizationPackage.USER__USER_NAME:
+				return USER_NAME_EDEFAULT == null ? userName != null : !USER_NAME_EDEFAULT.equals(userName);
+			case OrganizationPackage.USER__ENABLED:
+				return isSetEnabled();
+		}
+		return super.eIsSet(featureID);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (password: ");
-        result.append(password);
-        result.append(", firstName: ");
-        result.append(firstName);
-        result.append(", lastName: ");
-        result.append(lastName);
-        result.append(", iconName: ");
-        result.append(iconName);
-        result.append(", iconPath: ");
-        result.append(iconPath);
-        result.append(", title: ");
-        result.append(title);
-        result.append(", jobTitle: ");
-        result.append(jobTitle);
-        result.append(", manager: ");
-        result.append(manager);
-        result.append(", userName: ");
-        result.append(userName);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (password: ");
+		result.append(password);
+		result.append(", firstName: ");
+		result.append(firstName);
+		result.append(", lastName: ");
+		result.append(lastName);
+		result.append(", iconName: ");
+		result.append(iconName);
+		result.append(", iconPath: ");
+		result.append(iconPath);
+		result.append(", title: ");
+		result.append(title);
+		result.append(", jobTitle: ");
+		result.append(jobTitle);
+		result.append(", manager: ");
+		result.append(manager);
+		result.append(", userName: ");
+		result.append(userName);
+		result.append(", enabled: ");
+		if (enabledESet) result.append(enabled); else result.append("<unset>");
+		result.append(')');
+		return result.toString();
+	}
 
 } //UserImpl

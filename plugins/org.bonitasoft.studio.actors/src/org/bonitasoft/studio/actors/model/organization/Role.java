@@ -41,138 +41,138 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Role extends EObject {
 	/**
-     * Returns the value of the '<em><b>Display Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Display Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Display Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Display Name</em>' attribute.
-     * @see #setDisplayName(String)
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRole_DisplayName()
-     * @model dataType="org.eclipse.emf.ecore.xml.type.String"
-     *        extendedMetaData="kind='element' name='displayName'"
-     * @generated
-     */
+	 * @return the value of the '<em>Display Name</em>' attribute.
+	 * @see #setDisplayName(String)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRole_DisplayName()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='displayName'"
+	 * @generated
+	 */
 	String getDisplayName();
 
 	/**
-     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Role#getDisplayName <em>Display Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Role#getDisplayName <em>Display Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Display Name</em>' attribute.
-     * @see #getDisplayName()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Display Name</em>' attribute.
+	 * @see #getDisplayName()
+	 * @generated
+	 */
 	void setDisplayName(String value);
 
 	/**
-     * Returns the value of the '<em><b>Description</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Description</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Description</em>' attribute.
-     * @see #setDescription(String)
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRole_Description()
-     * @model dataType="org.eclipse.emf.ecore.xml.type.String"
-     *        extendedMetaData="kind='element' name='description'"
-     * @generated
-     */
+	 * @return the value of the '<em>Description</em>' attribute.
+	 * @see #setDescription(String)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRole_Description()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='description'"
+	 * @generated
+	 */
 	String getDescription();
 
 	/**
-     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Role#getDescription <em>Description</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Role#getDescription <em>Description</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Description</em>' attribute.
-     * @see #getDescription()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Description</em>' attribute.
+	 * @see #getDescription()
+	 * @generated
+	 */
 	void setDescription(String value);
 
 	/**
-     * Returns the value of the '<em><b>Icon Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Icon Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Icon Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Icon Name</em>' attribute.
-     * @see #setIconName(String)
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRole_IconName()
-     * @model dataType="org.eclipse.emf.ecore.xml.type.String"
-     *        extendedMetaData="kind='element' name='iconName'"
-     * @generated
-     */
+	 * @return the value of the '<em>Icon Name</em>' attribute.
+	 * @see #setIconName(String)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRole_IconName()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='iconName'"
+	 * @generated
+	 */
 	String getIconName();
 
 	/**
-     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Role#getIconName <em>Icon Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Role#getIconName <em>Icon Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Icon Name</em>' attribute.
-     * @see #getIconName()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Icon Name</em>' attribute.
+	 * @see #getIconName()
+	 * @generated
+	 */
 	void setIconName(String value);
 
 	/**
-     * Returns the value of the '<em><b>Icon Path</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Icon Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Icon Path</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Icon Path</em>' attribute.
-     * @see #setIconPath(String)
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRole_IconPath()
-     * @model dataType="org.eclipse.emf.ecore.xml.type.String"
-     *        extendedMetaData="kind='element' name='iconPath'"
-     * @generated
-     */
+	 * @return the value of the '<em>Icon Path</em>' attribute.
+	 * @see #setIconPath(String)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRole_IconPath()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='element' name='iconPath'"
+	 * @generated
+	 */
 	String getIconPath();
 
 	/**
-     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Role#getIconPath <em>Icon Path</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Role#getIconPath <em>Icon Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Icon Path</em>' attribute.
-     * @see #getIconPath()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Icon Path</em>' attribute.
+	 * @see #getIconPath()
+	 * @generated
+	 */
 	void setIconPath(String value);
 
 	/**
-     * Returns the value of the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-     * @return the value of the '<em>Name</em>' attribute.
-     * @see #setName(String)
-     * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRole_Name()
-     * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
-     *        extendedMetaData="kind='attribute' name='name'"
-     * @generated
-     */
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getRole_Name()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String" required="true"
+	 *        extendedMetaData="kind='attribute' name='name'"
+	 * @generated
+	 */
 	String getName();
 
 	/**
-     * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Role#getName <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.bonitasoft.studio.actors.model.organization.Role#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Name</em>' attribute.
-     * @see #getName()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
+	 * @generated
+	 */
 	void setName(String value);
 
 } // Role

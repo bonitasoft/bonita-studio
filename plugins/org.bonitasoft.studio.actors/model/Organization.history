@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<history:History xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<history:History xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:history="http://www.eclipse.org/emf/edapt/history/0.3">
   <releases date="2012-12-10T10:29:27.012+0100" label="6.0">
     <changes xsi:type="history:CompositeChange">
@@ -1918,6 +1919,34 @@
         <changes xsi:type="history:Set" element="Organization.ecore#//Users/user/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
             featureName="value" dataValue="user"/>
       </changes>
+    </changes>
+  </releases>
+  <releases date="2013-03-07T11:52:48.595+0100" label="6.0-Beta">
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Create" target="Organization.ecore#//User" referenceName="eStructuralFeatures"
+          element="Organization.ecore#//User/enabled"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//User/enabled"
+          featureName="name" dataValue="enabled"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//User/enabled"
+          featureName="eType" referenceValue="http://www.eclipse.org/emf/2003/XMLType#//Boolean"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//User/enabled"
+          featureName="unsettable" dataValue="true" oldDataValue="false"/>
+      <changes xsi:type="history:Create" target="Organization.ecore#//User/enabled"
+          referenceName="eAnnotations" element="Organization.ecore#//User/enabled/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//User/enabled/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+      <changes xsi:type="history:Create" target="Organization.ecore#//User/enabled/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//User/enabled/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//User/enabled/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+          featureName="key" dataValue="kind"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//User/enabled/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+          featureName="value" dataValue="element"/>
+      <changes xsi:type="history:Create" target="Organization.ecore#//User/enabled/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="Organization.ecore#//User/enabled/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//User/enabled/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+          featureName="key" dataValue="name"/>
+      <changes xsi:type="history:Set" element="Organization.ecore#//User/enabled/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+          featureName="value" dataValue="enabled"/>
     </changes>
   </releases>
   <releases/>

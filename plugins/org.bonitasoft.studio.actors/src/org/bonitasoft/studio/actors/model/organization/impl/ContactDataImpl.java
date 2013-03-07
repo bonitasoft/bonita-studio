@@ -53,720 +53,720 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  */
 public class ContactDataImpl extends EObjectImpl implements ContactData {
 	/**
-     * The default value of the '{@link #getEmail() <em>Email</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getEmail() <em>Email</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getEmail()
-     * @generated
-     * @ordered
-     */
+	 * @see #getEmail()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String EMAIL_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getEmail() <em>Email</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getEmail() <em>Email</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getEmail()
-     * @generated
-     * @ordered
-     */
+	 * @see #getEmail()
+	 * @generated
+	 * @ordered
+	 */
 	protected String email = EMAIL_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getPhoneNumber() <em>Phone Number</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getPhoneNumber() <em>Phone Number</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getPhoneNumber()
-     * @generated
-     * @ordered
-     */
+	 * @see #getPhoneNumber()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String PHONE_NUMBER_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getPhoneNumber() <em>Phone Number</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getPhoneNumber() <em>Phone Number</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getPhoneNumber()
-     * @generated
-     * @ordered
-     */
+	 * @see #getPhoneNumber()
+	 * @generated
+	 * @ordered
+	 */
 	protected String phoneNumber = PHONE_NUMBER_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getMobileNumber() <em>Mobile Number</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getMobileNumber() <em>Mobile Number</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getMobileNumber()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMobileNumber()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String MOBILE_NUMBER_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getMobileNumber() <em>Mobile Number</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getMobileNumber() <em>Mobile Number</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getMobileNumber()
-     * @generated
-     * @ordered
-     */
+	 * @see #getMobileNumber()
+	 * @generated
+	 * @ordered
+	 */
 	protected String mobileNumber = MOBILE_NUMBER_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getFaxNumber() <em>Fax Number</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getFaxNumber() <em>Fax Number</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getFaxNumber()
-     * @generated
-     * @ordered
-     */
+	 * @see #getFaxNumber()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String FAX_NUMBER_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getFaxNumber() <em>Fax Number</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getFaxNumber() <em>Fax Number</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getFaxNumber()
-     * @generated
-     * @ordered
-     */
+	 * @see #getFaxNumber()
+	 * @generated
+	 * @ordered
+	 */
 	protected String faxNumber = FAX_NUMBER_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getBuilding() <em>Building</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getBuilding() <em>Building</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getBuilding()
-     * @generated
-     * @ordered
-     */
+	 * @see #getBuilding()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String BUILDING_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getBuilding() <em>Building</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getBuilding() <em>Building</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getBuilding()
-     * @generated
-     * @ordered
-     */
+	 * @see #getBuilding()
+	 * @generated
+	 * @ordered
+	 */
 	protected String building = BUILDING_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getRoom() <em>Room</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getRoom() <em>Room</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getRoom()
-     * @generated
-     * @ordered
-     */
+	 * @see #getRoom()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String ROOM_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getRoom() <em>Room</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getRoom() <em>Room</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getRoom()
-     * @generated
-     * @ordered
-     */
+	 * @see #getRoom()
+	 * @generated
+	 * @ordered
+	 */
 	protected String room = ROOM_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getAddress() <em>Address</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getAddress() <em>Address</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getAddress()
-     * @generated
-     * @ordered
-     */
+	 * @see #getAddress()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String ADDRESS_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getAddress() <em>Address</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getAddress() <em>Address</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getAddress()
-     * @generated
-     * @ordered
-     */
+	 * @see #getAddress()
+	 * @generated
+	 * @ordered
+	 */
 	protected String address = ADDRESS_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getZipCode() <em>Zip Code</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getZipCode() <em>Zip Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getZipCode()
-     * @generated
-     * @ordered
-     */
+	 * @see #getZipCode()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String ZIP_CODE_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getZipCode() <em>Zip Code</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getZipCode() <em>Zip Code</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getZipCode()
-     * @generated
-     * @ordered
-     */
+	 * @see #getZipCode()
+	 * @generated
+	 * @ordered
+	 */
 	protected String zipCode = ZIP_CODE_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getCity() <em>City</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getCity() <em>City</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getCity()
-     * @generated
-     * @ordered
-     */
+	 * @see #getCity()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String CITY_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getCity() <em>City</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getCity() <em>City</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getCity()
-     * @generated
-     * @ordered
-     */
+	 * @see #getCity()
+	 * @generated
+	 * @ordered
+	 */
 	protected String city = CITY_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getState() <em>State</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getState() <em>State</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getState()
-     * @generated
-     * @ordered
-     */
+	 * @see #getState()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String STATE_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getState() <em>State</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getState() <em>State</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getState()
-     * @generated
-     * @ordered
-     */
+	 * @see #getState()
+	 * @generated
+	 * @ordered
+	 */
 	protected String state = STATE_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getCountry() <em>Country</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getCountry() <em>Country</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getCountry()
-     * @generated
-     * @ordered
-     */
+	 * @see #getCountry()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String COUNTRY_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getCountry() <em>Country</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getCountry() <em>Country</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getCountry()
-     * @generated
-     * @ordered
-     */
+	 * @see #getCountry()
+	 * @generated
+	 * @ordered
+	 */
 	protected String country = COUNTRY_EDEFAULT;
 
 	/**
-     * The default value of the '{@link #getWebsite() <em>Website</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getWebsite() <em>Website</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getWebsite()
-     * @generated
-     * @ordered
-     */
+	 * @see #getWebsite()
+	 * @generated
+	 * @ordered
+	 */
 	protected static final String WEBSITE_EDEFAULT = null;
 
 	/**
-     * The cached value of the '{@link #getWebsite() <em>Website</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getWebsite() <em>Website</em>}' attribute.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @see #getWebsite()
-     * @generated
-     * @ordered
-     */
+	 * @see #getWebsite()
+	 * @generated
+	 * @ordered
+	 */
 	protected String website = WEBSITE_EDEFAULT;
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	protected ContactDataImpl() {
-        super();
-    }
+		super();
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	protected EClass eStaticClass() {
-        return OrganizationPackage.Literals.CONTACT_DATA;
-    }
+		return OrganizationPackage.Literals.CONTACT_DATA;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getEmail() {
-        return email;
-    }
+		return email;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setEmail(String newEmail) {
-        String oldEmail = email;
-        email = newEmail;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__EMAIL, oldEmail, email));
-    }
+		String oldEmail = email;
+		email = newEmail;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__EMAIL, oldEmail, email));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getPhoneNumber() {
-        return phoneNumber;
-    }
+		return phoneNumber;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setPhoneNumber(String newPhoneNumber) {
-        String oldPhoneNumber = phoneNumber;
-        phoneNumber = newPhoneNumber;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__PHONE_NUMBER, oldPhoneNumber, phoneNumber));
-    }
+		String oldPhoneNumber = phoneNumber;
+		phoneNumber = newPhoneNumber;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__PHONE_NUMBER, oldPhoneNumber, phoneNumber));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getMobileNumber() {
-        return mobileNumber;
-    }
+		return mobileNumber;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setMobileNumber(String newMobileNumber) {
-        String oldMobileNumber = mobileNumber;
-        mobileNumber = newMobileNumber;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__MOBILE_NUMBER, oldMobileNumber, mobileNumber));
-    }
+		String oldMobileNumber = mobileNumber;
+		mobileNumber = newMobileNumber;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__MOBILE_NUMBER, oldMobileNumber, mobileNumber));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getFaxNumber() {
-        return faxNumber;
-    }
+		return faxNumber;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setFaxNumber(String newFaxNumber) {
-        String oldFaxNumber = faxNumber;
-        faxNumber = newFaxNumber;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__FAX_NUMBER, oldFaxNumber, faxNumber));
-    }
+		String oldFaxNumber = faxNumber;
+		faxNumber = newFaxNumber;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__FAX_NUMBER, oldFaxNumber, faxNumber));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getBuilding() {
-        return building;
-    }
+		return building;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setBuilding(String newBuilding) {
-        String oldBuilding = building;
-        building = newBuilding;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__BUILDING, oldBuilding, building));
-    }
+		String oldBuilding = building;
+		building = newBuilding;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__BUILDING, oldBuilding, building));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getRoom() {
-        return room;
-    }
+		return room;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setRoom(String newRoom) {
-        String oldRoom = room;
-        room = newRoom;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__ROOM, oldRoom, room));
-    }
+		String oldRoom = room;
+		room = newRoom;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__ROOM, oldRoom, room));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getAddress() {
-        return address;
-    }
+		return address;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setAddress(String newAddress) {
-        String oldAddress = address;
-        address = newAddress;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__ADDRESS, oldAddress, address));
-    }
+		String oldAddress = address;
+		address = newAddress;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__ADDRESS, oldAddress, address));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getZipCode() {
-        return zipCode;
-    }
+		return zipCode;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setZipCode(String newZipCode) {
-        String oldZipCode = zipCode;
-        zipCode = newZipCode;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__ZIP_CODE, oldZipCode, zipCode));
-    }
+		String oldZipCode = zipCode;
+		zipCode = newZipCode;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__ZIP_CODE, oldZipCode, zipCode));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getCity() {
-        return city;
-    }
+		return city;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setCity(String newCity) {
-        String oldCity = city;
-        city = newCity;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__CITY, oldCity, city));
-    }
+		String oldCity = city;
+		city = newCity;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__CITY, oldCity, city));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getState() {
-        return state;
-    }
+		return state;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setState(String newState) {
-        String oldState = state;
-        state = newState;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__STATE, oldState, state));
-    }
+		String oldState = state;
+		state = newState;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__STATE, oldState, state));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getCountry() {
-        return country;
-    }
+		return country;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setCountry(String newCountry) {
-        String oldCountry = country;
-        country = newCountry;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__COUNTRY, oldCountry, country));
-    }
+		String oldCountry = country;
+		country = newCountry;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__COUNTRY, oldCountry, country));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public String getWebsite() {
-        return website;
-    }
+		return website;
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public void setWebsite(String newWebsite) {
-        String oldWebsite = website;
-        website = newWebsite;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__WEBSITE, oldWebsite, website));
-    }
+		String oldWebsite = website;
+		website = newWebsite;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.CONTACT_DATA__WEBSITE, oldWebsite, website));
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case OrganizationPackage.CONTACT_DATA__EMAIL:
-                return getEmail();
-            case OrganizationPackage.CONTACT_DATA__PHONE_NUMBER:
-                return getPhoneNumber();
-            case OrganizationPackage.CONTACT_DATA__MOBILE_NUMBER:
-                return getMobileNumber();
-            case OrganizationPackage.CONTACT_DATA__FAX_NUMBER:
-                return getFaxNumber();
-            case OrganizationPackage.CONTACT_DATA__BUILDING:
-                return getBuilding();
-            case OrganizationPackage.CONTACT_DATA__ROOM:
-                return getRoom();
-            case OrganizationPackage.CONTACT_DATA__ADDRESS:
-                return getAddress();
-            case OrganizationPackage.CONTACT_DATA__ZIP_CODE:
-                return getZipCode();
-            case OrganizationPackage.CONTACT_DATA__CITY:
-                return getCity();
-            case OrganizationPackage.CONTACT_DATA__STATE:
-                return getState();
-            case OrganizationPackage.CONTACT_DATA__COUNTRY:
-                return getCountry();
-            case OrganizationPackage.CONTACT_DATA__WEBSITE:
-                return getWebsite();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case OrganizationPackage.CONTACT_DATA__EMAIL:
+				return getEmail();
+			case OrganizationPackage.CONTACT_DATA__PHONE_NUMBER:
+				return getPhoneNumber();
+			case OrganizationPackage.CONTACT_DATA__MOBILE_NUMBER:
+				return getMobileNumber();
+			case OrganizationPackage.CONTACT_DATA__FAX_NUMBER:
+				return getFaxNumber();
+			case OrganizationPackage.CONTACT_DATA__BUILDING:
+				return getBuilding();
+			case OrganizationPackage.CONTACT_DATA__ROOM:
+				return getRoom();
+			case OrganizationPackage.CONTACT_DATA__ADDRESS:
+				return getAddress();
+			case OrganizationPackage.CONTACT_DATA__ZIP_CODE:
+				return getZipCode();
+			case OrganizationPackage.CONTACT_DATA__CITY:
+				return getCity();
+			case OrganizationPackage.CONTACT_DATA__STATE:
+				return getState();
+			case OrganizationPackage.CONTACT_DATA__COUNTRY:
+				return getCountry();
+			case OrganizationPackage.CONTACT_DATA__WEBSITE:
+				return getWebsite();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case OrganizationPackage.CONTACT_DATA__EMAIL:
-                setEmail((String)newValue);
-                return;
-            case OrganizationPackage.CONTACT_DATA__PHONE_NUMBER:
-                setPhoneNumber((String)newValue);
-                return;
-            case OrganizationPackage.CONTACT_DATA__MOBILE_NUMBER:
-                setMobileNumber((String)newValue);
-                return;
-            case OrganizationPackage.CONTACT_DATA__FAX_NUMBER:
-                setFaxNumber((String)newValue);
-                return;
-            case OrganizationPackage.CONTACT_DATA__BUILDING:
-                setBuilding((String)newValue);
-                return;
-            case OrganizationPackage.CONTACT_DATA__ROOM:
-                setRoom((String)newValue);
-                return;
-            case OrganizationPackage.CONTACT_DATA__ADDRESS:
-                setAddress((String)newValue);
-                return;
-            case OrganizationPackage.CONTACT_DATA__ZIP_CODE:
-                setZipCode((String)newValue);
-                return;
-            case OrganizationPackage.CONTACT_DATA__CITY:
-                setCity((String)newValue);
-                return;
-            case OrganizationPackage.CONTACT_DATA__STATE:
-                setState((String)newValue);
-                return;
-            case OrganizationPackage.CONTACT_DATA__COUNTRY:
-                setCountry((String)newValue);
-                return;
-            case OrganizationPackage.CONTACT_DATA__WEBSITE:
-                setWebsite((String)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case OrganizationPackage.CONTACT_DATA__EMAIL:
+				setEmail((String)newValue);
+				return;
+			case OrganizationPackage.CONTACT_DATA__PHONE_NUMBER:
+				setPhoneNumber((String)newValue);
+				return;
+			case OrganizationPackage.CONTACT_DATA__MOBILE_NUMBER:
+				setMobileNumber((String)newValue);
+				return;
+			case OrganizationPackage.CONTACT_DATA__FAX_NUMBER:
+				setFaxNumber((String)newValue);
+				return;
+			case OrganizationPackage.CONTACT_DATA__BUILDING:
+				setBuilding((String)newValue);
+				return;
+			case OrganizationPackage.CONTACT_DATA__ROOM:
+				setRoom((String)newValue);
+				return;
+			case OrganizationPackage.CONTACT_DATA__ADDRESS:
+				setAddress((String)newValue);
+				return;
+			case OrganizationPackage.CONTACT_DATA__ZIP_CODE:
+				setZipCode((String)newValue);
+				return;
+			case OrganizationPackage.CONTACT_DATA__CITY:
+				setCity((String)newValue);
+				return;
+			case OrganizationPackage.CONTACT_DATA__STATE:
+				setState((String)newValue);
+				return;
+			case OrganizationPackage.CONTACT_DATA__COUNTRY:
+				setCountry((String)newValue);
+				return;
+			case OrganizationPackage.CONTACT_DATA__WEBSITE:
+				setWebsite((String)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public void eUnset(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.CONTACT_DATA__EMAIL:
-                setEmail(EMAIL_EDEFAULT);
-                return;
-            case OrganizationPackage.CONTACT_DATA__PHONE_NUMBER:
-                setPhoneNumber(PHONE_NUMBER_EDEFAULT);
-                return;
-            case OrganizationPackage.CONTACT_DATA__MOBILE_NUMBER:
-                setMobileNumber(MOBILE_NUMBER_EDEFAULT);
-                return;
-            case OrganizationPackage.CONTACT_DATA__FAX_NUMBER:
-                setFaxNumber(FAX_NUMBER_EDEFAULT);
-                return;
-            case OrganizationPackage.CONTACT_DATA__BUILDING:
-                setBuilding(BUILDING_EDEFAULT);
-                return;
-            case OrganizationPackage.CONTACT_DATA__ROOM:
-                setRoom(ROOM_EDEFAULT);
-                return;
-            case OrganizationPackage.CONTACT_DATA__ADDRESS:
-                setAddress(ADDRESS_EDEFAULT);
-                return;
-            case OrganizationPackage.CONTACT_DATA__ZIP_CODE:
-                setZipCode(ZIP_CODE_EDEFAULT);
-                return;
-            case OrganizationPackage.CONTACT_DATA__CITY:
-                setCity(CITY_EDEFAULT);
-                return;
-            case OrganizationPackage.CONTACT_DATA__STATE:
-                setState(STATE_EDEFAULT);
-                return;
-            case OrganizationPackage.CONTACT_DATA__COUNTRY:
-                setCountry(COUNTRY_EDEFAULT);
-                return;
-            case OrganizationPackage.CONTACT_DATA__WEBSITE:
-                setWebsite(WEBSITE_EDEFAULT);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.CONTACT_DATA__EMAIL:
+				setEmail(EMAIL_EDEFAULT);
+				return;
+			case OrganizationPackage.CONTACT_DATA__PHONE_NUMBER:
+				setPhoneNumber(PHONE_NUMBER_EDEFAULT);
+				return;
+			case OrganizationPackage.CONTACT_DATA__MOBILE_NUMBER:
+				setMobileNumber(MOBILE_NUMBER_EDEFAULT);
+				return;
+			case OrganizationPackage.CONTACT_DATA__FAX_NUMBER:
+				setFaxNumber(FAX_NUMBER_EDEFAULT);
+				return;
+			case OrganizationPackage.CONTACT_DATA__BUILDING:
+				setBuilding(BUILDING_EDEFAULT);
+				return;
+			case OrganizationPackage.CONTACT_DATA__ROOM:
+				setRoom(ROOM_EDEFAULT);
+				return;
+			case OrganizationPackage.CONTACT_DATA__ADDRESS:
+				setAddress(ADDRESS_EDEFAULT);
+				return;
+			case OrganizationPackage.CONTACT_DATA__ZIP_CODE:
+				setZipCode(ZIP_CODE_EDEFAULT);
+				return;
+			case OrganizationPackage.CONTACT_DATA__CITY:
+				setCity(CITY_EDEFAULT);
+				return;
+			case OrganizationPackage.CONTACT_DATA__STATE:
+				setState(STATE_EDEFAULT);
+				return;
+			case OrganizationPackage.CONTACT_DATA__COUNTRY:
+				setCountry(COUNTRY_EDEFAULT);
+				return;
+			case OrganizationPackage.CONTACT_DATA__WEBSITE:
+				setWebsite(WEBSITE_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case OrganizationPackage.CONTACT_DATA__EMAIL:
-                return EMAIL_EDEFAULT == null ? email != null : !EMAIL_EDEFAULT.equals(email);
-            case OrganizationPackage.CONTACT_DATA__PHONE_NUMBER:
-                return PHONE_NUMBER_EDEFAULT == null ? phoneNumber != null : !PHONE_NUMBER_EDEFAULT.equals(phoneNumber);
-            case OrganizationPackage.CONTACT_DATA__MOBILE_NUMBER:
-                return MOBILE_NUMBER_EDEFAULT == null ? mobileNumber != null : !MOBILE_NUMBER_EDEFAULT.equals(mobileNumber);
-            case OrganizationPackage.CONTACT_DATA__FAX_NUMBER:
-                return FAX_NUMBER_EDEFAULT == null ? faxNumber != null : !FAX_NUMBER_EDEFAULT.equals(faxNumber);
-            case OrganizationPackage.CONTACT_DATA__BUILDING:
-                return BUILDING_EDEFAULT == null ? building != null : !BUILDING_EDEFAULT.equals(building);
-            case OrganizationPackage.CONTACT_DATA__ROOM:
-                return ROOM_EDEFAULT == null ? room != null : !ROOM_EDEFAULT.equals(room);
-            case OrganizationPackage.CONTACT_DATA__ADDRESS:
-                return ADDRESS_EDEFAULT == null ? address != null : !ADDRESS_EDEFAULT.equals(address);
-            case OrganizationPackage.CONTACT_DATA__ZIP_CODE:
-                return ZIP_CODE_EDEFAULT == null ? zipCode != null : !ZIP_CODE_EDEFAULT.equals(zipCode);
-            case OrganizationPackage.CONTACT_DATA__CITY:
-                return CITY_EDEFAULT == null ? city != null : !CITY_EDEFAULT.equals(city);
-            case OrganizationPackage.CONTACT_DATA__STATE:
-                return STATE_EDEFAULT == null ? state != null : !STATE_EDEFAULT.equals(state);
-            case OrganizationPackage.CONTACT_DATA__COUNTRY:
-                return COUNTRY_EDEFAULT == null ? country != null : !COUNTRY_EDEFAULT.equals(country);
-            case OrganizationPackage.CONTACT_DATA__WEBSITE:
-                return WEBSITE_EDEFAULT == null ? website != null : !WEBSITE_EDEFAULT.equals(website);
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case OrganizationPackage.CONTACT_DATA__EMAIL:
+				return EMAIL_EDEFAULT == null ? email != null : !EMAIL_EDEFAULT.equals(email);
+			case OrganizationPackage.CONTACT_DATA__PHONE_NUMBER:
+				return PHONE_NUMBER_EDEFAULT == null ? phoneNumber != null : !PHONE_NUMBER_EDEFAULT.equals(phoneNumber);
+			case OrganizationPackage.CONTACT_DATA__MOBILE_NUMBER:
+				return MOBILE_NUMBER_EDEFAULT == null ? mobileNumber != null : !MOBILE_NUMBER_EDEFAULT.equals(mobileNumber);
+			case OrganizationPackage.CONTACT_DATA__FAX_NUMBER:
+				return FAX_NUMBER_EDEFAULT == null ? faxNumber != null : !FAX_NUMBER_EDEFAULT.equals(faxNumber);
+			case OrganizationPackage.CONTACT_DATA__BUILDING:
+				return BUILDING_EDEFAULT == null ? building != null : !BUILDING_EDEFAULT.equals(building);
+			case OrganizationPackage.CONTACT_DATA__ROOM:
+				return ROOM_EDEFAULT == null ? room != null : !ROOM_EDEFAULT.equals(room);
+			case OrganizationPackage.CONTACT_DATA__ADDRESS:
+				return ADDRESS_EDEFAULT == null ? address != null : !ADDRESS_EDEFAULT.equals(address);
+			case OrganizationPackage.CONTACT_DATA__ZIP_CODE:
+				return ZIP_CODE_EDEFAULT == null ? zipCode != null : !ZIP_CODE_EDEFAULT.equals(zipCode);
+			case OrganizationPackage.CONTACT_DATA__CITY:
+				return CITY_EDEFAULT == null ? city != null : !CITY_EDEFAULT.equals(city);
+			case OrganizationPackage.CONTACT_DATA__STATE:
+				return STATE_EDEFAULT == null ? state != null : !STATE_EDEFAULT.equals(state);
+			case OrganizationPackage.CONTACT_DATA__COUNTRY:
+				return COUNTRY_EDEFAULT == null ? country != null : !COUNTRY_EDEFAULT.equals(country);
+			case OrganizationPackage.CONTACT_DATA__WEBSITE:
+				return WEBSITE_EDEFAULT == null ? website != null : !WEBSITE_EDEFAULT.equals(website);
+		}
+		return super.eIsSet(featureID);
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (email: ");
-        result.append(email);
-        result.append(", phoneNumber: ");
-        result.append(phoneNumber);
-        result.append(", mobileNumber: ");
-        result.append(mobileNumber);
-        result.append(", faxNumber: ");
-        result.append(faxNumber);
-        result.append(", building: ");
-        result.append(building);
-        result.append(", room: ");
-        result.append(room);
-        result.append(", address: ");
-        result.append(address);
-        result.append(", zipCode: ");
-        result.append(zipCode);
-        result.append(", city: ");
-        result.append(city);
-        result.append(", state: ");
-        result.append(state);
-        result.append(", country: ");
-        result.append(country);
-        result.append(", website: ");
-        result.append(website);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (email: ");
+		result.append(email);
+		result.append(", phoneNumber: ");
+		result.append(phoneNumber);
+		result.append(", mobileNumber: ");
+		result.append(mobileNumber);
+		result.append(", faxNumber: ");
+		result.append(faxNumber);
+		result.append(", building: ");
+		result.append(building);
+		result.append(", room: ");
+		result.append(room);
+		result.append(", address: ");
+		result.append(address);
+		result.append(", zipCode: ");
+		result.append(zipCode);
+		result.append(", city: ");
+		result.append(city);
+		result.append(", state: ");
+		result.append(state);
+		result.append(", country: ");
+		result.append(country);
+		result.append(", website: ");
+		result.append(website);
+		result.append(')');
+		return result.toString();
+	}
 
 } //ContactDataImpl
