@@ -295,7 +295,7 @@
                 <showProgressDialog>
                     <title>${msg(workspace.setup)}</title>
                     <height>75</height>
-                    <width>400</width>
+                    <width>500</width>
                     <actionList>
                         <runProgram>
                             <program>${java_executable}</program>
