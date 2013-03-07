@@ -18,6 +18,7 @@ package org.bonitasoft.studio.validation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -85,13 +86,17 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 //				}
 
 				if(!toValidate.isEmpty()){
-					Diagram d = toValidate.iterator().next();
-					DiagramEditPart de = getDiagramEditPart(d);
-					EObject resolvedSemanticElement = de.resolveSemanticElement();
-					if(resolvedSemanticElement instanceof Form){
-						IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
-						if (target != null) {
-							ProcessMarkerNavigationProvider.deleteMarkers(target);
+					Iterator<Diagram> it = toValidate.iterator();
+					while( it.hasNext() ){
+						Diagram d = it.next();
+						DiagramEditPart de = getDiagramEditPart(d);
+						EObject resolvedSemanticElement = de.resolveSemanticElement();
+						if(resolvedSemanticElement instanceof Form){
+							IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
+							if (target != null) {
+								ProcessMarkerNavigationProvider.deleteMarkers(target);
+								break;
+							}
 						}
 					}
 				}
