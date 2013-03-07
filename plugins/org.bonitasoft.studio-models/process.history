@@ -7539,6 +7539,10 @@
         </changes>
       </changes>
     </changes>
+    <changes xsi:type="history:CompositeChange">
+      <changes xsi:type="history:Set" element="form.ecore#//Widget/returnTypeModifier"
+          featureName="defaultValueLiteral" dataValue="java.lang.String"/>
+    </changes>
   </releases>
   <releases/>
 </history:History>
