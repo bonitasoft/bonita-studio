@@ -44,7 +44,7 @@ public class CustomIntermediateErrorCatchEvent2EditPart extends
 	 */
 	@Override
 	protected NodeFigure createNodePlate() {
-		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(FiguresHelper.EVENT_WIDTH, FiguresHelper.EVENT_WIDTH) {
+		DefaultSizeNodeFigure result = new DefaultSizeNodeFigure(FiguresHelper.BOUNDARY_EVENT_WIDTH, FiguresHelper.BOUNDARY_EVENT_WIDTH) {
 			public PointList getPolygonPoints() {
 				Rectangle anchRect = getHandleBounds();
 				return FiguresHelper.CirclePointList(anchRect);
