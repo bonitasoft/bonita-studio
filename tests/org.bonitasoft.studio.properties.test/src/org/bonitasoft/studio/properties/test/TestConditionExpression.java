@@ -86,17 +86,17 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		Point p1 = getLeftExpressionColumnLength(condition);
 		StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p1.x);
 		if (leftError){
-			assertTrue(unvalidErrorMessage,styles.underline);
+			assertTrue(unvalidErrorMessage+" expression = "+condition,styles.underline);
 		} else {
-			assertFalse(validErrorMessage,styles.underline);
+			assertFalse(validErrorMessage+" expression = "+condition,styles.underline);
 		}
 		Point p2 = getRighExpressionColumnLength(condition);
 		bot.sleep(500);
 		styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p2.x);
 		if (rightError){
-			assertTrue(unvalidErrorMessage,styles.underline);
+			assertTrue(unvalidErrorMessage+" expression = "+condition,styles.underline);
 		} else {
-			assertFalse(validErrorMessage,styles.underline);
+			assertFalse(validErrorMessage+" expression = "+condition,styles.underline);
 		}
 		bot.button(IDialogConstants.CANCEL_LABEL).click(); 
 	}
@@ -110,7 +110,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		bot.sleep(500);
 		styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p2.x);
 		bot.button(IDialogConstants.OK_LABEL).click();
-		assertFalse(validErrorMessage,styles.underline);
+		assertFalse(validErrorMessage+" expression = "+condition,styles.underline);
 	}
 
 
