@@ -17,29 +17,69 @@
 package org.bonitasoft.studio.expression.editor.provider;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.expression.editor.i18n.Messages;
+
+import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class ExpressionTypeLabelProvider extends LabelProvider implements ExpressionConstants{
+public class ExpressionTypeLabelProvider extends CellLabelProvider{
 
-	@Override
+	
 	public String getText(Object element) {
 		if(element instanceof IExpressionProvider){
 			return ((IExpressionProvider)element).getTypeLabel() ;
 		}
-		return super.getText(element);
+		return null;
 	}
 	
-	@Override
+	
 	public Image getImage(Object element) {
 		if(element instanceof IExpressionProvider){
 			return ((IExpressionProvider)element).getTypeIcon() ;
 		}
-		return super.getImage(element);
+		return null;
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.CellLabelProvider#update(org.eclipse.jface.viewers.ViewerCell)
+	 */
+	@Override
+	public void update(ViewerCell cell) {
+		cell.setText(getText(cell.getElement()));
+		cell.setImage(getImage(cell.getElement()));
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
+	 */
+	@Override
+	public String getToolTipText(Object element) {
+		if (element instanceof IExpressionProvider){
+			return Messages.bind(Messages.expressionTypeToolTip, getText(element));
+		}
+		return super.getToolTipText(element);
+	}
+	
+	  @Override
+	  public Point getToolTipShift(Object object) {
+	    return new Point(5, 5);
+	  }
+
+	  @Override
+	  public int getToolTipDisplayDelayTime(Object object) {
+	    return 50; //msec
+	  }
+
+	  @Override
+	  public int getToolTipTimeDisplayed(Object object) {
+	    return 5000; //msec
+	  }
 	
 }
