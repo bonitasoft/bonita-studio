@@ -15,6 +15,7 @@ import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.DoubleType;
+import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.FloatType;
 import org.bonitasoft.studio.model.process.IntegerType;
 import org.bonitasoft.studio.model.process.JavaObjectData;
@@ -155,6 +156,9 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
 				}
 				if (type instanceof LongType){
 					return ConditionModelPackage.Literals.EXPRESSION_INTEGER.getName();
+				}
+				if (type instanceof EnumType){
+					return ConditionModelPackage.Literals.EXPRESSION_STRING.getName();
 				}
 			}else if(data instanceof Parameter){
 				String type = ((Parameter) data).getTypeClassname();
