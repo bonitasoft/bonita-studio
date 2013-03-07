@@ -21,7 +21,9 @@ import org.bonitasoft.studio.diagram.test.TestMoveBetweenLane;
 import org.bonitasoft.studio.diagram.test.TestSave;
 import org.bonitasoft.studio.engine.test.bar.BarExporterTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNConnectorExportImportTest;
+import org.bonitasoft.studio.exporter.tests.bpmn.BPMNEventSubProcessExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNExportTests;
+import org.bonitasoft.studio.exporter.tests.bpmn.BPMNGatewayExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowDefaultFlowExportImportTest;
 import org.bonitasoft.studio.groovy.tests.TestBonitaGroovyEditorDialog;
 import org.bonitasoft.studio.migration.tests.MigrationReporTest;
@@ -89,6 +91,8 @@ import org.junit.runners.Suite;
     TestConnectorExpression.class,
     TestMultiInstantiation.class,
     BPMNConnectorExportImportTest.class,
+    BPMNGatewayExportImportTest.class,
+    BPMNEventSubProcessExportImportTest.class,
     BarExporterTest.class,
     TestRunWithDocument.class,
     DuplicateCommandTest.class,
