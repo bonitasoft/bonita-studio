@@ -643,7 +643,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 	
 	
 	public static StyleRange getTextStyleInEditExpressionDialog(SWTGefBot bot,String expressionType, int line,int column){
-	    bot.sleep(1000);
+	    bot.sleep(1500);
 		return bot.styledText().getStyle(line,column);
 	}
 	
