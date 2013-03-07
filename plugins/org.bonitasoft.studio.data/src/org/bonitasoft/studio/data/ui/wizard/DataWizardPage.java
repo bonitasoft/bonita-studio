@@ -446,17 +446,24 @@ public class DataWizardPage extends WizardPage {
 		final IObservableValue interpreterObservable = EMFObservables.observeValue( data.getDefaultValue(), ExpressionPackage.Literals.EXPRESSION__INTERPRETER);
 		startegy.setConverter(new Converter(Boolean.class,String.class){
 
+			private Object previousExpressionType;
+
 			@Override
 			public Object convert(Object input) {
 				if((Boolean)input){
+					previousExpressionType = typeObservable.getValue();
 					typeObservable.setValue(ExpressionConstants.SCRIPT_TYPE);
 					interpreterObservable.setValue(ExpressionConstants.GROOVY);
 					defaultValueViewer.refresh();
 					return multipleReturnType;
 				}else{
-					typeObservable.setValue(ExpressionConstants.CONSTANT_TYPE);
-					interpreterObservable.setValue(null);
-					defaultValueViewer.refresh();
+					if(previousExpressionType != null){
+						typeObservable.setValue(previousExpressionType);
+						if(!ExpressionConstants.SCRIPT_TYPE.equals(previousExpressionType)){
+							interpreterObservable.setValue(null);
+						}
+						defaultValueViewer.refresh();
+					}
 					return getSelectedReturnType();
 				}
 			}
