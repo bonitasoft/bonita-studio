@@ -129,9 +129,7 @@ public class FlowElementSwitch extends AbstractSwitch {
         SequenceFlowSwitch sequenceFlowSwitch = new SequenceFlowSwitch(subProcessBuilder) ;
         for (SourceElement sourceElement : sourceElements) {
             for (Connection connection : sourceElement.getOutgoing()) {
-            	if(!ModelHelper.isInEvenementialSubProcessPool(connection)){
-            		sequenceFlowSwitch.doSwitch(connection);
-            	}
+            	sequenceFlowSwitch.doSwitch(connection);
             }
         }
 		return subProcessEvent;
