@@ -176,7 +176,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         System.out.println("Table size = "+ table.columnCount()+" x "+table.rowCount());
 
         // Set Description of the new Organisation
-        int idxBonita = table.indexOf("ACME", 0);
+        int idxBonita = table.indexOf("ACME  (active)", 0);
         Assert.assertTrue("Error: No ACME found in the table", idxBonita!=-1);
 
         // go to the next shell
