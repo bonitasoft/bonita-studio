@@ -50,22 +50,20 @@ import org.eclipse.emf.ecore.EObject;
  * @author Romain Bioteau
  *
  */
-public class AbstractProcessSwitch extends AbstractSwitch {
+public abstract class AbstractSwitch extends ProcessSwitch<Element> {
 
-    protected final ProcessDefinitionBuilder builder;
+    protected final Set<EObject> eObjectNotExported;
+  
+    public static final String DB_CONNECTOR_FOR_KPI_ID = "database-jdbc";
+    public static final String DB_CONNECTOR_VERSION = "1.0.0";
+    public static final String DB_DRIVER = "driver";
+    public static final String DB_URL = "url";
+    public static final String DB_QUERY = "script";
+    public static final String DB_USER = "username";
+    public static final String DB_PASSWORD = "password";
 
-    public AbstractProcessSwitch(ProcessDefinitionBuilder processBuilder,Set<EObject> eObjectNotExported){
-    	super(eObjectNotExported);
-        builder = processBuilder ;
-    }
-
-    @Override
-    public Element caseAbstractProcess(AbstractProcess object) {
-        addActors(builder,object);
-        addData(builder,object) ;
-        addConnector(builder, object) ;
-        addKPIBinding(builder, object);
-        return object;
+    public AbstractSwitch(Set<EObject> eObjectNotExported){
+        this.eObjectNotExported = eObjectNotExported ;
     }
 
     protected void addActors(final ProcessDefinitionBuilder builder , final AbstractProcess process) {

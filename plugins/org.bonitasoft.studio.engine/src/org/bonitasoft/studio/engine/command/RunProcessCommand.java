@@ -318,7 +318,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
         }else{
             selectedProcess = getProcessInEditor() ;
             if(selectedProcess instanceof MainProcess){
-                for(EObject p : ModelHelper.getAllItemsOfType(selectedProcess, ProcessPackage.eINSTANCE.getPool())){
+                for(EObject p : ModelHelper.getAllItemsOfType(selectedProcess, ProcessPackage.Literals.POOL)){
                     result.add((AbstractProcess) p) ;
                     Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
                     findCalledProcesses((AbstractProcess) p,calledProcesses);

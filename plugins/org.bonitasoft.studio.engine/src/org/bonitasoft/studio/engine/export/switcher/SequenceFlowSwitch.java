@@ -16,12 +16,11 @@
  */
 package org.bonitasoft.studio.engine.export.switcher;
 
-import org.bonitasoft.engine.bpm.model.ProcessDefinitionBuilder;
+import org.bonitasoft.engine.bpm.model.FlowElementBuilder;
 import org.bonitasoft.studio.decision.core.DecisionTableUtil;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.model.process.ANDGateway;
-import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.SequenceFlow;
@@ -38,86 +37,72 @@ import org.bonitasoft.studio.model.process.util.ProcessSwitch;
  */
 public class SequenceFlowSwitch extends ProcessSwitch<SequenceFlow> {
 
-    private final ProcessDefinitionBuilder builder;
+	private final FlowElementBuilder builder;
 
-    public SequenceFlowSwitch(ProcessDefinitionBuilder processBuilder){
-        builder = processBuilder ;
-    }
+	public SequenceFlowSwitch(FlowElementBuilder processBuilder){
+		builder = processBuilder ;
+	}
 
-    @Override
-    public SequenceFlow caseSequenceFlow(SequenceFlow sequenceFlow) {
-        SourceElement source = sequenceFlow.getSource();
-        TargetElement target = sequenceFlow.getTarget();
+	@Override
+	public SequenceFlow caseSequenceFlow(SequenceFlow sequenceFlow) {
+		SourceElement source = sequenceFlow.getSource();
+		TargetElement target = sequenceFlow.getTarget();
 
-        if(source == null ){
-            throw new RuntimeException("Source of sequenceflow is null") ;
-        }
+		if(source == null ){
+			throw new RuntimeException("Source of sequenceflow is null") ;
+		}
 
-        if( target == null){
-            throw new RuntimeException("Target of sequenceflow is null") ;
-        }
+		if( target == null){
+			throw new RuntimeException("Target of sequenceflow is null") ;
+		}
 
-        String sourceId = source.getName();
-        String targetId = target.getName();
+		String sourceId = source.getName();
+		String targetId = target.getName();
 
+		if(target instanceof ThrowLinkEvent || source instanceof CatchLinkEvent){/*link with catch or throw link event*/
+			addLinkEvents(builder, sequenceFlow);
+		} else {
+			if(!(source instanceof ANDGateway)){
+				if(sequenceFlow.getConditionType() == SequenceFlowConditionType.EXPRESSION && sequenceFlow.getCondition() != null
+						&& sequenceFlow.getCondition().getContent() != null && !sequenceFlow.getCondition().getContent().isEmpty()){
+					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(sequenceFlow.getCondition()));
+				}else if(sequenceFlow.getConditionType() == SequenceFlowConditionType.DECISION_TABLE){
+					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(DecisionTableUtil.toGroovyScriptExpression(sequenceFlow.getDecisionTable())));
+				}else if(sequenceFlow.isIsDefault()){
+					builder.addDefaultTransition(sourceId, targetId);
+				} else{
+					builder.addTransition(sourceId, targetId);
+				}
+			}else{
+				builder.addTransition(sourceId, targetId);
+			}
+		}
 
+		return sequenceFlow;
+	}
 
-        if(target instanceof ThrowLinkEvent || source instanceof CatchLinkEvent){/*link with catch or throw link event*/
-            addLinkEvents(builder, sequenceFlow);
-        } else {
-            //                  if(source instanceof BoundaryEvent){/*BoundaryEvent*/
-            //                      if(sequenceFlow.getSource() instanceof BoundaryMessageEvent){
-            //                          builder.addExceptionTransition(((Element)sequenceFlow.getSource().eContainer()).getName(),((BoundaryMessageEvent)transition.getSource()).getEvent(),targetName);
-            //                      }else{
-            //                          builder.addExceptionTransition(((Element) source.eContainer()).getName(), sourceName, targetName);
-            //                      }
-            //                  }
+	protected void addLinkEvents(FlowElementBuilder builder, SequenceFlow sequenceFlow) {
+		if(sequenceFlow.getTarget() instanceof ThrowLinkEvent){
+			final ThrowLinkEvent throwLink = (ThrowLinkEvent) sequenceFlow.getTarget() ;
+			if(null != throwLink.getTo()){
+				final CatchLinkEvent target = throwLink.getTo() ;
+				for(Connection c : target.getOutgoing()){
+					String sourceId = sequenceFlow.getSource().getName();
+					String targetId = c.getTarget().getName();
+					org.bonitasoft.studio.model.expression.Expression transitionCondition = sequenceFlow.getCondition();
+					if(sequenceFlow.isIsDefault()) {
+						builder.addDefaultTransition(sourceId,targetId);
+					}else if(null != transitionCondition && transitionCondition.getContent() != null && !transitionCondition.getContent().isEmpty()) {
+						builder.addTransition(sourceId,targetId,EngineExpressionUtil.createExpression(transitionCondition));
+					}else{
+						builder.addTransition(sourceId,targetId);
+					}
 
-            if(!(source instanceof ANDGateway)){
-                if(sequenceFlow.getConditionType() == SequenceFlowConditionType.EXPRESSION && sequenceFlow.getCondition() != null
-                        && sequenceFlow.getCondition().getContent() != null && !sequenceFlow.getCondition().getContent().isEmpty()){
-                    builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(sequenceFlow.getCondition()));
-                }else if(sequenceFlow.getConditionType() == SequenceFlowConditionType.DECISION_TABLE){
-                    builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(DecisionTableUtil.toGroovyScriptExpression(sequenceFlow.getDecisionTable())));
-                }else if(sequenceFlow.isIsDefault()){
-                    builder.addDefaultTransition(sourceId, targetId);
-                } else{
-                    builder.addTransition(sourceId, targetId);
-                }
-            }else{
-                builder.addTransition(sourceId, targetId);
-            }
-        }
-
-        return sequenceFlow;
-    }
-
-    protected void addLinkEvents(ProcessDefinitionBuilder builder, SequenceFlow sequenceFlow) {
-        if(sequenceFlow.getTarget() instanceof ThrowLinkEvent){
-            final ThrowLinkEvent throwLink = (ThrowLinkEvent) sequenceFlow.getTarget() ;
-            if(null != throwLink.getTo()){
-                final CatchLinkEvent target = throwLink.getTo() ;
-                for(Connection c : target.getOutgoing()){
-                    String sourceId = sequenceFlow.getSource().getName();
-                    String targetId = c.getTarget().getName();
-                    if(sequenceFlow.getSource() instanceof BoundaryEvent){
-                        //TODO boundary event
-                        //      builder.addExceptionTransition(((Element)sequenceFlow.getSource().eContainer()).getName(),sourceId,targetId);
-                    }else{
-                        org.bonitasoft.studio.model.expression.Expression transitionCondition = sequenceFlow.getCondition();
-                        if(sequenceFlow.isIsDefault()) {
-                            builder.addDefaultTransition(sourceId,targetId);
-                        }else if(null != transitionCondition && transitionCondition.getContent() != null && !transitionCondition.getContent().isEmpty()) {
-                            builder.addTransition(sourceId,targetId,EngineExpressionUtil.createExpression(transitionCondition));
-                        }else{
-                            builder.addTransition(sourceId,targetId);
-                        }
-                    }
-                }
-            }else{
-                throw new RuntimeException(Messages.bind(Messages.linkGoToIsNull,throwLink.getName()));
-            }
-        }
-    }
+				}
+			}else{
+				throw new RuntimeException(Messages.bind(Messages.linkGoToIsNull,throwLink.getName()));
+			}
+		}
+	}
 
 }

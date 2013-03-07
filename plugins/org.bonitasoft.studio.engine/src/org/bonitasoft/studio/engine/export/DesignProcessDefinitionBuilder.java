@@ -25,7 +25,7 @@ import org.bonitasoft.engine.bpm.model.ProcessDefinitionBuilder;
 import org.bonitasoft.engine.exception.InvalidProcessDefinitionException;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.engine.export.switcher.AbstractProcessSwitch;
-import org.bonitasoft.studio.engine.export.switcher.FlowElementSwith;
+import org.bonitasoft.studio.engine.export.switcher.FlowElementSwitch;
 import org.bonitasoft.studio.engine.export.switcher.SequenceFlowSwitch;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -39,6 +39,7 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SourceElement;
+import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -122,7 +123,7 @@ public class DesignProcessDefinitionBuilder {
             processBuilder.addDescription(decription);
             processBuilder.addDisplayDescription(decription);
         }
-        AbstractProcessSwitch processSwitch = createProcessSwitch(processBuilder) ;
+                AbstractProcessSwitch processSwitch = createProcessSwitch(processBuilder) ;
         processSwitch.doSwitch(process) ;
 
         processDocuments(process, processBuilder);
@@ -144,8 +145,14 @@ public class DesignProcessDefinitionBuilder {
     protected void processFlowElements(final AbstractProcess process,
             final ProcessDefinitionBuilder processBuilder) {
         List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.FLOW_ELEMENT);
-        final FlowElementSwith flowElementSwitch = new FlowElementSwith(processBuilder, eObjectNotExported) ;
+        final FlowElementSwitch flowElementSwitch = new FlowElementSwitch(processBuilder, eObjectNotExported) ;
         for (FlowElement flowElement : flowElements) {
+            if(!eObjectNotExported.contains(flowElement) && !ModelHelper.isInEvenementialSubProcessPool(flowElement)){
+                flowElementSwitch.doSwitch(flowElement);
+            }
+        }
+        List<SubProcessEvent> elements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.SUB_PROCESS_EVENT);
+        for (SubProcessEvent flowElement : elements) {
             if(!eObjectNotExported.contains(flowElement)){
                 flowElementSwitch.doSwitch(flowElement);
             }
@@ -158,7 +165,9 @@ public class DesignProcessDefinitionBuilder {
         SequenceFlowSwitch sequenceFlowSwitch = new SequenceFlowSwitch(processBuilder) ;
         for (SourceElement sourceElement : sourceElements) {
             for (Connection connection : sourceElement.getOutgoing()) {
-                sequenceFlowSwitch.doSwitch(connection);
+            	if(!ModelHelper.isInEvenementialSubProcessPool(connection)){
+            		sequenceFlowSwitch.doSwitch(connection);
+            	}
             }
         }
     }
@@ -167,11 +176,7 @@ public class DesignProcessDefinitionBuilder {
         if(process instanceof Pool){
             List<Document> documents = ((Pool) process).getDocuments();
             for (Document document : documents) {
-            	String fileName = document.getName(); 
-            	if(document.isIsInternal()){
-            		fileName = document.getDefaultValueIdOfDocumentStore();
-            	 }
-                DocumentDefinitionBuilder documentBuilder = processBuilder.addDocumentDefinition(document.getName(),fileName);
+                final DocumentDefinitionBuilder documentBuilder = processBuilder.addDocumentDefinition(document.getName());
                 documentBuilder.addDescription(document.getDocumentation());
                 final Expression mimeType = document.getMimeType();
                 if(mimeType != null){

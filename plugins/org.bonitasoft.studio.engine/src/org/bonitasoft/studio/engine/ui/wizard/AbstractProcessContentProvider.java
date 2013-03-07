@@ -66,7 +66,7 @@ public class AbstractProcessContentProvider implements ITreeContentProvider {
     public Object[] getChildren(Object element) {
         if(element instanceof MainProcess){
             List<Object> result = new ArrayList<Object>() ;
-            for(EObject process : ModelHelper.getAllItemsOfType((EObject) element, ProcessPackage.Literals.ABSTRACT_PROCESS)){
+            for(EObject process : ModelHelper.getAllItemsOfType((EObject) element, ProcessPackage.Literals.POOL)){
                 if(!process.equals(element)){
                     result.add(process) ;
                 }

@@ -214,6 +214,7 @@ public class DeployProcessOperation  {
         try {
             processApi.enableProcess(processIdsMap.get(process)) ;
         }  catch (ProcessEnablementException e) {
+        	BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
             IStatus status = openConfigurationPopup(process) ;
             if(status.isOK()){
                 undeployProcess(process, monitor) ;
