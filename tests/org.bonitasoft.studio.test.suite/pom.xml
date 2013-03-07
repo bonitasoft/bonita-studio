@@ -43,6 +43,10 @@
 							<type>eclipse-feature</type>
 							<artifactId>tests-feature</artifactId>
 						</dependency>
+						<dependency>
+							<type>eclipse-feature</type>
+							<artifactId>studio-feature</artifactId>
+						</dependency>
 					</dependencies>
 				</configuration>
 			</plugin>
