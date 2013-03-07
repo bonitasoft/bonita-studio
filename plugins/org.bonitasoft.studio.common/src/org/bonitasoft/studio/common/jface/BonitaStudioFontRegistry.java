@@ -64,7 +64,7 @@ public class BonitaStudioFontRegistry {
 	}
 	
 	public static Font getActiveFont(){
-		return getFont("bonita_active_font",8,SWT.BOLD);
+		return getFont("bonita_active_font",10,SWT.BOLD);
 	}
 
 	/**

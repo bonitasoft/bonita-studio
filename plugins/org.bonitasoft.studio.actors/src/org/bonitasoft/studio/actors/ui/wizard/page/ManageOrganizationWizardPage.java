@@ -90,21 +90,7 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
         TableViewerColumn column = new TableViewerColumn(viewer, SWT.FILL) ;
         column.setEditingSupport(new OrganizationNameEditingSupport(viewer)) ;
         column.getColumn().setText(Messages.name);
-        column.setLabelProvider(new ColumnLabelProvider(){
-            @Override
-            public String getText(Object element) {
-                return ((Organization)element).getName();
-            }
-
-            @Override
-            public Image getImage(Object element) {
-                String activeOrganization = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(ActorsPreferenceConstants.DEFAULT_ORGANIZATION) ;
-                if(((Organization)element).getName().equals(activeOrganization)){
-                    return Pics.getImage("active.png", ActorsPlugin.getDefault()) ;
-                }
-                return super.getImage(element);
-            }
-        });
+        column.setLabelProvider(new OrganizationLabelProvider());
 
 
         column = new TableViewerColumn(viewer, SWT.FILL) ;

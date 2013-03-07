@@ -16,17 +16,12 @@
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
-import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
-import org.bonitasoft.studio.actors.preference.ActorsPreferenceConstants;
-import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -40,7 +35,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -54,6 +48,7 @@ public class SynchronizeOrganizationWizardPage extends WizardPage implements ISe
     private TableViewer viewer;
     private final OrganizationRepositoryStore organizationStore;
 
+ 
     public SynchronizeOrganizationWizardPage() {
         super(SynchronizeOrganizationWizardPage.class.getName());
         setTitle(Messages.synchronizeOrganizationTitle) ;
@@ -83,21 +78,7 @@ public class SynchronizeOrganizationWizardPage extends WizardPage implements ISe
         TableViewerColumn column = new TableViewerColumn(viewer, SWT.FILL) ;
         TableColumn nameColumn = column.getColumn() ;
         column.getColumn().setText(Messages.name);
-        column.setLabelProvider(new ColumnLabelProvider(){
-            @Override
-            public String getText(Object element) {
-                return ((Organization) ((IRepositoryFileStore) element).getContent()).getName();
-            }
-
-            @Override
-            public Image getImage(Object element) {
-                String activeOrganization = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(ActorsPreferenceConstants.DEFAULT_ORGANIZATION) ;
-                if(((OrganizationFileStore)element).getDisplayName().equals(activeOrganization)){
-                    return Pics.getImage("active.png", ActorsPlugin.getDefault()) ;
-                }
-                return super.getImage(element);
-            }
-        });
+        column.setLabelProvider(new OrganizationLabelProvider());
 
 
         column = new TableViewerColumn(viewer, SWT.FILL) ;
