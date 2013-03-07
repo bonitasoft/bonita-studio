@@ -417,7 +417,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
             @Override
             public void documentChanged(DocumentEvent event) {
-                final String text = sourceViewer.getDocument().get();
+                final String text = event.getDocument().get();
                 if(lenghtValidator.validate(text).isOK()){
                     GroovyScriptExpressionEditor.this.inputExpression.setContent(text);
                 }
