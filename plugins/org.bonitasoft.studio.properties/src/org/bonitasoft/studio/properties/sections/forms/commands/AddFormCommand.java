@@ -226,7 +226,7 @@ public class AddFormCommand extends AbstractTransactionalCommand {
                         currentExpression = ExpressionHelper.createExpressionFromEnumType((EnumType) data.getDataType());
                     }
 
-                    if(!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool)){ //Do not set input expression if we are in an instantiation form
+                    if(!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool && !ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA.equals(data.eContainingFeature()))){ //Do not set input expression if we are in an instantiation form
                         ((FormField) tempWidget).setInputExpression(currentExpression);
                     }
 
