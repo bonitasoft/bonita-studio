@@ -546,7 +546,7 @@
                   severity="WARNING"
                   statusCode="1">
                <message>
-                  %Validation_nomessage
+                  {0}
                </message>
                <target
                      class="AbstractCatchMessageEvent">
