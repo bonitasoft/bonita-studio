@@ -255,7 +255,7 @@ public class ValidatorWizardPage extends NewTypeWizardPage implements ISelection
         classNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
         final Label packageLabel = new Label(mainComposite, SWT.NONE);
-        packageLabel.setText(Messages.createValidatorWizardPage_packageLabel);
+        packageLabel.setText(Messages.createValidatorWizardPage_packageLabel+" *");
         packageLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
 
         final Text packageText = new Text(mainComposite, SWT.BORDER);

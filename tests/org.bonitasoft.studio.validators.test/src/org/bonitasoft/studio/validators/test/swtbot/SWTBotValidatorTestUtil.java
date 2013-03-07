@@ -4,6 +4,7 @@ import junit.framework.Assert;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.bonitasoft.studio.validators.i18n.Messages;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
 import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -54,7 +55,7 @@ public class SWTBotValidatorTestUtil {
 	        Assert.assertFalse("button Finish should be disabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
 	        dialogBot.textWithLabel("Class *").setText(className);
 	        Assert.assertFalse("button Finish should be disabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-	        dialogBot.textWithLabel("Package").setText(packageName);
+	        dialogBot.textWithLabel(Messages.createValidatorWizardPage_packageLabel+" *").setText(packageName);
 	        dialogBot.comboBox().setSelection("Field");
 	        dialogBot.button(IDialogConstants.FINISH_LABEL).click();
 	        bot.waitUntil(Conditions.shellCloses(newShell), 10000);
@@ -83,7 +84,7 @@ public class SWTBotValidatorTestUtil {
 	        Assert.assertFalse("button Finish should be disabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
 	        dialogBot.textWithLabel("Class *").setText(className);
 	        Assert.assertFalse("button Finish should be disabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-	        dialogBot.textWithLabel("Package").setText(packageName);
+	        dialogBot.textWithLabel(Messages.createValidatorWizardPage_packageLabel+" *").setText(packageName);
 	        dialogBot.comboBox().setSelection("Page");
 	        dialogBot.button(IDialogConstants.FINISH_LABEL).click();
 	        Matcher<IEditorReference> matcher = WidgetMatcherFactory.withPartName(className+".java");

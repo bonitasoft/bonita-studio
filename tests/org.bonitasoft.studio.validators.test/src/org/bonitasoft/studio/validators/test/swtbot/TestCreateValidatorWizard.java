@@ -20,6 +20,7 @@ package org.bonitasoft.studio.validators.test.swtbot;
 
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.validators.i18n.Messages;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
 import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -63,7 +64,7 @@ public class TestCreateValidatorWizard extends SWTBotEclipseTestCase{
         assertFalse(dialogBot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         dialogBot.textWithLabel("Class *").setText(className);
         assertFalse(dialogBot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-        dialogBot.textWithLabel("Package").setText(packageName);
+        dialogBot.textWithLabel(Messages.createValidatorWizardPage_packageLabel+" *").setText(packageName);
 
         dialogBot.comboBox().setSelection("Field");
         
@@ -94,7 +95,7 @@ public class TestCreateValidatorWizard extends SWTBotEclipseTestCase{
         assertFalse(dialogBot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         dialogBot.textWithLabel("Class *").setText(className);
         assertFalse(dialogBot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-        dialogBot.textWithLabel("Package").setText(packageName);
+        dialogBot.textWithLabel(Messages.createValidatorWizardPage_packageLabel+" *").setText(packageName);
 
         dialogBot.comboBox().setSelection("Page");
         dialogBot.button(IDialogConstants.FINISH_LABEL).click();

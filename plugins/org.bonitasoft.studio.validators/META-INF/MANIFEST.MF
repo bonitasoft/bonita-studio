@@ -33,6 +33,7 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.validators.descriptor.validator,
+ org.bonitasoft.studio.validators.i18n,
  org.bonitasoft.studio.validators.repository
 Import-Package: org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.model,
