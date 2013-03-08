@@ -143,6 +143,18 @@
 							<version>6.0-SNAPSHOT</version>
 						</artifact>
 					</target>
+					<filters>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.bonitasoft.studioEx.console.libs</id>
+							<removeAll />
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.bonitasoft.studio.simulationEx.libs</id>
+							<removeAll />
+						</filter>
+					</filters>
 				</configuration>
 			</plugin>
 			<plugin>
