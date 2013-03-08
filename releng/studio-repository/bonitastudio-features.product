@@ -35,7 +35,8 @@ This software is licensed under GPL v2.
    <launcher name="BonitaStudio">
       <macosx icon="icons/bonitasoft-icon-128-128-transparent.icns"/>
       <solaris/>
-      <win useIco="false">
+      <win useIco="true">
+         <ico path="icons/bonitasoft-icon-128-128-transparent.ico"/>
          <bmp
             winSmallHigh="icons/bonitasoft-icon-16-16-transparent.bmp"
             winMediumHigh="icons/bonitasoft-icon-32-32-transparent.bmp"
