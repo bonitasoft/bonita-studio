@@ -61,7 +61,7 @@ public class TestImportXPDL extends TestCase {
 
     @Test
     public void testCarpool() throws Exception {
-        File destFile = new File("dest" + System.currentTimeMillis() + ".proc");
+        File destFile = new File("destCarPool" + System.currentTimeMillis() + ".proc");
         destFile.createNewFile();
         destFile.deleteOnExit();
         URL xpdlResource = FileLocator.toFileURL(getClass().getResource("carpool.xpdl"));
@@ -112,7 +112,7 @@ public class TestImportXPDL extends TestCase {
 
     @Test
     public void testApprovalWorkflow() throws Exception {
-        File destFile = new File("dest" + System.currentTimeMillis() + ".proc");
+        File destFile = new File("destApprovalWorkflow" + System.currentTimeMillis() + ".proc");
         destFile.createNewFile();
         destFile.deleteOnExit();
         URL xpdlResource = FileLocator.toFileURL(getClass().getResource("ApprovalWorkflow.xpdl"));
@@ -174,7 +174,7 @@ public class TestImportXPDL extends TestCase {
 
     @Test
     public void testWebSale() throws Exception {
-        File destFile = new File("dest" + System.currentTimeMillis() + ".proc");
+        File destFile = new File("destWebSale" + System.currentTimeMillis() + ".proc");
         destFile.createNewFile();
         destFile.deleteOnExit();
         URL xpdlResource = FileLocator.toFileURL(getClass().getResource("WebSale.xpdl"));
@@ -238,7 +238,7 @@ public class TestImportXPDL extends TestCase {
 
     @Test
     public void testSubFlow() throws Exception {
-        File destFile = new File("dest" + System.currentTimeMillis() + ".proc");
+        File destFile = new File("destSubFlow" + System.currentTimeMillis() + ".proc");
         destFile.createNewFile();
         destFile.deleteOnExit();
         URL xpdlResource = FileLocator.toFileURL(getClass().getResource("subflow_proed.xpdl"));
@@ -266,7 +266,7 @@ public class TestImportXPDL extends TestCase {
     
     @Test
     public void testImportWithWhiteSpace() throws IOException{
-    	File destFile = new File("dest" + System.currentTimeMillis() + ".proc");
+    	File destFile = new File("destImportWithWhiteSpace" + System.currentTimeMillis() + ".proc");
         destFile.createNewFile();
         destFile.deleteOnExit();
         URL xpdlResource = FileLocator.toFileURL(getClass().getResource("Approval Workflow.xpdl"));
@@ -282,7 +282,7 @@ public class TestImportXPDL extends TestCase {
 
     @Ignore
     public void testMultiInstantiation() throws Exception {
-        File destFile = new File("dest" + System.currentTimeMillis() + ".proc");
+        File destFile = new File("destMultiInstantiation" + System.currentTimeMillis() + ".proc");
         destFile.createNewFile();
         destFile.deleteOnExit();
         URL xpdlResource = FileLocator.toFileURL(getClass().getResource("multiInstantiation.xpdl"));
