@@ -183,7 +183,10 @@ public class OpenDiagramWizardPage extends WizardPage implements IWizardPage {
         					}
 
         					ifileTree.getViewer().setInput(new Object());
-        					PlatformUtil.openIntroIfNoOtherEditorOpen();
+        					if(PlatformUtil.isIntroOpen()){
+        						PlatformUtil.closeIntro();
+        						PlatformUtil.openIntro();
+        					}
         				}
         			} catch (Exception e1) {
         				BonitaStudioLog.error(e1);
