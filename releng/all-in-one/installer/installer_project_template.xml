@@ -294,7 +294,7 @@
             <postShowPageActionList>
                 <showProgressDialog>
                     <title>${msg(workspace.setup)}</title>
-                    <height>150</height>
+                    <height>100</height>
                     <width>400</width>
                     <actionList>
                         <runProgram>
@@ -362,7 +362,7 @@
 			<postShowPageActionList>
 			<showProgressDialog>
                     <title>${msg(workspace.setup)}</title>
-                    <height>150</height>
+                    <height>100</height>
                     <width>400</width>
                     <actionList>
 		               <runProgram>
