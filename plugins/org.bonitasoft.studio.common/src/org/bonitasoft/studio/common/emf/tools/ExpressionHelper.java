@@ -82,14 +82,14 @@ public class ExpressionHelper {
         storageExpression.setContent(targetDocName) ;
         storageExpression.setName(targetDocName) ;
         storageExpression.setType(ExpressionConstants.CONSTANT_TYPE) ;
-        storageExpression.setReturnType(String.class.getName()) ;
+        storageExpression.setReturnType(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE) ;
         action.setLeftOperand(storageExpression) ;
 
         Expression actionExpression = ExpressionFactory.eINSTANCE.createExpression();
         actionExpression.setContent("field_"+widget.getName()) ;
         actionExpression.setName("field_"+widget.getName()) ;
         actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE) ;
-        actionExpression.setReturnType(widget.getAssociatedReturnType()) ;
+        actionExpression.setReturnType(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE) ;
         actionExpression.getReferencedElements().add(EcoreUtil.copy(widget)) ;
         action.setRightOperand(actionExpression) ;
         return action;

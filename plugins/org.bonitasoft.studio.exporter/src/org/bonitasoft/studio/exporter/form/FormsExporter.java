@@ -506,7 +506,7 @@ public class FormsExporter {
                 final Expression rightOperand = action.getRightOperand();
                 rightOperand.setContent(FormsExporter.FIELD_IDENTIFIER + w.getName());
                 rightOperand.setType(ExpressionConstants.FORM_FIELD_TYPE);
-                rightOperand.setReturnType(String.class.getName());
+                rightOperand.setReturnType(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE);
                 addAction(builder, action);
             }
         }

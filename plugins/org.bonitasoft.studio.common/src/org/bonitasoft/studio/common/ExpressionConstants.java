@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.common;
 
+import org.bonitasoft.engine.bpm.model.document.DocumentValue;
 import org.bonitasoft.engine.core.operation.OperatorType;
 import org.bonitasoft.engine.expression.ExpressionInterpreter;
 import org.bonitasoft.engine.expression.ExpressionType;
@@ -55,6 +56,8 @@ public interface ExpressionConstants {
     String PATTERN_TYPE = ExpressionType.TYPE_PATTERN.name();
     String SET_DOCUMENT_OPERATOR = ActionType.DOCUMENT_CREATE_UPDATE.name();
     String VARIABLE_TYPE_FOR_FORM_OUPUT = "VARIABLE_TYPE_FOR_FORM_OUPUT";
+    String DOCUMENT_VALUE_RETURN_TYPE = DocumentValue.class.getName();
+   
 
   
 }
