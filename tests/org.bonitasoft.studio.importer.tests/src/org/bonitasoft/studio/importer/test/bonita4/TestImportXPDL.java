@@ -107,7 +107,7 @@ public class TestImportXPDL extends TestCase {
         for (Task task : tasks) {
             assertEquals("Task has no group", group, task.getActor());
         }
-
+        destFile.delete();
     }
 
     @Test
@@ -170,6 +170,7 @@ public class TestImportXPDL extends TestCase {
         for (Task task : tasks) {
             assertNotNull("Task has no group",  task.getActor());
         }
+        destFile.delete();
     }
 
     @Test
@@ -233,7 +234,7 @@ public class TestImportXPDL extends TestCase {
         for (Task task : tasks) {
             assertNotNull("Task has no group",task.getActor());
         }
-
+        destFile.delete();
     }
 
     @Test
@@ -262,6 +263,7 @@ public class TestImportXPDL extends TestCase {
         }
         assertEquals("Wrong subflow name", "subflow", subprocess.getCalledActivityName().getContent());
         assertEquals("Wrong number of gateways", 2, gateways.size());
+        destFile.delete();
     }
     
     @Test
@@ -278,6 +280,7 @@ public class TestImportXPDL extends TestCase {
         MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
         
         assertNotNull("xpdl diagram \"Approval workflow\" was not exported correctly",mainProcess);
+        destFile.delete();
     }
 
     @Ignore
@@ -300,6 +303,8 @@ public class TestImportXPDL extends TestCase {
                 activity = (Activity)item;
             }
         }
+        
         assertNotNull("Missing a multiinstantiation", activity.getMultiInstantiation());
+        destFile.delete();
     }
 }
