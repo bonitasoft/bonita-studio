@@ -22,9 +22,6 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.validation.constraints.ValidationContentProvider;
 import org.bonitasoft.studio.validation.i18n.Messages;
@@ -34,9 +31,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.notation.Shape;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelection;
@@ -44,7 +41,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -52,8 +48,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IViewSite;
@@ -143,26 +139,26 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 
 
 		tableViewer = new TableViewer(tableComposite,SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION) ;
-		tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
-		tableViewer.getTable().setHeaderVisible(true);
-		tableViewer.getTable().setLinesVisible(true);
-		TableLayout layout = new TableLayout();
-		layout.addColumnData(new ColumnWeightData(1));
-		layout.addColumnData(new ColumnWeightData(5));
-		layout.addColumnData(new ColumnWeightData(11));
-		tableViewer.getTable().setLayout(layout);
+		final Table table = tableViewer.getTable();
+		table.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+	
 		addSeverityDescriptionColumn();
 		addElementNameColumn();
 		addErrorDescriptionColumn();
-
+		
+		TableColumnLayout tcLayout = new TableColumnLayout();
+		tcLayout.setColumnData(table.getColumn(0), new ColumnWeightData(1));
+		tcLayout.setColumnData(table.getColumn(1), new ColumnWeightData(5));
+		tcLayout.setColumnData(table.getColumn(2), new ColumnWeightData(11));
+		table.getParent().setLayout(tcLayout);
+		
 		tableViewer.setContentProvider(new ValidationContentProvider());
 		IEditorPart activeEditor = getSite().getPage().getActiveEditor();
 		tableViewer.setInput(activeEditor);
 
 		tableViewer.addSelectionChangedListener(this);
-
-
-	
 	}
 
 	/* (non-Javadoc)
