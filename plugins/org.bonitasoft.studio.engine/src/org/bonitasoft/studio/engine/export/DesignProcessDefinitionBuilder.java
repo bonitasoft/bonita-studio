@@ -184,6 +184,7 @@ public class DesignProcessDefinitionBuilder {
                 }
                 if(document.isIsInternal()){
                     documentBuilder.addFile(document.getDefaultValueIdOfDocumentStore());
+                    documentBuilder.addContentFileName(document.getDefaultValueIdOfDocumentStore());
                 } else {
                     final Expression url = document.getUrl();
                     if(url != null){
