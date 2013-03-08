@@ -38,17 +38,20 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 
 	@Override
 	public void partBroughtToTop(IWorkbenchPartReference partRef) {
-	
+
 	}
 
 	@Override
 	public void partClosed(IWorkbenchPartReference partRef) {
-		PlatformUtil.openIntroIfNoOtherEditorOpen();
+		IWorkbenchPart part = partRef.getPart(false);
+		if (part instanceof IEditorPart) {
+			PlatformUtil.openIntroIfNoOtherEditorOpen();
+		}
 	}
 
 	@Override
 	public void partDeactivated(IWorkbenchPartReference partRef) {
-	
+
 	}
 
 	@Override
@@ -67,16 +70,16 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 
 	@Override
 	public void partHidden(IWorkbenchPartReference partRef) {
-		
+
 	}
 
 	@Override
 	public void partVisible(IWorkbenchPartReference partRef) {
-		
+
 	}
 
 	@Override
 	public void partInputChanged(IWorkbenchPartReference partRef) {
-	
+
 	}
 }
