@@ -27,6 +27,7 @@ import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepository
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.validation.EMFEventType;
 import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.emf.validation.internal.modeled.model.validation.EventTypesEnum;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -48,7 +49,7 @@ public class ValidatorTypeConstraint extends AbstractLiveValidationMarkerConstra
                 return ctx.createFailureStatus(new Object[] { Messages.Validation_Validator_EmptyValidatorType+" "+validator.getName()});
             }
         }else if(feature.equals(FormPackage.Literals.VALIDABLE__VALIDATORS)){
-            if(ctx.getEventType().equals(EventTypesEnum.ADD)){
+            if(ctx.getEventType().equals(EMFEventType.ADD)){
                 Object validator =  ctx.getFeatureNewValue();
                 if(validator instanceof Validator){
                     String validatorClass = ((Validator) validator).getValidatorClass();

@@ -27,6 +27,7 @@ import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.validation.EMFEventType;
 import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
@@ -43,11 +44,11 @@ public class ValidatorErrorMessageConstraint extends AbstractLiveValidationMarke
         if(feature.equals(FormPackage.Literals.VALIDATOR__DISPLAY_NAME)){
             Expression errorMessage = ((Expression) ctx.getFeatureNewValue());
             if(!ModelHelper.isAnExpressionCopy(errorMessage)){
-                if(errorMessage==null || errorMessage.getContent() != null && errorMessage.getContent().isEmpty()){
+                if(errorMessage==null || errorMessage.getContent() == null || errorMessage.getContent().isEmpty()){
                     return ctx.createFailureStatus(new Object[] { Messages.Validation_Validator_EmptyErrorMessage});
                 }
             }
-        }else if(feature.equals(FormPackage.Literals.VALIDABLE__VALIDATORS)){
+        }else if(feature.equals(FormPackage.Literals.VALIDABLE__VALIDATORS) && ctx.getEventType().equals(EMFEventType.ADD)){
             Object validator =  ctx.getFeatureNewValue();
             if(validator instanceof Validator){
                 Validator v = (Validator) validator;
