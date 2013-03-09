@@ -354,7 +354,7 @@
             </separator>
             <command
                   commandId="org.eclipse.ui.help.aboutAction"
-                  icon="icons/about.png"
+                  icon="icons/bonitasoft-icon-16-16-transparent.png"
                   style="push">
             </command>
             <visibleWhen
