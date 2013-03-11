@@ -59,13 +59,19 @@ public class BonitaErrorDialog extends ErrorDialog {
 	public BonitaErrorDialog(Shell parentShell, String dialogTitle, String message, IStatus status, int displayMask) {
 		super(parentShell, dialogTitle, message, status, displayMask);
 		this.message = message;
-		this.status = status;
+		if(status.getException() == null){
+			this.status = new Status(status.getSeverity(), status.getPlugin(), status.getMessage(), new Exception(status.getMessage()));
+		}else{
+			this.status = status;
+		}
+		setStatus(this.status);
 	}
-	
+
 	public BonitaErrorDialog(Shell parentShell, String dialogTitle, String message, Throwable t) {
 		super(parentShell, dialogTitle, message, new Status(IStatus.ERROR, Activator.PLUGIN_ID, message, t), IStatus.ERROR);
 		this.message = message;
 		this.status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, message, t);
+		setStatus(this.status);
 	}
 	/*
 	 * (non-Javadoc) Method declared on Dialog. Handles the pressing of the Ok
@@ -121,7 +127,7 @@ public class BonitaErrorDialog extends ErrorDialog {
 		listCreated = true;
 		return list;
 	}
-	
+
 	private void populateList(List list) {
 		Throwable exception = status.getException();
 		if(exception != null){
@@ -136,8 +142,8 @@ public class BonitaErrorDialog extends ErrorDialog {
 			list.add(stack.toString());
 		}
 	}
-	
-	
+
+
 	/**
 	 * Toggles the unfolding of the details area. This is triggered by the user
 	 * pressing the details button.
@@ -156,19 +162,19 @@ public class BonitaErrorDialog extends ErrorDialog {
 		}
 		Point newSize = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		getShell()
-				.setSize(
-						new Point(windowSize.x, windowSize.y
-								+ (newSize.y - oldSize.y)));
+		.setSize(
+				new Point(windowSize.x, windowSize.y
+						+ (newSize.y - oldSize.y)));
 	}
-	
-	
+
+
 	protected void createDetailsButton(Composite parent) {
 		if (shouldShowDetailsButton()) {
 			detailsButton = createButton(parent, IDialogConstants.DETAILS_ID,
 					IDialogConstants.SHOW_DETAILS_LABEL, false);
 		}
 	}
-	
+
 	/**
 	 * Copy the contents of the statuses to the clipboard.
 	 */
@@ -194,7 +200,7 @@ public class BonitaErrorDialog extends ErrorDialog {
 		buffer.append(buildingStatus.getMessage());
 		buffer.append("\n"); //$NON-NLS-1$
 		for (StackTraceElement trace : buildingStatus.getException().getStackTrace()) {
-			
+
 			buffer.append(trace.toString());
 			buffer.append("\n"); //$NON-NLS-1$
 		}

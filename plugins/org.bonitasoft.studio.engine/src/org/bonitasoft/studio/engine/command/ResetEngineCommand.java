@@ -29,6 +29,7 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
+import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -54,7 +55,15 @@ public class ResetEngineCommand extends AbstractHandler {
             @Override
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                 monitor.beginTask(Messages.resetEngine, IProgressMonitor.UNKNOWN);
-                APISession session = BOSEngineManager.getInstance().loginDefaultTenant(monitor) ;
+                APISession session = null;
+				try {
+					session = BOSEngineManager.getInstance().loginDefaultTenant(monitor);
+				} catch (Exception e1) {
+					BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
+				}
+				if(session == null){
+					return;
+				}
                 try {
                     ProcessManagementAPI processManagementAPI = BOSEngineManager.getInstance().getProcessAPI(session);
                     int nbProcess = (int) processManagementAPI.getNumberOfProcesses() ;

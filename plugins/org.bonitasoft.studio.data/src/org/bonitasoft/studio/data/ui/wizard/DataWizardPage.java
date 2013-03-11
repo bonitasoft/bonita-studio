@@ -730,7 +730,7 @@ public class DataWizardPage extends WizardPage {
 		defaultValueViewer = new ExpressionViewer(parent, SWT.BORDER, ProcessPackage.Literals.DATA__DEFAULT_VALUE);
 		defaultValueViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 		defaultValueViewer.setContext(container);
-		defaultValueViewer.setInput(data);
+
 
 		final Set<String> availableDataNames = new HashSet<String>();
 		if(!(container instanceof AbstractProcess)){
@@ -751,6 +751,7 @@ public class DataWizardPage extends WizardPage {
 				return selected;
 			}
 		});
+		defaultValueViewer.setInput(data);
 	}
 
 	protected void createTypeChooser(final Composite parent) {

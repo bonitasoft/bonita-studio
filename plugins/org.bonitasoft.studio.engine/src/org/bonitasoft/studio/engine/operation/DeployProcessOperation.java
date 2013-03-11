@@ -35,9 +35,10 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.model.ProcessDefinition;
 import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
 import org.bonitasoft.engine.bpm.model.ProcessDeploymentInfo;
-import org.bonitasoft.engine.exception.BonitaException;
+import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.DeletingEnabledProcessException;
 import org.bonitasoft.engine.exception.InvalidSessionException;
+import org.bonitasoft.engine.exception.LoginException;
 import org.bonitasoft.engine.exception.PageOutOfRangeException;
 import org.bonitasoft.engine.exception.ProcessDefinitionNotFoundException;
 import org.bonitasoft.engine.exception.ProcessDefinitionReadException;
@@ -45,6 +46,8 @@ import org.bonitasoft.engine.exception.ProcessDeletionException;
 import org.bonitasoft.engine.exception.ProcessDeployException;
 import org.bonitasoft.engine.exception.ProcessDisablementException;
 import org.bonitasoft.engine.exception.ProcessEnablementException;
+import org.bonitasoft.engine.exception.ServerAPIException;
+import org.bonitasoft.engine.exception.UnknownAPITypeException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
@@ -120,8 +123,16 @@ public class DeployProcessOperation  {
     public IStatus run(IProgressMonitor monitor)  {
         assert(!processes.isEmpty());
 
-        Configuration configuration =BarExporter.getInstance().getConfiguration(processes.get(0), configurationId);
-        final APISession session = BOSEngineManager.getInstance().loginTenant(configuration.getUsername(), configuration.getPassword(), monitor) ;
+        Configuration configuration = BarExporter.getInstance().getConfiguration(processes.get(0), configurationId);
+        APISession session;
+		try {
+			session = BOSEngineManager.getInstance().loginTenant(configuration.getUsername(), configuration.getPassword(), monitor);
+		} catch (Exception e1) {
+			return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,Messages.bind(Messages.loginFailed,configuration.getUsername()),e1);
+		} 
+        if(session == null){
+        	return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,Messages.bind(Messages.loginFailed,configuration.getUsername()));
+        }
         processApi = BOSEngineManager.getInstance().getProcessAPI(session);
         try {
             undeploy(monitor);
