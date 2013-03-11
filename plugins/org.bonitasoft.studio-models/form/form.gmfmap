@@ -3509,15 +3509,6 @@
             xsi:type="gmfmap:FeatureValueSpec">
           <feature
               xsi:type="ecore:EReference"
-              href="../form.ecore#//Widget/displayLabel"/>
-          <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
-              language="java"/>
-        </initializers>
-        <initializers
-            xsi:type="gmfmap:FeatureValueSpec">
-          <feature
-              xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/injectWidgetScript"/>
           <value
               body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
