@@ -486,6 +486,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			}
 			Expression[] expressions = expressionNatureProvider.getExpressions();
 			EObject input =  expressionNatureProvider.getContext() ;
+			if(input == null){
+				input = (EObject) getInput();
+			}
 			if(expressions != null){
 				filteredExpressions.addAll(Arrays.asList(expressions)) ;
 			}
