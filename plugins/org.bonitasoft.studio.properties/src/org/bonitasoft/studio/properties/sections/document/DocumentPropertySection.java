@@ -46,6 +46,7 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
@@ -220,7 +221,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 				super.widgetSelected(e);
 				final Document documentToRemove = (Document)((IStructuredSelection)documentListViewer.getSelection()).getFirstElement();
 				documentListViewer.remove(documentToRemove);
-				getEditingDomain().getCommandStack().execute(RemoveCommand.create(getEditingDomain(), getPool(), ProcessPackage.Literals.POOL__DOCUMENTS, documentToRemove));
+				getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), documentToRemove));
 				documentListViewer.refresh();
 				documentListViewer.setSelection(new StructuredSelection());
 			}
