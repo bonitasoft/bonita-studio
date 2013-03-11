@@ -108,7 +108,7 @@ public class TestImportBPMN2 extends TestCase {
 
 
     public void testBug1908b() throws Exception {
-        File destFile = new File("dest" + System.currentTimeMillis() + ".proc");  //$NON-NLS-1$//$NON-NLS-2$
+        File destFile = new File("destBug1908b" + System.currentTimeMillis() + ".proc");  //$NON-NLS-1$//$NON-NLS-2$
         destFile.createNewFile();
 
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource("definitionsTest3.bpmn")); //$NON-NLS-1$
@@ -256,7 +256,7 @@ public class TestImportBPMN2 extends TestCase {
 
     protected File importFileWithName(final String bpmnFileName)
             throws IOException, MalformedURLException {
-        File destFile = new File("dest" + System.currentTimeMillis() + ".proc");  //$NON-NLS-1$//$NON-NLS-2$
+        File destFile = new File("destbpmnFileName" + System.currentTimeMillis() + ".proc");  //$NON-NLS-1$//$NON-NLS-2$
         destFile.createNewFile();
         URL bpmnResource = FileLocator.toFileURL(getClass().getResource(bpmnFileName));
         BPMNToProc bpmnToProc = new BPMNToProc(bpmnResource.getFile());
