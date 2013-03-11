@@ -133,26 +133,13 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 public class FormsExporter {
 
     public static final String FIELD_IDENTIFIER = ExporterTools.FIELD_IDENTIFIER;
-
-    // protected DesignProcessDefinition processDefinition;
-
-    // protected Map<String, ActivityDefinition> activityDefNameMap;
     private long timestamp;
 
     private String procDefid;
 
     public File createXmlForms(final AbstractProcess studioProcess, final boolean isAllInBarExport) throws Exception {
         timestamp = System.currentTimeMillis();
-        // this.processDefinition = processDefinition;
         procDefid = studioProcess.getName() + "--" + studioProcess.getVersion();
-
-        // activityDefNameMap = new HashMap<String, ActivityDefinition>();
-        // if(processDefinition != null){//can be null if there no steps
-        // for(ActivityDefinition activityDef : processDefinition.getActivities()){
-        // activityDefNameMap.put(activityDef.getName(), activityDef);
-        // }
-        // }
-
         final IFormBuilder builder = createBuilder();
         // need to initialize
         builder.createFormDefinition();
@@ -1277,7 +1264,7 @@ public class FormsExporter {
     protected void addLabel(final IFormBuilder builder, final Widget widget) throws InvalidFormDefinitionException {
         // show display == false -> no label
         final Expression displayLabel = widget.getDisplayLabel();
-        if ((widget.getShowDisplayLabel() == null || widget.getShowDisplayLabel().booleanValue()) && displayLabel != null
+        if ((widget.getShowDisplayLabel() == null || widget.getShowDisplayLabel().booleanValue()) && displayLabel != null && displayLabel.getContent() != null 
                 && !displayLabel.getContent().isEmpty()) {
             // display label
             addLabelExpressionIfValid(builder, displayLabel);
