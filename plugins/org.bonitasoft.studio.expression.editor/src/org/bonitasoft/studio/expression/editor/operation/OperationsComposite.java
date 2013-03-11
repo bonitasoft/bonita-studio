@@ -357,6 +357,7 @@ public class OperationsComposite extends Composite {
 		};
 		actionExpression.addSelectionChangedListener(updateExpressionListener);
 		actionExpression.addExpressionEditorChangedListener(updateExpressionListener);
+		
 
 		storageComboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -397,9 +398,17 @@ public class OperationsComposite extends Composite {
 			}
 		});
 
-		lineBindings.add(storageBinding);
 
+		
+		lineBindings.add(storageBinding);
+		
 		bindings.add(lineBindings);
+		
+		//validate line
+		actionExpressionBinding.validateTargetToModel();
+		IStatus status = (IStatus) actionExpressionBinding.getValidationStatus().getValue();
+		actionExpression.setMessage(status.getMessage(),status.getSeverity());
+		
 	}
 
 	protected Button createRemoveButton() {
