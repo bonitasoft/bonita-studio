@@ -830,6 +830,21 @@
                      class="SourceElement">
                </target>
             </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.InternalDocumentConstraint"
+                  id="org.bonitasoft.studio.validation.constraints.document"
+                  lang="java"
+                  mode="Batch"
+                  name="Document default file"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Pool">
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">

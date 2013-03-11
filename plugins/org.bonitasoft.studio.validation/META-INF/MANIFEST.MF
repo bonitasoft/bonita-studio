@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.connectors.model.edit;bundle-version="1.0.0",
  org.bonitasoft.studio.expression.editor;bundle-version="1.0.0",
  org.eclipse.emf.common.ui;bundle-version="2.7.0",
- org.codehaus.groovy.eclipse.core;bundle-version="2.7.2"
+ org.codehaus.groovy.eclipse.core;bundle-version="2.7.2",
+ org.bonitasoft.studio.data;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
