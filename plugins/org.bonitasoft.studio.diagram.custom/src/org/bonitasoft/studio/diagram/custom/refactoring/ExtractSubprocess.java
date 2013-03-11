@@ -31,6 +31,12 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.editPolicies.UpdateSizePoolSelectionEditPolicy;
+import org.bonitasoft.studio.diagram.custom.parts.CustomLaneCompartmentEditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomPoolCompartmentEditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomSequenceFlowEditPart;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -43,14 +49,18 @@ import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.TargetElement;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
@@ -60,12 +70,14 @@ import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.INodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest.ViewAndElementDescriptor;
+import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DeferredSetValueCommand;
@@ -73,7 +85,9 @@ import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
+import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
 
@@ -119,7 +133,9 @@ public class ExtractSubprocess extends AbstractHandler {
                 processEp.getDiagramPreferencesHint());
 
         final CreateViewAndElementRequest poolReq = new CreateViewAndElementRequest(viewDescriptor);
-        poolReq.setLocation(new Point(20, processEp.getFigure().getSize().height - 1));
+        poolReq.setLocation(new Point(20, processEp.getFigure().getSize().height - 1 ));
+        Dimension size = new Dimension(processEp.getFigure().getSize().width,computePoolHeight(parts));
+        poolReq.setSize(size);
         //processEp.getCommand(req).execute();
         CompositeCommand cc = new CompositeCommand("Create subprocess");
         //String id = NamingUtils.convertToId(((AbstractProcess)processEp.resolveSemanticElement()).getName(),(Element) req.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class));
@@ -131,8 +147,17 @@ public class ExtractSubprocess extends AbstractHandler {
         final String extractedSubprocessName = EXTRACTED_SUBPROCESS + i;
         cc.add(createSetCommand(poolReq, ProcessPackage.Literals.ELEMENT__NAME, extractedSubprocessName, processSemantic));
         cc.add(createSetCommand(poolReq, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION, "1.0", processSemantic));
-
+        
+        if(size != null){
+        	IGraphicalEditPart poolPart = processEp.getChildBySemanticHint(poolReq.getViewAndElementDescriptor().getSemanticHint());
+        //	org.eclipse.emf.common.command.Command width=SetCommand.create(processEp.getEditingDomain(),((Node) poolPart.getNotationView()).getLayoutConstraint(), NotationPackage.eINSTANCE.getSize_Width(), size.width);
+          
+        //	cc.add(new SetBoundsCommand(processEp.getEditingDomain(), "Set pool size", new EObjectAdapter(poolPart.getNotationView()), size)) ;
+       //     cc.add(SetCommand.create(processEp.getEditingDomain(),((Node) poolPart.getNotationView()).getLayoutConstraint(), NotationPackage.eINSTANCE.getSize_Height(), size.height)) ;
+        }
+        
         IGraphicalEditPart containerEp = (IGraphicalEditPart) refNode.getParent();
+        
         IElementType subprocessType = null;
         subprocessType = ProcessElementTypes.CallActivity_3063;
         final ViewAndElementDescriptor subprocessDescriptor = new ViewAndElementDescriptor(
@@ -151,6 +176,13 @@ public class ExtractSubprocess extends AbstractHandler {
         processEp.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(cc));
         cc.dispose();
 
+        
+        
+       IGraphicalEditPart  ep =  GMFTools.findEditPart(processEp, (EObject) poolReq.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class));  
+       ep.getEditingDomain().getCommandStack().execute(SetCommand.create(ep.getEditingDomain(), ((Node) ep.getNotationView()).getLayoutConstraint(), NotationPackage.eINSTANCE.getSize_Width(), size.width));
+       ep.getEditingDomain().getCommandStack().execute(SetCommand.create(ep.getEditingDomain(), ((Node) ep.getNotationView()).getLayoutConstraint(), NotationPackage.eINSTANCE.getSize_Height(), size.height));
+       ep.refresh();
+        	
         cc = new CompositeCommand("Populate subprocess");
         final CallActivity newSubProcess = (CallActivity)subprocessDescriptor.getElementAdapter().getAdapter(EObject.class);
         final IGraphicalEditPart newSubprocessPart = GMFTools.findEditPart(processEp, newSubProcess);
@@ -194,6 +226,26 @@ public class ExtractSubprocess extends AbstractHandler {
         return exp;
     }
 
+    private int computePoolHeight(List<IGraphicalEditPart> elements){
+    	IGraphicalEditPart mostBottomElement=null;
+    	int maxHeight=0;
+    	for (IGraphicalEditPart element:elements){
+    		int height=element.getFigure().getBounds().y;
+    		if (height>maxHeight && !(element instanceof CustomSequenceFlowEditPart)) {
+    			maxHeight=height;
+    			mostBottomElement=element;
+    		}
+    	}
+    	IGraphicalEditPart parent = (IGraphicalEditPart)mostBottomElement.getParent().getParent();
+    	if (parent instanceof CustomPoolEditPart){
+    		return parent.getFigure().getBounds().height;
+    	} else {
+    		if (parent instanceof CustomLaneEditPart){
+    			return maxHeight+mostBottomElement.getFigure().getBounds().height+((IGraphicalEditPart)mostBottomElement.getParent().getParent()).getFigure().getBounds().y+70;
+    		}
+    	}
+    	return 0;
+    }
     /**
      * @param req
      * @param anEObjectInSameDomain
