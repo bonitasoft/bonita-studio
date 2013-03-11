@@ -236,6 +236,8 @@ public class AddFormCommand extends AbstractTransactionalCommand {
                     Collection<String> supportedModifiers = new WidgetModifiersSwitch().doSwitch(tempWidget);
                     if(supportedModifiers.contains(type)){
                         tempWidget.setReturnTypeModifier(type);
+                    }else{
+                    	tempWidget.setReturnTypeModifier(null);
                     }
                     if(!isDataPageFlowTransient(data)) {
                         final Operation action = createDataOutputOperation(tempWidget, data);
