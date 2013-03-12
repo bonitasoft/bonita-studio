@@ -34,7 +34,6 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
@@ -62,10 +61,14 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
 
 		final List<BarResource>  classpathResources = new ArrayList<BarResource>() ;
 		final List<BarResource>  resources = new ArrayList<BarResource>() ;
-		List<File> providedscripts = new ArrayList<File>();
+
 		addGroovyScriptDependencies(configuration, classpathResources,configuration.getProcessDependencies(),"");
 		addGroovyScriptDependencies(configuration, resources,configuration.getApplicationDependencies(),BARResourcesProvider.FORMS_FOLDER_IN_BAR+"/lib/");
-
+		for(BarResource barResource : resources){
+			builder.addExternalResource(barResource) ;
+		}
+		
+		List<File> providedscripts = new ArrayList<File>();
 		final ProvidedGroovyRepositoryStore providedStore = (ProvidedGroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class) ;
 		for (IRepositoryFileStore file : providedStore.getChildren()) {
 			List<IFile> classFiles = ((GroovyFileStore)file).getClassFiles() ;
@@ -75,45 +78,34 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
 				}
 			}
 		}
-
-		try{
-			if(!providedscripts.isEmpty()){
-				File jar = new File(providedStore.getResource().getLocation().toFile().getAbsolutePath()+File.separatorChar+ProvidedGroovyRepositoryStore.EXPORTED_PROVIDED_JAR_NAME);
-				if(jar.exists()){
-					jar.delete();
-				}
-				jar.createNewFile();
-
-				JarOutputStream jo = new JarOutputStream(new FileOutputStream(jar));
-				for (File entry : providedscripts) {
-					JarEntry jarEntry = new JarEntry(entry.getName());
-					jo.putNextEntry(jarEntry);
-					FileInputStream fis = new FileInputStream(entry);
-					byte[] buf = new byte[1024];
-					int nbBytes;
-					while ((nbBytes = fis.read(buf)) != -1) {
-						jo.write(buf, 0, nbBytes);
-					}
-					fis.close();
-				}
-
-				jo.close() ;
-
-				addFileContents(classpathResources,jar,"");
+		if(!providedscripts.isEmpty()){
+			File jar = new File(providedStore.getResource().getLocation().toFile().getAbsolutePath()+File.separatorChar+ProvidedGroovyRepositoryStore.EXPORTED_PROVIDED_JAR_NAME);
+			if(jar.exists()){
 				jar.delete();
 			}
+			jar.createNewFile();
+			JarOutputStream jo = new JarOutputStream(new FileOutputStream(jar));
+			for (File entry : providedscripts) {
+				JarEntry jarEntry = new JarEntry(entry.getName());
+				jo.putNextEntry(jarEntry);
+				FileInputStream fis = new FileInputStream(entry);
+				byte[] buf = new byte[1024];
+				int nbBytes;
+				while ((nbBytes = fis.read(buf)) != -1) {
+					jo.write(buf, 0, nbBytes);
+				}
+				fis.close();
+			}
 
-			
-		}catch (Exception e) {
-			BonitaStudioLog.error(e) ;
+			jo.close() ;
+			addFileContents(classpathResources,jar,"");
+			jar.delete();
 		}
 
 		for(BarResource barResource : classpathResources){
 			builder.addClasspathResource(barResource) ;
 		}
-		for(BarResource barResource : resources){
-			builder.addExternalResource(barResource) ;
-		}
+
 
 		return resources ;
 	}
@@ -140,7 +132,7 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
 				}
 			}
 		}
-		
+
 		if(!scripts.isEmpty()){
 			File jar = new File(store.getResource().getLocation().toFile().getAbsolutePath()+File.separatorChar+GroovyRepositoryStore.EXPORTED_JAR_NAME);
 			if(jar.exists()){
@@ -163,7 +155,6 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
 			}
 
 			jo.close() ;
-
 			addFileContents(resources,jar,barPath);
 			jar.delete();
 		}
