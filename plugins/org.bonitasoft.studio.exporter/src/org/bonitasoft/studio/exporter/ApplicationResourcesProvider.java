@@ -95,17 +95,6 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		return res;
 	}
 
-	protected void addApplicationValidators(List<BarResource> res, AbstractProcess process) throws Exception {
-		File validatorsFile = new File(tmpDir, "validators");
-		validatorsFile.delete();
-		validatorsFile.mkdir();
-		ResourcesExporter.exportValidators(process, validatorsFile, new NullProgressMonitor());
-		if (validatorsFile.exists()) {
-			addFolder(validatorsFile, FORMS_FOLDER_IN_BAR, res);
-			PlatformUtil.delete(validatorsFile, new NullProgressMonitor());
-		}
-	}
-
 	protected void addApplicationDependencies(List<BarResource> res, AbstractProcess process, Configuration configuration) throws Exception {
 		if(configuration != null){
 			File libFile = new File(tmpDir, "lib");

@@ -251,43 +251,4 @@ public class ResourcesExporter {
         return succes;
     }
 
-    public static boolean exportValidators(AbstractProcess process, File destFolder, IProgressMonitor monitor){
-        boolean succes = false;
-
-        //		ArrayList<File> fileToIncludes = new ArrayList<File>();
-        //		List<String> validatorsToInclude = process.getResourceValidators();
-        //		for (String artifact : validatorsToInclude) {
-        //			if (ValidatorRepository.getInstance().getArtifact(artifact) != null) {
-        //				ValidatorRepositoryArtifact vra = ValidatorRepository.getInstance().getArtifact(artifact);
-        //				File tmpFile = new File(TMP_DIR + File.separator + vra.getName() + ".jar"); //$NON-NLS-1$
-        //				try {
-        //					FileOutputStream out = new FileOutputStream(tmpFile);
-        //					ValidatorRepository.getInstance().exportArtifact(out, vra, monitor);
-        //					out.close();
-        //					if (tmpFile != null && tmpFile.exists()) {
-        //						fileToIncludes.add(tmpFile);
-        //					}
-        //				} catch (FileNotFoundException e) {
-        //					BonitaStudioLog.log(e);
-        //				} catch (IOException e) {
-        //					BonitaStudioLog.log(e);
-        //				}
-        //			}
-        //		}
-        //
-        //		for (File f : fileToIncludes) {
-        //			PlatformUtil.copyResource(destFolder, f, monitor);
-        //			PlatformUtil.delete(f, monitor);
-        //		}
-
-        return succes;
-    }
-
-    //    public static boolean exportJarsAndValidators(AbstractProcess process, File destFolder, IProgressMonitor monitor) {
-    //        boolean succes = true ;
-    //        succes = exportJars(process, destFolder, monitor) && succes;
-    //        succes = exportValidators(process, destFolder, monitor) && succes;
-    //        return succes;
-    //    }
-
 }
