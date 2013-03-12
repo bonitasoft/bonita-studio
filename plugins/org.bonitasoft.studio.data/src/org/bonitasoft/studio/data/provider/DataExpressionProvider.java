@@ -131,7 +131,7 @@ public class DataExpressionProvider implements IExpressionProvider {
 
     @Override
     public boolean isRelevantFor(EObject context) {
-        return !getExpressions(context).isEmpty();
+        return true;
     }
 
     @Override
