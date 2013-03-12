@@ -69,8 +69,8 @@ public class BOSEngineManager {
 	private static final String PRESTARTUP_CONTIBUTION_ID = "org.bonitasoft.studio.engine.preEngineAction";
 	public static final String PLATFORM_PASSWORD = "platform";
 	public static final String PLATFORM_USER = "platformAdmin";
-	public static final String BONITA_TECHNICAL_USER = "technical_user_username";
-	public static final String BONITA_TECHNICAL_USER_PASSWORD = "technical_user_password";
+	public static final String BONITA_TECHNICAL_USER = "install";
+	public static final String BONITA_TECHNICAL_USER_PASSWORD = "install";
 
 	public static final String API_TYPE_PROPERTY_NAME = "org.bonitasoft.engine.api-type";
 	public static final String DEFAULT_TENANT_NAME = "default";
