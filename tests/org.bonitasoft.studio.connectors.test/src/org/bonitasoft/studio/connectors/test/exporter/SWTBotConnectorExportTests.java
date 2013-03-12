@@ -79,15 +79,15 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 
     @Test
     public void testBonitaConnectorExport() throws Exception {
-        final String emailConnector = "email-impl (1.0.0) -- org.bonitasoft.connectors.email.EmailConnector";
-        final String fileName = "email-impl-1.0.0.zip";
+        final String emailConnector = "email-impl (1.0.1) -- org.bonitasoft.connectors.email.EmailConnector";
+        final String fileName = "email-impl-1.0.1.zip";
         exportConnector(emailConnector, fileName, true, false);
     }
 
     @Test
     public void testRewriteBonitaConnectorExport() throws Exception {
-        final String emailConnector = "email-impl (1.0.0) -- org.bonitasoft.connectors.email.EmailConnector";
-        final String fileName = "email-impl-1.0.0.zip";
+        final String emailConnector = "email-impl (1.0.1) -- org.bonitasoft.connectors.email.EmailConnector";
+        final String fileName = "email-impl-1.0.1.zip";
         exportConnector(emailConnector, fileName, true, false);
         exportConnector(emailConnector, fileName, true, false);
     }
