@@ -9,9 +9,9 @@
       Contains plugins that are only in the BOS product
    </description>
 
-   <copyright url="http://www.example.com/copyright">
+   <copyright url="http://www.gnu.org/licenses/">
       Bonita Studio
-Copyright (c) BonitaSoft S.A., 2009-2011
+Copyright (c) BonitaSoft S.A., 2009-2013
 All right reserved
 
 This software is licensed under GPL v2.
