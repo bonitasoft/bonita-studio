@@ -144,7 +144,7 @@ public class PlatformUtil {
 	 * Open the intro
 	 */
 	public static void openIntro(){
-		Display.getDefault().syncExec(new Runnable() {
+		Display.getDefault().asyncExec(new Runnable() {
 
 			@Override
 			public void run() {

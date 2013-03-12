@@ -22,6 +22,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.internal.ViewIntroAdapterPart;
+import org.eclipse.ui.intro.IIntroPart;
 
 public final class AutomaticSwitchPerspectivePartListener implements IPartListener2 {
 
@@ -47,6 +49,9 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 		if (part instanceof IEditorPart) {
 			PlatformUtil.openIntroIfNoOtherEditorOpen();
 		}
+		if("org.eclipse.ui.internal.introview".equals(partRef.getId())){
+			PlatformUtil.openIntroIfNoOtherEditorOpen();
+		}
 	}
 
 	@Override
@@ -70,12 +75,12 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 
 	@Override
 	public void partHidden(IWorkbenchPartReference partRef) {
-
+		
 	}
 
 	@Override
 	public void partVisible(IWorkbenchPartReference partRef) {
-
+		
 	}
 
 	@Override

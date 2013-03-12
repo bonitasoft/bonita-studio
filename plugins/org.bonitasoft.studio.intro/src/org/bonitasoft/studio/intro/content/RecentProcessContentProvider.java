@@ -75,28 +75,12 @@ public class RecentProcessContentProvider implements IIntroXHTMLContentProvider 
     public void createContent(String id, Element parent) {
         DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
         int nbProc = Integer.parseInt(id.split(",")[0]);
-        //        final List<DiagramFileStore> allArtifacts = diagramSotre.getChildren() ;
-        //        nbProc = Math.min(nbProc, allArtifacts.size());
         Document doc = parent.getOwnerDocument();
         Element ul = doc.createElement("ul");
         parent.appendChild(ul);
         if (nbProc == 0) {
             return;
         }
-        //        PriorityQueue<IRepositoryFileStore> queue = new PriorityQueue<IRepositoryFileStore>(nbProc, new Comparator<IRepositoryFileStore>() {
-        //            public int compare(IRepositoryFileStore arg0, IRepositoryFileStore arg1) {
-        //                final long lastModifiedArg1 = arg1.getResource().getLocation().toFile().lastModified();
-        //                final long lastModifiedArg0 = arg0.getResource().getLocation().toFile().lastModified();
-        //                return Long.valueOf(lastModifiedArg1).compareTo(Long.valueOf(lastModifiedArg0));
-        //            }
-        //        });
-        //        for (IRepositoryFileStore proc : allArtifacts) {
-        //            if(queue.size() == nbProc) {
-        //                break;
-        //            }
-        //            queue.add(proc);
-        //        }
-        //        Assert.isTrue(nbProc == queue.size());
         if(diagramSotre != null){
         	for (IRepositoryFileStore proc : diagramSotre.getRecentChildren(nbProc)) {
         		Element li = doc.createElement("li");
