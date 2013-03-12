@@ -209,10 +209,13 @@ public class EditExpressionDialog extends TrayDialog {
                 getShell().layout(true, true) ;
             }
         }) ;
-
-
     }
 
+    @Override
+    protected boolean isResizable() {
+    	return true;
+    }
+    
     protected void expressionTypeChanged(ISelection selection) {
         if(!selection.isEmpty()){
             final IExpressionProvider provider =  (IExpressionProvider) ((StructuredSelection) selection).getFirstElement() ;
