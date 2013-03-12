@@ -3,16 +3,6 @@
 
 <product name="Bonita Studio" uid="org.bonitasoft.studio.product" id="org.bonitasoft.studio.product" application="org.bonitasoft.studio.application.application" version="6.0" useFeatures="true" includeLaunchers="true">
 
-   <aboutInfo>
-      <image path="icons/about.bmp"/>
-      <text>
-         Bonita Studio
-Copyright (c) BonitaSoft S.A., 2009-2013
-All right reserved
-
-This software is licensed under GPL v2.
-      </text>
-   </aboutInfo>
 
    <configIni use="default">
    </configIni>
@@ -25,7 +15,7 @@ This software is licensed under GPL v2.
       <vmArgsWin>-Dgreclipse.nonlocking=true</vmArgsWin>
    </launcherArgs>
 
-   <windowImages i16="icons/bonitasoft-icon-16-16-transparent.png" i32="icons/bonitasoft-icon-32-32-transparent.png" i48="icons/bonitasoft-icon-48-48-transparent.png" i64="icons/bonitasoft-icon-64-64-transparent.png" i128="icons/bonitasoft-icon-128-128-transparent.png"/>
+   <windowImages/>
 
    <splash
       location="org.bonitasoft.studio"
@@ -37,12 +27,10 @@ This software is licensed under GPL v2.
       <solaris/>
       <win useIco="true">
          <ico path="icons/bonitasoft-icon-128-128-transparent.ico"/>
-         <bmp
-            winSmallHigh="icons/bonitasoft-icon-16-16-transparent.bmp"
-            winMediumHigh="icons/bonitasoft-icon-32-32-transparent.bmp"
-            winLargeHigh="icons/bonitasoft-icon-48-48-transparent.bmp"/>
+         <bmp/>
       </win>
    </launcher>
+
 
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</linux>
