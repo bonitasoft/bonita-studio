@@ -536,7 +536,11 @@ public class FlowElementSwitch extends AbstractSwitch {
 		for(BoundaryEvent boundaryEvent :activity.getBoundaryIntermediateEvents()){
 			BoundaryEventDefinitionBuilder boundaryEventBuilder = taskBuilder.addBoundaryEvent(boundaryEvent.getName());
 			if(boundaryEvent instanceof IntermediateErrorCatchEvent){
-				boundaryEventBuilder.addErrorEventTrigger(((IntermediateErrorCatchEvent) boundaryEvent).getErrorCode());
+				String errorCode = ((IntermediateErrorCatchEvent) boundaryEvent).getErrorCode();
+				if(errorCode != null && errorCode.trim().isEmpty()){
+					errorCode = null;
+				}
+				boundaryEventBuilder.addErrorEventTrigger(errorCode);
 			} else if(boundaryEvent instanceof BoundaryMessageEvent){
 				CatchMessageEventTriggerDefinitionBuilder catchMessageEventTriggerDefinitionBuilder = boundaryEventBuilder.addMessageEventTrigger(((BoundaryMessageEvent) boundaryEvent).getEvent());
 				addMessageContent((BoundaryMessageEvent)boundaryEvent, catchMessageEventTriggerDefinitionBuilder);
