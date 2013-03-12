@@ -80,6 +80,7 @@ public class AvailableValueContribution extends InitialValueContribution {
        
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{
     			ExpressionConstants.CONSTANT_TYPE,
+    			ExpressionConstants.PARAMETER_TYPE,
     			ExpressionConstants.VARIABLE_TYPE,
     			ExpressionConstants.SCRIPT_TYPE
         }));
