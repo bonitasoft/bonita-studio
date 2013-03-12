@@ -199,7 +199,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
                         @Override
                         public void run() {
-                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage, Messages.deploymentFailedMessage,status,IStatus.ERROR).open() ;
+                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.deploymentFailedMessage, Messages.deploymentFailedMessage,status,IStatus.ERROR | IStatus.WARNING).open() ;
                         }
                     }) ;
 
