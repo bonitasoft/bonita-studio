@@ -528,6 +528,7 @@ public class FlowElementSwitch extends AbstractSwitch {
 		addDisplayTitle(taskBuilder, activity) ;
 		addDescription(taskBuilder, activity.getDocumentation()) ;
 		addDisplayDescription(taskBuilder,activity) ;
+		addDisplayDescriptionAfterCompletion(taskBuilder,activity) ;
 		addMultiInstantiation(taskBuilder,activity);
 		addBoundaryEvents(taskBuilder, activity);
 	}
@@ -611,6 +612,13 @@ public class FlowElementSwitch extends AbstractSwitch {
 		org.bonitasoft.engine.expression.Expression exp =   EngineExpressionUtil.createExpression(flowElement.getDynamicDescription()) ;
 		if(exp != null){
 			builder.addDisplayDescription(exp) ;
+		}
+	}
+	
+	protected void addDisplayDescriptionAfterCompletion(ActivityDefinitionBuilder builder, FlowElement flowElement){
+		org.bonitasoft.engine.expression.Expression exp =   EngineExpressionUtil.createExpression(flowElement.getStepSummary()) ;
+		if(exp != null){
+			builder.addDisplayDescriptionAfterCompletion(exp) ;
 		}
 	}
 
