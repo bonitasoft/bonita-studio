@@ -170,6 +170,7 @@ public class ImportBosArchiveOperation {
             if(container.exists()){
                 try {
                     container.close( Repository.NULL_PROGRESS_MONITOR);
+                    container.refreshLocal(IResource.DEPTH_ZERO,  Repository.NULL_PROGRESS_MONITOR);
                     container.delete(true, true, Repository.NULL_PROGRESS_MONITOR);
                     container.refreshLocal(IResource.DEPTH_ZERO,  Repository.NULL_PROGRESS_MONITOR);
                 } catch (CoreException e) {
@@ -187,6 +188,7 @@ public class ImportBosArchiveOperation {
         IProject container = root.getProject(TMP_IMPORT_PROJECT) ;
         if(container.exists()){
             try {
+            	container.refreshLocal(IResource.DEPTH_ZERO,  Repository.NULL_PROGRESS_MONITOR);
                 container.delete(true, true, Repository.NULL_PROGRESS_MONITOR);
                 container.refreshLocal(IResource.DEPTH_ZERO,  Repository.NULL_PROGRESS_MONITOR);
             } catch (CoreException e) {
