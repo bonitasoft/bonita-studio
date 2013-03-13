@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Mickael Istria
@@ -32,6 +33,7 @@ public class OpenIntroCommandHandler extends AbstractHandler {
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
 		PlatformUtil.openIntro();
 		return null;
 	}
