@@ -35,7 +35,7 @@ import org.eclipse.emf.edapt.migration.Model;
  * @author Romain Bioteau
  *
  */
-public class DataDefaultValueMigeation extends ReportCustomMigration {
+public class DataDefaultValueMigration extends ReportCustomMigration {
 
 	private Map<String, String> dataDefaultValue = new HashMap<String,String>();
 

@@ -7882,7 +7882,7 @@
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
       </changes>
     </changes>
-    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.DataDefaultValueMigeation">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.DataDefaultValueMigration">
       <changes xsi:type="history:CompositeChange">
         <changes xsi:type="history:Delete" target="process.ecore#//Data" referenceName="eStructuralFeatures">
           <element xsi:type="ecore:EAttribute" name="defaultValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
