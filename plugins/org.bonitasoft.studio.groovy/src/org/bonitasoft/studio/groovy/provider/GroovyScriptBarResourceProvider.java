@@ -61,13 +61,13 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
 
 		final List<BarResource>  classpathResources = new ArrayList<BarResource>() ;
 		final List<BarResource>  resources = new ArrayList<BarResource>() ;
-
-		addGroovyScriptDependencies(configuration, classpathResources,configuration.getProcessDependencies(),"");
-		addGroovyScriptDependencies(configuration, resources,configuration.getApplicationDependencies(),BARResourcesProvider.FORMS_FOLDER_IN_BAR+"/lib/");
-		for(BarResource barResource : resources){
-			builder.addExternalResource(barResource) ;
+		if(configuration != null){
+			addGroovyScriptDependencies(configuration, classpathResources,configuration.getProcessDependencies(),"");
+			addGroovyScriptDependencies(configuration, resources,configuration.getApplicationDependencies(),BARResourcesProvider.FORMS_FOLDER_IN_BAR+"/lib/");
+			for(BarResource barResource : resources){
+				builder.addExternalResource(barResource) ;
+			}
 		}
-		
 		List<File> providedscripts = new ArrayList<File>();
 		final ProvidedGroovyRepositoryStore providedStore = (ProvidedGroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProvidedGroovyRepositoryStore.class) ;
 		for (IRepositoryFileStore file : providedStore.getChildren()) {
