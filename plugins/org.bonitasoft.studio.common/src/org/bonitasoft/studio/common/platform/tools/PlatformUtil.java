@@ -149,7 +149,6 @@ public class PlatformUtil {
 			@Override
 			public void run() {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				IntroPlugin.closeIntro();
 				final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
 				if(model != null) {
 					model.setCurrentPageId("intro");
