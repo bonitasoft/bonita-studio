@@ -153,7 +153,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         SWTBotActorFilterUtil.activateSynchronizeOrganizationWizard(bot);
         bot.table().select(organizationName);
         bot.button(Messages.synchronize).click();
-        bot.waitUntil(Conditions.shellIsActive(Messages.synchronizeOrganizationTitle),
+        bot.waitUntil(Conditions.shellIsActive(Messages.synchronizeInformationTitle),
                 1500000);
         bot.button(IDialogConstants.OK_LABEL).click();
     }
