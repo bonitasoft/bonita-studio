@@ -152,10 +152,10 @@ public class DefinitionResourceProvider {
 
     private ResourceBundle getResourceBundle(ConnectorDefinition definition,
             Locale locale) {
-        if (definition == null) {
+        if (definition == null || definition.eResource() == null) {
             return null;
         }
-        IRepositoryFileStore fileStore = store.getChild(NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), true));
+        IRepositoryFileStore fileStore = store.getChild(URI.decode(definition.eResource().getURI().lastSegment()));
         if(fileStore == null){
         	return null;
         }
@@ -309,8 +309,10 @@ public class DefinitionResourceProvider {
 
     public Set<Locale> getExistingLocale(ConnectorDefinition definition) {
         Set<Locale> result = new HashSet<Locale>();
-        String defId = NamingUtils.toConnectorDefinitionFilename(
-                definition.getId(), definition.getVersion(), false);
+        if(definition.eResource() == null){
+        	return result;
+        }
+        String defId = URI.decode(definition.eResource().getURI().trimFileExtension().lastSegment());
         try {
             for (IResource r : store.getResource().members()) {
                 if (r.getFileExtension() != null
@@ -376,8 +378,10 @@ public class DefinitionResourceProvider {
 
     public List<File> getExistingLocalesResource(ConnectorDefinition def) {
         List<File> result = new ArrayList<File>();
-        String defId = NamingUtils.toConnectorDefinitionFilename(def.getId(),
-                def.getVersion(), false);
+        if(def.eResource() == null){
+        	return result;
+        }
+        String defId = URI.decode(def.eResource().getURI().trimFileExtension().lastSegment());
         try {
             for (IResource r : store.getResource().members()) {
                 if (r.getFileExtension() != null

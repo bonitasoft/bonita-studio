@@ -16,11 +16,14 @@
  */
 package org.bonitasoft.studio.connector.model.definition.dialog;
 
+import java.util.List;
+
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
+import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectConnectorConfigurationWizard;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
@@ -28,6 +31,7 @@ import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -61,13 +65,15 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
     private final IRepositoryStore<? extends IRepositoryFileStore> configurationStore;
     private Listener testConfigurationListener;
     private final IImplementationRepositoryStore implStore;
-    private final IRepositoryStore<?> definitionRepositoryStore;
+    private final IDefinitionRepositoryStore definitionRepositoryStore;
+	private List<ConnectorDefinition> existingDefinitions;
 
     public AbstractDefinitionWizardDialog(Shell parentShell, IWizard newWizard,IRepositoryStore<? extends IRepositoryFileStore> configurationStore,IRepositoryStore definitionRepositoryStore, IImplementationRepositoryStore implStore) {
         super(parentShell, newWizard);
         this.configurationStore = configurationStore ;
-        this.definitionRepositoryStore = definitionRepositoryStore;
+        this.definitionRepositoryStore = (IDefinitionRepositoryStore) definitionRepositoryStore;
         this.implStore = implStore ;
+        this.existingDefinitions = this.definitionRepositoryStore.getDefinitions();
     }
 
     @Override
@@ -192,7 +198,8 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
             final AbstractConnectorConfigurationWizardPage connectorConfPage = (AbstractConnectorConfigurationWizardPage) page ;
             final String defId = connectorConfPage.getConfiguration().getDefinitionId();
             final String defVersion = connectorConfPage.getConfiguration().getVersion();
-            IRepositoryFileStore def = definitionRepositoryStore.getChild(NamingUtils.toConnectorDefinitionFilename(defId, defVersion, true));
+            ConnectorDefinition defintion = definitionRepositoryStore.getDefinition(defId, defVersion, existingDefinitions);
+            IRepositoryFileStore def = ((IRepositoryStore<? extends IRepositoryFileStore>) definitionRepositoryStore).getChild(URI.decode(defintion.eResource().getURI().lastSegment()));
             if(def != null){
                 final String displayName = def.getDisplayName();
                 if(!displayName.equals(getShell().getText())){

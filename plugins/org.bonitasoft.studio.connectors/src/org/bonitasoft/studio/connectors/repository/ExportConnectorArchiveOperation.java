@@ -58,6 +58,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 import org.osgi.framework.Bundle;
@@ -264,7 +265,7 @@ public class ExportConnectorArchiveOperation {
 	protected void addConnectorDefinition(ConnectorImplementation impl, List<IResource> resourcesToExport) throws FileNotFoundException, CoreException {
 		final IRepositoryStore store = getDefinitionStore() ;
 		ConnectorDefinition def = ((IDefinitionRepositoryStore) store).getDefinition(impl.getDefinitionId(), impl.getDefinitionVersion()) ;
-		EMFFileStore file = (EMFFileStore) store.getChild(NamingUtils.toConnectorDefinitionFilename(def.getId(),def.getVersion(), true)) ;
+		EMFFileStore file = (EMFFileStore) store.getChild(URI.decode(def.eResource().getURI().lastSegment())) ;
 
 		if(file != null && !file.canBeShared()){
 			File f = new File(file.getEMFResource().getURI().toFileString()) ;
