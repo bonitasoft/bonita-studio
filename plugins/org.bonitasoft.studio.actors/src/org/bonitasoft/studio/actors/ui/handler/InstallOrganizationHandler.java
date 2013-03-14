@@ -18,8 +18,9 @@ package org.bonitasoft.studio.actors.ui.handler;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -165,8 +166,8 @@ public class InstallOrganizationHandler extends AbstractHandler {
 	private String getFileContent(File file){
 		try
 		{
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			StringBuilder sb = new StringBuilder();
+			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
+			final StringBuilder sb = new StringBuilder();
 			String line = ""; //$NON-NLS-1$
 			while((line = reader.readLine()) != null)
 			{
