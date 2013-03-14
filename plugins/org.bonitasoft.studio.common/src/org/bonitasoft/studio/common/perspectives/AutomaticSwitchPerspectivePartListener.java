@@ -49,9 +49,9 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 		if (part instanceof IEditorPart) {
 			PlatformUtil.openIntroIfNoOtherEditorOpen();
 		}
-		if("org.eclipse.ui.internal.introview".equals(partRef.getId())){
-			PlatformUtil.openIntroIfNoOtherEditorOpen();
-		}
+//		if("org.eclipse.ui.internal.introview".equals(partRef.getId())){
+//			PlatformUtil.openIntroIfNoOtherEditorOpen();
+//		}
 	}
 
 	@Override

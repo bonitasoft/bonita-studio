@@ -55,6 +55,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
 import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
 import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.ui.part.IntroPart;
 import org.osgi.framework.Bundle;
 
 /**
@@ -144,7 +145,7 @@ public class PlatformUtil {
 	 * Open the intro
 	 */
 	public static void openIntro(){
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 
 			@Override
 			public void run() {
@@ -152,7 +153,6 @@ public class PlatformUtil {
 				final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
 				if(model != null) {
 					model.setCurrentPageId("intro");
-
 					PlatformUI.getWorkbench().getIntroManager().showIntro(
 							window,
 							false);
