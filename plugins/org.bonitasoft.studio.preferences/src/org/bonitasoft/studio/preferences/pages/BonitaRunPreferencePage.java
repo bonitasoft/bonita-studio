@@ -82,12 +82,13 @@ public class BonitaRunPreferencePage extends AbstractBonitaPreferencePage  imple
 
         radioFiled = new RadioGroupFieldEditor(BonitaPreferenceConstants.APLLICATION_DEPLOYMENT_MODE,"", 1, new String[][] {
                 { Messages.embeddedMode, BonitaPreferenceConstants.ALL_IN_BAR },
-                {Messages.warMode, BonitaPreferenceConstants.WAR_GENERATION }}, radioComposite, false) ;
-
+                {Messages.warMode, BonitaPreferenceConstants.WAR_GENERATION }}, radioComposite,
+                true) ;//TODO: remove use group when we will reactivate war mode
 
         radioFiled.getLabelControl(radioComposite).dispose();
         radioFiled.getRadioBoxControl(radioComposite).setLayoutData(GridDataFactory.fillDefaults().span(3, 1).create()) ;
-
+        radioFiled.setEnabled(false, null);
+               
         addField(radioFiled) ;
 
         defaultAppLookNFeel = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME, Messages.defaultAppliThemeLabel,getAvailableThemes(), getFieldEditorParent()) ;
