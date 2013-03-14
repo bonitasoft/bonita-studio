@@ -55,7 +55,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
 import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
 import org.eclipse.ui.intro.IIntroManager;
-import org.eclipse.ui.part.IntroPart;
 import org.osgi.framework.Bundle;
 
 /**

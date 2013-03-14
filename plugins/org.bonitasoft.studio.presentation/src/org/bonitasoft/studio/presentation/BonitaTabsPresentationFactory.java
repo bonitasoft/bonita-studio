@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.bonitasoft.studio.presentation;
 
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IProgressMonitorWithBlocking;
 import org.eclipse.core.runtime.IStatus;
@@ -18,43 +17,9 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.presentations.IStackPresentationSite;
-import org.eclipse.ui.presentations.StackPresentation;
 import org.eclipse.ui.presentations.WorkbenchPresentationFactory;
 
 public class BonitaTabsPresentationFactory extends WorkbenchPresentationFactory {
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.presentations.AbstractPresentationFactory#createEditorPresentation(org.eclipse.swt.widgets.Composite,
-     *      org.eclipse.ui.presentations.IStackPresentationSite)
-     */
-    @Override
-    public StackPresentation createEditorPresentation(Composite parent,
-            IStackPresentationSite site) {
-        final StackPresentation  result = super.createEditorPresentation(parent, site);
-//        org.eclipse.swt.custom.CTabFolder tab = (org.eclipse.swt.custom.CTabFolder)result.getControl();
-//        tab.setBackgroundImage(Pics.getImage(PresentationImages.COOLBAR_BACKGROUND));
-        return result;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.presentations.AbstractPresentationFactory#createViewPresentation(org.eclipse.swt.widgets.Composite,
-     *      org.eclipse.ui.presentations.IStackPresentationSite)
-     */
-    @Override
-    public StackPresentation createViewPresentation(Composite parent,
-            IStackPresentationSite site) {
-        final StackPresentation  result = super.createViewPresentation(parent, site);
-//        org.eclipse.swt.custom.CTabFolder tab = (org.eclipse.swt.custom.CTabFolder)result.getControl();
-//        tab.setBackgroundImage(Pics.getImage(PresentationImages.COOLBAR_BACKGROUND));
-
-        return result;
-    }
-
 
     @Override
     public Control createStatusLineControl(IStatusLineManager statusLine,

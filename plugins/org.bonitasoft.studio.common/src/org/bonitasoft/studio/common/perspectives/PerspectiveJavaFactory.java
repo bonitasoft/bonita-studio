@@ -29,8 +29,13 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
 	
 	public static String JAVA_PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.java";
 	
+	protected void configureIntroView(IPageLayout layout) {
+		layout.getViewLayout("org.eclipse.ui.internal.introview").setCloseable(false);
+		layout.getViewLayout("org.eclipse.ui.internal.introview").setMoveable(false);
+	}
 	
 	public void createInitialLayout(IPageLayout layout) {
+		configureIntroView(layout);
        String editorArea = layout.getEditorArea();
        
        // Bottom left.

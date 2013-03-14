@@ -32,7 +32,13 @@ public class TextEditorPerspectiveFactory extends AbstractPerspectiveFactory {
 	public static String PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.textEditor";
 
 	public void createInitialLayout(IPageLayout layout) {
+		configureIntroView(layout);
 		//no layout
+	}
+	
+	protected void configureIntroView(IPageLayout layout) {
+		layout.getViewLayout("org.eclipse.ui.internal.introview").setCloseable(false);
+		layout.getViewLayout("org.eclipse.ui.internal.introview").setMoveable(false);
 	}
 
 	/* (non-Javadoc)

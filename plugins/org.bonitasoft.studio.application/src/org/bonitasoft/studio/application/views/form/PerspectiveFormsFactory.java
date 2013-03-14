@@ -33,6 +33,7 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 	protected static String FORM_PERSPECTIVE_ID = "org.bonitasoft.studio.common.perspective.form";
 	
 	public void createInitialLayout(IPageLayout layout) {
+		configureIntroView(layout);
 		 // Editors are placed for free.
         String editorArea = layout.getEditorArea();
         
@@ -78,6 +79,11 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 	@Override
 	public String getID() {
 		return FORM_PERSPECTIVE_ID;
+	}
+	
+	protected void configureIntroView(IPageLayout layout) {
+		layout.getViewLayout("org.eclipse.ui.internal.introview").setCloseable(false);
+		layout.getViewLayout("org.eclipse.ui.internal.introview").setMoveable(false);
 	}
 
 }
