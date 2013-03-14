@@ -33,7 +33,6 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 	protected static String FORM_PERSPECTIVE_ID = "org.bonitasoft.studio.common.perspective.form";
 	
 	public void createInitialLayout(IPageLayout layout) {
-		configureIntroView(layout);
 		 // Editors are placed for free.
         String editorArea = layout.getEditorArea();
         

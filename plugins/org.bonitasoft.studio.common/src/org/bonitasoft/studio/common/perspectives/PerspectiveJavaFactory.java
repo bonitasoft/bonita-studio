@@ -35,7 +35,6 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
 	}
 	
 	public void createInitialLayout(IPageLayout layout) {
-		configureIntroView(layout);
        String editorArea = layout.getEditorArea();
        
        // Bottom left.

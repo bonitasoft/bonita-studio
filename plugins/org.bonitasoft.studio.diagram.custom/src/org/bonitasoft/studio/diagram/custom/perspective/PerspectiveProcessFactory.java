@@ -36,8 +36,6 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 	public static String PROCESS_PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.process";
 
 	public void createInitialLayout(IPageLayout layout) {
-		configureIntroView(layout);
-		
 		// Editors are placed for free.
 		String editorArea = layout.getEditorArea();
 		// Bottom left.
