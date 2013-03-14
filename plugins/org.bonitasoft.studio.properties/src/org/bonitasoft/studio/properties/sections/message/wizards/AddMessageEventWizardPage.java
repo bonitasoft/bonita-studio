@@ -100,7 +100,7 @@ public class AddMessageEventWizardPage extends WizardPage implements IWizardPage
     private WizardPageSupport pageSupport;
 
     protected MainProcess diagram;
-
+    private  Text nameText;
     /**
      * @param performer
      * @param pageName
@@ -365,6 +365,15 @@ public class AddMessageEventWizardPage extends WizardPage implements IWizardPage
             		}
             	}
             }
+            if(elementExpressionViewer==null || elementExpressionViewer.getTextControl().getText().isEmpty()){
+            	return ValidationStatus.error(Messages.eventNameLabel+ " "+Messages.isMandatory);
+            }
+            if(processExpressionViewer==null || processExpressionViewer.getTextControl().getText().isEmpty()){
+            	return ValidationStatus.error(Messages.processNameLabel+" "+ Messages.isMandatory);
+            }
+            if(nameText.getText() == null || nameText.getText().isEmpty()){
+            	return ValidationStatus.error(Messages.emptyName);
+            }
         }
 
 
@@ -447,7 +456,7 @@ public class AddMessageEventWizardPage extends WizardPage implements IWizardPage
         nameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
         nameLabel.setText(Messages.dataNameLabel);
 
-        final Text nameText = new Text(composite, SWT.BORDER);
+        nameText = new Text(composite, SWT.BORDER);
         nameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         IValidator nameValidator = new IValidator() {

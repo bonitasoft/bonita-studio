@@ -818,9 +818,10 @@ public class Messages extends NLS {
 	public static String valueShouldBeDefined;
 	public static String idShouldBeDefined;
 	public static String conditionExpresssionHelpMessage;
-
-
-
+	public static String isMandatory;
+	
+	
+	
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

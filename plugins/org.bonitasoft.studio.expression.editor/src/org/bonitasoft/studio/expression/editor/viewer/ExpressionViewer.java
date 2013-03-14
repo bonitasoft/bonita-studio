@@ -313,6 +313,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 						}
 					}
 					updateSelection(copy);
+					fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, new StructuredSelection(selectedExpression)));
 				}
 			}
 		}) ;

@@ -53,7 +53,7 @@ public class CatchMessageEventNamesExpressionNatureProvider implements IExpressi
                 result.add(exp);
             }
         }
-        return result.toArray(new Expression[]{});
+        return result.toArray(new Expression[result.size()]);
     }
 
     @Override

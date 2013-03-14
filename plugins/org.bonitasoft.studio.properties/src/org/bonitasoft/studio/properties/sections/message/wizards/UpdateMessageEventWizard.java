@@ -127,11 +127,13 @@ public class UpdateMessageEventWizard extends Wizard implements IWizard {
         }
 
         for(AbstractCatchMessageEvent catchEvent : events){
-            if(eventObject.getTargetElementExpression() != null && catchEvent.getName().equals(eventObject.getTargetElementExpression().getContent())){
-                if(isOnDiagram(catchEvent)){
-                    MessageFlowFactory.createMessageFlow(editingDomain,eventObject,element,catchEvent,editor.getDiagramEditPart()) ;
-                }
-            }
+        	if(eventObject.getTargetElementExpression() != null && catchEvent.getName().equals(eventObject.getTargetElementExpression().getContent())) { 
+        		if(eventObject.getTargetProcessExpression() != null && ModelHelper.getParentProcess(catchEvent).getName().equals(eventObject.getTargetProcessExpression().getContent())){
+        			if(isOnDiagram(catchEvent)){
+        				MessageFlowFactory.createMessageFlow(editingDomain,eventObject,element,catchEvent,editor.getDiagramEditPart()) ;
+        			}
+        		}
+        	}
         }
     }
 
