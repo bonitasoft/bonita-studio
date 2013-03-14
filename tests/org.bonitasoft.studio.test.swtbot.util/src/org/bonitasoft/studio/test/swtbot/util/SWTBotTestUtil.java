@@ -344,19 +344,20 @@ public class SWTBotTestUtil implements SWTBotConstants{
         
         int yPaletteDelta = computeYPaletteDelta(elementIndex);
         		
+        final Rectangle bounds = graphicalEditPart.getFigure().getBounds();
         switch (position) {
-		case PositionConstants.NORTH:dropLocation = graphicalEditPart.getFigure().getBounds().getTop().getCopy().translate(-20, -70);break;
-		case PositionConstants.SOUTH:dropLocation = graphicalEditPart.getFigure().getBounds().getBottom().getCopy().translate(-20, 70);break;
-		case PositionConstants.WEST:dropLocation = graphicalEditPart.getFigure().getBounds().getLeft().getCopy().translate(-80, yPaletteDelta);break;
-		case PositionConstants.EAST:dropLocation = graphicalEditPart.getFigure().getBounds().getRight().getCopy().translate(80,yPaletteDelta);break;
-		
-		case PositionConstants.NORTH_EAST:dropLocation = graphicalEditPart.getFigure().getBounds().getTopRight().getCopy().translate(80, -70);break;
-		case PositionConstants.NORTH_WEST:dropLocation = graphicalEditPart.getFigure().getBounds().getTopLeft().getCopy().translate(-80, 70);break;
-		case PositionConstants.SOUTH_EAST:dropLocation = graphicalEditPart.getFigure().getBounds().getBottomRight().getCopy().translate(80, 70);break;
-		case PositionConstants.SOUTH_WEST:dropLocation = graphicalEditPart.getFigure().getBounds().getBottomLeft().getCopy().translate(-80,-70);break;
-		
-		default: throw new RuntimeException("Invalid position specified") ;
-		}
+        case PositionConstants.NORTH:dropLocation = bounds.getTop().getCopy().translate(-20, -70);break;
+        case PositionConstants.SOUTH:dropLocation = bounds.getBottom().getCopy().translate(-20, 70);break;
+        case PositionConstants.WEST:dropLocation = bounds.getLeft().getCopy().translate(-80, yPaletteDelta);break;
+        case PositionConstants.EAST:dropLocation = bounds.getRight().getCopy().translate(80,yPaletteDelta);break;
+
+        case PositionConstants.NORTH_EAST:dropLocation = bounds.getTopRight().getCopy().translate(80, -70);break;
+        case PositionConstants.NORTH_WEST:dropLocation = bounds.getTopLeft().getCopy().translate(-80, 70);break;
+        case PositionConstants.SOUTH_EAST:dropLocation = bounds.getBottomRight().getCopy().translate(80, 70);break;
+        case PositionConstants.SOUTH_WEST:dropLocation = bounds.getBottomLeft().getCopy().translate(-80,-70);break;
+
+        default: throw new RuntimeException("Invalid position specified") ;
+        }
         
         Point location = toolbarFigure.getBounds().getCenter().getCopy();
         toolbarFigure.translateToAbsolute(location);
@@ -468,11 +469,12 @@ public class SWTBotTestUtil implements SWTBotConstants{
         final IGraphicalEditPart gep =  (IGraphicalEditPart) gmfEditor.getEditPart(endElementName).parent().part();
         IFigure figure = gep.getFigure();
         Point targetLocation = null;
-        switch (targetAnchorPosition) {
-		case PositionConstants.NORTH: targetLocation = figure.getBounds().getTop().getCopy().translate(-10, 10); break;
-		case PositionConstants.SOUTH: targetLocation = figure.getBounds().getBottom().getCopy().translate(-10, -10); break;
-		case PositionConstants.EAST: targetLocation = figure.getBounds().getRight().getCopy().translate(-10, 8);break;
-		case PositionConstants.WEST: targetLocation = figure.getBounds().getLeft().getCopy().translate(10, 8);break;
+        final Rectangle bounds = figure.getBounds();
+		switch (targetAnchorPosition) {
+		case PositionConstants.NORTH: targetLocation = bounds.getTop().getCopy().translate(-10, 10); break;
+		case PositionConstants.SOUTH: targetLocation = bounds.getBottom().getCopy().translate(-10, -10); break;
+		case PositionConstants.EAST: targetLocation = bounds.getRight().getCopy().translate(-10, 8);break;
+		case PositionConstants.WEST: targetLocation = bounds.getLeft().getCopy().translate(10, 8);break;
 		default:throw new RuntimeException("Unhandled position : "+targetAnchorPosition);
 		}
 
