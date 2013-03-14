@@ -115,7 +115,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
         addOutputPage() ;
 
-        i18nPage = new DefinitionI18NWizardPage(definitionWorkingCopy,originalDefinition, messageProvider.getExistingLocale(definitionWorkingCopy)) ;
+        i18nPage = new DefinitionI18NWizardPage(definitionWorkingCopy,originalDefinition, messageProvider.getExistingLocale(originalDefinition)) ;
         addPage(i18nPage) ;
     }
 
