@@ -29,13 +29,11 @@ import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -47,7 +45,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.ui.internal.quickaccess.EditorElement;
 
 /**
  * @author Romain Bioteau
@@ -106,12 +103,6 @@ public class ComputeScriptDependenciesJob extends Job {
 					}
 				}
 
-				for (final Data d : ModelHelper.getAccessibleData(context, true)) {
-					if (d.getName().equals(name)) {
-						deps.add(EcoreUtil.copy(d));
-						continue variablesloop;
-					}
-				}
 				if (context instanceof Widget) {
 					if (name.startsWith("field_")) {
 						IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.FORM_FIELD_TYPE);
@@ -123,7 +114,7 @@ public class ComputeScriptDependenciesJob extends Job {
 						}
 					}
 				}
-
+				
 				if (context instanceof Form) {
 					if (name.startsWith("field_")) {
 						IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.FORM_FIELD_TYPE);
@@ -136,7 +127,14 @@ public class ComputeScriptDependenciesJob extends Job {
 						}
 					}
 				}
-
+				
+				for (final Data d : ModelHelper.getAccessibleData(context, true)) {
+					if (d.getName().equals(name)) {
+						deps.add(EcoreUtil.copy(d));
+						continue variablesloop;
+					}
+				}
+				
 				if (context instanceof Connector) {
 					final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
 					for (final Expression e : provider.getExpressions(context)) {
