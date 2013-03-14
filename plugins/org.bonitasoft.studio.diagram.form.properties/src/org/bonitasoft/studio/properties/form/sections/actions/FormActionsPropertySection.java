@@ -58,6 +58,7 @@ public class FormActionsPropertySection extends AbstractBonitaDescriptionSection
     	AvailableExpressionTypeFilter actionFilter =  new AvailableExpressionTypeFilter(new String[]{
     			ExpressionConstants.CONSTANT_TYPE,
     			ExpressionConstants.VARIABLE_TYPE,
+    			ExpressionConstants.PARAMETER_TYPE,
     			ExpressionConstants.SCRIPT_TYPE,
     			ExpressionConstants.FORM_FIELD_TYPE
         }) ;
