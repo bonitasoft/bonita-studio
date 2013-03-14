@@ -41,6 +41,7 @@ import org.bonitasoft.studio.model.form.ViewForm;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.form.WidgetLayoutInfo;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.studio.model.process.AbstractPageFlow;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
@@ -1453,8 +1454,8 @@ public class ModelHelper {
         return result;
     }
 
-    public static PageFlow getPageFlow(Widget w) {
-        return (PageFlow) ModelHelper.getForm(w).eContainer();
+    public static AbstractPageFlow getPageFlow(Widget w) {
+        return (AbstractPageFlow) ModelHelper.getForm(w).eContainer();
     }
 
     public static List<Widget> getAllWidgetInsidePageFlow(PageFlow pageFlow) {
