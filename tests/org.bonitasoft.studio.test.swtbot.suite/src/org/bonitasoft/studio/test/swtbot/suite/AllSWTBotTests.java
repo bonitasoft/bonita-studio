@@ -68,6 +68,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     TestBugsSWTBot.class,
     DiagramTests.class,
+    TestLoadSaveConnectorConfiguration.class,
     TestConditionExpression.class,
     TestConfigurationDialog.class,
     OrganizationCreationTest.class,
@@ -77,11 +78,9 @@ import org.junit.runners.Suite;
     ActorFilterEditionTest.class,
     ActorFilterImplementationTest.class,
     SWTBotActorFilterExportTests.class,
-    ConnectorDefinitionTranslationsTest.class,
     ConnectorEditionTest.class,
     ConnectorDefinitionWizardPageTest.class,
     ConnectorImplementationTest.class,
-    TestLoadSaveConnectorConfiguration.class,
     TestTextAreaInConnectorWizard.class,
     SWTBotConnectorExportTests.class,
     SWTBotConnectorDefinitionTest.class,
@@ -94,7 +93,9 @@ import org.junit.runners.Suite;
     TestData.class,
     TestUndoRedoStackLimit.class,
     TestOpenDiagram.class,
-    TestDeleteTaskWithForm.class
+    TestDeleteTaskWithForm.class,
+    //WORKAROUND: put at the end otherwise when doing a new run after, it fails
+    ConnectorDefinitionTranslationsTest.class
 })
 public class AllSWTBotTests {
 
