@@ -78,7 +78,7 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 			}
 			if(c.eContainer() instanceof Expression){
 				Expression exp = (Expression) c.eContainer() ;
-				if(!ExpressionConstants.CONDITION_TYPE.equals(exp.getType())){
+				if(!ExpressionConstants.CONNECTOR_TYPE.equals(exp.getType())){
 					toRemove.add(c);
 				}
 			}
