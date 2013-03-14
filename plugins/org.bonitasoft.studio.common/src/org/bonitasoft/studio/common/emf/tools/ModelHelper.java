@@ -496,6 +496,9 @@ public class ModelHelper {
     private static void addAllDataWithType(DataAware element, List<Data> datas, EClass dataType) {
         if (dataType == null) {
             datas.addAll(element.getData());
+            if(element instanceof PageFlow){
+            	 datas.addAll(((PageFlow)element).getTransientData());
+            }
         } else {
 
             for (Data data : element.getData()) {
@@ -503,6 +506,13 @@ public class ModelHelper {
                     datas.add(data);
                 }
             }
+            if(element instanceof PageFlow){
+            	 for (Data data : ((PageFlow) element).getTransientData()) {
+                     if (dataType.isSuperTypeOf(data.getDataType().eClass())) {
+                         datas.add(data);
+                     }
+                 }
+           }
         }
 
         if(element instanceof EventSubProcessPool){
