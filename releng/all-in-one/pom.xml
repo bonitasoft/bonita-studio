@@ -153,36 +153,36 @@
 			</plugin>
 
 			<!-- Build all-in-one assemblies with all platforms -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>make-directory-assembly</id>
-						<phase>process-resources</phase>
-						<configuration>
-							<appendAssemblyId>false</appendAssemblyId>
-							<descriptor>${basedir}/assembly-descriptor.xml</descriptor>
-							<finalName>BOS-${project.version}</finalName>
-						</configuration>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>make-zip-assembly</id>
-						<phase>package</phase>
-						<configuration>
-							<appendAssemblyId>false</appendAssemblyId>
-							<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
-							<finalName>BOS-${project.version}-All-in-one</finalName>
-						</configuration>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
+<!-- 				<artifactId>maven-assembly-plugin</artifactId> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>make-directory-assembly</id> -->
+<!-- 						<phase>process-resources</phase> -->
+<!-- 						<configuration> -->
+<!-- 							<appendAssemblyId>false</appendAssemblyId> -->
+<!-- 							<descriptor>${basedir}/assembly-descriptor.xml</descriptor> -->
+<!-- 							<finalName>BOS-${project.version}</finalName> -->
+<!-- 						</configuration> -->
+<!-- 						<goals> -->
+<!-- 							<goal>single</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 					<execution> -->
+<!-- 						<id>make-zip-assembly</id> -->
+<!-- 						<phase>package</phase> -->
+<!-- 						<configuration> -->
+<!-- 							<appendAssemblyId>false</appendAssemblyId> -->
+<!-- 							<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor> -->
+<!-- 							<finalName>BOS-${project.version}-All-in-one</finalName> -->
+<!-- 						</configuration> -->
+<!-- 						<goals> -->
+<!-- 							<goal>single</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
 
 
 			<!-- Create a proper bundles.info for all-in-one -->
