@@ -18,7 +18,6 @@ package org.bonitasoft.studio.engine.export.switcher;
 
 import org.bonitasoft.engine.bpm.model.DataDefinitionBuilder;
 import org.bonitasoft.engine.bpm.model.FlowElementBuilder;
-import org.bonitasoft.engine.bpm.model.TextDataDefinitionBuilder;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.Data;
@@ -53,9 +52,7 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
 
     @Override
     public DataDefinitionBuilder caseStringType(final StringType type) {
-    	TextDataDefinitionBuilder textDataBuilder = builder.addLongTextData(data.getName(), expr);
-    	textDataBuilder.isLongText();
-    	return textDataBuilder;
+    	return builder.addLongTextData(data.getName(), expr);
     }
 
     @Override
