@@ -3309,11 +3309,11 @@
             referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Form" referenceName="eStructuralFeatures"
-          element="form.ecore#//Form/pageLabel">
-        <changes xsi:type="history:Set" element="form.ecore#//Form/pageLabel" featureName="name"
-            dataValue="pageLabel"/>
-        <changes xsi:type="history:Set" element="form.ecore#//Form/pageLabel" featureName="eType"
-            referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          element="#//@releases.1/@changes.38/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.38/@changes.2/@changes.0/@element"
+            featureName="name" dataValue="pageLabel"/>
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.38/@changes.2/@changes.0/@element"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Form" referenceName="eStructuralFeatures"
           element="form.ecore#//Form/showPageLabel">
@@ -9607,6 +9607,48 @@
           </parameters>
           <parameters name="upperBound">
             <dataValue>-1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="form.ecore#//Form" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="pageLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.1/@changes.38/@changes.2/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="form.ecore#//Form" referenceName="eStructuralFeatures"
+            element="form.ecore#//Form/pageLabel">
+          <changes xsi:type="history:Set" element="form.ecore#//Form/pageLabel" featureName="name"
+              dataValue="pageLabel"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Form/pageLabel" featureName="containment"
+              dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="form.ecore#//Form/pageLabel" featureName="eType"
+              referenceValue="expression.ecore#//Expression"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="form.ecore#//Form"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>pageLabel</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Expression"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
           </parameters>
           <parameters name="containment">
             <dataValue>true</dataValue>
