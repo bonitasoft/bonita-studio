@@ -39,7 +39,7 @@
             <code>fr</code>
             <file>i18n/messages_fr.properties</file>
         </language>
-         <language>
+        <language>
             <code>ar</code>
             <file>i18n/messages.properties</file>
         </language>
@@ -125,19 +125,19 @@
         </language>
          <language>
             <code>ko</code>
-            <file>messages.properties</file>
+            <file>i18n/messages.properties</file>
         </language>
 	    <language>
             <code>pl</code>
-            <file>messages.properties</file>
+            <file>i18n/messages.properties</file>
         </language>
          <language>
             <code>pt_BR</code>
-            <file>messages.properties</file>
+            <file>i18n/messages.properties</file>
         </language>
          <language>
             <code>pt</code>
-            <file>messages.properties</file>
+            <file>i18n/messages.properties</file>
         </language>
          <language>
             <code>ro</code>
@@ -174,7 +174,7 @@
          <language>
             <code>tr</code>
             <file>i18n/messages.properties</file>
-        </language>
+        </language> 
     </customLanguageFileList>
 	<preShowHelpActionList>
 		<setInstallerVariable>
