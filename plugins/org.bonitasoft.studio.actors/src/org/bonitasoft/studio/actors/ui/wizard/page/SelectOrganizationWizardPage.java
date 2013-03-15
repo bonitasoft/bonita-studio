@@ -16,9 +16,12 @@
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
+import java.util.List;
+
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.preference.ActorsPreferenceConstants;
+import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -76,10 +79,16 @@ public abstract class SelectOrganizationWizardPage extends WizardPage implements
         organizationCombo.setInput(organizationStore.getChildren()) ;
         String id =	BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(ActorsPreferenceConstants.DEFAULT_ORGANIZATION) ;
         IRepositoryFileStore defaultOrganization = organizationStore.getChild(id+"."+OrganizationRepositoryStore.ORGANIZATION_EXT) ;
-        organizationCombo.setSelection(new StructuredSelection(defaultOrganization)) ;
-
-        refreshOrganization((Organization) defaultOrganization.getContent()) ;
-
+        if(defaultOrganization == null){
+        	List<OrganizationFileStore> orga = organizationStore.getChildren();
+        	if(!orga.isEmpty()){
+        		defaultOrganization = orga.get(0);
+        	}
+        }
+        if(defaultOrganization != null){
+        	organizationCombo.setSelection(new StructuredSelection(defaultOrganization)) ;
+        	refreshOrganization((Organization) defaultOrganization.getContent()) ;
+        }
         Label separator = new Label(mainComposite, SWT.SEPARATOR | SWT.HORIZONTAL) ;
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create()) ;
 
