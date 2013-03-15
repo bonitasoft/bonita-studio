@@ -53,7 +53,7 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
 
     @Override
     public DataDefinitionBuilder caseStringType(final StringType type) {
-    	TextDataDefinitionBuilder textDataBuilder = builder.addTextData(data.getName(), expr);
+    	TextDataDefinitionBuilder textDataBuilder = builder.addLongTextData(data.getName(), expr);
     	textDataBuilder.isLongText();
     	return textDataBuilder;
     }
@@ -85,7 +85,7 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
 
     @Override
     public DataDefinitionBuilder caseEnumType(final EnumType type) {
-        return builder.addStringData(data.getName(), expr);
+        return builder.addShortTextData(data.getName(), expr);
     }
 
     @Override
