@@ -25,11 +25,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 
-    public static String migrationWarningTitle;
-    public static String migrationWizardTitle;
-    public static String migrationWizardDescription;
-    public static String importWarningMessageContent;
-    public static String importWarningMessageContentAfterPart;
+  
 	public static String callActivityTargetNameMigrationDescription;
 	public static String callActivityTargetNameProperty;
 	public static String callActivityTargetVersionMigrationDescription;

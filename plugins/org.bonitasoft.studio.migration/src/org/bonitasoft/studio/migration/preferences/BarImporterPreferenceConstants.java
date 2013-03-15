@@ -14,26 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.importer.bar.preferences;
-
-import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
-import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.jface.preference.IPreferenceStore;
+package org.bonitasoft.studio.migration.preferences;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class BarImporterPreferenceInitializer extends AbstractPreferenceInitializer {
+public class BarImporterPreferenceConstants {
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
-     */
-    @Override
-    public void initializeDefaultPreferences() {
-        final IPreferenceStore store = BarImporterPlugin.getDefault().getPreferenceStore();
-        store.setDefault(BarImporterPreferenceConstants.DISPLAY_MIGRATION_WARNING, true);
-    }
+    public static final String DISPLAY_MIGRATION_WARNING = "DISPLAY_MIGRATION_WARNING";
 
 }

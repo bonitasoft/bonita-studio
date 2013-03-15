@@ -14,35 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.importer.bar.ui;
+package org.bonitasoft.studio.migration.preferences;
 
-import org.bonitasoft.studio.importer.bar.i18n.Messages;
-import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.jface.wizard.Wizard;
+import org.bonitasoft.studio.migration.MigrationPlugin;
+import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class MigrationWarningWizard extends Wizard {
-
-    public MigrationWarningWizard(){
-        setDefaultPageImageDescriptor(Pics.getWizban());
-        setWindowTitle(Messages.migrationWarningTitle);
-    }
-
-    @Override
-    public void addPages() {
-        addPage(new MigrationWarningWizardPage());
-    }
+public class BarImporterPreferenceInitializer extends AbstractPreferenceInitializer {
 
     /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
+     * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
      */
     @Override
-    public boolean performFinish() {
-        return true;
+    public void initializeDefaultPreferences() {
+        final IPreferenceStore store = MigrationPlugin.getDefault().getPreferenceStore();
+        store.setDefault(BarImporterPreferenceConstants.DISPLAY_MIGRATION_WARNING, true);
     }
 
 }

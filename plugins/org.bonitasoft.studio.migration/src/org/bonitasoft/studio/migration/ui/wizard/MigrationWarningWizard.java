@@ -14,15 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.importer.bar.preferences;
+package org.bonitasoft.studio.migration.ui.wizard;
+
+import org.bonitasoft.studio.migration.i18n.Messages;
+import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.jface.wizard.Wizard;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class BarImporterPreferenceConstants {
+public class MigrationWarningWizard extends Wizard {
 
-    public static final String DISPLAY_MIGRATION_WARNING = "DISPLAY_MIGRATION_WARNING";
+    public MigrationWarningWizard(){
+        setDefaultPageImageDescriptor(Pics.getWizban());
+        setWindowTitle(Messages.migrationWarningTitle);
+        setNeedsProgressMonitor(false);
+        setForcePreviousAndNextButtons(false);
+    }
+
+    @Override
+    public void addPages() {
+        addPage(new MigrationWarningWizardPage());
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.wizard.Wizard#performFinish()
+     */
+    @Override
+    public boolean performFinish() {
+        return true;
+    }
 
 }

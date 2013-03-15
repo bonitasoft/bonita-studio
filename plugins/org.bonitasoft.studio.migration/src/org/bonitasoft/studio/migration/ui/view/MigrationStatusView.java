@@ -31,6 +31,7 @@ import org.bonitasoft.studio.migration.ui.action.ExportMigrationReportAsPDFActio
 import org.bonitasoft.studio.migration.ui.action.HideReviewedAction;
 import org.bonitasoft.studio.migration.ui.action.HideValidStatusAction;
 import org.bonitasoft.studio.migration.ui.action.ToggleLinkingAction;
+import org.bonitasoft.studio.migration.ui.wizard.MigrationWarningWizard;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.emf.ecore.EObject;
@@ -45,10 +46,12 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -67,6 +70,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.ToolTip;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -80,6 +84,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
@@ -159,11 +165,25 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 	protected void createBottomComposite(Composite mainComposite) {
 		final Composite bottomComposite = new Composite(mainComposite, SWT.NONE);
-		bottomComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(0, 10, 0, 0).create());
+		bottomComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).extendedMargins(5, 10, 0, 0).create());
 		bottomComposite.setLayoutData(GridDataFactory.fillDefaults().create());
 
+		createHelpButton(bottomComposite);
 		createMarkAsCompletedButton(bottomComposite);
 
+	}
+
+	private void createHelpButton(Composite bottomComposite) {
+		ToolBar helpToolbar = new ToolBar(bottomComposite, SWT.NONE);
+		helpToolbar.setLayoutData(GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).grab(false, false).create());
+		ToolItem helpItem = new ToolItem(helpToolbar, SWT.PUSH);
+		helpItem.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
+		helpItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				new WizardDialog(Display.getDefault().getActiveShell(), new MigrationWarningWizard()).open();
+			}
+		});
 	}
 
 	protected void createMarkAsCompletedButton(Composite bottomComposite) {

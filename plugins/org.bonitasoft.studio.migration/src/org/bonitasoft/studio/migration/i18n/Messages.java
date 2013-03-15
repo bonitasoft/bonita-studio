@@ -25,6 +25,12 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 
+	  public static String migrationWarningTitle;
+	    public static String migrationWizardTitle;
+	    public static String migrationWizardDescription;
+	    public static String importWarningMessageContent;
+	    public static String importWarningMessageContentAfterPart;
+	
     public static String find;
 	public static String exportAsPdf;
 	public static String completeImport;
@@ -51,6 +57,10 @@ public class Messages extends NLS {
 	public static String actionRequired;
 	public static String completeImportMessage;
 	public static String completeImportToggleMessage;
+	public static String noActionRequiredHelp;
+	public static String reviewRequiredHelp;
+	public static String actionRequiredHelp;
+	public static String doNotDisplayAtNextImport;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$
