@@ -449,7 +449,7 @@
                         </runProgram>
                         <runProgram>
                             <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace"</programArguments>
+                            <programArguments>-Xmx512m -XX:MaxPermSize=512m  -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace"</programArguments>
                             <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
                             <ruleList>
                                 <isFalse>
@@ -463,7 +463,7 @@
                     </actionList>
                     <ruleList>
                         <isFalse>
-                            <value>true</value>
+                            <value>${retrieveWorksapce}</value>
                         </isFalse>
                     </ruleList>
                 </showProgressDialog>
@@ -481,14 +481,14 @@
 			<mustBeWritable>1</mustBeWritable>
 			<mustExist>1</mustExist>
 			<ruleList>
-					<isFalse>
+					 <isFalse>
                             <value>true</value>
-                       </isFalse>
-				<!--<compareValues>
-                    <logic>equals</logic>
-                    <value1>${retrieveWorksapce}</value1>
-                    <value2>true</value2>
-                </compareValues>-->
+                        </isFalse>
+<!-- 				<compareValues> -->
+<!--                     <logic>equals</logic> -->
+<!--                     <value1>${retrieveWorksapce}</value1> -->
+<!--                     <value2>true</value2> -->
+<!--                 </compareValues> -->
             </ruleList>
 			<validationActionList>
 				<findFile>
