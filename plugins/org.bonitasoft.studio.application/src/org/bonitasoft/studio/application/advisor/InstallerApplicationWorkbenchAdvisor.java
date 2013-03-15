@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -46,7 +47,6 @@ public abstract class InstallerApplicationWorkbenchAdvisor extends BonitaStudioW
 	public void preStartup() {
 		try {
 			IProgressMonitor monitor = new NullProgressMonitor() ;
-			BonitaHomeUtil.initBonitaHome();
 			IWorkspaceRunnable workspaceOperation = new IWorkspaceRunnable() {
 
 				public void run(IProgressMonitor monitor) throws CoreException {
@@ -58,6 +58,9 @@ public abstract class InstallerApplicationWorkbenchAdvisor extends BonitaStudioW
 			} ;
 			workspaceOperation.run(monitor) ;
 
+	        BOSWebServerManager.getInstance().copyTomcatBundleInWorkspace(monitor) ;
+	        BonitaHomeUtil.initBonitaHome();
+			
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
 		}
