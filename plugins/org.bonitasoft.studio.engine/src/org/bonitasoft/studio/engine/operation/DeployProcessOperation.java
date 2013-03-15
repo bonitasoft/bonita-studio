@@ -222,6 +222,9 @@ public class DeployProcessOperation  {
 			processApi.enableProcess(processIdsMap.get(process)) ;
 		}  catch (ProcessEnablementException e) {
 			BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
+			if(e.getMessage() != null && e.getMessage().contains("org.bonitasoft.engine.xml.SValidationException")){
+				return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(),e);
+			}
 			IStatus status = openConfigurationPopup(process) ;
 			if(status.isOK()){
 				undeployProcess(process, monitor) ;
