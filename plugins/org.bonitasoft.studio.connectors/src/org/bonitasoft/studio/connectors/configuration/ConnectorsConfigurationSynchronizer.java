@@ -142,25 +142,32 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 			String defaultDriver = fileStore.getDefault();
 			List<String> jars = fileStore.getJarList();
 			boolean autoAddDriver = fileStore.getAutoAddDriver() || forceDriver;
+			Configuration conf = (Configuration) connectorContainer.eContainer().eContainer();
+			FragmentContainer otherDependencies = null;
+			for(FragmentContainer c : conf.getProcessDependencies()){
+				if(FragmentTypes.OTHER.equals(c.getId())){
+					otherDependencies = c;
+				}
+			}
 			for (String jar : jars){
 				boolean exists = false ;
-				for(Fragment dep : connectorContainer.getFragments()){
+				for(Fragment dep : otherDependencies.getFragments()){
 					if(dep.getValue().equals(jar)){
 						exists = true ;
 						break ;
 					}
 				}
 				if (!exists){
-					 Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment() ;
-					 if (jar.equals(defaultDriver) && autoAddDriver){
-						 depFragment.setExported(true) ;
-					 } else {
-						 depFragment.setExported(false);
-					 }
-		                depFragment.setKey(implementation.getImplementationId() +" -- " + implementation.getImplementationVersion()) ;
-		                depFragment.setValue(jar) ;
-		                depFragment.setType(getFragmentContainerId()) ;
-		                editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, connectorContainer, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, depFragment)) ;
+					Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment() ;
+					if (jar.equals(defaultDriver) && autoAddDriver){
+						depFragment.setExported(true) ;
+					} else {
+						depFragment.setExported(false);
+					}
+					depFragment.setKey(implementation.getImplementationId() +" -- " + implementation.getImplementationVersion()) ;
+					depFragment.setValue(jar) ;
+					depFragment.setType(FragmentTypes.OTHER) ;
+					cc.append(AddCommand.create(editingDomain, otherDependencies, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, depFragment)) ;
 				}
 			}
 		}
