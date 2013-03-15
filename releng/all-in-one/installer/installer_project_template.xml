@@ -463,7 +463,7 @@
                     </actionList>
                     <ruleList>
                         <isFalse>
-                            <value>${retrieveWorksapce}</value>
+                            <value>true</value>
                         </isFalse>
                     </ruleList>
                 </showProgressDialog>
@@ -481,11 +481,14 @@
 			<mustBeWritable>1</mustBeWritable>
 			<mustExist>1</mustExist>
 			<ruleList>
-				<compareValues>
+					<isFalse>
+                            <value>true</value>
+                       </isFalse>
+				<!--<compareValues>
                     <logic>equals</logic>
                     <value1>${retrieveWorksapce}</value1>
                     <value2>true</value2>
-                </compareValues>
+                </compareValues>-->
             </ruleList>
 			<validationActionList>
 				<findFile>
