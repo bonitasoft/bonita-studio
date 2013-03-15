@@ -23,48 +23,48 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.6</version>
 				<executions>
-<!-- 					<execution> -->
-<!-- 						<id>unpack-linux.gtk.x86_64</id> -->
-<!-- 						<phase>generate-resources</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.bonitasoft.studio.releng</groupId> -->
-<!-- 									<artifactId>studio-repository</artifactId> -->
-<!-- 									<version>6.0.0-SNAPSHOT</version> -->
-<!-- 									<classifier>linux.gtk.x86_64</classifier> -->
-<!-- 									<type>tar.gz</type> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/linux.gtk.x86_64</outputDirectory> -->
-<!-- 							<overWriteReleases>false</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 						<id>unpack-linux.gtk.x86</id> -->
-<!-- 						<phase>generate-resources</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.bonitasoft.studio.releng</groupId> -->
-<!-- 									<artifactId>studio-repository</artifactId> -->
-<!-- 									<version>6.0.0-SNAPSHOT</version> -->
-<!-- 									<classifier>linux.gtk.x86</classifier> -->
-<!-- 									<type>tar.gz</type> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/linux.gtk.x86</outputDirectory> -->
-<!-- 							<overWriteReleases>false</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
+					<execution>
+						<id>unpack-linux.gtk.x86_64</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.studio.releng</groupId>
+									<artifactId>studio-repository</artifactId>
+									<version>6.0.0-SNAPSHOT</version>
+									<classifier>linux.gtk.x86_64</classifier>
+									<type>tar.gz</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/linux.gtk.x86_64</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack-linux.gtk.x86</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.studio.releng</groupId>
+									<artifactId>studio-repository</artifactId>
+									<version>6.0.0-SNAPSHOT</version>
+									<classifier>linux.gtk.x86</classifier>
+									<type>tar.gz</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/linux.gtk.x86</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
 					<execution>
 						<id>unpack-macosx.cocoa.x86_64</id>
 						<phase>generate-resources</phase>
@@ -86,103 +86,103 @@
 							<overWriteSnapshots>true</overWriteSnapshots>
 						</configuration>
 					</execution>
-<!-- 					<execution> -->
-<!-- 						<id>unpack-macosx.cocoa.x86</id> -->
-<!-- 						<phase>generate-resources</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.bonitasoft.studio.releng</groupId> -->
-<!-- 									<artifactId>studio-repository</artifactId> -->
-<!-- 									<version>6.0.0-SNAPSHOT</version> -->
-<!-- 									<classifier>macosx.cocoa.x86</classifier> -->
-<!-- 									<type>tar.gz</type> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/macosx.cocoa.x86</outputDirectory> -->
-<!-- 							<overWriteReleases>false</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 						<id>unpack-win32.x86_64</id> -->
-<!-- 						<phase>generate-resources</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.bonitasoft.studio.releng</groupId> -->
-<!-- 									<artifactId>studio-repository</artifactId> -->
-<!-- 									<version>6.0.0-SNAPSHOT</version> -->
-<!-- 									<classifier>win32.win32.x86_64</classifier> -->
-<!-- 									<type>zip</type> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/win32.win32.x86_64</outputDirectory> -->
-<!-- 							<overWriteReleases>false</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 						<id>unpack-win32.x86</id> -->
-<!-- 						<phase>generate-resources</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.bonitasoft.studio.releng</groupId> -->
-<!-- 									<artifactId>studio-repository</artifactId> -->
-<!-- 									<version>6.0.0-SNAPSHOT</version> -->
-<!-- 									<classifier>win32.win32.x86</classifier> -->
-<!-- 									<type>zip</type> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/win32.win32.x86</outputDirectory> -->
-<!-- 							<overWriteReleases>false</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
+					<execution>
+						<id>unpack-macosx.cocoa.x86</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.studio.releng</groupId>
+									<artifactId>studio-repository</artifactId>
+									<version>6.0.0-SNAPSHOT</version>
+									<classifier>macosx.cocoa.x86</classifier>
+									<type>tar.gz</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/macosx.cocoa.x86</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack-win32.x86_64</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.studio.releng</groupId>
+									<artifactId>studio-repository</artifactId>
+									<version>6.0.0-SNAPSHOT</version>
+									<classifier>win32.win32.x86_64</classifier>
+									<type>zip</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/win32.win32.x86_64</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack-win32.x86</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.studio.releng</groupId>
+									<artifactId>studio-repository</artifactId>
+									<version>6.0.0-SNAPSHOT</version>
+									<classifier>win32.win32.x86</classifier>
+									<type>zip</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/win32.win32.x86</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 
 			<!-- Build all-in-one assemblies with all platforms -->
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
-<!-- 				<artifactId>maven-assembly-plugin</artifactId> -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<id>make-directory-assembly</id> -->
-<!-- 						<phase>process-resources</phase> -->
-<!-- 						<configuration> -->
-<!-- 							<appendAssemblyId>false</appendAssemblyId> -->
-<!-- 							<descriptor>${basedir}/assembly-descriptor.xml</descriptor> -->
-<!-- 							<finalName>BOS-${project.version}</finalName> -->
-<!-- 						</configuration> -->
-<!-- 						<goals> -->
-<!-- 							<goal>single</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 						<id>make-zip-assembly</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<configuration> -->
-<!-- 							<appendAssemblyId>false</appendAssemblyId> -->
-<!-- 							<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor> -->
-<!-- 							<finalName>BOS-${project.version}-All-in-one</finalName> -->
-<!-- 						</configuration> -->
-<!-- 						<goals> -->
-<!-- 							<goal>single</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 			</plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>make-directory-assembly</id>
+						<phase>process-resources</phase>
+						<configuration>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptor>${basedir}/assembly-descriptor.xml</descriptor>
+							<finalName>BOS-${project.version}</finalName>
+						</configuration>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>make-zip-assembly</id>
+						<phase>package</phase>
+						<configuration>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
+							<finalName>BOS-${project.version}-All-in-one</finalName>
+						</configuration>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
 
 			<!-- Create a proper bundles.info for all-in-one -->
@@ -223,48 +223,48 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<executions>
-<!-- 					<execution> -->
-<!-- 					 	<id>linux-x86</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<configuration> -->
-<!-- 							<arguments> -->
-<!-- 								<argument>build</argument> -->
-<!-- 								<argument>${basedir}/installer/installer_project_linux_x86.xml</argument> -->
-<!-- 								<argument>linux</argument> -->
-<!-- 							</arguments> -->
-<!-- 						</configuration> -->
-<!-- 						<goals> -->
-<!-- 							<goal>exec</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 					 	<id>linux-x86_64</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<configuration> -->
-<!-- 							<arguments> -->
-<!-- 								<argument>build</argument> -->
-<!-- 								<argument>${basedir}/installer/installer_project_linux_x86_64.xml</argument> -->
-<!-- 								<argument>linux-x64</argument> -->
-<!-- 							</arguments> -->
-<!-- 						</configuration> -->
-<!-- 						<goals> -->
-<!-- 							<goal>exec</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 					 	<id>macosx-x86</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<configuration> -->
-<!-- 							<arguments> -->
-<!-- 								<argument>build</argument> -->
-<!-- 								<argument>${basedir}/installer/installer_project_macosx_x86.xml</argument> -->
-<!-- 								<argument>osx</argument> -->
-<!-- 							</arguments> -->
-<!-- 						</configuration> -->
-<!-- 						<goals> -->
-<!-- 							<goal>exec</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
+					<execution>
+					 	<id>linux-x86</id>
+						<phase>package</phase>
+						<configuration>
+							<arguments>
+								<argument>build</argument>
+								<argument>${basedir}/installer/installer_project_linux_x86.xml</argument>
+								<argument>linux</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+					<execution>
+					 	<id>linux-x86_64</id>
+						<phase>package</phase>
+						<configuration>
+							<arguments>
+								<argument>build</argument>
+								<argument>${basedir}/installer/installer_project_linux_x86_64.xml</argument>
+								<argument>linux-x64</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+					<execution>
+					 	<id>macosx-x86</id>
+						<phase>package</phase>
+						<configuration>
+							<arguments>
+								<argument>build</argument>
+								<argument>${basedir}/installer/installer_project_macosx_x86.xml</argument>
+								<argument>osx</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
 					<execution>
 					 	<id>macosx-x86_64</id>
 						<phase>package</phase>
@@ -279,34 +279,34 @@
 							<goal>exec</goal>
 						</goals>
 					</execution>
-<!-- 					<execution> -->
-<!-- 					 	<id>win-x86</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<configuration> -->
-<!-- 							<arguments> -->
-<!-- 								<argument>build</argument> -->
-<!-- 								<argument>${basedir}/installer/installer_project_win_x86.xml</argument> -->
-<!-- 								<argument>windows</argument> -->
-<!-- 							</arguments> -->
-<!-- 						</configuration> -->
-<!-- 						<goals> -->
-<!-- 							<goal>exec</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 					 	<id>win-x86_64</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<configuration> -->
-<!-- 							<arguments> -->
-<!-- 								<argument>build</argument> -->
-<!-- 								<argument>${basedir}/installer/installer_project_win_x86_64.xml</argument> -->
-<!-- 								<argument>windows</argument> -->
-<!-- 							</arguments> -->
-<!-- 						</configuration> -->
-<!-- 						<goals> -->
-<!-- 							<goal>exec</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
+					<execution>
+					 	<id>win-x86</id>
+						<phase>package</phase>
+						<configuration>
+							<arguments>
+								<argument>build</argument>
+								<argument>${basedir}/installer/installer_project_win_x86.xml</argument>
+								<argument>windows</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+					<execution>
+					 	<id>win-x86_64</id>
+						<phase>package</phase>
+						<configuration>
+							<arguments>
+								<argument>build</argument>
+								<argument>${basedir}/installer/installer_project_win_x86_64.xml</argument>
+								<argument>windows</argument>
+							</arguments>
+						</configuration>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
 				</executions>
 				<configuration>
 					<executable>${BITROCK_HOME}/bin/builder</executable>
