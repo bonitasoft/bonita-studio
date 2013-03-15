@@ -7543,7 +7543,7 @@
       <changes xsi:type="history:Set" element="form.ecore#//Widget/returnTypeModifier"
           featureName="defaultValueLiteral" dataValue="java.lang.String"/>
       <changes xsi:type="history:Set" element="form.ecore#//Widget/labelPosition"
-          featureName="defaultValueLiteral" dataValue="2" oldDataValue="0"/>
+          featureName="defaultValueLiteral" dataValue="Up" oldDataValue="0"/>
     </changes>
   </releases>
   <releases/>
