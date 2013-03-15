@@ -115,27 +115,32 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 		ISelectionService ss = getSite().getWorkbenchWindow().getSelectionService();
 		ss.addPostSelectionListener(this);
-		if(getSite().getPage().getActiveEditor() != null){
-			selectionProvider =  getSite().getPage().getActiveEditor().getEditorSite().getSelectionProvider();
+		IEditorPart activeEditor = getSite().getPage().getActiveEditor();
+		if(activeEditor instanceof DiagramEditor){
+			selectionProvider =  activeEditor.getEditorSite().getSelectionProvider();
 			getSite().setSelectionProvider(this);
-	
 		}
 		createActions();
-
 	}
-	
+
 	protected void createActions() {
+		IEditorPart editor = getSite().getPage().getActiveEditor();
+
 		IActionBars actionBars = getViewSite().getActionBars();
 		IMenuManager dropDownMenu = actionBars.getMenuManager();
 		IToolBarManager toolBar = actionBars.getToolBarManager();
 		exportAction = new ExportMigrationReportAsPDFAction();
-		exportAction.setReport(getReportFromEditor(getSite().getPage().getActiveEditor()));
+		if(editor instanceof DiagramEditor){
+			exportAction.setReport(getReportFromEditor(editor));
+		}
 		exportAction.setViewer(tableViewer);
 		dropDownMenu.add(exportAction);
 
 		linkAction = new ToggleLinkingAction();
 		linkAction.setViewer(tableViewer);
-		linkAction.setEditor((DiagramEditor) getSite().getPage().getActiveEditor());
+		if(editor instanceof DiagramEditor){
+			linkAction.setEditor((DiagramEditor) editor);
+		}
 		toolBar.add(linkAction);
 
 		final HideValidStatusAction hideStatusAction = new HideValidStatusAction();
@@ -272,7 +277,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 				event.height = 25;
 			}
 		});
-		
+
 		ColumnViewerToolTipSupport.enableFor(tableViewer,ToolTip.NO_RECREATE);  
 
 		final Label descriptionLabel = new Label(tableComposite, SWT.NONE);
@@ -491,7 +496,11 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 	@Override
 	public void setFocus() {
-		
+		IEditorPart activeEditor = getSite().getPage().getActiveEditor();
+		if(activeEditor instanceof DiagramEditor){
+			selectionProvider =  activeEditor.getEditorSite().getSelectionProvider();
+			getSite().setSelectionProvider(this);
+		}
 	}
 
 	@Override
