@@ -118,8 +118,8 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		IEditorPart activeEditor = getSite().getPage().getActiveEditor();
 		if(activeEditor instanceof DiagramEditor){
 			selectionProvider =  activeEditor.getEditorSite().getSelectionProvider();
-			getSite().setSelectionProvider(this);
 		}
+		getSite().setSelectionProvider(this);
 		createActions();
 	}
 
@@ -137,7 +137,9 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		dropDownMenu.add(exportAction);
 
 		linkAction = new ToggleLinkingAction();
+		linkAction.setChecked(true);
 		linkAction.setViewer(tableViewer);
+		linkAction.run();
 		if(editor instanceof DiagramEditor){
 			linkAction.setEditor((DiagramEditor) editor);
 		}
@@ -496,11 +498,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 	@Override
 	public void setFocus() {
-		IEditorPart activeEditor = getSite().getPage().getActiveEditor();
-		if(activeEditor instanceof DiagramEditor){
-			selectionProvider =  activeEditor.getEditorSite().getSelectionProvider();
-			getSite().setSelectionProvider(this);
-		}
+	
 	}
 
 	@Override
