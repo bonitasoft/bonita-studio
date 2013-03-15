@@ -107,7 +107,6 @@ public class ToggleLinkingAction extends AbstractToggleLinkingAction {
 			viewer.addSelectionChangedListener(listener);
 			listener.selectionChanged(null);
 		}
-
 	}
 
 	public void setEditor(DiagramEditor editor){
