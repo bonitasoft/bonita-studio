@@ -1,0 +1,508 @@
+@charset "utf-8";
+/* CSS Document */
+@font-face{
+	font-family: 'Signika-Regular';
+	src: url("fonts/Signika-Regular.eot");
+	src: local('?'), url("fonts/Signika-Regular.woff") format('woff'), url("fonts/Signika-Regular.ttf") format('truetype'), url("fonts/Signika-Regular.svg") format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Signika-Semibold';
+	src: url("fonts/Signika-Semibold.eot");
+	src: local('?'), url("fonts/Signika-Semibold.woff") format('woff'), url("fonts/Signika-Semibold.ttf") format('truetype'), url("fonts/Signika-Semibold.svg") format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* Process template */
+body {
+	font-family: Signika-Regular;
+	font-size: 0.8125em;
+}
+.bonita_form_container, .bonita_form_container{
+	font-family: Signika-Regular;
+}
+/**/
+#bonita_form_step_header{
+	display: none;
+}
+button.bonita_form_button{
+	color: #666666;
+	padding: 5px 10px;
+	outline-color: #F9F9F9;
+	min-width: 90px;
+	border: 1px solid #B9B9B9;
+	text-transform: uppercase;
+	font-family: "Signika-Semibold";
+	text-shadow:0 0 0 transparent, -1px -1px 0 transparent, 1px -1px 0 transparent, -1px 1px 0 transparent, 1px 1px 0 transparent;
+	font-size: 92.3077%;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+	behavior: url(PIE.htc);
+	height: @height;
+	line-height: @height !important;
+	text-decoration: none;
+	vertical-align: middle;
+	text-align: center;
+	display: -moz-inline-stack;
+	display: inline-block;
+	zoom: 1;
+	*display: inline;
+	white-space: nowrap;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	background-color: @c1; /* Old browsers */
+	background: -moz-linear-gradient(top, #f5f5f5 0%, #dfdfdf 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f5f5), color-stop(100%, #dfdfdf)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,	#f5f5f5 0%,#dfdfdf 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,	#f5f5f5 0%, #dfdfdf 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,	#f5f5f5 0%,#dfdfdf 100%); /* IE10+ */
+	background: linear-gradient(to bottom,	#F5F5F5 0%, #DFDFDF 100%); /* W3C */
+	-pie-background: linear-gradient(#f5f5f5 0%, #dfdfdf 100%) #f5f5f5;
+	filter:alpha(opacity=100);
+	-moz-opacity: 1;
+	-khtml-opacity: 1;
+	opacity: 1;
+	cursor: pointer;
+	-webkit-box-shadow: 2px 2px 2px #d8d8d8;
+	-moz-box-shadow: 2px 2px 2px #d8d8d8;
+	-o-box-shadow: 2px 2px 2px #d8d8d8;
+	box-shadow: 2px 2px 2px #d8d8d8;
+}
+button.bonita_form_button *{
+	vertical-align: middle;
+}
+button.bonita_form_button + button.bonita_form_button {
+	margin-left: 5px;
+}
+
+input.bonita_form_field, select.bonita_form_field, select.bonita_datetime_list_item{
+	font-size: 123.07692307692308%;
+	padding: 5px 5px 5px 5px;
+	border: 1px solid #c2c2c2;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-box-shadow: 0 0 0 #cccccc;
+	-moz-box-shadow: 0 0 0 #cccccc;
+	-o-box-shadow: 0 0 0 #cccccc;
+	box-shadow: 0 0 0 #cccccc;
+	height: 35px;
+	*behavior: url(boxsizing.htc);
+	vertical-align: middle;
+}
+
+textarea.bonita_form_field, div.bonita_form_field div.bonita_rich_text{
+	font-size: 123.07692307692308%;
+	padding: 5px 5px 5px 5px;
+	border: 1px solid #c2c2c2;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-box-shadow: 0 0 0 #cccccc;
+	-moz-box-shadow: 0 0 0 #cccccc;
+	-o-box-shadow: 0 0 0 #cccccc;
+	box-shadow: 0 0 0 #cccccc;
+}
+div.bonita_form_label{
+	color: #282626;
+	font-weight: normal;
+}
+
+div#bonita-open-solution-logo {
+	width:230px;
+	height:77px;
+	background-image:url(../images/bonita-open-solution-logo.png);
+	margin-left:20px;
+	position:absolute;
+}
+
+div#bonita-banneralthaut {
+	width:100%;
+	height:3px;
+	margin-top:15px;
+	background-color:#de1c18;
+}
+
+div#bonita-banneraltbas {
+	width:100%;
+	height:25px;
+	background-color:#9a9a9a;
+}
+
+.bonita_process_label {
+	margin-left:250px;
+	margin-right:250px;
+	height:77px;
+	text-align:center;
+	positon:relative;
+	line-height:80px;
+	font-size: 184.6153846153846%;
+	color: #B20706;
+}
+
+div#bonita-identification-area {
+	font-size:14px;
+	color:#333333;
+	position:absolute;
+	right:0;
+	top:0;
+	margin-top: 5px;
+	margin-right:10px;
+}
+
+.bonita_username {
+	display: inline;
+}
+
+.bonita_username_label{
+	display: inline;
+}
+
+.bonita_logout_button {
+	display: inline;
+}
+
+.bonita_logout_label, .bonita_logout_label:visited, .bonita_logout_label:hover {
+		display: inline;
+		text-decoration: none;
+		color: #333333;
+}
+	
+.bonita_user_xp_link {
+	display: inline;
+}
+
+.bonita_user_xp_label {
+	display : inline;
+}
+
+.bonita_user_xp_icon {
+	background: transparent url(../images/sprite.png) no-repeat scroll
+		-584px 0px;
+	height: 16px;
+	width: 20px;
+	cursor: pointer;
+}
+
+div#bonita_form {
+	border: 0;
+	margin: 0;
+	padding-left: 0;
+	padding-right: 0;
+	padding-top: 30px;
+	padding-bottom: 15px;
+	min-height: 200px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+/** User ID Card */
+.bonita_identification {
+	background-image: url(../images/bloc-identification.png);
+	float: right;
+	height: 98px;
+	margin-right: 15px;
+	margin-top: 5px;
+	width: 230px;
+}
+
+.bonita_avatar {
+	width: 60px;
+	height: 60px;
+	display: block;
+	float: left;
+	border: 0px solid #FFFFFF;
+}
+
+.bonita_identified-right {
+	float: left;
+	text-align: left;
+	margin-left: 8px;
+	margin-top: 5px;
+	width: 130px;
+}
+
+.bonita_identified-left {
+	float: left;
+	margin-left: 16px;
+	margin-top: 18px;
+}
+
+.bonita_identif-1 {
+	color: #FFFFFF;
+	font-size: 17px;
+	margin-bottom: 10px;
+}
+
+.bonita_identif-2, .bonita_identif-2:visited, .bonita_identif-2:hover {
+		color: #DBDBDB;
+		font-size: 12px;
+		padding-right: 3px;
+		text-decoration: none;
+}
+/** End of User ID Card */
+
+/* default page template style */	
+div#bonita-object-area-top{
+	width:500px;
+	height:0px;
+	margin-top:10px;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+div#bonita-object-area-middle{
+	position:relative;
+	width:500px;
+	min-height:40px;
+	background-color:#ececec;
+	margin-left:auto;
+	margin-right:auto;
+	padding-top:4px;
+	padding-bottom:4px;
+}
+
+div#bonita-object-area-bottom{
+	width:500px;
+	height:0px;
+	margin-bottom:10px;
+	margin-left:auto;
+	margin-right:auto;
+}
+	
+div#bonita-object-area-form {
+	margin-left:4px;
+	height:auto;
+	width:188px;
+	float:left;
+}
+
+div#bonita-object-area-to {
+	height:auto;
+	width:188px;
+	float:left;
+	margin-left:4px;
+}
+
+div#bonita-object-area-priority {
+		height:auto;
+		margin-right:4px;
+		text-align:right;
+}
+
+div#bonita-object-area-description {
+	clear:both;
+	text-align:left;
+	margin-top:4px;
+	margin-left:4px;
+	padding-top:4px;
+}
+
+.bonita-priority {
+	color:#de1c18;
+}
+
+.bonita_form_container {
+	clear: both;
+}
+
+.bonita_form_page_label {
+	text-align:center;
+	height:auto;
+	color: #B20706;
+		font-weight: bold;
+	font-size: 138.46153846153845%;
+		padding: 0;
+		margin: 0 0 20px 0;
+		display: block;
+}
+
+.bonita_form_confirm_message {
+	color: black;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 30px;
+	padding-bottom: 20px;
+	font-size: 14px;
+}
+
+.bonita_form_error_message {
+	color: black;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 30px;
+	padding-bottom: 20px;
+	font-size: 14px;
+}
+
+.bonita_form_cause_message {
+	color: black;
+	text-align: left;
+	padding: 30px;
+	font-size: 12px;
+}
+}
+
+/* ------------------------------------------------------------------------- */
+/* Date picker bonita_forms.css override
+/* ------------------------------------------------------------------------- */
+
+.dateBoxPopup table{
+	width: 205px;
+}
+.dateBoxPopup .datePickerDays{
+	width: 205px;
+}
+.dateBoxPopup .tr, .dateBoxPopup .td, .dateBoxPopup .th, .dateBoxPopup div{
+	border: 1px solid transparent;
+	padding: 0;
+	margin: 0;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+./* ------------------------------------------------------------------------- */
+/* Date picker
+/* ------------------------------------------------------------------------- */
+.dateBoxPopup{
+	-webkit-box-shadow: 1px 1px 8px #d0d0d0;
+	-moz-box-shadow: 1px 1px 8px #d0d0d0;
+	-o-box-shadow: 1px 1px 8px #d0d0d0;
+	box-shadow: 1px 1px 8px #d0d0d0;
+	border: 1px solid #a9a9a9;
+	background: #ffffff;
+}
+
+.dateBoxPopup .datePickerDays .datePickerDay {
+	height: 37px;
+	display: table-cell;
+	width: 29px;
+	text-align: center;
+	vertical-align: middle;
+	border-color: #c4c4c4;
+	color: #666666;
+}
+.datePickerPreviousButton,
+.datePickerMonth,
+.datePickerNextButton{
+	font-size: 123.07692307692308%;
+	color: #ffffff;
+	padding: 15px 0;
+	border-collapse: collapse;
+	font-weight: normal;
+}
+
+.dateBoxPopup .datePickerPreviousButton{ padding-left: 15px; }
+.dateBoxPopup .datePickerNextButton{ padding-right: 15px; }
+
+.dateBoxPopup table{
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.dateBoxPopup .datePickerDays tr{
+	background-color: #ededed;/* Old browsers */
+	background: -moz-linear-gradient(top, #ededed 0%, #dedede 100%);/* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ededed), color-stop(100%, #dedede));/* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ededed 0%, #dedede 100%);/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ededed 0%, #dedede 100%);/* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ededed 0%, #dedede 100%);/* IE10+ */
+	background: linear-gradient(to bottom, #ededed 0%, #dedede 100%);/* W3C */
+	-pie-background: linear-gradient(#ededed 0%, #dedede 100%) #ededed;
+}
+.dateBoxPopup .datePickerMonthSelector{
+	width: 205px;
+	background: #323232;
+}
+
+
+.dateBoxPopup .datepickerDay {
+	display: block;
+	padding: 9.5px 0 9.5px 0;
+	height: 15px;
+	color: #666666;
+	text-align: center;
+}
+
+.dateBoxPopup .datePickerDayIsHighlighted:hover {
+	border-color: #b20706;
+}
+
+.dateBoxPopup .datePickerDayIsValue{
+	color: #ffffff;
+	font-weight: bold;
+	border-color: #5f8a96;
+	background-color: #e40908; /* Old browsers */
+	background: -moz-linear-gradient(top, #e40908 0%, #ab0706 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e40908), color-stop(100%, #ab0706));/* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #e40908 0%, #ab0706 100%);/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #e40908 0%, #ab0706 100%);/* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #e40908 0%, #ab0706 100%);/* IE10+ */
+	background: linear-gradient(to bottom, #e40908 0%, #ab0706 100%);/* W3C */
+	-pie-background: linear-gradient(#e40908 0%, #ab0706 100%) #e40908;
+}
+
+.dateBoxPopup .datePickerMonthSelector{
+	font-weight: bold;
+	text-align: center;
+	border-collapse: collapse;
+	border: 0 none;
+}
+.dateBoxPopup .datePickerDays tr{
+	line-height: 13px;
+}
+.dateBoxPopup .datePickerDays .datePickerWeekendLabel, .dateBoxPopup .datePickerDays .datePickerWeekdayLabel{
+	background-color: #f1f1f1; /* Old browsers */
+	background: -moz-linear-gradient(top, #f1f1f1 0%, #f7f7f7 100%);/* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f1f1f1), color-stop(100%, #f7f7f7));/* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #f1f1f1 0%, #f7f7f7 100%);/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #f1f1f1 0%, #f7f7f7 100%);/* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #f1f1f1 0%, #f7f7f7 100%);/* IE10+ */
+	background: linear-gradient(to bottom, #f1f1f1 0%, #f7f7f7 100%);/* W3C */
+	-pie-background: linear-gradient(#f1f1f1 0%, #f7f7f7 100%) #f1f1f1;
+	text-transform: uppercase;
+	text-align: center;
+	font-size: 69.23076923076922%;
+	width: 30px;
+	border: 0 none;
+	color: #6E6F6B;
+	font-weight: 400;
+	padding: 8px 0;
+	height: 9px;
+	text-align: center;
+	
+}
+
+.dateBoxPopup .datePickerDays .datePickerDay.datePickerDayIsFiller{
+	color: #B4B3B3;
+	background: rgba(255, 255, 255, 0.55);
+	border: 1px solid lightgray;
+	text-align: center;
+
+}
+.bonita_form_date{
+	background: url("../images/form-input-date.png") transparent no-repeat right center !important;
+	padding-right: 41px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
