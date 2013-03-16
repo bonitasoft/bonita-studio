@@ -19,6 +19,7 @@ package org.bonitasoft.studio.validation.ui.view;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.internal.resources.Marker;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -107,9 +108,9 @@ public class SeverityColumnLabelProvider extends StyledCellLabelProvider
 	 */
 	private Image getImageForSeverity(int status) {
 		switch (status) {
-		case 2: return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
-		case 0: return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
-		case 1: return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+		case IMarker.SEVERITY_WARNING: return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+		case IMarker.SEVERITY_INFO: return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
+		case IMarker.SEVERITY_ERROR: return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
 		default:break;
 		}
 

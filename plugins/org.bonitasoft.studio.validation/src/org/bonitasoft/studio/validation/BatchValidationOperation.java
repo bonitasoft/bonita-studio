@@ -178,27 +178,37 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 		for(IMarker m : target.findMarkers(ProcessMarkerNavigationProvider.MARKER_TYPE, true, IResource.DEPTH_ZERO)){
 			int severity = (Integer) m.getAttribute(IMarker.SEVERITY);
 			String location =  (String) m.getAttribute(IMarker.LOCATION);
-			if(severity == IStatus.WARNING || severity == IStatus.INFO || severity == IStatus.ERROR){
+			if(severity == IMarker.SEVERITY_WARNING || severity == IMarker.SEVERITY_INFO || severity == IMarker.SEVERITY_ERROR){
 				String message = (String) m.getAttribute(IMarker.MESSAGE);
 				String fullMessage = fileName + ":" +location +" : " + message;
 				if(!statusExists(result,fullMessage)){
-					result.add(new Status(severity, Activator.PLUGIN_ID, fullMessage));
+					result.add(new Status(toStatusSeverity(severity), Activator.PLUGIN_ID, fullMessage));
 				}
 			}
 		}
 		for(IMarker m : target.findMarkers(org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.MARKER_TYPE, true, IResource.DEPTH_ZERO)){
 			int severity = (Integer) m.getAttribute(IMarker.SEVERITY);
-			if(severity == IStatus.WARNING || severity == IStatus.INFO || severity == IStatus.ERROR){
+			if(severity == IMarker.SEVERITY_WARNING || severity == IMarker.SEVERITY_INFO || severity == IMarker.SEVERITY_ERROR){
 				String message = (String) m.getAttribute(IMarker.MESSAGE);
 				String location =  (String) m.getAttribute(IMarker.LOCATION);
 				String fullMessage = fileName + ":" +location +" : " + message;
 				if(!statusExists(result, fullMessage)){
-					result.add(new Status(severity, Activator.PLUGIN_ID, fullMessage));
+					result.add(new Status(toStatusSeverity(severity), Activator.PLUGIN_ID, fullMessage));
 				}
 			}
 		}
 		fileProcessed.add(target);
 	}
+
+	private int toStatusSeverity(int markerSeverity) {
+		switch (markerSeverity) {
+		case IMarker.SEVERITY_INFO: return IStatus.INFO;
+		case IMarker.SEVERITY_WARNING:return IStatus.WARNING;
+		case IMarker.SEVERITY_ERROR:return IStatus.ERROR;
+		default: return IStatus.INFO;
+		}
+	}
+
 
 	private boolean statusExists(MultiStatus multi, String message){
 		for(IStatus s : multi.getChildren()){

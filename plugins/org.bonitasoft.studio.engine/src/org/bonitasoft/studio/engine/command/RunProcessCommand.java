@@ -141,16 +141,9 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 			parameters.put("diagrams", diagrams);
 			try {
 				final IStatus status = (IStatus) cmd.executeWithChecks(new ExecutionEvent(cmd,parameters,null,null));
-				if(status == null || !status.isOK()){
-					StringBuilder report = new StringBuilder("");
-					for(IStatus s : status.getChildren()){
-						report.append(s.getMessage());
-						report.append("\n");
-					}
+				if(statusContainsError(status)){
 					if(!FileActionDialog.getDisablePopup()){
-
 						String errorMessage = Messages.errorValidationMessage +PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle()+Messages.errorValidationContinueAnywayMessage ;
-
 						int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,errorMessage, ValidationDialog.YES_NO_SEEDETAILS).open();
 
 						if(result == ValidationDialog.NO){
@@ -260,6 +253,18 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 		}
 		return status;
 	}
+
+	private boolean statusContainsError(IStatus validationStatus) {
+		if(validationStatus != null){
+			for(IStatus s : validationStatus.getChildren()){
+				if(s.getSeverity() == IStatus.WARNING || s.getSeverity() == IStatus.ERROR){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 
 	protected AbstractProcess getProcessToRun(ExecutionEvent event) {
 		if(event !=null && event.getParameters().get(PROCESS) != null){

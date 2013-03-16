@@ -40,11 +40,13 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
         final Composite mainComposite = new Composite(parent, SWT.NONE) ;
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
-        final AvailableExpressionTypeFilter leftFilter =  new AvailableExpressionTypeFilter(new String[]{ //list of hidden types
+        final AvailableExpressionTypeFilter leftFilter =  new AvailableExpressionTypeFilter(new String[]{ 
                 ExpressionConstants.VARIABLE_TYPE}) ;
-        final AvailableExpressionTypeFilter rightFilter =  new AvailableExpressionTypeFilter(new String[]{ //list of hidden types
-        		 ExpressionConstants.CONSTANT_TYPE,
+        final AvailableExpressionTypeFilter rightFilter =  new AvailableExpressionTypeFilter(new String[]{ 
+        		ExpressionConstants.CONSTANT_TYPE,
         		ExpressionConstants.CONNECTOR_OUTPUT_TYPE,
+        		ExpressionConstants.VARIABLE_TYPE,
+        		ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.SCRIPT_TYPE
         }) ;
 

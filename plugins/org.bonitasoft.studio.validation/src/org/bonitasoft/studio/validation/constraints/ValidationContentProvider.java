@@ -66,9 +66,7 @@ public class ValidationContentProvider implements IStructuredContentProvider{
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		
-		
-		
+		Object[] noElements = new Object[0];
 		if(inputElement instanceof DiagramEditor && !(inputElement instanceof FormDiagramEditor)){
 			final IEditorInput input  = ((DiagramEditor) inputElement).getEditorInput();
 			if(input instanceof FileEditorInput){
@@ -77,7 +75,7 @@ public class ValidationContentProvider implements IStructuredContentProvider{
 					return file.findMarkers("org.bonitasoft.studio.diagram.diagnostic", false, IResource.DEPTH_INFINITE);
 				} catch (CoreException e) {
 					BonitaStudioLog.error(e);
-					return null;
+					return noElements;
 				}
 			}
 		}else if(inputElement instanceof FormDiagramEditor){
@@ -108,15 +106,15 @@ public class ValidationContentProvider implements IStructuredContentProvider{
 					
 					} catch (CoreException e) {
 						BonitaStudioLog.error(e);
-						return null;
+						return noElements;
 					}
 				}
 
-				return null;
+				return noElements;
 			}
 
 		}
-		return null;
+		return noElements;
 	}
 
 	
