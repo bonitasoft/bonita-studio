@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
@@ -49,7 +50,7 @@ public class UniqueWidgetIdConstraint extends AbstractLiveValidationMarkerConstr
     @Override
     protected IStatus performBatchValidation(IValidationContext ctx) {
         EObject eObj = ctx.getTarget();
-        if (eObj instanceof Widget) {
+        if (eObj instanceof Widget && !(eObj.eContainer() instanceof Expression)) {
             Widget w = (Widget) eObj;
             String name = w.getName();
             Element pageFlow = ModelHelper.getPageFlow(w);

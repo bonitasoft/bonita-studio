@@ -122,7 +122,21 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 			if(relevantParent instanceof PageFlow){
 				if(relevantParent != null){
 					for (Form f : ((PageFlow) relevantParent).getForm()){
-						for (Widget w : f.getWidgets()) {
+						for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
+							if (w instanceof FormField || w instanceof NextFormButton){
+								result.add( createExpression(w) ) ;
+							}
+						}
+					}
+					for (Form f : ((ViewPageFlow) relevantParent).getViewForm()){
+						for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
+							if (w instanceof FormField || w instanceof NextFormButton){
+								result.add( createExpression(w) ) ;
+							}
+						}
+					}
+					for (Form f : ((RecapFlow) relevantParent).getRecapForms()){
+						for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
 							if (w instanceof FormField || w instanceof NextFormButton){
 								result.add( createExpression(w) ) ;
 							}
