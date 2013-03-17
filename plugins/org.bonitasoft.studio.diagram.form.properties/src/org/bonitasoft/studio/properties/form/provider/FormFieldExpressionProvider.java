@@ -87,7 +87,7 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 			}
 
 			//Add all widgets from the pageflow not in the same form
-			
+
 			final AbstractPageFlow pageFlow = ModelHelper.getPageFlow((Widget) relevantParent);
 			if (pageFlow != null ) {
 				List<? extends Form> forms= getForms(pageFlow, ModelHelper.getForm((Widget) relevantParent));
@@ -118,7 +118,7 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 				}
 			}
 		}else if(relevantParent instanceof AbstractPageFlow){
-            // get all fields from pageflow
+			// get all fields from pageflow
 			if(relevantParent instanceof PageFlow){
 				if(relevantParent != null){
 					for (Form f : ((PageFlow) relevantParent).getForm()){
@@ -128,23 +128,27 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 							}
 						}
 					}
-					for (Form f : ((ViewPageFlow) relevantParent).getViewForm()){
-						for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
-							if (w instanceof FormField || w instanceof NextFormButton){
-								result.add( createExpression(w) ) ;
+					if(relevantParent instanceof ViewPageFlow){
+						for (Form f : ((ViewPageFlow) relevantParent).getViewForm()){
+							for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
+								if (w instanceof FormField || w instanceof NextFormButton){
+									result.add( createExpression(w) ) ;
+								}
 							}
 						}
 					}
-					for (Form f : ((RecapFlow) relevantParent).getRecapForms()){
-						for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
-							if (w instanceof FormField || w instanceof NextFormButton){
-								result.add( createExpression(w) ) ;
+					if(relevantParent instanceof RecapFlow){
+						for (Form f : ((RecapFlow) relevantParent).getRecapForms()){
+							for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
+								if (w instanceof FormField || w instanceof NextFormButton){
+									result.add( createExpression(w) ) ;
+								}
 							}
 						}
 					}
 				}
 			}
-        }
+		}
 
 
 		return result;
