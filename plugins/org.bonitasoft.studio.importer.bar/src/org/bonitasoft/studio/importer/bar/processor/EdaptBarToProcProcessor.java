@@ -33,12 +33,16 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
+import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.importer.ToProcProcessor;
 import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
 import org.bonitasoft.studio.importer.bar.exception.IncompatibleVersionException;
@@ -113,7 +117,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 		importAttachment(archiveFile,progressMonitor);
 		importProcessJarDependencies(archiveFile,progressMonitor);
 		importFormJarDependencies(archiveFile,progressMonitor);
-
+		importApplicationResources(archiveFile,progressMonitor);
+		
 		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
 
 		final Resource resource =  new XMLResourceFactoryImpl().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
@@ -162,6 +167,27 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 
 		migratedProc = barProcFile;
 		return barProcFile;
+	}
+
+	private void importApplicationResources(File archiveFile,IProgressMonitor progressMonitor) {
+		File tmpBar = new File(ProjectUtil.getBonitaStudioWorkFolder(), "tmpBar");
+		PlatformUtil.unzipZipFiles(archiveFile, tmpBar, progressMonitor);
+		File resourceFile = FileUtil.findDirectory(tmpBar, "studio-templates");
+		if (resourceFile != null) {
+			ApplicationResourceRepositoryStore store = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
+			File toCopy = null;
+			for (File f : resourceFile.listFiles()) {
+				String webTemplateId = f.getName();
+				IRepositoryFileStore webTemplateArtifact = store.getChild(webTemplateId);
+				if (webTemplateArtifact == null) {
+					webTemplateArtifact = store.createRepositoryFileStore(webTemplateId);
+				}
+
+				toCopy = f;
+				PlatformUtil.copyResource(webTemplateArtifact.getResource().getLocation().toFile(), toCopy, progressMonitor);
+				PlatformUtil.delete(tmpBar, progressMonitor);
+			}
+		}
 	}
 
 	private void importFormJarDependencies(File archiveFile,IProgressMonitor monitor) throws ZipException, IOException {

@@ -12,11 +12,5 @@
             priorityDisplay="2">
       </importFactory>
    </extension>
-   <extension
-         point="org.eclipse.equinox.preferences.preferences">
-      <initializer
-            class="org.bonitasoft.studio.importer.bar.preferences.BarImporterPreferenceInitializer">
-      </initializer>
-   </extension>
 
 </plugin>
