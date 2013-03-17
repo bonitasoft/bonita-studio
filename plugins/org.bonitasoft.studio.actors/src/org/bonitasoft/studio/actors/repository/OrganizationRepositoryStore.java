@@ -16,20 +16,41 @@
  */
 package org.bonitasoft.studio.actors.repository;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationAdapterFactory;
+import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceFactoryImpl;
+import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.emf.ecore.xmi.XMLOptions;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLOptionsImpl;
+import org.eclipse.emf.ecore.xml.type.AnyType;
+import org.eclipse.emf.edapt.history.Release;
+import org.eclipse.emf.edapt.migration.execution.Migrator;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
@@ -116,6 +137,63 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
     @Override
     protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
         adapterFactory.addAdapterFactory(new OrganizationAdapterFactory()) ;
+    }
+    
+    @Override
+    protected Release getRelease(Migrator targetMigrator, Resource resource) {
+    	final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
+		//Ignore unknown features
+		loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+		XMLOptions options = new XMLOptionsImpl() ;
+		options.setProcessAnyXML(true) ;
+		loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
+		try {
+			resource.load(loadOptions);
+		} catch (IOException e) {
+			BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
+		}
+		Map<EObject, AnyType> eObjectToExtensionMap = Collections.emptyMap();
+		if(resource instanceof XMLResource){
+			eObjectToExtensionMap = ((XMLResource) resource).getEObjectToExtensionMap();
+		}
+		if(eObjectToExtensionMap.isEmpty()){
+			return null;
+		}else{
+			return super.getRelease(targetMigrator, resource);
+		}
+    }
+    
+    @Override
+    protected Resource getTmpEMFResource(String fileName,
+    		InputStream inputStream) {
+         FileOutputStream fos = null;
+         File tmpFile = null ;
+         try{
+             tmpFile = File.createTempFile("tmp", fileName, ProjectUtil.getBonitaStudioWorkFolder());
+             fos = new FileOutputStream(tmpFile);
+             FileUtil.copy(inputStream, fos);
+             final Resource resource = new OrganizationResourceFactoryImpl().createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
+             return resource;
+         }catch (Exception e) {
+             BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+         }finally{
+             if(fos != null){
+                 try {
+                     fos.close();
+                 } catch (IOException e) {
+                     BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
+                 }
+             }
+             if(inputStream != null){
+                 try{
+                     inputStream.close();
+                 } catch (IOException e) {
+                     BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
+                 }
+             }
+         }
+
+         return null;
     }
 
 }

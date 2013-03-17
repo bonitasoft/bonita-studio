@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
+import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
@@ -53,6 +54,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.emf.ecore.xmi.XMLOptions;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLOptionsImpl;
+import org.eclipse.emf.edapt.history.Release;
+import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
@@ -279,5 +285,31 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 	protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
 		adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
 		adapterFactory.addAdapterFactory(new NotationAdapterFactory()) ;
+	}
+	
+	@Override
+    protected Release getRelease(Migrator targetMigrator, Resource resource) {
+    	final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
+		//Ignore unknown features
+		loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+		XMLOptions options = new XMLOptionsImpl() ;
+		options.setProcessAnyXML(true) ;
+		loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
+		try {
+			resource.load(loadOptions);
+		} catch (IOException e) {
+			BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
+		}
+		for(Release release : targetMigrator.getReleases()){
+			for(EObject root : resource.getContents()){
+				if(root instanceof MainProcess){
+					String modelVersion = ((MainProcess) root).getBonitaModelVersion();
+					if(release.getLabel().equals(modelVersion)){
+						return release;
+					}
+				}
+			}
+		}
+		return targetMigrator.getReleases().iterator().next(); //First release of all time
 	}
 }
