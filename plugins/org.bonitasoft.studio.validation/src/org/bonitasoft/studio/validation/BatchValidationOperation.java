@@ -70,32 +70,19 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 		Display.getDefault().syncExec(new Runnable() {
 
 			public void run() {	
-//				if(!toValidate.isEmpty()){
-//					Diagram view = toValidate.iterator().next();
-//					IFile target = view.eResource() != null ? WorkspaceSynchronizer.getFile(view.eResource()) : null;
-//					if (target != null) {
-//						ProcessMarkerNavigationProvider.deleteMarkers(target);
-//						org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider.deleteMarkers(target);
-//						try {
-//							target.findMarkers("org.bonitasoft.studio.diagram.diagnostic", false, IResource.DEPTH_INFINITE);
-//						} catch (CoreException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//					}
-//				}
-
 				if(!toValidate.isEmpty()){
 					Iterator<Diagram> it = toValidate.iterator();
 					while( it.hasNext() ){
 						Diagram d = it.next();
 						DiagramEditPart de = getDiagramEditPart(d);
-						EObject resolvedSemanticElement = de.resolveSemanticElement();
-						if(resolvedSemanticElement instanceof Form){
-							IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
-							if (target != null) {
-								ProcessMarkerNavigationProvider.deleteMarkers(target);
-								break;
+						if(de != null){
+							EObject resolvedSemanticElement = de.resolveSemanticElement();
+							if(resolvedSemanticElement instanceof Form){
+								IFile target = d.eResource() != null ? WorkspaceSynchronizer.getFile(d.eResource()) : null;
+								if (target != null) {
+									ProcessMarkerNavigationProvider.deleteMarkers(target);
+									break;
+								}
 							}
 						}
 					}
