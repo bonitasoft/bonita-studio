@@ -378,20 +378,6 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
         GridData gData = new GridData(SWT.BEGINNING, SWT.CENTER, false, false);
         gData.widthHint = 200;
         inputDocumentViewer.getControl().setLayoutData(gData);
-
-        //      List<Data> data = ModelHelper.getAccessibleData(element, ProcessPackage.eINSTANCE.getAttachmentType());
-        //      for (Data data2 : data) {
-        //          String name = data2.getName();
-        //          if(data2.isMultiple()){
-        //              name = GroovyUtil.GROOVY_PREFIX + name + GroovyUtil.GROOVY_SUFFIX;
-        //          }
-        //          inputDocumentViewer.add(name,0);
-        //      }
-
-        //        ControlDecoration cd = new ControlDecoration(inputDocumentViewer.getControl(), SWT.LEFT);
-        //        cd.setDescriptionText(Messages.data_tooltip_file);
-        //        cd.setImage(Pics.getImage(PicsConstants.hint));
-
         return client ;
     }
 

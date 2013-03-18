@@ -20,13 +20,12 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
-import org.bonitasoft.studio.data.provider.DataExpressionProviderForFormOutput;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.operation.OperationViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.form.Duplicable;
@@ -41,7 +40,6 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
-import org.bonitasoft.studio.properties.form.provider.ExpressionViewerVariableFilter;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
@@ -49,6 +47,7 @@ import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -56,6 +55,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -83,7 +83,7 @@ public class DocumentOutputSectionContribution implements IExtensibleGridPropert
     protected TransactionalEditingDomain editingDomain;
     protected EMFDataBindingContext dataBinding;
     protected EMFDataBindingContext checkBoxdataBinding;
-    private OperationViewer operationViewer;
+    private ExpressionViewer newDocumentExpressionViewer;
     private ComboViewer documentViewer;
     private final String noDocumentComboItem = Messages.noDocumentOutput;
     private Button updateDocumentCheckbox;
@@ -186,74 +186,70 @@ public class DocumentOutputSectionContribution implements IExtensibleGridPropert
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         client.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
-        AvailableExpressionTypeFilter expressionFilter =  new AvailableExpressionTypeFilter(new String[]{
-     			ExpressionConstants.CONSTANT_TYPE,
-     			ExpressionConstants.VARIABLE_TYPE,
-     			ExpressionConstants.FORM_FIELD_TYPE,
-     			ExpressionConstants.SCRIPT_TYPE
-         }) ;
-
-        operationViewer = new OperationViewer(client, widgetFactory,getEditingDomain(), expressionFilter, new ExpressionViewerVariableFilter()) ;
-        operationViewer.setStorageExpressionContentProvider(new DataExpressionProviderForFormOutput());
-        operationViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-
+        newDocumentExpressionViewer = new ExpressionViewer(client,SWT.BORDER,widgetFactory,getEditingDomain(),ExpressionPackage.Literals.OPERATION__LEFT_OPERAND) ;
+        newDocumentExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(500, SWT.DEFAULT).create()) ;
+        newDocumentExpressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,
+        		ExpressionConstants.VARIABLE_TYPE,
+        		ExpressionConstants.PARAMETER_TYPE,
+        		ExpressionConstants.SCRIPT_TYPE}));
+        newDocumentExpressionViewer.setMessage(Messages.newDocumentNameHint, IStatus.INFO);
         boolean enabled = !element.isDownloadOnly();
-        operationViewer.getTextControl().setVisible(false);
-        operationViewer.getComboControl().setEnabled(enabled);
-        operationViewer.getOperatorControl().setVisible(false);
-        operationViewer.getButtonControl().getParent().setVisible(false);
+        newDocumentExpressionViewer.getTextControl().setEnabled(enabled);
+        newDocumentExpressionViewer.getToolbar().setEnabled(enabled);
 
+        newDocumentExpressionViewer.setContext(element);
         bindOperationViewer();
         return client;
     }
 
     protected void bindOperationViewer() {
-        if(operationViewer != null && !operationViewer.isDisposed()){
+        if(newDocumentExpressionViewer != null && !newDocumentExpressionViewer.getControl().isDisposed()){
             if(dataBinding != null){
                 dataBinding.dispose();
             }
             dataBinding = new EMFDataBindingContext();
-            dataBinding.bindValue(EMFObservables.observeValue(element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), SWTObservables.observeEnabled(operationViewer.getTextControl()),new UpdateValueStrategy(){
+            dataBinding.bindValue(EMFObservables.observeValue(element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), SWTObservables.observeEnabled(newDocumentExpressionViewer.getToolbar()),new UpdateValueStrategy(){
                 @Override
                 public Object convert(Object value) {
                     return !(Boolean)value;
                 }
             },new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
-            dataBinding.bindValue(EMFObservables.observeValue(element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), SWTObservables.observeEnabled(operationViewer.getButtonControl()),new UpdateValueStrategy(){
+            dataBinding.bindValue(EMFObservables.observeValue(element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), SWTObservables.observeEnabled(newDocumentExpressionViewer.getEraseControl()),new UpdateValueStrategy(){
                 @Override
                 public Object convert(Object value) {
                     return !(Boolean)value;
                 }
             },new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
-            dataBinding.bindValue(EMFObservables.observeValue(element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), SWTObservables.observeEnabled(operationViewer.getOperatorControl()),new UpdateValueStrategy(){
+            dataBinding.bindValue(EMFObservables.observeValue(element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), SWTObservables.observeEnabled(newDocumentExpressionViewer.getTextControl()),new UpdateValueStrategy(){
                 @Override
                 public Object convert(Object value) {
                     return !(Boolean)value;
                 }
             },new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
-            dataBinding.bindValue(EMFObservables.observeValue(element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), SWTObservables.observeEnabled(operationViewer.getComboControl()),new UpdateValueStrategy(){
+            dataBinding.bindValue(EMFObservables.observeValue(element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY), SWTObservables.observeEnabled(newDocumentExpressionViewer.getButtonControl()),new UpdateValueStrategy(){
                 @Override
                 public Object convert(Object value) {
                     return !(Boolean)value;
                 }
             },new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
-            operationViewer.setContext(dataBinding) ;
             Operation action = element.getAction() ;
             if(action == null){
                 action = ExpressionFactory.eINSTANCE.createOperation() ;
                 Operator op = ExpressionFactory.eINSTANCE.createOperator() ;
-                op.setType(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
+                op.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR) ;
                 op.setExpression("=") ;
                 action.setOperator(op) ;
 
                 Expression variableExp = ExpressionFactory.eINSTANCE.createExpression() ;
+                variableExp.setReturnType(String.class.getName());
+                variableExp.setReturnTypeFixed(true);
                 Expression actionExp = ExpressionFactory.eINSTANCE.createExpression() ;
                 action.setLeftOperand(variableExp) ;
                 action.setRightOperand(actionExp) ;
                 editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, element, FormPackage.Literals.WIDGET__ACTION, action));
             }
-            operationViewer.setEditingDomain(getEditingDomain()) ;
-            operationViewer.setEObject(element) ;
+            newDocumentExpressionViewer.setInput(action);
+            dataBinding.bindValue(ViewersObservables.observeSingleSelection(newDocumentExpressionViewer),EMFEditObservables.observeValue(getEditingDomain(), action, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND));
         }
     }
 
@@ -454,8 +450,8 @@ public class DocumentOutputSectionContribution implements IExtensibleGridPropert
         if(dataBinding!= null){
             dataBinding.dispose();
         }
-        if(operationViewer != null){
-            operationViewer.dispose() ;
+        if(newDocumentExpressionViewer != null){
+            newDocumentExpressionViewer.getControl().dispose() ;
         }
     }
 

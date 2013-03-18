@@ -315,6 +315,8 @@ public class Messages extends NLS {
 
     public static String modifierDescription;
 
+	public static String newDocumentNameHint;
+
 
 
     static {
