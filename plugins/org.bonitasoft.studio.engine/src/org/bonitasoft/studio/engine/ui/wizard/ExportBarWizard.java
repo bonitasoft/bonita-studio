@@ -65,7 +65,10 @@ public class ExportBarWizard extends Wizard {
     public boolean performFinish() {
         try {
             IStatus status = page.finish() ;
-            if(!status.isOK()){
+            if(status.getSeverity() == IStatus.CANCEL){
+            	return false;
+            }
+            if(statusContainsError(status)){
                 String message = status.getMessage();
                 if(message == null || message.isEmpty()){
                     message = Messages.exportErrorOccuredMsg ;
@@ -74,7 +77,7 @@ public class ExportBarWizard extends Wizard {
             }else{
                 MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.exportSuccessTitle, Messages.exportSuccessMsg) ;
             }
-            return status.isOK();
+            return !statusContainsError(status);
         } catch (InvocationTargetException e) {
             BonitaStudioLog.error(e);
         } catch (InterruptedException e) {
@@ -82,6 +85,17 @@ public class ExportBarWizard extends Wizard {
         }
         return false;
     }
+    
+    private boolean statusContainsError(IStatus validationStatus) {
+		if(validationStatus != null){
+			for(IStatus s : validationStatus.getChildren()){
+				if(s.getSeverity() == IStatus.WARNING || s.getSeverity() == IStatus.ERROR){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 
 }

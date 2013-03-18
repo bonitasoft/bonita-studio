@@ -428,7 +428,7 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
         parameters.put("diagrams", diagrams);
         try {
             final IStatus status = (IStatus) cmd.executeWithChecks(new ExecutionEvent(cmd,parameters,null,null));
-            if(status == null || !status.isOK()){
+            if(statusContainsError(status)){
             	StringBuilder report = new StringBuilder("");
             	List<String> alreadyInReport = new ArrayList<String>(selectedList.size());
             	for(IStatus s : status.getChildren()){
@@ -456,6 +456,16 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
 	}
 
 
+	 private static boolean statusContainsError(IStatus validationStatus) {
+			if(validationStatus != null){
+				for(IStatus s : validationStatus.getChildren()){
+					if(s.getSeverity() == IStatus.WARNING || s.getSeverity() == IStatus.ERROR){
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 
     @Override
     public void dispose() {
