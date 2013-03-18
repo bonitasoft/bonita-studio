@@ -117,11 +117,9 @@ public class ImagePathContribution implements IExtensibleGridPropertySectionCont
         context = new EMFDataBindingContext();
         createDocumentPanel(composite, widgetFactory, gd);
 
-
-
         isUrlButton = widgetFactory.createButton(composite, Messages.imageIsAURL, SWT.RADIO);
         urlImgPathExpression = new ExpressionViewer(composite, SWT.BORDER, widgetFactory, editingDomain, FormPackage.Literals.IMAGE_WIDGET__IMG_PATH);
-        urlImgPathExpression.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(5, 0).create());
+        urlImgPathExpression.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(600, SWT.DEFAULT).indent(5, 0).create());
         urlImgPathExpression.getTextControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
         ControlDecoration cd = new ControlDecoration(urlImgPathExpression.getControl(), SWT.LEFT);
@@ -196,7 +194,7 @@ public class ImagePathContribution implements IExtensibleGridPropertySectionCont
         widgetFactory.createLabel(composite, "");
         widgetFactory.createLabel(composite, "");
 
-        controlDecoration = new ControlDecoration(documentSelectedViewer.getControl(), SWT.TOP);
+        controlDecoration = new ControlDecoration(documentSelectedViewer.getControl(), SWT.LEFT);
         controlDecoration.setImage(Pics.getImage("decoration/smartmode_co.gif"));
         controlDecoration.setDescriptionText(Messages.data_tooltip_image);
     }
