@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<theme author="bonitasoft" creationDate="1363191944114" description="" imagePreview="preview.png" name="6.0 beta default" provided="false" type="application" updateDate="1313660940526">
+<theme author="bonitasoft" creationDate="1363191944114" description="" imagePreview="preview.png" name="6.0 beta default" provided="true" type="application" updateDate="1313660940526">
   <bindings>
     <binding description="Hyperlink to the bonita User Experience" name="user_xp_link">
       <css-rule>.bonita_user_xp_link</css-rule>
