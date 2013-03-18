@@ -1085,7 +1085,14 @@ public class FormsExporter {
         builder.addHorizontalHeaderExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
                 engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
-    }
+		}else{
+			builder.addHorizontalHeaderExpression(
+					"empty",
+					"",
+					ExpressionConstants.CONSTANT_TYPE,
+					String.class.getName(),
+					null);
+		}
 	}
 
     protected void addVerticalHeaderExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
@@ -1094,6 +1101,13 @@ public class FormsExporter {
         builder.addVerticalHeaderExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
                 engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
         addExpressionDependency(builder, engineExpression);
+		}else{
+			builder.addHorizontalHeaderExpression(
+					"empty",
+					"",
+					ExpressionConstants.CONSTANT_TYPE,
+					String.class.getName(),
+					null);
 		}
 
     }
