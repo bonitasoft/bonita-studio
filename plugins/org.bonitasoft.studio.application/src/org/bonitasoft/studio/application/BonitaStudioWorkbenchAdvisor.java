@@ -303,7 +303,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
         boolean returnValue =  super.preShutdown();
         if(returnValue){
         	try {
-        		if(PlatformUI.isWorkbenchRunning()){
+        		if(PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
         			boolean closeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true) ;
         			if(closeEditor){
         				PlatformUI.getWorkbench().getProgressService().run(true, false, new IRunnableWithProgress() {
