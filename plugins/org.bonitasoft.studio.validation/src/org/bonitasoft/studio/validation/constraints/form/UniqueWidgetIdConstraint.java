@@ -25,8 +25,12 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.process.AbstractPageFlow;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.PageFlow;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.RecapFlow;
+import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
@@ -42,49 +46,58 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 public class UniqueWidgetIdConstraint extends AbstractLiveValidationMarkerConstraint {
 
 
-    @Override
-    protected IStatus performLiveValidation(IValidationContext ctx) {
-        return ctx.createSuccessStatus();
-    }
+	@Override
+	protected IStatus performLiveValidation(IValidationContext ctx) {
+		return ctx.createSuccessStatus();
+	}
 
-    @Override
-    protected IStatus performBatchValidation(IValidationContext ctx) {
-        EObject eObj = ctx.getTarget();
-        if (eObj instanceof Widget && !(eObj.eContainer() instanceof Expression)) {
-            Widget w = (Widget) eObj;
-            String name = w.getName();
-            Element pageFlow = ModelHelper.getPageFlow(w);
-            Form form = ModelHelper.getForm(w);
-            if(pageFlow != null){
-                List<String> existingNames = new ArrayList<String>();
-                for (Widget w1 : ModelHelper.getAllWidgetInsidePageFlow((PageFlow) pageFlow)) {
-                    existingNames.add(w1.getName());
-                }
+	@Override
+	protected IStatus performBatchValidation(IValidationContext ctx) {
+		EObject eObj = ctx.getTarget();
+		if (eObj instanceof Widget && !(eObj.eContainer() instanceof Expression)) {
+			Widget w = (Widget) eObj;
+			String name = w.getName();
+			Element pageFlow = ModelHelper.getPageFlow(w);
+			Form form = ModelHelper.getForm(w);
+			if(pageFlow != null &&  pageFlow instanceof AbstractPageFlow){
+				List<String> existingNames = new ArrayList<String>();
+				if(pageFlow instanceof PageFlow){
+					for (Widget w1 : ModelHelper.getAllWidgetInsidePageFlow((PageFlow) pageFlow)) {
+						existingNames.add(w1.getName());
+					}
+				}else if(pageFlow instanceof ViewPageFlow){
+					for (Widget w1 : ModelHelper.getAllWidgetInsidePageFlow(pageFlow,ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM)) {
+						existingNames.add(w1.getName());
+					}
+				}else if(pageFlow instanceof RecapFlow){
+					for (Widget w1 : ModelHelper.getAllWidgetInsidePageFlow(pageFlow,ProcessPackage.Literals.RECAP_FLOW__RECAP_FORMS)) {
+						existingNames.add(w1.getName());
+					}
+				}
+				if(Collections.frequency(existingNames,name)>1){
+					return ctx.createFailureStatus(new Object[] { Messages.Validation_Widget_SameName + ": " + name });
+				}
+			}else{
+				for (Widget w1 : ModelHelper.getAllWidgetInsideForm(form)) {//in a form template
+					if (!w1.equals(w) && w1.getName().equals(name)) {
+						return ctx.createFailureStatus(new Object[] { Messages.Validation_Widget_SameName + ": " + name });
+					}
+				}
+			}
 
-                if(Collections.frequency(existingNames,name)>1){
-                    return ctx.createFailureStatus(new Object[] { Messages.Validation_Widget_SameName + ": " + name });
-                }
-            }else{
-                for (Widget w1 : ModelHelper.getAllWidgetInsideForm(form)) {//in a form template
-                    if (!w1.equals(w) && w1.getName().equals(name)) {
-                        return ctx.createFailureStatus(new Object[] { Messages.Validation_Widget_SameName + ": " + name });
-                    }
-                }
-            }
-
-        }
-        return ctx.createSuccessStatus();
-    }
+		}
+		return ctx.createSuccessStatus();
+	}
 
 
-    @Override
-    protected String getMarkerType(DiagramEditor editor) {
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
-    }
+	@Override
+	protected String getMarkerType(DiagramEditor editor) {
+		return ProcessMarkerNavigationProvider.MARKER_TYPE;
+	}
 
-    @Override
-    protected String getConstraintId() {
-        return "org.bonitasoft.studio.validation.constraint.Widget";
-    }
+	@Override
+	protected String getConstraintId() {
+		return "org.bonitasoft.studio.validation.constraint.Widget";
+	}
 
 }
