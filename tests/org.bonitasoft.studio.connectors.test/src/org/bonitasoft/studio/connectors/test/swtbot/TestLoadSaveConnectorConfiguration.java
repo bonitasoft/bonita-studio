@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connectors.test.swtbot;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.DefinitionConfigurationFileStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -36,11 +37,15 @@ import org.junit.runner.RunWith;
 public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 	
 	 @Before
-	  public void disablePopup() {
+	  public void initTest() {
 	     FileActionDialog.setDisablePopup(true);
+	     ConnectorConfRepositoryStore store = (ConnectorConfRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
+	     for (DefinitionConfigurationFileStore fileStore:store.getChildren()){
+	    	 fileStore.delete();
+	     }
 	    }
 
-
+	
 	public void createConnector(String connectorDefinitionId) {
         final String widgetId = "textWidget";
         final String pageId = "connectorDefPageId";
