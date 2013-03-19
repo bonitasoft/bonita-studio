@@ -54,9 +54,12 @@ import org.eclipse.swt.graphics.Image;
  */
 public class TestThemeRepository extends TestCase{
 
-    public void testDuplicateLookNFeelFileStore() throws Exception {
+    private static final String DEFAULT_APPLICATION_LNF_ID = "Default Application";
+
+
+	public void testDuplicateLookNFeelFileStore() throws Exception {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
-        final LookNFeelFileStore artifact = repository.getChild("grey");
+        final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
         assertNotNull(artifact);
         final LookNFeelFileStore duplicateTheme = repository.duplicateFrom("grey2", "grey2Desc", artifact);
         assertEquals("grey2", duplicateTheme.getName());
@@ -70,7 +73,7 @@ public class TestThemeRepository extends TestCase{
 
     public void testDuplicateLookNFeelFileStoreWithNullDesc() throws Exception {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
-        final LookNFeelFileStore artifact = repository.getChild("grey");
+        final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
         assertNotNull(artifact);
         final LookNFeelFileStore duplicateTheme = repository.duplicateFrom("grey2", null, artifact);
         assertEquals("grey2", duplicateTheme.getName());
@@ -87,7 +90,7 @@ public class TestThemeRepository extends TestCase{
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final int size = repository.getApplicationLookNFeels().size();
         try {
-            final LookNFeelFileStore artifact = repository.getChild("grey");
+            final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
             assertNotNull(artifact);
             repository.duplicateFrom("", "", artifact);
             fail("should have failed");
@@ -102,7 +105,7 @@ public class TestThemeRepository extends TestCase{
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final int size = repository.getApplicationLookNFeels().size();
         try {
-            final LookNFeelFileStore artifact = repository.getChild("grey");
+            final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
             assertNotNull(artifact);
             repository.duplicateFrom(null, null, artifact);
             fail("should have failed");
@@ -116,9 +119,9 @@ public class TestThemeRepository extends TestCase{
     public void testDuplicateLookNFeelFileStoreWithSameName() throws ThemeAlreadyExistsException {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final int size = repository.getApplicationLookNFeels().size();
-        final LookNFeelFileStore artifact = repository.getChild("grey");
+        final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
         assertNotNull(artifact);
-        assertNull(repository.duplicateFrom("Default Application", "desc", artifact));
+        assertNull(repository.duplicateFrom(DEFAULT_APPLICATION_LNF_ID, "desc", artifact));
         assertEquals(size, repository.getApplicationLookNFeels().size());
     }
 
@@ -126,13 +129,13 @@ public class TestThemeRepository extends TestCase{
     public void testCantRemoveProvidedTheme() throws Exception {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         try {
-            final LookNFeelFileStore artifact = repository.getChild("grey");
+            final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
             assertNotNull(artifact);
             artifact.delete();
         } catch (IllegalArgumentException e){
             //OK
         } finally {
-            assertNotNull("grey theme was removed", repository.getChild("grey"));
+            assertNotNull("grey theme was removed", repository.getChild(DEFAULT_APPLICATION_LNF_ID));
         }
     }
 
@@ -310,15 +313,15 @@ public class TestThemeRepository extends TestCase{
         InputStream stream = this.getClass().getResourceAsStream("myTheme.zip");
         LookNFeelFileStore artifact = repository.importInputStream("myTheme.zip", stream);
 
-        artifact.setThemeName("grey");
+        artifact.setThemeName(DEFAULT_APPLICATION_LNF_ID);
 
         artifact.save(null);
 
         assertEquals("myTheme", artifact.getResource().getName());
-        assertNotNull(repository.getChild("grey"));
+        assertNotNull(repository.getChild(DEFAULT_APPLICATION_LNF_ID));
         assertNotNull(repository.getChild("myTheme"));
         artifact.delete();
-        assertNotNull(repository.getChild("grey"));
+        assertNotNull(repository.getChild(DEFAULT_APPLICATION_LNF_ID));
         assertNull(repository.getChild("myTheme"));
     }
 
@@ -332,7 +335,7 @@ public class TestThemeRepository extends TestCase{
 
     public void testDuplicateApplicationLookNFeelFileStore() throws ThemeAlreadyExistsException{
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
-        LookNFeelFileStore artifact = repository.getChild( "grey");
+        LookNFeelFileStore artifact = repository.getChild( DEFAULT_APPLICATION_LNF_ID);
         LookNFeelFileStore duplicateTheme = repository.duplicateFrom("myDuplicatedApplicationTheme", "myDesc", artifact);
         assertTrue(duplicateTheme instanceof ApplicationLookNFeelFileStore);
     }
