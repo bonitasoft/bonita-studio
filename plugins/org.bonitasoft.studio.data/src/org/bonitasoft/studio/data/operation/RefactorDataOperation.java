@@ -18,7 +18,9 @@ package org.bonitasoft.studio.data.operation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -89,7 +91,20 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 				cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
 				//update referenced data
 				cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,exp.getReferencedElements()));
+			}else if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType()) ){
+				Set<EObject> toRemove = new HashSet<EObject>();
+				for(EObject dep : exp.getReferencedElements()){
+					if(dep instanceof Data){
+						if(oldData.getName().equals(((Data) dep).getName()) && dep.eClass().equals(oldData.eClass())){
+							toRemove.add(dep);
+						}
+					}
+				}
+				if(!toRemove.isEmpty()){
+					cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,toRemove));
+				}
 			}
+
 		}
 	}
 
@@ -165,7 +180,7 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 	public void setOldData(Data oldData){
 		this.oldData = oldData ;
 	}
-	
+
 	public void setUpdateDataReferences(boolean updateDataReferences) {
 		this.updateDataReferences = updateDataReferences;
 	}
