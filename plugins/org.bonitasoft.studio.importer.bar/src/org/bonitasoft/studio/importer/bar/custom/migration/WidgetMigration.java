@@ -61,6 +61,18 @@ public class WidgetMigration extends ReportCustomMigration {
 					widgetActions.put(widget.getUuid(), operation);
 					if(inputScript != null && !inputScript.trim().isEmpty()){
 						widgetInputs.put(widget.getUuid(), inputScript);
+					}else{
+						if(widget.instanceOf("form.MultipleValuatedFormField")){
+							Instance data = widget.get("enum");
+							if(data != null){
+								List<String> literals = widget.get("literals");
+								if(literals.isEmpty()){
+									widgetInputs.put(widget.getUuid(), "${"+generateListScript((Instance) data.get("dataType"))+"}");
+								}else{
+									widgetInputs.put(widget.getUuid(), "${"+generateListScript(literals)+"}");
+								}
+							}
+						}
 					}
 				}
 				storeDisplayLabels(widget);
@@ -72,6 +84,18 @@ public class WidgetMigration extends ReportCustomMigration {
 				storeInjectWidgetScripts(widget);
 			}
 		}
+	}
+
+	private String generateListScript(List<String> literals) {
+		StringBuilder sb = new StringBuilder("[");
+		for(String l : literals){
+			sb.append("\""+l+"\"");
+			if(literals.indexOf(l) < literals.size()-1){
+				sb.append(",");
+			}
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 
 	private String getDefaultReturnTypeForWidget(Instance widget) {
