@@ -278,8 +278,11 @@ public class WidgetMigration extends ReportCustomMigration {
 			expression = getConverter(model,getScope(widget)).parse(widgetInputs.get(widget.getUuid()), String.class.getName(), false);
 			if(ExpressionConstants.VARIABLE_TYPE.equals(expression.get("type"))){
 				expression.set("returnType", StringToExpressionConverter.getDataReturnType(((List<Instance>) expression.get("referencedElements")).get(0)));
-				if(widget.getContainer().getContainer().instanceOf("process.AbstractProcess")){
+				if(getParentPageFlow(widget).instanceOf("process.Pool")){
+					model.delete(expression);
+					widget.set("inputExpression", StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false));
 					addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.widgetDataInputAtProcessLevelMigrationDescription, Messages.dataProperty, IStatus.ERROR);
+					return;
 				}else{
 					addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.widgetDataInputMigrationDescription, Messages.dataProperty, IStatus.OK);
 				}
@@ -294,6 +297,14 @@ public class WidgetMigration extends ReportCustomMigration {
 			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
 		}
 		widget.set("inputExpression", expression);
+	}
+
+	private Instance getParentPageFlow(Instance widget) {
+		Instance current =  widget.getContainer();
+		while(current != null && !current.instanceOf("process.AbstractPageFlow")){
+			current = current.getContainer();
+		}
+		return current;
 	}
 
 	private void setReturnTypeModifier(Instance widget) {

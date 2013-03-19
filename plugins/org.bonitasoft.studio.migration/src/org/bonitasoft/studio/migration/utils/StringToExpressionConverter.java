@@ -103,7 +103,9 @@ public class StringToExpressionConverter {
 				}
 			}
 			if(dataInstance != null){
-				leftOperand = parse("${"+setVarScript+"}", getDataReturnType(dataInstance), true);
+				String dataReturnType = getDataReturnType(dataInstance);
+				leftOperand = parse("${"+setVarScript+"}", dataReturnType, true);
+				actionExpression.set("returnType", dataReturnType);
 			}
 		}
 		if(leftOperand == null){
