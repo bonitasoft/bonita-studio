@@ -48,6 +48,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -73,6 +75,7 @@ public class ExpressionCollectionViewer {
 
     private Composite viewerComposite;
     private TableViewer viewer;
+	private int posClickX;
     private ExpressionCollectionContentProvider provider;
     private Button addRowButton;
     private Button removeRowButton;
@@ -168,6 +171,27 @@ public class ExpressionCollectionViewer {
                 }
             }
         });
+        viewer.getTable().addMouseListener(new MouseListener() {
+			
+
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseDown(MouseEvent e) {
+				posClickX = e.x;
+			}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
         updateButtons();
         // viewer.getTable().addControlListener(new ControlAdapter() {
@@ -452,8 +476,7 @@ public class ExpressionCollectionViewer {
             public void handleEvent(Event event) {
                 if (viewer != null && viewer.getSelection() != null
                         && !viewer.getSelection().isEmpty()) {
-                    int indexColumnToRemove = viewer.getTable()
-                            .getSelectionIndex();
+                    int indexColumnToRemove = posClickX / viewer.getTable().getColumns()[0].getWidth();
                     removeColumn(indexColumnToRemove);
                 }
                 for (Listener l : listeners) {
@@ -666,14 +689,16 @@ public class ExpressionCollectionViewer {
             CompoundCommand cc = new CompoundCommand(
                     "Remove column of a TableExpression");
             for (ListExpression listExpression : expressions) {
-                Expression expressionToRemove = listExpression.getExpressions()
-                        .get(indexColumnToRemove);
-                Command removeCommand = RemoveCommand
-                        .create(editingDomain,
-                                listExpression,
-                                ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS,
-                                expressionToRemove);
-                cc.append(removeCommand);
+            	if(indexColumnToRemove < listExpression.getExpressions().size()){
+            		Expression expressionToRemove = listExpression.getExpressions()
+            				.get(indexColumnToRemove);
+            		Command removeCommand = RemoveCommand
+            				.create(editingDomain,
+            						listExpression,
+            						ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS,
+            						expressionToRemove);
+            		cc.append(removeCommand);
+            	}
             }
             editingDomain.getCommandStack().execute(cc);
         } else {
