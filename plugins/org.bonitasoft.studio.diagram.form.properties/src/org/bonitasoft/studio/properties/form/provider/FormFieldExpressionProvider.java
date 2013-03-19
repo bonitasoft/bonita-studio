@@ -28,6 +28,7 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.NextFormButton;
@@ -179,10 +180,14 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 		exp.setType(getExpressionType()) ;
 		exp.setContent("field_"+w.getName()) ;
 		exp.setName("field_"+w.getName()) ;
-		if(w instanceof TextFormField && w.getReturnTypeModifier() != null ){
-			exp.setReturnType(w.getReturnTypeModifier()) ;
+		if(w instanceof Duplicable && ((Duplicable) w).isDuplicate()){
+			exp.setReturnType(List.class.getName()) ; 
 		}else{
-			exp.setReturnType(w.getAssociatedReturnType()) ;
+			if(w instanceof TextFormField && w.getReturnTypeModifier() != null ){
+				exp.setReturnType(w.getReturnTypeModifier()) ;
+			}else{
+				exp.setReturnType(w.getAssociatedReturnType()) ;
+			}
 		}
 		exp.getReferencedElements().add(EcoreUtil.copy(w)) ;
 		return exp;
