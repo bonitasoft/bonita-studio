@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -112,6 +113,12 @@ public class FormFieldMigration extends ReportCustomMigration {
 		Instance expression = null;
 		if(defaultValueScripts.containsKey(widget.getUuid())){
 			expression = getConverter(model,getScope(widget)).parse(defaultValueScripts.get(widget.getUuid()), String.class.getName(), true);
+			if(ExpressionConstants.VARIABLE_TYPE.equals(expression.get("type")) && getParentPageFlow(widget).instanceOf("process.Pool")){
+				model.delete(expression);
+				widget.set("defaultExpression", StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true));
+				addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.widgetDataInputAtProcessLevelMigrationDescription, Messages.dataProperty, IStatus.ERROR);
+				return;
+			}
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "initialValueScript");
 			}
@@ -120,6 +127,14 @@ public class FormFieldMigration extends ReportCustomMigration {
 			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
 		}
 		widget.set("defaultExpression", expression);
+	}
+	
+	private Instance getParentPageFlow(Instance widget) {
+		Instance current =  widget.getContainer();
+		while(current != null && !current.instanceOf("process.AbstractPageFlow")){
+			current = current.getContainer();
+		}
+		return current;
 	}
 	
 	private void setDefaultValueAfterEvent(Model model, Instance widget) {

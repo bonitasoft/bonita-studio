@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.migration.utils;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,7 @@ public class StringToExpressionConverter {
 	private Map<String,Instance> data = new HashMap<String, Instance>();
 	private Map<String,Instance> widget = new HashMap<String, Instance>();
 	private boolean useSimulationDataScope = false;
-	private Instance container;
+
 
 	public StringToExpressionConverter(Model model, Instance container) {
 		Assert.isNotNull(model);
@@ -241,11 +242,24 @@ public class StringToExpressionConverter {
 
 
 	private Instance createFormFieldDependencyInstance(Instance widgetInstance) {
-		return widgetInstance.copy();
+		Instance widget =  widgetInstance.copy();
+		List<Instance> widgetDependencies = widget.get("dependOn");
+		for(Instance w: widgetDependencies){
+			model.delete(w);
+		}
+		widget.set("dependOn",Collections.emptyList());
+		return widget;
 	}
 
 	private Instance createVariableDependencyInstance(Instance dataInstance) {
-		return dataInstance.copy();
+		Instance copy = dataInstance.copy();
+		Instance defaultValue = copy.get("defaultValue");
+		if(defaultValue != null){
+			model.delete(defaultValue);
+			copy.set("defaultValue", null);
+		}
+	
+		return copy;
 	}
 
 	private String guessExpressionType(String stringToParse) {

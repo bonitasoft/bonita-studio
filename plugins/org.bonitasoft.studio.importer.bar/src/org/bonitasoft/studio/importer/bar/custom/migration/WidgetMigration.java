@@ -277,7 +277,21 @@ public class WidgetMigration extends ReportCustomMigration {
 		if(widgetInputs.containsKey(widget.getUuid())){
 			expression = getConverter(model,getScope(widget)).parse(widgetInputs.get(widget.getUuid()), String.class.getName(), false);
 			if(ExpressionConstants.VARIABLE_TYPE.equals(expression.get("type"))){
-				expression.set("returnType", StringToExpressionConverter.getDataReturnType(((List<Instance>) expression.get("referencedElements")).get(0)));
+				Instance data = ((List<Instance>) expression.get("referencedElements")).get(0);
+				if(widget.instanceOf("form.MultipleValuatedFormField")){
+					Instance datatype = data.get("dataType");
+					if(datatype.instanceOf("process.EnumType")){
+						expression.set("content", generateListScript(datatype));
+						expression.set("returnType",List.class.getName());
+						expression.set("name","availableValuesScript");
+						expression.set("type",ExpressionConstants.SCRIPT_TYPE);
+						expression.set("interpreter",ExpressionConstants.GROOVY);
+						widget.set("inputExpression", expression);
+						addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.widgetDataInputMigrationDescription, Messages.dataProperty, IStatus.OK);
+						return;
+					}
+				}
+				expression.set("returnType", StringToExpressionConverter.getDataReturnType(data));
 				if(getParentPageFlow(widget).instanceOf("process.Pool")){
 					model.delete(expression);
 					widget.set("inputExpression", StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false));
@@ -297,6 +311,19 @@ public class WidgetMigration extends ReportCustomMigration {
 			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
 		}
 		widget.set("inputExpression", expression);
+	}
+
+	private String generateListScript(Instance datatype) {
+		final List<String> literals = datatype.get("literals");
+		StringBuilder sb = new StringBuilder("[");
+		for(String l : literals){
+			sb.append("\""+l+"\"");
+			if(literals.indexOf(l) < literals.size()-1){
+				sb.append(",");
+			}
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 
 	private Instance getParentPageFlow(Instance widget) {
