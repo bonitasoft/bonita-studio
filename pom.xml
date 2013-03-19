@@ -11,7 +11,7 @@
 		<tychoVersion>0.16.0</tychoVersion>
 		<tychoExtrasVersion>0.16.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
-		<bundle.version>6.0-Beta-001</bundle.version>
+		<bundle.version>6.0-beta-001</bundle.version>
 		<engine.version>6.0.0-beta-014</engine.version>
 		<connector.version>6.0.0-Beta-007</connector.version>
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
