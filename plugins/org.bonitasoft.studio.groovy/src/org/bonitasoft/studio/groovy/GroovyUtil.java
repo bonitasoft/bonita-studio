@@ -55,11 +55,13 @@ import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.PageFlow;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.RecapFlow;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.StartTimerEvent;
+import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.model.simulation.SimulationBoolean;
 import org.bonitasoft.studio.model.simulation.SimulationData;
@@ -298,7 +300,7 @@ public class GroovyUtil {
         result.add(ExpressionConstants.ROOT_PROCESS_INSTANCE_ID);
         result.add(ExpressionConstants.PARENT_PROCESS_INSTANCE_ID);
         result.add(ExpressionConstants.ACTIVITY_INSTANCE_ID);
-        result.add(ExpressionConstants.LOGGED_USER_ID);
+    
         if (context instanceof Activity) {
             if (((Activity) context).isIsMultiInstance()) {
                 result.add(ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES);
@@ -308,6 +310,14 @@ public class GroovyUtil {
             } else if (((Activity) context).getIsLoop()) {
                 result.add(ExpressionConstants.LOOP_COUNTER);
             }
+        }
+        
+        if(context instanceof Task){
+            result.add(ExpressionConstants.LOGGED_USER_ID);
+        }else  if(context instanceof Widget && ModelHelper.getPageFlow((Widget) context) != null){
+            result.add(ExpressionConstants.LOGGED_USER_ID);
+        }else  if(context instanceof Form){
+        	 result.add(ExpressionConstants.LOGGED_USER_ID);
         }
 
         return result;
