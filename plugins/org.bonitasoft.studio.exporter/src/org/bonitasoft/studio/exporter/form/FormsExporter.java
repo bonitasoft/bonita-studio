@@ -1175,12 +1175,20 @@ public class FormsExporter {
     }
 
     private void addValueExpressionIfValid(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
-        if (expression != null && expression.getContent() != null) {
-            final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
-            builder.addValueExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
-                    engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
-            addExpressionDependency(builder, engineExpression);
-        }
+    	if (expression != null && expression.getContent() != null) {
+    		final org.bonitasoft.engine.expression.Expression engineExpression = EngineExpressionUtil.createExpression(expression);
+    		if(engineExpression!=null){
+    			builder.addValueExpression(engineExpression.getName(), engineExpression.getContent(), engineExpression.getExpressionType(),
+    					engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter());
+    			addExpressionDependency(builder, engineExpression);
+    		}else{
+    			builder.addValueExpression(	"empty",
+    										" ",
+    										ExpressionConstants.CONSTANT_TYPE,
+    										String.class.getName(),
+    										null);
+    		}
+    	}
     }
 
     protected void addAvailableValuesExpression(final IFormBuilder builder, final Expression expression) throws InvalidFormDefinitionException {
