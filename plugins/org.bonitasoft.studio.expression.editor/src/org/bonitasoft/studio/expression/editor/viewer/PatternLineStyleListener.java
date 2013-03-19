@@ -78,11 +78,11 @@ public class PatternLineStyleListener implements LineStyleListener {
 					int i = lineOffset ;
 					IRegion index = null;
 					index = finder.find(i, exp.getName(), true, true, true, false);
-					while(index != null){
+					while(index != null && index.getOffset() < lineOffset + lineLenght){
 						if(PatternLineStyleListener.isNotEscapeWord(content, index.getOffset())){
 							styles.add(new StyleRange(index.getOffset(), index.getLength(), Display.getDefault().getSystemColor(supportedTypes.get(exp.getType())), null,SWT.BOLD));
 						}
-						i = i + index.getLength();
+						i = index.getOffset() + index.getLength();
 						if(i < lineOffset+lineLenght){
 							index = finder.find(i, exp.getName(), true, true, true, false);
 						}else{
