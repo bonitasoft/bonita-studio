@@ -216,7 +216,9 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 					int size = jars.size();
 					List<IRepositoryFileStore> selectedJars=dialog.getSelectedJars();
 					for (IRepositoryFileStore jar:selectedJars){
-						jars.add(jar.getName());
+						if(!jars.contains(jar.getName())){
+							jars.add(jar.getName());
+						}
 					}
 					if (size==0  && !jars.isEmpty()){
 						driversLabelProvider.setDefaultDriver( jars.get(0));
