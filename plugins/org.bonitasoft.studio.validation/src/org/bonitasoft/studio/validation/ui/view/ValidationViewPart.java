@@ -328,11 +328,10 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 		}
 	}
 
-	@Override
-	public void init(IViewSite site) throws PartInitException {
-		// TODO Auto-generated method stub
-		super.init(site);
-		
+	public void refreshViewer() {
+		if(tableViewer != null && !tableViewer.getTable().isDisposed()){
+			tableViewer.setInput(tableViewer.getInput());
+		}
 	}
 
 }

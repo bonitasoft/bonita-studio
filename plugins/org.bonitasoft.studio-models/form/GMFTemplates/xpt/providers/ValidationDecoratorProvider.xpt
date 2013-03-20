@@ -87,17 +87,20 @@ public class «validationDecoratorProviderClassName»
 			public void run() {
 				try {
 				
-					if (!fdiagram.eIsProxy()) 
-					org.eclipse.emf.transaction.util.TransactionUtil.getEditingDomain(fdiagram).runExclusive(new Runnable() {
-
-						public void run() {
-							for (java.util.Iterator it = decorators.iterator(); it.hasNext();) {
-								org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecorator decorator =
+					if (!fdiagram.eIsProxy()){ 
+					org.eclipse.emf.transaction.TransactionalEditingDomain domain = org.eclipse.emf.transaction.util.TransactionUtil.getEditingDomain(fdiagram);
+					if(domain != null){
+						domain.runExclusive(new Runnable() {
+								public void run() {
+									for (java.util.Iterator it = decorators.iterator(); it.hasNext();) {
+										org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecorator decorator =
 										(org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecorator) it.next();
-								decorator.refresh();
-							}
+										decorator.refresh();
+									}
+								}
+							});
 						}
-					});
+					}
 				} catch (Exception e) {
 					«editorGen.plugin.getActivatorQualifiedClassName()».getInstance().logError(
 							"Decorator refresh failure", e); «EXPAND xpt::Common::nonNLS»
