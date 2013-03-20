@@ -237,7 +237,7 @@ public class TestSimpleMigrationUseCase {
 		}
 		assertEquals("Invalid number of variable expression",1, nbVariableExpression);
 		assertEquals("Invalid number of script expression",2, nbScriptExpression);
-		assertEquals("Invalid number of constant expression",5, nbConstantExpression);
+		assertEquals("Invalid number of constant expression",4, nbConstantExpression);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
 

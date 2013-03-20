@@ -82,7 +82,7 @@ public class StringToExpressionConverter {
 				Instance widget = getParentWidget(groovyScriptInstance);
 				String widgetName = setVarScript;
 				if(widget != null){
-					 widgetName = widget.get("name");
+					widgetName = widget.get("name");
 				}
 				expressionScript = "${"+FORM_FIELD_PREFIX+widgetName+"}";
 			}
@@ -253,12 +253,13 @@ public class StringToExpressionConverter {
 
 	private Instance createVariableDependencyInstance(Instance dataInstance) {
 		Instance copy = dataInstance.copy();
-		Instance defaultValue = copy.get("defaultValue");
-		if(defaultValue != null){
-			model.delete(defaultValue);
-			copy.set("defaultValue", null);
+		if(copy.instanceOf("process.Data")){
+			Object defaultValue = copy.get("defaultValue");
+			if(defaultValue != null && defaultValue instanceof Instance && ((Instance) defaultValue).instanceOf("expression.Expression")){
+				model.delete((Instance) defaultValue);
+				copy.set("defaultValue", null);
+			}
 		}
-	
 		return copy;
 	}
 
@@ -297,7 +298,7 @@ public class StringToExpressionConverter {
 
 	public static String getDataReturnType(Instance data) {
 		final Instance dataype = data.get("dataType");
-		 if(dataype.instanceOf("process.IntegerType")){
+		if(dataype.instanceOf("process.IntegerType")){
 			return Integer.class.getName();
 		}else if(dataype.instanceOf("process.BooleanType")){
 			return Boolean.class.getName();
