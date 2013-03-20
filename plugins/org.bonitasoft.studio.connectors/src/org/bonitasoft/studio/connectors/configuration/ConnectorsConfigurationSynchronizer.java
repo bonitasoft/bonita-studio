@@ -164,9 +164,9 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 					} else {
 						depFragment.setExported(false);
 					}
-					depFragment.setKey(implementation.getImplementationId() +" -- " + implementation.getImplementationVersion()) ;
+					depFragment.setKey(jar) ;
 					depFragment.setValue(jar) ;
-					depFragment.setType(FragmentTypes.OTHER) ;
+					depFragment.setType(FragmentTypes.JAR) ;
 					cc.append(AddCommand.create(editingDomain, otherDependencies, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, depFragment)) ;
 				}
 			}
