@@ -15,7 +15,7 @@
 		<engine.version>6.0.0-beta-014</engine.version>
 		<connector.version>6.0.0-Beta-007</connector.version>
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
-		<filters.version>6.0.0-beta-005</filters.version>
+		<filters.version>6.0.Beta.4-SNAPSHOT</filters.version>
 		<jacoco.reportDir>${user.home}/target/jacoco/</jacoco.reportDir>
 		<jacoco.file>${user.home}/target/jacoco-studio.exec</jacoco.file>
 		<jacoco.version>0.6.0.201210061924</jacoco.version>
