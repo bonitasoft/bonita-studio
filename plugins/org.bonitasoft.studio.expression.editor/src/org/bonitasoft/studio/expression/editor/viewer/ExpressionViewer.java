@@ -414,6 +414,13 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				for(IExpressionToolbarContribution contribution : toolbarContributions){
 					contribution.setExpression(selectedExpression);
 				}
+				if(ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())){
+					autoCompletion.getContentProposalAdapter().setEnabled(false);
+					autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_INSERT);
+				}else{
+					autoCompletion.getContentProposalAdapter().setEnabled(true);
+					autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
+				}
 				refresh() ;
 			} else {
 				selectedExpression = null;
