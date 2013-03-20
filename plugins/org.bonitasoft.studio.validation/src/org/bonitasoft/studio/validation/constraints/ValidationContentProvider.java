@@ -19,7 +19,6 @@ package org.bonitasoft.studio.validation.constraints;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -32,8 +31,6 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.ui.URIEditorInput;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -46,7 +43,7 @@ import org.eclipse.ui.part.FileEditorInput;
  */
 public class ValidationContentProvider implements IStructuredContentProvider{
 
-	
+
 	/**
 	 * 
 	 */
@@ -56,7 +53,7 @@ public class ValidationContentProvider implements IStructuredContentProvider{
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -71,11 +68,13 @@ public class ValidationContentProvider implements IStructuredContentProvider{
 			final IEditorInput input  = ((DiagramEditor) inputElement).getEditorInput();
 			if(input instanceof FileEditorInput){
 				IFile file = ((FileEditorInput) input).getFile();
-				try {
-					return file.findMarkers("org.bonitasoft.studio.diagram.diagnostic", false, IResource.DEPTH_INFINITE);
-				} catch (CoreException e) {
-					BonitaStudioLog.error(e);
-					return noElements;
+				if(file.exists()){
+					try {
+						return file.findMarkers("org.bonitasoft.studio.diagram.diagnostic", false, IResource.DEPTH_INFINITE);
+					} catch (CoreException e) {
+						BonitaStudioLog.error(e);
+						return noElements;
+					}
 				}
 			}
 		}else if(inputElement instanceof FormDiagramEditor){
@@ -90,10 +89,9 @@ public class ValidationContentProvider implements IStructuredContentProvider{
 				}else{
 					dfs = store.getChild(file.substring(idxSlash+1));
 				}
-				if(dfs!=null){
+				if(dfs!=null && dfs.getResource().exists()){
 					try {
-
-						List<IMarker> markerList = new ArrayList<IMarker>();
+						final List<IMarker> markerList = new ArrayList<IMarker>();
 						IMarker[] markerTab = (IMarker[]) dfs.getResource().findMarkers("org.bonitasoft.studio.diagram.form.diagnostic", false, IResource.DEPTH_INFINITE);
 						for(int i=0; i<markerTab.length; i++ ){
 							Marker m = (Marker)markerTab[i];
@@ -103,7 +101,7 @@ public class ValidationContentProvider implements IStructuredContentProvider{
 							}
 						}
 						return markerList.toArray();
-					
+
 					} catch (CoreException e) {
 						BonitaStudioLog.error(e);
 						return noElements;
@@ -117,6 +115,6 @@ public class ValidationContentProvider implements IStructuredContentProvider{
 		return noElements;
 	}
 
-	
+
 
 }
