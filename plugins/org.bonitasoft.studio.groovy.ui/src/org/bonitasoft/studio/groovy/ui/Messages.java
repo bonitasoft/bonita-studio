@@ -149,6 +149,8 @@ public final class Messages extends NLS {
 
 	public static String nameHelp;
 
+	public static String scriptNameAlreadyExists;
+
     private Messages() {
         // Do not instantiate
     }

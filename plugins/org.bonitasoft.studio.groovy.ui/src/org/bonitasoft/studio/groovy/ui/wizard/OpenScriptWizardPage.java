@@ -265,9 +265,13 @@ public class OpenScriptWizardPage extends WizardPage implements IWizardPage {
 			if (scriptName.length() <= 3) {
 				res.add(Messages.wrongName);
 			} else {
-				IStatus validJavaIdentifierName = JavaConventions.validateJavaTypeName(scriptName, JavaCore.VERSION_1_5, JavaCore.VERSION_1_5);
+				IStatus validJavaIdentifierName = JavaConventions.validateJavaTypeName(scriptName, JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
 				if (validJavaIdentifierName.getSeverity() == IStatus.ERROR) {
 					res.add(Messages.scriptNameMustBeValid);
+				}
+				GroovyRepositoryStore store = (GroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class);
+				if(store.getChild(scriptName+"."+GroovyRepositoryStore.GROOVY_EXT) != null){
+					res.add(Messages.scriptNameAlreadyExists);
 				}
 			}
 		}
