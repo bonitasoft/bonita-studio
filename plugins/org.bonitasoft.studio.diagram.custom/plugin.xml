@@ -312,9 +312,6 @@
                commandId="org.bonitasoft.studio.diagram.custom.extractSubprocess"
                icon="icons/menuIcons/extractSubProcess.png"
                style="push">
-            <visibleWhen
-                  checkEnabled="true">
-            </visibleWhen>
          </command>
          <command
                commandId="org.bonitasoft.studio.diagram.custom.openLatestSubprocess"
@@ -471,9 +468,14 @@
             commandId="org.bonitasoft.studio.diagram.custom.extractSubprocess">
          <activeWhen>
             <reference
-                  definitionId="org.bonitasoft.studio.diagram.custom.definition.processWithASelection">
+                  definitionId="org.bonitasoft.studio.diagram.custom.definition.extractSubprocessSelection">
             </reference>
          </activeWhen>
+         <enabledWhen>
+            <reference
+                  definitionId="org.bonitasoft.studio.diagram.custom.definition.extractSubprocessSelection">
+            </reference>
+         </enabledWhen>
       </handler>
    </extension>
    <extension
@@ -592,6 +594,57 @@
                            value="org.bonitasoft.studio.diagram.custom.parts.CustomSubprocessEventCompartmentEditPart">
                      </instanceof>
                   </or>
+               </iterate>
+            </with>
+         </and>
+      </definition>
+      <definition
+            id="org.bonitasoft.studio.diagram.custom.definition.extractSubprocessSelection">
+         <and>
+            <with
+                  variable="activeEditor">
+               <instanceof
+                     value="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor">
+               </instanceof>
+            </with>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+                  </instanceof>
+                  <not>
+                     <instanceof
+                           value="org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart">
+                     </instanceof>
+                  </not>
+                  <not>
+                     <instanceof
+                           value="org.bonitasoft.studio.model.process.diagram.edit.parts.Lane2EditPart">
+                     </instanceof>
+                  </not>
+                  <not>
+                     <instanceof
+                           value="org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart">
+                     </instanceof>
+                  </not>
+                  <not>
+                     <instanceof
+                           value="org.bonitasoft.studio.model.process.diagram.edit.parts.LaneLaneCompartmentEditPart">
+                     </instanceof>
+                  </not>
+                  <not>
+                     <instanceof
+                           value="org.bonitasoft.studio.model.process.diagram.edit.parts.PoolPoolCompartmentEditPart">
+                     </instanceof>
+                  </not>
+                  <not>
+                     <instanceof
+                           value="org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart">
+                     </instanceof>
+                  </not>
                </iterate>
             </with>
          </and>
