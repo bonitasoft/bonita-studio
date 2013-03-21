@@ -111,11 +111,13 @@ public class BatchValidationHandler extends AbstractHandler {
 				}
 			}
 
-			if( PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
+			if( PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null){
 				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				IViewPart part = activePage.findView("org.bonitasoft.studio.validation.view");
-				if(part instanceof ValidationViewPart){
-					((ValidationViewPart)part).refreshViewer();
+				if(activePage != null){
+					IViewPart part = activePage.findView("org.bonitasoft.studio.validation.view");
+					if(part instanceof ValidationViewPart){
+						((ValidationViewPart)part).refreshViewer();
+					}
 				}
 			}
 
