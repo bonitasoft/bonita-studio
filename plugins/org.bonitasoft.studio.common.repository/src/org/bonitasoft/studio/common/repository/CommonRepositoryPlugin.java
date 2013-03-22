@@ -73,7 +73,12 @@ public class CommonRepositoryPlugin extends AbstractUIPlugin {
             dialogTitle = Messages.exportRepositoryFileTitle ;
         }
         ExportRepositoryWizard wizard = new ExportRepositoryWizard(stores,false,selectFilesByDefault,null,dialogTitle);
-        WizardDialog dialog = new CustomWizardDialog(Display.getCurrent().getActiveShell(), wizard);
+        WizardDialog dialog = new CustomWizardDialog(Display.getCurrent().getActiveShell(), wizard){
+        	protected void initializeBounds() {
+        		super.initializeBounds();
+        		getShell().setSize(500, 500); 
+        	}
+        };
         dialog.setTitle(dialogTitle);
         dialog.open() ;
     }
