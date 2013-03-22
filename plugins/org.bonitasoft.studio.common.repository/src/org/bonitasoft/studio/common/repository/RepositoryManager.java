@@ -28,10 +28,12 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
@@ -135,26 +137,37 @@ public class RepositoryManager {
     public List<IRepository> getAllRepositories() {
         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
         final List<IRepository> result = new ArrayList<IRepository>() ;
-        result.add(repository) ;
-        for(IProject p : workspace.getRoot().getProjects()){
-            try {
-            	boolean close = false;
-                if(!p.isOpen()){
-                    p.open(Repository.NULL_PROGRESS_MONITOR);
-                    close = true;
-                }
-                if(p.getDescription().hasNature(BonitaProjectNature.NATURE_ID)){
-                    if(!p.getName().equals(repository.getName())){
-                        result.add(createRepository(p.getName())) ;
-                    }
-                }
-                if(close){
-                	 p.close(Repository.NULL_PROGRESS_MONITOR);
-                }
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e);
-            }
-        }
+        try {
+			workspace.run(new IWorkspaceRunnable() {
+				
+				@Override
+				public void run(IProgressMonitor monitor) throws CoreException {
+			        result.add(repository) ;
+			        for(IProject p : workspace.getRoot().getProjects()){
+			            try {
+			            	boolean close = false;
+			                if(!p.isOpen()){
+			                    p.open(Repository.NULL_PROGRESS_MONITOR);
+			                    close = true;
+			                }
+			                if(p.getDescription().hasNature(BonitaProjectNature.NATURE_ID)){
+			                    if(!p.getName().equals(repository.getName())){
+			                        result.add(createRepository(p.getName())) ;
+			                    }
+			                }
+			                if(close){
+			                	 p.close(Repository.NULL_PROGRESS_MONITOR);
+			                }
+			            } catch (CoreException e) {
+			                BonitaStudioLog.error(e);
+			            }
+			        }
+				}
+			}, Repository.NULL_PROGRESS_MONITOR);
+		} catch (CoreException e) {
+			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+		}
+
         return result;
     }
 

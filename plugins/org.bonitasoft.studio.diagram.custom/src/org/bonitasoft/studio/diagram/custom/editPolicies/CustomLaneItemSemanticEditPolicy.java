@@ -147,28 +147,29 @@ public class CustomLaneItemSemanticEditPolicy extends LaneItemSemanticEditPolicy
 
 
 		Lane lane = (Lane)((IGraphicalEditPart)getHost()).resolveSemanticElement();
-		for(Element element : lane.getElements()){
-			if(element instanceof Task) {
-				EditElementCommand eec = new SetValueCommand(new SetRequest(element, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE, true)){
+		if(lane != null){
+			for(Element element : lane.getElements()){
+				if(element instanceof Task) {
+					EditElementCommand eec = new SetValueCommand(new SetRequest(element, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE, true)){
 
-					/* (non-Javadoc)
-					 * @see org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand#doUndo(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
-					 */
-					@Override
-					protected IStatus doUndo(IProgressMonitor monitor,
-							IAdaptable info) throws ExecutionException {
-						IStatus status = super.doUndo(monitor, info);
-						DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-						ValidateAction.runValidation(editor.getDiagram());
-						return status;
-					}
-				};
+						/* (non-Javadoc)
+						 * @see org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand#doUndo(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
+						 */
+						@Override
+						protected IStatus doUndo(IProgressMonitor monitor,
+								IAdaptable info) throws ExecutionException {
+							IStatus status = super.doUndo(monitor, info);
+							DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+							ValidateAction.runValidation(editor.getDiagram());
+							return status;
+						}
+					};
 
-				cmd.add(eec);
+					cmd.add(eec);
+				}
 			}
+
 		}
-
-
 
 
 		EAnnotation annotation = view.getEAnnotation("Shortcut"); //$NON-NLS-1$

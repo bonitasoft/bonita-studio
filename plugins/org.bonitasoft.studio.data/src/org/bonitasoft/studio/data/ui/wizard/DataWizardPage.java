@@ -602,13 +602,14 @@ public class DataWizardPage extends WizardPage {
 				return String.class.getName();
 			}
 			return className;
-		}else{
+		}else if (type != null){
 			final String technicalTypeFor = DataUtil.getTechnicalTypeFor(ModelHelper.getMainProcess(container), type.getName()).replace(Messages.dataTechnicalTypeLabel+" ", "");
 			if(technicalTypeFor.isEmpty()){
 				return String.class.getName();
 			}
 			return technicalTypeFor;
 		}
+		return null;
 
 	}
 

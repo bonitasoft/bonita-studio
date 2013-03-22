@@ -286,7 +286,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 				}
 				// Copy referenced data types
 				if (res instanceof DataAware && !inSameDiagram(toCopyElement, targetElement)) {
-					List<Data> datas = ((DataAware) res).getData();
+					List<Data> datas = ModelHelper.getAllItemsOfType(res, ProcessPackage.Literals.DATA);
 					for (Data d : datas) {
 						if (!mainProc.getDatatypes().contains(d.getDataType()) && d.getDataType() instanceof EnumType) {
 							EnumType newDt = (EnumType) EcoreUtil.copy(d.getDataType());
@@ -533,6 +533,8 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 			}
 			if(locationStrategy.equals(LocationStrategy.OFFSET)){
 				locationStrategy.alterBounds((Bounds) node.getLayoutConstraint(), (Bounds) ((Node) selectedTargetEditPart.getNotationView()).getLayoutConstraint(), rect.getLocation());
+			}else if(locationStrategy.equals(LocationStrategy.MOUSE)){
+				locationStrategy.alterBounds((Bounds) node.getLayoutConstraint(), (Bounds) ((Node) srcPart.getNotationView()).getLayoutConstraint(),rect.getLocation());
 			}else{
 				locationStrategy.alterBounds((Bounds) node.getLayoutConstraint(), (Bounds) ((Node) srcPart.getNotationView()).getLayoutConstraint(), new Point(0,relativeToPoolY));
 			}
