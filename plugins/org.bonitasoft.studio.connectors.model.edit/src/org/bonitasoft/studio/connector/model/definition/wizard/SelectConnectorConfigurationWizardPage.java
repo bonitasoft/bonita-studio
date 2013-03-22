@@ -49,7 +49,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
-
+import static org.bonitasoft.studio.common.jface.SWTBotConstants.SELECTION_CONNECTOR_CONFIGURATION_TREE_ID;
+import static org.bonitasoft.studio.common.jface.SWTBotConstants.SWTBOT_WIDGET_ID_KEY;
 /**
  * @author Romain Bioteau
  *
@@ -115,6 +116,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
 
     protected void doCreateControl(Composite composite) {
         configurationsTree = new FilteredTree(composite, SWT.SINGLE | SWT.BORDER, new PatternFilter(), true);
+        configurationsTree.getViewer().getTree().setData(SWTBOT_WIDGET_ID_KEY, SELECTION_CONNECTOR_CONFIGURATION_TREE_ID);
         configurationsTree.getViewer().setContentProvider(new ConfigurationsContentProvider(configuration.getDefinitionId(),configuration.getVersion(),configurationStore));
         configurationsTree.getViewer().setLabelProvider(new ConnectorConfiguraitonLabelProvider()) ;
         configurationsTree.getViewer().addDoubleClickListener(new IDoubleClickListener() {

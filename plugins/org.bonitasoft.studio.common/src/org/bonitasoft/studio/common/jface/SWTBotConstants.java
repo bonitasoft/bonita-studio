@@ -32,6 +32,7 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_CONNECTORBUTTON = "expressionViewerConnectorButton";
     public static final String BONITA_OVERVIEW_TREE_ID = "bonitaOverviewTreeId";
     public static final String APPLICATION_RESOURCES_TREE_ID = "bonitaApplicationResourcesTree";
+    public static final String SELECTION_CONNECTOR_CONFIGURATION_TREE_ID = "selectConnectorConfigurationTree";
 
     public static final String VIEWS_PROPERTIES_PROCESS_GENERAL = "org.bonitasoft.studio.views.properties.process.general";
     public static final String VIEWS_PROPERTIES_SIMULATION = "org.bonitasoft.studio.views.properties.simulation";

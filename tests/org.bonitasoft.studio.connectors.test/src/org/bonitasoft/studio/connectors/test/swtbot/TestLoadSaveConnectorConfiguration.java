@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.connectors.test.swtbot;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.DefinitionConfigurationFileStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
@@ -25,6 +26,7 @@ import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -99,8 +101,9 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 		bot.button(IDialogConstants.NEXT_LABEL).click();
 		bot.toolbarButton("Load").click();
 		assertFalse("finish button should be disabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-		bot.tree().setFocus();
-		bot.tree().getTreeItem(saveName).select();
+		SWTBotTree wizardTree = bot.treeWithId(SWTBotConstants.SELECTION_CONNECTOR_CONFIGURATION_TREE_ID);
+		wizardTree.setFocus();
+		wizardTree.getTreeItem(saveName).select();
 
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 		bot.button(IDialogConstants.NEXT_LABEL).click();
