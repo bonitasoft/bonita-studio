@@ -112,7 +112,7 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
         final Combo connectorFailsCombo = new Combo(composite, SWT.READ_ONLY);
         connectorFailsCombo.add(Messages.connectorFails_crash);
         connectorFailsCombo.add(Messages.connectorFails_ignore);
-
+       
         // Throw Event are not allowed in Connector in forms
         if(!(container instanceof Form || container instanceof SubmitFormButton )){
         	connectorFailsCombo.add(Messages.connectorFails_throwEvent);
@@ -172,7 +172,7 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
             }
         }) ;
         context.bindValue(WidgetProperties.text().observe(connectorFailsCombo), EMFObservables.observeValue(connector, ProcessPackage.Literals.CONNECTOR__THROW_ERROR_EVENT),throwEventStrategyTarget,throwEventStrategyModel) ;
-
+        connectorFailsCombo.select(0);
 
 
         Label namedErrorEvent = new Label(composite, SWT.NONE);
