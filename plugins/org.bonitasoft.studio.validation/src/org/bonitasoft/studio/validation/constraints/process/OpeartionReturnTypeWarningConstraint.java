@@ -22,6 +22,13 @@ import org.bonitasoft.studio.expression.editor.operation.OperationReturnTypesVal
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.form.FileWidget;
+import org.bonitasoft.studio.model.form.FormButton;
+import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.ImageWidget;
+import org.bonitasoft.studio.model.form.Info;
+import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
@@ -41,77 +48,101 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
  */
 public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidationMarkerConstraint {
 
-    private final OperationReturnTypesValidator validator =  new OperationReturnTypesValidator();
+	private final OperationReturnTypesValidator validator =  new OperationReturnTypesValidator();
 
-    @Override
-    protected IStatus performLiveValidation(IValidationContext ctx) {
-        final EStructuralFeature featureTriggered = ctx.getFeature();
-        if(featureTriggered.equals(ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE)){
-            final Expression expression = (Expression) ctx.getTarget();
-            if(expression.eContainer() instanceof Operation){
-                final Operation op = (Operation) expression.eContainer();
-                if(op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)){
-                    return ctx.createSuccessStatus();
-                }
-                validator.setDataExpression(op.getLeftOperand());
-                final IStatus status = validator.validate(op.getRightOperand());
-                if(!status.isOK()){
-                    FlowElement el = ModelHelper.getParentFlowElement(op);
-                    String activityName = null;
-                    if(el != null){
-                        activityName = el.getName();
-                    }
-                    if(activityName == null){
-                        return ctx.createFailureStatus(new Object[] {status.getMessage()});
-                    }else{
-                        return ctx.createFailureStatus(new Object[] {Messages.bind(Messages.incompatilbeOperationReturnType, status.getMessage(), activityName) });
-                    }
+	@Override
+	protected IStatus performLiveValidation(IValidationContext ctx) {
+		final EStructuralFeature featureTriggered = ctx.getFeature();
+		if(featureTriggered.equals(ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE)){
+			final Expression expression = (Expression) ctx.getTarget();
+			if(expression.eContainer() instanceof Operation){
+				final Operation op = (Operation) expression.eContainer();
+				if(op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)){
+					return ctx.createSuccessStatus();
+				}
+				validator.setDataExpression(op.getLeftOperand());
+				final IStatus status = validator.validate(op.getRightOperand());
+				if(!status.isOK()){
+					FlowElement el = ModelHelper.getParentFlowElement(op);
+					String activityName = null;
+					if(el != null){
+						activityName = el.getName();
+					}
+					if(activityName == null){
+						return ctx.createFailureStatus(new Object[] {status.getMessage()});
+					}else{
+						return ctx.createFailureStatus(new Object[] {Messages.bind(Messages.incompatilbeOperationReturnType, status.getMessage(), activityName) });
+					}
 
-                }
-            }
-        }
-        return ctx.createSuccessStatus();
-    }
+				}
+			}
+		}
+		return ctx.createSuccessStatus();
+	}
 
-    @Override
-    protected String getMarkerType(DiagramEditor editor) {
-        if(editor instanceof ProcessDiagramEditor){
-            return ProcessMarkerNavigationProvider.MARKER_TYPE;
-        }else if(editor instanceof FormDiagramEditor){
-            return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
-        }
-        return null;
-    }
+	@Override
+	protected String getMarkerType(DiagramEditor editor) {
+		if(editor instanceof ProcessDiagramEditor){
+			return ProcessMarkerNavigationProvider.MARKER_TYPE;
+		}else if(editor instanceof FormDiagramEditor){
+			return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
+		}
+		return null;
+	}
 
-    @Override
-    protected String getConstraintId() {
-        return "org.bonitasoft.studio.validation.constraints.operationreturntype";
-    }
+	@Override
+	protected String getConstraintId() {
+		return "org.bonitasoft.studio.validation.constraints.operationreturntype";
+	}
 
-    @Override
-    protected IStatus performBatchValidation(IValidationContext ctx) {
-        final Expression expression = (Expression) ctx.getTarget();
-        if(expression.eContainer() instanceof Operation){
-            final Operation op = (Operation) expression.eContainer();
-            if(op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)){
-                return ctx.createSuccessStatus();
-            }
-            validator.setDataExpression(op.getLeftOperand());
-            final IStatus status = validator.validate(op.getRightOperand());
-            if(!status.isOK()){
-                FlowElement el = ModelHelper.getParentFlowElement(op);
-                String activityName = null;
-                if(el != null){
-                    activityName = el.getName();
-                }
-                if(activityName == null){
-                    return ctx.createFailureStatus(new Object[] {status.getMessage()});
-                }else{
-                    return ctx.createFailureStatus(new Object[] {Messages.bind(Messages.incompatilbeOperationReturnType, status.getMessage(), activityName) });
-                }
-            }
-        }
-        return ctx.createSuccessStatus();
-    }
+	@Override
+	protected IStatus performBatchValidation(IValidationContext ctx) {
+		final Expression expression = (Expression) ctx.getTarget();
+		if(!ModelHelper.isAnExpressionCopy(expression) && expression.eContainer() instanceof Operation){
+			final Operation op = (Operation) expression.eContainer();
+			if(op.eContainingFeature().equals(FormPackage.Literals.WIDGET__ACTION)){
+				Widget parentWidget = ModelHelper.getParentWidget(op);
+				if(parentWidget instanceof FormButton 
+						|| parentWidget instanceof Info 
+						|| parentWidget instanceof ImageWidget
+						|| parentWidget instanceof FileWidget){
+					return ctx.createSuccessStatus();
+				}
+			}
+			if(op.getLeftOperand() == null 
+					|| op.getLeftOperand().getContent() == null 
+					|| op.getLeftOperand().getContent().isEmpty()){
+				if(op.getRightOperand() != null 
+						&& op.getRightOperand() .getContent() != null 
+						&& !op.getRightOperand() .getContent().isEmpty()){
+					Element el = ModelHelper.getParentElement(op);
+					String activityName = null;
+					if(el != null){
+						activityName = el.getName();
+					}
+					return ctx.createFailureStatus("Left operand is missing in an operation of "+activityName);
+				}
+			}
+
+			if(op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)){
+				return ctx.createSuccessStatus();
+			}
+			validator.setDataExpression(op.getLeftOperand());
+			final IStatus status = validator.validate(op.getRightOperand());
+			if(!status.isOK()){
+				FlowElement el = ModelHelper.getParentFlowElement(op);
+				String activityName = null;
+				if(el != null){
+					activityName = el.getName();
+				}
+				if(activityName == null){
+					return ctx.createFailureStatus(new Object[] {status.getMessage()});
+				}else{
+					return ctx.createFailureStatus(new Object[] {Messages.bind(Messages.incompatilbeOperationReturnType, status.getMessage(), activityName) });
+				}
+			}
+		}
+		return ctx.createSuccessStatus();
+	}
 
 }

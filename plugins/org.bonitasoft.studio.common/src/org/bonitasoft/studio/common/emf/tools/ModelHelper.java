@@ -32,6 +32,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
@@ -1822,6 +1823,14 @@ public class ModelHelper {
 	    	  }
 	    	  return false;
 	      }
+
+		public static Element getParentElement(EObject object) {
+			EObject element = object;
+			while (element != null && !(element instanceof Element)) {
+				element = element.eContainer();
+			}
+			return (Element) element;
+		}
 
 
 

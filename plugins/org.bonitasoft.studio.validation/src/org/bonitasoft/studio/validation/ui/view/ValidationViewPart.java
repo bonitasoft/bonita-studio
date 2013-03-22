@@ -22,12 +22,17 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.validation.constraints.ValidationContentProvider;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -73,7 +78,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 	private ValidationViewAction validateAction;
 
 	public ValidationViewPart() {
-	
+
 	}
 
 	/* (non-Javadoc)
@@ -86,7 +91,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 
 		createValidateButton(mainComposite);
 		createTableComposite(mainComposite);
-		
+
 
 		ISelectionService ss = getSite().getWorkbenchWindow().getSelectionService();
 		ss.addPostSelectionListener(this);
@@ -95,19 +100,19 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 			getSite().setSelectionProvider(this);
 
 		}
-		
+
 		TableColumnSorter sorter = new TableColumnSorter(tableViewer) ;
 		sorter.setColumn(severityColumn.getColumn()) ;
 	}
 
 	private void createValidateButton(Composite mainComposite) {
-		
+
 		IWorkbenchPage activePage =  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		validateAction = new ValidationViewAction();
 		validateAction.setActivePage(activePage);
 		validateAction.setTableViewer(tableViewer);
-		
-		
+
+
 		Composite buttonComposite = new Composite(mainComposite,SWT.NONE);
 		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0,0).create());
 		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -124,7 +129,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 			}
 		});
 
-		
+
 
 	}
 
@@ -143,17 +148,17 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 		table.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-	
+
 		addSeverityDescriptionColumn();
 		addElementNameColumn();
 		addErrorDescriptionColumn();
-		
+
 		TableColumnLayout tcLayout = new TableColumnLayout();
 		tcLayout.setColumnData(table.getColumn(0), new ColumnWeightData(1));
 		tcLayout.setColumnData(table.getColumn(1), new ColumnWeightData(5));
 		tcLayout.setColumnData(table.getColumn(2), new ColumnWeightData(11));
 		table.getParent().setLayout(tcLayout);
-		
+
 		tableViewer.setContentProvider(new ValidationContentProvider());
 		IEditorPart activeEditor = getSite().getPage().getActiveEditor();
 		tableViewer.setInput(activeEditor);
@@ -178,38 +183,31 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 				Marker marker = (Marker) element;
 				try {
 
-				String elementId = (String) marker.getAttribute(org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID);
+					String elementId = (String) marker.getAttribute(org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID);
 					String location = (String) marker.getAttribute("location");
 					int idx = location.lastIndexOf(":");
 					if(idx>0){
-						return location.substring(idx+1);
+						String result = location.substring(idx+1);;
+						if(!(result.startsWith("<") && result.endsWith(">"))){
+							return result;
+						}else{
+							DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+							DiagramFileStore file = store.getChild(marker.getResource().getLocation().toFile().getName());
+							if(file != null){
+								EObject view = file.getEMFResource().getEObject(elementId);
+								if(view != null){
+									for(EObject object : view.eCrossReferences()){
+										if(object instanceof Element){
+											return ((Element) object).getName();
+										}
+									}
+								}
+							}
+							return "";
+						}
 					}
-					
+
 					return location;
-					
-					
-//					if (elementId == null || !(getSite().getPage().getActiveEditor() instanceof DiagramEditor)) {
-//						return "";
-//					}
-//					DiagramEditor editor = (DiagramEditor) getSite().getPage().getActiveEditor();
-//					EObject targetView = editor.getDiagram().eResource().getEObject(elementId);
-//					if (targetView == null) {
-//						return "";
-//					}
-//
-//					if(targetView instanceof Shape){
-//
-//						Shape targetShape = (Shape)targetView;
-//						Element elem = (Element)targetShape.getElement();
-//						return elem.getName();
-//
-//					}else {
-//						if(editor.getDiagramEditPart().resolveSemanticElement() instanceof Form){
-//							return ((Form)editor.getDiagramEditPart().resolveSemanticElement()).getName();
-//						}else if(editor.getDiagramEditPart().resolveSemanticElement() instanceof MainProcess){
-//							return ((MainProcess)editor.getDiagramEditPart().resolveSemanticElement()).getName();
-//						}
-//					}
 				} catch (CoreException e) {
 					BonitaStudioLog.error(e);
 					return "";
@@ -297,7 +295,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		
+
 		if(selection instanceof StructuredSelection && !tableViewer.getTable().isDisposed()){
 			Object selectedEP = ((StructuredSelection) selection).getFirstElement();
 			if(selectedEP instanceof IGraphicalEditPart){
@@ -307,7 +305,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 						selectionProvider = editorPart.getEditorSite().getSelectionProvider();
 						tableViewer.setInput(editorPart);
 					}else{
-						
+
 						tableViewer.refresh();
 					}
 				}
@@ -316,15 +314,15 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 
 			// change Validate Action
 			IWorkbenchPage activePage =  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		
+
 			//tableViewer.setInput(activePage.getActiveEditor());
 			validateAction = new ValidationViewAction();
 			validateAction.setActivePage(activePage);
 			validateAction.setTableViewer(tableViewer);
-			
+
 			tableViewer.refresh();
 
-			
+
 		}
 	}
 
