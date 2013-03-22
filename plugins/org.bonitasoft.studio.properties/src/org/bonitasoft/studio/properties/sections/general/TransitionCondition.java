@@ -101,6 +101,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
     private Button useDecisionTable;
     private TabbedPropertySheetWidgetFactory widgetFactory;
     private Section conditionSection;
+    private Button updateTableButton;
 
 
     @Override
@@ -170,7 +171,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
 
 
 
-        final Button updateTableButton = widgetFactory.createButton(client, Messages.editDecisionTable ,SWT.PUSH) ;
+        updateTableButton = widgetFactory.createButton(client, Messages.editDecisionTable ,SWT.PUSH) ;
         updateTableButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -456,15 +457,28 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
             if(conditionViewer != null && !conditionViewer.getControl().isDisposed()){
                 dataBindingContext.bindValue(SWTObservables.observeEnabled(conditionViewer.getTextControl()),
                         EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
-                dataBindingContext.bindValue(SWTObservables.observeEnabled(conditionViewer.getButtonControl()),
+                
+                dataBindingContext.bindValue(SWTObservables.observeEnabled(conditionViewer.getToolbar()),
                         EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
+
                 conditionViewer.setEditingDomain(editingDomain) ;
                 dataBindingContext.bindValue(
                         ViewerProperties.singleSelection().observe(conditionViewer),
                         EMFEditProperties.value(editingDomain, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION).observe(transition));
                 conditionViewer.setInput(transition) ;
             }
+            
+            dataBindingContext.bindValue(SWTObservables.observeEnabled(useExpressionCondition),
+                    EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
+            
+            dataBindingContext.bindValue(SWTObservables.observeEnabled(useDecisionTable),
+                    EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
+            
+            if(updateTableButton != null && !updateTableButton.isDisposed()){
+                dataBindingContext.bindValue(SWTObservables.observeEnabled(updateTableButton),
+                        EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
 
+            }
 
 
             //		conditionText.setEditingDomain(editingDomain);
