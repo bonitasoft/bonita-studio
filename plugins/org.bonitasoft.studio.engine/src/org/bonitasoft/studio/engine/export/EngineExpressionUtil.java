@@ -204,9 +204,11 @@ public class EngineExpressionUtil {
 			expressionNames.append("(");
 			for (final org.bonitasoft.studio.model.expression.Expression simpleExpression : listExpression.getExpressions()) {
 				final Expression createExpression = createExpression(simpleExpression);
+				if (createExpression!=null){
 				engineExpressionList.add(createExpression);
 				expressionNames.append(createExpression.getName());
 				expressionNames.append(",");
+				}
 			}
 			expressionNames.append(")");
 			expressions.add(engineExpressionList);
@@ -226,9 +228,11 @@ public class EngineExpressionUtil {
 		final StringBuilder expressionNames = new StringBuilder("List of expression containing the following expressions: (");
 		for (final org.bonitasoft.studio.model.expression.Expression simpleExpression : ((ListExpression) expression).getExpressions()) {
 			final Expression createExpression = createExpression(simpleExpression);
-			expressions.add(createExpression);
-			expressionNames.append(createExpression.getName());
-			expressionNames.append(",");
+			if (createExpression!=null){
+				expressions.add(createExpression);
+				expressionNames.append(createExpression.getName());
+				expressionNames.append(",");
+			}
 		}
 		expressionNames.append(").");
 		try {
