@@ -39,10 +39,7 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 	@Before
 	public void initTest() {
 		FileActionDialog.setDisablePopup(true);
-		ConnectorConfRepositoryStore store = (ConnectorConfRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
-		for (DefinitionConfigurationFileStore fileStore:store.getChildren()){
-			fileStore.delete();
-		}
+		
 	}
 
 
@@ -70,6 +67,8 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 
 	@Test
 	public void testSaveLoadConnectorConfiguration(){
+		ConnectorConfRepositoryStore store = (ConnectorConfRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
+		int initialSize = store.getChildren().size();
 		final String connectorDefId="testLoadConnectorDefinition";
 		final String version = "1.0.0";
 		final String name = "testLoadConnector";
@@ -115,8 +114,7 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 		bot.button(IDialogConstants.CANCEL_LABEL).click();
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 		bot.saveAllEditors();
-		ConnectorConfRepositoryStore store = (ConnectorConfRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
-		assertEquals("no configuration should be in connector configuration repository store",store.getChildren().size(),0);
+		assertEquals("invalid number of configuration",initialSize,store.getChildren().size());
 	}
 
 
