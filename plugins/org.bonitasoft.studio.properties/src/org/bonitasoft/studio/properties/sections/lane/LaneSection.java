@@ -18,6 +18,7 @@
  
 package org.bonitasoft.studio.properties.sections.lane;
 
+import org.bonitasoft.studio.common.properties.DescriptionPropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 
 /**
@@ -30,7 +31,7 @@ public class LaneSection extends ExtensibleGridPropertySection {
 	@Override
 	protected void addContributions() {
 		addContribution(new LaneNameSectionContribution(getTabbedPropertySheetPage(),this));
-		addContribution(new LaneDescriptionSectionContribution(getTabbedPropertySheetPage()));
+		addContribution(new DescriptionPropertySectionContribution());
 	}
 
 	

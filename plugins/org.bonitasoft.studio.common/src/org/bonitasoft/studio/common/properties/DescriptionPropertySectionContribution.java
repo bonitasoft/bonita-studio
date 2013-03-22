@@ -73,7 +73,7 @@ public class DescriptionPropertySectionContribution implements IExtensibleGridPr
 		
 		context = new EMFDataBindingContext();
 		UpdateValueStrategy strategy = new UpdateValueStrategy();
-		strategy.setBeforeSetValidator(new InputLengthValidator(Messages.GeneralSection_Description, 255));
+		strategy.setBeforeSetValidator(new InputLengthValidator(Messages.GeneralSection_Description, 254));
 	//	context.bindValue(SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify)), EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),strategy,null);
 		ControlDecorationSupport.create(context.bindValue(SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify)), EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),strategy,null), SWT.LEFT|SWT.TOP);
 		
