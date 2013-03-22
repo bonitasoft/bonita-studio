@@ -64,6 +64,7 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Element;
@@ -471,7 +472,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	}
 
 	protected ViewerFilter getExpressionTypeFilter() {
-		if(container instanceof Form){
+		if(container instanceof Form || container instanceof SubmitFormButton){
 			return formExpressionTypeFilter;
 		}
 		return expressionTypeFilter;
