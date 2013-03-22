@@ -377,7 +377,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			editorComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 			Control editor = groovyExpressionEditor.createExpressionEditor(editorComposite);
 			editor.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-			groovyExpressionEditor.bindExpression(context, container, inputExpression, null);
+			groovyExpressionEditor.bindExpression(context, container, inputExpression, new ViewerFilter[]{connectorExpressionContentTypeFilter});
 			if(input.isMandatory()){
 				final EmptyInputValidator validator =  new EmptyInputValidator(getLabel(input.getName()));
 				final IObservableValue textObservable = (IObservableValue) groovyExpressionEditor.getContentObservable();
