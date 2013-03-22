@@ -405,8 +405,9 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         addDependencyButton.setEnabled(!inputExpression.isAutomaticDependencies()) ;
 
         dependencyJob = new ComputeScriptDependenciesJob(sourceViewer.getDocument()) ;
-        dependencyJob.setNodes(nodes) ;
         dependencyJob.setContext(context) ;
+        dependencyJob.setNodes(nodes) ;
+       
         final InputLengthValidator lenghtValidator = new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH);
         String content = inputExpression.getContent();
         if(content == null){
