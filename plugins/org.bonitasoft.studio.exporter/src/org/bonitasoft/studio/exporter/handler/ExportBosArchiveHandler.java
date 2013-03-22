@@ -51,6 +51,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 
@@ -84,7 +85,12 @@ public class ExportBosArchiveHandler extends AbstractHandler {
             }
 
             final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores(),true,selectedFiles,getDefaultName(),Messages.ExportButtonLabel) ;
-            WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard);
+            WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard){
+            	protected void initializeBounds() {
+            		super.initializeBounds();
+            		getShell().setSize(500, 500); 
+            	}
+            };
             dialog.setTitle(Messages.ExportButtonLabel);
             dialog.open() ;
         }

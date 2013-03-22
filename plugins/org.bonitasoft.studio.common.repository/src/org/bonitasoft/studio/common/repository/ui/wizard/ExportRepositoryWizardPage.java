@@ -49,6 +49,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
@@ -63,6 +64,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorReference;
@@ -128,8 +130,11 @@ public class ExportRepositoryWizardPage extends WizardPage {
         composite.setLayout(new GridLayout(3,false));
 
         final Section browseRepoSection = new Section(composite, Section.NO_TITLE_FOCUS_BOX | Section.TWISTIE);
-        browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,browseRepoSection.isExpanded()).span(3, 1).hint(SWT.DEFAULT,300).create()) ;
+        browseRepoSection.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+        browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).hint(SWT.DEFAULT, 150).span(3, 1).create()) ;
+      
         browseRepoSection.setText(Messages.browseRepository) ;
+     
         browseRepoSection.addExpansionListener(new IExpansionListener() {
 
             @Override
@@ -137,29 +142,27 @@ public class ExportRepositoryWizardPage extends WizardPage {
 
             @Override
             public void expansionStateChanged(ExpansionEvent event) {
-            	browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,browseRepoSection.isExpanded()).span(3, 1).hint(SWT.DEFAULT,300).create()) ;
+            	browseRepoSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,browseRepoSection.isExpanded()).span(3, 1).create()) ;
                 Point defaultSize = getShell().getSize() ;
-                Point size = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true) ;
+             //   Point size = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true) ;
+                Point size = getShell().computeSize(SWT.DEFAULT, 450, true) ;
                 getShell().setSize(defaultSize.x, size.y) ;
                 getShell().layout(true, true) ;
 
             }
         }) ;
-
-        browseRepoSection.setClient(createViewer(browseRepoSection)) ;
         browseRepoSection.setExpanded(true) ;
+        browseRepoSection.setClient(createViewer(browseRepoSection)) ;
         createDestination(composite) ;
-
         pageSupport = WizardPageSupport.create(this, dbc) ;
         setControl(composite);
     }
-
+    
     protected Control createViewer(final Composite composite) {
         treeViewer = new CheckboxRepositoryTreeViewer(composite, SWT.BORDER | SWT.V_SCROLL);
         treeViewer.setFilters(filters);
         treeViewer.setInput(input) ;
-        treeViewer.getControl().setLayoutData(GridDataFactory.swtDefaults().grab(true, true).span(3, 1).hint(SWT.DEFAULT, 150).create());
-
+        treeViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
         final IObservableSet checkedElementsObservable =  ViewersObservables.observeCheckedElements(treeViewer,Object.class) ;
         final MultiValidator notEmptyValidator = new MultiValidator() {

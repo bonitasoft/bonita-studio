@@ -50,7 +50,12 @@ public class ExportArtifactsToZip extends AbstractHandler {
         ExportRepositoryWizard wizard = new ExportRepositoryWizard(currentRepository.getAllExportableStores(),true,selectedFiles,defaultName,Messages.exportRepositoryTitle) ;
         WizardDialog dialog = new WizardDialog(
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                wizard );
+                wizard ){
+        	protected void initializeBounds() {
+        		super.initializeBounds();
+        		getShell().setSize(500, 500); 
+        	}
+        };
         dialog.setTitle(Messages.exportArtifactsWizard_title);
         dialog.open() ;
         return null;
