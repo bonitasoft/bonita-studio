@@ -19,6 +19,7 @@ package org.bonitasoft.studio.actors.ui.wizard;
 import java.util.Set;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
+import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.actors.ui.wizard.page.SelectFilterDefinitionWizardPage;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -45,10 +46,12 @@ public class FilterWizard extends ConnectorWizard implements IConnectorDefinitio
 
 	public FilterWizard(EObject container, EStructuralFeature connectorContainmentFeature, Set<EStructuralFeature> featureToCheckForUniqueID) {
 		super(container, connectorContainmentFeature, featureToCheckForUniqueID);
+		setWindowTitle(Messages.actorFilters);
 	}
 
 	public FilterWizard(ActorFilter filter, EStructuralFeature connectorContainmentFeature, Set<EStructuralFeature> featureToCheckForUniqueID) {
 		super(filter, connectorContainmentFeature, featureToCheckForUniqueID);
+		setWindowTitle(Messages.actorFilters);
 	}
 
 	@Override

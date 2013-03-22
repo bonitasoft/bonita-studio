@@ -129,7 +129,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		this.connectorContainmentFeature = connectorContainmentFeature ;
 		this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
 		this.featureToCheckForUniqueID.add(connectorContainmentFeature);
-		setWindowTitle("Connectors");
+		setWindowTitle(Messages.connectors);
 		initialize() ;
 	}
 
@@ -141,7 +141,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		connectorWorkingCopy = EcoreUtil.copy(connector) ;
 		editMode = true ;
 		this.featureToCheckForUniqueID = featureToCheckForUniqueID ;
-		setWindowTitle("Connectors");
+		setWindowTitle(Messages.connectors);
 		initialize() ;
 	}
 	

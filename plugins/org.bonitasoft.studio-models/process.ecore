@@ -36,7 +36,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="actors" upperBound="-1"
         eType="#//Actor" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="configurations" upperBound="-1"
-        eType="ecore:EClass configuration.ecore#//Configuration" derived="true" containment="true"/>
+        eType="ecore:EClass configuration.ecore#//Configuration" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractTimerEvent" abstract="true"
       interface="true" eSuperTypes="#//Element">

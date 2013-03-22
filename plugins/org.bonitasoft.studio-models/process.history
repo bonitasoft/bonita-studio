@@ -5771,8 +5771,6 @@
         <changes xsi:type="history:Set" element="process.ecore#//AbstractProcess/configurations"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
         <changes xsi:type="history:Set" element="process.ecore#//AbstractProcess/configurations"
-            featureName="derived" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="process.ecore#//AbstractProcess/configurations"
             featureName="containment" dataValue="true" oldDataValue="false"/>
         <changes xsi:type="history:Set" element="process.ecore#//AbstractProcess/configurations"
             featureName="eType" referenceValue="configuration.ecore#//Configuration"/>
