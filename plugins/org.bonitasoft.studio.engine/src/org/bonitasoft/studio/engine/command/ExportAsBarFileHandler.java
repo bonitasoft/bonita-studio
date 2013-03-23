@@ -23,6 +23,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -30,26 +31,28 @@ import org.eclipse.swt.widgets.Display;
 public class ExportAsBarFileHandler extends AbstractHandler {
 
 
-    /**
-     * @return a List<File> of the all the created bar or proc
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
-    @Override
-    public Object execute(final ExecutionEvent event) throws ExecutionException {
-        ExportBarWizard exportWizard = new ExportBarWizard() ;
-        WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), exportWizard) ;
-        dialog.open();
-        return null ;
-    }
+	/**
+	 * @return a List<File> of the all the created bar or proc
+	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 */
+	@Override
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
+		if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(true)){
+			ExportBarWizard exportWizard = new ExportBarWizard() ;
+			WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), exportWizard) ;
+			dialog.open();
+		}
+		return null ;
+	}
 
 
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
+	 */
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 
 }

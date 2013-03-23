@@ -132,6 +132,9 @@ public final class Messages extends NLS {
     public static String readOnlyFileTitle;
     public static String readOnlyFileWarning;
 
+	public static String selectAll;
+	public static String deselectAll;
+
 
 
 

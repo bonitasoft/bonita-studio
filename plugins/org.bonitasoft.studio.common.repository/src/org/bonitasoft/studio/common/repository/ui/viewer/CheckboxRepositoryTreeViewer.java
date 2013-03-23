@@ -20,6 +20,7 @@ package org.bonitasoft.studio.common.repository.ui.viewer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.WeakHashMap;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -37,116 +38,118 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
  */
 public class CheckboxRepositoryTreeViewer extends ContainerCheckedTreeViewer {
 
-    private class RepositoryTreeContentProvider implements ITreeContentProvider {
+	private class RepositoryTreeContentProvider implements ITreeContentProvider {
 
-        @Override
-        public Object[] getChildren(Object parentElement) {
-            if (parentElement instanceof IRepositoryStore) {
-                List<IRepositoryFileStore> result = new ArrayList<IRepositoryFileStore>() ;
-                for(IRepositoryFileStore child : ((IRepositoryStore<IRepositoryFileStore>) parentElement).getChildren()){
-                    if(child.canBeExported()){
-                        result.add(child) ;
-                    }
-                }
-                return result.toArray();
+		private WeakHashMap<IRepositoryStore, Object[]> cache = new WeakHashMap<IRepositoryStore, Object[]>();
 
-            }
-            return null;
-        }
+		@Override
+		public Object[] getChildren(Object parentElement) {
+			if (parentElement instanceof IRepositoryStore) {
+				if(!cache.containsKey(parentElement)){
+					List<IRepositoryFileStore> result = new ArrayList<IRepositoryFileStore>() ;
+					for(IRepositoryFileStore child : ((IRepositoryStore<IRepositoryFileStore>) parentElement).getChildren()){
+						if(child.canBeExported()){
+							result.add(child) ;
+						}
+					}
+					cache.put((IRepositoryStore) parentElement, result.toArray());
+				}
+				return cache.get(parentElement);
 
-        @Override
-        public Object getParent(Object element) {
-            if (element instanceof IRepositoryFileStore) {
-                return ((IRepositoryFileStore) element).getParentStore();
-            }
-            return null;
-        }
+			}
+			return null;
+		}
 
-        @Override
-        public boolean hasChildren(Object element) {
-            if (element instanceof IRepositoryStore) {
-                for(IRepositoryFileStore child : ((IRepositoryStore<IRepositoryFileStore>) element).getChildren()){
-                    if(child != null && child.canBeExported()){
-                        return true ;
-                    }
-                }
-            }
-            return false;
-        }
+		@Override
+		public Object getParent(Object element) {
+			if (element instanceof IRepositoryFileStore) {
+				return ((IRepositoryFileStore) element).getParentStore();
+			}
+			return null;
+		}
 
-        @Override
-        public Object[] getElements(Object element) {
-            if (element instanceof Collection<?>) {
-                if(((Collection<?>) element).size() == 1){
-                    IRepositoryStore store = (IRepositoryStore) ((Collection<?>) element).iterator().next() ;
-                    return getChildren(store);
+		@Override
+		public boolean hasChildren(Object element) {
+			if (element instanceof IRepositoryStore) {
+				Object[] children =  getChildren(element);
+				return children != null && children.length > 0  ;
+			}
+			return false;
+		}
 
-                }else{
-                    return ((Collection<?>) element).toArray();
-                }
+		@Override
+		public Object[] getElements(Object element) {
+			if (element instanceof Collection<?>) {
+				if(((Collection<?>) element).size() == 1){
+					IRepositoryStore store = (IRepositoryStore) ((Collection<?>) element).iterator().next() ;
+					return getChildren(store);
 
-            } else if (element instanceof Object[]) {
-                return (Object[]) element;
-            }
-            return null;
-        }
+				}else{
+					return ((Collection<?>) element).toArray();
+				}
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-         */
-        @Override
-        public void dispose() {
-            // TODO Auto-generated method stub
+			} else if (element instanceof Object[]) {
+				return (Object[]) element;
+			}
+			return null;
+		}
 
-        }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+		 */
+		@Override
+		public void dispose() {
+			// TODO Auto-generated method stub
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
-         * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        @Override
-        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
 
-        }
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse
+		 * .jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+		 */
+		@Override
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
-    }
+		}
 
-    private RepositoryTreeContentProvider localContentProvider;
+	}
 
-    /**
-     * @param parent
-     * @param style
-     * @param showImages
-     *            TODO
-     */
-    public CheckboxRepositoryTreeViewer(Composite parent, int style) {
-        super(parent, style | SWT.VIRTUAL);
-        initialize();
-    }
+	private RepositoryTreeContentProvider localContentProvider;
 
-    /**
-     * 
-     */
-    private void initialize() {
-        setLabelProvider(new FileStoreLabelProvider());
-        localContentProvider = new RepositoryTreeContentProvider();
-        setContentProvider(localContentProvider);
-        addFilter(new ViewerFilter() {
+	/**
+	 * @param parent
+	 * @param style
+	 * @param showImages
+	 *            TODO
+	 */
+	public CheckboxRepositoryTreeViewer(Composite parent, int style) {
+		super(parent, style | SWT.VIRTUAL);
+		initialize();
+	}
 
-            @Override
-            public boolean select(Viewer arg0, Object parentElement, Object element) {
-                if(element instanceof IRepositoryStore){
-                    ITreeContentProvider provider = (ITreeContentProvider) getContentProvider() ;
-                    return provider.hasChildren(element) ;
-                }
-                return true;
-            }
-        }) ;
-    }
+	/**
+	 * 
+	 */
+	private void initialize() {
+		setLabelProvider(new FileStoreLabelProvider());
+		localContentProvider = new RepositoryTreeContentProvider();
+		setContentProvider(localContentProvider);
+		addFilter(new ViewerFilter() {
+
+			@Override
+			public boolean select(Viewer arg0, Object parentElement, Object element) {
+				if(element instanceof IRepositoryStore){
+					ITreeContentProvider provider = (ITreeContentProvider) getContentProvider() ;
+					return provider.hasChildren(element) ;
+				}
+				return true;
+			}
+		}) ;
+	}
 
 }

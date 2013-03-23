@@ -76,7 +76,7 @@ public class CommonRepositoryPlugin extends AbstractUIPlugin {
         WizardDialog dialog = new CustomWizardDialog(Display.getCurrent().getActiveShell(), wizard){
         	protected void initializeBounds() {
         		super.initializeBounds();
-        		getShell().setSize(500, 500); 
+        		getShell().setSize(600, 500); 
         	}
         };
         dialog.setTitle(dialogTitle);

@@ -88,7 +88,7 @@ public class ExportBosArchiveHandler extends AbstractHandler {
             WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard){
             	protected void initializeBounds() {
             		super.initializeBounds();
-            		getShell().setSize(500, 500); 
+            		getShell().setSize(600, 500); 
             	}
             };
             dialog.setTitle(Messages.ExportButtonLabel);
