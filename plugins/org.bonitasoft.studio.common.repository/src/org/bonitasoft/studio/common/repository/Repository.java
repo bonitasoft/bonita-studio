@@ -205,14 +205,20 @@ public class Repository implements IRepository {
 			IConfigurationElement[] elements =  BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(REPOSITORY_STORE_EXTENSION_POINT_ID) ;
 			for(IConfigurationElement configuration : elements){
 				try {
-					IRepositoryStore<? extends IRepositoryFileStore> store = (IRepositoryStore<? extends IRepositoryFileStore>) configuration.createExecutableExtension(CLASS) ;
-					store.createRepositoryStore(this) ;
-					stores.put(store.getClass(),store );
+					final IRepositoryStore<? extends IRepositoryFileStore> store = createRepositoryStore(configuration);
+					stores.put(store.getClass(),store);
 				} catch (CoreException e) {
 					BonitaStudioLog.error(e) ;
 				}
 			}
 		}
+	}
+
+	protected IRepositoryStore<? extends IRepositoryFileStore> createRepositoryStore(
+			IConfigurationElement configuration) throws CoreException {
+		final IRepositoryStore<? extends IRepositoryFileStore> store = (IRepositoryStore<? extends IRepositoryFileStore>) configuration.createExecutableExtension(CLASS) ;
+		store.createRepositoryStore(this) ;
+		return store;
 	}
 
 	public void enableBuild() {
