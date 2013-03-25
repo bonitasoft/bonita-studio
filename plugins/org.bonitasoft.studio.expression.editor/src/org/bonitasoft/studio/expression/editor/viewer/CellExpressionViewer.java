@@ -81,7 +81,7 @@ public class CellExpressionViewer extends ExpressionViewer {
                 	  width=((Tree)composite).getColumn(colIndex).getWidth();
                 }
                 String troncatedLabel = getTroncatedLabel(input,width);
-                if (!input.isEmpty() && !fullText.equals(input) && !input.equals(getTroncatedLabel(fullText, width))){
+                if (input != null && !fullText.equals(input) && !input.equals(getTroncatedLabel(fullText, width))){
                 		setFullText(input);
                 }
                 getTextControl().setText(troncatedLabel);
