@@ -129,6 +129,7 @@ public class Messages extends NLS {
     public static String errorValidationContinueAnywayMessage;
     public static String errorValidationInDiagramToExport;
 	public static String loginFailed;
+	public static String errorActorMappingGroup;
     
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

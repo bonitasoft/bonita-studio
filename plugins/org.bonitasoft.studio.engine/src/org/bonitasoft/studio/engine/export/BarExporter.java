@@ -186,8 +186,19 @@ public class BarExporter {
         return createBusinessArchive(process, configuration, excludedObject);
     }
 
-    public byte[] getActorMappingContent(Configuration configuration) {
+    public byte[] getActorMappingContent(Configuration configuration) throws Exception {
         if(configuration.getActorMappings() != null && configuration.getActorMappings().getActorMapping() != null && !configuration.getActorMappings().getActorMapping().isEmpty()){
+    		
+        	StringBuffer result = new StringBuffer("");
+        	for(ActorMapping mapping : configuration.getActorMappings().getActorMapping()){
+        		if(!checkActorMappingGroup(mapping)){
+        			result.append("- "+mapping.getName()+"\n");
+        		}
+        	}
+        	if(result.length()>0){
+        		throw new Exception(Messages.errorActorMappingGroup+" : \n"+ result.toString());
+        	}
+        	
             org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI.createFileURI(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath()+File.separatorChar+EcoreUtil.generateUUID()+".xml") ;
             Resource resource = new ActorMappingResourceFactoryImpl().createResource(uri) ;
             DocumentRoot root = ActorMappingFactory.eINSTANCE.createDocumentRoot() ;
@@ -395,5 +406,19 @@ public class BarExporter {
         }
         return new BarResource(barPathPrefix+file.getName(), jarBytes);
     }
-
+    
+    private boolean checkActorMappingGroup(ActorMapping mapping){
+    	
+    	List<String> list1 = mapping.getGroups().getGroup();
+    	List<String> list2 = mapping.getGroups().getGroup();
+    	
+    	for(String s1 : list1){
+			for(String s2 : list2){
+				if(!s1.equals(s2) && (s2.startsWith(s1) || s1.startsWith(s2)) ){
+					return false;
+				}
+			}
+		}
+		return true;
+    }
 }

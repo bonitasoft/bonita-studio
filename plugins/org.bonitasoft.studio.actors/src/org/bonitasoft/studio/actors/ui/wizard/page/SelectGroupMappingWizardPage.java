@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -26,6 +28,14 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.beans.PojoObservables;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
+import org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -48,8 +58,11 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
     private final SortedSet<String> availableGroups = new TreeSet<String>() ;
     private final SortedSet<String> selectedGroups ;
     private List<Group> groups;
-    private CheckboxTableViewer availableGroupViewer;
-
+	private CheckboxTableViewer availableGroupViewer;
+    
+    // validation group selection
+	private DataBindingContext context;
+	
     public SelectGroupMappingWizardPage(ActorMapping mapping) {
         super();
         setTitle(Messages.selectGroupTitle) ;
@@ -87,9 +100,58 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
 
         availableGroupViewer.setInput(availableGroups) ;
         availableGroupViewer.setCheckedElements(selectedGroups.toArray());
+        
+        context = new DataBindingContext();
+		
+        final IObservableSet checkedElementsObservable =  ViewersObservables.observeCheckedElements(availableGroupViewer, String.class) ;
+        final MultiValidator notEmptyValidator = new MultiValidator() {
 
+        	@Override
+            protected IStatus validate() {
+				if(groupSelectionIsValid(checkedElementsObservable)){
+					return ValidationStatus.ok();
+				}
+				return ValidationStatus.error(Messages.errorSelectionGroups);
+			}
+        }  ;
+
+        context.addValidationStatusProvider(notEmptyValidator);
+		context.bindSet(checkedElementsObservable, PojoObservables.observeSet(this, "selectedGroups"));
+		
+		WizardPageSupport.create(this, context);
+		setControl(mainComposite);
     }
-
+    
+    /** Return false if a group and one of its child is selected. Else return true.
+     * @param checkedElementsObservable 
+     * 
+     * @return
+     */
+	private boolean groupSelectionIsValid(IObservableSet checkedElementsObservable) {
+		List<Object> list1 = new ArrayList<Object>();
+		List<Object> list2 = new ArrayList<Object>();
+		Iterator<Object> it = checkedElementsObservable.iterator();
+		while(it.hasNext()){
+			Object obj = it.next();
+			list1.add(obj);
+			list2.add(obj);
+		}
+	
+		for(Object o1 : list1){
+			String s1 = (String) o1;
+			for(Object o2 : list2){
+				String s2 = (String) o2;
+				if(!s1.equals(s2) && (s2.startsWith(s1) || s1.startsWith(s2)) ){
+					System.out.println("FALSE");
+					return false;
+				}
+			}
+		}
+		System.out.println("OK");
+		return true;
+	}
+	
+	
     protected void removedGroup(List<String> removedGroups) {
         selectedGroups.removeAll(removedGroups) ;
         for(Group g : groups){
