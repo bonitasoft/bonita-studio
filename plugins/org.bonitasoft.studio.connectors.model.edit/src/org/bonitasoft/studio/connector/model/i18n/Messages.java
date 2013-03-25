@@ -340,6 +340,8 @@ public class Messages extends NLS {
     public static String textAreaEditor;
     public static String addWidget;
     public static String Edit;
+	public static String emptyTable;
+	public static String emptyList;
 
 
 

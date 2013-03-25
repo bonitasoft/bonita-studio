@@ -39,6 +39,7 @@ import org.bonitasoft.studio.connector.model.definition.TextArea;
 import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionSwitch;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
@@ -60,6 +61,7 @@ import org.bonitasoft.studio.scripting.extensions.ScriptLanguageService;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -79,9 +81,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
@@ -428,13 +428,22 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 					viewer.setSelection(expression) ;
 				}
 			}) ;
-			viewer.addModifyListener(new Listener() {
+			if(input.isMandatory()){
+				final IObservableValue inputObservable = (IObservableValue) ViewersObservables.observeInput(viewer.getViewer());
+				final IObservableValue tableValue = EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS);
+				context.addValidationStatusProvider(new MultiValidator() {
 
-				@Override
-				public void handleEvent(Event event) {
-					iWizardContainer.updateButtons();
-				}
-			});
+					@Override
+					protected IStatus validate() {
+						TableExpression value = (TableExpression) inputObservable.getValue();
+						tableValue.getValue();
+						if(value.getExpressions().isEmpty()){
+							return ValidationStatus.error(Messages.bind(Messages.emptyTable,getLabel(input.getName())));
+						}
+						return ValidationStatus.ok();
+					}
+				});
+			}
 		}
 	}
 
@@ -479,13 +488,22 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 					viewer.setSelection(expression) ;
 				}
 			}) ;
-			viewer.addModifyListener(new Listener() {
+			if(input.isMandatory()){
+				final IObservableValue inputObservable = (IObservableValue) ViewersObservables.observeInput(viewer.getViewer());
+				final IObservableValue listValue = EMFObservables.observeValue(parameter.getExpression(), ExpressionPackage.Literals.LIST_EXPRESSION__EXPRESSIONS);
+				context.addValidationStatusProvider(new MultiValidator() {
 
-				@Override
-				public void handleEvent(Event event) {
-					iWizardContainer.updateButtons();
-				}
-			});
+					@Override
+					protected IStatus validate() {
+						ListExpression value = (ListExpression) inputObservable.getValue();
+						listValue.getValue();
+						if(value.getExpressions().isEmpty()){
+							return ValidationStatus.error(Messages.bind(Messages.emptyList,getLabel(input.getName())));
+						}
+						return ValidationStatus.ok();
+					}
+				});
+			}
 		}
 
 	}
