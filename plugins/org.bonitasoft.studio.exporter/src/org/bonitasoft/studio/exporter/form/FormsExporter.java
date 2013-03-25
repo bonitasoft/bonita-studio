@@ -850,6 +850,13 @@ public class FormsExporter {
 
 	private void performOnImageWidget(final IFormBuilder builder, final Widget widget) throws InvalidFormDefinitionException {
 		builder.addWidget(widget.getName(), WidgetType.IMAGE);
+		addImageWidgetInitialValue(builder, widget);
+		builder.addImageStyle(getCSSClasses(widget, ExporterTools.PREFIX_IMAGE));
+		builder.addAttachmentImageBehavior(((ImageWidget) widget).isIsADocument());
+	}
+
+	protected void addImageWidgetInitialValue(final IFormBuilder builder,
+			final Widget widget) throws InvalidFormDefinitionException {
 		if (((ImageWidget) widget).getImgPath() != null) {
 			if (((ImageWidget) widget).isIsADocument()) {
 				final Document document = ((ImageWidget) widget).getDocument();
@@ -875,8 +882,6 @@ public class FormsExporter {
 				}
 			}
 		}
-		builder.addImageStyle(getCSSClasses(widget, ExporterTools.PREFIX_IMAGE));
-		builder.addAttachmentImageBehavior(((ImageWidget) widget).isIsADocument());
 	}
 
 	//    protected void addImageDocument(final IFormBuilder builder, final Widget widget) throws InvalidFormDefinitionException {
@@ -930,7 +935,7 @@ public class FormsExporter {
 						currentChildren = provider.getChildren(temp);
 						break;
 					} else {
-						return false;
+						currentChildren = provider.getChildren(temp);
 					}
 				} else {
 					return false;

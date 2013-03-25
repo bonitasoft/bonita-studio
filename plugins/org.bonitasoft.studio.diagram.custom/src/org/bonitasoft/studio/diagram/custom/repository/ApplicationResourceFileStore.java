@@ -458,9 +458,12 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
 
 	private void notifyInvalidFiles(final List<String> files) {
 		BonitaStudioLog.log(".svn POP-UP !!!");
+		StringBuilder sb = new StringBuilder();
 		for (StackTraceElement item : Thread.currentThread().getStackTrace()) {
-			BonitaStudioLog.log(item.toString());
+			sb.append(item.toString());
+			sb.append("\n");
 		}
+		BonitaStudioLog.log(sb.toString());
 
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {

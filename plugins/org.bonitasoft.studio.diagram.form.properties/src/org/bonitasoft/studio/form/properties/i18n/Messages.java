@@ -306,16 +306,12 @@ public class Messages extends NLS {
     public static String filewidget_resource_hint_multiple;
     public static String data_tooltip_multiple_document;
     public static String createAnewDocument;
-
     public static String tooltipMultipleDocNames;
-
     public static String updatingWidgetReferences;
-
     public static String fieldModifier;
-
     public static String modifierDescription;
-
 	public static String newDocumentNameHint;
+	public static String multipleExplanation;
 
 
 

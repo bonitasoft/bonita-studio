@@ -177,14 +177,8 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
                         if(initialValueSection.getClient() != null){
                             initialValueSection.getClient().dispose() ;
                         }
-                        if(element.isDuplicate()){
-                            multiple = true ;
-                            initialValueSection.setClient(createURLComposite(initialValueSection,FileGridPropertySectionContribution.this.widgetFactory)) ;
-                        }else{
-                            multiple = false ;
-                            initialValueSection.setClient(createURLComposite(initialValueSection,FileGridPropertySectionContribution.this.widgetFactory)) ;
-                        }
-
+                        multiple = element.isDuplicate();
+                        initialValueSection.setClient(createURLComposite(initialValueSection,FileGridPropertySectionContribution.this.widgetFactory)) ;
                         initialValueSection.setExpanded(true) ;
                         bindFields();
                     }
