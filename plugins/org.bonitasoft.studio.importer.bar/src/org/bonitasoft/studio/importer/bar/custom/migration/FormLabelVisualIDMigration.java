@@ -110,22 +110,22 @@ public class FormLabelVisualIDMigration extends ReportCustomMigration {
     private static final int SELECT_TYPE_2 = 5122 ;
     private static final int TEXTFIELD_TYPE_2 = 5123 ;
     private static final int TEXTAREA_TYPE_2 = 5124 ;
-    private static final int SUBMIT_TYPE_2 = 5128 ;
+    private static final int PREVIOUS_TYPE_2 = 5128 ;
     private static final int NEXT_TYPE_2 = 5129 ;
-    private static final int PREVIOUS_TYPE_2 = 5130 ;
+    private static final int SUBMIT_TYPE_2 = 5130 ;
     private static final int CHECKBOX_TYPE_2 = 5134 ;
-    private static final int TEXT_TYPE_2 = 5137 ;
-    private static final int FILE_TYPE_2 = 5143 ;
-    private static final int MULTIPLECHECKBOX_TYPE_2 = 5144 ;
+    private static final int FILE_TYPE_2 = 5137 ;
+    private static final int MULTIPLECHECKBOX_TYPE_2 = 5143 ;
+    private static final int DURATION_TYPE_2 = 5144 ;
     private static final int IMAGE_TYPE_2 = 5146 ;
-    private static final int DURATION_TYPE_2 = 5148 ;
+    private static final int TEXT_TYPE_2 = 5148 ;
     private static final int BUTTON_TYPE_2 = 5149 ;
     private static final int TABLE_TYPE_2 = 5152 ;
     private static final int RICHTEXT_TYPE_2 = 5154 ;
     private static final int DYNAMIC_TABLE_TYPE_2 = 5156 ;
     private static final int IFRAME_TYPE_2 = 5158 ;
     private static final int HTML_TYPE_2 = 5161 ;
-    private static final int SUGGESTBOX_TYPE_2 = 5132 ;
+    private static final int SUGGESTBOX_TYPE_2 = 5162 ;
     
     @Override
     public void migrateBefore(Model model, Metamodel metamodel) throws MigrationException {
