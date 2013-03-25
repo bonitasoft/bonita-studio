@@ -166,7 +166,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 
         createButtons(mainComposite);
         createListOfValidators(mainComposite);
-
+        updateButton() ;
         createRightPanel(mainComposite);
    
     }
@@ -252,7 +252,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
         addValidatorButton.setFocus();
         createCreateValidatorButton(buttonsComposite);
         removeValidatorButton =  createRemoveValidatorButton(buttonsComposite);
-        updateButton() ;
+       
     }
 
     private void updateButton() {
