@@ -131,16 +131,18 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
                 removeConnectorButton.setEnabled(!selection.isEmpty());
             }
 
-            if(!downConnectorButton.isDisposed()){
-                downConnectorButton.setEnabled(selection.size() == 1) ;
+            final boolean isAnElementSelected = selection.size() == 1;
+            final boolean hasMoreThanOneItemInTheTable = tableViewer.getTable().getItemCount() > 1;
+			if(!downConnectorButton.isDisposed()){
+                downConnectorButton.setEnabled(isAnElementSelected && hasMoreThanOneItemInTheTable) ;
             }
 
             if(!upConnectorButton.isDisposed()){
-                upConnectorButton.setEnabled(selection.size() == 1) ;
+                upConnectorButton.setEnabled(isAnElementSelected && hasMoreThanOneItemInTheTable) ;
             }
 
             if(!updateConnectorButton.isDisposed()){
-                if(selection.size() == 1){
+                if(isAnElementSelected){
                     Connector connector = (Connector) selection.getFirstElement() ;
                     ConnectorDefRepositoryStore connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
                     ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion()) ;
