@@ -90,7 +90,8 @@ public class ShowLabelGridPropertySectionContribution implements IExtensibleGrid
                 ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.I18N_TYPE,
                 ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.PARAMETER_TYPE
+                ExpressionConstants.PARAMETER_TYPE,
+                ExpressionConstants.VARIABLE_TYPE
         })) ;
         Expression displayLabelExpression = element.getDisplayLabel();
         if(displayLabelExpression == null){
