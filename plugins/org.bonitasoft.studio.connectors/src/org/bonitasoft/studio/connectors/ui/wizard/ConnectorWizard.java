@@ -92,6 +92,8 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	private static final String CUSTOM_WIZARD_ID = "org.bonitasoft.studio.connectors.connectorWizard";
 	private static final String DATABASE_ID ="database";
+	private static final String DATASOURCE_CONNECTOR_D = "database-datasource";
+	
 	protected final EObject container;
 	protected Connector connectorWorkingCopy;
 	private boolean editMode = false;
@@ -528,7 +530,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	private boolean isDatabaseConnector(ConnectorDefinition def){
 		List<Category> categories = def.getCategory();
 		for (Category category:categories){
-			if (DATABASE_ID.equals(category.getId())){
+			if (DATABASE_ID.equals(category.getId()) && !def.getId().equals(DATASOURCE_CONNECTOR_D)){
 				return true;
 			}
 		}

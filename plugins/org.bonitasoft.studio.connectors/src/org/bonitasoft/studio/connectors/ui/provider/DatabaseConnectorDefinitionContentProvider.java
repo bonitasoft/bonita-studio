@@ -37,7 +37,8 @@ public class DatabaseConnectorDefinitionContentProvider extends ArrayContentProv
 
 
 	private final List<ConnectorDefinition> connectorDefList;
-
+	private static final String DATASOURCE_CONNECTOR_D = "database-datasource";
+	
 	public DatabaseConnectorDefinitionContentProvider() {
 		ConnectorDefRepositoryStore connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
 		connectorDefList = connectorDefStore.getDefinitions();
@@ -45,13 +46,11 @@ public class DatabaseConnectorDefinitionContentProvider extends ArrayContentProv
 
 
 	protected Bundle getBundle() {
-
 		return ConnectorPlugin.getDefault().getBundle();
 	}
 
 
 	protected Class<?> getDefStoreClass() {
-
 		return ConnectorDefRepositoryStore.class;
 	}
 
@@ -64,7 +63,7 @@ public class DatabaseConnectorDefinitionContentProvider extends ArrayContentProv
 
 			for (ConnectorDefinition def : connectorDefList) {
 				for(Category category : def.getCategory()){
-					if (category.getId().equals(cat.getId())){
+					if (category.getId().equals(cat.getId()) && !def.getId().equals(DATASOURCE_CONNECTOR_D)){
 						result.add(def);
 					}
 				}
@@ -78,7 +77,6 @@ public class DatabaseConnectorDefinitionContentProvider extends ArrayContentProv
 	 */
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -87,7 +85,6 @@ public class DatabaseConnectorDefinitionContentProvider extends ArrayContentProv
 	 */
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// TODO Auto-generated method stub
 
 	}
 
