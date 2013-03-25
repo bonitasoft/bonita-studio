@@ -312,6 +312,15 @@
                commandId="org.bonitasoft.studio.diagram.custom.extractSubprocess"
                icon="icons/menuIcons/extractSubProcess.png"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeEditor">
+                  <instanceof
+                        value="org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor">
+                  </instanceof>
+               </with>
+            </visibleWhen>
          </command>
          <command
                commandId="org.bonitasoft.studio.diagram.custom.openLatestSubprocess"
@@ -471,11 +480,6 @@
                   definitionId="org.bonitasoft.studio.diagram.custom.definition.extractSubprocessSelection">
             </reference>
          </activeWhen>
-         <enabledWhen>
-            <reference
-                  definitionId="org.bonitasoft.studio.diagram.custom.definition.extractSubprocessSelection">
-            </reference>
-         </enabledWhen>
       </handler>
    </extension>
    <extension
