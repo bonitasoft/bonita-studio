@@ -500,8 +500,9 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
      * @param tree
      */
     private void editFormInTree(FilteredTree tree) {
-        if (tree != null && ((ITreeSelection) tree.getViewer().getSelection()).size() > 0) {
-            Object selection = ((ITreeSelection) tree.getViewer().getSelection()).getFirstElement();
+        final ITreeSelection iTreeSelection = (ITreeSelection) tree.getViewer().getSelection();
+		if (tree != null && iTreeSelection.size() > 0) {
+            Object selection = iTreeSelection.getFirstElement();
             if (selection instanceof Form) {
                 FormsUtils.openDiagram((Form) selection,getEditingDomain());
             }
@@ -509,11 +510,14 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
     }
 
     private void updateButtons() {
-        ITreeSelection selection = (ITreeSelection) tree.getViewer().getSelection();
+        final TreeViewer viewer = tree.getViewer();
+		ITreeSelection selection = (ITreeSelection) viewer.getSelection();
         removeButton.setEnabled(selection.size() > 0);
-        upButton.setEnabled(selection.size() == 1);
-        downButton.setEnabled(selection.size() == 1);
-        editButton.setEnabled(selection.size() == 1);
+        final boolean isOnlyOneElementSelected = selection.size() == 1;
+		final boolean hasMoreThanOneItemInTheList = viewer.getTree().getItems().length > 1;
+		upButton.setEnabled(isOnlyOneElementSelected && hasMoreThanOneItemInTheList);
+        downButton.setEnabled(isOnlyOneElementSelected && hasMoreThanOneItemInTheList);
+        editButton.setEnabled(isOnlyOneElementSelected);
     }
 
     /**
