@@ -69,7 +69,7 @@ public class TestSwitchPalette extends TestCase {
                     childLabel.equals("Lane")||
                     childLabel.equals("Pool")||
                     childLabel.equals("Event")||
-                    childLabel.equals("And gateway")||
+                    childLabel.equals("Paralell gateway")||
                     childLabel.equals("Transition")){
                 assertTrue("some items were mising from simple palette: "+child,child.isVisible());
             }else{
