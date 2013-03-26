@@ -20,7 +20,7 @@
 «AROUND  initMethod FOR gmfgen::GenEditorView»
 	«EXPAND xpt::Common::generatedMemberComment»
 	public void init(org.eclipse.ui.IActionBars bars, org.eclipse.ui.IWorkbenchPage page) {
-		super.init(bars, page);
+		//super.init(bars, page);
 	}
 «ENDAROUND»
 
