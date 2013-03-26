@@ -719,26 +719,26 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			return ExpressionConstants.CONNECTOR_TYPE ;
 		}
 
-//		Set<String> cache = new HashSet<String>() ;
-//		for(Expression e : getFilteredExpressions()){
-//			if(e.getName().equals(input)){
-//				cache.add(e.getType()) ;
-//			}
-//		}
-//		if(cache.size() > 1){
-//			for(String type : cache){
-//				if(type.equals(selectedExpression.getType())){
-//					return type ;
-//				}
-//			}
-//			return cache.iterator().next() ;
-//		}else if(cache.size() == 1){
-//			return CONSTANT_TYPE; // cache.iterator().next() ;
-//		}else{
-//			expressionType = CONSTANT_TYPE ;
-//		}
+		Set<String> cache = new HashSet<String>() ;
+		for(Expression e : getFilteredExpressions()){
+			if(e.getName().equals(input)){
+				cache.add(e.getType()) ;
+			}
+		}
+		if(cache.size() > 1){
+			for(String type : cache){
+				if(type.equals(selectedExpression.getType())){
+					return type ;
+				}
+			}
+			return cache.iterator().next() ;
+		}else if(cache.size() == 1){
+			return cache.iterator().next() ;
+		}else{
+			expressionType = CONSTANT_TYPE ;
+		}
 
-		return CONSTANT_TYPE;
+		return expressionType;
 	}
 
 	protected void internalRefresh(Object element) {
