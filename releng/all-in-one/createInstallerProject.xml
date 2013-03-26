@@ -9,8 +9,10 @@
 		<replace file="${updated.project.file}" token="@product.full.name@" value="${product.full.name}"/>
 		<replace file="${updated.project.file}" token="@product.version@" value="${product.version}"/>
 		<replace file="${updated.project.file}" token="@file.shortname@" value="${file.shortname}"/>
-
+		<replace file="${updated.project.file}" token="@os_arch@" value="${os_arch}"/>
+		
 		<!-- RESOURCES -->
+		
 		<replace file="${updated.project.file}" token="@license@" value="${license}"/>
 		<replace file="${updated.project.file}" token="@wizard.image@" value="${wizard.image}"/>
 		<replace file="${updated.project.file}" token="@titlebar.image@" value="${titlebar.image}"/>

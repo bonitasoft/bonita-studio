@@ -11,198 +11,217 @@
 	<allowLanguageSelection>1</allowLanguageSelection>
 	<wmImage>@titlebar.image@</wmImage>
 	<windowsExecutableIcon>@windows.ico@</windowsExecutableIcon>
-	<osxApplicationBundleIcon>@mac.installer.icns@</osxApplicationBundleIcon>
+	<osxApplicationBundleIcon>@mac.installer.icns@
+	</osxApplicationBundleIcon>
 	<slideShowLoop>1</slideShowLoop>
-    <slideShowTiming>8</slideShowTiming>
-    <slideShowImageList>
-       <slideShowImage>
-          <path>@slide1@</path>
-       </slideShowImage>
-       <slideShowImage>
-          <path>@slide2@</path>
-       </slideShowImage>
-       <slideShowImage>
-          <path>@slide3@</path>
-       </slideShowImage>
-       <slideShowImage>
-          <path>@slide4@</path>
-       </slideShowImage>
-    </slideShowImageList>
+	<slideShowTiming>8</slideShowTiming>
+	<slideShowImageList>
+		<slideShowImage>
+			<path>@slide1@</path>
+		</slideShowImage>
+		<slideShowImage>
+			<path>@slide2@</path>
+		</slideShowImage>
+		<slideShowImage>
+			<path>@slide3@</path>
+		</slideShowImage>
+		<slideShowImage>
+			<path>@slide4@</path>
+		</slideShowImage>
+	</slideShowImageList>
 	<requestedExecutionLevel>asInvoker</requestedExecutionLevel>
 	<singleInstanceCheck>1</singleInstanceCheck>
-	 <customLanguageFileList>
-        <language>
-            <code>en</code>
-            <file>i18n/messages.properties</file>
-        </language>
-           <language>
-            <code>fr</code>
-            <file>i18n/messages_fr.properties</file>
-        </language>
-        <language>
-            <code>ar</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>bg</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>ca</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>da</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>nl</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>cs</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>cy</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>va</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>zh_CN</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>zh_TW</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>et</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>fi</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>de</code>
-            <file>i18n/messages.properties</file>
-        </language>
-     	 <language>
-            <code>el</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>de</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>es</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>es_AR</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>he</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>hr</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>it</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>ja</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>ko</code>
-            <file>i18n/messages.properties</file>
-        </language>
-	    <language>
-            <code>pl</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>pt_BR</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>pt</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>ro</code>
-            <file>i18n/messages.properties</file>
-        </language>
+	<customLanguageFileList>
 		<language>
-            <code>ru</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>no</code>
-            <file>i18n/messages.properties</file>
-        </language>
-	    <language>
-            <code>sl</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>sk</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>sq</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>sq</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>sv</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>tr</code>
-            <file>i18n/messages.properties</file>
-        </language> 
-    </customLanguageFileList>
+			<code>en</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>fr</code>
+			<file>i18n/messages_fr.properties</file>
+		</language>
+		<language>
+			<code>ar</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>bg</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>ca</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>da</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>nl</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>cs</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>cy</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>va</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>zh_CN</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>zh_TW</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>et</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>fi</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>de</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>el</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>de</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>es</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>es_AR</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>he</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>hr</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>it</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>ja</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>ko</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>pl</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>pt_BR</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>pt</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>ro</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>ru</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>no</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>sl</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>sk</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>sq</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>sq</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>sv</code>
+			<file>i18n/messages.properties</file>
+		</language>
+		<language>
+			<code>tr</code>
+			<file>i18n/messages.properties</file>
+		</language>
+	</customLanguageFileList>
 	<preShowHelpActionList>
 		<setInstallerVariable>
 			<!-- Set default path to C: on Windows -->
 			<name>installdir</name>
-			<value>${env(SYSTEMDRIVE)}/@file.shortname@-${product_version}</value>
+			<value>${env(SYSTEMDRIVE)}/@file.shortname@-${product_version}
+			</value>
 			<ruleList>
 				<platformTest type="windows" />
 			</ruleList>
 		</setInstallerVariable>
 	</preShowHelpActionList>
 	<preInstallationActionList>
+<!-- 		<autodetectJava> -->
+<!-- 			<customErrorMessage>${msg(java.version.error.message)}</customErrorMessage> -->
+<!-- 			<promptUser>1</promptUser> -->
+<!-- 			<selectionOrder>newest</selectionOrder> -->
+<!-- 			<validVersionList> -->
+<!-- 				<validVersion> -->
+<!-- 					<minVersion>1.6</minVersion> -->
+<!-- 					<requireJDK>0</requireJDK> -->
+<!-- 					<vendor></vendor> -->
+<!-- 				</validVersion> -->
+<!-- 			</validVersionList> -->
+<!-- 		</autodetectJava> -->
+		
 		<autodetectJava>
-			<customErrorMessage>${msg(java.version.error.message)}</customErrorMessage>
-			<promptUser>1</promptUser>
+			<promptUser>0</promptUser>
 			<selectionOrder>newest</selectionOrder>
+			<showMessageOnError>0</showMessageOnError>
+			<customErrorMessage>${msg(java.version.error.message)} @os_arch@ bits</customErrorMessage>
 			<validVersionList>
 				<validVersion>
+					<bitness>@os_arch@</bitness>
 					<minVersion>1.6</minVersion>
 					<requireJDK>0</requireJDK>
 					<vendor></vendor>
 				</validVersion>
 			</validVersionList>
 		</autodetectJava>
+		
 		<setInstallerVariable>
 			<!-- Set default path to C: on Windows -->
 			<name>installdir</name>
-			<value>${env(SYSTEMDRIVE)}/@file.shortname@-${product_version}</value>
+			<value>${env(SYSTEMDRIVE)}/@file.shortname@-${product_version}
+			</value>
 			<ruleList>
 				<platformTest type="windows" />
 			</ruleList>
@@ -228,69 +247,70 @@
 			</ruleList>
 		</createSymLink>
 	</postInstallationActionList>
-		<postBuildActionList>
-	<actionGroup>
-		<actionList>
-			<createTimeStamp>
-				<format>%Y%m%d%H%M%S</format>
-				<variable>timestamp</variable>
-			</createTimeStamp>
-			<setInstallerVariable>
-				<name>tempDir</name>
-				<value>@bitrock.output@/.tmpDir${timestamp}</value>
-			</setInstallerVariable>
-			<setInstallerVariable>
-				<name>dmgName</name>
-				<value>@installer.name@.dmg</value>
-			</setInstallerVariable>
-			<deleteFile>
-				<path>@bitrock.output@/${dmgName}</path>
-			</deleteFile>
-			<deleteFile>
-				<path>${tempDir}</path>
-			</deleteFile>
-			<createDirectory>
-				<path>${tempDir}/output/${installerFilename}.app</path>
-			</createDirectory>
-			<!--  <copyFile>
-				<destination>${tempDir}/output</destination>
-				<origin>@mac.installer.icns@</origin>
-			</copyFile>-->
-			<copyFile>
-				<destination>${tempDir}/output/${installerFilename}.app/</destination>
-				<origin>@bitrock.output@/${installerFilename}/Contents</origin>
-			</copyFile>
-			<runProgram>
-				<program>genisoimage</program>
-				<programArguments>-D -V @file.shortname@-${product_version} -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
-				</programArguments>
-			</runProgram>
-			<deleteFile>
-				<path>${tempDir}</path>
-			</deleteFile>
-		</actionList>
-		<ruleList>
-			<compareValues>
-				<logic>equals</logic>
-				<value1>${platform_name}</value1>
-				<value2>osx</value2>
-			</compareValues>
-			<programTest>
-          		  <condition>is_in_path</condition>
-         	   	  <name>genisoimage</name>
-       	   </programTest>
-		</ruleList>
-	</actionGroup>
-	<showWarning>
-    <text>'genisoimage' not found in path, dmg file cannot be generated</text>
-    <ruleList>
-        <programTest>
-          		  <condition>is_not_in_path</condition>
-         	   	  <name>genisoimage</name>
-       	   </programTest>
-    </ruleList>
-</showWarning>
-</postBuildActionList>
+	<postBuildActionList>
+		<actionGroup>
+			<actionList>
+				<createTimeStamp>
+					<format>%Y%m%d%H%M%S</format>
+					<variable>timestamp</variable>
+				</createTimeStamp>
+				<setInstallerVariable>
+					<name>tempDir</name>
+					<value>@bitrock.output@/.tmpDir${timestamp}</value>
+				</setInstallerVariable>
+				<setInstallerVariable>
+					<name>dmgName</name>
+					<value>@installer.name@.dmg</value>
+				</setInstallerVariable>
+				<deleteFile>
+					<path>@bitrock.output@/${dmgName}</path>
+				</deleteFile>
+				<deleteFile>
+					<path>${tempDir}</path>
+				</deleteFile>
+				<createDirectory>
+					<path>${tempDir}/output/${installerFilename}.app</path>
+				</createDirectory>
+				<!-- <copyFile> <destination>${tempDir}/output</destination> <origin>@mac.installer.icns@</origin> 
+					</copyFile> -->
+				<copyFile>
+					<destination>${tempDir}/output/${installerFilename}.app/
+					</destination>
+					<origin>@bitrock.output@/${installerFilename}/Contents</origin>
+				</copyFile>
+				<runProgram>
+					<program>genisoimage</program>
+					<programArguments>-D -V @file.shortname@-${product_version} -no-pad
+						-r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
+					</programArguments>
+				</runProgram>
+				<deleteFile>
+					<path>${tempDir}</path>
+				</deleteFile>
+			</actionList>
+			<ruleList>
+				<compareValues>
+					<logic>equals</logic>
+					<value1>${platform_name}</value1>
+					<value2>osx</value2>
+				</compareValues>
+				<programTest>
+					<condition>is_in_path</condition>
+					<name>genisoimage</name>
+				</programTest>
+			</ruleList>
+		</actionGroup>
+		<showWarning>
+			<text>'genisoimage' not found in path, dmg file cannot be generated
+			</text>
+			<ruleList>
+				<programTest>
+					<condition>is_not_in_path</condition>
+					<name>genisoimage</name>
+				</programTest>
+			</ruleList>
+		</showWarning>
+	</postBuildActionList>
 	<finalPageActionList>
 		<runProgram>
 			<ruleList>
@@ -299,7 +319,8 @@
 				</platformTest>
 			</ruleList>
 			<program>open</program>
-			<programArguments>"${installdir}/@mac.shortcut.name@" &amp;</programArguments>
+			<programArguments>"${installdir}/@mac.shortcut.name@" &amp;
+			</programArguments>
 			<progressText>${msg(launch)} ${product_fullname}</progressText>
 		</runProgram>
 		<runProgram>
@@ -324,8 +345,8 @@
 		</runProgram>
 		<launchBrowser>
 			<show>0</show>
-            <url>http://www.bonitasoft.org</url>
-        </launchBrowser>
+			<url>http://www.bonitasoft.org</url>
+		</launchBrowser>
 	</finalPageActionList>
 
 	<enableRollback>0</enableRollback>
@@ -378,7 +399,7 @@
 						</distributionDirectory>
 					</distributionFileList>
 				</folder>
-			</folderList> 
+			</folderList>
 			<startMenuShortcutList>
 				<startMenuShortcut>
 					<comment>@shortcut.comment@</comment>
@@ -402,73 +423,84 @@
 		</component>
 	</componentList>
 	<parameterList>
-	<choiceParameter>
-            <name>retrieveWorksapce</name>
-            <title>${msg(retrieve.workspace.title)}</title>
-            <explanation>${msg(retrieve.workspace.message)}</explanation>
-            <value></value>
-            <default>false</default>
-            <allowEmptyValue>0</allowEmptyValue>
-            <displayType>radiobuttons</displayType>
-            <insertBefore>installationFinished</insertBefore>
-            <ordering>default</ordering>
-            <width></width>
-            <optionList>
-                <option>
-                    <description></description>
-                    <image></image>
-                    <text>${msg(no.thanks)}</text>
-                    <value>false</value>
-                </option>
-                <option>
-                    <description></description>
-                    <image></image>
-                    <text>${msg(yes.import)}</text>
-                    <value>true</value>
-                </option>
-            </optionList>
-            <postShowPageActionList>
-                <showProgressDialog>
-                    <title>${msg(workspace.setup)}</title>
-                    <height>100</height>
-                    <width>400</width>
-                    <actionList>
-                        <runProgram>
-                            <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace"</programArguments>
-                            <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
-                            <ruleList>
-                                <isFalse>
-                                    <value>${retrieveWorksapce}</value>
-                                </isFalse>
-                                <platformTest>
-                                    <negate>1</negate>
-                                    <type>osx</type>
-                                </platformTest>
-                            </ruleList>
-                        </runProgram>
-                        <runProgram>
-                            <program>${java_executable}</program>
-                            <programArguments>-Xmx512m -XX:MaxPermSize=512m  -XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace"</programArguments>
-                            <progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
-                            <ruleList>
-                                <isFalse>
-                                    <value>${retrieveWorksapce}</value>
-                                </isFalse>
-                                <platformTest>
-                                    <type>osx</type>
-                                </platformTest>
-                            </ruleList>
-                        </runProgram>
-                    </actionList>
-                    <ruleList>
-                        <isFalse>
-                            <value>${retrieveWorksapce}</value>
-                        </isFalse>
-                    </ruleList>
-                </showProgressDialog>
-            </postShowPageActionList>
-        </choiceParameter>
+		<choiceParameter>
+			<name>retrieveWorksapce</name>
+			<title>${msg(retrieve.workspace.title)}</title>
+			<explanation>${msg(retrieve.workspace.message)}</explanation>
+			<value></value>
+			<default>false</default>
+			<allowEmptyValue>0</allowEmptyValue>
+			<displayType>radiobuttons</displayType>
+			<insertBefore>installationFinished</insertBefore>
+			<ordering>default</ordering>
+			<width></width>
+			<optionList>
+				<option>
+					<description></description>
+					<image></image>
+					<text>${msg(no.thanks)}</text>
+					<value>false</value>
+				</option>
+				<option>
+					<description></description>
+					<image></image>
+					<text>${msg(yes.import)}</text>
+					<value>true</value>
+				</option>
+			</optionList>
+			<postShowPageActionList>
+				<showProgressDialog>
+					<title>${msg(workspace.setup)}</title>
+					<height>100</height>
+					<width>400</width>
+					<actionList>
+						<runProgram>
+							<program>${java_executable}</program>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar
+								"${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar"
+								-application
+								org.bonitasoft.studio.application.InitializerApplication -data
+								"${installdir}/workspace"</programArguments>
+							<progressText>${msg(initializing.progressMessage)}
+								${product_fullname}...</progressText>
+							<ruleList>
+								<isFalse>
+									<value>${retrieveWorksapce}</value>
+								</isFalse>
+								<platformTest>
+									<negate>1</negate>
+									<type>osx</type>
+								</platformTest>
+							</ruleList>
+						</runProgram>
+						<runProgram>
+							<program>${java_executable}</program>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m
+								-XstartOnFirstThread -jar
+								"${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar"
+								-application
+								org.bonitasoft.studio.application.InitializerApplication -data
+								"${installdir}/workspace"</programArguments>
+							<progressText>${msg(initializing.progressMessage)}
+								${product_fullname}...</progressText>
+							<ruleList>
+								<isFalse>
+									<value>${retrieveWorksapce}</value>
+								</isFalse>
+								<platformTest>
+									<type>osx</type>
+								</platformTest>
+							</ruleList>
+						</runProgram>
+					</actionList>
+					<ruleList>
+						<isFalse>
+							<value>${retrieveWorksapce}</value>
+						</isFalse>
+					</ruleList>
+				</showProgressDialog>
+			</postShowPageActionList>
+		</choiceParameter>
 		<directoryParameter>
 			<name>Oldworkspace</name>
 			<title>${msg(workspace.location.title)}</title>
@@ -481,38 +513,45 @@
 			<mustBeWritable>1</mustBeWritable>
 			<mustExist>1</mustExist>
 			<ruleList>
-					 <isFalse>
-                            <value>true</value>
-                        </isFalse>
-<!-- 				<compareValues> -->
-<!--                     <logic>equals</logic> -->
-<!--                     <value1>${retrieveWorksapce}</value1> -->
-<!--                     <value2>true</value2> -->
-<!--                 </compareValues> -->
-            </ruleList>
+				<isFalse>
+					<value>true</value>
+				</isFalse>
+				<!-- <compareValues> -->
+				<!-- <logic>equals</logic> -->
+				<!-- <value1>${retrieveWorksapce}</value1> -->
+				<!-- <value2>true</value2> -->
+				<!-- </compareValues> -->
+			</ruleList>
 			<validationActionList>
 				<findFile>
 					<baseDirectory>${Oldworkspace}/studio</baseDirectory>
-					<customErrorMessage>${msg(workspace.location.validation.error)}</customErrorMessage>
+					<customErrorMessage>${msg(workspace.location.validation.error)}
+					</customErrorMessage>
 					<pattern>workspace</pattern>
 					<variable>workspaceFound</variable>
 				</findFile>
 			</validationActionList>
 			<postShowPageActionList>
-			<showProgressDialog>
-                    <title>${msg(workspace.setup)}</title>
-                    <height>100</height>
-                    <width>400</width>
-                    <actionList>
-		               <runProgram>
+				<showProgressDialog>
+					<title>${msg(workspace.setup)}</title>
+					<height>100</height>
+					<width>400</width>
+					<actionList>
+						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/studio/workspace" -newWorkspaceLocation "${installdir}/workspace"</programArguments>
-							<progressText>${msg(workspace.recovery.progressMessage)}</progressText>
+							<programArguments>-jar
+								"${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar"
+								-Xmx512m -XX:MaxPermSize=512m -application
+								org.bonitasoft.studio.application.WorkspaceRecovery -data
+								"${Oldworkspace}/studio/workspace" -newWorkspaceLocation
+								"${installdir}/workspace"</programArguments>
+							<progressText>${msg(workspace.recovery.progressMessage)}
+							</progressText>
 							<ruleList>
 								<platformTest>
-										<negate>1</negate>
-		                  			  <type>osx</type>
-		           				</platformTest>
+									<negate>1</negate>
+									<type>osx</type>
+								</platformTest>
 								<isTrue>
 									<value>${retrieveWorksapce}</value>
 								</isTrue>
@@ -520,23 +559,34 @@
 						</runProgram>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace"</programArguments>
-							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
+							<programArguments>-jar
+								"${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar"
+								-Xmx512m -XX:MaxPermSize=512m -application
+								org.bonitasoft.studio.application.InitializerApplication -data
+								"${installdir}/workspace"</programArguments>
+							<progressText>${msg(initializing.progressMessage)}
+								${product_fullname}...</progressText>
 							<ruleList>
 								<platformTest>
-										<negate>1</negate>
-		                  			  <type>osx</type>
-		           				</platformTest>
+									<negate>1</negate>
+									<type>osx</type>
+								</platformTest>
 							</ruleList>
 						</runProgram>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/studio/workspace" -newWorkspaceLocation "${installdir}/workspace"</programArguments>
-							<progressText>${msg(workspace.recovery.progressMessage)}</progressText>
+							<programArguments>-XstartOnFirstThread -jar
+								"${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar"
+								-Xmx512m -XX:MaxPermSize=512m -application
+								org.bonitasoft.studio.application.WorkspaceRecovery -data
+								"${Oldworkspace}/studio/workspace" -newWorkspaceLocation
+								"${installdir}/workspace"</programArguments>
+							<progressText>${msg(workspace.recovery.progressMessage)}
+							</progressText>
 							<ruleList>
 								<platformTest>
-		                  			  <type>osx</type>
-		           				</platformTest>
+									<type>osx</type>
+								</platformTest>
 								<isTrue>
 									<value>${retrieveWorksapce}</value>
 								</isTrue>
@@ -545,139 +595,149 @@
 						<runProgram>
 							<program>${java_executable}</program>
 							<!-- Change bundle version when Equinox version change -->
-							<programArguments>-XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace"</programArguments>
-							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
+							<programArguments>-XstartOnFirstThread -jar
+								"${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar"
+								-Xmx512m -XX:MaxPermSize=512m -application
+								org.bonitasoft.studio.application.InitializerApplication -data
+								"${installdir}/workspace"</programArguments>
+							<progressText>${msg(initializing.progressMessage)}
+								${product_fullname}...</progressText>
 							<ruleList>
 								<platformTest>
-		                  			  <type>osx</type>
-		           				</platformTest>
+									<type>osx</type>
+								</platformTest>
 							</ruleList>
 						</runProgram>
-				 	</actionList>
-				 </showProgressDialog>
-            </postShowPageActionList>
+					</actionList>
+				</showProgressDialog>
+			</postShowPageActionList>
 		</directoryParameter>
 		<directoryParameter>
 			<name>installdir</name>
 			<description>Installer.Parameter.installdir.description</description>
 			<explanation>Installer.Parameter.installdir.explanation</explanation>
 			<value></value>
-			<default>${platform_install_prefix}/@file.shortname@-${product_version}</default>
+			<default>${platform_install_prefix}/@file.shortname@-${product_version}
+			</default>
 			<allowEmptyValue>0</allowEmptyValue>
 			<ask>yes</ask>
 			<cliOptionName>prefix</cliOptionName>
 			<mustBeWritable>yes</mustBeWritable>
 			<mustExist>0</mustExist>
 		</directoryParameter>
-		
-		 <parameterGroup>
-            <name>licensePage</name>
-            <title>${msg(install.license.title)}</title>
-            <explanation></explanation>
-            <value></value>
-            <default></default>
-            <insertBefore>installationFinished</insertBefore>
-            <parameterList>
-                <infoParameter>
-                    <name>RequestKey</name>
-                    <description></description>
-                    <explanation>${msg(request.key.explanation)}</explanation>
-                    <value>${keyContent}</value>
-                    <default></default>
-                    <insertAfter>installLicense</insertAfter>
-                    <trimMarginNumChars>0</trimMarginNumChars>
-                    <preShowPageActionList>
-                        <changePermissions>
-                            <files>${installDir}/license/*</files>
-                            <permissions>777</permissions>
-                        </changePermissions>
-                        <touchFile>
-                            <path>${installDir}/license/requestKey.txt</path>
-                        </touchFile>
-                        <findFile>
-                            <baseDirectory>${installDir}/license/</baseDirectory>
-                            <pattern>generateKey*.jar</pattern>
-                            <variable>generateKeyJar</variable>
-                        </findFile>
-                        <runProgram>
-                            <program>${java_executable}</program>
-                            <programArguments>-cp "${generateKeyjar}" org.bonitasoft.security.generateKey.GenerateKeyDev -noPrompt -output=${installDir}/license/requestKey.txt</programArguments>
-                    		<progressText>Generate request key</progressText>
-                        </runProgram>
-                        <readFile>
-                            <name>keyContent</name>
-                            <path>${installDir}/license/requestKey.txt</path>
-                        </readFile>
-                    </preShowPageActionList>
-                </infoParameter>
-                <fileParameter>
-                    <name>installLicense</name>
-                    <description>${msg(install.license.desc)}</description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default></default>
-                    <allowEmptyValue>1</allowEmptyValue>
-                    <mustBeWritable>0</mustBeWritable>
-                    <mustExist>0</mustExist>
-                    <width>25</width>
-                    <validationActionList>
-                        <throwError>
-                            <text>${msg(install.license.error)}</text>
-                            <ruleList>
-                                <compareValues>
-                                    <logic>does_not_equal</logic>
-                                    <value1>${installLicense}</value1>
-                                    <value2></value2>
-                                </compareValues>
-                                <fileExists>
-                                    <path>${installLicense}</path>
-                                </fileExists>
-								<regExMatch logic="does_not_match" pattern=".*\.(lic)$" text="${installLicense}"/>
-                            </ruleList>
-                        </throwError>
-                        <copyFile>
-                            <customErrorMessage>${msg(install.license.error)}</customErrorMessage>
-                            <destination>${installdir}</destination>
-                            <origin>${installLicense}</origin>
-                            <ruleList>
-                                <fileTest>
-                                    <condition>is_not_directory</condition>
-                                    <path>${installLicense}</path>
-                                </fileTest>
-                                <compareText>
-                                    <logic>contains</logic>
-                                    <text>${installLicense}</text>
-                                    <value>.lic</value>
-                                </compareText>
-                            </ruleList>
-                        </copyFile>
-                    </validationActionList>
-                </fileParameter>
-            </parameterList>
-            <ruleList>
-                <fileExists>
-                    <path>${installDir}/license/</path>
-                </fileExists>
-            </ruleList>
-        </parameterGroup>
+
+		<parameterGroup>
+			<name>licensePage</name>
+			<title>${msg(install.license.title)}</title>
+			<explanation></explanation>
+			<value></value>
+			<default></default>
+			<insertBefore>installationFinished</insertBefore>
+			<parameterList>
+				<infoParameter>
+					<name>RequestKey</name>
+					<description></description>
+					<explanation>${msg(request.key.explanation)}</explanation>
+					<value>${keyContent}</value>
+					<default></default>
+					<insertAfter>installLicense</insertAfter>
+					<trimMarginNumChars>0</trimMarginNumChars>
+					<preShowPageActionList>
+						<changePermissions>
+							<files>${installDir}/license/*</files>
+							<permissions>777</permissions>
+						</changePermissions>
+						<touchFile>
+							<path>${installDir}/license/requestKey.txt</path>
+						</touchFile>
+						<findFile>
+							<baseDirectory>${installDir}/license/</baseDirectory>
+							<pattern>generateKey*.jar</pattern>
+							<variable>generateKeyJar</variable>
+						</findFile>
+						<runProgram>
+							<program>${java_executable}</program>
+							<programArguments>-cp "${generateKeyjar}"
+								org.bonitasoft.security.generateKey.GenerateKeyDev -noPrompt
+								-output=${installDir}/license/requestKey.txt</programArguments>
+							<progressText>Generate request key</progressText>
+						</runProgram>
+						<readFile>
+							<name>keyContent</name>
+							<path>${installDir}/license/requestKey.txt</path>
+						</readFile>
+					</preShowPageActionList>
+				</infoParameter>
+				<fileParameter>
+					<name>installLicense</name>
+					<description>${msg(install.license.desc)}</description>
+					<explanation></explanation>
+					<value></value>
+					<default></default>
+					<allowEmptyValue>1</allowEmptyValue>
+					<mustBeWritable>0</mustBeWritable>
+					<mustExist>0</mustExist>
+					<width>25</width>
+					<validationActionList>
+						<throwError>
+							<text>${msg(install.license.error)}</text>
+							<ruleList>
+								<compareValues>
+									<logic>does_not_equal</logic>
+									<value1>${installLicense}</value1>
+									<value2></value2>
+								</compareValues>
+								<fileExists>
+									<path>${installLicense}</path>
+								</fileExists>
+								<regExMatch logic="does_not_match" pattern=".*\.(lic)$"
+									text="${installLicense}" />
+							</ruleList>
+						</throwError>
+						<copyFile>
+							<customErrorMessage>${msg(install.license.error)}
+							</customErrorMessage>
+							<destination>${installdir}</destination>
+							<origin>${installLicense}</origin>
+							<ruleList>
+								<fileTest>
+									<condition>is_not_directory</condition>
+									<path>${installLicense}</path>
+								</fileTest>
+								<compareText>
+									<logic>contains</logic>
+									<text>${installLicense}</text>
+									<value>.lic</value>
+								</compareText>
+							</ruleList>
+						</copyFile>
+					</validationActionList>
+				</fileParameter>
+			</parameterList>
+			<ruleList>
+				<fileExists>
+					<path>${installDir}/license/</path>
+				</fileExists>
+			</ruleList>
+		</parameterGroup>
 	</parameterList>
 	<preUninstallationActionList>
-		 <showQuestion>
-            <default>yes</default>
-            <text>${msg(keep.workspace.msg)}</text>
-            <title>${msg(keep.workspace.title)}</title>
-            <variable>saveWorkspace</variable>
-        </showQuestion>
+		<showQuestion>
+			<default>yes</default>
+			<text>${msg(keep.workspace.msg)}</text>
+			<title>${msg(keep.workspace.title)}</title>
+			<variable>saveWorkspace</variable>
+		</showQuestion>
 	</preUninstallationActionList>
 	<postUninstallationActionList>
-        <deleteFile>
-            <path>${installdir}</path>
-            <ruleList>
-                <isFalse>
-                    <value>${saveWorkspace}</value>
-                </isFalse>
-            </ruleList>
-        </deleteFile>
-    </postUninstallationActionList>
+		<deleteFile>
+			<path>${installdir}</path>
+			<ruleList>
+				<isFalse>
+					<value>${saveWorkspace}</value>
+				</isFalse>
+			</ruleList>
+		</deleteFile>
+	</postUninstallationActionList>
 </project>
 
