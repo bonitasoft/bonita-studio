@@ -310,7 +310,7 @@ public class EngineExpressionUtil {
 				
 				final Expression rightExpression = new ExpressionConditionModelSwitch(simpleExpression).doSwitch(rightExp);
 				final Expression leftExpression = new ExpressionConditionModelSwitch(simpleExpression).doSwitch(leftExp);
-				return exp.createComparisonExpression(name, rightExpression, operator, leftExpression);
+				return exp.createComparisonExpression(name, leftExpression, operator, rightExpression);
 			}
 
 		} catch (final InvalidExpressionException e) {
