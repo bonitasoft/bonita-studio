@@ -358,7 +358,7 @@
 							<target>
 							    <property name="studio.dir" value="${project.build.directory}/macosx.cocoa.x86"/>
 							    <property name="bitrock.install" value="${project.build.directory}/installers"/>
-							    <property name="os_arch" value=32 />
+							    <property name="os_arch" value="32" />
 								<property file="installer/installer.properties"/>
 								<property name="installer.name" value="${product.short.name}-${product.version}-x86"/>
 								<property name="updated.project.file" value="${basedir}/installer/installer_project_macosx_x86.xml" />
