@@ -286,8 +286,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
     		boolean sourceIdAndGateway = source instanceof ANDGateway ;
     		TargetElement target =  ((SequenceFlow)eObject).getTarget() ;
     		boolean targetIsAndGateway = target instanceof ANDGateway ;
-
-    		return !(eObject instanceof BoundaryEvent) && !sourceIdAndGateway && !targetIsAndGateway;
+    		return !(source instanceof BoundaryEvent) &&  !sourceIdAndGateway && !targetIsAndGateway;
 
     	}
     	return false ;

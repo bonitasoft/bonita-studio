@@ -21,6 +21,7 @@ import org.bonitasoft.studio.decision.core.DecisionTableUtil;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.model.process.ANDGateway;
+import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.SequenceFlow;
@@ -68,7 +69,7 @@ public class SequenceFlowSwitch extends ProcessSwitch<SequenceFlow> {
 					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(sequenceFlow.getCondition()));
 				}else if(sequenceFlow.getConditionType() == SequenceFlowConditionType.DECISION_TABLE){
 					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(DecisionTableUtil.toGroovyScriptExpression(sequenceFlow.getDecisionTable())));
-				}else if(sequenceFlow.isIsDefault()){
+				}else if(sequenceFlow.isIsDefault() && !(source instanceof BoundaryEvent)){
 					builder.addDefaultTransition(sourceId, targetId);
 				} else{
 					builder.addTransition(sourceId, targetId);
