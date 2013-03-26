@@ -36,6 +36,7 @@ import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import javax.imageio.ImageIO;
 
@@ -96,7 +97,7 @@ public class DefinitionResourceProvider {
     private final static Map<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider> INSTANCES_MAP;
 
     static {
-        INSTANCES_MAP = new HashMap<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider>();
+        INSTANCES_MAP = new WeakHashMap<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider>();
     }
 
     public static DefinitionResourceProvider getInstance(
