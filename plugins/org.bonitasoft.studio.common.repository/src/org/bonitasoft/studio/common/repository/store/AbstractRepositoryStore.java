@@ -64,7 +64,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
                     this.folder.getLocation().toFile().mkdirs() ;
                     this.folder.getParent().refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR) ;
                 }else{
-                    this.folder.create(false, true, Repository.NULL_PROGRESS_MONITOR) ;
+                    this.folder.create(true, true, Repository.NULL_PROGRESS_MONITOR) ;
                 }
                 processDefaultContribution() ;
             } catch (CoreException e) {
