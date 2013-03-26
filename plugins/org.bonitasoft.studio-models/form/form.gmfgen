@@ -8587,7 +8587,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8621,7 +8621,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8659,7 +8659,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8693,7 +8693,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8731,7 +8731,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8765,7 +8765,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8803,7 +8803,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8841,7 +8841,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8879,7 +8879,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8913,7 +8913,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8947,7 +8947,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -8981,7 +8981,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9001,7 +9001,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9021,7 +9021,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9041,7 +9041,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9073,7 +9073,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9109,7 +9109,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9147,7 +9147,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9213,7 +9213,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9247,7 +9247,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9267,7 +9267,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9287,7 +9287,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9307,7 +9307,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9357,7 +9357,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9405,7 +9405,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
@@ -9425,7 +9425,7 @@
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"/>
+          body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Boolean.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions

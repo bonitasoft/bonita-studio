@@ -28,7 +28,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -206,7 +206,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -399,7 +399,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -577,7 +577,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -773,7 +773,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -951,7 +951,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -1147,7 +1147,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -1343,7 +1343,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -1539,7 +1539,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -1717,7 +1717,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -1895,7 +1895,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -2073,7 +2073,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -2188,7 +2188,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -2303,7 +2303,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -2418,7 +2418,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -2720,7 +2720,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -2835,7 +2835,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -2950,7 +2950,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -3137,7 +3137,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -3333,7 +3333,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -3680,7 +3680,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -3858,7 +3858,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -3982,7 +3982,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -4241,7 +4241,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -4482,7 +4482,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
@@ -4597,7 +4597,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/displayLabel"/>
           <value
-              body="return org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());"
+              body="org.bonitasoft.studio.model.expression.Expression exp =  org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(self.getName());&#xA;exp.setReturnTypeFixed(true);&#xA;return exp;"
               language="java"/>
         </initializers>
         <initializers
