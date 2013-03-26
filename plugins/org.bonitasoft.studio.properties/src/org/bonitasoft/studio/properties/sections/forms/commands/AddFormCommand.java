@@ -197,6 +197,7 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             displayLabel.setName(key.getName());
             displayLabel.setType(ExpressionConstants.CONSTANT_TYPE);
             displayLabel.setReturnType(String.class.getName());
+            displayLabel.setReturnTypeFixed(true);
             displayLabel.setContent(key.getName());
             tempWidget.setDisplayLabel(displayLabel);
             WidgetLayoutInfo wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
@@ -267,6 +268,7 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             previousLabel.setType(ExpressionConstants.CONSTANT_TYPE);
             previousLabel.setReturnType(String.class.getName());
             previousLabel.setContent(previousName);
+            previousLabel.setReturnTypeFixed(true);
             tempWidget.setDisplayLabel(previousLabel);
             tempWidget.setName(NamingUtils.convertToId(previousName, tempWidget));
             wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
@@ -283,6 +285,7 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             submitLabel.setName(submitButtonName);
             submitLabel.setType(ExpressionConstants.CONSTANT_TYPE);
             submitLabel.setReturnType(String.class.getName());
+            submitLabel.setReturnTypeFixed(true);
             submitLabel.setContent(submitButtonName);
             tempWidget.setDisplayLabel(submitLabel);
             tempWidget.setName(NamingUtils.convertToId(submitButtonName, tempWidget));
