@@ -61,7 +61,7 @@ public class TestConfigurationDialog extends SWTBotGefTestCase {
 
 
         if(SWTBotTestUtil.testingBosSp()){
-            bot.table().getTableItem("Parameters").select();
+            bot.table().getTableItem("Parameter").select();
         }
         bot.table().getTableItem("Actor mapping").select();
 
