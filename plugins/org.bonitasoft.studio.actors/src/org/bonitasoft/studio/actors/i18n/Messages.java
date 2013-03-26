@@ -276,6 +276,10 @@ public class Messages extends NLS {
 	public static String nameTooLong;
 	public static String descTooLong;
 	public static String active;
+	public static String importOrganizationFailedTitle;
+	public static String importOrganizationFailedMessage;
+	public static String importOrganizationSuccessfullTitle;
+	public static String importOrganizationSuccessfullMessage;
 	public static String errorSelectionGroups;
 
 

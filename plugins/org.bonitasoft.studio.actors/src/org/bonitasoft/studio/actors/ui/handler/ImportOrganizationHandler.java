@@ -22,13 +22,16 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -65,8 +68,14 @@ public class ImportOrganizationHandler extends AbstractHandler {
 							fis = new FileInputStream(filePath);
 							String id =	new File(filePath).getName() ;
 							organizationStore.importInputStream(id, fis) ;
+							MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.importOrganizationSuccessfullTitle, Messages.importOrganizationSuccessfullMessage);
 						} catch (Exception e) {
 							BonitaStudioLog.error(e) ; 
+							OrganizationFileStore file = organizationStore.getChild(new File(filePath).getName().replace(".xml", "."+OrganizationRepositoryStore.ORGANIZATION_EXT));
+							if( file != null){
+								file.delete();
+							}
+							new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.importOrganizationFailedTitle, Messages.importOrganizationFailedMessage,e).open();
 						}finally{
 							if(fis != null){
 								try {
