@@ -164,11 +164,13 @@ public class TimerEventConditionContribution implements IExtensibleGridPropertyS
         conditionViewer.setText(conditionLabel != null? conditionLabel:"");
 
         DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        EditPart ep = GMFTools.findEditPart(editor.getDiagramEditPart(), eObject);
-        if (ep != null) {
-            if (!ep.getChildren().isEmpty()) {
-                ((LabelEditPart) ep.getChildren().get(0)).refresh();
-            }
+        if(editor != null){
+        	EditPart ep = GMFTools.findEditPart(editor.getDiagramEditPart(), eObject);
+        	if (ep != null) {
+        		if (!ep.getChildren().isEmpty()) {
+        			((LabelEditPart) ep.getChildren().get(0)).refresh();
+        		}
+        	}
         }
 
     }
