@@ -33,6 +33,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.internal.corext.template.java.SignatureUtil;
+import org.eclipse.jdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -112,14 +113,18 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
                     if(isValid){
                         TreePath path = selection.getPaths()[0];
                         IMethod item = (IMethod) path.getSegment(path.getSegmentCount() - 1);
-
                         operator.setExpression(item.getElementName()) ;
                         operator.getInputTypes().clear() ;
                         for(String type : item.getParameterTypes()){
-                            String qualifiedType = Signature.toString(Signature.getTypeErasure(type)) ;
-                            if(qualifiedType.equals("E")){
-                                qualifiedType = Object.class.getName() ;
-                            }
+                            String qualifiedType = Object.class.getName();
+							try {
+								qualifiedType = JavaModelUtil.getResolvedTypeName(Signature.getTypeErasure(type), item.getDeclaringType());
+							} catch (JavaModelException e) {
+								BonitaStudioLog.error(e);
+							} catch (IllegalArgumentException e) {
+								BonitaStudioLog.error(e);
+							}
+                          
                             operator.getInputTypes().add(qualifiedType) ;
                         }
                     }

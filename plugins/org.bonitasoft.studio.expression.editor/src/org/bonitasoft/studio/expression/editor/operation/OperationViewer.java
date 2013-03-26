@@ -233,6 +233,19 @@ public class OperationViewer extends Composite {
                     }
                 }
             });
+            
+            IObservableValue operatorValue = EMFEditObservables.observeValue(editingDomain, actionExp, ExpressionPackage.Literals.OPERATOR__TYPE);
+            operatorValue.addChangeListener(new IChangeListener() {
+
+                @Override
+                public void handleChange(ChangeEvent arg0) {
+                    if (actionExpressionBinding.getTarget() != null) {
+                        actionExpressionBinding.validateTargetToModel();
+                        IStatus status = (IStatus) actionExpressionBinding.getValidationStatus().getValue();
+                        actionExpression.setMessage(status.getMessage(),status.getSeverity());
+                    }
+                }
+            });
 
 
             storageComboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -288,7 +301,7 @@ public class OperationViewer extends Composite {
                     if(editingDomain == null){
                         action.setOperator(newOperator) ;
                     }else{
-                        editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, action.getOperator(), ExpressionPackage.OPERATION__OPERATOR, newOperator));
+                        editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, action, ExpressionPackage.Literals.OPERATION__OPERATOR, newOperator));
                     }
 
                     operatorLabel.setText("<A>"+labelProvider.getText(newOperator)+"</A>") ;

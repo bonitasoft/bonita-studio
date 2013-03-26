@@ -34,59 +34,79 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class OperationReturnTypesValidator implements IValidator {
 
-    private Expression dataExpression;
+	private Expression dataExpression;
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
-     */
-    @Override
-    public IStatus validate(Object expression) {
-        if(expression instanceof Expression){
-            EObject container = ((Expression) expression).eContainer() ;
-            if(container instanceof Operation){
-                final Operation operation = (Operation) container;
-                
-                EObject parent = operation.eContainer();
-                if(parent instanceof Info){
-                	   return ValidationStatus.ok();
-                }
-                
-                if(!ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operation.getOperator().getType())){
-                    return ValidationStatus.ok();
-                }
-                if(ExpressionConstants.MESSAGE_ID_TYPE.equals(operation.getRightOperand().getType())){
-                    return ValidationStatus.ok();
-                }
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
+	 */
+	@Override
+	public IStatus validate(Object expression) {
+		if(expression instanceof Expression){
+			EObject container = ((Expression) expression).eContainer() ;
+			if(container instanceof Operation){
+				final Operation operation = (Operation) container;
 
-                if(ModelHelper.isAnExpressionCopy((Expression) expression)){
-                    return ValidationStatus.ok();
-                }
-            }
+				EObject parent = operation.eContainer();
+				if(parent instanceof Info){
+					return ValidationStatus.ok();
+				}
 
-            if(dataExpression != null && dataExpression.getContent() != null && !dataExpression.getContent().isEmpty() && ((Expression) expression).getContent() != null && !((Expression) expression).getContent().isEmpty()){
-                try{
-                    Class<?> dataReturnTypeClass = Class.forName(dataExpression.getReturnType());
-                    Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
-                    if(!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)){
-                        return ValidationStatus.warning(Messages.bind(
-                                Messages.invalidReturnTypeBetween,dataExpression.getName(),
-                                ((Expression) expression).getName()));
-                    }
-                }catch (Exception e) {
-                    if(!dataExpression.getReturnType().equals(((Expression) expression).getReturnType())){
-                        return ValidationStatus.warning(Messages.bind(
-                                Messages.invalidReturnTypeFor,
-                                ((Expression) expression).getName()));
-                    }
-                }
+				if(ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operation.getOperator().getType())){
+					if(dataExpression != null && dataExpression.getContent() != null && !dataExpression.getContent().isEmpty() && ((Expression) expression).getContent() != null && !((Expression) expression).getContent().isEmpty()){
+						if(!operation.getOperator().getInputTypes().isEmpty()){
+							String typeName = operation.getOperator().getInputTypes().get(0);
+							try{
+								Class<?> dataReturnTypeClass = Class.forName(typeName);
+								Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
+								if(!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)){
+									return ValidationStatus.warning(Messages.bind(
+											Messages.invalidReturnTypeBetween,dataExpression.getName(),
+											((Expression) expression).getName()));
+								}
+							}catch (Exception e) {
+								if(!operation.getOperator().getInputTypes().get(0).equals(((Expression) expression).getReturnType())){
+									return ValidationStatus.warning(Messages.bind(
+											Messages.invalidReturnTypeFor,
+											((Expression) expression).getName()));
+								}
+							}
+						}
+					}
+					return ValidationStatus.ok();
+				}
+				if(ExpressionConstants.MESSAGE_ID_TYPE.equals(operation.getRightOperand().getType())){
+					return ValidationStatus.ok();
+				}
 
-            }
-        }
-        return ValidationStatus.ok();
-    }
+				if(ModelHelper.isAnExpressionCopy((Expression) expression)){
+					return ValidationStatus.ok();
+				}
+			}
 
-    public void setDataExpression(Expression dataExpression){
-        this.dataExpression =dataExpression ;
-    }
+			if(dataExpression != null && dataExpression.getContent() != null && !dataExpression.getContent().isEmpty() && ((Expression) expression).getContent() != null && !((Expression) expression).getContent().isEmpty()){
+				try{
+					Class<?> dataReturnTypeClass = Class.forName(dataExpression.getReturnType());
+					Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
+					if(!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)){
+						return ValidationStatus.warning(Messages.bind(
+								Messages.invalidReturnTypeBetween,dataExpression.getName(),
+								((Expression) expression).getName()));
+					}
+				}catch (Exception e) {
+					if(!dataExpression.getReturnType().equals(((Expression) expression).getReturnType())){
+						return ValidationStatus.warning(Messages.bind(
+								Messages.invalidReturnTypeFor,
+								((Expression) expression).getName()));
+					}
+				}
+
+			}
+		}
+		return ValidationStatus.ok();
+	}
+
+	public void setDataExpression(Expression dataExpression){
+		this.dataExpression =dataExpression ;
+	}
 
 }
