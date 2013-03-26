@@ -114,8 +114,7 @@ public class Repository implements IRepository {
 	@Override
 	public void createRepository(String repositoryName) {
 		name = repositoryName ;
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		project = workspace.getRoot().getProject(repositoryName);
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(repositoryName);
 	}
 
 	@Override
@@ -187,10 +186,11 @@ public class Repository implements IRepository {
 		} catch (CoreException e) {
 			BonitaStudioLog.error(e) ;
 		}
+		stores.clear();
+		stores = null; 
 	}
 
 
-	@SuppressWarnings("unchecked")
 	protected void initRepositoryStores() {
 		if(stores == null || stores.isEmpty()){
 			disableBuild();
