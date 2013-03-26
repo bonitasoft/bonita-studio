@@ -46,48 +46,15 @@ div.bonita_form_container div#bonita_form_confirm_todolist .bonita_form_task_lin
 
 button.bonita_form_button {
 	text-align: center;
-	zoom: 1;
-	*display: inline;
-	-webkit-touch-callout: none;
-	height: line-height;
-	font-size: 75%;
-	opacity: 1;
-	white-space: nowrap;
-	-khtml-opacity: 1;
-	text-shadow: 0 0 0 transparent, -1px -1px 0 transparent, 1px -1px 0 transparent, -1px 1px 0 transparent, 1px 1px 0 transparent;
-	border: 1px solid #B9B9B9;
-	-moz-box-shadow: 2px 2px 2px #d8d8d8;
-	border-radius: 3px;
-	-ms-user-select: none;
-	-webkit-border-radius: 3px;
-	-webkit-box-shadow: 2px 2px 2px #d8d8d8;
-	-webkit-linear-gradient(top,#3d3d3d 0%,#272727 100%);
-	-pie-background: linear-gradient(#3d3d3d 0%, #272727 100%) #3d3d3d;
-	background-color: #3d3d3d;
-	behavior: url(PIE.htc);
-	-webkit-user-select: none;
-	display: inline-block;
-	-o-box-shadow: 2px 2px 2px #d8d8d8;
-	vertical-align: middle;
 	outline-color: #F9F9F9;
 	text-transform: uppercase;
-	min-width: 90px;
-	-khtml-user-select: none;
 	background: linear-gradient(to bottom,	#3d3d3d 0%, #272727 100%);
-	user-select: none;
-	-moz-user-select: none;
-	font-family: "Signika-Semibold";
-	filter: alpha(opacity=100);
-	
-	
-	/**/
 	cursor: pointer;
 	color: #ffffff;
 	padding: 5px 10px;
 	outline-color: #F9F9F9;
 	min-width: 90px;
 	border: 1px solid #B9B9B9;
-	text-transform: uppercase;
 	font-family: "Signika-Semibold";
 	text-shadow:0 0 0 transparent, -1px -1px 0 transparent, 1px -1px 0 transparent, -1px 1px 0 transparent, 1px 1px 0 transparent;
 	font-size: 75%;
@@ -95,9 +62,7 @@ button.bonita_form_button {
 	-moz-border-radius: 3px;
 	-o-border-radius: 3px;
 	border-radius: 3px;
-	behavior: url(PIE.htc);
-	height: @height;
-	line-height: @height !important;
+	line-height: 25px !important;
 	text-decoration: none;
 	vertical-align: middle;
 	text-align: center;
@@ -113,6 +78,7 @@ button.bonita_form_button {
 	-ms-user-select: none;
 	user-select: none;
 	background-color: #3d3d3d; /* Old browsers */ 
+	-webkit-linear-gradient(top,#3d3d3d 0%,#272727 100%);
 	background: -moz-linear-gradient(top, #3d3d3d 0%, #272727 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #3d3d3d), color-stop(100%, #272727)); /* Chrome,Safari4+ */
 	background: -webkit-linear-gradient(top,	#3d3d3d 0%,#272727 100%); /* Chrome10+,Safari5.1+ */
@@ -129,61 +95,8 @@ button.bonita_form_button {
 	-webkit-box-shadow: 2px 2px 2px #d8d8d8;
 	-moz-box-shadow: 2px 2px 2px #d8d8d8;
 	-o-box-shadow: 2px 2px 2px #d8d8d8;
-	
-	
-	
-}
-/*
-
-	color: #ffffff;
-	padding: 5px 10px;
-	outline-color: #F9F9F9;
-	min-width: 90px;
-	border: 1px solid #B9B9B9;
-	text-transform: uppercase;
-	font-family: "Signika-Semibold";
-	text-shadow:0 0 0 transparent, -1px -1px 0 transparent, 1px -1px 0 transparent, -1px 1px 0 transparent, 1px 1px 0 transparent;
-	font-size: 75%;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	-o-border-radius: 3px;
-	border-radius: 3px;
 	behavior: url(PIE.htc);
-	height: @height;
-	line-height: @height !important;
-	text-decoration: none;
-	vertical-align: middle;
-	text-align: center;
-	display: -moz-inline-stack;
-	display: inline-block;
-	zoom: 1;
-	*display: inline;
-	white-space: nowrap;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	background-color: @c1;  Old browsers 
-	background: -moz-linear-gradient(top, #3d3d3d 0%, #272727 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #3d3d3d), color-stop(100%, #272727)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,	#3d3d3d 0%,#272727 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,	#3d3d3d 0%, #272727 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,	#3d3d3d 0%,#272727 100%); /* IE10+ */
-	background: linear-gradient(to bottom,	#3d3d3d 0%, #272727 100%); /* W3C */
-	-pie-background: linear-gradient(#3d3d3d 0%, #272727 100%) #3d3d3d;
-	filter:alpha(opacity=100);
-	-moz-opacity: 1;
-	-khtml-opacity: 1;
-	opacity: 1;
-	cursor: pointer;
-	-webkit-box-shadow: 2px 2px 2px #d8d8d8;
-	-moz-box-shadow: 2px 2px 2px #d8d8d8;
-	-o-box-shadow: 2px 2px 2px #d8d8d8;
-
-
-*/
+}
 button.bonita_form_button * {
 	vertical-align: middle;
 }
@@ -192,7 +105,21 @@ button.bonita_form_button + button.bonita_form_button {
 	margin-left: 5px;
 }
 
-input.bonita_form_field, select.bonita_form_field, select.bonita_datetime_list_item {
+
+.bonita_form_field.list_container select{
+	width: 110%;
+	background: transparent;
+	-webkit-appearance: none;
+	border: 0;
+	border-radius: 0;
+	font-family: Signika-Regular;
+	font-size: 100%;
+}
+.bonita_form_field.list_container{
+	background: url(../images/form-select.png) no-repeat right center;
+}
+
+input.bonita_form_field, select.bonita_form_field, select.bonita_datetime_list_item, .bonita_form_field.list_container {
 	box-shadow: 0 0 0 #cccccc;
 	-moz-border-radius: 5px;
 	-o-border-radius: 5px;
@@ -477,6 +404,10 @@ div#bonita-object-area-description {
 	padding: 30px;
 }
 
+.gwt-SuggestBoxPopup .item.item-selected{
+	background: #b20706;
+	color: #ffffff;
+}
 /* ------------------------------------------------------------------------- */
 /* Date picker bonita_forms.css override
 /* ------------------------------------------------------------------------- */
@@ -629,7 +560,107 @@ div#bonita-object-area-from {
 
 .bonita_table_container {
 }
-
-.bonita-body {
+.bonita_form_field_sub_title{
+	margin-left: 0;	
+}
+.bonita_form_popup_tooltip .popupContent{
+	border: 1px solid #B9B9B9;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+	padding: 5px;
+	background: : #ffffff;
+	margin-left: 10px
 }
 
+
+.bonita_form_popup_tooltip .popupContent:after,
+.bonita_form_popup_tooltip .popupContent:before {
+  right: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  display: block;
+  margin-top: 0px;
+  border-width: 5px 10px 5px 0;
+  top: 4px;
+}
+.bonita_form_popup_tooltip .popupContent:after {
+  border-color: rgba(255, 255, 15, 0) #ffffff rgba(255, 255, 15, 0) rgba(255, 255, 15, 0);
+  left: 2px;
+}
+.bonita_form_popup_tooltip .popupContent:before {
+  border-color: rgba(220, 220, 220, 0) #c2c2c2 rgba(220, 220, 220, 0) rgba(220, 220, 220, 0);
+  left: 0px;
+}
+
+
+.details_panel .comments .table .tbody .tr .td_content:after {
+  border-color: rgba(255, 255, 15, 0) #ffffff rgba(255, 255, 15, 0) rgba(255, 255, 15, 0);
+}
+.details_panel .comments .table .tbody .tr .td_content:before {
+  border-color: rgba(220, 220, 220, 0) #c2c2c2 rgba(220, 220, 220, 0) rgba(220, 220, 220, 0);
+}
+
+
+
+.bonita_form_field_validation_message{
+	margin-left: 0;
+}
+
+.bonita_form_radio {
+	position: relative;
+}
+.bonita_form_radio input[type="radio"],
+.bonita_form_radio input[type="checkbox"] {
+	width: 1px;
+	height: 1px;
+	vertical-align: middle;
+	position: absolute;
+	left: 5px;
+	top: 50%;
+	margin: -8px 0 0 0;
+	z-index: 0;
+	line-height: 25px;
+}
+.bonita_form_radio .custom-radio, .bonita_form_radio .custom-checkbox{
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	line-height: 25px;
+}
+
+.bonita_form_radio .custom-checkbox label , 
+.bonita_form_radio .custom-radio label {
+	cursor: pointer;
+	display: block;
+	left: 0;
+	margin: 0;
+	position: relative;
+	top: 0;
+	padding-left: 30px;
+}
+
+
+.bonita_form_radio .custom-checkbox label {
+	background: url("../images/form-checkbox.png") transparent no-repeat 4px 50%;
+}
+.bonita_form_radio .custom-checkbox label.checked {
+	background: url("../images/form-checkbox-checked.png") transparent no-repeat 4px 50%;
+}
+.bonita_form_radio .custom-radio label {
+	background: url("../images/form-radio.png") transparent no-repeat 4px 50%;
+}
+.bonita_form_radio .custom-radio label.checked {
+	background: url("../images/form-radio-selected.png") transparent no-repeat 4px 50%;
+}
+.bonita_form_radio{
+	margin-bottom: 0;
+}
+select.bonita_form_field[multiple]{
+	height: auto;
+}
