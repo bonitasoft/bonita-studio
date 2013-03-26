@@ -46,6 +46,7 @@ import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
 import org.bonitasoft.studio.model.form.NextFormButton;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
+import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -477,7 +478,7 @@ public class GroovyUtil {
 		 if(widget instanceof Duplicable && ((Duplicable) widget).isDuplicate()){
 			 type = List.class.getName();
 		 }else{
-			 if( widget.getReturnTypeModifier() != null ){
+			 if(widget instanceof TextFormField && widget.getReturnTypeModifier() != null ){
 				 type =  widget.getReturnTypeModifier() ;
 			 }else{
 				 type =  widget.getAssociatedReturnType() ;
