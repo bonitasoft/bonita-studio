@@ -36,62 +36,66 @@ import org.eclipse.ui.internal.WorkbenchPlugin;
  */
 public class ExportBarWizard extends Wizard {
 
-    protected ExportBarWizardPage page;
+	protected ExportBarWizardPage page;
 
-    public ExportBarWizard(){
-        setDefaultPageImageDescriptor(Pics.getWizban()) ;
-        setNeedsProgressMonitor(true) ;
-        IDialogSettings workbenchSettings = WorkbenchPlugin.getDefault()
-                .getDialogSettings();
-        IDialogSettings wizardSettings = workbenchSettings
-                .getSection("ExportBarWizard"); //$NON-NLS-1$
-        if (wizardSettings == null) {
-            wizardSettings = workbenchSettings.addNewSection("ExportBarWizard"); //$NON-NLS-1$
-        }
-        setDialogSettings(wizardSettings);
-        setWindowTitle(Messages.buildTitle);
-    }
-
-    @Override
-    public void addPages() {
-        page = new ExportBarWizardPage() ;
-        addPage(page) ;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
-    @Override
-    public boolean performFinish() {
-        try {
-            IStatus status = page.finish() ;
-            if(status.getSeverity() == IStatus.CANCEL){
-            	return false;
-            }
-            if(statusContainsError(status)){
-                String message = status.getMessage();
-                if(message == null || message.isEmpty()){
-                    message = Messages.exportErrorOccuredMsg ;
-                }
-                new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.exportErrorOccured, message, status, IStatus.ERROR).open() ;
-            }else{
-                MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.exportSuccessTitle, Messages.exportSuccessMsg) ;
-            }
-            return !statusContainsError(status);
-        } catch (InvocationTargetException e) {
-            BonitaStudioLog.error(e);
-        } catch (InterruptedException e) {
-            BonitaStudioLog.error(e);
-        }
-        return false;
-    }
-    
-    private boolean statusContainsError(IStatus validationStatus) {
-		if(validationStatus != null){
-			for(IStatus s : validationStatus.getChildren()){
-				if(s.getSeverity() == IStatus.WARNING || s.getSeverity() == IStatus.ERROR){
-					return true;
+	public ExportBarWizard(){
+		setDefaultPageImageDescriptor(Pics.getWizban()) ;
+		setNeedsProgressMonitor(true) ;
+		IDialogSettings workbenchSettings = WorkbenchPlugin.getDefault()
+				.getDialogSettings();
+		IDialogSettings wizardSettings = workbenchSettings
+				.getSection("ExportBarWizard"); //$NON-NLS-1$
+				if (wizardSettings == null) {
+					wizardSettings = workbenchSettings.addNewSection("ExportBarWizard"); //$NON-NLS-1$
 				}
+				setDialogSettings(wizardSettings);
+				setWindowTitle(Messages.buildTitle);
+	}
+
+	@Override
+	public void addPages() {
+		page = new ExportBarWizardPage() ;
+		addPage(page) ;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
+	 */
+	@Override
+	public boolean performFinish() {
+		try {
+			IStatus status = page.finish() ;
+			if(status.getSeverity() == IStatus.CANCEL){
+				return false;
+			}
+			if(statusContainsError(status)){
+				String message = status.getMessage();
+				if(message == null || message.isEmpty()){
+					message = Messages.exportErrorOccuredMsg ;
+				}
+				new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.exportErrorOccured, message, status, IStatus.ERROR).open() ;
+			}else{
+				MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.exportSuccessTitle, Messages.exportSuccessMsg) ;
+			}
+			return !statusContainsError(status);
+		} catch (InvocationTargetException e) {
+			BonitaStudioLog.error(e);
+		} catch (InterruptedException e) {
+			BonitaStudioLog.error(e);
+		}
+		return false;
+	}
+
+	private boolean statusContainsError(IStatus validationStatus) {
+		if(validationStatus != null){
+			if(validationStatus.getChildren().length > 0){
+				for(IStatus s : validationStatus.getChildren()){
+					if(s.getSeverity() == IStatus.WARNING || s.getSeverity() == IStatus.ERROR){
+						return true;
+					}
+				}
+			}else{
+				return validationStatus.getSeverity() == IStatus.WARNING || validationStatus.getSeverity() == IStatus.ERROR;
 			}
 		}
 		return false;

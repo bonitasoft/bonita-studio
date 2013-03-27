@@ -93,7 +93,7 @@ public class ExportBarOperation  {
             }
 
             status = exportBar(process, outputFile,monitor);
-            if(status.getSeverity() != IStatus.OK){
+            if(!status.isOK()){
                 return status ;
             }
         }
