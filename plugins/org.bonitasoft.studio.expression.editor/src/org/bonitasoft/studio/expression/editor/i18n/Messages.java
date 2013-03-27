@@ -85,8 +85,6 @@ public class Messages extends NLS {
     public static String comparisonType;
 	public static String comparisonSupportedOperators;
 	public static String automaticResolution;
-
-
 	public static String expressionTypeToolTip;
 
     private Messages() {

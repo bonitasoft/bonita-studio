@@ -62,6 +62,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 
 
 /**
@@ -82,23 +83,29 @@ public class PatternExpressionViewer extends Composite {
 
 	public PatternExpressionViewer(Composite parent, int style) {
 		super(parent, style);
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(10, 20, 0, 0).create()) ;
+		setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(10, 25, 0, 0).create()) ;
+	
 		createTextViewer();
+	
 	}
 
 
+	
 	protected void createTextViewer() {
+		
+		
 		viewer = new TextViewer(this, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL) ;
 		viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-		final ControlDecoration helpDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT);
-		helpDecoration.hide();
+		final ControlDecoration helpDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT,this);
+		//helpDecoration.hide();
 		helpDecoration.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
 		helpDecoration.setDescriptionText(Messages.patternViewerHelp);
 		helpDecoration.setMarginWidth(2);
-		helpDecoration.setShowOnlyOnFocus(true);
+		//helpDecoration.setShowHover(false);
+		//helpDecoration.setShowOnlyOnFocus(true);
 
-		hintDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.LEFT);
+		hintDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.LEFT,this);
 		hintDecoration.setImage(Pics.getImage(PicsConstants.hint));
 		hintDecoration.setMarginWidth(2);
 		hintDecoration.setShowHover(true);
