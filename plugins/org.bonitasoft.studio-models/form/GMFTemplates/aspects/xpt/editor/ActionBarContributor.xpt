@@ -21,6 +21,7 @@
 	«EXPAND xpt::Common::generatedMemberComment»
 	public void init(org.eclipse.ui.IActionBars bars, org.eclipse.ui.IWorkbenchPage page) {
 		super.init(bars, page);
+		bars.getMenuManager().removeAll();
 	}
 «ENDAROUND»
 
