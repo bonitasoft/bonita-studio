@@ -177,7 +177,11 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         createOperatorEditorFor(section, operatorType, operator, exp) ;
 
         relayout() ;
-        enableOKButton(false) ;
+        if(!operatorType.equals(ExpressionConstants.ASSIGNMENT_OPERATOR)){
+        	enableOKButton(false) ;
+        }else{
+        	enableOKButton(true) ;
+        }
     }
 
     private void relayout() {

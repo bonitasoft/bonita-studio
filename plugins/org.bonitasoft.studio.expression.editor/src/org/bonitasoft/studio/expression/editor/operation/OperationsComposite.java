@@ -296,12 +296,12 @@ public class OperationsComposite extends Composite {
 						Expression exp = (Expression) storageComboViewer
 								.getElementAt(i);
 						if (!exp.getReferencedElements().isEmpty()) {
-							
+
 							EObject eObject = exp.getReferencedElements()
 									.get(0);
 							if (originalEObject instanceof SearchIndex){
 								if (modelExpression.getName().equals(exp.getName())){
-											return exp;
+									return exp;
 								}
 							} else {
 								if (originalEObject instanceof Element
@@ -357,7 +357,7 @@ public class OperationsComposite extends Composite {
 		};
 		actionExpression.addSelectionChangedListener(updateExpressionListener);
 		actionExpression.addExpressionEditorChangedListener(updateExpressionListener);
-		
+
 
 		storageComboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -367,17 +367,19 @@ public class OperationsComposite extends Composite {
 						.getSelection()).getFirstElement();
 				if (selectedExpression != null) {
 					Operator operator = action.getOperator();
-					if (getEditingDomain() == null) {
-						operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
-					} else {
-						getEditingDomain()
-						.getCommandStack()
-						.execute(
-								SetCommand
-								.create(getEditingDomain(),
-										operator,
-										ExpressionPackage.Literals.OPERATOR__TYPE,
-										ExpressionConstants.ASSIGNMENT_OPERATOR));
+					if(operator.getType() == null){
+						if (getEditingDomain() == null) {
+							operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+						} else {
+							getEditingDomain()
+							.getCommandStack()
+							.execute(
+									SetCommand
+									.create(getEditingDomain(),
+											operator,
+											ExpressionPackage.Literals.OPERATOR__TYPE,
+											ExpressionConstants.ASSIGNMENT_OPERATOR));
+						}
 					}
 					final OperatorLabelProvider labelProvider = new OperatorLabelProvider();
 					operatorLink.setText("<A>"
@@ -397,18 +399,53 @@ public class OperationsComposite extends Composite {
 				}
 			}
 		});
+		final OperatorLabelProvider labelProvider = new OperatorLabelProvider();
+		operatorLink.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				OperatorSelectionDialog dialog = new OperatorSelectionDialog(
+						Display.getDefault().getActiveShell(), action);
+				if (dialog.open() == Dialog.OK) {
+					Operator newOperator = dialog.getOperator();
 
+					if (getEditingDomain() == null) {
+						action.setOperator(newOperator);
+					} else {
+						getEditingDomain()
+						.getCommandStack()
+						.execute(
+								SetCommand
+								.create(getEditingDomain(),
+										action,
+										ExpressionPackage.Literals.OPERATION__OPERATOR,
+										newOperator));
+					}
 
-		
+					operatorLink.setText("<A>"
+							+ labelProvider.getText(newOperator) + "</A>");
+					if (!newOperator.getType().equals(
+							ExpressionConstants.ASSIGNMENT_OPERATOR)) {
+						operatorLink.setToolTipText(newOperator
+								.getExpression());
+					}
+					if(actionExpressionBinding != null){
+						actionExpressionBinding.validateTargetToModel();
+						IStatus status = (IStatus) actionExpressionBinding.getValidationStatus().getValue();
+						actionExpression.setMessage(status.getMessage(),status.getSeverity());
+					}
+					operatorLink.getParent().layout(true, true);
+				}
+			}
+		});
+
 		lineBindings.add(storageBinding);
-		
 		bindings.add(lineBindings);
-		
+
 		//validate line
 		actionExpressionBinding.validateTargetToModel();
 		IStatus status = (IStatus) actionExpressionBinding.getValidationStatus().getValue();
 		actionExpression.setMessage(status.getMessage(),status.getSeverity());
-		
+
 	}
 
 	protected Button createRemoveButton() {
@@ -444,39 +481,6 @@ public class OperationsComposite extends Composite {
 				.equals(ExpressionConstants.ASSIGNMENT_OPERATOR)) {
 			operatorLabel.setToolTipText(action.getOperator().getExpression());
 		}
-
-		operatorLabel.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				OperatorSelectionDialog dialog = new OperatorSelectionDialog(
-						Display.getDefault().getActiveShell(), action);
-				if (dialog.open() == Dialog.OK) {
-					Operator newOperator = dialog.getOperator();
-
-					if (getEditingDomain() == null) {
-						action.setOperator(newOperator);
-					} else {
-						getEditingDomain()
-						.getCommandStack()
-						.execute(
-								SetCommand
-								.create(getEditingDomain(),
-										action,
-										ExpressionPackage.Literals.OPERATION__OPERATOR,
-										newOperator));
-					}
-
-					operatorLabel.setText("<A>"
-							+ labelProvider.getText(newOperator) + "</A>");
-					if (!newOperator.getType().equals(
-							ExpressionConstants.ASSIGNMENT_OPERATOR)) {
-						operatorLabel.setToolTipText(newOperator
-								.getExpression());
-					}
-					operatorLabel.getParent().layout(true, true);
-				}
-			}
-		});
 
 		return operatorLabel;
 	}
