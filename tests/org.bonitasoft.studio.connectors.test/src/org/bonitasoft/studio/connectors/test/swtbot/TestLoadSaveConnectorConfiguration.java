@@ -20,19 +20,20 @@ package org.bonitasoft.studio.connectors.test.swtbot;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.filestore.DefinitionConfigurationFileStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * @author aurelie
+ * @author Aurelie Zara
  *
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
@@ -41,7 +42,6 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 	@Before
 	public void initTest() {
 		FileActionDialog.setDisablePopup(true);
-		
 	}
 
 
@@ -70,7 +70,7 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 	@Test
 	public void testSaveLoadConnectorConfiguration(){
 		ConnectorConfRepositoryStore store = (ConnectorConfRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
-		int initialSize = store.getChildren().size();
+		final int initialSize = store.getChildren().size();
 		final String connectorDefId="testLoadConnectorDefinition";
 		final String version = "1.0.0";
 		final String name = "testLoadConnector";
@@ -114,8 +114,20 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 		bot.tree().setFocus();
 		bot.tree().getTreeItem(saveName).select();
 		bot.button("Remove").click();
+		bot.waitUntil(new ICondition() {
+			
+			public boolean test() throws Exception {
+				return bot.tree().getAllItems().length == initialSize;
+			}
+			
+			public void init(SWTBot bot) {}
+			
+			public String getFailureMessage() {
+				return "Fail to delete configuration";
+			}
+		});
 		bot.button(IDialogConstants.CANCEL_LABEL).click();
-		bot.button(IDialogConstants.FINISH_LABEL).click();
+		bot.button(IDialogConstants.CANCEL_LABEL).click();
 		bot.saveAllEditors();
 		assertEquals("invalid number of configuration",initialSize,store.getChildren().size());
 	}
