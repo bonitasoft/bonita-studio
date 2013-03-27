@@ -94,16 +94,17 @@ public class XSDRepositoryStore extends AbstractEMFRepositoryStore<XSDFileStore>
 
     public IStatus isXSDFileValid(File file) {
         Resource resource = null ;
-        try {
+        final String filePath = file.getAbsolutePath();
+		try {
             XSDResourceFactoryImpl factory = new XSDResourceFactoryImpl();
-            resource = factory.createResource(URI.createFileURI(file.getAbsolutePath()));
+            resource = factory.createResource(URI.createFileURI(filePath));
             resource.load(Collections.EMPTY_MAP);
             XSDSchema schema = (XSDSchema) resource.getContents().get(0);
             if(schema.getTargetNamespace() == null){
                 return new Status(IStatus.ERROR, XMLPlugin.PLUGIN_ID, Messages.missingATargetNamespace);
             }
         } catch (Exception ex) {
-            return new Status(IStatus.ERROR, XMLPlugin.PLUGIN_ID, ex.getMessage(),ex);
+            return new Status(IStatus.ERROR, XMLPlugin.PLUGIN_ID, "An xsd file seems corrupted in your workspace ("+filePath+").\n"+ex.getMessage(),ex);
         } finally{
             if(resource != null){
                 resource.unload() ;
