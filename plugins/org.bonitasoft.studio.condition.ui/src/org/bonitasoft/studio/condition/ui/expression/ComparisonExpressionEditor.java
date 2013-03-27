@@ -127,6 +127,10 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 		Composite header = new Composite(parent,SWT.NONE);
 		header.setLayout(GridLayoutFactory.fillDefaults().create());
 		header.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		final Label autocompleteMessage = new Label(header,SWT.WRAP);
+		autocompleteMessage.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		autocompleteMessage.setText(Messages.autocompleteMessage);
+		autocompleteMessage.setFont(BonitaStudioFontRegistry.getItalicFont());
 		final Label supportedOperators = new Label(header,SWT.WRAP);
 		supportedOperators.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		supportedOperators.setText(Messages.comparisonSupportedOperators);

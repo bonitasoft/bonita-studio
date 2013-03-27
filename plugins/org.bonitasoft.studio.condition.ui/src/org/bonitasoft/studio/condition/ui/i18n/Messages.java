@@ -27,6 +27,7 @@ public class Messages extends NLS{
 	public static String remove;
 	public static String returnType;
 	public static String returnTypeIsMandatory;
+	public static String autocompleteMessage;
 
 	static{
 		NLS.initializeMessages("messages", Messages.class) ;
