@@ -172,7 +172,6 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
             }
         }) ;
         context.bindValue(WidgetProperties.text().observe(connectorFailsCombo), EMFObservables.observeValue(connector, ProcessPackage.Literals.CONNECTOR__THROW_ERROR_EVENT),throwEventStrategyTarget,throwEventStrategyModel) ;
-        connectorFailsCombo.select(0);
 
 
         Label namedErrorEvent = new Label(composite, SWT.NONE);
