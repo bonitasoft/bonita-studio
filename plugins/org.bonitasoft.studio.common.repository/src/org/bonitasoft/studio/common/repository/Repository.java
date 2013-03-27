@@ -186,8 +186,10 @@ public class Repository implements IRepository {
 		} catch (CoreException e) {
 			BonitaStudioLog.error(e) ;
 		}
-		stores.clear();
-		stores = null; 
+		if(stores != null){
+			stores.clear();
+			stores = null; 
+		}
 	}
 
 
