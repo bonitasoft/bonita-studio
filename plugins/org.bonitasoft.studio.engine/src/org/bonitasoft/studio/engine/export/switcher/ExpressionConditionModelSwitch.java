@@ -60,7 +60,11 @@ public class ExpressionConditionModelSwitch extends ConditionModelSwitch<Express
 	
 	@Override
 	public Expression caseExpression_String(Expression_String object) {
-		return EngineExpressionUtil.createConstantExpression(object.getValue(),object.getValue(),String.class.getName());
+		String value = object.getValue();
+		if (value==null || value.isEmpty()){
+			return EngineExpressionUtil.createConstantExpression("<empty-string>","",String.class.getName());
+		}
+		return EngineExpressionUtil.createConstantExpression(value,value,String.class.getName());
 	}
 	
 	@Override
