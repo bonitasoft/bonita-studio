@@ -45,7 +45,7 @@ public class ResetServerCommand extends AbstractHandler {
             @Override
             public void run(IProgressMonitor monitor)
                     throws InvocationTargetException, InterruptedException {
-                monitor.beginTask(Messages.resetServer,IProgressMonitor.UNKNOWN);
+                monitor.beginTask(Messages.restartingWebServer,IProgressMonitor.UNKNOWN);
                 BOSWebServerManager.getInstance().resetServer(monitor);
             }
         };

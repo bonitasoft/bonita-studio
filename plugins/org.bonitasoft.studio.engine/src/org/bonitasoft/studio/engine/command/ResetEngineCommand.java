@@ -54,7 +54,7 @@ public class ResetEngineCommand extends AbstractHandler {
 
             @Override
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask(Messages.resetEngine, IProgressMonitor.UNKNOWN);
+                monitor.beginTask(Messages.resetingEngine, IProgressMonitor.UNKNOWN);
                 APISession session = null;
 				try {
 					session = BOSEngineManager.getInstance().loginDefaultTenant(monitor);

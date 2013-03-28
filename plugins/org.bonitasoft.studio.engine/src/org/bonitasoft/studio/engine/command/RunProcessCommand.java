@@ -171,7 +171,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 			@Override
 			public void run(IProgressMonitor monitor) throws InvocationTargetException,
 			InterruptedException {
-				monitor.beginTask(Messages.run, IProgressMonitor.UNKNOWN) ;
+				monitor.beginTask(Messages.running, IProgressMonitor.UNKNOWN) ;
 				final DeployProcessOperation operation = new DeployProcessOperation() ;
 				operation.setConfigurationId(configurationId) ;
 				operation.setObjectToExclude(excludedObject) ;
