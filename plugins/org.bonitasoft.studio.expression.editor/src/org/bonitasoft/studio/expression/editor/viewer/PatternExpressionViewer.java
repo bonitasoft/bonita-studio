@@ -38,7 +38,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.Dialog;
@@ -46,11 +45,8 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
@@ -62,7 +58,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 
 
 /**
@@ -92,18 +87,13 @@ public class PatternExpressionViewer extends Composite {
 
 	
 	protected void createTextViewer() {
-		
-		
 		viewer = new TextViewer(this, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL) ;
 		viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
 		final ControlDecoration helpDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT,this);
-		//helpDecoration.hide();
 		helpDecoration.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
 		helpDecoration.setDescriptionText(Messages.patternViewerHelp);
 		helpDecoration.setMarginWidth(2);
-		//helpDecoration.setShowHover(false);
-		//helpDecoration.setShowOnlyOnFocus(true);
 
 		hintDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.LEFT,this);
 		hintDecoration.setImage(Pics.getImage(PicsConstants.hint));
@@ -268,14 +258,6 @@ public class PatternExpressionViewer extends Composite {
 				}
 			}
 		}
-		Collections.sort(filteredExpressions, new Comparator<Expression>() {
-
-			@Override
-			public int compare(Expression exp0, Expression exp1) {
-				return -Integer.valueOf(exp0.getName().length()).compareTo(Integer.valueOf(exp1.getName().length()));
-			}
-
-		});
 		return filteredExpressions ;
 	}
 
