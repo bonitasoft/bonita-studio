@@ -1,5 +1,6 @@
 package org.bonitasoft.studio.test.swtbot.suite;
 
+import org.bonitasoft.expressions.test.TestPatternExpressionViewer;
 import org.bonitasoft.studio.actors.tests.SWTbot.ActorDefinitionTranslationsTest;
 import org.bonitasoft.studio.actors.tests.SWTbot.ActorFilterDefinitionTest;
 import org.bonitasoft.studio.actors.tests.SWTbot.ActorFilterDefinitionWizardPageTest;
@@ -68,6 +69,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     TestBugsSWTBot.class,
     DiagramTests.class,
+    TestPatternExpressionViewer.class,
     TestLoadSaveConnectorConfiguration.class,
     TestConditionExpression.class,
     TestConfigurationDialog.class,

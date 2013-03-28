@@ -26,6 +26,7 @@ import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 /**
  * @author Aur�lie Zara
@@ -220,16 +221,19 @@ public class SWTBotConnectorTestUtil {
      * @param dataName
      * @param version
      */
-    public static void addConnectorToPool(SWTBot bot,String connectorDefinitionId, String name,
-            String dataName, String version) {
+    public static void addConnectorToPool(SWTBot bot,String connectorDefinitionLabel,String version,String categoryLabel, String connectorName) {
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
         bot.button("Add...").click();
         Assert.assertFalse(IDialogConstants.NEXT_LABEL + " should be disabled", bot
                 .button(IDialogConstants.NEXT_LABEL).isEnabled());
         Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
                 .button(IDialogConstants.FINISH_LABEL).isEnabled());
-        bot.tree().expandNode("Uncategorized")
-        .select(connectorDefinitionId + " (" + version + ")");
+       SWTBotTreeItem categoryItem = bot.tree().expandNode(categoryLabel);
+       for(String node : categoryItem.getNodes()){
+    	   if(node.startsWith(connectorDefinitionLabel + " (" + version + ")")){
+    		   categoryItem.select(node);
+    	   }
+       }
         Assert.assertTrue(IDialogConstants.NEXT_LABEL + " should be disabled", bot
                 .button(IDialogConstants.NEXT_LABEL).isEnabled());
         Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
@@ -237,16 +241,8 @@ public class SWTBotConnectorTestUtil {
         bot.button(IDialogConstants.NEXT_LABEL).click();
         Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
                 .button(IDialogConstants.FINISH_LABEL).isEnabled());
-        bot.textWithLabel("Name *").setText(name);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
-        bot.button(IDialogConstants.NEXT_LABEL).click();
-        bot.textWithLabel("text").setText("hello world");
-        bot.sleep(1000); // Due to delayed observable on databinding
-        bot.button(IDialogConstants.NEXT_LABEL).click();
-        if (dataName!=null && !dataName.isEmpty()){
-        	bot.comboBox().setSelection(dataName + " (java.lang.String)");
-        }
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+        bot.textWithLabel("Name *").setText(connectorName);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)),5000);
     }
     
 }

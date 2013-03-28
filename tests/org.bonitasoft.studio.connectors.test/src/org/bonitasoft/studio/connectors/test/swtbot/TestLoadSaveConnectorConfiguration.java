@@ -81,7 +81,15 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 		SWTBotTestUtil.createNewDiagram(bot);
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
 		createData(dataName);
-		SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorDefId, name, dataName, version);
+		SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorDefId,version, "Uncategorized",name);
+        bot.button(IDialogConstants.NEXT_LABEL).click();
+        bot.textWithLabel("text").setText("hello world");
+        bot.sleep(1000); // Due to delayed observable on databinding
+        bot.button(IDialogConstants.NEXT_LABEL).click();
+        if (dataName!=null && !dataName.isEmpty()){
+        	bot.comboBox().setSelection(dataName + " (java.lang.String)");
+        }
+        bot.button(IDialogConstants.FINISH_LABEL).click();
 		bot.table().select(
 				name + " -- " + connectorDefId + " (" + version
 				+ ") -- ON_FINISH");
