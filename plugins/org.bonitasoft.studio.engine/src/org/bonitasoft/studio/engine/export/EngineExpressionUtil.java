@@ -446,7 +446,8 @@ public class EngineExpressionUtil {
 							patternExpressionContent.append(dep.getName());
 							patternExpressionContent.append("}");
 						}else{
-							patternExpressionContent.append(simpleExpression.getContent().substring(i, index.getOffset() + index.getLength()));
+							patternExpressionContent.append(simpleExpression.getContent().substring(i, index.getOffset()-1));
+							patternExpressionContent.append(simpleExpression.getContent().substring(index.getOffset(),index.getOffset()+index.getLength()));
 						}
 						i = index.getOffset() + index.getLength();
 						if(i < lenght){
