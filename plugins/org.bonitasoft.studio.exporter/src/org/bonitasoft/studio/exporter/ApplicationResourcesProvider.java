@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -209,11 +210,11 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 			if(firstCall){
 				baseFolder2 = baseFolder;
 			}else{
-				baseFolder2 = baseFolder + file.getName() + "/";
+				baseFolder2 = baseFolder + URLEncoder.encode(file.getName(),"UTF-8") + "/";
 			}
 
 			for (File f : file.listFiles()) {
-				replaceUrl(f, f.isDirectory()?baseURI.resolve(f.getName()+'/'):baseURI, baseFolder2,false, processName, processVersion, timestamp);
+				replaceUrl(f, f.isDirectory()?baseURI.resolve(URLEncoder.encode(f.getName(), "UTF-8")+'/'):baseURI, baseFolder2,false, processName, processVersion, timestamp);
 			}
 		} else if (file.getName().endsWith(".html") || file.getName().endsWith(".htm") || file.getName().endsWith(".xhtml") || file.getName().endsWith(".css")
 				|| file.getName().endsWith(".jsp")) {

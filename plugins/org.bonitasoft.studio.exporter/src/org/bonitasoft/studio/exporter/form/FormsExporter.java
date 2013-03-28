@@ -873,7 +873,10 @@ public class FormsExporter {
 						if (isAnApplicationResource(process, path)) {
 							builder.addInitialValueExpression(path.getName(), ExporterTools.toApplicationResourceURL("application/" + path.getContent().trim(),
 									process.getName(), process.getVersion(), timestamp), ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
-						} else {
+						} else if(isARootResource(process, path)){
+							builder.addInitialValueExpression(path.getName(), ExporterTools.toApplicationResourceURL(path.getContent().trim(),
+									process.getName(), process.getVersion(), timestamp), ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
+						}else {
 							addInitialValueExpression(builder, path);
 						}
 					} else {
@@ -905,16 +908,50 @@ public class FormsExporter {
 	//        }
 	//    }
 
+	private boolean isARootResource(AbstractProcess process, Expression path) {
+		final ResourceTreeContentProvider provider = new ResourceTreeContentProvider();
+		provider.inputChanged(null, null, process);
+		final Object[] initial = provider.getElements(process);
+		Object[] currentChildren = provider.getChildren(initial[0]);
+		StringTokenizer tokenizer = new StringTokenizer(path.getContent(), "/");
+		Object temp = null;
+		while (tokenizer.hasMoreElements()) {
+			final String item = tokenizer.nextToken();
+			for (int i = 0; i < currentChildren.length; i++) {
+				temp = currentChildren[i];
+				if (temp instanceof File) {
+					if (((File) temp).getName().equals(item)) {
+						if (!((File) temp).isDirectory()) {
+							if(!tokenizer.hasMoreElements()){
+								return true;
+							}
+						}
+					}
+				} else if (temp instanceof ResourceFile) {
+					if (((ResourceFile) temp).getPath().endsWith("/" + item)) {
+						if(!tokenizer.hasMoreElements()){
+							return true;
+						}
+					}
+				} else if (temp instanceof ResourceFolder) {
+					if (((ResourceFolder) temp).getPath().endsWith("/" + item)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	private boolean isAnApplicationResource(final AbstractProcess process, final Expression path) {
 		final ResourceTreeContentProvider provider = new ResourceTreeContentProvider();
 		provider.inputChanged(null, null, process);
 		final Object[] initial = provider.getElements(process);
 		Object[] currentChildren = provider.getChildren(initial[0]);
-		final StringTokenizer tokenizer = new StringTokenizer(path.getContent(), "/");
+		StringTokenizer tokenizer = new StringTokenizer(path.getContent(), "/");
 		Object temp = null;
 		while (tokenizer.hasMoreElements()) {
 			final String item = tokenizer.nextToken();
-
 			for (int i = 0; i < currentChildren.length; i++) {
 				temp = currentChildren[i];
 				if (temp instanceof File) {

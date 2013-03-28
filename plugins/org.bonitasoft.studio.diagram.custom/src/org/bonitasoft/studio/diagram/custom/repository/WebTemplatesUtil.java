@@ -334,9 +334,17 @@ public class WebTemplatesUtil {
         if (temp instanceof String) {
             return ((String) temp).startsWith(store.getResource().getName());
         } else if (temp instanceof ResourceFolder) {
-            return ((ResourceFolder) temp).getPath().startsWith(store.getResource().getName());
+        	 if(((ResourceFolder) temp).getPath().startsWith(store.getResource().getName())){
+             	return true;
+             }else if(((ResourceFolder) temp).eContainer() instanceof Pool){
+             	return true;
+             }
         } else if (temp instanceof ResourceFile) {
-            return ((ResourceFile) temp).getPath().startsWith(store.getResource().getName());
+            if(((ResourceFile) temp).getPath().startsWith(store.getResource().getName())){
+            	return true;
+            }else if(((ResourceFile) temp).eContainer() instanceof Pool){
+            	return true;
+            }
         } else if (temp instanceof File) {
             File parent = ((File) temp).getParentFile();
             File userFolder = store.getResource().getLocation().toFile();
