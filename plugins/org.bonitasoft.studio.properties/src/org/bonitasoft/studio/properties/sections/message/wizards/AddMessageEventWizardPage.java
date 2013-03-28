@@ -219,7 +219,10 @@ public class AddMessageEventWizardPage extends WizardPage implements IWizardPage
         ecv.setRemoveRowLabel(Messages.removeCorrelation);
         final List<ViewerFilter> filters = new ArrayList<ViewerFilter>(2);
         filters.add(new AvailableExpressionTypeFilter(new String[]{ ExpressionConstants.CONSTANT_TYPE})) ;
-        filters.add(null); //Second column has no filter
+        filters.add(new AvailableExpressionTypeFilter(new String[]{ ExpressionConstants.CONSTANT_TYPE,
+        		ExpressionConstants.PARAMETER_TYPE,
+        		ExpressionConstants.SCRIPT_TYPE,
+        		ExpressionConstants.VARIABLE_TYPE})); //Second column has everything except Form field and simulation type
         ecv.setViewerFilters(filters);
         ecv.setInput(element);
 
