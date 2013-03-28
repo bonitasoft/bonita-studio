@@ -845,6 +845,35 @@
                      class="Pool">
                </target>
             </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.MultiInstanceConstraintOutput"
+                  id="org.bonitasoft.studio.validation.constraints.outputIteration"
+                  lang="java"
+                  mode="Live"
+                  name="outputdataMultiInstanceCollection"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Activity"></target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.MultiInstanceConstraintInput"
+                  id="org.bonitasoft.studio.validation.constraints.inputIteration"
+                  lang="java"
+                  mode="Live"
+                  name="inputdataMultiInstanceCollection"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="Activity">
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">

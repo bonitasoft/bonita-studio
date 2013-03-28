@@ -61,6 +61,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -111,7 +113,11 @@ public class MultiInstantiationPropertyContribution implements IExtensibleGridPr
     private ExpressionViewer completionConditionViewer;
     private Button sequentialButton;
     private ComboViewer listOutputDataChooser;
-
+    private ControlDecoration cdOutputData;
+    private ControlDecoration cdlistOutputData;
+    private Composite inputOutputDataComposite;
+    private ControlDecoration cdInput;
+    
     /* (non-Javadoc)
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory, org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection)
      */
@@ -175,67 +181,101 @@ public class MultiInstantiationPropertyContribution implements IExtensibleGridPr
 
         sequentialButton = widgetFactory.createButton(parametersComposite, Messages.multiInstance_sequentialButton, SWT.CHECK);
         sequentialButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
-        ControlDecoration cdsequential = new ControlDecoration(sequentialButton, SWT.LEFT,parametersComposite);
+        ControlDecoration cdsequential = new ControlDecoration(sequentialButton, SWT.RIGHT,parametersComposite);
         cdsequential.setDescriptionText(Messages.multiInstance_sequentialDescription);
         cdsequential.setImage(Pics.getImage(PicsConstants.hint));
+        cdsequential.show();
 
         Label completionConditionLabel = widgetFactory.createLabel(parametersComposite, Messages.multiInstance_completionConditionLabel);
-        ControlDecoration cdCompletionCondition = new ControlDecoration(completionConditionLabel, SWT.LEFT,parametersComposite);
-        cdCompletionCondition.setDescriptionText(Messages.multiInstance_completionConditionDescription);
-        cdCompletionCondition.setImage(Pics.getImage(PicsConstants.hint));
         completionConditionViewer = new ExpressionViewer(parametersComposite, SWT.BORDER, widgetFactory, ProcessPackage.Literals.MULTI_INSTANTIATION__COMPLETION_CONDITION);
         completionConditionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
         completionConditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,
                 ExpressionConstants.VARIABLE_TYPE,
                 ExpressionConstants.PARAMETER_TYPE,
                 ExpressionConstants.SCRIPT_TYPE}));
+        ControlDecoration cdCompletionCondition = new ControlDecoration(  completionConditionLabel, SWT.RIGHT,parametersComposite);
+        cdCompletionCondition.setDescriptionText(Messages.multiInstance_completionConditionDescription);
+        cdCompletionCondition.setImage(Pics.getImage(PicsConstants.hint));
+        cdCompletionCondition.setMarginWidth(5);
+        cdCompletionCondition.show();
     }
 
 
     protected void createUseExpressionBlock(TabbedPropertySheetWidgetFactory widgetFactory,	Composite parametersComposite) {
+    	
+        ModifyListener inputDataAndListOutputDataListener = new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if(!inputDataChooser.getCombo().getText().isEmpty() && collectionDataChooser.getCombo().getText().isEmpty()){
+					cdInput.setImage(Pics.getImage(PicsConstants.error));
+					cdInput.setDescriptionText(Messages.errorInputDataMultiInstanceCollection);
+				}else{
+					cdInput.setImage(Pics.getImage(PicsConstants.hint));
+					cdInput.setDescriptionText(Messages.multiInstance_inputDataDescription);
+				}
+			}
+		};
+    	
         useCollectionButton = widgetFactory.createButton(parametersComposite, Messages.multiInstance_useCollection, SWT.RADIO);
         ControlDecoration cdUseCollection = new ControlDecoration(useCollectionButton, SWT.RIGHT,parametersComposite);
         cdUseCollection.setDescriptionText(Messages.multiInstance_useCollectionDescription);
         cdUseCollection.setImage(Pics.getImage(PicsConstants.hint));
         collectionDataChooser = createChooser(widgetFactory, parametersComposite);
+        collectionDataChooser.getCombo().addModifyListener(inputDataAndListOutputDataListener);
 
-
-        Composite inputOutputDataComposite = widgetFactory.createComposite(parametersComposite);
+        inputOutputDataComposite = widgetFactory.createComposite(parametersComposite);
         inputOutputDataComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(6).create());
         inputOutputDataComposite.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).create());
+        
+        ModifyListener outputDataAndListOutputDataListener = new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if(!outputDataChooser.getCombo().getText().isEmpty() && listOutputDataChooser.getCombo().getText().isEmpty()){
+					cdOutputData.setImage(Pics.getImage(PicsConstants.error));
+					cdOutputData.setDescriptionText(Messages.errorOutputDataMultiInstanceCollection);
+				}else{
+					cdOutputData.setImage(Pics.getImage(PicsConstants.hint));
+					cdOutputData.setDescriptionText(Messages.multiInstance_outputDataDescription);
+				}
+			}
+		};
 
         widgetFactory.createLabel(inputOutputDataComposite, Messages.multiInstance_inputData);
         inputDataChooser = createChooser(widgetFactory, inputOutputDataComposite);
-        ControlDecoration cd = new ControlDecoration(inputDataChooser.getControl(), SWT.LEFT,parametersComposite);
-        cd.setImage(Pics.getImage(PicsConstants.hint));
-        cd.setDescriptionText(Messages.multiInstance_inputDataDescription);
+        inputDataChooser.getCombo().addModifyListener(inputDataAndListOutputDataListener);
+        cdInput = new ControlDecoration(inputDataChooser.getControl(), SWT.LEFT,parametersComposite);
+        cdInput.setImage(Pics.getImage(PicsConstants.hint));
+        cdInput.setDescriptionText(Messages.multiInstance_inputDataDescription);
         widgetFactory.createLabel(inputOutputDataComposite, Messages.multiInstance_outputData);
         outputDataChooser = createChooser(widgetFactory, inputOutputDataComposite);
-        ControlDecoration cdOutputData = new ControlDecoration(outputDataChooser.getControl(), SWT.LEFT,parametersComposite);
+        outputDataChooser.getCombo().addModifyListener(outputDataAndListOutputDataListener);
+        cdOutputData = new ControlDecoration(outputDataChooser.getControl(), SWT.LEFT,parametersComposite);
         cdOutputData.setImage(Pics.getImage(PicsConstants.hint));
         cdOutputData.setDescriptionText(Messages.multiInstance_outputDataDescription);
 
         widgetFactory.createLabel(parametersComposite, Messages.multiInstance_listOutputDataLabel);
         listOutputDataChooser = createChooser(widgetFactory, parametersComposite);
-        ControlDecoration cdlistOutputData = new ControlDecoration(listOutputDataChooser.getControl(), SWT.LEFT,parametersComposite);
+        listOutputDataChooser.getCombo().addModifyListener(outputDataAndListOutputDataListener);
+        cdlistOutputData = new ControlDecoration(listOutputDataChooser.getControl(), SWT.LEFT,parametersComposite);
         cdlistOutputData.setImage(Pics.getImage(PicsConstants.hint));
         cdlistOutputData.setDescriptionText(Messages.multiInstance_listOutputDataDescription);
+        
     }
 
 
     protected void createCardinalityLine(TabbedPropertySheetWidgetFactory widgetFactory, Composite parametersComposite) {
-        useCardinalityButton = widgetFactory.createButton(parametersComposite, Messages.multiInstance_useCardinality, SWT.RADIO);
-        //        ControlDecoration cd = new ControlDecoration(useCardinalityButton, SWT.RIGHT,parametersComposite);
-        //        cd.setDescriptionText(Messages.multiInstance_useCardinalityDescription);
-        //        cd.setImage(Pics.getImage(PicsConstants.hint));
-        cardinalityExpression = new ExpressionViewer(parametersComposite, SWT.BORDER, widgetFactory, ProcessPackage.Literals.MULTI_INSTANTIATION__CARDINALITY);
-        cardinalityExpression.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        cardinalityExpression.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,
-                ExpressionConstants.VARIABLE_TYPE,
-                ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.SCRIPT_TYPE}));
-        cardinalityExpression.getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
-        cardinalityExpression.setMessage(Messages.multiInstance_useCardinalityDescription, IStatus.INFO);
+    	useCardinalityButton = widgetFactory.createButton(parametersComposite, Messages.multiInstance_useCardinality, SWT.RADIO);
+    	ControlDecoration cd = new ControlDecoration(useCardinalityButton, SWT.RIGHT,parametersComposite);
+    	cd.setDescriptionText(Messages.multiInstance_useCardinalityDescription);
+    	cd.setImage(Pics.getImage(PicsConstants.hint));
+    	cardinalityExpression = new ExpressionViewer(parametersComposite, SWT.BORDER, widgetFactory, ProcessPackage.Literals.MULTI_INSTANTIATION__CARDINALITY);
+    	cardinalityExpression.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+    	cardinalityExpression.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,
+    			ExpressionConstants.VARIABLE_TYPE,
+    			ExpressionConstants.PARAMETER_TYPE,
+    			ExpressionConstants.SCRIPT_TYPE}));
+    	cardinalityExpression.getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
+    	// cardinalityExpression.setMessage(Messages.multiInstance_useCardinalityDescription, IStatus.INFO);
     }
 
 

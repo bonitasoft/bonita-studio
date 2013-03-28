@@ -819,6 +819,8 @@ public class Messages extends NLS {
 	public static String idShouldBeDefined;
 	public static String conditionExpresssionHelpMessage;
 	public static String isMandatory;
+	public static String errorOutputDataMultiInstanceCollection;
+	public static String errorInputDataMultiInstanceCollection;
 	
 	
 	
