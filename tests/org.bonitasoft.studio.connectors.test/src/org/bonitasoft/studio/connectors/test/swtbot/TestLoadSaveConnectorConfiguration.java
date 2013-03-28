@@ -112,7 +112,22 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 		bot.toolbarButton("Load").click();
 		assertFalse("remove button should be disabled",bot.button("Remove").isEnabled());
 		bot.tree().setFocus();
-		bot.tree().getTreeItem(saveName).select();
+		bot.waitUntil(new ICondition() {
+			
+			public boolean test() throws Exception {
+				bot.tree().getTreeItem(saveName).select();
+				return bot.tree().selectionCount() > 0;
+			}
+			
+			public void init(SWTBot bot) {
+	
+			}
+			
+			public String getFailureMessage() {
+				return "Cannot select tree item";
+			}
+		},10000,1000);
+		assertTrue("Remove button is not enabled",bot.button("Remove").isEnabled());
 		bot.button("Remove").click();
 		bot.waitUntil(new ICondition() {
 			
