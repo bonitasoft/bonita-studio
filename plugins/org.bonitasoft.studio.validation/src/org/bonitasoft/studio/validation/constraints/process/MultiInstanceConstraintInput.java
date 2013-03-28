@@ -39,10 +39,12 @@ public class MultiInstanceConstraintInput extends AbstractLiveValidationMarkerCo
 	@Override
 	protected IStatus performLiveValidation(IValidationContext context) {
 		EStructuralFeature feature = context.getFeature();
-        if(feature.equals(ProcessPackage.Literals.ACTIVITY)){
-        	final Activity mi = (Activity) context;
-        	validateMultiInstantiation(context, mi);
-        }	
+		if(feature.equals(ProcessPackage.Literals.ACTIVITY)){
+			final Activity mi = (Activity) context;
+			if(mi.isIsMultiInstance()){
+				validateMultiInstantiation(context, mi);
+			}
+		}	
 		return context.createSuccessStatus();
 	}
 
@@ -57,14 +59,15 @@ public class MultiInstanceConstraintInput extends AbstractLiveValidationMarkerCo
 	}
 	@Override
 	protected IStatus performBatchValidation(IValidationContext context) {
-        EObject eObj = context.getTarget();
-        if (eObj instanceof Activity) {
-        	Activity act = (Activity) eObj;
-            return validateMultiInstantiation(context, act);
-        }
-
-        return context.createSuccessStatus();
-    }
+		EObject eObj = context.getTarget();
+		if (eObj instanceof Activity) {
+			Activity act = (Activity) eObj;
+			if(act.isIsMultiInstance()){
+				return validateMultiInstantiation(context, act);
+			}
+		}
+		return context.createSuccessStatus();
+	}
 
     @Override
     protected String getMarkerType(DiagramEditor editor) {
