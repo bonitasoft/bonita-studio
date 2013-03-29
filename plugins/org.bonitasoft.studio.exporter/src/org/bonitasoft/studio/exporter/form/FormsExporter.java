@@ -1485,20 +1485,23 @@ public class FormsExporter {
 	}
 
 	protected void addDocumentInitialValue(final FileWidget widget, final IFormBuilder builder) throws InvalidFormDefinitionException {
-		if (widget.getInputType() == FileWidgetInputType.DOCUMENT) {
+		final FileWidgetInputType widgetInputType = widget.getInputType();
+		if (widgetInputType == FileWidgetInputType.DOCUMENT) {
 			final Document document = widget.getDocument();
 			if (document != null) {
-				final Expression documentExpression = ExpressionHelper.createExpressionFromDocument(document);
+				final Expression documentExpression = ExpressionHelper.createExpressionFromDocument(document);				
 				addInitialValueExpression(builder, documentExpression);
 			}
-		} else if (widget.getInputType() == FileWidgetInputType.URL) {
+		} else if (widgetInputType == FileWidgetInputType.URL) {
 			final Expression inputExpression = widget.getInputExpression();
 			if (inputExpression != null && inputExpression.getContent() != null && !inputExpression.getContent().isEmpty()) {
+				builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.URL);
 				addInitialValueExpression(builder, inputExpression);
 			}
-		} else if (widget.getInputType() == FileWidgetInputType.RESOURCE) {
+		} else if (widgetInputType == FileWidgetInputType.RESOURCE) {
 			final String resourcePath = widget.getInitialResourcePath();
 			if (resourcePath != null && !resourcePath.isEmpty()) {
+				builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.FILE);
 				builder.addInitialValueResource(resourcePath);
 			}
 		}
