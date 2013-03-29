@@ -107,16 +107,26 @@ button.bonita_form_button + button.bonita_form_button {
 
 
 .bonita_form_field.list_container select{
-	width: 110%;
 	background: transparent;
 	-webkit-appearance: none;
 	border: 0;
 	border-radius: 0;
 	font-family: Signika-Regular;
 	font-size: 100%;
+	width: auto;
+	position: absolute;
+}
+.bonita_form_field.list_container select option{
+	background: transparent;
 }
 .bonita_form_field.list_container{
 	background: url(../images/form-select.png) no-repeat right center;
+	overflow: hidden;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	position: relative;
+	overflow: hidden;
 }
 
 input.bonita_form_field, select.bonita_form_field, select.bonita_datetime_list_item, .bonita_form_field.list_container {
@@ -127,12 +137,13 @@ input.bonita_form_field, select.bonita_form_field, select.bonita_datetime_list_i
 	-webkit-border-radius: 5px;
 	-webkit-box-shadow: 0 0 0 #cccccc;
 	*behavior: url(boxsizing.htc);
-	-moz-box-sizing: border-box;
 	padding: 5px 5px 5px 5px;
 	box-sizing: border-box;
 	vertical-align: middle;
 	-o-box-shadow: 0 0 0 #cccccc;
+	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 	height: 35px;
 	font-size: 100%;
 	border: 1px solid #c2c2c2;
@@ -146,11 +157,11 @@ textarea.bonita_form_field, div.bonita_form_field div.bonita_rich_text {
 	border-radius: 5px;
 	-webkit-border-radius: 5px;
 	-webkit-box-shadow: 0 0 0 #cccccc;
-	-moz-box-sizing: border-box;
 	padding: 5px 5px 5px 5px;
-	box-sizing: border-box;
 	-o-box-shadow: 0 0 0 #cccccc;
+	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 	font-size: 100%;
 	border: 1px solid #c2c2c2;
 	-moz-box-shadow: 0 0 0 #cccccc;
