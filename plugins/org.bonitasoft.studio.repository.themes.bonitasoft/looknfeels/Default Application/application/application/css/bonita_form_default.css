@@ -42,10 +42,9 @@ div.bonita_form_container div#bonita_form_confirm_todolist .bonita_form_task_loa
 
 div.bonita_form_container div#bonita_form_confirm_todolist .bonita_form_task_link {
 	color: #B20706;
-}
-div.bonita_form_container div#bonita_form_confirm_todolist .bonita_form_task_link:hover {
 	text-decoration: underline;
 }
+
 button.bonita_form_button {
 	text-align: center;
 	outline-color: #F9F9F9;
