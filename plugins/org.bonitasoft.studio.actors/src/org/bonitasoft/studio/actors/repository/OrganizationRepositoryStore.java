@@ -180,7 +180,7 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
 		ResourceSet rSet = migrator.migrateAndLoad(
 				Collections.singletonList(resourceURI), release,
 				null, Repository.NULL_PROGRESS_MONITOR);
-		if(rSet.getResources().isEmpty()){
+		if(!rSet.getResources().isEmpty()){
 			FileOutputStream fos = null;
 			try{
 				OrganizationResourceImpl r = (OrganizationResourceImpl) rSet.getResources().get(0);
