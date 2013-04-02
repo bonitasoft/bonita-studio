@@ -221,7 +221,7 @@ public class SWTBotConnectorTestUtil {
      * @param dataName
      * @param version
      */
-    public static void addConnectorToPool(SWTBot bot,String connectorDefinitionLabel,String version,String categoryLabel, String connectorName) {
+    public static void addConnectorToPool(final SWTBot bot,final String connectorDefinitionLabel,final String version,final String categoryLabel,final String connectorName) {
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
         bot.button("Add...").click();
         Assert.assertFalse(IDialogConstants.NEXT_LABEL + " should be disabled", bot
@@ -229,12 +229,30 @@ public class SWTBotConnectorTestUtil {
         Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
                 .button(IDialogConstants.FINISH_LABEL).isEnabled());
        SWTBotTreeItem categoryItem = bot.tree().expandNode(categoryLabel);
+       String cNode = null;
        for(String node : categoryItem.getNodes()){
     	   if(node.startsWith(connectorDefinitionLabel + " (" + version + ")")){
-    		   categoryItem.select(node);
+    		 cNode =  node ;
+    		 break;
     	   }
        }
-        Assert.assertTrue(IDialogConstants.NEXT_LABEL + " should be disabled", bot
+       final String nodeToSelect = cNode;
+       bot.waitUntil(new ICondition() {
+
+			public boolean test() throws Exception {
+				bot.tree().select(categoryLabel).expandNode(categoryLabel).select(nodeToSelect);
+				return bot.tree().selectionCount() > 0;
+			}
+
+			public void init(SWTBot bot) {
+
+			}
+
+			public String getFailureMessage() {
+				return "Cannot select tree item";
+			}
+		},10000,1000);
+        Assert.assertTrue(IDialogConstants.NEXT_LABEL + " should be enabled", bot
                 .button(IDialogConstants.NEXT_LABEL).isEnabled());
         Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
                 .button(IDialogConstants.FINISH_LABEL).isEnabled());
