@@ -16,33 +16,11 @@
  */
 package org.bonitasoft.studio.engine.export.switcher;
 
-import java.util.Collection;
 import java.util.Set;
 
-import org.bonitasoft.engine.bpm.model.ConnectorDefinitionBuilder;
-import org.bonitasoft.engine.bpm.model.ConnectorEvent;
-import org.bonitasoft.engine.bpm.model.DataDefinitionBuilder;
-import org.bonitasoft.engine.bpm.model.DescriptionBuilder;
-import org.bonitasoft.engine.bpm.model.FlowElementBuilder;
 import org.bonitasoft.engine.bpm.model.ProcessDefinitionBuilder;
-import org.bonitasoft.engine.core.operation.OperatorType;
-import org.bonitasoft.engine.expression.Expression;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.engine.EnginePlugin;
-import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
-import org.bonitasoft.studio.model.kpi.DatabaseKPIBinding;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Actor;
-import org.bonitasoft.studio.model.process.ConnectableElement;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.util.ProcessSwitch;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 
 
@@ -66,98 +44,6 @@ public class AbstractProcessSwitch extends AbstractSwitch {
         addConnector(builder, object) ;
         addKPIBinding(builder, object);
         return object;
-    }
-
-    protected void addActors(final ProcessDefinitionBuilder builder , final AbstractProcess process) {
-        for (Actor a : process.getActors()) {
-            builder.addActor(a.getName()) ;
-            if(a.isInitiator()){
-                builder.setActorInitiator(a.getName()) ;
-            }
-        }
-    }
-
-
-    protected void addConnector(final FlowElementBuilder builder,final ConnectableElement element) {
-        for (Connector connector : element.getConnectors()) {
-            if(!eObjectNotExported.contains(connector)){
-                final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(connector.getName(), connector.getDefinitionId(), connector.getDefinitionVersion(), ConnectorEvent.valueOf(connector.getEvent()));
-                if(connector.isIgnoreErrors()){
-                	connectorBuilder.ignoreError();
-                }else if(connector.isThrowErrorEvent()){
-                	connectorBuilder.throwErrorEventWhenFailed(connector.getNamedError());
-                }
-                for(ConnectorParameter parameter : connector.getConfiguration().getParameters()){
-                    final Expression inputExpression = EngineExpressionUtil.createExpression(parameter.getExpression());
-                    if(inputExpression != null){
-                        connectorBuilder.addInput(parameter.getKey(), inputExpression) ;
-                      
-                    }else{
-                        if(BonitaStudioLog.isLoggable(IStatus.OK)){
-                            BonitaStudioLog.debug("Expression of input "+parameter.getKey() +" is null for connector "+connector.getName(), EnginePlugin.PLUGIN_ID);
-                        }
-                    }
-                }
-                for(Operation outputOpeartion : connector.getOutputs()){
-                    String inputType = null ;
-                    if(!outputOpeartion.getOperator().getInputTypes().isEmpty()){
-                        inputType = outputOpeartion.getOperator().getInputTypes().get(0) ;
-                    }
-                    if(outputOpeartion.getLeftOperand() != null
-                            && outputOpeartion.getLeftOperand().getContent() != null
-                            && !outputOpeartion.getLeftOperand().getContent().isEmpty()
-                            && outputOpeartion.getRightOperand() != null
-                            && outputOpeartion.getRightOperand().getContent() != null){
-                        connectorBuilder.addOutput(
-                                EngineExpressionUtil.createLeftOperand(outputOpeartion.getLeftOperand()),
-                                OperatorType.valueOf(outputOpeartion.getOperator().getType()),
-                                outputOpeartion.getOperator().getExpression(),inputType,
-                                EngineExpressionUtil.createExpression(outputOpeartion.getRightOperand())) ;
-                    }
-                }
-            }
-        }
-    }
-
-    protected void addKPIBinding(final FlowElementBuilder builder,final ConnectableElement element) {
-        for (AbstractKPIBinding kpiBinding : element.getKpis()) {
-            if(kpiBinding instanceof DatabaseKPIBinding){
-                final ConnectorDefinitionBuilder connectorBuilder = builder.addConnector(kpiBinding.getName(),DB_CONNECTOR_FOR_KPI_ID, DB_CONNECTOR_VERSION, ConnectorEvent.valueOf(kpiBinding.getEvent()));
-                DatabaseKPIBinding dbKPI = (DatabaseKPIBinding) kpiBinding;
-                connectorBuilder.addInput(DB_DRIVER, EngineExpressionUtil.createExpression(dbKPI.getDriverclassName())) ;
-                connectorBuilder.addInput(DB_URL, EngineExpressionUtil.createExpression(dbKPI.getJdbcUrl())) ;
-                connectorBuilder.addInput(DB_QUERY, EngineExpressionUtil.createExpression(dbKPI.getRequest())) ;
-                connectorBuilder.addInput(DB_USER, EngineExpressionUtil.createExpression(dbKPI.getUser())) ;
-                connectorBuilder.addInput(DB_PASSWORD, EngineExpressionUtil.createExpression(dbKPI.getPassword())) ;
-            }
-        }
-    }
-
-    protected void addData(final FlowElementBuilder dataContainerBuilder,final DataAware dataAwareContainer) {
-        for (final Data data : dataAwareContainer.getData()) {
-            Expression expr = EngineExpressionUtil.createExpression(data.getDefaultValue());
-            if(!data.isMultiple()){
-                final ProcessSwitch<DataDefinitionBuilder> dataSwitch = new DataSwitch(data, expr, dataContainerBuilder) ;
-                final DataDefinitionBuilder dataBuilder =  dataSwitch.doSwitch(data.getDataType());
-                if(data.isTransient()){
-                    dataBuilder.isTransient();
-                }
-            }else{
-                if(expr == null){
-                    expr = EngineExpressionUtil.createEmptyListExpression();
-                }
-                final DataDefinitionBuilder dataBuilder = dataContainerBuilder.addData(data.getName(), Collection.class.getName(), expr);
-                if(data.isTransient()){
-                    dataBuilder.isTransient();
-                }
-            }
-        }
-    }
-
-    protected void addDescription(final DescriptionBuilder builder ,final String description){
-        if(description != null && !description.isEmpty()){
-            builder.addDescription(description) ;
-        }
     }
 
 }
