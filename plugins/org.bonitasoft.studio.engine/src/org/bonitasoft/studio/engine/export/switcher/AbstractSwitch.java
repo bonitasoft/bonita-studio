@@ -19,6 +19,7 @@ package org.bonitasoft.studio.engine.export.switcher;
 import java.util.Collection;
 import java.util.Set;
 
+import org.bonitasoft.engine.bpm.model.ActorDefinitionBuilder;
 import org.bonitasoft.engine.bpm.model.ConnectorDefinitionBuilder;
 import org.bonitasoft.engine.bpm.model.ConnectorEvent;
 import org.bonitasoft.engine.bpm.model.DataDefinitionBuilder;
@@ -68,9 +69,12 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
 
     protected void addActors(final ProcessDefinitionBuilder builder , final AbstractProcess process) {
         for (Actor a : process.getActors()) {
-            builder.addActor(a.getName()) ;
+            final ActorDefinitionBuilder actorBuilder = builder.addActor(a.getName()) ;
+            if(a.getDocumentation() != null){
+            	actorBuilder.addDescription(a.getDocumentation());
+            }
             if(a.isInitiator()){
-                builder.setActorInitiator(a.getName()) ;
+            	actorBuilder.setActorInitiator(a.getName()) ;
             }
         }
     }
