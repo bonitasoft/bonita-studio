@@ -37,9 +37,9 @@ import org.eclipse.core.runtime.FileLocator;
  */
 
 public class TestImportOrganization extends  TestCase{
-	
+
 	protected void setUp() throws Exception {}
-	
+
 	public void testImportOrganization() throws Exception{
 		final OrganizationRepositoryStore organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
 		String organizationName="OrganizationTest.xml";
@@ -53,9 +53,9 @@ public class TestImportOrganization extends  TestCase{
 		id  = toImport.getName() ;
 		organizationStore.importInputStream(id, fis) ;
 		if(fis != null){
-				fis.close() ;	
+			fis.close() ;	
 		}
-		String orgaNameWithBosExtansion = organizationName.substring(0,organizationName.indexOf("."))+"."+organizationStore.ORGANIZATION_EXT;
+		String orgaNameWithBosExtansion = organizationName.substring(0,organizationName.indexOf("."))+"."+OrganizationRepositoryStore.ORGANIZATION_EXT;
 		Organization organizationTest = (Organization) organizationStore.getChild(orgaNameWithBosExtansion).getContent();
 		assertNotNull(orgaNameWithBosExtansion+" was not imported",organizationTest);
 		assertTrue("not all groups have been imported",organizationTest.getGroups().getGroup().size()==5);
@@ -69,7 +69,7 @@ public class TestImportOrganization extends  TestCase{
 		ArrayList<Membership> userms2=new ArrayList<Membership>();
 		for (Membership ms:organizationTest.getMemberships().getMembership()) {
 			if(ms.getUserName().equals(user1.getUserName())){
-			   userms.add(ms);
+				userms.add(ms);
 			} else {
 				if(ms.getUserName().equals(user2.getUserName())){
 					userms2.add(ms);
@@ -80,5 +80,26 @@ public class TestImportOrganization extends  TestCase{
 		assertEquals("memberships are not imported correctly",userms2.size(),2);
 	}
 
-  protected void tearDown(){}
+	public void testImportAlphaOrganization() throws Exception{
+		final OrganizationRepositoryStore organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+		String organizationName="ACME-Alpha.xml";
+		URL archiveURL = TestImportOrganization.class.getResource(organizationName);
+		assertNotNull("filePath should not be null",archiveURL.getPath());
+		FileInputStream fis = null ;
+		String id =	null;
+		final File toImport = new File(FileLocator.toFileURL(archiveURL).getFile());
+		assertTrue("organization to import does not exist",toImport.exists());
+		fis = new FileInputStream(toImport);
+		id  = toImport.getName() ;
+		organizationStore.importInputStream(id, fis) ;
+		if(fis != null){
+			fis.close() ;	
+		}
+		String orgaNameWithBosExtansion = organizationName.substring(0,organizationName.indexOf("."))+"."+OrganizationRepositoryStore.ORGANIZATION_EXT;
+		Organization organizationTest = (Organization) organizationStore.getChild(orgaNameWithBosExtansion).getContent();
+		assertNotNull(orgaNameWithBosExtansion+" was not imported",organizationTest);
+	}
+
+	protected void tearDown(){}
+
 }
