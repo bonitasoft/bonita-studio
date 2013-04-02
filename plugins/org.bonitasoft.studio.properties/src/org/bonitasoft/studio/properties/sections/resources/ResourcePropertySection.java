@@ -317,7 +317,7 @@ public class ResourcePropertySection extends AbstractBonitaDescriptionSection im
                             break;
                         }
                     }
-                    removeFolder.setEnabled(!disable);
+                
                     editFile.setEnabled(enableEdit) ;
                 }
             }
