@@ -45,17 +45,17 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class ResetEngineCommand extends AbstractHandler {
 
-    @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 
-        IProgressService progressManager = PlatformUI.getWorkbench().getProgressService() ;
-        IRunnableWithProgress runnable = new IRunnableWithProgress(){
+		IProgressService progressManager = PlatformUI.getWorkbench().getProgressService() ;
+		IRunnableWithProgress runnable = new IRunnableWithProgress(){
 
 
-            @Override
-            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask(Messages.resetingEngine, IProgressMonitor.UNKNOWN);
-                APISession session = null;
+			@Override
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				monitor.beginTask(Messages.resetingEngine, IProgressMonitor.UNKNOWN);
+				APISession session = null;
 				try {
 					session = BOSEngineManager.getInstance().loginDefaultTenant(monitor);
 				} catch (Exception e1) {
@@ -64,39 +64,42 @@ public class ResetEngineCommand extends AbstractHandler {
 				if(session == null){
 					return;
 				}
-                try {
-                    ProcessManagementAPI processManagementAPI = BOSEngineManager.getInstance().getProcessAPI(session);
-                    int nbProcess = (int) processManagementAPI.getNumberOfProcesses() ;
-                    if(nbProcess > 0){
-                        List<ProcessDeploymentInfo> processes = processManagementAPI.getProcesses(0,nbProcess , ProcessDefinitionCriterion.DEFAULT) ;
-                        List<Long> processIds = new ArrayList<Long>() ;
-                        for(ProcessDeploymentInfo info : processes){
-                            processIds.add(info.getProcessId()) ;
-                        }
-                        processManagementAPI.deleteProcesses(processIds);
-                    }
-                } catch (Exception e) {
-                    BonitaStudioLog.error(e);
-                }finally{
-                    if(BOSEngineManager.getInstance() != null){
-                        BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
-                    }
-                }
+				try {
+					ProcessManagementAPI processManagementAPI = BOSEngineManager.getInstance().getProcessAPI(session);
+					int nbProcess = (int) processManagementAPI.getNumberOfProcesses() ;
+					if(nbProcess > 0){
+						List<ProcessDeploymentInfo> processes = processManagementAPI.getProcesses(0,nbProcess , ProcessDefinitionCriterion.DEFAULT) ;
+						List<Long> processIds = new ArrayList<Long>() ;
+						for(ProcessDeploymentInfo info : processes){
+							processIds.add(info.getProcessId()) ;
+						}
+						for(Long id: processIds){
+							processManagementAPI.disableAndDelete(id);
+						}
 
-                BOSWebServerManager.getInstance().resetServer(monitor);
+					}
+				} catch (Exception e) {
+					throw new InvocationTargetException(e);
+				}finally{
+					if(BOSEngineManager.getInstance() != null){
+						BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
+					}
+				}
 
-                monitor.done();
+				BOSWebServerManager.getInstance().resetServer(monitor);
 
-            }
-        };
+				monitor.done();
 
-        try {
-            progressManager.run(true, false, runnable);
-        } catch (Exception e) {
-            BonitaStudioLog.error(e);
-        }
-        return null;
-    }
+			}
+		};
+
+		try {
+			progressManager.run(true, false, runnable);
+		} catch (Exception e) {
+			BonitaStudioLog.error(e);
+		}
+		return null;
+	}
 
 
 }
