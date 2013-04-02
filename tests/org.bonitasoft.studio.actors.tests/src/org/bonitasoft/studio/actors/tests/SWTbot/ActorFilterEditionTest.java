@@ -76,13 +76,24 @@ public class ActorFilterEditionTest extends SWTBotGefTestCase {
         createActorFilterDefinition(id, version);
         SWTBotActorFilterUtil.activateActorFilterDefEditionShell(bot);
         bot.tree().setFocus();
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.tree().expandNode("Uncategorized")
-        .select(id + " (" + version + ")")),10000);
+        bot.waitUntil(new ICondition() {
+
+			public boolean test() throws Exception {
+				bot.tree().select("Uncategorized").expandNode("Uncategorized").select(id + " (" + version + ")");
+				return bot.tree().selectionCount() > 0;
+			}
+
+			public void init(SWTBot bot) {
+
+			}
+
+			public String getFailureMessage() {
+				return "Cannot select tree item";
+			}
+		},10000,1000);
+        
        
-        assertTrue(id+" does not exist in tree viewer", bot.tree().expandNode("Uncategorized")
-        .select(id + " (" + version + ")").isEnabled());
-        bot.tree().expandNode("Uncategorized")
-        .select(id + " (" + version + ")");
+
         bot.button(Messages.edit).click();
         assertEquals(bot.textWithLabel("Definition id *").getText(), id);
         assertEquals(bot.textWithLabel("Version *").getText(), version);
@@ -128,13 +139,23 @@ public class ActorFilterEditionTest extends SWTBotGefTestCase {
         createActorFilterDefinition(id, version);
         SWTBotActorFilterUtil.activateActorFilterDefEditionShell(bot);
         bot.tree().setFocus();
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.tree().expandNode("Uncategorized")
-        .select(id + " (" + version + ")")),10000);
+        bot.waitUntil(new ICondition() {
+
+			public boolean test() throws Exception {
+				bot.tree().select("Uncategorized").expandNode("Uncategorized").select(id + " (" + version + ")");
+				return bot.tree().selectionCount() > 0;
+			}
+
+			public void init(SWTBot bot) {
+
+			}
+
+			public String getFailureMessage() {
+				return "Cannot select tree item";
+			}
+		},10000,1000);
        
-        assertTrue(id+" does not exist in tree viewer", bot.tree().expandNode("Uncategorized")
-        .select(id + " (" + version + ")").isEnabled());
-        bot.tree().select("Uncategorized").expandNode("Uncategorized")
-        .select(id + " (" + version + ")");
+     
         bot.button(Messages.edit).click();
         bot.textWithLabel("Version *").setText(version2);
         bot.button(IDialogConstants.FINISH_LABEL).click();
