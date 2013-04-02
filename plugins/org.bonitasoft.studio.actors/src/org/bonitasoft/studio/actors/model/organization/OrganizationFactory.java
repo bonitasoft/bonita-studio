@@ -154,6 +154,15 @@ public interface OrganizationFactory extends EFactory {
 	Users createUsers();
 
 	/**
+	 * Returns a new object of class '<em>Password Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Password Type</em>'.
+	 * @generated
+	 */
+	PasswordType createPasswordType();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

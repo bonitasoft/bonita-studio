@@ -58,17 +58,19 @@ public class ImportOrganizationHandler extends AbstractHandler {
 			IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
 			try {
 				service.run(false, false, new IRunnableWithProgress() {
-					
+
 					@Override
 					public void run(IProgressMonitor monitor) throws InvocationTargetException,
-							InterruptedException {
+					InterruptedException {
 						monitor.beginTask(Messages.importingOrganization, IProgressMonitor.UNKNOWN) ;
 						FileInputStream fis = null ;
 						try {
 							fis = new FileInputStream(filePath);
 							String id =	new File(filePath).getName() ;
-							organizationStore.importInputStream(id, fis) ;
-							MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.importOrganizationSuccessfullTitle, Messages.importOrganizationSuccessfullMessage);
+							OrganizationFileStore file = organizationStore.importInputStream(id, fis) ;
+							if(file != null){
+								MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.importOrganizationSuccessfullTitle, Messages.importOrganizationSuccessfullMessage);
+							}
 						} catch (Exception e) {
 							BonitaStudioLog.error(e) ; 
 							OrganizationFileStore file = organizationStore.getChild(new File(filePath).getName().replace(".xml", "."+OrganizationRepositoryStore.ORGANIZATION_EXT));
@@ -81,19 +83,19 @@ public class ImportOrganizationHandler extends AbstractHandler {
 								try {
 									fis.close() ;
 								} catch (IOException e) {
-									
+
 								}
 							}
 						}
-						
+
 					}
 				});
 			} catch (Exception e) {
 				BonitaStudioLog.error(e) ;
 			} 
-			
+
 		}
-		
+
 		return null;
 	}
 

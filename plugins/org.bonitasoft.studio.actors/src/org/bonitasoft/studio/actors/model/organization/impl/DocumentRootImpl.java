@@ -21,6 +21,7 @@ import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EMap;
@@ -30,6 +31,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 
@@ -84,6 +86,16 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * @ordered
 	 */
 	protected EMap<String, String> xSISchemaLocation;
+
+	/**
+	 * The cached value of the '{@link #getOrganization() <em>Organization</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getOrganization()
+	 * @generated
+	 * @ordered
+	 */
+	protected Organization organization;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -146,7 +158,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * @generated
 	 */
 	public Organization getOrganization() {
-		return (Organization)getMixed().get(OrganizationPackage.Literals.DOCUMENT_ROOT__ORGANIZATION, true);
+		return organization;
 	}
 
 	/**
@@ -155,7 +167,13 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * @generated
 	 */
 	public NotificationChain basicSetOrganization(Organization newOrganization, NotificationChain msgs) {
-		return ((FeatureMap.Internal)getMixed()).basicAdd(OrganizationPackage.Literals.DOCUMENT_ROOT__ORGANIZATION, newOrganization, msgs);
+		Organization oldOrganization = organization;
+		organization = newOrganization;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, OrganizationPackage.DOCUMENT_ROOT__ORGANIZATION, oldOrganization, newOrganization);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -164,7 +182,17 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * @generated
 	 */
 	public void setOrganization(Organization newOrganization) {
-		((FeatureMap.Internal)getMixed()).set(OrganizationPackage.Literals.DOCUMENT_ROOT__ORGANIZATION, newOrganization);
+		if (newOrganization != organization) {
+			NotificationChain msgs = null;
+			if (organization != null)
+				msgs = ((InternalEObject)organization).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.DOCUMENT_ROOT__ORGANIZATION, null, msgs);
+			if (newOrganization != null)
+				msgs = ((InternalEObject)newOrganization).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.DOCUMENT_ROOT__ORGANIZATION, null, msgs);
+			msgs = basicSetOrganization(newOrganization, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.DOCUMENT_ROOT__ORGANIZATION, newOrganization, newOrganization));
 	}
 
 	/**
@@ -273,7 +301,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 			case OrganizationPackage.DOCUMENT_ROOT__XSI_SCHEMA_LOCATION:
 				return xSISchemaLocation != null && !xSISchemaLocation.isEmpty();
 			case OrganizationPackage.DOCUMENT_ROOT__ORGANIZATION:
-				return getOrganization() != null;
+				return organization != null;
 		}
 		return super.eIsSet(featureID);
 	}

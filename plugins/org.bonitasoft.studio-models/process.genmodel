@@ -19,7 +19,6 @@
   <genPackages prefix="ActorMapping" basePackage="org.bonitasoft.studio.model" resource="XML"
       disposableProviderFactory="true" ecorePackage="ActorMapping.ecore#/">
     <genClasses ecoreClass="ActorMapping.ecore#//ActorMapping">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ActorMapping.ecore#//ActorMapping/description"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMapping/users"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMapping/groups"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ActorMapping.ecore#//ActorMapping/roles"/>
@@ -64,6 +63,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/username"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/password"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/applicationDependencies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/version"/>
     </genClasses>
     <genClasses ecoreClass="configuration.ecore#//Fragment">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Fragment/key"/>

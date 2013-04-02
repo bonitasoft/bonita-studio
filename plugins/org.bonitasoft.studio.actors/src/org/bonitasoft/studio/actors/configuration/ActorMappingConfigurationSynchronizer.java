@@ -66,7 +66,6 @@ public class ActorMappingConfigurationSynchronizer implements IConfigurationSync
             if(!exists){
                 ActorMapping mapping = ActorMappingFactory.eINSTANCE.createActorMapping() ;
                 mapping.setName(actorName) ;
-                mapping.setDescription(actor.getDocumentation()) ;
                 mapping.setGroups( ActorMappingFactory.eINSTANCE.createGroups()) ;
                 mapping.setRoles( ActorMappingFactory.eINSTANCE.createRoles()) ;
                 mapping.setMemberships( ActorMappingFactory.eINSTANCE.createMembership()) ;

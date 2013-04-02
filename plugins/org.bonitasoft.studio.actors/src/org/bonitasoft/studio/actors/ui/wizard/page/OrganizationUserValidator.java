@@ -50,7 +50,7 @@ public class OrganizationUserValidator implements IValidator {
             if(u.getUserName() == null || u.getUserName().isEmpty()){
                 return ValidationStatus.error(Messages.userNameMissing);
             }
-            if(u.getPassword() == null || u.getPassword().isEmpty()){
+            if(u.getPassword() == null || u.getPassword().getValue() == null || u.getPassword().getValue().isEmpty()){
                 return ValidationStatus.error(Messages.bind(Messages.userPasswordMissing,u.getUserName()));
             }
             if(u.getFirstName() == null || u.getFirstName().isEmpty()){

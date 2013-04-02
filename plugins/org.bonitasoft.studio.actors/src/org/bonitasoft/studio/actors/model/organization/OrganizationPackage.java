@@ -58,7 +58,7 @@ public interface OrganizationPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http://www.bonitasoft.org/ns/organization/6.0";
+	String eNS_URI = "http://www.bonitasoft.org/ns/organization/6.0.0-beta-016";
 
 	/**
 	 * The package namespace name.
@@ -701,22 +701,13 @@ public interface OrganizationPackage extends EPackage {
 	int USER = 11;
 
 	/**
-	 * The feature id for the '<em><b>Password</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int USER__PASSWORD = 0;
-
-	/**
 	 * The feature id for the '<em><b>First Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int USER__FIRST_NAME = 1;
+	int USER__FIRST_NAME = 0;
 
 	/**
 	 * The feature id for the '<em><b>Last Name</b></em>' attribute.
@@ -725,7 +716,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int USER__LAST_NAME = 2;
+	int USER__LAST_NAME = 1;
 
 	/**
 	 * The feature id for the '<em><b>Icon Name</b></em>' attribute.
@@ -734,7 +725,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int USER__ICON_NAME = 3;
+	int USER__ICON_NAME = 2;
 
 	/**
 	 * The feature id for the '<em><b>Icon Path</b></em>' attribute.
@@ -743,7 +734,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int USER__ICON_PATH = 4;
+	int USER__ICON_PATH = 3;
 
 	/**
 	 * The feature id for the '<em><b>Title</b></em>' attribute.
@@ -752,7 +743,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int USER__TITLE = 5;
+	int USER__TITLE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Job Title</b></em>' attribute.
@@ -761,7 +752,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int USER__JOB_TITLE = 6;
+	int USER__JOB_TITLE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Manager</b></em>' attribute.
@@ -770,7 +761,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int USER__MANAGER = 7;
+	int USER__MANAGER = 6;
 
 	/**
 	 * The feature id for the '<em><b>Personal Data</b></em>' containment reference.
@@ -779,7 +770,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int USER__PERSONAL_DATA = 8;
+	int USER__PERSONAL_DATA = 7;
 
 	/**
 	 * The feature id for the '<em><b>Professional Data</b></em>' containment reference.
@@ -788,7 +779,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int USER__PROFESSIONAL_DATA = 9;
+	int USER__PROFESSIONAL_DATA = 8;
 
 	/**
 	 * The feature id for the '<em><b>Meta Datas</b></em>' containment reference.
@@ -797,7 +788,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-    int USER__META_DATAS = 10;
+    int USER__META_DATAS = 9;
 
     /**
 	 * The feature id for the '<em><b>User Name</b></em>' attribute.
@@ -806,7 +797,7 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int USER__USER_NAME = 11;
+	int USER__USER_NAME = 10;
 
 	/**
 	 * The feature id for the '<em><b>Enabled</b></em>' attribute.
@@ -815,7 +806,16 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int USER__ENABLED = 12;
+	int USER__ENABLED = 11;
+
+	/**
+	 * The feature id for the '<em><b>Password</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int USER__PASSWORD = 12;
 
 	/**
 	 * The number of structural features of the '<em>User</em>' class.
@@ -853,6 +853,44 @@ public interface OrganizationPackage extends EPackage {
 	 * @ordered
 	 */
 	int USERS_FEATURE_COUNT = 1;
+
+
+	/**
+	 * The meta object id for the '{@link org.bonitasoft.studio.actors.model.organization.impl.PasswordTypeImpl <em>Password Type</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.bonitasoft.studio.actors.model.organization.impl.PasswordTypeImpl
+	 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getPasswordType()
+	 * @generated
+	 */
+	int PASSWORD_TYPE = 13;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PASSWORD_TYPE__VALUE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Encrypted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PASSWORD_TYPE__ENCRYPTED = 1;
+
+	/**
+	 * The number of structural features of the '<em>Password Type</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PASSWORD_TYPE_FEATURE_COUNT = 2;
 
 
 	/**
@@ -1471,15 +1509,15 @@ public interface OrganizationPackage extends EPackage {
 	EClass getUser();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.User#getPassword <em>Password</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.bonitasoft.studio.actors.model.organization.User#getPassword <em>Password</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Password</em>'.
+	 * @return the meta object for the containment reference '<em>Password</em>'.
 	 * @see org.bonitasoft.studio.actors.model.organization.User#getPassword()
 	 * @see #getUser()
 	 * @generated
 	 */
-	EAttribute getUser_Password();
+	EReference getUser_Password();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.User#getFirstName <em>First Name</em>}'.
@@ -1633,6 +1671,38 @@ public interface OrganizationPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getUsers_User();
+
+	/**
+	 * Returns the meta object for class '{@link org.bonitasoft.studio.actors.model.organization.PasswordType <em>Password Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Password Type</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.PasswordType
+	 * @generated
+	 */
+	EClass getPasswordType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.PasswordType#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.PasswordType#getValue()
+	 * @see #getPasswordType()
+	 * @generated
+	 */
+	EAttribute getPasswordType_Value();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.actors.model.organization.PasswordType#isEncrypted <em>Encrypted</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Encrypted</em>'.
+	 * @see org.bonitasoft.studio.actors.model.organization.PasswordType#isEncrypted()
+	 * @see #getPasswordType()
+	 * @generated
+	 */
+	EAttribute getPasswordType_Encrypted();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -2137,12 +2207,12 @@ public interface OrganizationPackage extends EPackage {
 		EClass USER = eINSTANCE.getUser();
 
 		/**
-		 * The meta object literal for the '<em><b>Password</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Password</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute USER__PASSWORD = eINSTANCE.getUser_Password();
+		EReference USER__PASSWORD = eINSTANCE.getUser_Password();
 
 		/**
 		 * The meta object literal for the '<em><b>First Name</b></em>' attribute feature.
@@ -2257,6 +2327,32 @@ public interface OrganizationPackage extends EPackage {
 		 * @generated
 		 */
 		EReference USERS__USER = eINSTANCE.getUsers_User();
+
+		/**
+		 * The meta object literal for the '{@link org.bonitasoft.studio.actors.model.organization.impl.PasswordTypeImpl <em>Password Type</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.bonitasoft.studio.actors.model.organization.impl.PasswordTypeImpl
+		 * @see org.bonitasoft.studio.actors.model.organization.impl.OrganizationPackageImpl#getPasswordType()
+		 * @generated
+		 */
+		EClass PASSWORD_TYPE = eINSTANCE.getPasswordType();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PASSWORD_TYPE__VALUE = eINSTANCE.getPasswordType_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Encrypted</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute PASSWORD_TYPE__ENCRYPTED = eINSTANCE.getPasswordType_Encrypted();
 
 	}
 

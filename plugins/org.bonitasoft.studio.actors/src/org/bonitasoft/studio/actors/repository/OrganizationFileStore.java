@@ -48,106 +48,109 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class OrganizationFileStore extends EMFFileStore {
 
-    public OrganizationFileStore(String fileName, OrganizationRepositoryStore store) {
-        super(fileName, store);
-    }
+	public OrganizationFileStore(String fileName, OrganizationRepositoryStore store) {
+		super(fileName, store);
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getDisplayName()
-     */
-    @Override
-    public String getDisplayName() {
-        return getContent().getName();
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getDisplayName()
+	 */
+	@Override
+	public String getDisplayName() {
+		return getContent().getName();
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-     */
-    @Override
-    public Image getIcon() {
-        return getParentStore().getIcon();
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
+	 */
+	@Override
+	public Image getIcon() {
+		return getParentStore().getIcon();
+	}
 
-    @Override
-    public Organization getContent() {
-        DocumentRoot root = (DocumentRoot) super.getContent();
-        return root.getOrganization() ;
-    }
+	@Override
+	public Organization getContent() {
+		DocumentRoot root = (DocumentRoot) super.getContent();
+		if(root != null){
+			return root.getOrganization() ;
+		}
+		return null;
+	}
 
-    @Override
-    protected void doSave(Object content) {
-        if(content instanceof Organization){
-            Resource emfResource = getEMFResource() ;
-            emfResource.getContents().clear() ;
-            DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
-            root.setOrganization((Organization) EcoreUtil.copy((EObject) content)) ;
-            emfResource.getContents().add(root) ;
-            try {
-                Map<String, String> options = new HashMap<String, String>() ;
-                options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-                options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-                emfResource.save(options) ;
-            } catch (IOException e) {
-                BonitaStudioLog.error(e) ;
-            }
-        }
-    }
+	@Override
+	protected void doSave(Object content) {
+		if(content instanceof Organization){
+			Resource emfResource = getEMFResource() ;
+			emfResource.getContents().clear() ;
+			DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
+			root.setOrganization((Organization) EcoreUtil.copy((EObject) content)) ;
+			emfResource.getContents().add(root) ;
+			try {
+				Map<String, String> options = new HashMap<String, String>() ;
+				options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+				options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+				emfResource.save(options) ;
+			} catch (IOException e) {
+				BonitaStudioLog.error(e) ;
+			}
+		}
+	}
 
-    @Override
-    public void export(String targetAbsoluteFilePath) {
-        Organization organization = getContent() ;
-        DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
-        Organization exportedCopy = EcoreUtil.copy(organization)  ;
-        exportedCopy.setName(null) ;
-        exportedCopy.setDescription(null) ;
-        root.setOrganization(exportedCopy) ;
-        try{
-            File to = new File(targetAbsoluteFilePath) ;
-            if(targetAbsoluteFilePath.endsWith(".xml")){
-                to.getParentFile().mkdirs() ;
-            }else{
-                to.mkdirs() ;
-            }
-            XMLProcessor processor = new OrganizationXMLProcessor() ;
+	@Override
+	public void export(String targetAbsoluteFilePath) {
+		Organization organization = getContent() ;
+		DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
+		Organization exportedCopy = EcoreUtil.copy(organization)  ;
+		exportedCopy.setName(null) ;
+		exportedCopy.setDescription(null) ;
+		root.setOrganization(exportedCopy) ;
+		try{
+			File to = new File(targetAbsoluteFilePath) ;
+			if(targetAbsoluteFilePath.endsWith(".xml")){
+				to.getParentFile().mkdirs() ;
+			}else{
+				to.mkdirs() ;
+			}
+			XMLProcessor processor = new OrganizationXMLProcessor() ;
 
-            File target = null;
-            if(to.isDirectory()){
-                String targetFilename = organization.getName()+".xml";
-                target = new File(to,targetFilename) ;
-            }else{
-                target = to ;
-            }
-            if(target.exists()){
-                if(FileActionDialog.overwriteQuestion(target.getName())){
-                    PlatformUtil.delete(target,  Repository.NULL_PROGRESS_MONITOR) ;
-                }else{
-                    return ;
-                }
-            }
+			File target = null;
+			if(to.isDirectory()){
+				String targetFilename = organization.getName()+".xml";
+				target = new File(to,targetFilename) ;
+			}else{
+				target = to ;
+			}
+			if(target.exists()){
+				if(FileActionDialog.overwriteQuestion(target.getName())){
+					PlatformUtil.delete(target,  Repository.NULL_PROGRESS_MONITOR) ;
+				}else{
+					return ;
+				}
+			}
 
-            Resource resource = new XMLResourceImpl(URI.createFileURI(target.getAbsolutePath())) ;
-            resource.getContents().add(root) ;
-            Map<String, String> options = new HashMap<String, String>() ;
-            options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-            options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+			Resource resource = new XMLResourceImpl(URI.createFileURI(target.getAbsolutePath())) ;
+			resource.getContents().add(root) ;
+			Map<String, String> options = new HashMap<String, String>() ;
+			options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+			options.put(XMLResource.OPTION_XML_VERSION, "1.0");
 
-            FileOutputStream fos = new FileOutputStream(target)  ;
-            processor.save(fos, resource, options)  ;
-            fos.close() ;
-        }catch (Exception e) {
-            BonitaStudioLog.error(e);
-        }
+			FileOutputStream fos = new FileOutputStream(target)  ;
+			processor.save(fos, resource, options)  ;
+			fos.close() ;
+		}catch (Exception e) {
+			BonitaStudioLog.error(e);
+		}
 
-    }
+	}
 
-    @Override
-    protected IWorkbenchPart doOpen() {
-        return null;
-    }
+	@Override
+	protected IWorkbenchPart doOpen() {
+		return null;
+	}
 
 
-    @Override
-    public IFile getResource() {
-        return getParentStore().getResource().getFile(getName());
-    }
+	@Override
+	public IFile getResource() {
+		return getParentStore().getResource().getFile(getName());
+	}
 }

@@ -28,6 +28,7 @@ import org.bonitasoft.studio.actors.model.organization.Metadata;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
+import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.Role;
 import org.bonitasoft.studio.actors.model.organization.Roles;
 import org.bonitasoft.studio.actors.model.organization.User;
@@ -139,6 +140,13 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	private EClass usersEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass passwordTypeEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -722,8 +730,8 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getUser_Password() {
-		return (EAttribute)userEClass.getEStructuralFeatures().get(0);
+	public EReference getUser_Password() {
+		return (EReference)userEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
@@ -732,7 +740,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	public EAttribute getUser_FirstName() {
-		return (EAttribute)userEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)userEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -741,7 +749,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	public EAttribute getUser_LastName() {
-		return (EAttribute)userEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)userEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -750,7 +758,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	public EAttribute getUser_IconName() {
-		return (EAttribute)userEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)userEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -759,7 +767,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	public EAttribute getUser_IconPath() {
-		return (EAttribute)userEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)userEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -768,7 +776,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	public EAttribute getUser_Title() {
-		return (EAttribute)userEClass.getEStructuralFeatures().get(5);
+		return (EAttribute)userEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -777,7 +785,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	public EAttribute getUser_JobTitle() {
-		return (EAttribute)userEClass.getEStructuralFeatures().get(6);
+		return (EAttribute)userEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -786,7 +794,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	public EAttribute getUser_Manager() {
-		return (EAttribute)userEClass.getEStructuralFeatures().get(7);
+		return (EAttribute)userEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -795,7 +803,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	public EReference getUser_PersonalData() {
-		return (EReference)userEClass.getEStructuralFeatures().get(8);
+		return (EReference)userEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -804,7 +812,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	public EReference getUser_ProfessionalData() {
-		return (EReference)userEClass.getEStructuralFeatures().get(9);
+		return (EReference)userEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -813,7 +821,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
     public EReference getUser_MetaDatas() {
-		return (EReference)userEClass.getEStructuralFeatures().get(10);
+		return (EReference)userEClass.getEStructuralFeatures().get(9);
 	}
 
     /**
@@ -822,7 +830,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	public EAttribute getUser_UserName() {
-		return (EAttribute)userEClass.getEStructuralFeatures().get(11);
+		return (EAttribute)userEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -831,7 +839,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 * @generated
 	 */
 	public EAttribute getUser_Enabled() {
-		return (EAttribute)userEClass.getEStructuralFeatures().get(12);
+		return (EAttribute)userEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -850,6 +858,33 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 	 */
 	public EReference getUsers_User() {
 		return (EReference)usersEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getPasswordType() {
+		return passwordTypeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getPasswordType_Value() {
+		return (EAttribute)passwordTypeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getPasswordType_Encrypted() {
+		return (EAttribute)passwordTypeEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -948,7 +983,6 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		createEReference(rolesEClass, ROLES__ROLE);
 
 		userEClass = createEClass(USER);
-		createEAttribute(userEClass, USER__PASSWORD);
 		createEAttribute(userEClass, USER__FIRST_NAME);
 		createEAttribute(userEClass, USER__LAST_NAME);
 		createEAttribute(userEClass, USER__ICON_NAME);
@@ -961,9 +995,14 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		createEReference(userEClass, USER__META_DATAS);
 		createEAttribute(userEClass, USER__USER_NAME);
 		createEAttribute(userEClass, USER__ENABLED);
+		createEReference(userEClass, USER__PASSWORD);
 
 		usersEClass = createEClass(USERS);
 		createEReference(usersEClass, USERS__USER);
+
+		passwordTypeEClass = createEClass(PASSWORD_TYPE);
+		createEAttribute(passwordTypeEClass, PASSWORD_TYPE__VALUE);
+		createEAttribute(passwordTypeEClass, PASSWORD_TYPE__ENCRYPTED);
 	}
 
 	/**
@@ -1017,7 +1056,7 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		initEAttribute(getDocumentRoot_Mixed(), ecorePackage.getEFeatureMapEntry(), "mixed", null, 0, -1, null, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDocumentRoot_XMLNSPrefixMap(), ecorePackage.getEStringToStringMapEntry(), null, "xMLNSPrefixMap", null, 0, -1, null, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDocumentRoot_XSISchemaLocation(), ecorePackage.getEStringToStringMapEntry(), null, "xSISchemaLocation", null, 0, -1, null, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDocumentRoot_Organization(), this.getOrganization(), null, "organization", null, 0, -2, null, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getDocumentRoot_Organization(), this.getOrganization(), null, "organization", null, 0, 1, null, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(groupEClass, Group.class, "Group", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getGroup_DisplayName(), theXMLTypePackage.getString(), "displayName", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1067,7 +1106,6 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		initEReference(getRoles_Role(), this.getRole(), null, "role", null, 0, -1, Roles.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(userEClass, User.class, "User", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getUser_Password(), theXMLTypePackage.getString(), "password", null, 0, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getUser_FirstName(), theXMLTypePackage.getString(), "firstName", null, 0, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getUser_LastName(), theXMLTypePackage.getString(), "lastName", null, 0, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getUser_IconName(), theXMLTypePackage.getString(), "iconName", null, 0, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1080,9 +1118,14 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		initEReference(getUser_MetaDatas(), this.getMetaDatasType(), null, "metaDatas", null, 0, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getUser_UserName(), theXMLTypePackage.getString(), "userName", null, 1, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getUser_Enabled(), theXMLTypePackage.getBoolean(), "enabled", null, 0, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getUser_Password(), this.getPasswordType(), null, "password", null, 1, 1, User.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(usersEClass, Users.class, "Users", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getUsers_User(), this.getUser(), null, "user", null, 1, -1, Users.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(passwordTypeEClass, PasswordType.class, "PasswordType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPasswordType_Value(), theXMLTypePackage.getString(), "value", null, 0, 1, PasswordType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPasswordType_Encrypted(), theXMLTypePackage.getBoolean(), "encrypted", null, 1, 1, PasswordType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
@@ -1487,13 +1530,6 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 			 "kind", "elementOnly"
 		   });		
 		addAnnotation
-		  (getUser_Password(), 
-		   source, 
-		   new String[] {
-			 "kind", "element",
-			 "name", "password"
-		   });		
-		addAnnotation
 		  (getUser_FirstName(), 
 		   source, 
 		   new String[] {
@@ -1578,6 +1614,13 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 			 "name", "enabled"
 		   });		
 		addAnnotation
+		  (getUser_Password(), 
+		   source, 
+		   new String[] {
+			 "kind", "element",
+			 "name", "password"
+		   });		
+		addAnnotation
 		  (usersEClass, 
 		   source, 
 		   new String[] {
@@ -1590,6 +1633,20 @@ public class OrganizationPackageImpl extends EPackageImpl implements Organizatio
 		   new String[] {
 			 "kind", "element",
 			 "name", "user"
+		   });		
+		addAnnotation
+		  (passwordTypeEClass, 
+		   source, 
+		   new String[] {
+			 "name", "password_._type",
+			 "kind", "simple"
+		   });		
+		addAnnotation
+		  (getPasswordType_Value(), 
+		   source, 
+		   new String[] {
+			 "name", ":0",
+			 "kind", "simple"
 		   });
 	}
 

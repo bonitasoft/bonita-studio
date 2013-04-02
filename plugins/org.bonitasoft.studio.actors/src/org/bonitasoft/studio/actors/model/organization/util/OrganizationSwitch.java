@@ -159,6 +159,12 @@ public class OrganizationSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case OrganizationPackage.PASSWORD_TYPE: {
+				PasswordType passwordType = (PasswordType)theEObject;
+				T result = casePasswordType(passwordType);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -355,6 +361,21 @@ public class OrganizationSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseUsers(Users object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Password Type</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Password Type</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T casePasswordType(PasswordType object) {
 		return null;
 	}
 

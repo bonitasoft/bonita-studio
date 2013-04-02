@@ -23,8 +23,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.RepositoryFileStoreComparator;
 import org.bonitasoft.studio.common.repository.model.IFileStoreContribution;
@@ -41,6 +43,8 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.swt.widgets.Display;
 
 
 /**
@@ -90,7 +94,24 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 
     @Override
     public final T importInputStream(String fileName,InputStream inputStream) {
-        InputStream newIs = handlePreImport(fileName,inputStream) ;
+        InputStream newIs = null;
+		try {
+			newIs = handlePreImport(fileName,inputStream);
+		} catch (final MigrationException e) {
+			if(!FileActionDialog.getDisablePopup()){
+				Display.getDefault().syncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+					new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.migrationFailedTitle, Messages.migrationFailedMessage,e).open();
+					}
+				});
+			}
+			return null;
+		}
+		if(newIs == null){
+			return null;
+		}
         final T store = doImportInputStream(fileName,newIs) ;
         return store;
     }
@@ -141,7 +162,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
      * @param inputStream
      * @return A new InputStream with a migrated content
      */
-    protected InputStream handlePreImport(String fileName, InputStream inputStream) {
+    protected InputStream handlePreImport(String fileName, InputStream inputStream) throws MigrationException{
         return inputStream ;
     }
 

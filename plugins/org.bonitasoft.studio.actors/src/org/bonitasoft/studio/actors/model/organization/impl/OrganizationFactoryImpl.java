@@ -42,7 +42,7 @@ public class OrganizationFactoryImpl extends EFactoryImpl implements Organizatio
 	 */
 	public static OrganizationFactory init() {
 		try {
-			OrganizationFactory theOrganizationFactory = (OrganizationFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.bonitasoft.org/ns/organization/6.0"); 
+			OrganizationFactory theOrganizationFactory = (OrganizationFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.bonitasoft.org/ns/organization/6.0.0-beta-016"); 
 			if (theOrganizationFactory != null) {
 				return theOrganizationFactory;
 			}
@@ -84,6 +84,7 @@ public class OrganizationFactoryImpl extends EFactoryImpl implements Organizatio
 			case OrganizationPackage.ROLES: return createRoles();
 			case OrganizationPackage.USER: return createUser();
 			case OrganizationPackage.USERS: return createUsers();
+			case OrganizationPackage.PASSWORD_TYPE: return createPasswordType();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -217,6 +218,16 @@ public class OrganizationFactoryImpl extends EFactoryImpl implements Organizatio
 	public Users createUsers() {
 		UsersImpl users = new UsersImpl();
 		return users;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public PasswordType createPasswordType() {
+		PasswordTypeImpl passwordType = new PasswordTypeImpl();
+		return passwordType;
 	}
 
 	/**

@@ -5035,29 +5035,29 @@
             featureName="value" dataValue="elementOnly"/>
       </changes>
       <changes xsi:type="history:Create" target="ActorMapping.ecore#//ActorMapping"
-          referenceName="eStructuralFeatures" element="ActorMapping.ecore#//ActorMapping/description">
-        <changes xsi:type="history:Set" element="ActorMapping.ecore#//ActorMapping/description"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.10/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.10/@changes.0/@element"
             featureName="name" dataValue="description"/>
-        <changes xsi:type="history:Set" element="ActorMapping.ecore#//ActorMapping/description"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.10/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2003/XMLType#//String"/>
       </changes>
-      <changes xsi:type="history:Create" target="ActorMapping.ecore#//ActorMapping/description"
-          referenceName="eAnnotations" element="ActorMapping.ecore#//ActorMapping/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
-        <changes xsi:type="history:Set" element="ActorMapping.ecore#//ActorMapping/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.10/@changes.0/@element"
+          referenceName="eAnnotations" element="#//@releases.1/@changes.10/@changes.0/@element/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.10/@changes.0/@element/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
             featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
       </changes>
-      <changes xsi:type="history:Create" target="ActorMapping.ecore#//ActorMapping/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
-          referenceName="details" element="ActorMapping.ecore#//ActorMapping/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
-        <changes xsi:type="history:Set" element="ActorMapping.ecore#//ActorMapping/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.10/@changes.0/@element/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="#//@releases.1/@changes.10/@changes.0/@element/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.10/@changes.0/@element/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
             featureName="key" dataValue="kind"/>
-        <changes xsi:type="history:Set" element="ActorMapping.ecore#//ActorMapping/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.10/@changes.0/@element/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
             featureName="value" dataValue="element"/>
       </changes>
-      <changes xsi:type="history:Create" target="ActorMapping.ecore#//ActorMapping/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
-          referenceName="details" element="ActorMapping.ecore#//ActorMapping/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
-        <changes xsi:type="history:Set" element="ActorMapping.ecore#//ActorMapping/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.10/@changes.0/@element/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+          referenceName="details" element="#//@releases.1/@changes.10/@changes.0/@element/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.10/@changes.0/@element/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
             featureName="key" dataValue="name"/>
-        <changes xsi:type="history:Set" element="ActorMapping.ecore#//ActorMapping/description/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.10/@changes.0/@element/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
             featureName="value" dataValue="description"/>
       </changes>
       <changes xsi:type="history:Create" target="ActorMapping.ecore#//ActorMapping"
@@ -7554,6 +7554,51 @@
           featureName="lowerBound" dataValue="0" oldDataValue="1"/>
       <changes xsi:type="history:Set" element="ActorMapping.ecore#//Groups/group"
           featureName="lowerBound" dataValue="0" oldDataValue="1"/>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Delete" target="ActorMapping.ecore#//ActorMapping"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//String">
+          <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+            <details key="kind" value="element"/>
+            <details key="name" value="description"/>
+          </eAnnotations>
+        </element>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.1/@changes.10/@changes.0/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="configuration.ecore#//Configuration"
+          referenceName="eStructuralFeatures" element="configuration.ecore#//Configuration/version">
+        <changes xsi:type="history:Set" element="configuration.ecore#//Configuration/version"
+            featureName="name" dataValue="version"/>
+        <changes xsi:type="history:Set" element="configuration.ecore#//Configuration/version"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="configuration.ecore#//Configuration"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>version</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
     </changes>
   </releases>
   <releases/>

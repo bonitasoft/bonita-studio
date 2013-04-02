@@ -135,6 +135,10 @@ public class OrganizationAdapterFactory extends AdapterFactoryImpl {
 				return createUsersAdapter();
 			}
 			@Override
+			public Adapter casePasswordType(PasswordType object) {
+				return createPasswordTypeAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -333,6 +337,20 @@ public class OrganizationAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createUsersAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.bonitasoft.studio.actors.model.organization.PasswordType <em>Password Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.bonitasoft.studio.actors.model.organization.PasswordType
+	 * @generated
+	 */
+	public Adapter createPasswordTypeAdapter() {
 		return null;
 	}
 

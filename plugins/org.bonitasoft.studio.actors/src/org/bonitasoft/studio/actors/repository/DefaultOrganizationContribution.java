@@ -29,6 +29,7 @@ import org.bonitasoft.studio.actors.model.organization.MetaDatasType;
 import org.bonitasoft.studio.actors.model.organization.Metadata;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
+import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.Role;
 import org.bonitasoft.studio.actors.model.organization.Roles;
 import org.bonitasoft.studio.actors.model.organization.User;
@@ -202,7 +203,7 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
         user.setFirstName(firstname) ;
         user.setLastName(lastname) ;
         user.setUserName(username) ;
-        user.setPassword(password) ;
+        user.setPassword(createPassword(password)) ;
         user.setManager(manager);
         user.setJobTitle(jobTitle);
         ContactData data = OrganizationFactory.eINSTANCE.createContactData();
@@ -236,5 +237,12 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
 
         return user;
     }
+
+	private PasswordType createPassword(String password) {
+		PasswordType passwordType = OrganizationFactory.eINSTANCE.createPasswordType();
+		passwordType.setValue(password);
+		passwordType.setEncrypted(false);
+		return passwordType;
+	}
 
 }

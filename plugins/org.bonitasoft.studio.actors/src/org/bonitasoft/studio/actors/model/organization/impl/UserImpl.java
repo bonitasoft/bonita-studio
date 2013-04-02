@@ -23,6 +23,7 @@ import org.bonitasoft.studio.actors.model.organization.ContactData;
 import org.bonitasoft.studio.actors.model.organization.MetaDatasType;
 import org.bonitasoft.studio.actors.model.organization.Metadata;
 import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
+import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.User;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -46,7 +47,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getPassword <em>Password</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getFirstName <em>First Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getLastName <em>Last Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getIconName <em>Icon Name</em>}</li>
@@ -59,32 +59,13 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getMetaDatas <em>Meta Datas</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getUserName <em>User Name</em>}</li>
  *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#isEnabled <em>Enabled</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.actors.model.organization.impl.UserImpl#getPassword <em>Password</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
 public class UserImpl extends EObjectImpl implements User {
-	/**
-	 * The default value of the '{@link #getPassword() <em>Password</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPassword()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String PASSWORD_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getPassword() <em>Password</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getPassword()
-	 * @generated
-	 * @ordered
-	 */
-	protected String password = PASSWORD_EDEFAULT;
-
 	/**
 	 * The default value of the '{@link #getFirstName() <em>First Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -305,6 +286,16 @@ public class UserImpl extends EObjectImpl implements User {
 	protected boolean enabledESet;
 
 	/**
+	 * The cached value of the '{@link #getPassword() <em>Password</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPassword()
+	 * @generated
+	 * @ordered
+	 */
+	protected PasswordType password;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -328,7 +319,7 @@ public class UserImpl extends EObjectImpl implements User {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getPassword() {
+	public PasswordType getPassword() {
 		return password;
 	}
 
@@ -337,11 +328,33 @@ public class UserImpl extends EObjectImpl implements User {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setPassword(String newPassword) {
-		String oldPassword = password;
+	public NotificationChain basicSetPassword(PasswordType newPassword, NotificationChain msgs) {
+		PasswordType oldPassword = password;
 		password = newPassword;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PASSWORD, oldPassword, password));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PASSWORD, oldPassword, newPassword);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPassword(PasswordType newPassword) {
+		if (newPassword != password) {
+			NotificationChain msgs = null;
+			if (password != null)
+				msgs = ((InternalEObject)password).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PASSWORD, null, msgs);
+			if (newPassword != null)
+				msgs = ((InternalEObject)newPassword).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - OrganizationPackage.USER__PASSWORD, null, msgs);
+			msgs = basicSetPassword(newPassword, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, OrganizationPackage.USER__PASSWORD, newPassword, newPassword));
 	}
 
 	/**
@@ -701,6 +714,8 @@ public class UserImpl extends EObjectImpl implements User {
 				return basicSetProfessionalData(null, msgs);
 			case OrganizationPackage.USER__META_DATAS:
 				return basicSetMetaDatas(null, msgs);
+			case OrganizationPackage.USER__PASSWORD:
+				return basicSetPassword(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -713,8 +728,6 @@ public class UserImpl extends EObjectImpl implements User {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case OrganizationPackage.USER__PASSWORD:
-				return getPassword();
 			case OrganizationPackage.USER__FIRST_NAME:
 				return getFirstName();
 			case OrganizationPackage.USER__LAST_NAME:
@@ -739,6 +752,8 @@ public class UserImpl extends EObjectImpl implements User {
 				return getUserName();
 			case OrganizationPackage.USER__ENABLED:
 				return isEnabled();
+			case OrganizationPackage.USER__PASSWORD:
+				return getPassword();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -752,9 +767,6 @@ public class UserImpl extends EObjectImpl implements User {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case OrganizationPackage.USER__PASSWORD:
-				setPassword((String)newValue);
-				return;
 			case OrganizationPackage.USER__FIRST_NAME:
 				setFirstName((String)newValue);
 				return;
@@ -791,6 +803,9 @@ public class UserImpl extends EObjectImpl implements User {
 			case OrganizationPackage.USER__ENABLED:
 				setEnabled((Boolean)newValue);
 				return;
+			case OrganizationPackage.USER__PASSWORD:
+				setPassword((PasswordType)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -803,9 +818,6 @@ public class UserImpl extends EObjectImpl implements User {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case OrganizationPackage.USER__PASSWORD:
-				setPassword(PASSWORD_EDEFAULT);
-				return;
 			case OrganizationPackage.USER__FIRST_NAME:
 				setFirstName(FIRST_NAME_EDEFAULT);
 				return;
@@ -842,6 +854,9 @@ public class UserImpl extends EObjectImpl implements User {
 			case OrganizationPackage.USER__ENABLED:
 				unsetEnabled();
 				return;
+			case OrganizationPackage.USER__PASSWORD:
+				setPassword((PasswordType)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -854,8 +869,6 @@ public class UserImpl extends EObjectImpl implements User {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case OrganizationPackage.USER__PASSWORD:
-				return PASSWORD_EDEFAULT == null ? password != null : !PASSWORD_EDEFAULT.equals(password);
 			case OrganizationPackage.USER__FIRST_NAME:
 				return FIRST_NAME_EDEFAULT == null ? firstName != null : !FIRST_NAME_EDEFAULT.equals(firstName);
 			case OrganizationPackage.USER__LAST_NAME:
@@ -880,6 +893,8 @@ public class UserImpl extends EObjectImpl implements User {
 				return USER_NAME_EDEFAULT == null ? userName != null : !USER_NAME_EDEFAULT.equals(userName);
 			case OrganizationPackage.USER__ENABLED:
 				return isSetEnabled();
+			case OrganizationPackage.USER__PASSWORD:
+				return password != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -894,9 +909,7 @@ public class UserImpl extends EObjectImpl implements User {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (password: ");
-		result.append(password);
-		result.append(", firstName: ");
+		result.append(" (firstName: ");
 		result.append(firstName);
 		result.append(", lastName: ");
 		result.append(lastName);

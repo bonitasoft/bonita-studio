@@ -107,7 +107,7 @@ public interface DocumentRoot extends EObject {
 	 * @return the value of the '<em>Organization</em>' containment reference.
 	 * @see #setOrganization(Organization)
 	 * @see org.bonitasoft.studio.actors.model.organization.OrganizationPackage#getDocumentRoot_Organization()
-	 * @model containment="true" upper="-2" transient="true" volatile="true" derived="true"
+	 * @model containment="true"
 	 *        extendedMetaData="kind='element' name='Organization' namespace='##targetNamespace'"
 	 * @generated
 	 */

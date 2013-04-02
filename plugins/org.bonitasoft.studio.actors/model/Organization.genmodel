@@ -76,7 +76,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//Roles/role"/>
     </genClasses>
     <genClasses ecoreClass="Organization.ecore#//User">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/password"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/firstName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/lastName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/iconName"/>
@@ -89,9 +88,14 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//User/metaDatas"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/userName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//User/enabled"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EReference Organization.ecore#//User/password"/>
     </genClasses>
     <genClasses ecoreClass="Organization.ecore#//Users">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Organization.ecore#//Users/user"/>
+    </genClasses>
+    <genClasses ecoreClass="Organization.ecore#//PasswordType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//PasswordType/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Organization.ecore#//PasswordType/encrypted"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
