@@ -259,6 +259,8 @@ public class EngineExpressionUtil {
 			}
 			if(ExpressionConstants.CONDITION_TYPE.equals(simpleExpression.getType())){
 				return createComparisonExpression(exp, simpleExpression);
+			}else if(ExpressionConstants.PATTERN_TYPE.equals(simpleExpression.getType())){
+				return createPatternExpression(simpleExpression);
 			}else{
 				exp.createNewInstance(name);
 				exp.setContent(simpleExpression.getContent());
