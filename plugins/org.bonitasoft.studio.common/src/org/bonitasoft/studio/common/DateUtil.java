@@ -297,6 +297,12 @@ public class DateUtil {
 
 		return days>0?days+" "+Messages.daysLabel+" "+sdf.format(d):sdf.format(d); //$NON-NLS-1$ //$NON-NLS-2$
 	}
+
+	public static String getDateExpressionContent(int year, int month, int day,int hours, int minutes, int seconds) {
+		return "Calendar calendar = GregorianCalendar.getInstance();\n"+
+				"calendar.set("+year+", "+month+","+ day+", "+hours+", "+minutes+", "+seconds+");\n"+
+				"calendar.getTime();";
+	}
 	
 	
 
