@@ -176,6 +176,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
         ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
         IRepositoryFileStore confFile = processConfStore.createRepositoryFileStore(processUUID+".conf") ;
         Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
+        conf.setVersion(ProductVersion.CURRENT_VERSION);
         createDefaultActorMapping(conf);
         confFile.save(conf) ;
 
