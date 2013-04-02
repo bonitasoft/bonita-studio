@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -163,6 +164,7 @@ public class ExportBosArchiveHandler extends AbstractHandler {
             if(file == null){
                 file = processConfStore.createRepositoryFileStore(id+".conf") ;
                 Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
+                conf.setVersion(ProductVersion.CURRENT_VERSION);
                 file.save(conf);
             }
             configuration = (Configuration) file.getContent();
@@ -176,6 +178,7 @@ public class ExportBosArchiveHandler extends AbstractHandler {
         if(configuration == null){
             configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
             configuration.setName(configurationId) ;
+            configuration.setVersion(ProductVersion.CURRENT_VERSION);
         }
         //Synchronize configuration with definition
         new ConfigurationSynchronizer(process, configuration).synchronize() ;
