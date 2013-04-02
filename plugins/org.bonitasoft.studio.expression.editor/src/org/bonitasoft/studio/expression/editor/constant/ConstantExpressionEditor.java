@@ -34,6 +34,8 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -71,7 +73,27 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
 
         typeCombo = new ComboViewer(mainComposite, SWT.BORDER | SWT.READ_ONLY) ;
         typeCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-        typeCombo.setContentProvider(new ExpressionReturnTypeContentProvider()) ;
+        typeCombo.setContentProvider(new IStructuredContentProvider() {
+			
+			@Override
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {	}
+			
+			@Override
+			public void dispose() {}
+			
+			@Override
+			public Object[] getElements(Object inputElement) {
+				return new String[]{
+		                 String.class.getName()
+		                ,Boolean.class.getName()
+		                ,Long.class.getName()
+		                ,Float.class.getName()
+		                ,Double.class.getName()
+		                ,Integer.class.getName()
+		        };
+			}
+		}) ;
+        
         typeCombo.setLabelProvider(new ConstantTypeLabelProvider()) ;
         typeCombo.setInput(new Object()) ;
 
