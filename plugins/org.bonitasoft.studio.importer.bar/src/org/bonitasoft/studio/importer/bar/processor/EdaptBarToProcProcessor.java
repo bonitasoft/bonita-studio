@@ -124,7 +124,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 		importProcessJarDependencies(archiveFile,progressMonitor);
 		importFormJarDependencies(archiveFile,progressMonitor);
 		importApplicationResources(archiveFile,progressMonitor);
-		
+
 		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
 
 		final Resource resource =  new XMLResourceFactoryImpl().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
@@ -190,9 +190,11 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 				}
 
 				toCopy = f;
-				PlatformUtil.copyResource(webTemplateArtifact.getResource().getLocation().toFile(), toCopy, progressMonitor);
-				PlatformUtil.delete(tmpBar, progressMonitor);
+				if(toCopy.exists()){
+					PlatformUtil.copyResource(webTemplateArtifact.getResource().getLocation().toFile(), toCopy, progressMonitor);
+				}
 			}
+			PlatformUtil.delete(tmpBar, progressMonitor);
 		}
 	}
 
