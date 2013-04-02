@@ -284,21 +284,25 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			viewer.addFilter(connectorExpressionContentTypeFilter);
 
 			Expression exp = (Expression) parameter.getExpression();
-			if(!exp.getType().equals(ExpressionConstants.PATTERN_TYPE)){
-				exp.setType(ExpressionConstants.PATTERN_TYPE);
-			}
+//			if(!exp.getType().equals(ExpressionConstants.PATTERN_TYPE)){
+//				exp.setType(ExpressionConstants.PATTERN_TYPE);
+//			}
 			String desc = messageProvider.getFieldDescription(definition, object.getId()) ;
 			if(desc != null && !desc.isEmpty()){
 				viewer.setHint(desc) ;
 			}
 			viewer.setContextInput(container);
-			viewer.setPatternExpression(exp) ;
+		
 			UpdateValueStrategy startegy = new UpdateValueStrategy();
 			if(input.isMandatory()){
 				startegy.setAfterConvertValidator(new EmptyInputValidator(getLabel(object.getId())));
 			}
-			context.bindValue(SWTObservables.observeText(viewer.getTextControl(),SWT.Modify), EMFObservables.observeValue(exp, ExpressionPackage.Literals.EXPRESSION__NAME));
-			context.bindValue(SWTObservables.observeText(viewer.getTextControl(),SWT.Modify), EMFObservables.observeValue(exp, ExpressionPackage.Literals.EXPRESSION__CONTENT),startegy,null);
+			viewer.setEMFBindingContext(context);
+			if(input.isMandatory()){
+				viewer.setMandatoryField(getLabel(object.getId())) ;
+			}
+		
+			viewer.setExpression(exp) ;
 		}
 	}
 
@@ -641,6 +645,8 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 				expression.setName(input.getName()+"Script") ;
 				expression.setType(ExpressionConstants.SCRIPT_TYPE);
 				expression.setInterpreter(((ScriptEditor) widget).getInterpreter());
+			}else if(widget instanceof TextArea){
+				expression.setType(ExpressionConstants.PATTERN_TYPE);
 			}
 			return expression ;
 		}

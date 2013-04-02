@@ -30,7 +30,11 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.expression.editor,
  org.bonitasoft.studio.expression.editor.constant,
  org.bonitasoft.studio.expression.editor.filter,
- org.bonitasoft.studio.expression.editor.i18n;x-friends:="org.bonitasoft.studio.properties.test,org.bonitasoft.studio.test.swtbot.util,org.bonitasoft.studio.tests.ex",
+ org.bonitasoft.studio.expression.editor.i18n;
+  x-friends:="org.bonitasoft.studio.properties.test,
+   org.bonitasoft.studio.test.swtbot.util,
+   org.bonitasoft.studio.tests.ex,
+   org.bonitasoft.studio.expressions.test",
  org.bonitasoft.studio.expression.editor.operation,
  org.bonitasoft.studio.expression.editor.provider,
  org.bonitasoft.studio.expression.editor.viewer

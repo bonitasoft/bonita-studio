@@ -25,22 +25,29 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.bonitasoft.studio.common.widgets.MagicComposite;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.core.databinding.Binding;
+import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -51,13 +58,18 @@ import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Link;
+
 
 
 /**
@@ -67,27 +79,123 @@ import org.eclipse.swt.widgets.Event;
 public class PatternExpressionViewer extends Composite {
 
 	private TextViewer viewer;
+	private ExpressionViewer expressionViewer;
 	private final IExpressionNatureProvider expressionNatureProvider = new ExpressionContentProvider();
 	private ExpressionContentAssistProcessor contentAssisProcessor;
 	private final Set<ViewerFilter> filters = new HashSet<ViewerFilter>();
-	private Expression patternExpression;
+	private Expression expression;
 	private List<Expression> filteredExpressions;
 	private PatternLineStyleListener patternLineStyle;
 	private ControlDecoration hintDecoration;
 	private ComputePatternDependenciesJob dependencyJob;
+	private MagicComposite mc;
+	private EMFDataBindingContext context;
+	private String mandatoryFieldLabel;
+	private EObject contextInput;
+	private Binding patternBinding;
 
 	public PatternExpressionViewer(Composite parent, int style) {
 		super(parent, style);
 		setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(10, 25, 0, 0).create()) ;
 	
+		mc = new MagicComposite(this, SWT.INHERIT_DEFAULT);
+		mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+		mc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		createTextViewer();
-	
+		createExpressionViewer();
+		createEditorSwitch();
+		mc.hide(viewer.getControl());
+		mc.show(expressionViewer.getControl());
+
+	}
+
+	private void createEditorSwitch() {
+		final Link switchControl = new Link(mc, SWT.NONE);
+		switchControl.setText(Messages.switchEditor);
+		switchControl.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				switchEditorType();
+			}
+		});
+	}
+
+	protected void initializeEditorType() {
+		if(ExpressionConstants.PATTERN_TYPE.equals(expression.getType())){
+			expression.setName("<pattern-expression>");
+			mc.hide(expressionViewer.getControl());
+			mc.show(viewer.getControl());
+		}else{
+			mc.hide(viewer.getControl());
+			mc.show(expressionViewer.getControl());
+		}
+		bindExpression();
+		mc.layout(true, true);
+	}
+
+	protected void switchEditorType() {
+		if(MessageDialog.openQuestion(mc.getShell(), Messages.eraseExpressionTitle,Messages.eraseExpressionMsg)){
+			if(!expressionViewer.getControl().isVisible()){
+				mc.hide(viewer.getControl());
+				mc.show(expressionViewer.getControl());
+				expression.setContent("");
+				expression.setName("");
+				expression.setInterpreter(null);
+				expression.setType(ExpressionConstants.CONSTANT_TYPE);
+				expressionViewer.setSelection(new StructuredSelection(expression));
+			}else{
+				mc.hide(expressionViewer.getControl());
+				mc.show(viewer.getControl());
+				expression.setContent("");
+				expression.setName("<pattern-expression>");
+				expression.setInterpreter(null);
+				expression.setType(ExpressionConstants.PATTERN_TYPE);
+				bindPatternExpression();
+			}
+			mc.layout(true, true);
+		}
 	}
 
 
-	
+	private void bindExpression() {
+		if(context != null){
+			bindPatternExpression();
+			bindExpressionViewer();
+		}
+	}
+
+
+	private void bindExpressionViewer() {
+		expressionViewer.setContext(contextInput);
+		if(mandatoryFieldLabel != null){
+			expressionViewer.setMandatoryField(mandatoryFieldLabel, context);
+		}
+		expressionViewer.setSelection(new StructuredSelection(expression));
+	}
+
+
+	private void bindPatternExpression() {
+		UpdateValueStrategy startegy = new UpdateValueStrategy();
+		if(mandatoryFieldLabel != null){
+			startegy.setAfterConvertValidator(new EmptyInputValidator(mandatoryFieldLabel));
+		}
+		if(patternBinding != null){
+			patternBinding.dispose();
+			patternBinding = null;
+		}
+		patternBinding = context.bindValue(SWTObservables.observeText(viewer.getTextWidget(),SWT.Modify), EMFObservables.observeValue(expression, ExpressionPackage.Literals.EXPRESSION__CONTENT),startegy,null);
+	}
+
+
+	protected void createExpressionViewer() {
+		expressionViewer = new ExpressionViewer(mc, SWT.BORDER, null);
+		expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+	}
+
+
+
 	protected void createTextViewer() {
-		viewer = new TextViewer(this, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL) ;
+		viewer = new TextViewer(mc, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL) ;
 		viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
 		final ControlDecoration helpDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT,this);
@@ -142,7 +250,7 @@ public class PatternExpressionViewer extends Composite {
 
 
 
-		ISWTObservableValue observable = SWTObservables.observeDelayedValue(200, SWTObservables.observeText(getTextControl(), SWT.Modify));
+		ISWTObservableValue observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(getTextControl(), SWT.Modify));
 		observable.addValueChangeListener(new IValueChangeListener() {
 
 			@Override
@@ -166,40 +274,14 @@ public class PatternExpressionViewer extends Composite {
 		}
 	}
 
-
-	/** Check if a word is contained as a sub-word in each element of a list of expressions
-	 * 
-	 * @param word word to search in the expressions of the list
-	 * @param startIndexWord index of the word in the message
-	 * @param message the currentContent
-	 * @param eList list of Expressions in the current Content
-	 * @return 
-	 */
-	public boolean isNotIncludedInWord(String word,  int startIndexWord, String message, EList<EObject> eList){
-		for(Object exp : eList){
-			if(exp instanceof Expression){
-				String expWord = ((Expression)exp).getName();
-				int offset = 0;
-				while(message.indexOf( expWord, offset)!=-1){
-					int startIndexReference = message.indexOf(expWord, offset);
-					int endIndexReference = startIndexReference+expWord.length();
-					if(startIndexWord-offset >= startIndexReference && startIndexWord < endIndexReference){
-						return false;
-					}
-					offset=endIndexReference;
-				}
-			}
-		}
-		return true;
-	}
-
 	public void setContextInput(EObject input){
+		this.contextInput = input;
 		manageNatureProviderAndAutocompletionProposal(input) ;
 	}
 
-	public void setPatternExpression(final Expression patternExpression){
-		Assert.isLegal(patternExpression.getType() != null && patternExpression.getType().equals(ExpressionConstants.PATTERN_TYPE)) ;
-		this.patternExpression = patternExpression;
+	public void setExpression(final Expression expression){
+		this.expression = expression;
+		initializeEditorType();
 	}
 
 
@@ -224,9 +306,9 @@ public class PatternExpressionViewer extends Composite {
 			public void done(IJobChangeEvent event) {
 				if(dependencyJob != null){
 					List<EObject> deps = dependencyJob.getDependencies(viewer.getDocument().get()) ;
-					patternExpression.getReferencedElements().clear() ;
+					expression.getReferencedElements().clear() ;
 					if(deps != null && !deps.isEmpty()){
-						patternExpression.getReferencedElements().addAll(deps) ;
+						expression.getReferencedElements().addAll(deps) ;
 					}
 				}
 			}
@@ -263,6 +345,7 @@ public class PatternExpressionViewer extends Composite {
 
 	public void addFilter(ViewerFilter viewerFilter) {
 		filters.add(viewerFilter) ;
+		expressionViewer.addFilter(viewerFilter);
 	}
 
 	public StyledText getTextControl(){
@@ -273,5 +356,15 @@ public class PatternExpressionViewer extends Composite {
 	public void setHint(String hint) {
 		hintDecoration.setDescriptionText(hint);
 		hintDecoration.show();
+		expressionViewer.setMessage(hint, IStatus.INFO);
+	}
+
+
+	public void setEMFBindingContext(EMFDataBindingContext context) {
+		this.context = context;
+	}
+
+	public void setMandatoryField(String mandatoryFieldLabel) {
+		this.mandatoryFieldLabel = mandatoryFieldLabel;
 	}
 }

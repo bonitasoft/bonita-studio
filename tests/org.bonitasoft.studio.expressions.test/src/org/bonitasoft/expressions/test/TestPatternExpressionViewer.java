@@ -28,6 +28,7 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.test.swtbot.SWTBotConnectorTestUtil;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
+import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Connector;
@@ -56,6 +57,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 	private static final String QUERY = "SELECT "+DATA_NAME_1+" from MyTable WHERE "+DATA_NAME_2+"='\\"+DATA_NAME_3+"'";
 	private static final String JDBC_DB_CONNECTOR_ID = "database-jdbc";
 	private static final String DB_CATEGORY_ID = "database";
+	private static final String GROOVY_SQL_QUERY = "\"SELECT \"+"+DATA_NAME_1+"+\" from MyTable WHERE \"+"+DATA_NAME_2+"+\"='\"+"+DATA_NAME_3+"+\"'\"";
 
 	@Test
     public void testPatternExpressionViewer(){
@@ -70,9 +72,32 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 		addDBConnectorWithPatternExpression(connectorLabel, connectorVersion,dbCategoryLabel,"patternDBConnector");
 		fillPatternExpression();
 		checkPatternExpressionModel();
-//		addDBConnectorWithPatternExpression(connectorLabel, connectorVersion,dbCategoryLabel,"groovyDBConnector");
-//		fillGroovyExpression();
+		addDBConnectorWithPatternExpression(connectorLabel, connectorVersion,dbCategoryLabel,"groovyDBConnector");
+		fillGroovyExpression();
+		checkGroovyExpressionModel();
     }
+
+	private void checkGroovyExpressionModel() {
+		DiagramEditPart diagramEp = (DiagramEditPart) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart().part();
+		MainProcess diagram  = (MainProcess) diagramEp.resolveSemanticElement();
+		List<Connector> connectors = ModelHelper.getAllItemsOfType(diagram, ProcessPackage.Literals.CONNECTOR);
+		boolean found = false;
+		for(Connector c : connectors){
+			if(c.getName().equals("groovyDBConnector")){
+				List<Expression> expressions = ModelHelper.getAllItemsOfType(c, ExpressionPackage.Literals.EXPRESSION);
+				for(Expression exp : expressions){
+					if(exp.getType().equals(ExpressionConstants.SCRIPT_TYPE)){
+						found = true;
+						assertEquals("Invalid expression content", GROOVY_SQL_QUERY,exp.getContent());
+						assertEquals("Invalid expression return type",String.class.getName(),exp.getReturnType());
+						assertEquals("Invalid number of dependencies", 3,exp.getReferencedElements().size());
+						assertEquals("Invalid interpreter", ExpressionConstants.GROOVY,exp.getInterpreter());
+					}
+				}
+			}
+		}
+		assertTrue("Groovy expression not found", found);
+	}
 
 	private void checkPatternExpressionModel() {
 		DiagramEditPart diagramEp = (DiagramEditPart) bot.gefEditor(bot.activeEditor().getTitle()).mainEditPart().part();
@@ -115,10 +140,14 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 	}
 	
 	private void fillGroovyExpression() {
-		bot.styledText().setText("SELECT "+DATA_NAME_1+" from MyTable WHERE "+DATA_NAME_2+"='monTest'");
+		bot.link(Messages.switchEditor).click();
+		bot.button(IDialogConstants.YES_LABEL).click();
+		editGroovyEditor(0, "Request", String.class.getName(), "sqlQuery", GROOVY_SQL_QUERY);
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
+		bot.sleep(1000);
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 		bot.sleep(1000);
+		bot.activeEditor().save();
 	}
 
 	private String getCategoryLabel(String categoryId) {
@@ -161,7 +190,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
         assertFalse("return type combobox should be disabled",bot.comboBoxWithLabel("Return type").isEnabled());
         assertEquals("return type should be"+inputtype,bot.comboBoxWithLabel("Return type").getText(),inputtype);
         bot.button(IDialogConstants.OK_LABEL).click();
-        assertEquals("wrong value for "+inputName,bot.textWithLabel(inputName).getText(),scriptName);
+        assertEquals("wrong value for "+inputName,bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT,0).getText(),scriptName);
     }
     
     private void createData(String dataName) {
