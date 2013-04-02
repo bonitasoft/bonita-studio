@@ -219,7 +219,11 @@ public class ImportFileCommand extends AbstractHandler {
 
                                         @Override
                                         public void run() {
-                                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Could not import", "Import has failed !\nPlease, check your log file",e).open();
+                                        	String message =  Messages.errorWhileImporting_message;
+                                        	if(e.getMessage() != null && !e.getMessage().isEmpty()){
+                                        		message = e.getMessage();
+                                        	}
+                                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title,message,e).open();
                                         }
                                     }) ;
 

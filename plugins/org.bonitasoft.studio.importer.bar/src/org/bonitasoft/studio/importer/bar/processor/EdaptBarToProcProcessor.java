@@ -25,9 +25,11 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -81,7 +83,11 @@ import org.eclipse.swt.widgets.Display;
 public class EdaptBarToProcProcessor extends ToProcProcessor {
 
 	private static final String ATTACHMENTS_FOLDER = "attachments";
-	private static final String SUPPORTED_VERSION = "5.9";
+	private static final Set<String> SUPPORTED_VERSIONS = new HashSet<String>() ;
+	static{
+		SUPPORTED_VERSIONS.add("5.9");
+		SUPPORTED_VERSIONS.add("5.10");
+	}
 	private static final String MIGRATION_HISTORY_PATH = "models/v60/process.history";
 	private static final String FORMS_LIBS = "forms/lib";
 	private static final String VALIDATORS = "validators";
@@ -154,8 +160,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 					}
 				}
 			}
-			if(sourceVersion == null || !sourceVersion.toString().equals(SUPPORTED_VERSION)){
-				throw new IncompatibleVersionException((String) sourceVersion,SUPPORTED_VERSION);
+			if(sourceVersion == null || !SUPPORTED_VERSIONS.contains(sourceVersion.toString())){
+				throw new IncompatibleVersionException((String) sourceVersion,SUPPORTED_VERSIONS.toString());
 			}
 			resource.unload();
 			final URI resourceURI = resource.getURI();
