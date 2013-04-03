@@ -236,12 +236,14 @@ public class SWTBotConnectorTestUtil {
     		 break;
     	   }
        }
+       Assert.assertNotNull("Connector "+connectorDefinitionLabel + " (" + version + ") not found in category "+categoryLabel ,cNode);
        final String nodeToSelect = cNode;
        bot.waitUntil(new ICondition() {
 
 			public boolean test() throws Exception {
 				bot.tree().select(categoryLabel).expandNode(categoryLabel).select(nodeToSelect);
-				return bot.tree().selectionCount() > 0;
+				String selection = bot.tree().selection().get(0,0);
+				return selection != null &&  selection.startsWith(connectorDefinitionLabel);
 			}
 
 			public void init(SWTBot bot) {
