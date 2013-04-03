@@ -423,7 +423,8 @@ public class EngineExpressionUtil {
 
 	public static Expression createPatternExpression(org.bonitasoft.studio.model.expression.Expression patternExpression) {
 		final org.bonitasoft.studio.model.expression.Expression simpleExpression = (org.bonitasoft.studio.model.expression.Expression) patternExpression;
-		if (simpleExpression.getContent() != null && !simpleExpression.getContent().isEmpty()) {
+		String content = simpleExpression.getContent();
+		if (content != null && !content.isEmpty()) {
 			final ExpressionBuilder exp = new ExpressionBuilder();
 			String name = simpleExpression.getName();
 			if(name == null || name.isEmpty()){
@@ -431,25 +432,26 @@ public class EngineExpressionUtil {
 			}
 			exp.createNewInstance(name);
 			IDocument document = new Document();
-			document.set(simpleExpression.getContent());
+			document.set(content);
 			StringBuilder patternExpressionContent = new StringBuilder();
-			final FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(document);
+			FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(document);
 			List<Expression> dependencies = createDependenciesList(simpleExpression);
+
+			int lenght = content.length();
 			int i = 0;
-			int lenght = simpleExpression.getContent().length();
 			for (final Expression dep : dependencies) {
 				try {
 					IRegion index = null;
 					index = finder.find(i, dep.getName(), true, true, true, false);
 					while(index != null && index.getOffset() <  lenght){
-						if(isNotEscapeWord(simpleExpression.getContent(), index.getOffset())){
-							patternExpressionContent.append(simpleExpression.getContent().substring(i, index.getOffset()));
+						if(isNotEscapeWord(content, index.getOffset())){
+							patternExpressionContent.append(content.substring(i, index.getOffset()));
 							patternExpressionContent.append("${");
 							patternExpressionContent.append(dep.getName());
 							patternExpressionContent.append("}");
 						}else{
-							patternExpressionContent.append(simpleExpression.getContent().substring(i, index.getOffset()-1));
-							patternExpressionContent.append(simpleExpression.getContent().substring(index.getOffset(),index.getOffset()+index.getLength()));
+							patternExpressionContent.append(content.substring(i, index.getOffset()-1));
+							patternExpressionContent.append(content.substring(index.getOffset(),index.getOffset()+index.getLength()));
 						}
 						i = index.getOffset() + index.getLength();
 						if(i < lenght){
@@ -461,11 +463,18 @@ public class EngineExpressionUtil {
 				} catch (BadLocationException e) {
 					// Ignore
 				}
+				if(i < lenght){
+					patternExpressionContent.append(content.substring(i, lenght));
+				}
+				content = patternExpressionContent.toString();
+				lenght = content.length();
+				i = 0;
+				patternExpressionContent = new StringBuilder();
+				document.set(content);
+				finder = new FindReplaceDocumentAdapter(document);
 			}
-			if(i < lenght){
-				patternExpressionContent.append(simpleExpression.getContent().substring(i, lenght));
-			}
-			exp.setContent(patternExpressionContent.toString());
+
+			exp.setContent(content);
 			final String engineExpressionType = toEngineExpressionType(simpleExpression);
 			exp.setExpressionType(engineExpressionType);
 			exp.setInterpreter("");
