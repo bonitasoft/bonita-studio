@@ -68,9 +68,11 @@ public class BatchValidationHandler extends AbstractHandler {
 				IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
 				if(part instanceof DiagramEditor){
 					Resource resource = ((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement().eResource();
-					for(EObject content : resource.getContents()){
-						if(content instanceof Diagram){
-							toValidate.add((Diagram) content);
+					if(resource != null){
+						for(EObject content : resource.getContents()){
+							if(content instanceof Diagram){
+								toValidate.add((Diagram) content);
+							}
 						}
 					}
 				}
