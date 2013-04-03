@@ -276,7 +276,7 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
         buttonComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0,0).spacing(0,3).create()) ;
 
         addJarButton = new Button(buttonComposite, SWT.FLAT) ;
-        addJarButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
+        addJarButton.setLayoutData(GridDataFactory.fillDefaults().create()) ;
         addJarButton.setText(Messages.add) ;
         addJarButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -314,7 +314,7 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
         }) ;
 
         removeJarButton = new Button(buttonComposite, SWT.FLAT) ;
-        removeJarButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
+        removeJarButton.setLayoutData(GridDataFactory.fillDefaults().create()) ;
         removeJarButton.setText(Messages.remove) ;
         removeJarButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -327,7 +327,7 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
         }) ;
 
         final Button manageJarButton = new Button(buttonComposite, SWT.FLAT) ;
-        manageJarButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
+        manageJarButton.setLayoutData(GridDataFactory.fillDefaults().create()) ;
         manageJarButton.setText(Messages.manageJars) ;
         manageJarButton.addSelectionListener(new SelectionAdapter() {
             @Override
