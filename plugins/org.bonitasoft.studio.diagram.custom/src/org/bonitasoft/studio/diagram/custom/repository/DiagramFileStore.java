@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.Activator;
+import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -52,6 +53,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -210,6 +213,13 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 				MainProcess diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
 				if(isReadOnly()){
 					editor.getDiagramEditPart().disableEditMode() ;
+					Display.getDefault().syncExec(new Runnable() {
+						
+						@Override
+						public void run() {
+							MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.readOnlyFileTitle, Messages.readOnlyFileWarning);
+						}
+					});
 				}
 				registerListeners(diagram, editor.getEditingDomain()) ;
 				IGraphicalEditPart editPart = editor.getDiagramEditPart().getChildBySemanticHint(PoolEditPart.VISUAL_ID+"");

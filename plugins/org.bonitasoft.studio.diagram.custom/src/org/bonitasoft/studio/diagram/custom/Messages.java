@@ -72,5 +72,7 @@ public class Messages extends NLS {
     public static String applicationResourcesFor;
 	public static String migrationOngoing;
 	public static String deleteMessageFlow;
+	public static String readOnlyFileTitle;
+	public static String readOnlyFileWarning;
 
 }
