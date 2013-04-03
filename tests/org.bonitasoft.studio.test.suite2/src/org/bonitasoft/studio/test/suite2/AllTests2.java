@@ -50,7 +50,6 @@ import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
 import org.bonitasoft.studio.themes.tests.TestCSSModel;
 import org.bonitasoft.studio.themes.tests.TestDirtyState;
 import org.bonitasoft.studio.themes.tests.TestThemeRepository;
-import org.bonitasoft.studio.userguidance.tests.TestSynchronization;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -82,7 +81,6 @@ import org.junit.runners.Suite;
     TestThemeRepository.class,
     TestDirtyState.class,
     TestCSSModel.class,
-    TestSynchronization.class,
     TestURLs.class,
     TestDuplicateCommand.class,
     BPMNDataExportImportTest.class,
