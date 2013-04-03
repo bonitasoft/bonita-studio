@@ -39,6 +39,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -47,7 +48,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.dialogs.FilteredTree;
@@ -65,7 +65,7 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
 
     private ListViewer categoriesList;
     private FilteredTree functionsList;
-    private Text documenationText;
+    private Browser documenationText;
     private final GroovyViewer viewer;
 
 
@@ -218,9 +218,8 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
 
         Label docTitle = new Label(docComposite, SWT.NONE);
         docTitle.setText(Messages.functionDocTitle);
-
-        documenationText = new Text(docComposite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-        documenationText.setEditable(false);
+        
+        documenationText = new Browser(docComposite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
         documenationText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         documenationText.setBackground(ColorConstants.white);
     }
