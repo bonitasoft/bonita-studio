@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,12 +32,15 @@ import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
+import org.bonitasoft.studio.actors.model.organization.OrganizationPackage;
+import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationAdapterFactory;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceFactoryImpl;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationResourceImpl;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -47,6 +51,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.eclipse.emf.edapt.history.Release;
@@ -186,7 +191,12 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
 				OrganizationResourceImpl r = (OrganizationResourceImpl) rSet.getResources().get(0);
 				Resource resource = new XMLResourceImpl(resourceURI) ;
 				DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
-				root.setOrganization(((DocumentRoot)r.getContents().get(0)).getOrganization());
+				final Organization orga = EcoreUtil.copy(((DocumentRoot)r.getContents().get(0)).getOrganization());
+				List<PasswordType> passwords = ModelHelper.getAllItemsOfType(orga, OrganizationPackage.Literals.PASSWORD_TYPE);
+				for(PasswordType p : passwords){
+					p.setEncrypted(p.isEncrypted());
+				}
+				root.setOrganization(orga);
 				resource.getContents().add(root) ;
 				Map<String, String> options = new HashMap<String, String>() ;
 				options.put(XMLResource.OPTION_ENCODING, "UTF-8");
