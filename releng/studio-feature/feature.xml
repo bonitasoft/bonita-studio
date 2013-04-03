@@ -254,13 +254,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.userguidance"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.repository.themes"
          download-size="0"
          install-size="0"
