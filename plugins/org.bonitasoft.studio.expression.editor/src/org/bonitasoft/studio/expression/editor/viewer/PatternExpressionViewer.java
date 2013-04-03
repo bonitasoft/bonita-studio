@@ -18,8 +18,6 @@ package org.bonitasoft.studio.expression.editor.viewer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -93,13 +91,13 @@ public class PatternExpressionViewer extends Composite {
 	private String mandatoryFieldLabel;
 	private EObject contextInput;
 	private Binding patternBinding;
+	private ControlDecoration helpDecoration;
 
 	public PatternExpressionViewer(Composite parent, int style) {
 		super(parent, style);
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(10, 25, 0, 0).create()) ;
-	
+		setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create()) ;
 		mc = new MagicComposite(this, SWT.INHERIT_DEFAULT);
-		mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+		mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
 		mc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		createTextViewer();
 		createExpressionViewer();
@@ -125,9 +123,13 @@ public class PatternExpressionViewer extends Composite {
 			expression.setName("<pattern-expression>");
 			mc.hide(expressionViewer.getControl());
 			mc.show(viewer.getControl());
+			helpDecoration.show();
+			mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
 		}else{
 			mc.hide(viewer.getControl());
 			mc.show(expressionViewer.getControl());
+			helpDecoration.hide();
+			mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 		}
 		bindExpression();
 		mc.layout(true, true);
@@ -136,6 +138,7 @@ public class PatternExpressionViewer extends Composite {
 	protected void switchEditorType() {
 		if(MessageDialog.openQuestion(mc.getShell(), Messages.eraseExpressionTitle,Messages.eraseExpressionMsg)){
 			if(!expressionViewer.getControl().isVisible()){
+				helpDecoration.hide();
 				mc.hide(viewer.getControl());
 				mc.show(expressionViewer.getControl());
 				expression.setContent("");
@@ -143,6 +146,7 @@ public class PatternExpressionViewer extends Composite {
 				expression.setInterpreter(null);
 				expression.setType(ExpressionConstants.CONSTANT_TYPE);
 				expressionViewer.setSelection(new StructuredSelection(expression));
+				mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 			}else{
 				mc.hide(expressionViewer.getControl());
 				mc.show(viewer.getControl());
@@ -150,7 +154,9 @@ public class PatternExpressionViewer extends Composite {
 				expression.setName("<pattern-expression>");
 				expression.setInterpreter(null);
 				expression.setType(ExpressionConstants.PATTERN_TYPE);
+				helpDecoration.show();
 				bindPatternExpression();
+				mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
 			}
 			mc.layout(true, true);
 		}
@@ -198,7 +204,7 @@ public class PatternExpressionViewer extends Composite {
 		viewer = new TextViewer(mc, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL) ;
 		viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-		final ControlDecoration helpDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT,this);
+		helpDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT,this);
 		helpDecoration.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
 		helpDecoration.setDescriptionText(Messages.patternViewerHelp);
 		helpDecoration.setMarginWidth(2);
