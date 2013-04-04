@@ -74,6 +74,29 @@ public class OperationReturnTypesValidator implements IValidator {
 					}
 					return ValidationStatus.ok();
 				}
+				if (ExpressionConstants.XPATH_UPDATE_OPERATOR.equals(operation.getOperator().getType())){
+					if (dataExpression!=null && dataExpression.getContent()!=null && !dataExpression.getContent().isEmpty()){
+						if (!operation.getOperator().getInputTypes().isEmpty()){
+							String typeName = operation.getOperator().getInputTypes().get(0);
+							try{
+								Class<?> dataReturnTypeClass = Class.forName(typeName);
+								Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
+								if(!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)){
+									return ValidationStatus.warning(Messages.bind(
+											Messages.invalidReturnTypeBetween,dataExpression.getName(),
+											((Expression) expression).getName()));
+								}
+							}catch (Exception e) {
+								if(!operation.getOperator().getInputTypes().get(0).equals(((Expression) expression).getReturnType())){
+									return ValidationStatus.warning(Messages.bind(
+											Messages.invalidReturnTypeFor,
+											((Expression) expression).getName()));
+								}
+							}
+						}
+					}
+					return ValidationStatus.ok();
+				}
 				if(ExpressionConstants.MESSAGE_ID_TYPE.equals(operation.getRightOperand().getType())){
 					return ValidationStatus.ok();
 				}
