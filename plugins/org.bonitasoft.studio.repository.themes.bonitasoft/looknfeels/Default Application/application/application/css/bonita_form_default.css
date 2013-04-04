@@ -108,26 +108,16 @@ button.bonita_form_button + button.bonita_form_button {
 
 
 .bonita_form_field.list_container select{
+	width: 110%;
 	background: transparent;
 	-webkit-appearance: none;
 	border: 0;
 	border-radius: 0;
 	font-family: Signika-Regular;
 	font-size: 100%;
-	width: auto;
-	position: absolute;
-}
-.bonita_form_field.list_container select option{
-	background: transparent;
 }
 .bonita_form_field.list_container{
 	background: url(../images/form-select.png) no-repeat right center;
-	overflow: hidden;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-	position: relative;
-	overflow: hidden;
 }
 
 input.bonita_form_field, select.bonita_form_field, select.bonita_datetime_list_item, .bonita_form_field.list_container {
@@ -138,13 +128,12 @@ input.bonita_form_field, select.bonita_form_field, select.bonita_datetime_list_i
 	-webkit-border-radius: 5px;
 	-webkit-box-shadow: 0 0 0 #cccccc;
 	*behavior: url(boxsizing.htc);
+	-moz-box-sizing: border-box;
 	padding: 5px 5px 5px 5px;
 	box-sizing: border-box;
 	vertical-align: middle;
 	-o-box-shadow: 0 0 0 #cccccc;
-	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
 	height: 35px;
 	font-size: 100%;
 	border: 1px solid #c2c2c2;
@@ -158,11 +147,11 @@ textarea.bonita_form_field, div.bonita_form_field div.bonita_rich_text {
 	border-radius: 5px;
 	-webkit-border-radius: 5px;
 	-webkit-box-shadow: 0 0 0 #cccccc;
-	padding: 5px 5px 5px 5px;
-	-o-box-shadow: 0 0 0 #cccccc;
 	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
+	padding: 5px 5px 5px 5px;
 	box-sizing: border-box;
+	-o-box-shadow: 0 0 0 #cccccc;
+	-webkit-box-sizing: border-box;
 	font-size: 100%;
 	border: 1px solid #c2c2c2;
 	-moz-box-shadow: 0 0 0 #cccccc;
@@ -175,70 +164,78 @@ div.bonita_form_label {
 }
 
 div#bonita-open-solution-logo {
-	height: 63px;
-	width: 200px;
-	margin-left: 20px;
-	position: absolute;
-	background: url(../images/Logo-Bonitasoft-Horizontal-Small.png) no-repeat transparent;
+	background: url("../images/logo.png") no-repeat scroll 20px 8px #FFFFFF !important;
+    height: 50px;
+    position: absolute;
+    width: 200px;
 }
 
 div#bonita-banneralthaut {
+	display: none;
 	height: 3px;
 	width: 100%;
 	background-color: #de1c18;
 }
 
 div#bonita-banneraltbas {
-	height: 25px;
+	height: 35px;
 	width: 100%;
 	background-color: #b20706;
+	background: -moz-linear-gradient(top, #CD0807 0%, #B20706 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #CD0807), color-stop(100%, #B20706)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #CD0807 0%,#B20706 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,	#CD0807 0%, #B20706 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,	#CD0807 0%,#B20706 100%); /* IE10+ */
+	background: linear-gradient(to bottom,	#CD0807 0%, #B20706 100%); /* W3C */
+	-pie-background: linear-gradient(#CD0807 0%, #B20706 100%) #CD0807;
+	behavior: url(applicationResource?location=application%2Fcss%2FPIE.htc&process=Pool--1.0&timestamp=1365003811106);
 }
 
 .bonita_process_label {
-	height: 65px;
+	height: 50px;
+	line-height: 50px;
 	margin-left: 250px;
 	positon: relative;
 	text-align: center;
 	margin-right: 250px;
-	line-height: 80px;
 	font-size: 184.6153846153846%;
 	color: #282626;
 }
 
 div#bonita-identification-area {
 	right: 0;
-	margin-top: 5px;
 	position: absolute;
-	margin-right: 10px;
 	font-size: 14px;
 	top: 0;
 	color: #333333;
+	line-height: 25px;
+	margin-right: 10px;
+    margin-top: 15px;
 }
 
-.bonita_username {
-	display: inline;
+.bonita_username, .bonita_username_label,
+.bonita_logout_button, .bonita_logout_label,
+.bonita_user_xp_link, .bonita_user_xp_label {
+	display: inline-block;
 }
 
-.bonita_username_label {
-	display: inline;
-}
-
+.bonita_username,
 .bonita_logout_button {
-	display: inline;
+	padding: 0 20px;
+}
+
+.bonita_user_xp_label {
+	padding: 0 10px 0 20px;
+}
+
+.bonita_logout_button,
+.bonita_user_xp_link {
+	border-left: 1px solid #323232;
 }
 
 .bonita_logout_label, .bonita_logout_label:visited, .bonita_logout_label:hover {
 	text-decoration: none;
-	display: inline;
-	color: #333333;
-}
-
-.bonita_user_xp_link {
-	display: inline;
-}
-
-.bonita_user_xp_label {
-	display: inline;
+	color: #B20706;
 }
 
 .bonita_user_xp_icon {
