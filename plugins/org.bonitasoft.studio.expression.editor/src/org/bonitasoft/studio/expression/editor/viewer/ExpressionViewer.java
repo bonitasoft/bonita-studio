@@ -708,37 +708,39 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 	protected String getContentTypeFromInput(String input) {
 		String expressionType = selectedExpression.getType() ;
+		if(CONSTANT_TYPE.equals(expressionType)){
+			return expressionType;
+		}
 		if( selectedExpression.getType() == null){
 			expressionType = CONSTANT_TYPE ;
 		}
-//		if(ExpressionConstants.SCRIPT_TYPE.equals(expressionType)){
-//			return ExpressionConstants.SCRIPT_TYPE ;
-//		}else if(ExpressionConstants.CONDITION_TYPE.equals(expressionType)){
-//			return ExpressionConstants.CONDITION_TYPE ;
-//		}else if(ExpressionConstants.CONNECTOR_TYPE.equals(expressionType)){
-//			return ExpressionConstants.CONNECTOR_TYPE ;
-//		}else if(ExpressionConstants.VARIABLE_TYPE.equals(expressionType)){
-//			return ExpressionConstants.VARIABLE_TYPE ;
-//		}
+		if(ExpressionConstants.SCRIPT_TYPE.equals(expressionType)){
+			return ExpressionConstants.SCRIPT_TYPE ;
+		}else if(ExpressionConstants.CONDITION_TYPE.equals(expressionType)){
+			return ExpressionConstants.CONDITION_TYPE ;
+		}else if(ExpressionConstants.CONNECTOR_TYPE.equals(expressionType)){
+			return ExpressionConstants.CONNECTOR_TYPE ;
+		}
+		
 
-//		Set<String> cache = new HashSet<String>() ;
-//		for(Expression e : getFilteredExpressions()){
-//			if(e.getName().equals(input)){
-//				cache.add(e.getType()) ;
-//			}
-//		}
-//		if(cache.size() > 1){
-//			for(String type : cache){
-//				if(type.equals(selectedExpression.getType())){
-//					return type ;
-//				}
-//			}
-//			return cache.iterator().next() ;
-//		}else if(cache.size() == 1){
-//			return cache.iterator().next() ;
-//		}else{
-//			expressionType = CONSTANT_TYPE ;
-//		}
+		Set<String> cache = new HashSet<String>() ;
+		for(Expression e : getFilteredExpressions()){
+			if(e.getName().equals(input)){
+				cache.add(e.getType()) ;
+			}
+		}
+		if(cache.size() > 1){
+			for(String type : cache){
+				if(type.equals(selectedExpression.getType())){
+					return type ;
+				}
+			}
+			return cache.iterator().next() ;
+		}else if(cache.size() == 1){
+			return cache.iterator().next() ;
+		}else{
+			expressionType = CONSTANT_TYPE ;
+		}
 
 		return expressionType;
 	}
