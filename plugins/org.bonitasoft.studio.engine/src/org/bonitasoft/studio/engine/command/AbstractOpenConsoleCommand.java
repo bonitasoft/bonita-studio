@@ -24,6 +24,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.preferences.BonitaUserXpPreferencePage;
@@ -89,10 +90,8 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
                 public void run(IProgressMonitor monitor)
                         throws InvocationTargetException, InterruptedException {
                     try{
-                        if (!BOSWebServerManager.getInstance().serverIsStarted()) {
-                            BOSWebServerManager.getInstance().startServer(monitor);
-                        }
                         monitor.beginTask(Messages.initializingUserXP, IProgressMonitor.UNKNOWN);
+                        BOSEngineManager.getInstance().start();
                         setURL(buildUrl(monitor));
                         if(refreshTheme){
                             String currentTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME) ;
