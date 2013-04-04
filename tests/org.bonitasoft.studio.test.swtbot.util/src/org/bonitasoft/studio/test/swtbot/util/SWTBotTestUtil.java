@@ -294,17 +294,16 @@ public class SWTBotTestUtil implements SWTBotConstants{
      * @param eventName
      */
     public static void selectElementFromOverview(final  SWTGefBot bot,String poolName,String laneName, String eventName){
-        final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_OVERVIEW);
+        final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW);
         view.show();
         view.setFocus();
-        view.toolbarButton("Outline").click();
         final SWTBotTree tree = bot.treeWithId(BONITA_OVERVIEW_TREE_ID);
         tree.setFocus();
-        tree.getTreeItem("Pool "+poolName).click();
+        tree.getTreeItem(poolName).click();
         if (laneName==null){
-            tree.expandNode("Pool "+poolName).select(eventName);
+            tree.expandNode(poolName).select(eventName);
         } else {
-            tree.expandNode("Lane "+laneName).click();
+            tree.expandNode(laneName).click();
         }
     }
 
@@ -551,10 +550,9 @@ public class SWTBotTestUtil implements SWTBotConstants{
      */
     public static void configureSequenceFlow(SWTGefBot bot,String name,final String pool,boolean defaultFlow,String condition,String expressionType){
         bot.activeEditor().setFocus();
-        final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_OVERVIEW);
+        final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW);
         view.show();
         view.setFocus();
-        view.toolbarButton("Outline").click();
         final SWTBotTree overviewTree = bot.treeWithId(BONITA_OVERVIEW_TREE_ID);
         bot.waitUntil(Conditions.widgetIsEnabled(overviewTree));
         overviewTree.setFocus();
@@ -564,7 +562,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
             public boolean test() throws Exception {
                 SWTBotTreeItem item = null;
                 try{
-                    item = overviewTree.getTreeItem("Pool "+pool);
+                    item = overviewTree.getTreeItem(pool);
                 }catch (TimeoutException e) {
                     return false;
                 }
@@ -583,7 +581,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
                 return "Pool "+pool +" not found in overview tree.\n"+res;
             }
         },10000,500);
-        final SWTBotTreeItem treeItem = overviewTree.getTreeItem("Pool "+pool);
+        final SWTBotTreeItem treeItem = overviewTree.getTreeItem(pool);
         if(!treeItem.isExpanded()){
             treeItem.expand();
         }
