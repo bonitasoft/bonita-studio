@@ -56,6 +56,21 @@ public class OperationReturnTypesValidator implements IValidator {
 						if(!operation.getOperator().getInputTypes().isEmpty()){
 							String typeName = operation.getOperator().getInputTypes().get(0);
 							try{
+								if("int".equals(typeName)){
+									typeName = Integer.class.getName();
+								}else if("boolean".equals(typeName)){
+									typeName = Boolean.class.getName();
+								}else if("long".equals(typeName)){
+									typeName = Long.class.getName();
+								}else if("float".equals(typeName)){
+									typeName = Float.class.getName();
+								}else if("double".equals(typeName)){
+									typeName = Double.class.getName();
+								}else if("short".equals(typeName)){
+									typeName = Short.class.getName();
+								}else if("byte".equals(typeName)){
+									typeName = Byte.class.getName();
+								}
 								Class<?> dataReturnTypeClass = Class.forName(typeName);
 								Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
 								if(!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)){
