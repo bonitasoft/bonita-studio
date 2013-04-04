@@ -20,6 +20,7 @@ import org.bonitasoft.engine.bpm.model.FlowElementBuilder;
 import org.bonitasoft.studio.decision.core.DecisionTableUtil;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.ANDGateway;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
@@ -64,13 +65,18 @@ public class SequenceFlowSwitch extends ProcessSwitch<SequenceFlow> {
 			addLinkEvents(builder, sequenceFlow);
 		} else {
 			if(!(source instanceof ANDGateway)){
-				if(sequenceFlow.getConditionType() == SequenceFlowConditionType.EXPRESSION && sequenceFlow.getCondition() != null
-						&& sequenceFlow.getCondition().getContent() != null && !sequenceFlow.getCondition().getContent().isEmpty()){
-					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(sequenceFlow.getCondition()));
-				}else if(sequenceFlow.getConditionType() == SequenceFlowConditionType.DECISION_TABLE){
-					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(DecisionTableUtil.toGroovyScriptExpression(sequenceFlow.getDecisionTable())));
-				}else if(sequenceFlow.isIsDefault() && !(source instanceof BoundaryEvent)){
+				final SequenceFlowConditionType conditionType = sequenceFlow.getConditionType();
+				final Expression condition = sequenceFlow.getCondition();
+				final String conditionContent = condition.getContent();
+				if(sequenceFlow.isIsDefault() && !(source instanceof BoundaryEvent)){
 					builder.addDefaultTransition(sourceId, targetId);
+				} else if(conditionType == SequenceFlowConditionType.EXPRESSION
+						&& condition != null
+						&& conditionContent != null
+						&& !conditionContent.isEmpty()){
+					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(condition));
+				}else if(conditionType == SequenceFlowConditionType.DECISION_TABLE){
+					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(DecisionTableUtil.toGroovyScriptExpression(sequenceFlow.getDecisionTable())));
 				} else{
 					builder.addTransition(sourceId, targetId);
 				}
