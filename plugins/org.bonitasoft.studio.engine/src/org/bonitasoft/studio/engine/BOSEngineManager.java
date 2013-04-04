@@ -40,9 +40,7 @@ import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IEngineAction;
-import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -54,8 +52,6 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
@@ -134,7 +130,8 @@ public class BOSEngineManager {
 			monitor.beginTask(Messages.initializingProcessEngine, IProgressMonitor.UNKNOWN) ;
 			initBonitaHome() ;
 			BOSWebServerManager.getInstance().startServer(monitor) ;
-			synchronizeDefaultOrganization();
+			isRunning = true ;
+			loadOrganization();
 			monitor.done() ;
 		}
 	}
@@ -163,30 +160,6 @@ public class BOSEngineManager {
 
 	}
 
-	protected void synchronizeDefaultOrganization()  {
-		isRunning = true ;
-		loadOrganization();
-	}
-
-
-	protected void recoverFromCrash() {
-		if(retry == 0){
-			if(!FileActionDialog.getDisablePopup()){
-				Display.getDefault().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.crashRecoveryTitle,Messages.crashRecoveryMsg);
-					}
-				});
-			}
-			retry ++ ;
-			BonitaStudioLog.log("Clean platform and retry") ;
-			PlatformUtil.delete(BonitaHomeUtil.getBonitaHome(), monitor);
-			initBonitaHome();
-			synchronizeDefaultOrganization();
-		}
-	}
 
 	private void initBonitaHome() {
 		BonitaHomeUtil.initBonitaHome() ;

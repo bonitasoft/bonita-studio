@@ -28,6 +28,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.NoSuchElementException;
 
+import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
@@ -92,6 +93,7 @@ public class BOSWebServerManager {
 	private static final int MAX_PORT_NUMBER = 65535;
 	private static final int MAX_SERVER_START_TIME = 300000;
 	private static final String TOMCAT_LOG_FILE = "tomcat.log";
+	private static final int MAX_LOGGING_TRY = 5;
 	private ServerSocket watchdogServer;
 
 	private static BOSWebServerManager INSTANCE;
@@ -210,7 +212,28 @@ public class BOSWebServerManager {
 				BonitaStudioLog.debug("Tomcat failed to start.", EnginePlugin.PLUGIN_ID);	
 			}
 		}
-		
+
+		int loginTry = 0;
+		while (loginTry < MAX_LOGGING_TRY) {
+			APISession session = null;
+			try {
+				session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+			} catch (Exception e) {
+
+			}finally{
+				if(session != null){
+					BOSEngineManager.getInstance().logoutDefaultTenant(session);
+					return ;
+				}
+				loginTry++;
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
+				}
+			}
+		}	
+		BonitaStudioLog.error("Failed to login to engine after "+MAX_LOGGING_TRY+" tries", EnginePlugin.PLUGIN_ID);
 	}
 
 	protected void createLaunchConfiguration(IServer server,IProgressMonitor monitor) throws CoreException {
@@ -218,11 +241,11 @@ public class BOSWebServerManager {
 		if(conf == null){
 			conf = server.getLaunchConfiguration(true,Repository.NULL_PROGRESS_MONITOR);
 		}
-	    ILaunchConfigurationWorkingCopy workingCopy = conf.getWorkingCopy();
-        String args = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,"");
+		ILaunchConfigurationWorkingCopy workingCopy = conf.getWorkingCopy();
+		String args = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,"");
 		if(!args.contains(tomcatInstanceLocation)){
-			 conf = server.getLaunchConfiguration(true,Repository.NULL_PROGRESS_MONITOR);
-			 workingCopy = conf.getWorkingCopy();
+			conf = server.getLaunchConfiguration(true,Repository.NULL_PROGRESS_MONITOR);
+			workingCopy = conf.getWorkingCopy();
 		}
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,getVMArgs());
 		workingCopy.setAttribute(IDebugUIConstants.ATTR_CAPTURE_IN_FILE, getTomcatLogFile());
@@ -262,7 +285,7 @@ public class BOSWebServerManager {
 			}
 			if("0".equals(p.getId())){
 				tomcatPort = p;
-				
+
 			}
 			if ("1".equals(p.getId())){
 				ajpConnectorPort = p;
@@ -281,7 +304,7 @@ public class BOSWebServerManager {
 		if(!isPortAvailable(serverPortNumber)) {
 			server=updatePort(serverPortNumber,server,runtime,sType,file,configurationFolder);
 		}
-		
+
 		if(!isPortAvailable(ajpConnectorPortNumber)) {
 			server=updatePort(ajpConnectorPortNumber,server,runtime,sType,file,configurationFolder);
 		}
@@ -295,8 +318,8 @@ public class BOSWebServerManager {
 		}
 		return server.save(true, null);
 	}
-	
-	
+
+
 	private int getTomcatPort(IServerWorkingCopy server){
 		for(ServerPort p : server.getServerPorts(Repository.NULL_PROGRESS_MONITOR)){
 			if("0".equals(p.getId())){
@@ -305,7 +328,7 @@ public class BOSWebServerManager {
 		}
 		return -1;
 	}
-	
+
 	private IServerWorkingCopy updatePort(int port, IServerWorkingCopy server,IRuntime runtime, IServerType sType, IFile file, IFolder configurationFolder) throws CoreException{
 		int oldPort = port;
 		port  = getNextAvailable(oldPort);
@@ -314,7 +337,7 @@ public class BOSWebServerManager {
 		BonitaStudioLog.debug("Port "+oldPort+" is not availble, studio will use next available port : "+port,EnginePlugin.PLUGIN_ID);
 		return server;
 	}
-	
+
 	protected IServerWorkingCopy configureServer(IRuntime runtime, IServerType sType, IFile file, final IFolder configurationFolder) throws CoreException {
 		IServerWorkingCopy server = sType.createServer("bonitaTomcatServer", file, runtime, null);
 		server.setServerConfiguration(configurationFolder);
