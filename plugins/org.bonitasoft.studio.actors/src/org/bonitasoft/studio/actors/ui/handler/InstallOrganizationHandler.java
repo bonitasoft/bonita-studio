@@ -96,7 +96,7 @@ public class InstallOrganizationHandler extends AbstractHandler {
 
 						@Override
 						public void run() {
-							new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error", "An error occured during synchronization", e).open() ;
+							new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Error", "An error occured while publishing the organization", e).open() ;
 						}
 
 					}) ;
