@@ -119,6 +119,21 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
                             String qualifiedType = Object.class.getName();
 							try {
 								qualifiedType = JavaModelUtil.getResolvedTypeName(Signature.getTypeErasure(type), item.getDeclaringType());
+								if("int".equals(qualifiedType)){
+									qualifiedType = Integer.class.getName();
+								}else if("boolean".equals(qualifiedType)){
+									qualifiedType = Boolean.class.getName();
+								}else if("long".equals(qualifiedType)){
+									qualifiedType = Long.class.getName();
+								}else if("float".equals(qualifiedType)){
+									qualifiedType = Float.class.getName();
+								}else if("double".equals(qualifiedType)){
+									qualifiedType = Double.class.getName();
+								}else if("short".equals(qualifiedType)){
+									qualifiedType = Short.class.getName();
+								}else if("byte".equals(qualifiedType)){
+									qualifiedType = Byte.class.getName();
+								}
 							} catch (JavaModelException e) {
 								BonitaStudioLog.error(e);
 							} catch (IllegalArgumentException e) {
