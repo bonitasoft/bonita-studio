@@ -64,7 +64,7 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase {
         SWTBotTestUtil.selectEventOnProcess(bot, gmfEditor, catchMessageEventName);
         testThrowMessageConfiguration();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
-        SWTBotTestUtil.selectElementFromOverview(bot, targetPool, null, "Start Message Event "+throwMessageEventName);
+        SWTBotTestUtil.selectElementFromOverview(bot, targetPool, null, throwMessageEventName);
         testCatchMessageProperties();
     }
 

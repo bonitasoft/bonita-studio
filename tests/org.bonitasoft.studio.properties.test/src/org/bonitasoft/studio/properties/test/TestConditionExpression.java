@@ -68,15 +68,17 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		testValidConditionExpression("123.567777>=234234234324",ExpressionConstants.CONDITION_TYPE);
 
 		testValidConditionExpression("myData<\"myString\"",ExpressionConstants.CONDITION_TYPE);
-		testUnvalidConditionExpression("myData != true",ExpressionConstants.CONDITION_TYPE,true,true);
+		
 		testValidConditionExpression("!myData2",ExpressionConstants.CONDITION_TYPE);
 		testValidConditionExpression("myData2",ExpressionConstants.CONDITION_TYPE);
-		testUnvalidConditionExpression("myData",ExpressionConstants.CONDITION_TYPE,true,true);
 		
+		testUnvalidConditionExpression("myData != true",ExpressionConstants.CONDITION_TYPE,true,true);
+		testUnvalidConditionExpression("myData",ExpressionConstants.CONDITION_TYPE,true,true);
 		
 		testValidConditionExpression("\"myString\"<\"myString1\"",ExpressionConstants.CONDITION_TYPE);
 		testUnvalidConditionExpression("myString<\"myString1\"",ExpressionConstants.CONDITION_TYPE,true,false);
 		testUnvalidConditionExpression("\"myString\"<myString1",ExpressionConstants.CONDITION_TYPE,true,true);
+		
 		
 	}
 
