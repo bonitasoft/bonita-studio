@@ -62,7 +62,6 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
 
 
     public static String BUSINESS_ANALYST_PROFILE = "Business Analyst"  ;
-    public static String PROCESS_ENGINEER_PROFILE = "Process Engineer";
     public static final String APPLICATION_DEVELOPER_PROFILE = "Application Developer";
 
     private final Map<String,Set<String>> profiles ;
@@ -257,9 +256,7 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
 
         if(BUSINESS_ANALYST_PROFILE.equals(id)){
             return Messages.BusinessAnalyst_Label ;
-        }else if(PROCESS_ENGINEER_PROFILE.equals(id)){
-            return Messages.ProcessEngineer_Label ;
-        }else if(APPLICATION_DEVELOPER_PROFILE.equals(id)){
+        } else if(APPLICATION_DEVELOPER_PROFILE.equals(id)){
             return Messages.ApplicationDeveloper_Label ;
         }
 
@@ -269,9 +266,6 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
     public static Integer getPriority(String id) {
         if(id.equals(APPLICATION_DEVELOPER_PROFILE)){
             return 3 ;
-        }
-        if(id.equals(PROCESS_ENGINEER_PROFILE)){
-            return 2 ;
         }
         if(id.equals(BUSINESS_ANALYST_PROFILE)){
             return 1 ;

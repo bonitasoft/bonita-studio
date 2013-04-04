@@ -77,7 +77,6 @@ public class Messages extends NLS {
 	public static String askForProfileOnStartup;
 	public static String applyingProfiles;
 	public static String BusinessAnalyst_Label;
-	public static String ProcessEngineer_Label;
 	public static String ApplicationDeveloper_Label;
 	
 	static {
