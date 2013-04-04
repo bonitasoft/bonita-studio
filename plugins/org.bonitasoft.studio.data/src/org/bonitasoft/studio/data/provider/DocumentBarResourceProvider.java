@@ -48,31 +48,32 @@ public class DocumentBarResourceProvider implements BARResourcesProvider {
      */
     @Override
     public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process, Configuration configuration) {
-        final List<BarResource> resources = new ArrayList<BarResource>() ;
-        final List<Document> documents = ((Pool)process).getDocuments();
-        final DocumentRepositoryStore store = (DocumentRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
-        for (Document document : documents) {
-        	if(document.isIsInternal()){
-        		String documentID= document.getDefaultValueIdOfDocumentStore();
-        		if(documentID != null){
-        			DocumentFileStore artifact = (DocumentFileStore) store.getChild(documentID);
-        			if(artifact != null){
-        				try {
-        					addFileContents(resources, artifact.getResource().getLocation().toFile(), "");
-        				} catch (FileNotFoundException e) {
-        					BonitaStudioLog.error(e);
-        				} catch (IOException e) {
-        					BonitaStudioLog.error(e);
-        				}
-        			}
-        		}
-			}
-		}
-        
-        for(BarResource barResource : resources ){
-            builder.addDocumentResource(barResource)  ;
-        }
+    	final List<BarResource> resources = new ArrayList<BarResource>() ;
+    	if(process instanceof Pool){
+    		final List<Document> documents = ((Pool)process).getDocuments();
+    		final DocumentRepositoryStore store = (DocumentRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DocumentRepositoryStore.class);
+    		for (Document document : documents) {
+    			if(document.isIsInternal()){
+    				String documentID= document.getDefaultValueIdOfDocumentStore();
+    				if(documentID != null){
+    					DocumentFileStore artifact = (DocumentFileStore) store.getChild(documentID);
+    					if(artifact != null){
+    						try {
+    							addFileContents(resources, artifact.getResource().getLocation().toFile(), "");
+    						} catch (FileNotFoundException e) {
+    							BonitaStudioLog.error(e);
+    						} catch (IOException e) {
+    							BonitaStudioLog.error(e);
+    						}
+    					}
+    				}
+    			}
+    		}
 
+    		for(BarResource barResource : resources ){
+    			builder.addDocumentResource(barResource)  ;
+    		}
+    	}
         return resources ;
     }
 
