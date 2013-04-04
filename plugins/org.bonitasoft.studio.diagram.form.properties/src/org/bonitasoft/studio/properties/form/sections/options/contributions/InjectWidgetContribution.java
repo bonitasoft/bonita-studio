@@ -80,7 +80,6 @@ public class InjectWidgetContribution extends AbstractPropertySectionContributio
 		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
 		checkbox = widgetFactory.createButton(composite, "", SWT.CHECK);
-
 		expressionViewer = new ExpressionViewer(composite, SWT.BORDER, widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INJECT_WIDGET_SCRIPT);
 		expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
 		expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.FORM_FIELD_TYPE}));

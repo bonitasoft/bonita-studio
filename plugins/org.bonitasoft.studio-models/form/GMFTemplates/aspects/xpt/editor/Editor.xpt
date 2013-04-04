@@ -288,7 +288,7 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 			};
 			showOutlineAction.setImageDescriptor(org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages.DESC_OUTLINE);
 			showOutlineAction.setToolTipText(org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages.OutlineView_OutlineTipText);
-		     tbm.add(showOutlineAction);
+		  //   tbm.add(showOutlineAction);
 			showOverviewAction = new org.eclipse.jface.action.Action() {
 
 				public void run() {
@@ -298,8 +298,8 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 			showOverviewAction.setImageDescriptor(org.eclipse.gmf.runtime.diagram.ui.internal.l10n.DiagramUIPluginImages.DESC_OVERVIEW);
 			showOverviewAction.setToolTipText(org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages.OutlineView_OverviewTipText);
        
-            tbm.add(showOverviewAction);
-            showPage(getDefaultOutlineViewMode());
+         //   tbm.add(showOverviewAction);
+            showPage(ID_OVERVIEW);
         }
 
         public void createControl(org.eclipse.swt.widgets.Composite parent) {

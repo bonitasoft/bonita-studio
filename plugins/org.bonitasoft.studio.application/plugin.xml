@@ -528,6 +528,14 @@
             name="%Appearance"
             restorable="true">
       </view>
+      <view
+            category="org.bonitasoft.studio.application.bonita"
+            class="org.bonitasoft.studio.application.views.BonitaContentOutlineTreeView"
+            icon="icons/overview.png"
+            id="org.bonitasoft.studio.views.overview.tree"
+            name="Tree Overview"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.activities">

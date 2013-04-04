@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.application.actions;
 
+import org.bonitasoft.studio.application.views.BonitaContentOutlineTreeView;
 import org.bonitasoft.studio.application.views.BonitaContentOutlineView;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
@@ -48,9 +49,9 @@ public class FindHandler extends AbstractHandler {
         final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         IEditorPart editor = workbenchWindow.getActivePage().getActiveEditor() ;
 
-        BonitaContentOutlineView view;
+        BonitaContentOutlineTreeView view;
         try {
-            view = (BonitaContentOutlineView) workbenchWindow.getActivePage().showView(BonitaContentOutlineView.VIEW_ID);
+            view = (BonitaContentOutlineTreeView) workbenchWindow.getActivePage().showView(BonitaContentOutlineTreeView.VIEW_ID);
             view.setFocus();
             if (editor != null && editor instanceof ProcessDiagramEditor ) {
                 IAction action =((ProcessDiagramEditor)editor).getShowOutlineAction();

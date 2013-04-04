@@ -18,16 +18,25 @@
 package org.bonitasoft.studio.application.actions;
 
 
+import org.bonitasoft.studio.application.views.BonitaContentOutlineTreeView;
 import org.bonitasoft.studio.application.views.BonitaContentOutlineView;
+import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
+import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.part.PageBook;
 
 /**
  * @author Aurelien Pupier
@@ -39,20 +48,37 @@ public class ShowOverviewHandler extends AbstractHandler {
         try {
             IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
             ISelection selection = null ;
+            final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            IEditorPart editor = workbenchWindow.getActivePage().getActiveEditor() ;
             if(part != null){
                 selection = part.getSite().getSelectionProvider().getSelection() ;
             }
 
-            IViewPart view  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(BonitaContentOutlineView.VIEW_ID);
-            if(view != null){
-                view.setFocus();
-                part.getSite().getSelectionProvider().setSelection(selection) ;
+            BonitaContentOutlineView view  = (BonitaContentOutlineView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(BonitaContentOutlineView.VIEW_ID);
+            if (editor != null && editor instanceof ProcessDiagramEditor ) {
+                IAction action =((ProcessDiagramEditor)editor).getShowOverivewAction();
+                if(action != null){
+                    action.run();
+                }
+            }else if(editor != null && editor instanceof FormDiagramEditor){
+                IAction action =((FormDiagramEditor)editor).getShowOverivewAction();
+                if(action != null){
+                    action.run();
+                }
             }
-
-            return Status.OK_STATUS ;
+            for (Control control : ((PageBook)view.getCurrentPage().getControl()).getTabList()) {
+                if (control instanceof FilteredTree) {
+                    final Text filterText = ((FilteredTree)control).getFilterControl();
+                    filterText.setFocus();
+                    if (filterText.getText() != null) {
+                        filterText.setSelection(0, filterText.getText().length());
+                    }
+                }
+            }
         } catch (PartInitException ex) {
             return new ExecutionException("Could not load overview view", ex);
         }
+        return null;
     }
 
 }
