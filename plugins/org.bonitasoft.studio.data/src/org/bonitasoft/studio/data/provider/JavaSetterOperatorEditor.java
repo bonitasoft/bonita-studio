@@ -133,6 +133,10 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
 									qualifiedType = Short.class.getName();
 								}else if("byte".equals(qualifiedType)){
 									qualifiedType = Byte.class.getName();
+								}else if("E".equals(qualifiedType)){
+									qualifiedType = Object.class.getName();
+								}else if("V".equals(qualifiedType)){
+									qualifiedType = Object.class.getName();
 								}
 							} catch (JavaModelException e) {
 								BonitaStudioLog.error(e);
