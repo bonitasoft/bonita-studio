@@ -48,6 +48,7 @@ import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EnumType;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.TargetElement;
@@ -262,6 +263,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 				final Container container = (Container) targetElement;
 
 				AbstractProcess mainProc = ModelHelper.getMainProcess(container);
+				AbstractProcess pool = ModelHelper.getParentProcess(container);
 				List<Element> elems = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.eINSTANCE.getElement()) ;
 				Iterator<Element> it = elems.iterator();
 				boolean alreadyExists = false ;
@@ -285,7 +287,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 					activity.getTextAnnotationAttachment().clear();
 				}
 				// Copy referenced data types
-				if (res instanceof DataAware && !inSameDiagram(toCopyElement, targetElement)) {
+				if (res instanceof DataAware && !inSamePool(toCopyElement, targetElement)) {
 					List<Data> datas = ModelHelper.getAllItemsOfType(res, ProcessPackage.Literals.DATA);
 					for (Data d : datas) {
 						if (!mainProc.getDatatypes().contains(d.getDataType()) && d.getDataType() instanceof EnumType) {
@@ -303,17 +305,29 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 					}
 				}
 				// Copy referenced groups
-				if (toCopyElement instanceof Task && !inSameDiagram(toCopyElement, targetElement)) {
+				if (toCopyElement instanceof Task && !inSamePool(toCopyElement, targetElement)) {
 					Set<Actor> newActorMappingTypes = getNewGroups(toCopyElement,mainProc) ;
 					Set<Actor> existingActorMappingTypes = getExistingGroups(toCopyElement,mainProc) ;
 					for (Actor g : newActorMappingTypes) {
 						Actor copiedActorMappingType = EcoreUtil.copy(g);
-						((Task) res).setActor(copiedActorMappingType);
-						mainProc.getActors().add(copiedActorMappingType);
+						Actor existingActor = getExistingActor(pool.getActors(), copiedActorMappingType);
+						if (existingActor==null){
+							pool.getActors().add(copiedActorMappingType);
+							existingActor = copiedActorMappingType;
+						}
+						((Task) res).setActor(existingActor);
 					}
-
-
-
+					if (ModelHelper.getParentLane(toCopyElement)!=null && !((Task)toCopyElement).isOverrideActorsOfTheLane()){
+						Actor actor = ModelHelper.getParentLane(toCopyElement).getActor();
+						Actor copiedActorMappingType = EcoreUtil.copy(actor);
+						Actor existingActor = getExistingActor(pool.getActors(), copiedActorMappingType);
+						if (existingActor==null){
+							pool.getActors().add(copiedActorMappingType);
+							existingActor = copiedActorMappingType;
+						}
+						((Task) res).setActor(existingActor);
+						((Task)res).setOverrideActorsOfTheLane(true);
+					}
 					for(Actor existingActorMappingType : existingActorMappingTypes){
 						for(Actor procGroup : mainProc.getActors()){
 							if(procGroup.getName().equals(existingActorMappingType.getName())){
@@ -322,7 +336,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 						}
 					}
 				}
-
+ 
 
 				// reset connections
 				if (toCopyElement instanceof Connection) {
@@ -600,8 +614,8 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 	/**
 	 * @param mainProc
 	 */
-	protected boolean inSameDiagram(Element item1, Element item2) {
-		return ModelHelper.getMainProcess(item1).equals(ModelHelper.getMainProcess(item2));
+	protected boolean inSamePool(Element item1, Element item2) {
+		return ModelHelper.getParentProcess(item1).equals(ModelHelper.getParentProcess(item2));
 	}
 
 	/**
@@ -612,5 +626,12 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 	}
 
 
-
+	private Actor getExistingActor(List<Actor>actors,Actor actor){
+		for (Actor a:actors){
+			if (a.getName().equals(actor.getName())){
+				return a;
+			}
+		}
+		return null;
+	}
 }
