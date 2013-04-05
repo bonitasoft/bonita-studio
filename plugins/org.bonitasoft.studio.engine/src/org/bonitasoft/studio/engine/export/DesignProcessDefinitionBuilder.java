@@ -165,7 +165,7 @@ public class DesignProcessDefinitionBuilder {
 		SequenceFlowSwitch sequenceFlowSwitch = new SequenceFlowSwitch(processBuilder) ;
 		for (SourceElement sourceElement : sourceElements) {
 			for (Connection connection : sourceElement.getOutgoing()) {
-				if(!ModelHelper.isInEvenementialSubProcessPool(connection)){
+				if(!ModelHelper.isInEvenementialSubProcessPool(connection.getSource())){
 					sequenceFlowSwitch.doSwitch(connection);
 				}
 			}
