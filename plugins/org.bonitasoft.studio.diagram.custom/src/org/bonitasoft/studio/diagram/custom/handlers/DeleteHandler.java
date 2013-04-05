@@ -24,8 +24,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.studio.model.process.EventSubProcessPool;
-import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
@@ -38,7 +36,6 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.common.command.CompoundCommand;
-import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -55,10 +52,8 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.forms.widgets.FormUtil;
 
 /**
  * @author Aurelien Pupier
@@ -79,8 +74,7 @@ public class DeleteHandler extends AbstractHandler {
 				MessageFlow flow  = null;
 				List<IGraphicalEditPart> newSelection = new ArrayList<IGraphicalEditPart>() ;
 				for (Object item : currentSelection.toArray()) {
-					if (((IGraphicalEditPart) item).resolveSemanticElement() instanceof Pool
-							||((IGraphicalEditPart) item).resolveSemanticElement() instanceof EventSubProcessPool ) {
+					if (((IGraphicalEditPart) item).resolveSemanticElement() instanceof Pool) {
 						containsPool = true;
 					}
 					if(((IGraphicalEditPart) item).resolveSemanticElement() instanceof Lane){

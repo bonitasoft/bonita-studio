@@ -29,7 +29,6 @@ import org.bonitasoft.studio.importer.bpmn.BPMNToProc;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Event;
-import org.bonitasoft.studio.model.process.EventSubProcessPool;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.TextAnnotation;
@@ -236,8 +235,6 @@ public class TestImportBPMN2 extends TestCase {
                 boundaryEvent++;
             } else if(current instanceof TextAnnotation){
                 textAnnotations++;
-            } else if(current instanceof EventSubProcessPool){
-                eventSubProcPool++;
             } else if(current instanceof Event){
                 events++;
             }

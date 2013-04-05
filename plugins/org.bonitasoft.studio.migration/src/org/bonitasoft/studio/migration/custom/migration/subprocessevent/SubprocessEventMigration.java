@@ -40,7 +40,8 @@ public class SubprocessEventMigration extends CustomMigration {
 	private Map<String, Instance> elementsMapping = new HashMap<String, Instance>();
 	private Map<String, String> subprocNames = new HashMap<String, String>();
 	private Map<String, String> subprocDescription = new HashMap<String, String>();
-	
+	private Map<String, String> subprocData = new HashMap<String, String>();
+
 	@Override
 	public void migrateBefore(Model model, Metamodel metamodel)
 			throws MigrationException {
@@ -51,11 +52,17 @@ public class SubprocessEventMigration extends CustomMigration {
 			if(process == null){
 				throw new MigrationException("No parent process found for subprocess event "+subprocessevent.get("name"), null);
 			}
+
+			for(Instance data :  (List<Instance>) subprocessevent.get("data")){
+				process.add("data",data.copy());
+			}
+
 			final List<Instance> elements =  new ArrayList<Instance>();
 			for(Instance element :  (List<Instance>) subprocessevent.get("elements")){
-				Instance copy = element.copy();
+				subprocessevent.remove("elements", element);
+				process.add("elements", element);
+				Instance copy = element;
 				copy.setUuid(element.getUuid());
-				process.add("elements",copy);
 				for(Instance view : model.getAllInstances(NotationPackage.Literals.VIEW)){
 					Instance elem =  view.get("element");
 					if(elem != null && elem.getUuid().equals(element.getUuid())){
@@ -66,29 +73,11 @@ public class SubprocessEventMigration extends CustomMigration {
 				elements.add(copy);
 			}
 			elementsMap.put(subprocessevent.getUuid(), elements);
-			final List<Instance> connections = new ArrayList<Instance>();
 			for(Instance connection : (List<Instance>) subprocessevent.get("connections")){		
-				Instance copy = connection.copy();
-				copy.setUuid(connection.getUuid());
-				Instance source = copy.get("source");
-				Instance target = copy.get("target");
-				Instance newSource = elementsByUUID.get(source.getUuid());
-				Instance newTarget = elementsByUUID.get(target.getUuid());
-				if(newSource != null){
-					copy.set("source", newSource);
-				}
-				if(newTarget != null){
-					copy.set("target", newTarget);
-				}
-				connections.add(copy);
-				for(Instance edge : model.getAllInstances(NotationPackage.Literals.EDGE)){
-					Instance edgeInstance =  edge.get("element");
-					if(edgeInstance != null && edgeInstance.getUuid().equals(connection.getUuid())){
-						elementsMapping.put(connection.getUuid(),edge);
-					}
-				}
+				subprocessevent.remove("connections", connection);
+				process.add("connections", connection);
 			}
-			connectionsMap.put(subprocessevent.getUuid(), connections);
+			
 		}
 	}
 
@@ -113,12 +102,12 @@ public class SubprocessEventMigration extends CustomMigration {
 			final List<Instance> elements = elementsMap.get(subprocessevent.getUuid());
 			if(elements != null){
 				for(Instance element : elements){
+					process.remove("elements", element);
 					subprocessevent.add("elements",element);
 					if(elementsMapping.containsKey(element.getUuid())){
 						elementsMapping.get(element.getUuid()).set("element", element);
 					}
 				}
-
 			}
 
 			final List<Instance> connections = connectionsMap.get(subprocessevent.getUuid());

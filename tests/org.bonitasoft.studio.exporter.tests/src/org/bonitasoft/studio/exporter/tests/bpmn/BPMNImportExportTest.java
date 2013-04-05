@@ -38,7 +38,6 @@ import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.EventSubProcessPool;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
@@ -680,8 +679,7 @@ public class BPMNImportExportTest extends TestCase {
                                 childBounds.y >= 0);
                         EObject semanticElement = ((IGraphicalEditPart)childEditPart).resolveSemanticElement();
                         if(semanticElement instanceof Pool
-                                || semanticElement instanceof Lane
-                                || semanticElement instanceof EventSubProcessPool){
+                                || semanticElement instanceof Lane){
                             checkAllEditPartsAreVisible((IGraphicalEditPart) childEditPart);
                         }
                     }

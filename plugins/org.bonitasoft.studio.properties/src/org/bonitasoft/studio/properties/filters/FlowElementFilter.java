@@ -18,7 +18,6 @@
  
 package org.bonitasoft.studio.properties.filters;
 
-import org.bonitasoft.studio.model.process.EventSubProcessPool;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
@@ -40,7 +39,6 @@ public class FlowElementFilter implements IFilter {
 			Object model = editPart.resolveSemanticElement();
 			return model instanceof FlowElement 
 			&& !(model instanceof Pool) 
-			&& !(model instanceof EventSubProcessPool)
 			&& !(model instanceof SubProcessEvent);
 		}
 		return false;

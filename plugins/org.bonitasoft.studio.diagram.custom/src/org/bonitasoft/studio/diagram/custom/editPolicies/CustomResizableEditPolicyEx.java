@@ -25,13 +25,11 @@ import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.figures.CustomSVGFigure;
 import org.bonitasoft.studio.common.figures.EventSubprocessFigureWrapper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
-import org.bonitasoft.studio.diagram.custom.parts.CustomLaneCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubProcessEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubprocessEventCompartmentEditPart;
 import org.bonitasoft.studio.model.process.Container;
-import org.bonitasoft.studio.model.process.EventSubProcessPool;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
@@ -196,8 +194,7 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 	protected List createSelectionHandles() {
 		List list = new ArrayList();
 		if(((IGraphicalEditPart) getHost()).resolveSemanticElement() instanceof Pool 
-				|| ((IGraphicalEditPart) getHost()).resolveSemanticElement() instanceof Lane
-				|| ((IGraphicalEditPart) getHost()).resolveSemanticElement() instanceof EventSubProcessPool){
+				|| ((IGraphicalEditPart) getHost()).resolveSemanticElement() instanceof Lane){
 			ResizableHandleKit.addMoveHandle((GraphicalEditPart) getHost(),
 					list);
 			if(!(((IGraphicalEditPart) getHost()).resolveSemanticElement() instanceof Lane)){

@@ -21,7 +21,6 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 
 import org.bonitasoft.studio.diagram.custom.commands.CompartmentRepositionEObjectCommand;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
-import org.bonitasoft.studio.model.process.EventSubProcessPool;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -304,7 +303,7 @@ public class CompartmentEditPolicy extends FlowLayoutEditPolicy {
 			/*Allow only Pool and Evenmential pool to have a feedback as it is the only to have right to be created here*/
 			if(newElementType != null){
 				Class<?> ec = newElementType.getEClass().getInstanceClass();
-				if(Pool.class.equals(ec) || EventSubProcessPool.class.equals(ec)){
+				if(Pool.class.equals(ec)){
 					super.showLayoutTargetFeedback(request);
 				}
 			}
