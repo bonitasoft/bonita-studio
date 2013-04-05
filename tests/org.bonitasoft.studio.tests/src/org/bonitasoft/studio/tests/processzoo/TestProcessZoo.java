@@ -26,6 +26,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
@@ -59,7 +60,6 @@ public class TestProcessZoo  {
     }
 
     @Test
-    @Ignore
     public void testProcesses() throws Throwable {
         int foundProcesses = 0;
         List<URL> entries = getEntries();
@@ -69,6 +69,7 @@ public class TestProcessZoo  {
             try {
                 applyTestsOnProcess(url);
             } catch (Exception ex) {
+            	BonitaStudioLog.error(ex);
                 throw new Exception("Error on file: " + url.toString(), ex);
             }
             foundProcesses++;
