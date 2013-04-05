@@ -48,6 +48,7 @@ import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceReposi
 import org.bonitasoft.studio.importer.ToProcProcessor;
 import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
 import org.bonitasoft.studio.importer.bar.exception.IncompatibleVersionException;
+import org.bonitasoft.studio.migration.MigrationPlugin;
 import org.bonitasoft.studio.migration.migrator.BOSMigrator;
 import org.bonitasoft.studio.migration.preferences.BarImporterPreferenceConstants;
 import org.bonitasoft.studio.migration.ui.wizard.MigrationWarningWizard;
@@ -243,7 +244,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 	}
 
 	private boolean displayMigrationWarningPopup() {
-		final IPreferenceStore store = BarImporterPlugin.getDefault().getPreferenceStore();
+		final IPreferenceStore store = MigrationPlugin.getDefault().getPreferenceStore();
 		return store.getBoolean(BarImporterPreferenceConstants.DISPLAY_MIGRATION_WARNING);
 	}
 
