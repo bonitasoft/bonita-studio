@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -272,7 +273,7 @@ public class ConfigurationWizard extends Wizard {
             }else{
                 configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
                 configuration.setName(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON) ;
-                configuration.setVersion(ProductVersion.CURRENT_VERSION);
+                configuration.setVersion(ModelVersion.CURRENT_VERSION);
             }
         }else if(process != null){
             for(Configuration conf : process.getConfigurations()){
@@ -284,7 +285,7 @@ public class ConfigurationWizard extends Wizard {
             if(configuration == null){
                 configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
                 configuration.setName(confName) ;
-                configuration.setVersion(ProductVersion.CURRENT_VERSION);
+                configuration.setVersion(ModelVersion.CURRENT_VERSION);
             }
         }
         return configuration ;

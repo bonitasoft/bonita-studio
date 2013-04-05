@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.simulation.wizards;
 
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -56,7 +57,7 @@ public class EditSimulationResourceWizard extends Wizard {
 	public EditSimulationResourceWizard() {
 		artifact = null;
 		resource = SimulationFactory.eINSTANCE.createResource();
-		resource.setVersion(ProductVersion.CURRENT_VERSION) ;
+		resource.setVersion(ModelVersion.CURRENT_VERSION) ;
 		setWindowTitle(Messages.EditSimulationResourceWizard_WindowTitle);
 	}
 

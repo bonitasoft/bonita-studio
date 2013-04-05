@@ -20,7 +20,6 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 
 
 import org.bonitasoft.studio.diagram.custom.commands.CompartmentRepositionEObjectCommand;
-import org.bonitasoft.studio.diagram.custom.parts.CustomEventSubProcessPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.model.process.EventSubProcessPool;
 import org.bonitasoft.studio.model.process.Pool;
@@ -84,14 +83,6 @@ public class CompartmentEditPolicy extends FlowLayoutEditPolicy {
 
 					if(s.width < 0){
 						s.width = ((CustomPoolEditPart)ep).getDefaultWidth();
-					}
-				} else if(ep instanceof CustomEventSubProcessPoolEditPart){
-					if(s.height < 0){
-						s.height = ((CustomEventSubProcessPoolEditPart)ep).getDefaultHeight();
-					}
-
-					if(s.width < 0){
-						s.width = ((CustomEventSubProcessPoolEditPart)ep).getDefaultWidth();
 					}
 				}
 

@@ -102,7 +102,7 @@ public class BonitaUnspecifiedTypeCreationTool extends UnspecifiedTypeCreationTo
     protected boolean applies() {
         if(eClass != null){
             return (ProcessPackage.Literals.FLOW_ELEMENT.isSuperTypeOf(eClass)|| ProcessPackage.Literals.BOUNDARY_EVENT.isSuperTypeOf(eClass) || ProcessPackage.Literals.SUB_PROCESS_EVENT.equals(eClass))
-                    && !(eClass.equals(ProcessPackage.Literals.POOL) || eClass.equals(ProcessPackage.Literals.EVENT_SUB_PROCESS_POOL));
+                    && !(eClass.equals(ProcessPackage.Literals.POOL));
         }else{
             return true ;
         }

@@ -29,7 +29,6 @@ import org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeProcessCr
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.diagram.custom.figures.IEventSelectionListener;
 import org.bonitasoft.studio.diagram.custom.figures.MenuEventFigure;
-import org.bonitasoft.studio.diagram.custom.parts.CustomEventSubProcessPoolPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneNameEditPart;
@@ -39,10 +38,6 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomSubprocessEventCompartme
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.EventSubProcessPoolLabelEditPart;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.EventSubProcessPoolPoolCompartmentEditPart;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneLabelEditPart;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneLaneCompartment2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolNameEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
@@ -116,11 +111,6 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 		if(request.getExtendedData().get("DELETE_FROM_LANE") != null){
 			return super.getReparentCommand(request);
 		}
-		if(getHost() instanceof CustomEventSubProcessPoolPoolCompartmentEditPart 
-				&& request.getEditParts().get(0) != null 
-				&& ((EditPart) request.getEditParts().get(0)).getParent() instanceof LaneLaneCompartment2EditPart){
-			return UnexecutableCommand.INSTANCE;
-		}		
 		if(getHost() instanceof CustomPoolCompartmentEditPart  
 				&& request.getEditParts().get(0) != null 
 				&& ((EditPart) request.getEditParts().get(0)).getParent() instanceof CustomLaneCompartmentEditPart){
@@ -176,32 +166,27 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 
 				//Handle LAne DnD case
 				if(target instanceof ITextAwareEditPart 
-						&& (requestElementTypes.contains(ProcessElementTypes.Pool_2007)
-								|| requestElementTypes.contains(ProcessElementTypes.EventSubProcessPool_2032))){
+						&& (requestElementTypes.contains(ProcessElementTypes.Pool_2007))){
 					target = null ;
 					continue ;
 				}
 
 				/*If we are on NameEditPart of a Pool or EventSUbProcessPool, take the corresponding parent*/
-				if((target instanceof PoolNameEditPart && requestElementTypes.contains(ProcessElementTypes.Lane_3007))
-						|| (target instanceof EventSubProcessPoolLabelEditPart && requestElementTypes.contains(ProcessElementTypes.Lane_3059))){
+				if((target instanceof PoolNameEditPart && requestElementTypes.contains(ProcessElementTypes.Lane_3007))){
 					target = target.getParent() ;
 					for(Object child : target.getChildren()){
-						if(child instanceof CustomPoolCompartmentEditPart 
-								|| child instanceof CustomEventSubProcessPoolPoolCompartmentEditPart){
+						if(child instanceof CustomPoolCompartmentEditPart){
 							target = (EditPart) child ;
 						}
-						if(target instanceof CustomPoolCompartmentEditPart 
-								|| target instanceof CustomEventSubProcessPoolPoolCompartmentEditPart) break ;
+						if(target instanceof CustomPoolCompartmentEditPart) break ;
 					}
 				}
 
 				/*
 				 * This is for the case: create an element on the border between Pool and Lane; Be precise!!
 				 * The idea is to allow only creation of Lane in direct child of Pool.*/
-				if((target instanceof PoolPoolCompartmentEditPart || target instanceof EventSubProcessPoolPoolCompartmentEditPart)
-						&& !(requestElementTypes.contains(ProcessElementTypes.Lane_3007)//in Pool
-								|| requestElementTypes.contains(ProcessElementTypes.Lane_3059))){//In EventSUbProcPool
+				if((target instanceof PoolPoolCompartmentEditPart)
+						&& !(requestElementTypes.contains(ProcessElementTypes.Lane_3007))){
 					List<Element> elements = ((Container)((IGraphicalEditPart) target).resolveSemanticElement()).getElements() ;
 					Iterator<Element> it = elements.iterator() ;
 					while (it.hasNext()) {
@@ -214,8 +199,7 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 				}
 
 				/*If we are a Lane take the corresponding grand-parent: the compartment Pool or EventSubProcessPool EditPart*/
-				if(((target instanceof CustomLaneCompartmentEditPart || target instanceof CustomLaneNameEditPart) && requestElementTypes.contains(ProcessElementTypes.Lane_3007))
-						|| (target instanceof LaneLaneCompartment2EditPart || target instanceof LaneLabelEditPart) && requestElementTypes.contains(ProcessElementTypes.Lane_3059)){
+				if(((target instanceof CustomLaneCompartmentEditPart || target instanceof CustomLaneNameEditPart) && requestElementTypes.contains(ProcessElementTypes.Lane_3007)) ){
 					target = target.getParent().getParent() ;
 				}
 

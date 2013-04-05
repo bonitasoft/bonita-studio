@@ -62,7 +62,6 @@ public class GeneralExtensibleGridPropertySection extends ExtensibleGridProperty
 		addContribution(gatewayTypeContrib);
 		addContribution(new TaskPriorityPropertySection());
 		addContribution(new ErrorEventSectionContribution());
-		//addContribution(new SubProcessEventPropertySectionContribution());
 		
 	}
 

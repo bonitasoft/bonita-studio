@@ -4634,10 +4634,10 @@
             featureName="eType" referenceValue="process.ecore#//Actor"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-          element="process.ecore#//EventSubProcessPool">
-        <changes xsi:type="history:Set" element="process.ecore#//EventSubProcessPool"
+          element="#//@releases.2/@changes.2/@changes.1/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"
             featureName="name" dataValue="EventSubProcessPool"/>
-        <changes xsi:type="history:Add" element="process.ecore#//EventSubProcessPool"
+        <changes xsi:type="history:Add" element="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"
             featureName="eSuperTypes" referenceValue="process.ecore#//AbstractProcess"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -4824,22 +4824,22 @@
             featureName="eSuperTypes" referenceValue="process.ecore#//AbstractProcess"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//SubProcessEvent"
-          referenceName="eStructuralFeatures" element="process.ecore#//SubProcessEvent/subProcessEvent">
-        <changes xsi:type="history:Set" element="process.ecore#//SubProcessEvent/subProcessEvent"
+          referenceName="eStructuralFeatures" element="#//@releases.2/@changes.0/@changes.1/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.0/@changes.1/@element"
             featureName="name" dataValue="subProcessEvent"/>
-        <changes xsi:type="history:Set" element="process.ecore#//SubProcessEvent/subProcessEvent"
-            featureName="eType" referenceValue="process.ecore#//EventSubProcessPool"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.0/@changes.1/@element"
+            featureName="eType" referenceValue="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"/>
       </changes>
-      <changes xsi:type="history:Create" target="process.ecore#//EventSubProcessPool"
-          referenceName="eStructuralFeatures" element="process.ecore#//EventSubProcessPool/subProcessActivityInParentProcess">
-        <changes xsi:type="history:Set" element="process.ecore#//EventSubProcessPool/subProcessActivityInParentProcess"
+      <changes xsi:type="history:Create" target="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.2/@changes.0/@changes.2/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.0/@changes.2/@element"
             featureName="name" dataValue="subProcessActivityInParentProcess"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventSubProcessPool/subProcessActivityInParentProcess"
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.0/@changes.2/@element"
             featureName="eType" referenceValue="process.ecore#//SubProcessEvent"/>
-        <changes xsi:type="history:Set" element="process.ecore#//EventSubProcessPool/subProcessActivityInParentProcess"
-            featureName="eOpposite" referenceValue="process.ecore#//SubProcessEvent/subProcessEvent"/>
-        <changes xsi:type="history:Set" element="process.ecore#//SubProcessEvent/subProcessEvent"
-            featureName="eOpposite" referenceValue="process.ecore#//EventSubProcessPool/subProcessActivityInParentProcess"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.0/@changes.2/@element"
+            featureName="eOpposite" referenceValue="#//@releases.2/@changes.0/@changes.1/@element"/>
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.0/@changes.1/@element"
+            featureName="eOpposite" referenceValue="#//@releases.2/@changes.0/@changes.2/@element"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//CSSCustomizable" referenceName="eStructuralFeatures"
           element="form.ecore#//CSSCustomizable/htmlAttributes">
@@ -7599,6 +7599,51 @@
           <dataValue xsi:nil="true"/>
         </parameters>
       </operation>
+    </changes>
+  </releases>
+  <releases date="2013-04-05T09:29:54.291+0200" label="6.0.0-ga-001">
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Set" element="#//@releases.2/@changes.0/@changes.2/@element"
+          featureName="eOpposite" oldReferenceValue="#//@releases.2/@changes.0/@changes.1/@element"/>
+      <changes xsi:type="history:Delete" target="process.ecore#//SubProcessEvent"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="subProcessEvent" eType="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"
+            eOpposite="#//@releases.2/@changes.0/@changes.2/@element"/>
+      </changes>
+      <changes xsi:type="history:Delete" target="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"
+          referenceName="eStructuralFeatures">
+        <element xsi:type="ecore:EReference" name="subProcessActivityInParentProcess"
+            eType="ecore:EClass process.ecore#//SubProcessEvent"/>
+      </changes>
+      <operation name="deleteFeature2">
+        <parameters name="feature">
+          <referenceValue element="#//@releases.2/@changes.0/@changes.1/@element"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.subprocessevent.SubprocessEventMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Remove" element="process.ecore#//SubProcessEvent"
+            featureName="eSuperTypes" referenceValue="process.ecore#//AbstractProcess"/>
+        <operation name="removeSuperType">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//SubProcessEvent"/>
+            <referenceValue element="process.ecore#//SubProcessEvent"/>
+          </parameters>
+          <parameters name="superType">
+            <referenceValue element="process.ecore#//AbstractProcess"/>
+            <referenceValue element="process.ecore#//AbstractProcess"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:CompositeChange">
+        <changes xsi:type="history:Delete" target="process.ecore#/" referenceName="eClassifiers">
+          <element xsi:type="ecore:EClass" name="EventSubProcessPool" eSuperTypes="process.ecore#//AbstractProcess"/>
+        </changes>
+        <changes xsi:type="history:Add" element="process.ecore#//SubProcessEvent"
+            featureName="eSuperTypes" referenceValue="process.ecore#//Container"/>
+      </changes>
     </changes>
   </releases>
   <releases/>

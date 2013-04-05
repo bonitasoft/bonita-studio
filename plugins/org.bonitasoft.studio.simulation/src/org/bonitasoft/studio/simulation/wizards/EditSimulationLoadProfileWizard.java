@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.simulation.wizards;
 
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -55,7 +56,7 @@ public class EditSimulationLoadProfileWizard extends Wizard {
 	public EditSimulationLoadProfileWizard(IRepositoryFileStore artifact) {
 		this.file = artifact;
 		loadProfile = (LoadProfile) artifact.getContent() ;
-		loadProfile.setVersion(ProductVersion.CURRENT_VERSION) ;
+		loadProfile.setVersion(ModelVersion.CURRENT_VERSION) ;
 	}
 
 	/* (non-Javadoc)

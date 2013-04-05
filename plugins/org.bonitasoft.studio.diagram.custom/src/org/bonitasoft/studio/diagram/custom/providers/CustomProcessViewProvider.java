@@ -74,15 +74,6 @@ public class CustomProcessViewProvider extends ProcessViewProvider {
     }
 
     @Override
-    public Node createLane_3059(EObject domainElement, View containerView,
-            int index, boolean persisted, PreferencesHint preferencesHint) {
-        Node node = super.createLane_3059(domainElement, containerView, index, persisted,
-                preferencesHint);
-        node.getStyles().add(NotationFactory.eINSTANCE.createFillStyle()) ;
-        return node ;
-    }
-
-    @Override
     public Edge createMessageFlow_4002(EObject domainElement,
             View containerView, int index, boolean persisted,
             PreferencesHint preferencesHint) {
@@ -325,16 +316,6 @@ public class CustomProcessViewProvider extends ProcessViewProvider {
         return node ;
     }
 
-    @Override
-    public Node createEventSubProcessPool_2032(EObject domainElement,
-            View containerView, int index, boolean persisted,
-            PreferencesHint preferencesHint) {
-
-        Node node = super.createEventSubProcessPool_2032(domainElement, containerView,
-                index, persisted, preferencesHint);
-        node.getStyles().add(NotationFactory.eINSTANCE.createFillStyle()) ;
-        return node ;
-    }
 
     @Override
     public Node createReceiveTask_2025(EObject domainElement,

@@ -600,9 +600,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//EnumType/literals"/>
     </genClasses>
     <genClasses image="false" ecoreClass="process.ecore#//Event"/>
-    <genClasses ecoreClass="process.ecore#//EventSubProcessPool">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//EventSubProcessPool/subProcessActivityInParentProcess"/>
-    </genClasses>
     <genClasses ecoreClass="process.ecore#//FloatType"/>
     <genClasses ecoreClass="process.ecore#//FlowElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//FlowElement/dynamicLabel"/>
@@ -760,9 +757,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//StartTimerEvent/scriptType"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//StringType"/>
-    <genClasses ecoreClass="process.ecore#//SubProcessEvent">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//SubProcessEvent/subProcessEvent"/>
-    </genClasses>
+    <genClasses ecoreClass="process.ecore#//SubProcessEvent"/>
     <genClasses ecoreClass="process.ecore#//TargetElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference process.ecore#//TargetElement/incoming"/>
     </genClasses>

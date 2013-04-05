@@ -25,13 +25,13 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubProcessEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubprocessEventCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomTextAnnotation2EditPart;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.TextAnnotation;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneLaneCompartment2EditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneLaneCompartmentEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SequenceFlowEditPart;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -178,16 +178,16 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
 						return super.getMoveCommand(request);
 					}
 					IGraphicalEditPart host = (IGraphicalEditPart)getHost();
-					AbstractProcess hostParent = ModelHelper.getParentProcessIncludedEmbedded(host.resolveSemanticElement());
+					Container hostParent = ModelHelper.getParentContainer(host.resolveSemanticElement());
 
 					IGraphicalEditPart target = null ;
 					if(host.getViewer().findObjectAt(request.getLocation()) instanceof IGraphicalEditPart){
 						target = (IGraphicalEditPart) host.getViewer().findObjectAt(request.getLocation());
 					}
 
-					AbstractProcess targetParent = null ;
+					Container targetParent = null ;
 					if(target != null){
-						targetParent = ModelHelper.getParentProcessIncludedEmbedded(target.resolveSemanticElement());
+						targetParent = ModelHelper.getParentContainer(target.resolveSemanticElement());
 					}
 
 					if (target == null || hostParent.equals(targetParent)) {
@@ -197,7 +197,7 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
 							if(target instanceof SequenceFlowEditPart
 									|| target instanceof CustomPoolCompartmentEditPart 
 									|| target instanceof CustomLaneCompartmentEditPart  
-									|| target instanceof LaneLaneCompartment2EditPart
+									|| target instanceof LaneLaneCompartmentEditPart
 									|| target.equals(getHost())){
 
 								return super.getMoveCommand(request);

@@ -20,7 +20,7 @@ package org.bonitasoft.studio.common;
  * @author Romain Bioteau
  *
  */
-public class ProductVersion {
+public class ModelVersion {
 
     public static final String VERSION_5_0_PREVIEW = "5.0.preview";
     public static final String VERSION_5_0_M4 = "5.0.M4";
@@ -37,10 +37,10 @@ public class ProductVersion {
     public static final String VERSION_6_0 = "6.0";
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
     public static final String VERSION_6_0_0_BETA = "6.0.0-Beta";
-    public static final String VERSION_6_0_0_GA = "6.0.0-GA";
+    public static final String VERSION_6_0_0_GA_001 = "6.0.0-ga-001";
     //public static final String VERSION_6_0_0 = "6.0.0";
 
-    public static final String CURRENT_VERSION = VERSION_6_0_0_GA;
+    public static final String CURRENT_VERSION = VERSION_6_0_0_GA_001;
 
 
     public static boolean sameVersion(String version){

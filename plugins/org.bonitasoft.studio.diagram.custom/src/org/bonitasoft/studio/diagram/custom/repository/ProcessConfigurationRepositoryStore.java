@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -139,7 +140,7 @@ public class ProcessConfigurationRepositoryStore extends AbstractEMFRepositorySt
 		} catch (IOException e) {
 			BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
 		}
-		String modelVersion = ProductVersion.VERSION_6_0_0_ALPHA;
+		String modelVersion = ModelVersion.VERSION_6_0_0_ALPHA;
 		for(EObject root : resource.getContents()){
 			if(root instanceof Configuration){
 				String version = ((Configuration) root).getVersion();

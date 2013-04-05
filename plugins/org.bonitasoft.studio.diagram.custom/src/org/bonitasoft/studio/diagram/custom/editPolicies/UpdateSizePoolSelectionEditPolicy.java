@@ -24,8 +24,6 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.diagram.custom.commands.UpdatePoolSizeCommand;
-import org.bonitasoft.studio.diagram.custom.parts.CustomEventSubProcessPoolEditPart;
-import org.bonitasoft.studio.diagram.custom.parts.CustomEventSubProcessPoolPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomMainProcessEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
@@ -157,13 +155,7 @@ public class UpdateSizePoolSelectionEditPolicy extends SelectionEditPolicy imple
                     haveLanes = true ;
                     break ;
                 }
-            }
-            if(o instanceof CustomEventSubProcessPoolPoolCompartmentEditPart){
-                if(!((CustomEventSubProcessPoolPoolCompartmentEditPart)o).getPoolLanes().isEmpty()){
-                    haveLanes = true ;
-                    break ;
-                }
-            }
+            } 
         }
 
 
@@ -216,14 +208,6 @@ public class UpdateSizePoolSelectionEditPolicy extends SelectionEditPolicy imple
         /*first search for a CustomLaneEditPart*/
         while(!(result instanceof CustomPoolEditPart) && result != null){
             result = result.getParent() ;
-        }
-        /*If no CustomLaneEditPart found,
-         * search for a CustomLane2EditPart*/
-        if(result == null){
-            result = tempEditPart;
-            while(!(result instanceof CustomEventSubProcessPoolEditPart) && result != null){
-                result = result.getParent() ;
-            }
         }
 
         if(result == null){

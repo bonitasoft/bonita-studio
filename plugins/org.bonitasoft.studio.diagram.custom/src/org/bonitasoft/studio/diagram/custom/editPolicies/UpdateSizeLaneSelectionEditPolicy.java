@@ -26,7 +26,6 @@ import org.bonitasoft.studio.diagram.custom.commands.UpdatePoolSizeCommand;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomMainProcessEditPart;
 import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.Lane2EditPart;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.ExecutionException;
@@ -166,29 +165,12 @@ public class UpdateSizeLaneSelectionEditPolicy extends SelectionEditPolicy imple
 
 	private ShapeNodeEditPart findLaneEditPart(EditPart host) {
 		EditPart result = host ;
-
-		//		if(host instanceof SequenceFlowEditPart){
-		//			result = ((AbstractConnectionEditPart) host).getSource();
-		//		}
-		//
-		//		if(host instanceof MessageFlowEditPart){
-		//			result = ((AbstractConnectionEditPart) host).getSource();
-		//		}
-
 		EditPart tempEditPart = result;
 		/*first search for a CustomLaneEditPart*/
 		while(!(result instanceof CustomLaneEditPart) && result != null){
 			result = result.getParent() ;
 		}
-		/*If no CustomLaneEditPart found,
-		 * search for a CustomLane2EditPart*/
-		if(result == null){
-			result = tempEditPart;
-			while(!(result instanceof Lane2EditPart) && result != null){
-				result = result.getParent() ;
-			}
-		}
-
+		
 		if(result == null){
 			return null ;
 		}

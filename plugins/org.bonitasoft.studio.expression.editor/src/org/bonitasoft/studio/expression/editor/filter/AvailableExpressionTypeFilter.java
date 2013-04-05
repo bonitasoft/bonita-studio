@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.jface.viewers.Viewer;
@@ -35,6 +36,10 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
 
     public AvailableExpressionTypeFilter(String[] contentTypes){
         this.contentTypes = new HashSet<String>(Arrays.asList(contentTypes))  ;
+        if(this.contentTypes.contains(ExpressionConstants.VARIABLE_TYPE)){
+        	this.contentTypes.add(ExpressionConstants.JAVA_TYPE);
+         	this.contentTypes.add(ExpressionConstants.XPATH_TYPE);
+        }
     }
 
     /* (non-Javadoc)

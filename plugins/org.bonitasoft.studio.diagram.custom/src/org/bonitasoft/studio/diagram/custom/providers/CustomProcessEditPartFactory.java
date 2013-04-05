@@ -28,9 +28,6 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomEndEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomEndMessageEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomEndSignalEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomEndTerminatedEvent2EditPart;
-import org.bonitasoft.studio.diagram.custom.parts.CustomEventSubProcessPoolEditPart;
-import org.bonitasoft.studio.diagram.custom.parts.CustomEventSubProcessPoolLabelEditPart;
-import org.bonitasoft.studio.diagram.custom.parts.CustomEventSubProcessPoolPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomInclusiveGateway2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomIntermediateCatchMessageEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomIntermediateCatchSignalEvent2EditPart;
@@ -82,9 +79,6 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.EndEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.EndMessageEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.EndSignalEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.EndTerminatedEvent2EditPart;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.EventSubProcessPoolEditPart;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.EventSubProcessPoolLabelEditPart;
-import org.bonitasoft.studio.model.process.diagram.edit.parts.EventSubProcessPoolPoolCompartmentEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.InclusiveGateway2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateCatchMessageEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.IntermediateCatchSignalEvent2EditPart;
@@ -157,12 +151,7 @@ public class CustomProcessEditPartFactory extends ProcessEditPartFactory {
                 case PoolPoolCompartmentEditPart.VISUAL_ID:
                     return new CustomPoolCompartmentEditPart(view);
 
-                case EventSubProcessPoolEditPart.VISUAL_ID:
-                    return new CustomEventSubProcessPoolEditPart(view);
-
-                case EventSubProcessPoolPoolCompartmentEditPart.VISUAL_ID:
-                    return new CustomEventSubProcessPoolPoolCompartmentEditPart(view);
-
+ 
                 case ActivityName2EditPart.VISUAL_ID:
                     return new CustomActivityName2EditPart(view);
 
@@ -176,9 +165,7 @@ public class CustomProcessEditPartFactory extends ProcessEditPartFactory {
                     return new CustomSubProcessEventLabel2EditPart(view);
 
                 case PoolNameEditPart.VISUAL_ID:
-                    return new CustomPoolNameEditPart(view);
-                case EventSubProcessPoolLabelEditPart.VISUAL_ID:
-                    return new CustomEventSubProcessPoolLabelEditPart(view);
+                    return new CustomPoolNameEditPart(view);           
 
                 case LaneNameEditPart.VISUAL_ID:
                     return new CustomLaneNameEditPart(view);

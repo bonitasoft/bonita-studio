@@ -542,7 +542,7 @@
         canonicalEditPolicyClassName="ANDGateway2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="ANDGateway2GraphicalNodeEditPolicy"
         createCommandClassName="ANDGateway2CreateCommand"
-        containers="//@diagram/@compartments.0 //@diagram/@compartments.1 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.0 //@diagram/@compartments.1 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -629,7 +629,7 @@
         canonicalEditPolicyClassName="EndEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="EndEvent2GraphicalNodeEditPolicy"
         createCommandClassName="EndEvent2CreateCommand"
-        containers="//@diagram/@compartments.0 //@diagram/@compartments.1 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.0 //@diagram/@compartments.1 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -718,7 +718,7 @@
         childNodes="//@diagram/@childNodes.4 //@diagram/@childNodes.5 //@diagram/@childNodes.6 //@diagram/@childNodes.7"
         graphicalNodeEditPolicyClassName="CallActivity2GraphicalNodeEditPolicy"
         createCommandClassName="CallActivity2CreateCommand"
-        containers="//@diagram/@compartments.0 //@diagram/@compartments.1 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.0 //@diagram/@compartments.1 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -836,7 +836,7 @@
         compartments="//@diagram/@compartments.1"
         graphicalNodeEditPolicyClassName="SubProcessEvent2GraphicalNodeEditPolicy"
         createCommandClassName="SubProcessEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -867,12 +867,6 @@
               value="//@expressionProviders/@providers.0/@expressions.42">
             <feature
                 href="process.genmodel#//process/Element/name"/>
-          </initializers>
-          <initializers
-              xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.43">
-            <feature
-                href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
         </modelElementInitializer>
       </modelFacet>
@@ -907,7 +901,7 @@
         childNodes="//@diagram/@childNodes.0 //@diagram/@childNodes.1 //@diagram/@childNodes.2 //@diagram/@childNodes.3"
         graphicalNodeEditPolicyClassName="Task2GraphicalNodeEditPolicy"
         createCommandClassName="Task2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -1019,7 +1013,7 @@
         childNodes="//@diagram/@childNodes.14"
         graphicalNodeEditPolicyClassName="ReceiveTask2GraphicalNodeEditPolicy"
         createCommandClassName="ReceiveTask2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -1047,49 +1041,49 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.44">
+              value="//@expressionProviders/@providers.0/@expressions.43">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.45">
+              value="//@expressionProviders/@providers.0/@expressions.44">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.46">
+              value="//@expressionProviders/@providers.0/@expressions.45">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.47">
+              value="//@expressionProviders/@providers.0/@expressions.46">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.48">
+              value="//@expressionProviders/@providers.0/@expressions.47">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.49">
+              value="//@expressionProviders/@providers.0/@expressions.48">
             <feature
                 href="process.genmodel#//process/Activity/loopCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.50">
+              value="//@expressionProviders/@providers.0/@expressions.49">
             <feature
                 href="process.genmodel#//process/Activity/loopMaximum"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.51">
+              value="//@expressionProviders/@providers.0/@expressions.50">
             <feature
                 href="process.genmodel#//process/Activity/multiInstantiation"/>
           </initializers>
@@ -1152,7 +1146,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.52">
+              value="//@expressionProviders/@providers.0/@expressions.51">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -1187,7 +1181,7 @@
         canonicalEditPolicyClassName="SendTask2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="SendTask2GraphicalNodeEditPolicy"
         createCommandClassName="SendTask2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -1215,49 +1209,49 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.53">
+              value="//@expressionProviders/@providers.0/@expressions.52">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.54">
+              value="//@expressionProviders/@providers.0/@expressions.53">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.55">
+              value="//@expressionProviders/@providers.0/@expressions.54">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.56">
+              value="//@expressionProviders/@providers.0/@expressions.55">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.57">
+              value="//@expressionProviders/@providers.0/@expressions.56">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.58">
+              value="//@expressionProviders/@providers.0/@expressions.57">
             <feature
                 href="process.genmodel#//process/Activity/loopCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.59">
+              value="//@expressionProviders/@providers.0/@expressions.58">
             <feature
                 href="process.genmodel#//process/Activity/loopMaximum"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.60">
+              value="//@expressionProviders/@providers.0/@expressions.59">
             <feature
                 href="process.genmodel#//process/Activity/multiInstantiation"/>
           </initializers>
@@ -1293,7 +1287,7 @@
         childNodes="//@diagram/@childNodes.17"
         graphicalNodeEditPolicyClassName="ServiceTask2GraphicalNodeEditPolicy"
         createCommandClassName="ServiceTask2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -1321,49 +1315,49 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.61">
+              value="//@expressionProviders/@providers.0/@expressions.60">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.62">
+              value="//@expressionProviders/@providers.0/@expressions.61">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.63">
+              value="//@expressionProviders/@providers.0/@expressions.62">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.64">
+              value="//@expressionProviders/@providers.0/@expressions.63">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.65">
+              value="//@expressionProviders/@providers.0/@expressions.64">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.66">
+              value="//@expressionProviders/@providers.0/@expressions.65">
             <feature
                 href="process.genmodel#//process/Activity/loopCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.67">
+              value="//@expressionProviders/@providers.0/@expressions.66">
             <feature
                 href="process.genmodel#//process/Activity/loopMaximum"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.68">
+              value="//@expressionProviders/@providers.0/@expressions.67">
             <feature
                 href="process.genmodel#//process/Activity/multiInstantiation"/>
           </initializers>
@@ -1426,7 +1420,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.69">
+              value="//@expressionProviders/@providers.0/@expressions.68">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -1462,7 +1456,7 @@
         childNodes="//@diagram/@childNodes.19"
         graphicalNodeEditPolicyClassName="ScriptTask2GraphicalNodeEditPolicy"
         createCommandClassName="ScriptTask2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -1490,49 +1484,49 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.70">
+              value="//@expressionProviders/@providers.0/@expressions.69">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.71">
+              value="//@expressionProviders/@providers.0/@expressions.70">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.72">
+              value="//@expressionProviders/@providers.0/@expressions.71">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.73">
+              value="//@expressionProviders/@providers.0/@expressions.72">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.74">
+              value="//@expressionProviders/@providers.0/@expressions.73">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.75">
+              value="//@expressionProviders/@providers.0/@expressions.74">
             <feature
                 href="process.genmodel#//process/Activity/loopCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.76">
+              value="//@expressionProviders/@providers.0/@expressions.75">
             <feature
                 href="process.genmodel#//process/Activity/loopMaximum"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.77">
+              value="//@expressionProviders/@providers.0/@expressions.76">
             <feature
                 href="process.genmodel#//process/Activity/multiInstantiation"/>
           </initializers>
@@ -1595,7 +1589,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.78">
+              value="//@expressionProviders/@providers.0/@expressions.77">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -1630,7 +1624,7 @@
         canonicalEditPolicyClassName="XORGateway2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="XORGateway2GraphicalNodeEditPolicy"
         createCommandClassName="XORGateway2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -1658,37 +1652,37 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.79">
+              value="//@expressionProviders/@providers.0/@expressions.78">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.80">
+              value="//@expressionProviders/@providers.0/@expressions.79">
             <feature
                 href="process.genmodel#//simulation/SimulationActivity/exclusiveOutgoingTransition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.81">
+              value="//@expressionProviders/@providers.0/@expressions.80">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.82">
+              value="//@expressionProviders/@providers.0/@expressions.81">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.83">
+              value="//@expressionProviders/@providers.0/@expressions.82">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.84">
+              value="//@expressionProviders/@providers.0/@expressions.83">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -1724,7 +1718,7 @@
         childNodes="//@diagram/@childNodes.22"
         graphicalNodeEditPolicyClassName="Activity2GraphicalNodeEditPolicy"
         createCommandClassName="Activity2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -1752,49 +1746,49 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.85">
+              value="//@expressionProviders/@providers.0/@expressions.84">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.86">
+              value="//@expressionProviders/@providers.0/@expressions.85">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.87">
+              value="//@expressionProviders/@providers.0/@expressions.86">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.88">
+              value="//@expressionProviders/@providers.0/@expressions.87">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.89">
+              value="//@expressionProviders/@providers.0/@expressions.88">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.90">
+              value="//@expressionProviders/@providers.0/@expressions.89">
             <feature
                 href="process.genmodel#//process/Activity/loopCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.91">
+              value="//@expressionProviders/@providers.0/@expressions.90">
             <feature
                 href="process.genmodel#//process/Activity/loopMaximum"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.92">
+              value="//@expressionProviders/@providers.0/@expressions.91">
             <feature
                 href="process.genmodel#//process/Activity/multiInstantiation"/>
           </initializers>
@@ -1857,7 +1851,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.93">
+              value="//@expressionProviders/@providers.0/@expressions.92">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -1892,7 +1886,7 @@
         canonicalEditPolicyClassName="IntermediateCatchMessageEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="IntermediateCatchMessageEvent2GraphicalNodeEditPolicy"
         createCommandClassName="IntermediateCatchMessageEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -1920,31 +1914,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.94">
+              value="//@expressionProviders/@providers.0/@expressions.93">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.95">
+              value="//@expressionProviders/@providers.0/@expressions.94">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.96">
+              value="//@expressionProviders/@providers.0/@expressions.95">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.97">
+              value="//@expressionProviders/@providers.0/@expressions.96">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.98">
+              value="//@expressionProviders/@providers.0/@expressions.97">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -1979,7 +1973,7 @@
         canonicalEditPolicyClassName="StartMessageEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="StartMessageEvent2GraphicalNodeEditPolicy"
         createCommandClassName="StartMessageEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2007,31 +2001,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.99">
+              value="//@expressionProviders/@providers.0/@expressions.98">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.100">
+              value="//@expressionProviders/@providers.0/@expressions.99">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.101">
+              value="//@expressionProviders/@providers.0/@expressions.100">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.102">
+              value="//@expressionProviders/@providers.0/@expressions.101">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.103">
+              value="//@expressionProviders/@providers.0/@expressions.102">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -2066,7 +2060,7 @@
         canonicalEditPolicyClassName="EndMessageEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="EndMessageEvent2GraphicalNodeEditPolicy"
         createCommandClassName="EndMessageEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2094,31 +2088,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.104">
+              value="//@expressionProviders/@providers.0/@expressions.103">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.105">
+              value="//@expressionProviders/@providers.0/@expressions.104">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.106">
+              value="//@expressionProviders/@providers.0/@expressions.105">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.107">
+              value="//@expressionProviders/@providers.0/@expressions.106">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.108">
+              value="//@expressionProviders/@providers.0/@expressions.107">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -2153,7 +2147,7 @@
         canonicalEditPolicyClassName="IntermediateThrowMessageEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="IntermediateThrowMessageEvent2GraphicalNodeEditPolicy"
         createCommandClassName="IntermediateThrowMessageEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2181,31 +2175,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.109">
+              value="//@expressionProviders/@providers.0/@expressions.108">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.110">
+              value="//@expressionProviders/@providers.0/@expressions.109">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.111">
+              value="//@expressionProviders/@providers.0/@expressions.110">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.112">
+              value="//@expressionProviders/@providers.0/@expressions.111">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.113">
+              value="//@expressionProviders/@providers.0/@expressions.112">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -2240,7 +2234,7 @@
         canonicalEditPolicyClassName="TextAnnotation2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="TextAnnotation2GraphicalNodeEditPolicy"
         createCommandClassName="TextAnnotation2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2269,7 +2263,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.114">
+              value="//@expressionProviders/@providers.0/@expressions.113">
             <feature
                 href="process.genmodel#//process/TextAnnotation/text"/>
           </initializers>
@@ -2304,7 +2298,7 @@
         canonicalEditPolicyClassName="StartTimerEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="StartTimerEvent2GraphicalNodeEditPolicy"
         createCommandClassName="StartTimerEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2332,31 +2326,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.115">
+              value="//@expressionProviders/@providers.0/@expressions.114">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.116">
+              value="//@expressionProviders/@providers.0/@expressions.115">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.117">
+              value="//@expressionProviders/@providers.0/@expressions.116">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.118">
+              value="//@expressionProviders/@providers.0/@expressions.117">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.119">
+              value="//@expressionProviders/@providers.0/@expressions.118">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -2391,7 +2385,7 @@
         canonicalEditPolicyClassName="IntermediateCatchTimerEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="IntermediateCatchTimerEvent2GraphicalNodeEditPolicy"
         createCommandClassName="IntermediateCatchTimerEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2419,31 +2413,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.120">
+              value="//@expressionProviders/@providers.0/@expressions.119">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.121">
+              value="//@expressionProviders/@providers.0/@expressions.120">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.122">
+              value="//@expressionProviders/@providers.0/@expressions.121">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.123">
+              value="//@expressionProviders/@providers.0/@expressions.122">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.124">
+              value="//@expressionProviders/@providers.0/@expressions.123">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -2478,7 +2472,7 @@
         canonicalEditPolicyClassName="StartSignalEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="StartSignalEvent2GraphicalNodeEditPolicy"
         createCommandClassName="StartSignalEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2506,31 +2500,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.125">
+              value="//@expressionProviders/@providers.0/@expressions.124">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.126">
+              value="//@expressionProviders/@providers.0/@expressions.125">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.127">
+              value="//@expressionProviders/@providers.0/@expressions.126">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.128">
+              value="//@expressionProviders/@providers.0/@expressions.127">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.129">
+              value="//@expressionProviders/@providers.0/@expressions.128">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -2565,7 +2559,7 @@
         canonicalEditPolicyClassName="IntermediateThrowSignalEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="IntermediateThrowSignalEvent2GraphicalNodeEditPolicy"
         createCommandClassName="IntermediateThrowSignalEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2593,31 +2587,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.130">
+              value="//@expressionProviders/@providers.0/@expressions.129">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.131">
+              value="//@expressionProviders/@providers.0/@expressions.130">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.132">
+              value="//@expressionProviders/@providers.0/@expressions.131">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.133">
+              value="//@expressionProviders/@providers.0/@expressions.132">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.134">
+              value="//@expressionProviders/@providers.0/@expressions.133">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -2652,7 +2646,7 @@
         canonicalEditPolicyClassName="IntermediateCatchSignalEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="IntermediateCatchSignalEvent2GraphicalNodeEditPolicy"
         createCommandClassName="IntermediateCatchSignalEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2680,31 +2674,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.135">
+              value="//@expressionProviders/@providers.0/@expressions.134">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.136">
+              value="//@expressionProviders/@providers.0/@expressions.135">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.137">
+              value="//@expressionProviders/@providers.0/@expressions.136">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.138">
+              value="//@expressionProviders/@providers.0/@expressions.137">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.139">
+              value="//@expressionProviders/@providers.0/@expressions.138">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -2739,7 +2733,7 @@
         canonicalEditPolicyClassName="EndSignalEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="EndSignalEvent2GraphicalNodeEditPolicy"
         createCommandClassName="EndSignalEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2767,31 +2761,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.140">
+              value="//@expressionProviders/@providers.0/@expressions.139">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.141">
+              value="//@expressionProviders/@providers.0/@expressions.140">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.142">
+              value="//@expressionProviders/@providers.0/@expressions.141">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.143">
+              value="//@expressionProviders/@providers.0/@expressions.142">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.144">
+              value="//@expressionProviders/@providers.0/@expressions.143">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -2826,7 +2820,7 @@
         canonicalEditPolicyClassName="EndErrorEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="EndErrorEvent2GraphicalNodeEditPolicy"
         createCommandClassName="EndErrorEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2854,31 +2848,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.145">
+              value="//@expressionProviders/@providers.0/@expressions.144">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.146">
+              value="//@expressionProviders/@providers.0/@expressions.145">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.147">
+              value="//@expressionProviders/@providers.0/@expressions.146">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.148">
+              value="//@expressionProviders/@providers.0/@expressions.147">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.149">
+              value="//@expressionProviders/@providers.0/@expressions.148">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -2914,7 +2908,7 @@
         canonicalEditPolicyClassName="EndTerminatedEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="EndTerminatedEvent2GraphicalNodeEditPolicy"
         createCommandClassName="EndTerminatedEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -2940,31 +2934,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.150">
+              value="//@expressionProviders/@providers.0/@expressions.149">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.151">
+              value="//@expressionProviders/@providers.0/@expressions.150">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.152">
+              value="//@expressionProviders/@providers.0/@expressions.151">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.153">
+              value="//@expressionProviders/@providers.0/@expressions.152">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.154">
+              value="//@expressionProviders/@providers.0/@expressions.153">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -3000,7 +2994,7 @@
         canonicalEditPolicyClassName="StartErrorEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="StartErrorEvent2GraphicalNodeEditPolicy"
         createCommandClassName="StartErrorEvent2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -3026,31 +3020,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.155">
+              value="//@expressionProviders/@providers.0/@expressions.154">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.156">
+              value="//@expressionProviders/@providers.0/@expressions.155">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.157">
+              value="//@expressionProviders/@providers.0/@expressions.156">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.158">
+              value="//@expressionProviders/@providers.0/@expressions.157">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.159">
+              value="//@expressionProviders/@providers.0/@expressions.158">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -3086,7 +3080,7 @@
         canonicalEditPolicyClassName="Event2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="Event2GraphicalNodeEditPolicy"
         createCommandClassName="Event2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -3120,7 +3114,7 @@
         canonicalEditPolicyClassName="InclusiveGateway2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="InclusiveGateway2GraphicalNodeEditPolicy"
         createCommandClassName="InclusiveGateway2CreateCommand"
-        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.1 //@diagram/@compartments.0 //@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -3148,31 +3142,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.160">
+              value="//@expressionProviders/@providers.0/@expressions.159">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.161">
+              value="//@expressionProviders/@providers.0/@expressions.160">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.162">
+              value="//@expressionProviders/@providers.0/@expressions.161">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.163">
+              value="//@expressionProviders/@providers.0/@expressions.162">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.164">
+              value="//@expressionProviders/@providers.0/@expressions.163">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -3240,7 +3234,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.173">
+              value="//@expressionProviders/@providers.0/@expressions.172">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -3363,7 +3357,7 @@
         canonicalEditPolicyClassName="ThrowLinkEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="ThrowLinkEvent2GraphicalNodeEditPolicy"
         createCommandClassName="ThrowLinkEvent2CreateCommand"
-        containers="//@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -3391,31 +3385,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.174">
+              value="//@expressionProviders/@providers.0/@expressions.173">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.175">
+              value="//@expressionProviders/@providers.0/@expressions.174">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.176">
+              value="//@expressionProviders/@providers.0/@expressions.175">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.177">
+              value="//@expressionProviders/@providers.0/@expressions.176">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.178">
+              value="//@expressionProviders/@providers.0/@expressions.177">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -3449,7 +3443,7 @@
         canonicalEditPolicyClassName="CatchLinkEvent2CanonicalEditPolicy"
         graphicalNodeEditPolicyClassName="CatchLinkEvent2GraphicalNodeEditPolicy"
         createCommandClassName="CatchLinkEvent2CreateCommand"
-        containers="//@diagram/@compartments.3 //@diagram/@compartments.2 //@diagram/@compartments.5 //@diagram/@compartments.4">
+        containers="//@diagram/@compartments.3 //@diagram/@compartments.2">
       <diagramRunTimeClass
           href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
       <elementType
@@ -3477,31 +3471,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.179">
+              value="//@expressionProviders/@providers.0/@expressions.178">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.180">
+              value="//@expressionProviders/@providers.0/@expressions.179">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.181">
+              value="//@expressionProviders/@providers.0/@expressions.180">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.182">
+              value="//@expressionProviders/@providers.0/@expressions.181">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.183">
+              value="//@expressionProviders/@providers.0/@expressions.182">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -3517,75 +3511,6 @@
             href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
         <viewmap
             xsi:type="gmfgen:FigureViewmap"
-            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
-        <modelFacet
-            xsi:type="gmfgen:FeatureLabelModelFacet"
-            parser="//@labelParsers/@implementations.0">
-          <metaFeatures
-              href="process.genmodel#//process/Element/name"/>
-          <editableMetaFeatures
-              href="process.genmodel#//process/Element/name"/>
-        </modelFacet>
-      </labels>
-    </childNodes>
-    <childNodes
-        visualID="3059"
-        editPartClassName="Lane2EditPart"
-        itemSemanticEditPolicyClassName="Lane2ItemSemanticEditPolicy"
-        notationViewFactoryClassName="LaneViewFactory"
-        canonicalEditPolicyClassName="Lane2CanonicalEditPolicy"
-        compartments="//@diagram/@compartments.5"
-        graphicalNodeEditPolicyClassName="Lane2GraphicalNodeEditPolicy"
-        createCommandClassName="Lane2CreateCommand"
-        containers="//@diagram/@compartments.4">
-      <diagramRunTimeClass
-          href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
-      <elementType
-          xsi:type="gmfgen:SpecializationType"
-          metamodelType="//@diagram/@childNodes.39/@elementType"/>
-      <viewmap
-          xsi:type="gmfgen:InnerClassViewmap"
-          className="LaneFigure"
-          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class LaneFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureLaneNameFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigureLaneContainerFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public LaneFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.GridLayout layoutThis = new org.eclipse.draw2d.GridLayout();&#xA;&#x9;layoutThis.numColumns = 2;&#xA;&#x9;layoutThis.makeColumnsEqualWidth = false;&#xA;&#x9;layoutThis.horizontalSpacing = 0;&#xA;&#x9;layoutThis.verticalSpacing = 0;&#xA;&#x9;layoutThis.marginWidth = 0;&#xA;&#x9;layoutThis.marginHeight = 0;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;&#x9;this.setBackgroundColor(THIS_BACK&#xA;);&#xA;this.setPreferredSize(new org.eclipse.draw2d.geometry.Dimension(getMapMode().DPtoLP(975)&#xA;, getMapMode().DPtoLP(100)&#xA;));&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;org.eclipse.draw2d.RectangleFigure nameContainerFigure0 = new org.eclipse.draw2d.RectangleFigure();&#xA;&#xA;&#xA;org.eclipse.draw2d.GridData constraintNameContainerFigure0 = new org.eclipse.draw2d.GridData();&#xA;constraintNameContainerFigure0.verticalAlignment = org.eclipse.draw2d.GridData.FILL;&#xA;constraintNameContainerFigure0.horizontalAlignment = org.eclipse.draw2d.GridData.BEGINNING;&#xA;constraintNameContainerFigure0.horizontalIndent = 0;&#xA;constraintNameContainerFigure0.horizontalSpan = 1;&#xA;constraintNameContainerFigure0.verticalSpan = 1;&#xA;constraintNameContainerFigure0.grabExcessHorizontalSpace = false;&#xA;constraintNameContainerFigure0.grabExcessVerticalSpace = true;&#xA;constraintNameContainerFigure0.widthHint = 20;&#xA;constraintNameContainerFigure0.heightHint = 0;&#xA;this.add(nameContainerFigure0, constraintNameContainerFigure0);&#xA;&#xA;&#xA;&#x9;org.eclipse.draw2d.GridLayout layoutNameContainerFigure0 = new org.eclipse.draw2d.GridLayout();&#xA;&#x9;layoutNameContainerFigure0.numColumns = 1;&#xA;&#x9;layoutNameContainerFigure0.makeColumnsEqualWidth = true;&#xA;&#x9;layoutNameContainerFigure0.horizontalSpacing = 0;&#xA;&#x9;layoutNameContainerFigure0.verticalSpacing = 0;&#xA;&#x9;layoutNameContainerFigure0.marginWidth = 0;&#xA;&#x9;layoutNameContainerFigure0.marginHeight = 0;&#xA;&#x9;nameContainerFigure0.setLayoutManager(layoutNameContainerFigure0);&#xA;&#xA;&#xA;&#xA;fFigureLaneNameFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureLaneNameFigure.setText(&quot;&quot;);&#xA;&#xA;&#xA;org.eclipse.draw2d.GridData constraintFFigureLaneNameFigure = new org.eclipse.draw2d.GridData();&#xA;constraintFFigureLaneNameFigure.verticalAlignment = org.eclipse.draw2d.GridData.FILL;&#xA;constraintFFigureLaneNameFigure.horizontalAlignment = org.eclipse.draw2d.GridData.FILL;&#xA;constraintFFigureLaneNameFigure.horizontalIndent = 2;&#xA;constraintFFigureLaneNameFigure.horizontalSpan = 1;&#xA;constraintFFigureLaneNameFigure.verticalSpan = 1;&#xA;constraintFFigureLaneNameFigure.grabExcessHorizontalSpace = true;&#xA;constraintFFigureLaneNameFigure.grabExcessVerticalSpace = true;&#xA;nameContainerFigure0.add(fFigureLaneNameFigure, constraintFFigureLaneNameFigure);&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;fFigureLaneContainerFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;&#xA;&#xA;org.eclipse.draw2d.GridData constraintFFigureLaneContainerFigure = new org.eclipse.draw2d.GridData();&#xA;constraintFFigureLaneContainerFigure.verticalAlignment = org.eclipse.draw2d.GridData.FILL;&#xA;constraintFFigureLaneContainerFigure.horizontalAlignment = org.eclipse.draw2d.GridData.FILL;&#xA;constraintFFigureLaneContainerFigure.horizontalIndent = 0;&#xA;constraintFFigureLaneContainerFigure.horizontalSpan = 1;&#xA;constraintFFigureLaneContainerFigure.verticalSpan = 1;&#xA;constraintFFigureLaneContainerFigure.grabExcessHorizontalSpace = true;&#xA;constraintFFigureLaneContainerFigure.grabExcessVerticalSpace = true;&#xA;this.add(fFigureLaneContainerFigure, constraintFFigureLaneContainerFigure);&#xA;&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureLaneNameFigure() {&#xA;&#x9;&#x9;return fFigureLaneNameFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigureLaneContainerFigure() {&#xA;&#x9;&#x9;return fFigureLaneContainerFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color THIS_BACK = new org.eclipse.swt.graphics.Color(null, 246, 246, 237);&#xA;&#xA;">
-        <attributes
-            xsi:type="gmfgen:StyleAttributes"
-            fixedBackground="true"/>
-        <attributes
-            xsi:type="gmfgen:ResizeConstraints"
-            resizeHandles="20"/>
-        <attributes
-            xsi:type="gmfgen:DefaultSizeAttributes"
-            width="975"
-            height="100"/>
-      </viewmap>
-      <modelFacet>
-        <metaClass
-            href="process.genmodel#//process/Lane"/>
-        <containmentMetaFeature
-            href="process.genmodel#//process/Container/elements"/>
-        <childMetaFeature
-            href="process.genmodel#//process/Container/elements"/>
-        <modelElementInitializer
-            xsi:type="gmfgen:GenFeatureSeqInitializer">
-          <initializers
-              xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.186">
-            <feature
-                href="process.genmodel#//process/Element/name"/>
-          </initializers>
-        </modelElementInitializer>
-      </modelFacet>
-      <labels
-          visualID="5084"
-          editPartClassName="LaneLabelEditPart"
-          itemSemanticEditPolicyClassName="LaneLabelItemSemanticEditPolicy"
-          notationViewFactoryClassName="LaneLabelViewFactory"
-          readOnly="true">
-        <diagramRunTimeClass
-            href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
-        <viewmap
-            xsi:type="gmfgen:ParentAssignedViewmap"
-            getterName="getFigureLaneNameFigure"
             figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
         <modelFacet
             xsi:type="gmfgen:FeatureLabelModelFacet"
@@ -4124,12 +4049,6 @@
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
-          <initializers
-              xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.43">
-            <feature
-                href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
-          </initializers>
         </modelElementInitializer>
       </modelFacet>
       <labels
@@ -4190,49 +4109,49 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.44">
+              value="//@expressionProviders/@providers.0/@expressions.43">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.45">
+              value="//@expressionProviders/@providers.0/@expressions.44">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.46">
+              value="//@expressionProviders/@providers.0/@expressions.45">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.47">
+              value="//@expressionProviders/@providers.0/@expressions.46">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.48">
+              value="//@expressionProviders/@providers.0/@expressions.47">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.49">
+              value="//@expressionProviders/@providers.0/@expressions.48">
             <feature
                 href="process.genmodel#//process/Activity/loopCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.50">
+              value="//@expressionProviders/@providers.0/@expressions.49">
             <feature
                 href="process.genmodel#//process/Activity/loopMaximum"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.51">
+              value="//@expressionProviders/@providers.0/@expressions.50">
             <feature
                 href="process.genmodel#//process/Activity/multiInstantiation"/>
           </initializers>
@@ -4294,49 +4213,49 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.53">
+              value="//@expressionProviders/@providers.0/@expressions.52">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.54">
+              value="//@expressionProviders/@providers.0/@expressions.53">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.55">
+              value="//@expressionProviders/@providers.0/@expressions.54">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.56">
+              value="//@expressionProviders/@providers.0/@expressions.55">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.57">
+              value="//@expressionProviders/@providers.0/@expressions.56">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.58">
+              value="//@expressionProviders/@providers.0/@expressions.57">
             <feature
                 href="process.genmodel#//process/Activity/loopCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.59">
+              value="//@expressionProviders/@providers.0/@expressions.58">
             <feature
                 href="process.genmodel#//process/Activity/loopMaximum"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.60">
+              value="//@expressionProviders/@providers.0/@expressions.59">
             <feature
                 href="process.genmodel#//process/Activity/multiInstantiation"/>
           </initializers>
@@ -4399,49 +4318,49 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.61">
+              value="//@expressionProviders/@providers.0/@expressions.60">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.62">
+              value="//@expressionProviders/@providers.0/@expressions.61">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.63">
+              value="//@expressionProviders/@providers.0/@expressions.62">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.64">
+              value="//@expressionProviders/@providers.0/@expressions.63">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.65">
+              value="//@expressionProviders/@providers.0/@expressions.64">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.66">
+              value="//@expressionProviders/@providers.0/@expressions.65">
             <feature
                 href="process.genmodel#//process/Activity/loopCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.67">
+              value="//@expressionProviders/@providers.0/@expressions.66">
             <feature
                 href="process.genmodel#//process/Activity/loopMaximum"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.68">
+              value="//@expressionProviders/@providers.0/@expressions.67">
             <feature
                 href="process.genmodel#//process/Activity/multiInstantiation"/>
           </initializers>
@@ -4504,49 +4423,49 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.70">
+              value="//@expressionProviders/@providers.0/@expressions.69">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.71">
+              value="//@expressionProviders/@providers.0/@expressions.70">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.72">
+              value="//@expressionProviders/@providers.0/@expressions.71">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.73">
+              value="//@expressionProviders/@providers.0/@expressions.72">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.74">
+              value="//@expressionProviders/@providers.0/@expressions.73">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.75">
+              value="//@expressionProviders/@providers.0/@expressions.74">
             <feature
                 href="process.genmodel#//process/Activity/loopCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.76">
+              value="//@expressionProviders/@providers.0/@expressions.75">
             <feature
                 href="process.genmodel#//process/Activity/loopMaximum"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.77">
+              value="//@expressionProviders/@providers.0/@expressions.76">
             <feature
                 href="process.genmodel#//process/Activity/multiInstantiation"/>
           </initializers>
@@ -4608,37 +4527,37 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.79">
+              value="//@expressionProviders/@providers.0/@expressions.78">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.80">
+              value="//@expressionProviders/@providers.0/@expressions.79">
             <feature
                 href="process.genmodel#//simulation/SimulationActivity/exclusiveOutgoingTransition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.81">
+              value="//@expressionProviders/@providers.0/@expressions.80">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.82">
+              value="//@expressionProviders/@providers.0/@expressions.81">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.83">
+              value="//@expressionProviders/@providers.0/@expressions.82">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.84">
+              value="//@expressionProviders/@providers.0/@expressions.83">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -4700,31 +4619,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.160">
+              value="//@expressionProviders/@providers.0/@expressions.159">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.161">
+              value="//@expressionProviders/@providers.0/@expressions.160">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.162">
+              value="//@expressionProviders/@providers.0/@expressions.161">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.163">
+              value="//@expressionProviders/@providers.0/@expressions.162">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.164">
+              value="//@expressionProviders/@providers.0/@expressions.163">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -4787,49 +4706,49 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.85">
+              value="//@expressionProviders/@providers.0/@expressions.84">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.86">
+              value="//@expressionProviders/@providers.0/@expressions.85">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.87">
+              value="//@expressionProviders/@providers.0/@expressions.86">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.88">
+              value="//@expressionProviders/@providers.0/@expressions.87">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.89">
+              value="//@expressionProviders/@providers.0/@expressions.88">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.90">
+              value="//@expressionProviders/@providers.0/@expressions.89">
             <feature
                 href="process.genmodel#//process/Activity/loopCondition"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.91">
+              value="//@expressionProviders/@providers.0/@expressions.90">
             <feature
                 href="process.genmodel#//process/Activity/loopMaximum"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.92">
+              value="//@expressionProviders/@providers.0/@expressions.91">
             <feature
                 href="process.genmodel#//process/Activity/multiInstantiation"/>
           </initializers>
@@ -4895,7 +4814,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.165">
+              value="//@expressionProviders/@providers.0/@expressions.164">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -4907,43 +4826,43 @@
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.166">
+              value="//@expressionProviders/@providers.0/@expressions.165">
             <feature
                 href="process.genmodel#//process/Pool/searchIndexes"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.167">
+              value="//@expressionProviders/@providers.0/@expressions.166">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.168">
+              value="//@expressionProviders/@providers.0/@expressions.167">
             <feature
                 href="process.genmodel#//form/MandatoryFieldsCustomization/mandatoryLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.169">
+              value="//@expressionProviders/@providers.0/@expressions.168">
             <feature
                 href="process.genmodel#//form/MandatoryFieldsCustomization/mandatorySymbol"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.170">
+              value="//@expressionProviders/@providers.0/@expressions.169">
             <feature
                 href="process.genmodel#//process/PageFlow/confirmationMessage"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.171">
+              value="//@expressionProviders/@providers.0/@expressions.170">
             <feature
                 href="process.genmodel#//process/PageFlow/entryRedirectionURL"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.172">
+              value="//@expressionProviders/@providers.0/@expressions.171">
             <feature
                 href="process.genmodel#//process/RecapFlow/recapPageFlowRedirectionURL"/>
           </initializers>
@@ -4967,85 +4886,6 @@
             viewPattern=""
             editorPattern=""
             editPattern="">
-          <metaFeatures
-              href="process.genmodel#//process/Element/name"/>
-          <editableMetaFeatures
-              href="process.genmodel#//process/Element/name"/>
-        </modelFacet>
-      </labels>
-    </topLevelNodes>
-    <topLevelNodes
-        visualID="2032"
-        editPartClassName="EventSubProcessPoolEditPart"
-        itemSemanticEditPolicyClassName="EventSubProcessPoolItemSemanticEditPolicy"
-        notationViewFactoryClassName="EventSubProcessPoolViewFactory"
-        canonicalEditPolicyClassName="EventSubProcessPoolCanonicalEditPolicy"
-        compartments="//@diagram/@compartments.4"
-        graphicalNodeEditPolicyClassName="EventSubProcessPoolGraphicalNodeEditPolicy"
-        createCommandClassName="EventSubProcessPoolCreateCommand">
-      <diagramRunTimeClass
-          href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
-      <elementType
-          xsi:type="gmfgen:MetamodelType"
-          editHelperClassName="EventSubProcessPoolEditHelper"/>
-      <viewmap
-          xsi:type="gmfgen:InnerClassViewmap"
-          className="PoolEventSubProcessFigure"
-          classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class PoolEventSubProcessFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigurePoolNameFigure; &#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.draw2d.RectangleFigure fFigurePoolContainerFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public PoolEventSubProcessFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.GridLayout layoutThis = new org.eclipse.draw2d.GridLayout();&#xA;&#x9;layoutThis.numColumns = 2;&#xA;&#x9;layoutThis.makeColumnsEqualWidth = false;&#xA;&#x9;layoutThis.horizontalSpacing = 0;&#xA;&#x9;layoutThis.verticalSpacing = 0;&#xA;&#x9;layoutThis.marginWidth = 0;&#xA;&#x9;layoutThis.marginHeight = 0;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;this.setLineStyle(org.eclipse.draw2d.Graphics.LINE_CUSTOM);&#xA;&#x9;this.setBackgroundColor(THIS_BACK&#xA;);&#xA;this.setPreferredSize(new org.eclipse.draw2d.geometry.Dimension(getMapMode().DPtoLP(1000)&#xA;, getMapMode().DPtoLP(100)&#xA;));&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;org.eclipse.draw2d.RectangleFigure poolNameContainerFigure0 = new org.eclipse.draw2d.RectangleFigure();&#xA;&#xA;&#xA;org.eclipse.draw2d.GridData constraintPoolNameContainerFigure0 = new org.eclipse.draw2d.GridData();&#xA;constraintPoolNameContainerFigure0.verticalAlignment = org.eclipse.draw2d.GridData.FILL;&#xA;constraintPoolNameContainerFigure0.horizontalAlignment = org.eclipse.draw2d.GridData.BEGINNING;&#xA;constraintPoolNameContainerFigure0.horizontalIndent = 0;&#xA;constraintPoolNameContainerFigure0.horizontalSpan = 1;&#xA;constraintPoolNameContainerFigure0.verticalSpan = 1;&#xA;constraintPoolNameContainerFigure0.grabExcessHorizontalSpace = false;&#xA;constraintPoolNameContainerFigure0.grabExcessVerticalSpace = true;&#xA;constraintPoolNameContainerFigure0.widthHint = 20;&#xA;constraintPoolNameContainerFigure0.heightHint = 0;&#xA;this.add(poolNameContainerFigure0, constraintPoolNameContainerFigure0);&#xA;&#xA;&#xA;&#x9;org.eclipse.draw2d.GridLayout layoutPoolNameContainerFigure0 = new org.eclipse.draw2d.GridLayout();&#xA;&#x9;layoutPoolNameContainerFigure0.numColumns = 1;&#xA;&#x9;layoutPoolNameContainerFigure0.makeColumnsEqualWidth = true;&#xA;&#x9;layoutPoolNameContainerFigure0.horizontalSpacing = 0;&#xA;&#x9;layoutPoolNameContainerFigure0.verticalSpacing = 0;&#xA;&#x9;layoutPoolNameContainerFigure0.marginWidth = 0;&#xA;&#x9;layoutPoolNameContainerFigure0.marginHeight = 0;&#xA;&#x9;poolNameContainerFigure0.setLayoutManager(layoutPoolNameContainerFigure0);&#xA;&#xA;&#xA;&#xA;fFigurePoolNameFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigurePoolNameFigure.setText(&quot;&quot;);&#xA;&#xA;&#xA;org.eclipse.draw2d.GridData constraintFFigurePoolNameFigure = new org.eclipse.draw2d.GridData();&#xA;constraintFFigurePoolNameFigure.verticalAlignment = org.eclipse.draw2d.GridData.FILL;&#xA;constraintFFigurePoolNameFigure.horizontalAlignment = org.eclipse.draw2d.GridData.FILL;&#xA;constraintFFigurePoolNameFigure.horizontalIndent = 2;&#xA;constraintFFigurePoolNameFigure.horizontalSpan = 1;&#xA;constraintFFigurePoolNameFigure.verticalSpan = 1;&#xA;constraintFFigurePoolNameFigure.grabExcessHorizontalSpace = true;&#xA;constraintFFigurePoolNameFigure.grabExcessVerticalSpace = true;&#xA;poolNameContainerFigure0.add(fFigurePoolNameFigure, constraintFFigurePoolNameFigure);&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;fFigurePoolContainerFigure = new org.eclipse.draw2d.RectangleFigure();&#xA;fFigurePoolContainerFigure.setLineWidth(0);&#xA;&#xA;&#xA;org.eclipse.draw2d.GridData constraintFFigurePoolContainerFigure = new org.eclipse.draw2d.GridData();&#xA;constraintFFigurePoolContainerFigure.verticalAlignment = org.eclipse.draw2d.GridData.FILL;&#xA;constraintFFigurePoolContainerFigure.horizontalAlignment = org.eclipse.draw2d.GridData.FILL;&#xA;constraintFFigurePoolContainerFigure.horizontalIndent = 0;&#xA;constraintFFigurePoolContainerFigure.horizontalSpan = 1;&#xA;constraintFFigurePoolContainerFigure.verticalSpan = 1;&#xA;constraintFFigurePoolContainerFigure.grabExcessHorizontalSpace = true;&#xA;constraintFFigurePoolContainerFigure.grabExcessVerticalSpace = true;&#xA;this.add(fFigurePoolContainerFigure, constraintFFigurePoolContainerFigure);&#xA;&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigurePoolNameFigure() {&#xA;&#x9;&#x9;return fFigurePoolNameFigure;&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.draw2d.RectangleFigure getFigurePoolContainerFigure() {&#xA;&#x9;&#x9;return fFigurePoolContainerFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color THIS_BACK = new org.eclipse.swt.graphics.Color(null, 246, 246, 237);&#xA;&#xA;">
-        <attributes
-            xsi:type="gmfgen:StyleAttributes"
-            fixedBackground="true"/>
-        <attributes
-            xsi:type="gmfgen:DefaultSizeAttributes"
-            width="1000"
-            height="100"/>
-        <attributes
-            xsi:type="gmfgen:ResizeConstraints"/>
-      </viewmap>
-      <modelFacet>
-        <metaClass
-            href="process.genmodel#//process/EventSubProcessPool"/>
-        <containmentMetaFeature
-            href="process.genmodel#//process/Container/elements"/>
-        <childMetaFeature
-            href="process.genmodel#//process/Container/elements"/>
-        <modelElementInitializer
-            xsi:type="gmfgen:GenFeatureSeqInitializer">
-          <initializers
-              xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.184">
-            <feature
-                href="process.genmodel#//process/Element/name"/>
-          </initializers>
-          <initializers
-              xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.1/@expressions.1">
-            <feature
-                href="process.genmodel#//process/AbstractProcess/version"/>
-          </initializers>
-          <initializers
-              xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.185">
-            <feature
-                href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
-          </initializers>
-        </modelElementInitializer>
-      </modelFacet>
-      <labels
-          visualID="5085"
-          editPartClassName="EventSubProcessPoolLabelEditPart"
-          itemSemanticEditPolicyClassName="EventSubProcessPoolLabelItemSemanticEditPolicy"
-          notationViewFactoryClassName="EventSubProcessPoolLabelViewFactory"
-          readOnly="true">
-        <diagramRunTimeClass
-            href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
-        <viewmap
-            xsi:type="gmfgen:ParentAssignedViewmap"
-            getterName="getFigurePoolNameFigure"
-            figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
-        <modelFacet
-            xsi:type="gmfgen:FeatureLabelModelFacet"
-            parser="//@labelParsers/@implementations.0">
           <metaFeatures
               href="process.genmodel#//process/Element/name"/>
           <editableMetaFeatures
@@ -5088,31 +4928,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.99">
+              value="//@expressionProviders/@providers.0/@expressions.98">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.100">
+              value="//@expressionProviders/@providers.0/@expressions.99">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.101">
+              value="//@expressionProviders/@providers.0/@expressions.100">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.102">
+              value="//@expressionProviders/@providers.0/@expressions.101">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.103">
+              value="//@expressionProviders/@providers.0/@expressions.102">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -5174,31 +5014,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.104">
+              value="//@expressionProviders/@providers.0/@expressions.103">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.105">
+              value="//@expressionProviders/@providers.0/@expressions.104">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.106">
+              value="//@expressionProviders/@providers.0/@expressions.105">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.107">
+              value="//@expressionProviders/@providers.0/@expressions.106">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.108">
+              value="//@expressionProviders/@providers.0/@expressions.107">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -5260,31 +5100,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.94">
+              value="//@expressionProviders/@providers.0/@expressions.93">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.95">
+              value="//@expressionProviders/@providers.0/@expressions.94">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.96">
+              value="//@expressionProviders/@providers.0/@expressions.95">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.97">
+              value="//@expressionProviders/@providers.0/@expressions.96">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.98">
+              value="//@expressionProviders/@providers.0/@expressions.97">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -5346,31 +5186,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.109">
+              value="//@expressionProviders/@providers.0/@expressions.108">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.110">
+              value="//@expressionProviders/@providers.0/@expressions.109">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.111">
+              value="//@expressionProviders/@providers.0/@expressions.110">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.112">
+              value="//@expressionProviders/@providers.0/@expressions.111">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.113">
+              value="//@expressionProviders/@providers.0/@expressions.112">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -5433,7 +5273,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.114">
+              value="//@expressionProviders/@providers.0/@expressions.113">
             <feature
                 href="process.genmodel#//process/TextAnnotation/text"/>
           </initializers>
@@ -5495,31 +5335,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.120">
+              value="//@expressionProviders/@providers.0/@expressions.119">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.121">
+              value="//@expressionProviders/@providers.0/@expressions.120">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.122">
+              value="//@expressionProviders/@providers.0/@expressions.121">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.123">
+              value="//@expressionProviders/@providers.0/@expressions.122">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.124">
+              value="//@expressionProviders/@providers.0/@expressions.123">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -5581,31 +5421,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.115">
+              value="//@expressionProviders/@providers.0/@expressions.114">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.116">
+              value="//@expressionProviders/@providers.0/@expressions.115">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.117">
+              value="//@expressionProviders/@providers.0/@expressions.116">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.118">
+              value="//@expressionProviders/@providers.0/@expressions.117">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.119">
+              value="//@expressionProviders/@providers.0/@expressions.118">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -5667,31 +5507,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.179">
+              value="//@expressionProviders/@providers.0/@expressions.178">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.180">
+              value="//@expressionProviders/@providers.0/@expressions.179">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.181">
+              value="//@expressionProviders/@providers.0/@expressions.180">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.182">
+              value="//@expressionProviders/@providers.0/@expressions.181">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.183">
+              value="//@expressionProviders/@providers.0/@expressions.182">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -5753,31 +5593,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.174">
+              value="//@expressionProviders/@providers.0/@expressions.173">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.175">
+              value="//@expressionProviders/@providers.0/@expressions.174">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.176">
+              value="//@expressionProviders/@providers.0/@expressions.175">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.177">
+              value="//@expressionProviders/@providers.0/@expressions.176">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.178">
+              value="//@expressionProviders/@providers.0/@expressions.177">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -5838,31 +5678,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.130">
+              value="//@expressionProviders/@providers.0/@expressions.129">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.131">
+              value="//@expressionProviders/@providers.0/@expressions.130">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.132">
+              value="//@expressionProviders/@providers.0/@expressions.131">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.133">
+              value="//@expressionProviders/@providers.0/@expressions.132">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.134">
+              value="//@expressionProviders/@providers.0/@expressions.133">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -5924,31 +5764,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.135">
+              value="//@expressionProviders/@providers.0/@expressions.134">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.136">
+              value="//@expressionProviders/@providers.0/@expressions.135">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.137">
+              value="//@expressionProviders/@providers.0/@expressions.136">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.138">
+              value="//@expressionProviders/@providers.0/@expressions.137">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.139">
+              value="//@expressionProviders/@providers.0/@expressions.138">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -6010,31 +5850,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.125">
+              value="//@expressionProviders/@providers.0/@expressions.124">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.126">
+              value="//@expressionProviders/@providers.0/@expressions.125">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.127">
+              value="//@expressionProviders/@providers.0/@expressions.126">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.128">
+              value="//@expressionProviders/@providers.0/@expressions.127">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.129">
+              value="//@expressionProviders/@providers.0/@expressions.128">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -6096,31 +5936,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.140">
+              value="//@expressionProviders/@providers.0/@expressions.139">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.141">
+              value="//@expressionProviders/@providers.0/@expressions.140">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.142">
+              value="//@expressionProviders/@providers.0/@expressions.141">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.143">
+              value="//@expressionProviders/@providers.0/@expressions.142">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.144">
+              value="//@expressionProviders/@providers.0/@expressions.143">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -6215,31 +6055,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.145">
+              value="//@expressionProviders/@providers.0/@expressions.144">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.146">
+              value="//@expressionProviders/@providers.0/@expressions.145">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.147">
+              value="//@expressionProviders/@providers.0/@expressions.146">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.148">
+              value="//@expressionProviders/@providers.0/@expressions.147">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.149">
+              value="//@expressionProviders/@providers.0/@expressions.148">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -6300,31 +6140,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.155">
+              value="//@expressionProviders/@providers.0/@expressions.154">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.156">
+              value="//@expressionProviders/@providers.0/@expressions.155">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.157">
+              value="//@expressionProviders/@providers.0/@expressions.156">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.158">
+              value="//@expressionProviders/@providers.0/@expressions.157">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.159">
+              value="//@expressionProviders/@providers.0/@expressions.158">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -6385,31 +6225,31 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.150">
+              value="//@expressionProviders/@providers.0/@expressions.149">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.151">
+              value="//@expressionProviders/@providers.0/@expressions.150">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicDescription"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.152">
+              value="//@expressionProviders/@providers.0/@expressions.151">
             <feature
                 href="process.genmodel#//process/FlowElement/dynamicLabel"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.153">
+              value="//@expressionProviders/@providers.0/@expressions.152">
             <feature
                 href="process.genmodel#//process/FlowElement/stepSummary"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.154">
+              value="//@expressionProviders/@providers.0/@expressions.153">
             <feature
                 href="process.genmodel#//process/ViewPageFlow/viewPageFlowRedirectionURL"/>
           </initializers>
@@ -6465,13 +6305,13 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.187">
+              value="//@expressionProviders/@providers.0/@expressions.183">
             <feature
                 href="process.genmodel#//process/SequenceFlow/decisionTable"/>
           </initializers>
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.188">
+              value="//@expressionProviders/@providers.0/@expressions.184">
             <feature
                 href="process.genmodel#//process/SequenceFlow/condition"/>
           </initializers>
@@ -6506,7 +6346,7 @@
         </modelFacet>
       </labels>
       <creationConstraints
-          sourceEnd="//@expressionProviders/@providers.0/@expressions.189"/>
+          sourceEnd="//@expressionProviders/@providers.0/@expressions.185"/>
     </links>
     <links
         visualID="4002"
@@ -6536,7 +6376,7 @@
             xsi:type="gmfgen:GenFeatureSeqInitializer">
           <initializers
               xsi:type="gmfgen:GenFeatureValueSpec"
-              value="//@expressionProviders/@providers.0/@expressions.190">
+              value="//@expressionProviders/@providers.0/@expressions.186">
             <feature
                 href="process.genmodel#//process/Element/name"/>
           </initializers>
@@ -6572,7 +6412,7 @@
         </modelFacet>
       </labels>
       <creationConstraints
-          sourceEnd="//@expressionProviders/@providers.0/@expressions.191"/>
+          sourceEnd="//@expressionProviders/@providers.0/@expressions.187"/>
     </links>
     <links
         visualID="4003"
@@ -6676,44 +6516,6 @@
           getterName="getFigureLaneContainerFigure"
           figureQualifiedClassName="org.eclipse.draw2d.RectangleFigure"/>
     </compartments>
-    <compartments
-        visualID="7003"
-        editPartClassName="EventSubProcessPoolPoolCompartmentEditPart"
-        itemSemanticEditPolicyClassName="EventSubProcessPoolPoolCompartmentItemSemanticEditPolicy"
-        notationViewFactoryClassName="EventSubProcessPoolPoolCompartmentViewFactory"
-        canonicalEditPolicyClassName="EventSubProcessPoolPoolCompartmentCanonicalEditPolicy"
-        childNodes="//@diagram/@childNodes.43 //@diagram/@childNodes.8 //@diagram/@childNodes.9 //@diagram/@childNodes.10 //@diagram/@childNodes.12 //@diagram/@childNodes.13 //@diagram/@childNodes.15 //@diagram/@childNodes.16 //@diagram/@childNodes.18 //@diagram/@childNodes.20 //@diagram/@childNodes.21 //@diagram/@childNodes.23 //@diagram/@childNodes.24 //@diagram/@childNodes.25 //@diagram/@childNodes.26 //@diagram/@childNodes.27 //@diagram/@childNodes.28 //@diagram/@childNodes.29 //@diagram/@childNodes.42 //@diagram/@childNodes.41 //@diagram/@childNodes.30 //@diagram/@childNodes.31 //@diagram/@childNodes.32 //@diagram/@childNodes.33 //@diagram/@childNodes.34 //@diagram/@childNodes.35 //@diagram/@childNodes.36 //@diagram/@childNodes.37 //@diagram/@childNodes.38"
-        title="PoolCompartment"
-        canCollapse="false"
-        needsTitle="false"
-        node="//@diagram/@topLevelNodes.14"
-        listLayout="false">
-      <diagramRunTimeClass
-          href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
-      <viewmap
-          xsi:type="gmfgen:ParentAssignedViewmap"
-          getterName="getFigurePoolContainerFigure"
-          figureQualifiedClassName="org.eclipse.draw2d.RectangleFigure"/>
-    </compartments>
-    <compartments
-        visualID="7004"
-        editPartClassName="LaneLaneCompartment2EditPart"
-        itemSemanticEditPolicyClassName="LaneLaneCompartment2ItemSemanticEditPolicy"
-        notationViewFactoryClassName="LaneLaneCompartmentViewFactory"
-        canonicalEditPolicyClassName="LaneLaneCompartment2CanonicalEditPolicy"
-        childNodes="//@diagram/@childNodes.12 //@diagram/@childNodes.8 //@diagram/@childNodes.9 //@diagram/@childNodes.10 //@diagram/@childNodes.11 //@diagram/@childNodes.20 //@diagram/@childNodes.15 //@diagram/@childNodes.13 //@diagram/@childNodes.16 //@diagram/@childNodes.18 //@diagram/@childNodes.21 //@diagram/@childNodes.23 //@diagram/@childNodes.25 //@diagram/@childNodes.24 //@diagram/@childNodes.26 //@diagram/@childNodes.27 //@diagram/@childNodes.28 //@diagram/@childNodes.29 //@diagram/@childNodes.41 //@diagram/@childNodes.42 //@diagram/@childNodes.33 //@diagram/@childNodes.32 //@diagram/@childNodes.31 //@diagram/@childNodes.30 //@diagram/@childNodes.34 //@diagram/@childNodes.35 //@diagram/@childNodes.36 //@diagram/@childNodes.37 //@diagram/@childNodes.38"
-        title="LaneCompartment"
-        canCollapse="false"
-        needsTitle="false"
-        node="//@diagram/@childNodes.43"
-        listLayout="false">
-      <diagramRunTimeClass
-          href="../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
-      <viewmap
-          xsi:type="gmfgen:ParentAssignedViewmap"
-          getterName="getFigureLaneContainerFigure"
-          figureQualifiedClassName="org.eclipse.draw2d.RectangleFigure"/>
-    </compartments>
     <palette>
       <groups
           title="Default"
@@ -6763,12 +6565,12 @@
             xsi:type="gmfgen:ToolEntry"
             title="Throw Link"
             description="Create a new Throw Link"
-            genNodes="//@diagram/@childNodes.41 //@diagram/@topLevelNodes.23"/>
+            genNodes="//@diagram/@childNodes.41 //@diagram/@topLevelNodes.22"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Catch Link"
             description="Create a new Catch Link"
-            genNodes="//@diagram/@childNodes.42 //@diagram/@topLevelNodes.22"/>
+            genNodes="//@diagram/@childNodes.42 //@diagram/@topLevelNodes.21"/>
         <entries
             xsi:type="gmfgen:Separator"/>
         <entries
@@ -6780,12 +6582,12 @@
             xsi:type="gmfgen:ToolEntry"
             title="Lane"
             description="Create a new Lane"
-            genNodes="//@diagram/@childNodes.39 //@diagram/@childNodes.43"/>
+            genNodes="//@diagram/@childNodes.39"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Text Annotation"
             description="Create a new Text Annotation"
-            genNodes="//@diagram/@childNodes.27 //@diagram/@topLevelNodes.19"/>
+            genNodes="//@diagram/@childNodes.27 //@diagram/@topLevelNodes.18"/>
         <entries
             xsi:type="gmfgen:Separator"/>
         <entries
@@ -6797,21 +6599,21 @@
             xsi:type="gmfgen:ToolEntry"
             title="Start Message"
             description="Create a new Start Message event"
-            genNodes="//@diagram/@childNodes.24 //@diagram/@topLevelNodes.15"/>
+            genNodes="//@diagram/@childNodes.24 //@diagram/@topLevelNodes.14"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Start Timer"
             description="Create a new Start Timer event"
-            genNodes="//@diagram/@childNodes.28 //@diagram/@topLevelNodes.21"/>
+            genNodes="//@diagram/@childNodes.28 //@diagram/@topLevelNodes.20"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Start Signal"
             description="Create a new Start Signal event"
-            genNodes="//@diagram/@childNodes.30 //@diagram/@topLevelNodes.26"/>
+            genNodes="//@diagram/@childNodes.30 //@diagram/@topLevelNodes.25"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Start Error"
-            genNodes="//@diagram/@childNodes.36 //@diagram/@topLevelNodes.30"/>
+            genNodes="//@diagram/@childNodes.36 //@diagram/@topLevelNodes.29"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="End"
@@ -6821,46 +6623,46 @@
             xsi:type="gmfgen:ToolEntry"
             title="End Message"
             description="Create a new End Message event"
-            genNodes="//@diagram/@childNodes.25 //@diagram/@topLevelNodes.16"/>
+            genNodes="//@diagram/@childNodes.25 //@diagram/@topLevelNodes.15"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="End Signal"
             description="Create a new End Signal event"
-            genNodes="//@diagram/@childNodes.33 //@diagram/@topLevelNodes.27"/>
+            genNodes="//@diagram/@childNodes.33 //@diagram/@topLevelNodes.26"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="End Error"
             description="Create a new End Error event"
-            genNodes="//@diagram/@childNodes.34 //@diagram/@topLevelNodes.29"/>
+            genNodes="//@diagram/@childNodes.34 //@diagram/@topLevelNodes.28"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="End Terminated Event"
-            genNodes="//@diagram/@childNodes.35 //@diagram/@topLevelNodes.31"/>
+            genNodes="//@diagram/@childNodes.35 //@diagram/@topLevelNodes.30"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Timer"
             description="Create a new Timer event"
-            genNodes="//@diagram/@childNodes.2 //@diagram/@childNodes.6 //@diagram/@childNodes.29 //@diagram/@topLevelNodes.20"/>
+            genNodes="//@diagram/@childNodes.2 //@diagram/@childNodes.6 //@diagram/@childNodes.29 //@diagram/@topLevelNodes.19"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Throw Message"
             description="Create a new Throw Message event"
-            genNodes="//@diagram/@childNodes.26 //@diagram/@topLevelNodes.18"/>
+            genNodes="//@diagram/@childNodes.26 //@diagram/@topLevelNodes.17"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Catch Message"
             description="Create a new Catch Message event"
-            genNodes="//@diagram/@childNodes.1 //@diagram/@childNodes.5 //@diagram/@childNodes.23 //@diagram/@topLevelNodes.17"/>
+            genNodes="//@diagram/@childNodes.1 //@diagram/@childNodes.5 //@diagram/@childNodes.23 //@diagram/@topLevelNodes.16"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Throw Signal"
             description="Create a new Throw Signal event"
-            genNodes="//@diagram/@childNodes.31 //@diagram/@topLevelNodes.24"/>
+            genNodes="//@diagram/@childNodes.31 //@diagram/@topLevelNodes.23"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Catch Signal"
             description="Create a new Catch Signal event"
-            genNodes="//@diagram/@childNodes.3 //@diagram/@childNodes.7 //@diagram/@childNodes.32 //@diagram/@topLevelNodes.25"/>
+            genNodes="//@diagram/@childNodes.3 //@diagram/@childNodes.7 //@diagram/@childNodes.32 //@diagram/@topLevelNodes.24"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Catch Error"
@@ -6871,7 +6673,7 @@
             title="Event"
             description="Create a new Event"
             smallIconPath="/org.bonitasoft.studio.model.edit/icons/full/obj16/Event.gif"
-            genNodes="//@diagram/@childNodes.37 //@diagram/@topLevelNodes.28"/>
+            genNodes="//@diagram/@childNodes.37 //@diagram/@topLevelNodes.27"/>
         <entries
             xsi:type="gmfgen:Separator"/>
         <entries
@@ -7391,180 +7193,6 @@
         parent="//@diagram"
         child="//@diagram/@topLevelNodes.13"/>
     <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.12"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.8"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.9"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.10"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.11"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.20"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.15"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.13"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.16"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.18"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.21"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.23"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.25"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.24"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.26"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.27"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.28"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.29"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.41"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.42"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.33"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.32"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.31"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.30"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.34"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.35"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.36"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.37"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@childNodes.38"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.43"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.8"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.9"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.10"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.12"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.13"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.15"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.16"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.18"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.20"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.21"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.23"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.24"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.25"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.26"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.27"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.28"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.29"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.42"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.41"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.30"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.31"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.32"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.33"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.34"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.35"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.36"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.37"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.14"
-        child="//@diagram/@childNodes.38"/>
-    <childReferences
         parent="//@diagram"
         child="//@diagram/@topLevelNodes.14"/>
     <childReferences
@@ -7615,9 +7243,6 @@
     <childReferences
         parent="//@diagram"
         child="//@diagram/@topLevelNodes.30"/>
-    <childReferences
-        parent="//@diagram"
-        child="//@diagram/@topLevelNodes.31"/>
     <childReferences
         parent="//@diagram"
         child="//@diagram/@links.0"
@@ -7769,6 +7394,18 @@
         groupIcon="icons/incomingLinksNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@links.0"
+        child="//@diagram/@topLevelNodes.14"
+        referenceType="out_target"
+        groupName="target"
+        groupIcon="icons/linkTargetNavigatorGroup.gif"/>
+    <childReferences
+        parent="//@diagram/@topLevelNodes.14"
+        child="//@diagram/@links.0"
+        referenceType="in_source"
+        groupName="incoming links"
+        groupIcon="icons/incomingLinksNavigatorGroup.gif"/>
+    <childReferences
+        parent="//@diagram/@links.0"
         child="//@diagram/@topLevelNodes.15"
         referenceType="out_target"
         groupName="target"
@@ -7805,12 +7442,12 @@
         groupIcon="icons/incomingLinksNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@links.0"
-        child="//@diagram/@topLevelNodes.18"
+        child="//@diagram/@topLevelNodes.19"
         referenceType="out_target"
         groupName="target"
         groupIcon="icons/linkTargetNavigatorGroup.gif"/>
     <childReferences
-        parent="//@diagram/@topLevelNodes.18"
+        parent="//@diagram/@topLevelNodes.19"
         child="//@diagram/@links.0"
         referenceType="in_source"
         groupName="incoming links"
@@ -7943,18 +7580,6 @@
         groupIcon="icons/linkTargetNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@topLevelNodes.30"
-        child="//@diagram/@links.0"
-        referenceType="in_source"
-        groupName="incoming links"
-        groupIcon="icons/incomingLinksNavigatorGroup.gif"/>
-    <childReferences
-        parent="//@diagram/@links.0"
-        child="//@diagram/@topLevelNodes.31"
-        referenceType="out_target"
-        groupName="target"
-        groupIcon="icons/linkTargetNavigatorGroup.gif"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.31"
         child="//@diagram/@links.0"
         referenceType="in_source"
         groupName="incoming links"
@@ -8441,6 +8066,18 @@
         groupIcon="icons/outgoingLinksNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@links.0"
+        child="//@diagram/@topLevelNodes.14"
+        referenceType="in_source"
+        groupName="source"
+        groupIcon="icons/linkSourceNavigatorGroup.gif"/>
+    <childReferences
+        parent="//@diagram/@topLevelNodes.14"
+        child="//@diagram/@links.0"
+        referenceType="out_target"
+        groupName="outgoing links"
+        groupIcon="icons/outgoingLinksNavigatorGroup.gif"/>
+    <childReferences
+        parent="//@diagram/@links.0"
         child="//@diagram/@topLevelNodes.15"
         referenceType="in_source"
         groupName="source"
@@ -8477,12 +8114,12 @@
         groupIcon="icons/outgoingLinksNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@links.0"
-        child="//@diagram/@topLevelNodes.18"
+        child="//@diagram/@topLevelNodes.19"
         referenceType="in_source"
         groupName="source"
         groupIcon="icons/linkSourceNavigatorGroup.gif"/>
     <childReferences
-        parent="//@diagram/@topLevelNodes.18"
+        parent="//@diagram/@topLevelNodes.19"
         child="//@diagram/@links.0"
         referenceType="out_target"
         groupName="outgoing links"
@@ -8615,18 +8252,6 @@
         groupIcon="icons/linkSourceNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@topLevelNodes.30"
-        child="//@diagram/@links.0"
-        referenceType="out_target"
-        groupName="outgoing links"
-        groupIcon="icons/outgoingLinksNavigatorGroup.gif"/>
-    <childReferences
-        parent="//@diagram/@links.0"
-        child="//@diagram/@topLevelNodes.31"
-        referenceType="in_source"
-        groupName="source"
-        groupIcon="icons/linkSourceNavigatorGroup.gif"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.31"
         child="//@diagram/@links.0"
         referenceType="out_target"
         groupName="outgoing links"
@@ -9130,24 +8755,24 @@
         groupIcon="icons/incomingLinksNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@links.1"
-        child="//@diagram/@topLevelNodes.15"
+        child="//@diagram/@topLevelNodes.14"
         referenceType="out_target"
         groupName="target"
         groupIcon="icons/linkTargetNavigatorGroup.gif"/>
     <childReferences
-        parent="//@diagram/@topLevelNodes.15"
+        parent="//@diagram/@topLevelNodes.14"
         child="//@diagram/@links.1"
         referenceType="in_source"
         groupName="incoming links"
         groupIcon="icons/incomingLinksNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@links.1"
-        child="//@diagram/@topLevelNodes.17"
+        child="//@diagram/@topLevelNodes.16"
         referenceType="out_target"
         groupName="target"
         groupIcon="icons/linkTargetNavigatorGroup.gif"/>
     <childReferences
-        parent="//@diagram/@topLevelNodes.17"
+        parent="//@diagram/@topLevelNodes.16"
         child="//@diagram/@links.1"
         referenceType="in_source"
         groupName="incoming links"
@@ -9226,24 +8851,24 @@
         groupIcon="icons/outgoingLinksNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@links.1"
-        child="//@diagram/@topLevelNodes.16"
+        child="//@diagram/@topLevelNodes.15"
         referenceType="in_source"
         groupName="source"
         groupIcon="icons/linkSourceNavigatorGroup.gif"/>
     <childReferences
-        parent="//@diagram/@topLevelNodes.16"
+        parent="//@diagram/@topLevelNodes.15"
         child="//@diagram/@links.1"
         referenceType="out_target"
         groupName="outgoing links"
         groupIcon="icons/outgoingLinksNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@links.1"
-        child="//@diagram/@topLevelNodes.18"
+        child="//@diagram/@topLevelNodes.17"
         referenceType="in_source"
         groupName="source"
         groupIcon="icons/linkSourceNavigatorGroup.gif"/>
     <childReferences
-        parent="//@diagram/@topLevelNodes.18"
+        parent="//@diagram/@topLevelNodes.17"
         child="//@diagram/@links.1"
         referenceType="out_target"
         groupName="outgoing links"
@@ -9657,18 +9282,6 @@
         groupIcon="icons/linkTargetNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@topLevelNodes.30"
-        child="//@diagram/@links.2"
-        referenceType="in_source"
-        groupName="incoming links"
-        groupIcon="icons/incomingLinksNavigatorGroup.gif"/>
-    <childReferences
-        parent="//@diagram/@links.2"
-        child="//@diagram/@topLevelNodes.31"
-        referenceType="out_target"
-        groupName="target"
-        groupIcon="icons/linkTargetNavigatorGroup.gif"/>
-    <childReferences
-        parent="//@diagram/@topLevelNodes.31"
         child="//@diagram/@links.2"
         referenceType="in_source"
         groupName="incoming links"
@@ -10191,18 +9804,6 @@
         groupIcon="icons/incomingLinksNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@links.2"
-        child="//@diagram/@childNodes.43"
-        referenceType="out_target"
-        groupName="target"
-        groupIcon="icons/linkTargetNavigatorGroup.gif"/>
-    <childReferences
-        parent="//@diagram/@childNodes.43"
-        child="//@diagram/@links.2"
-        referenceType="in_source"
-        groupName="incoming links"
-        groupIcon="icons/incomingLinksNavigatorGroup.gif"/>
-    <childReferences
-        parent="//@diagram/@links.2"
         child="//@diagram/@links.0"
         referenceType="out_target"
         groupName="target"
@@ -10227,12 +9828,12 @@
         groupIcon="icons/incomingLinksNavigatorGroup.gif"/>
     <childReferences
         parent="//@diagram/@links.2"
-        child="//@diagram/@topLevelNodes.19"
+        child="//@diagram/@topLevelNodes.18"
         referenceType="in_source"
         groupName="source"
         groupIcon="icons/linkSourceNavigatorGroup.gif"/>
     <childReferences
-        parent="//@diagram/@topLevelNodes.19"
+        parent="//@diagram/@topLevelNodes.18"
         child="//@diagram/@links.2"
         referenceType="out_target"
         groupName="outgoing links"
@@ -10363,8 +9964,6 @@
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
-      <expressions
-          body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
       <expressions
@@ -10646,18 +10245,12 @@
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
       <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
-      <expressions
-          body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"/>
-      <expressions
-          body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"/>
-      <expressions
           body="return org.bonitasoft.studio.model.process.decision.DecisionFactory.eINSTANCE.createDecisionTable();"/>
       <expressions
           body="org.bonitasoft.studio.model.expression.Expression expression = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;expression.setName(&quot;&quot;);&#xD;&#xA;expression.setType(org.bonitasoft.studio.common.ExpressionConstants.CONDITION_TYPE);&#xD;&#xA;expression.setReturnType(java.lang.Boolean.class.getName()) ;&#xD;&#xA;expression.setReturnTypeFixed(true) ;&#xD;&#xA;return expression;"/>
       <expressions
           xsi:type="gmfgen:GenConstraint"
-          body="if (source instanceof org.bonitasoft.studio.model.process.EndEvent || source instanceof org.bonitasoft.studio.model.process.EndTerminatedEvent || source instanceof org.bonitasoft.studio.model.process.EndErrorEvent  || source instanceof org.bonitasoft.studio.model.process.Pool || target instanceof org.bonitasoft.studio.model.process.Pool&#xD;&#xA;&#x9;|| source instanceof org.bonitasoft.studio.model.process.EndMessageEvent || source instanceof org.bonitasoft.studio.model.process.ThrowLinkEvent || source instanceof org.bonitasoft.studio.model.process.EndSignalEvent || source instanceof org.bonitasoft.studio.model.process.SubProcessEvent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;if (target instanceof org.bonitasoft.studio.model.process.StartEvent || target instanceof org.bonitasoft.studio.model.process.StartMessageEvent  || target instanceof org.bonitasoft.studio.model.process.StartErrorEvent || target instanceof org.bonitasoft.studio.model.process.StartTimerEvent   || target instanceof org.bonitasoft.studio.model.process.CatchLinkEvent  || target instanceof org.bonitasoft.studio.model.process.StartSignalEvent || target instanceof org.bonitasoft.studio.model.process.SubProcessEvent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.FlowElement&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&amp;&amp; target instanceof org.bonitasoft.studio.model.process.FlowElement) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;java.util.List&lt;org.bonitasoft.studio.model.process.Connection> outGoing = ((org.bonitasoft.studio.model.process.FlowElement) source)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;.getOutgoing();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;for (org.bonitasoft.studio.model.process.Connection con : outGoing) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if (con.getTarget().equals(target)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.Gateway &amp;&amp; target instanceof org.bonitasoft.studio.model.process.Gateway) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return !source.equals(target);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;// if target not set, then continue tool&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (target == null) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcessIncludedEmbedded(source) instanceof org.bonitasoft.studio.model.process.SubProcessEvent || org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcessIncludedEmbedded(target) instanceof org.bonitasoft.studio.model.process.SubProcessEvent){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(!org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcessIncludedEmbedded(source).equals(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcessIncludedEmbedded(target))){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false ;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;// source and target must be contained in same process (pool)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;org.eclipse.emf.ecore.EObject sourceParent = source;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;while (sourceParent != null &amp;&amp; sourceParent.eContainer() != null &amp;&amp; !(sourceParent.eContainer() instanceof org.bonitasoft.studio.model.process.MainProcess)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sourceParent = sourceParent.eContainer();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;//sourceParent = pool&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;org.eclipse.emf.ecore.EObject targetParent = target;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;while (targetParent != null &amp;&amp; targetParent.eContainer() != null &amp;&amp; !(targetParent.eContainer() instanceof org.bonitasoft.studio.model.process.MainProcess)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;targetParent = targetParent.eContainer();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (sourceParent != targetParent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.Event &amp;&amp; target instanceof org.bonitasoft.studio.model.process.Event) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return !source.equals(target);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;"/>
+          body="if (source instanceof org.bonitasoft.studio.model.process.EndEvent || source instanceof org.bonitasoft.studio.model.process.EndTerminatedEvent || source instanceof org.bonitasoft.studio.model.process.EndErrorEvent  || source instanceof org.bonitasoft.studio.model.process.Pool || target instanceof org.bonitasoft.studio.model.process.Pool&#xD;&#xA;&#x9;|| source instanceof org.bonitasoft.studio.model.process.EndMessageEvent || source instanceof org.bonitasoft.studio.model.process.ThrowLinkEvent || source instanceof org.bonitasoft.studio.model.process.EndSignalEvent || source instanceof org.bonitasoft.studio.model.process.SubProcessEvent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;if (target instanceof org.bonitasoft.studio.model.process.StartEvent || target instanceof org.bonitasoft.studio.model.process.StartMessageEvent  || target instanceof org.bonitasoft.studio.model.process.StartErrorEvent || target instanceof org.bonitasoft.studio.model.process.StartTimerEvent   || target instanceof org.bonitasoft.studio.model.process.CatchLinkEvent  || target instanceof org.bonitasoft.studio.model.process.StartSignalEvent || target instanceof org.bonitasoft.studio.model.process.SubProcessEvent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.FlowElement&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&amp;&amp; target instanceof org.bonitasoft.studio.model.process.FlowElement) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;java.util.List&lt;org.bonitasoft.studio.model.process.Connection> outGoing = ((org.bonitasoft.studio.model.process.FlowElement) source)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;.getOutgoing();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;for (org.bonitasoft.studio.model.process.Connection con : outGoing) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if (con.getTarget().equals(target)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.Gateway &amp;&amp; target instanceof org.bonitasoft.studio.model.process.Gateway) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return !source.equals(target);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;// if target not set, then continue tool&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (target == null) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentContainer(source) instanceof org.bonitasoft.studio.model.process.SubProcessEvent || org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentContainer(target) instanceof org.bonitasoft.studio.model.process.SubProcessEvent){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(!org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentContainer(source).equals(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentContainer(target))){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false ;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;// source and target must be contained in same process (pool)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;org.eclipse.emf.ecore.EObject sourceParent = source;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;while (sourceParent != null &amp;&amp; sourceParent.eContainer() != null &amp;&amp; !(sourceParent.eContainer() instanceof org.bonitasoft.studio.model.process.MainProcess)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sourceParent = sourceParent.eContainer();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;//sourceParent = pool&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;org.eclipse.emf.ecore.EObject targetParent = target;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;while (targetParent != null &amp;&amp; targetParent.eContainer() != null &amp;&amp; !(targetParent.eContainer() instanceof org.bonitasoft.studio.model.process.MainProcess)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;targetParent = targetParent.eContainer();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (sourceParent != targetParent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.Event &amp;&amp; target instanceof org.bonitasoft.studio.model.process.Event) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return !source.equals(target);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;"/>
       <expressions
           body="return org.bonitasoft.studio.common.NamingUtils.getEventDefaultId(self);"/>
       <expressions
@@ -10668,14 +10261,12 @@
         xsi:type="gmfgen:GenExpressionInterpreter">
       <expressions
           body="'1.0'"/>
-      <expressions
-          body="'1.0'"/>
     </providers>
   </expressionProviders>
   <labelParsers
       extensibleViaService="true">
     <implementations
         xsi:type="gmfgen:PredefinedParser"
-        uses="//@diagram/@topLevelNodes.0/@labels.0/@modelFacet //@diagram/@topLevelNodes.1/@labels.0/@modelFacet //@diagram/@topLevelNodes.2/@labels.0/@modelFacet //@diagram/@childNodes.0/@labels.0/@modelFacet //@diagram/@childNodes.1/@labels.0/@modelFacet //@diagram/@childNodes.2/@labels.0/@modelFacet //@diagram/@childNodes.3/@labels.0/@modelFacet //@diagram/@topLevelNodes.3/@labels.0/@modelFacet //@diagram/@childNodes.4/@labels.0/@modelFacet //@diagram/@childNodes.5/@labels.0/@modelFacet //@diagram/@childNodes.6/@labels.0/@modelFacet //@diagram/@childNodes.7/@labels.0/@modelFacet //@diagram/@topLevelNodes.4/@labels.0/@modelFacet //@diagram/@childNodes.8/@labels.0/@modelFacet //@diagram/@childNodes.9/@labels.0/@modelFacet //@diagram/@childNodes.10/@labels.0/@modelFacet //@diagram/@childNodes.12/@labels.0/@modelFacet //@diagram/@childNodes.14/@labels.0/@modelFacet //@diagram/@childNodes.13/@labels.0/@modelFacet //@diagram/@childNodes.15/@labels.0/@modelFacet //@diagram/@childNodes.17/@labels.0/@modelFacet //@diagram/@childNodes.16/@labels.0/@modelFacet //@diagram/@childNodes.19/@labels.0/@modelFacet //@diagram/@childNodes.18/@labels.0/@modelFacet //@diagram/@childNodes.20/@labels.0/@modelFacet //@diagram/@childNodes.22/@labels.0/@modelFacet //@diagram/@childNodes.21/@labels.0/@modelFacet //@diagram/@childNodes.23/@labels.0/@modelFacet //@diagram/@childNodes.24/@labels.0/@modelFacet //@diagram/@childNodes.25/@labels.0/@modelFacet //@diagram/@childNodes.26/@labels.0/@modelFacet //@diagram/@childNodes.27/@labels.0/@modelFacet //@diagram/@childNodes.28/@labels.0/@modelFacet //@diagram/@childNodes.29/@labels.0/@modelFacet //@diagram/@childNodes.30/@labels.0/@modelFacet //@diagram/@childNodes.31/@labels.0/@modelFacet //@diagram/@childNodes.32/@labels.0/@modelFacet //@diagram/@childNodes.33/@labels.0/@modelFacet //@diagram/@childNodes.34/@labels.0/@modelFacet //@diagram/@childNodes.35/@labels.0/@modelFacet //@diagram/@childNodes.36/@labels.0/@modelFacet //@diagram/@childNodes.38/@labels.0/@modelFacet //@diagram/@childNodes.11/@labels.0/@modelFacet //@diagram/@topLevelNodes.5/@labels.0/@modelFacet //@diagram/@topLevelNodes.6/@labels.0/@modelFacet //@diagram/@topLevelNodes.7/@labels.0/@modelFacet //@diagram/@topLevelNodes.8/@labels.0/@modelFacet //@diagram/@topLevelNodes.9/@labels.0/@modelFacet //@diagram/@topLevelNodes.10/@labels.0/@modelFacet //@diagram/@topLevelNodes.11/@labels.0/@modelFacet //@diagram/@topLevelNodes.12/@labels.0/@modelFacet //@diagram/@childNodes.40/@labels.0/@modelFacet //@diagram/@childNodes.41/@labels.0/@modelFacet //@diagram/@childNodes.42/@labels.0/@modelFacet //@diagram/@childNodes.39/@labels.0/@modelFacet //@diagram/@topLevelNodes.13/@labels.0/@modelFacet //@diagram/@childNodes.43/@labels.0/@modelFacet //@diagram/@topLevelNodes.14/@labels.0/@modelFacet //@diagram/@topLevelNodes.15/@labels.0/@modelFacet //@diagram/@topLevelNodes.16/@labels.0/@modelFacet //@diagram/@topLevelNodes.17/@labels.0/@modelFacet //@diagram/@topLevelNodes.18/@labels.0/@modelFacet //@diagram/@topLevelNodes.19/@labels.0/@modelFacet //@diagram/@topLevelNodes.20/@labels.0/@modelFacet //@diagram/@topLevelNodes.21/@labels.0/@modelFacet //@diagram/@topLevelNodes.22/@labels.0/@modelFacet //@diagram/@topLevelNodes.23/@labels.0/@modelFacet //@diagram/@topLevelNodes.24/@labels.0/@modelFacet //@diagram/@topLevelNodes.25/@labels.0/@modelFacet //@diagram/@topLevelNodes.26/@labels.0/@modelFacet //@diagram/@topLevelNodes.27/@labels.0/@modelFacet //@diagram/@topLevelNodes.29/@labels.0/@modelFacet //@diagram/@topLevelNodes.30/@labels.0/@modelFacet //@diagram/@topLevelNodes.31/@labels.0/@modelFacet //@diagram/@links.0/@labels.0/@modelFacet //@diagram/@links.1/@labels.0/@modelFacet"/>
+        uses="//@diagram/@topLevelNodes.0/@labels.0/@modelFacet //@diagram/@topLevelNodes.1/@labels.0/@modelFacet //@diagram/@topLevelNodes.2/@labels.0/@modelFacet //@diagram/@childNodes.0/@labels.0/@modelFacet //@diagram/@childNodes.1/@labels.0/@modelFacet //@diagram/@childNodes.2/@labels.0/@modelFacet //@diagram/@childNodes.3/@labels.0/@modelFacet //@diagram/@topLevelNodes.3/@labels.0/@modelFacet //@diagram/@childNodes.4/@labels.0/@modelFacet //@diagram/@childNodes.5/@labels.0/@modelFacet //@diagram/@childNodes.6/@labels.0/@modelFacet //@diagram/@childNodes.7/@labels.0/@modelFacet //@diagram/@topLevelNodes.4/@labels.0/@modelFacet //@diagram/@childNodes.8/@labels.0/@modelFacet //@diagram/@childNodes.9/@labels.0/@modelFacet //@diagram/@childNodes.10/@labels.0/@modelFacet //@diagram/@childNodes.12/@labels.0/@modelFacet //@diagram/@childNodes.14/@labels.0/@modelFacet //@diagram/@childNodes.13/@labels.0/@modelFacet //@diagram/@childNodes.15/@labels.0/@modelFacet //@diagram/@childNodes.17/@labels.0/@modelFacet //@diagram/@childNodes.16/@labels.0/@modelFacet //@diagram/@childNodes.19/@labels.0/@modelFacet //@diagram/@childNodes.18/@labels.0/@modelFacet //@diagram/@childNodes.20/@labels.0/@modelFacet //@diagram/@childNodes.22/@labels.0/@modelFacet //@diagram/@childNodes.21/@labels.0/@modelFacet //@diagram/@childNodes.23/@labels.0/@modelFacet //@diagram/@childNodes.24/@labels.0/@modelFacet //@diagram/@childNodes.25/@labels.0/@modelFacet //@diagram/@childNodes.26/@labels.0/@modelFacet //@diagram/@childNodes.27/@labels.0/@modelFacet //@diagram/@childNodes.28/@labels.0/@modelFacet //@diagram/@childNodes.29/@labels.0/@modelFacet //@diagram/@childNodes.30/@labels.0/@modelFacet //@diagram/@childNodes.31/@labels.0/@modelFacet //@diagram/@childNodes.32/@labels.0/@modelFacet //@diagram/@childNodes.33/@labels.0/@modelFacet //@diagram/@childNodes.34/@labels.0/@modelFacet //@diagram/@childNodes.35/@labels.0/@modelFacet //@diagram/@childNodes.36/@labels.0/@modelFacet //@diagram/@childNodes.38/@labels.0/@modelFacet //@diagram/@childNodes.11/@labels.0/@modelFacet //@diagram/@topLevelNodes.5/@labels.0/@modelFacet //@diagram/@topLevelNodes.6/@labels.0/@modelFacet //@diagram/@topLevelNodes.7/@labels.0/@modelFacet //@diagram/@topLevelNodes.8/@labels.0/@modelFacet //@diagram/@topLevelNodes.9/@labels.0/@modelFacet //@diagram/@topLevelNodes.10/@labels.0/@modelFacet //@diagram/@topLevelNodes.11/@labels.0/@modelFacet //@diagram/@topLevelNodes.12/@labels.0/@modelFacet //@diagram/@childNodes.40/@labels.0/@modelFacet //@diagram/@childNodes.41/@labels.0/@modelFacet //@diagram/@childNodes.42/@labels.0/@modelFacet //@diagram/@childNodes.39/@labels.0/@modelFacet //@diagram/@topLevelNodes.13/@labels.0/@modelFacet //@diagram/@topLevelNodes.14/@labels.0/@modelFacet //@diagram/@topLevelNodes.15/@labels.0/@modelFacet //@diagram/@topLevelNodes.16/@labels.0/@modelFacet //@diagram/@topLevelNodes.17/@labels.0/@modelFacet //@diagram/@topLevelNodes.18/@labels.0/@modelFacet //@diagram/@topLevelNodes.19/@labels.0/@modelFacet //@diagram/@topLevelNodes.20/@labels.0/@modelFacet //@diagram/@topLevelNodes.21/@labels.0/@modelFacet //@diagram/@topLevelNodes.22/@labels.0/@modelFacet //@diagram/@topLevelNodes.23/@labels.0/@modelFacet //@diagram/@topLevelNodes.24/@labels.0/@modelFacet //@diagram/@topLevelNodes.25/@labels.0/@modelFacet //@diagram/@topLevelNodes.26/@labels.0/@modelFacet //@diagram/@topLevelNodes.28/@labels.0/@modelFacet //@diagram/@topLevelNodes.29/@labels.0/@modelFacet //@diagram/@topLevelNodes.30/@labels.0/@modelFacet //@diagram/@links.0/@labels.0/@modelFacet //@diagram/@links.1/@labels.0/@modelFacet"/>
   </labelParsers>
 </gmfgen:GenEditorGenerator>

@@ -19,9 +19,7 @@ package org.bonitasoft.studio.diagram.custom.editPolicies;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.diagram.custom.actions.OpenLatestSubprocessCommand;
-import org.bonitasoft.studio.model.process.EventSubProcessPool;
 import org.bonitasoft.studio.model.process.CallActivity;
-import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
@@ -54,17 +52,6 @@ public class OpenDetailsOrGoToSubProcessEditPolicy extends OpenEditPolicy {
 						if(semanticElement instanceof CallActivity){
 							/*select it if in the same diagram or open a the diagram in editor that contains it*/
 							new OpenLatestSubprocessCommand().execute(new ExecutionEvent());
-						} else if (semanticElement instanceof SubProcessEvent) {
-							/*select it, it should be on the same diagram*/
-							SubProcessEvent subProc = (SubProcessEvent) semanticElement;
-							EventSubProcessPool subProcessEventPool = subProc.getSubProcessEvent();
-							if(subProcessEventPool != null){
-								EditPart subProcPoolEditPart = ((IGraphicalEditPart) host).findEditPart(host.getRoot(), subProcessEventPool);
-								subProcPoolEditPart.getViewer().select(subProcPoolEditPart);
-								subProcPoolEditPart.getViewer().reveal(subProcPoolEditPart);
-							} else {
-								//TODO: perhaps it would be great to set focus on the combo to select one or to propose to create one?
-							}
 						} else {
 							//TODO: remove show details command and call another view, keep to have the trace in log for reminder
 							ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);

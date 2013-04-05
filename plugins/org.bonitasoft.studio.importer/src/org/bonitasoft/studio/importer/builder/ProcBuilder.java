@@ -484,7 +484,7 @@ public class ProcBuilder implements IProcBuilder {
         final EObject sourceElement = steps.get(srcId);
         final EObject targetElement = steps.get(trgtId);
         if(sourceElement != null && targetElement != null){
-            if(!ModelHelper.getParentProcessIncludedEmbedded(sourceElement).equals( ModelHelper.getParentProcessIncludedEmbedded(targetElement))){
+            if(!ModelHelper.getParentProcess(sourceElement).equals( ModelHelper.getParentProcess(targetElement))){
                 return ;//TODO HAPPENS WITH EMBEDDED SUBPROC AND NOT SUPPORTED YET IN BOS
             }
         }

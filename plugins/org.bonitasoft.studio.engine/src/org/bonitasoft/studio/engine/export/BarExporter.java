@@ -35,6 +35,7 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.engine.bpm.model.DesignProcessDefinition;
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -256,7 +257,7 @@ public class BarExporter {
             	file = processConfStore.createRepositoryFileStore(id+".conf");
             	 configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
                  configuration.setName(configurationId) ;
-                 configuration.setVersion(ProductVersion.CURRENT_VERSION);
+                 configuration.setVersion(ModelVersion.CURRENT_VERSION);
                  file.save(configuration);
             }
             configuration = (Configuration) file.getContent();
@@ -270,7 +271,7 @@ public class BarExporter {
         if(configuration == null){
             configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
             configuration.setName(configurationId) ;
-            configuration.setVersion(ProductVersion.CURRENT_VERSION);
+            configuration.setVersion(ModelVersion.CURRENT_VERSION);
         }
         //Synchronize configuration with definition
         new ConfigurationSynchronizer(process, configuration).synchronize() ;

@@ -357,7 +357,7 @@
         </ownedChild>
       </children>
       <children
-          referencedChild="//@nodes.18/@ownedChild">
+          referencedChild="//@nodes.17/@ownedChild">
         <containmentFeature
             href="process.ecore#//Activity/BoundaryIntermediateEvents"/>
         <ownedChild>
@@ -426,7 +426,7 @@
         </ownedChild>
       </children>
       <children
-          referencedChild="//@nodes.25/@ownedChild">
+          referencedChild="//@nodes.24/@ownedChild">
         <containmentFeature
             href="process.ecore#//Activity/BoundaryIntermediateEvents"/>
         <ownedChild>
@@ -679,7 +679,7 @@
         </ownedChild>
       </children>
       <children
-          referencedChild="//@nodes.25/@ownedChild">
+          referencedChild="//@nodes.24/@ownedChild">
         <containmentFeature
             href="process.ecore#//Activity/BoundaryIntermediateEvents"/>
         <ownedChild>
@@ -730,15 +730,6 @@
               href="process.ecore#//Element/name"/>
           <value
               body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
-              language="java"/>
-        </initializers>
-        <initializers
-            xsi:type="gmfmap:FeatureValueSpec">
-          <feature
-              xsi:type="ecore:EReference"
-              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
-          <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -825,7 +816,13 @@
       </children>
       <children
           compartment="//@nodes.5/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.17/@ownedChild">
+          referencedChild="//@nodes.16/@ownedChild">
+        <containmentFeature
+            href="process.ecore#//Container/elements"/>
+      </children>
+      <children
+          compartment="//@nodes.5/@ownedChild/@compartments.0"
+          referencedChild="//@nodes.14/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
@@ -837,7 +834,7 @@
       </children>
       <children
           compartment="//@nodes.5/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.16/@ownedChild">
+          referencedChild="//@nodes.17/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
@@ -849,31 +846,13 @@
       </children>
       <children
           compartment="//@nodes.5/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.19/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.5/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.21/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.5/@ownedChild/@compartments.0"
           referencedChild="//@nodes.20/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
       <children
           compartment="//@nodes.5/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.26/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.5/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.24/@ownedChild">
+          referencedChild="//@nodes.19/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
@@ -885,19 +864,25 @@
       </children>
       <children
           compartment="//@nodes.5/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.27/@ownedChild">
+          referencedChild="//@nodes.23/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
       <children
           compartment="//@nodes.5/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.29/@ownedChild">
+          referencedChild="//@nodes.24/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
       <children
           compartment="//@nodes.5/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.31/@ownedChild">
+          referencedChild="//@nodes.26/@ownedChild">
+        <containmentFeature
+            href="process.ecore#//Container/elements"/>
+      </children>
+      <children
+          compartment="//@nodes.5/@ownedChild/@compartments.0"
+          referencedChild="//@nodes.28/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
@@ -909,7 +894,13 @@
       </children>
       <children
           compartment="//@nodes.5/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.28/@ownedChild">
+          referencedChild="//@nodes.29/@ownedChild">
+        <containmentFeature
+            href="process.ecore#//Container/elements"/>
+      </children>
+      <children
+          compartment="//@nodes.5/@ownedChild/@compartments.0"
+          referencedChild="//@nodes.27/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
@@ -1916,12 +1907,6 @@
           </children>
           <children
               compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.17/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
               referencedChild="//@nodes.16/@ownedChild">
             <containmentFeature
                 href="process.ecore#//Container/elements"/>
@@ -1934,19 +1919,19 @@
           </children>
           <children
               compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
+              referencedChild="//@nodes.14/@ownedChild">
+            <containmentFeature
+                href="process.ecore#//Container/elements"/>
+          </children>
+          <children
+              compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
+              referencedChild="//@nodes.17/@ownedChild">
+            <containmentFeature
+                href="process.ecore#//Container/elements"/>
+          </children>
+          <children
+              compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
               referencedChild="//@nodes.18/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.19/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.21/@ownedChild">
             <containmentFeature
                 href="process.ecore#//Container/elements"/>
           </children>
@@ -1958,7 +1943,7 @@
           </children>
           <children
               compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.23/@ownedChild">
+              referencedChild="//@nodes.19/@ownedChild">
             <containmentFeature
                 href="process.ecore#//Container/elements"/>
           </children>
@@ -1970,19 +1955,7 @@
           </children>
           <children
               compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.27/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.25/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.24/@ownedChild">
+              referencedChild="//@nodes.21/@ownedChild">
             <containmentFeature
                 href="process.ecore#//Container/elements"/>
           </children>
@@ -1994,19 +1967,37 @@
           </children>
           <children
               compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.29/@ownedChild">
+              referencedChild="//@nodes.24/@ownedChild">
             <containmentFeature
                 href="process.ecore#//Container/elements"/>
           </children>
           <children
               compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.31/@ownedChild">
+              referencedChild="//@nodes.23/@ownedChild">
+            <containmentFeature
+                href="process.ecore#//Container/elements"/>
+          </children>
+          <children
+              compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
+              referencedChild="//@nodes.25/@ownedChild">
             <containmentFeature
                 href="process.ecore#//Container/elements"/>
           </children>
           <children
               compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
               referencedChild="//@nodes.28/@ownedChild">
+            <containmentFeature
+                href="process.ecore#//Container/elements"/>
+          </children>
+          <children
+              compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
+              referencedChild="//@nodes.30/@ownedChild">
+            <containmentFeature
+                href="process.ecore#//Container/elements"/>
+          </children>
+          <children
+              compartment="//@nodes.13/@ownedChild/@children.0/@ownedChild/@compartments.0"
+              referencedChild="//@nodes.27/@ownedChild">
             <containmentFeature
                 href="process.ecore#//Container/elements"/>
           </children>
@@ -2097,7 +2088,13 @@
       </children>
       <children
           compartment="//@nodes.13/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.17/@ownedChild">
+          referencedChild="//@nodes.16/@ownedChild">
+        <containmentFeature
+            href="process.ecore#//Container/elements"/>
+      </children>
+      <children
+          compartment="//@nodes.13/@ownedChild/@compartments.0"
+          referencedChild="//@nodes.14/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
@@ -2109,13 +2106,19 @@
       </children>
       <children
           compartment="//@nodes.13/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.16/@ownedChild">
+          referencedChild="//@nodes.17/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
       <children
           compartment="//@nodes.13/@ownedChild/@compartments.0"
           referencedChild="//@nodes.18/@ownedChild">
+        <containmentFeature
+            href="process.ecore#//Container/elements"/>
+      </children>
+      <children
+          compartment="//@nodes.13/@ownedChild/@compartments.0"
+          referencedChild="//@nodes.20/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
@@ -2133,31 +2136,7 @@
       </children>
       <children
           compartment="//@nodes.13/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.20/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.13/@ownedChild/@compartments.0"
           referencedChild="//@nodes.22/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.13/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.23/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.13/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.26/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.13/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.24/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
@@ -2169,25 +2148,37 @@
       </children>
       <children
           compartment="//@nodes.13/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.27/@ownedChild">
+          referencedChild="//@nodes.23/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
       <children
           compartment="//@nodes.13/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.29/@ownedChild">
+          referencedChild="//@nodes.24/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
       <children
           compartment="//@nodes.13/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.31/@ownedChild">
+          referencedChild="//@nodes.26/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
       <children
           compartment="//@nodes.13/@ownedChild/@compartments.0"
           referencedChild="//@nodes.28/@ownedChild">
+        <containmentFeature
+            href="process.ecore#//Container/elements"/>
+      </children>
+      <children
+          compartment="//@nodes.13/@ownedChild/@compartments.0"
+          referencedChild="//@nodes.30/@ownedChild">
+        <containmentFeature
+            href="process.ecore#//Container/elements"/>
+      </children>
+      <children
+          compartment="//@nodes.13/@ownedChild/@compartments.0"
+          referencedChild="//@nodes.27/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
       </children>
@@ -2199,444 +2190,6 @@
       </children>
       <compartments
           children="//@nodes.13/@ownedChild/@children.1 //@nodes.13/@ownedChild/@children.2 //@nodes.13/@ownedChild/@children.3 //@nodes.13/@ownedChild/@children.12 //@nodes.13/@ownedChild/@children.4 //@nodes.13/@ownedChild/@children.0 //@nodes.13/@ownedChild/@children.6 //@nodes.13/@ownedChild/@children.11 //@nodes.13/@ownedChild/@children.13 //@nodes.13/@ownedChild/@children.14 //@nodes.13/@ownedChild/@children.15 //@nodes.13/@ownedChild/@children.16 //@nodes.13/@ownedChild/@children.17 //@nodes.13/@ownedChild/@children.18 //@nodes.13/@ownedChild/@children.19 //@nodes.13/@ownedChild/@children.21 //@nodes.13/@ownedChild/@children.20 //@nodes.13/@ownedChild/@children.25 //@nodes.13/@ownedChild/@children.24 //@nodes.13/@ownedChild/@children.23 //@nodes.13/@ownedChild/@children.22 //@nodes.13/@ownedChild/@children.28 //@nodes.13/@ownedChild/@children.8 //@nodes.13/@ownedChild/@children.7 //@nodes.13/@ownedChild/@children.9 //@nodes.13/@ownedChild/@children.10 //@nodes.13/@ownedChild/@children.26 //@nodes.13/@ownedChild/@children.29 //@nodes.13/@ownedChild/@children.5 //@nodes.13/@ownedChild/@children.27">
-        <compartment
-            href="process.gmfgraph#PoolCompartment"/>
-      </compartments>
-    </ownedChild>
-  </nodes>
-  <nodes>
-    <containmentFeature
-        href="process.ecore#//Container/elements"/>
-    <ownedChild>
-      <domainMetaElement
-          href="process.ecore#//EventSubProcessPool"/>
-      <domainInitializer
-          xsi:type="gmfmap:FeatureSeqInitializer">
-        <initializers
-            xsi:type="gmfmap:FeatureValueSpec">
-          <feature
-              xsi:type="ecore:EAttribute"
-              href="process.ecore#//Element/name"/>
-          <value
-              body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
-              language="java"/>
-        </initializers>
-        <initializers
-            xsi:type="gmfmap:FeatureValueSpec">
-          <feature
-              xsi:type="ecore:EAttribute"
-              href="process.ecore#//AbstractProcess/version"/>
-          <value
-              body="'1.0'"/>
-        </initializers>
-        <initializers
-            xsi:type="gmfmap:FeatureValueSpec">
-          <feature
-              xsi:type="ecore:EReference"
-              href="process.ecore#//ViewPageFlow/viewPageFlowRedirectionURL"/>
-          <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
-              language="java"/>
-        </initializers>
-      </domainInitializer>
-      <labelMappings
-          xsi:type="gmfmap:FeatureLabelMapping"
-          readOnly="true">
-        <diagramLabel
-            href="process.gmfgraph#PoolName"/>
-        <features
-            href="process.ecore#//Element/name"/>
-        <editableFeatures
-            href="process.ecore#//Element/name"/>
-      </labelMappings>
-      <diagramNode
-          href="process.gmfgraph#PoolEventSubProcess"/>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.14/@ownedChild/@children.0/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-        <ownedChild>
-          <domainMetaElement
-              href="process.ecore#//Lane"/>
-          <domainInitializer
-              xsi:type="gmfmap:FeatureSeqInitializer">
-            <initializers
-                xsi:type="gmfmap:FeatureValueSpec">
-              <feature
-                  xsi:type="ecore:EAttribute"
-                  href="process.ecore#//Element/name"/>
-              <value
-                  body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
-                  language="java"/>
-            </initializers>
-          </domainInitializer>
-          <labelMappings
-              xsi:type="gmfmap:FeatureLabelMapping"
-              readOnly="true">
-            <diagramLabel
-                href="process.gmfgraph#LaneName"/>
-            <features
-                href="process.ecore#//Element/name"/>
-            <editableFeatures
-                href="process.ecore#//Element/name"/>
-          </labelMappings>
-          <tool
-              xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.13"/>
-          <diagramNode
-              href="process.gmfgraph#Lane"/>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.3/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.0/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.2/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.4/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.5/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.10/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.7/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.6/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.8/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.9/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.12/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.17/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.16/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.15/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.18/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.19/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.21/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.20/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.23/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.22/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.27/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.25/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.24/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.26/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.29/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.31/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.30/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.28/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <children
-              compartment="//@nodes.14/@ownedChild/@children.0/@ownedChild/@compartments.0"
-              referencedChild="//@nodes.11/@ownedChild">
-            <containmentFeature
-                href="process.ecore#//Container/elements"/>
-          </children>
-          <compartments
-              children="//@nodes.14/@ownedChild/@children.0/@ownedChild/@children.0 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.10 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.2 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.1 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.3 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.5 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.13 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.12 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.11 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.14 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.15 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.16 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.17 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.18 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.19 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.20 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.23 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.22 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.21 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.27 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.6 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.7 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.8 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.9 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.24 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.28 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.4 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.26 //@nodes.14/@ownedChild/@children.0/@ownedChild/@children.25">
-            <compartment
-                href="process.gmfgraph#LaneCompartment"/>
-          </compartments>
-        </ownedChild>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.0/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.2/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.4/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.3/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.6/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.7/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.8/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.9/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.10/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.12/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.17/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.15/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.16/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.18/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.19/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.21/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.20/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.22/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.23/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.26/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.24/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.25/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.27/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.29/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.31/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.30/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.28/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.14/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.11/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <compartments
-          children="//@nodes.14/@ownedChild/@children.1 //@nodes.14/@ownedChild/@children.2 //@nodes.14/@ownedChild/@children.10 //@nodes.14/@ownedChild/@children.3 //@nodes.14/@ownedChild/@children.0 //@nodes.14/@ownedChild/@children.4 //@nodes.14/@ownedChild/@children.9 //@nodes.14/@ownedChild/@children.11 //@nodes.14/@ownedChild/@children.12 //@nodes.14/@ownedChild/@children.13 //@nodes.14/@ownedChild/@children.14 //@nodes.14/@ownedChild/@children.15 //@nodes.14/@ownedChild/@children.16 //@nodes.14/@ownedChild/@children.17 //@nodes.14/@ownedChild/@children.19 //@nodes.14/@ownedChild/@children.18 //@nodes.14/@ownedChild/@children.23 //@nodes.14/@ownedChild/@children.22 //@nodes.14/@ownedChild/@children.21 //@nodes.14/@ownedChild/@children.20 //@nodes.14/@ownedChild/@children.27 //@nodes.14/@ownedChild/@children.6 //@nodes.14/@ownedChild/@children.5 //@nodes.14/@ownedChild/@children.7 //@nodes.14/@ownedChild/@children.8 //@nodes.14/@ownedChild/@children.24 //@nodes.14/@ownedChild/@children.28 //@nodes.14/@ownedChild/@children.26 //@nodes.14/@ownedChild/@children.25">
         <compartment
             href="process.gmfgraph#PoolCompartment"/>
       </compartments>
@@ -3789,7 +3342,7 @@
         href="process.ecore#//Connection/target"/>
     <creationConstraints>
       <sourceEnd
-          body="if (source instanceof org.bonitasoft.studio.model.process.EndEvent || source instanceof org.bonitasoft.studio.model.process.EndTerminatedEvent || source instanceof org.bonitasoft.studio.model.process.EndErrorEvent  || source instanceof org.bonitasoft.studio.model.process.Pool || target instanceof org.bonitasoft.studio.model.process.Pool&#xD;&#xA;&#x9;|| source instanceof org.bonitasoft.studio.model.process.EndMessageEvent || source instanceof org.bonitasoft.studio.model.process.ThrowLinkEvent || source instanceof org.bonitasoft.studio.model.process.EndSignalEvent || source instanceof org.bonitasoft.studio.model.process.SubProcessEvent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;if (target instanceof org.bonitasoft.studio.model.process.StartEvent || target instanceof org.bonitasoft.studio.model.process.StartMessageEvent  || target instanceof org.bonitasoft.studio.model.process.StartErrorEvent || target instanceof org.bonitasoft.studio.model.process.StartTimerEvent   || target instanceof org.bonitasoft.studio.model.process.CatchLinkEvent  || target instanceof org.bonitasoft.studio.model.process.StartSignalEvent || target instanceof org.bonitasoft.studio.model.process.SubProcessEvent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.FlowElement&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&amp;&amp; target instanceof org.bonitasoft.studio.model.process.FlowElement) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;java.util.List&lt;org.bonitasoft.studio.model.process.Connection> outGoing = ((org.bonitasoft.studio.model.process.FlowElement) source)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;.getOutgoing();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;for (org.bonitasoft.studio.model.process.Connection con : outGoing) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if (con.getTarget().equals(target)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.Gateway &amp;&amp; target instanceof org.bonitasoft.studio.model.process.Gateway) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return !source.equals(target);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;// if target not set, then continue tool&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (target == null) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcessIncludedEmbedded(source) instanceof org.bonitasoft.studio.model.process.SubProcessEvent || org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcessIncludedEmbedded(target) instanceof org.bonitasoft.studio.model.process.SubProcessEvent){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(!org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcessIncludedEmbedded(source).equals(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentProcessIncludedEmbedded(target))){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false ;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;// source and target must be contained in same process (pool)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;org.eclipse.emf.ecore.EObject sourceParent = source;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;while (sourceParent != null &amp;&amp; sourceParent.eContainer() != null &amp;&amp; !(sourceParent.eContainer() instanceof org.bonitasoft.studio.model.process.MainProcess)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sourceParent = sourceParent.eContainer();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;//sourceParent = pool&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;org.eclipse.emf.ecore.EObject targetParent = target;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;while (targetParent != null &amp;&amp; targetParent.eContainer() != null &amp;&amp; !(targetParent.eContainer() instanceof org.bonitasoft.studio.model.process.MainProcess)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;targetParent = targetParent.eContainer();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (sourceParent != targetParent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.Event &amp;&amp; target instanceof org.bonitasoft.studio.model.process.Event) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return !source.equals(target);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;"
+          body="if (source instanceof org.bonitasoft.studio.model.process.EndEvent || source instanceof org.bonitasoft.studio.model.process.EndTerminatedEvent || source instanceof org.bonitasoft.studio.model.process.EndErrorEvent  || source instanceof org.bonitasoft.studio.model.process.Pool || target instanceof org.bonitasoft.studio.model.process.Pool&#xD;&#xA;&#x9;|| source instanceof org.bonitasoft.studio.model.process.EndMessageEvent || source instanceof org.bonitasoft.studio.model.process.ThrowLinkEvent || source instanceof org.bonitasoft.studio.model.process.EndSignalEvent || source instanceof org.bonitasoft.studio.model.process.SubProcessEvent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;if (target instanceof org.bonitasoft.studio.model.process.StartEvent || target instanceof org.bonitasoft.studio.model.process.StartMessageEvent  || target instanceof org.bonitasoft.studio.model.process.StartErrorEvent || target instanceof org.bonitasoft.studio.model.process.StartTimerEvent   || target instanceof org.bonitasoft.studio.model.process.CatchLinkEvent  || target instanceof org.bonitasoft.studio.model.process.StartSignalEvent || target instanceof org.bonitasoft.studio.model.process.SubProcessEvent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.FlowElement&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&amp;&amp; target instanceof org.bonitasoft.studio.model.process.FlowElement) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;java.util.List&lt;org.bonitasoft.studio.model.process.Connection> outGoing = ((org.bonitasoft.studio.model.process.FlowElement) source)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;.getOutgoing();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;for (org.bonitasoft.studio.model.process.Connection con : outGoing) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;if (con.getTarget().equals(target)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.Gateway &amp;&amp; target instanceof org.bonitasoft.studio.model.process.Gateway) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return !source.equals(target);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;// if target not set, then continue tool&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (target == null) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return true;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentContainer(source) instanceof org.bonitasoft.studio.model.process.SubProcessEvent || org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentContainer(target) instanceof org.bonitasoft.studio.model.process.SubProcessEvent){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;if(!org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentContainer(source).equals(org.bonitasoft.studio.common.emf.tools.ModelHelper.getParentContainer(target))){&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;return false ;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;// source and target must be contained in same process (pool)&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;org.eclipse.emf.ecore.EObject sourceParent = source;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;while (sourceParent != null &amp;&amp; sourceParent.eContainer() != null &amp;&amp; !(sourceParent.eContainer() instanceof org.bonitasoft.studio.model.process.MainProcess)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sourceParent = sourceParent.eContainer();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xA;&#x9;&#x9;&#x9;&#x9;//sourceParent = pool&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;org.eclipse.emf.ecore.EObject targetParent = target;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;while (targetParent != null &amp;&amp; targetParent.eContainer() != null &amp;&amp; !(targetParent.eContainer() instanceof org.bonitasoft.studio.model.process.MainProcess)) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;targetParent = targetParent.eContainer();&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (sourceParent != targetParent) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return false;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;if (source instanceof org.bonitasoft.studio.model.process.Event &amp;&amp; target instanceof org.bonitasoft.studio.model.process.Event) {&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;return !source.equals(target);&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;}&#xD;&#xA;"
           language="java"/>
     </creationConstraints>
   </links>

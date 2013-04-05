@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bonitasoft.studio.common.FragmentTypes;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -143,8 +144,8 @@ public class ConfigurationSynchronizer {
             cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__NAME, ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)) ;
         }
         
-        if(configuration.getVersion() == null || !ProductVersion.CURRENT_VERSION.equals(configuration.getVersion())){
-        	 cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__VERSION, ProductVersion.CURRENT_VERSION)) ;
+        if(configuration.getVersion() == null || !ModelVersion.CURRENT_VERSION.equals(configuration.getVersion())){
+        	 cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__VERSION, ModelVersion.CURRENT_VERSION)) ;
         }
 
         synchronizeFragmentContainers(cc) ;

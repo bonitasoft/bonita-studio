@@ -19,6 +19,7 @@ package org.bonitasoft.studio.diagram.custom.repository;
 
 import java.util.Set;
 
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -63,7 +64,7 @@ public class PoolNotificationListerner implements NotificationListener {
 				String processUUID = ModelHelper.getEObjectID(pool) ;
 				IRepositoryFileStore confFile = processConfStore.createRepositoryFileStore(processUUID+".conf") ;
 				final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
-				conf.setVersion(ProductVersion.CURRENT_VERSION);
+				conf.setVersion(ModelVersion.CURRENT_VERSION);
 				confFile.save(conf) ;
 
 				ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;

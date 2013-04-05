@@ -113,7 +113,9 @@ IExtensibleGridPropertySectionContribution {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				if(element instanceof EventObject){
-					if(eObject != null && ((Message) element).getSource() != null && ModelHelper.getParentProcess(((Message) element).getSource()) != null && ModelHelper.getParentProcessIncludedEmbedded(((Message) element).getSource()).equals(ModelHelper.getParentProcessIncludedEmbedded(eObject))){
+					if(eObject != null && ((Message) element).getSource() != null 
+							&& ModelHelper.getParentProcess(((Message) element).getSource()) != null 
+							&& ModelHelper.getParentProcess(((Message) element).getSource()).equals(ModelHelper.getParentProcess(eObject))){
 						return false ;
 					}else{
 						return true ;
@@ -193,7 +195,7 @@ IExtensibleGridPropertySectionContribution {
 		// Add new
 		if (eventsOnSameDiagram) {
 			AbstractCatchMessageEvent catchMessage =  (AbstractCatchMessageEvent)messageEventPart.resolveSemanticElement() ;
-			String procName = ModelHelper.getParentProcessIncludedEmbedded(catchMessage).getName();
+			String procName = ModelHelper.getParentProcess(catchMessage).getName();
 			SetCommand cmd = new SetCommand(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION, ExpressionHelper.createConstantExpression(procName, String.class.getName()));
 			editingDomain.getCommandStack().execute(cmd) ;
 			cmd = new SetCommand(editingDomain, event, ProcessPackage.Literals.MESSAGE__TARGET_ELEMENT_EXPRESSION,ExpressionHelper.createConstantExpression(catchMessage.getName(), String.class.getName()));

@@ -203,9 +203,7 @@ public class CustomLaneEditPart extends LaneEditPart {
 				for(Object child1 : ((MainProcessEditPart) child).getChildren()){
 					if(child1 instanceof CustomPoolEditPart && !child1.equals(getParent())){
 						((CustomPoolEditPart) child1).refreshBounds();
-					} else if(child1 instanceof CustomEventSubProcessPoolEditPart && !child1.equals(getParent())){
-						((CustomEventSubProcessPoolEditPart) child1).refreshBounds();
-					}
+					} 
 				}
 			}
 		}

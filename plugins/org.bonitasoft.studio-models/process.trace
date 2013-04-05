@@ -84,10 +84,6 @@
     <nodeLabelTraces visualID="5081" queryText="true"/>
     <compartmentTraces visualID="7005" queryText="true"/>
   </nodeTraces>
-  <nodeTraces visualID="2032" queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'EventSubProcessPool') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
-    <nodeLabelTraces visualID="5085" queryText="true"/>
-    <compartmentTraces visualID="7003" queryText="true"/>
-  </nodeTraces>
   <nodeTraces visualID="2033" queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartErrorEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
     <nodeLabelTraces visualID="5087" queryText="true"/>
   </nodeTraces>
@@ -216,10 +212,6 @@
   <childNodeTraces visualID="3058" queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'SubProcessEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
     <nodeLabelTraces visualID="5083" queryText="true"/>
     <compartmentTraces visualID="7006" queryText="true"/>
-  </childNodeTraces>
-  <childNodeTraces visualID="3059" queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Lane') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
-    <nodeLabelTraces visualID="5084" queryText="true"/>
-    <compartmentTraces visualID="7004" queryText="true"/>
   </childNodeTraces>
   <childNodeTraces visualID="3060" queryText="(let _eClass_:ecore::EClass = modelFacet.metaClass.ecoreClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'StartErrorEvent') and (let _containmentMF_:ecore::EStructuralFeature = modelFacet.containmentMetaFeature.ecoreFeature in (let _eClass_:ecore::EClass = _containmentMF_.eContainingClass in _eClass_.ePackage.nsURI = 'http://www.bonitasoft.org/ns/studio/process' and _eClass_.name = 'Container') and _containmentMF_.name = 'elements')">
     <nodeLabelTraces visualID="5086" queryText="true"/>

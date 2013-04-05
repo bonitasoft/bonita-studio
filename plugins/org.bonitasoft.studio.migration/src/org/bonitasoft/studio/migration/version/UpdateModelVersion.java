@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.migration.version;
 
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.Instance;
@@ -34,7 +35,7 @@ public class UpdateModelVersion extends CustomMigration {
 			throws MigrationException {
 		for(Instance mainProc : model.getAllInstances("process.MainProcess")){
 			mainProc.set("bonitaVersion", ProductVersion.CURRENT_VERSION);
-			mainProc.set("bonitaModelVersion", ProductVersion.CURRENT_VERSION);
+			mainProc.set("bonitaModelVersion", ModelVersion.CURRENT_VERSION);
 		}
 	}
 	

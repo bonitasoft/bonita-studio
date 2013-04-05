@@ -162,7 +162,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
 	}
 
 	protected void performMigration(Migrator migrator, URI resourceURI, Release release) throws MigrationException {
-		migrator.setLevel(ValidationLevel.RELEASE);
+		migrator.setLevel(ValidationLevel.NONE);
 		migrator.migrateAndSave(
 				Collections.singletonList(resourceURI), release,
 				null, Repository.NULL_PROGRESS_MONITOR);

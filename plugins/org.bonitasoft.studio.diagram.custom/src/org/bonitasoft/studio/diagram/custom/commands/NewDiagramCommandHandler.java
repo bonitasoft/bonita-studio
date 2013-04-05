@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
@@ -176,7 +177,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
         ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
         IRepositoryFileStore confFile = processConfStore.createRepositoryFileStore(processUUID+".conf") ;
         Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
-        conf.setVersion(ProductVersion.CURRENT_VERSION);
+        conf.setVersion(ModelVersion.CURRENT_VERSION);
         createDefaultActorMapping(conf);
         confFile.save(conf) ;
 
@@ -450,7 +451,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
         proc.setName(diagramName);
         proc.setVersion("1.0"); //$NON-NLS-1$
         proc.setBonitaVersion(ProductVersion.CURRENT_VERSION);
-        proc.setBonitaModelVersion(ProductVersion.CURRENT_VERSION);
+        proc.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
         proc.setEnableValidation(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.PREF_ENABLE_VALIDATION)) ;
         ModelHelper.addDataTypes(proc);
         return proc ;
