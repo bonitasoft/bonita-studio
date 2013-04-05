@@ -228,6 +228,22 @@ public class SWTBotConnectorTestUtil {
                 .button(IDialogConstants.NEXT_LABEL).isEnabled());
         Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
                 .button(IDialogConstants.FINISH_LABEL).isEnabled());
+        bot.waitUntil(new ICondition() {
+
+			public boolean test() throws Exception {
+				SWTBotTreeItem categoryItem = bot.tree().expandNode(categoryLabel);
+				return !categoryItem.getNodes().isEmpty();
+			}
+
+			public void init(SWTBot bot) {
+
+			}
+
+			public String getFailureMessage() {
+				return "Category "+categoryLabel +" has no children" ;
+			}
+		},10000,1000);
+        
        SWTBotTreeItem categoryItem = bot.tree().expandNode(categoryLabel);
        String cNode = null;
        for(String node : categoryItem.getNodes()){
