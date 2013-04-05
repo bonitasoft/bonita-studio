@@ -24,6 +24,7 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.i18n.Messages;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -36,6 +37,7 @@ public class BonitaDatabasePreferencePage extends AbstractBonitaPreferencePage i
 
 	private BooleanFieldEditor dropDB;
 	private BooleanFieldEditor usersAndRoles;
+	private Button checkbox;
 
 	public BonitaDatabasePreferencePage() {
 		super(GRID);
@@ -48,12 +50,19 @@ public class BonitaDatabasePreferencePage extends AbstractBonitaPreferencePage i
 	 * editor knows how to save and restore itself.
 	 */
 	public void createFieldEditors() {
-		
+
 		createTitleBar(Messages.BonitaPreferenceDialog_database,Pics.getImage(PicsConstants.preferenceDB),false);
 
 		dropDB = new BooleanFieldEditor(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT, Messages.deleteTenantOnExit, getFieldEditorParent());
 		addField(dropDB);
-		usersAndRoles = new BooleanFieldEditor(BonitaPreferenceConstants.LOAD_ORGANIZATION, Messages.reloadDefaultOrganization, getFieldEditorParent());
+		usersAndRoles = new BooleanFieldEditor(BonitaPreferenceConstants.LOAD_ORGANIZATION, Messages.reloadDefaultOrganization, getFieldEditorParent()){
+	
+			protected org.eclipse.swt.widgets.Button getChangeControl(org.eclipse.swt.widgets.Composite parent) {
+				checkbox= super.getChangeControl(parent);
+				return checkbox;
+			}
+			
+		};
 		addField(usersAndRoles);
 		usersAndRoles.setEnabled(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT),
 				getFieldEditorParent());
@@ -70,6 +79,10 @@ public class BonitaDatabasePreferencePage extends AbstractBonitaPreferencePage i
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getSource() == dropDB) {
+			if(!(Boolean) event.getNewValue()){
+				BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.LOAD_ORGANIZATION, false);
+				checkbox.setSelection(false);
+			}
 			usersAndRoles.setEnabled((Boolean) event.getNewValue(), getFieldEditorParent());
 		}
 		super.propertyChange(event);
@@ -92,6 +105,6 @@ public class BonitaDatabasePreferencePage extends AbstractBonitaPreferencePage i
 		usersAndRoles.setEnabled(dropDB.getBooleanValue(), getFieldEditorParent());
 	}
 
-	
+
 
 }
