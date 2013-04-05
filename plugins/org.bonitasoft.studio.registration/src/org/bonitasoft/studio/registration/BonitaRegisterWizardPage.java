@@ -264,7 +264,7 @@ public class BonitaRegisterWizardPage extends WizardPage {
 
 	protected BonitaRegisterWizardPage(String pageName) {
 		super(pageName);
-        setTitle(Messages.RegisterWizardPage_Title); //$NON-NLS-1$
+        setTitle(Messages.RegisterWizardPage_Title);
         setDescription(Messages.RegisterWizardPage_Desc);
         setImageDescriptor(Pics.getWizban());
         initCurrentCountry();
