@@ -109,6 +109,9 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 					return ctx.createSuccessStatus();
 				}
 			}
+			if(op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)){
+				return ctx.createSuccessStatus();
+			}
 			if(op.getLeftOperand() == null 
 					|| op.getLeftOperand().getContent() == null 
 					|| op.getLeftOperand().getContent().isEmpty()){
@@ -120,12 +123,8 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 					if(el != null){
 						activityName = el.getName();
 					}
-					return ctx.createFailureStatus("Left operand is missing in an operation of "+activityName);
+					return ctx.createFailureStatus(Messages.bind(Messages.leftOperandMissing,activityName));
 				}
-			}
-
-			if(op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)){
-				return ctx.createSuccessStatus();
 			}
 			validator.setDataExpression(op.getLeftOperand());
 			final IStatus status = validator.validate(op.getRightOperand());
