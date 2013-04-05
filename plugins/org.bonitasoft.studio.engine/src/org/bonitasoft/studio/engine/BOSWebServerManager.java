@@ -93,7 +93,7 @@ public class BOSWebServerManager {
 	private static final int MAX_PORT_NUMBER = 65535;
 	private static final int MAX_SERVER_START_TIME = 300000;
 	private static final String TOMCAT_LOG_FILE = "tomcat.log";
-	private static final int MAX_LOGGING_TRY = 5;
+	private static final int MAX_LOGGING_TRY = 50;
 	private ServerSocket watchdogServer;
 
 	private static BOSWebServerManager INSTANCE;
