@@ -12,8 +12,8 @@
 		<tychoExtrasVersion>0.16.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>6.0-Beta-SNAPSHOT</bundle.version>
-		<engine.version>6.0.0-beta-016</engine.version>
-		<connector.version>6.0.0-beta-010</connector.version>
+		<engine.version>6.0.0-beta-017</engine.version>
+		<connector.version>6.0.0-beta-011</connector.version>
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
 		<filters.version>6.0.0-beta-006</filters.version>
 		<jacoco.reportDir>${user.home}/target/jacoco/</jacoco.reportDir>
