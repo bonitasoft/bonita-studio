@@ -2,7 +2,7 @@
 <feature
       id="tests-common-feature"
       label="Feature for BonitaStudio tests"
-      version="1.0.0.qualifier"
+      version="6.0.0.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
@@ -300,13 +300,6 @@
 
    <plugin
          id="org.eclipse.swtbot.finder.nebula.gallery"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.userguidance.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"
