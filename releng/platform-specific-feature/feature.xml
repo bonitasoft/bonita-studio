@@ -2,7 +2,7 @@
 <feature
       id="platform-specific-feature"
       label="Platform specific feature"
-      version="1.0.0.qualifier"
+      version="6.0.0.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
@@ -21,7 +21,7 @@
       <import feature="org.eclipse.rcp" version="3.7.1.r37x_v20110729-9DB5FmNFnFLSFCtLxnRfMqt15A4A" match="greaterOrEqual"/>
    </requires>
 
-<plugin
+   <plugin
          id="org.eclipse.core.filesystem.linux.x86_64"
          os="linux"
          arch="x86_64"
@@ -69,8 +69,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
-     <plugin
+
+   <plugin
          id="org.eclipse.update.core.linux"
          os="linux"
          arch="x86"
@@ -79,8 +79,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
-    <plugin
+
+   <plugin
          id="org.eclipse.gmf.runtime.common.ui.printing.win32"
          os="win32"
          download-size="0"
@@ -88,8 +88,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
-      <plugin
+
+   <plugin
          id="org.eclipse.jdt.launching.macosx"
          os="macosx"
          download-size="0"
