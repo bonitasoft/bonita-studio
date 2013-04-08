@@ -133,6 +133,7 @@ public class Messages extends NLS {
 	public static String running;
 	public static String restartingWebServer;
 	public static String resetingEngine;
+	public static String undeploymentFailedMessage;
     
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

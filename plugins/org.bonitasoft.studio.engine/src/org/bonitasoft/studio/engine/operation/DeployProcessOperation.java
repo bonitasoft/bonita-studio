@@ -133,7 +133,8 @@ public class DeployProcessOperation  {
 		try {
 			undeploy(monitor);
 		} catch (Exception e) {
-			BonitaStudioLog.error(e) ;
+			BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID) ;
+			return new Status(Status.ERROR,EnginePlugin.PLUGIN_ID,Messages.undeploymentFailedMessage,e) ;
 		}
 		try{
 			IStatus status = deploy(monitor);
@@ -251,7 +252,7 @@ public class DeployProcessOperation  {
 	 * @throws ProcessDisablementException
 	 * @throws Exception
 	 */
-	protected void undeploy(IProgressMonitor monitor) throws InvalidSessionException, PageOutOfRangeException, ProcessDefinitionReadException, ProcessDefinitionNotFoundException, ProcessDeletionException, DeletingEnabledProcessException {
+	protected void undeploy(IProgressMonitor monitor) throws InvalidSessionException, PageOutOfRangeException, ProcessDefinitionReadException, ProcessDefinitionNotFoundException, ProcessDeletionException, DeletingEnabledProcessException, ProcessDisablementException {
 		for(AbstractProcess process : processes){
 			undeployProcess(process,monitor) ;
 		}
@@ -259,19 +260,14 @@ public class DeployProcessOperation  {
 
 
 
-	protected void undeployProcess(AbstractProcess process, IProgressMonitor monitor) throws InvalidSessionException, ProcessDefinitionReadException, PageOutOfRangeException, ProcessDefinitionNotFoundException, ProcessDeletionException, DeletingEnabledProcessException {
+	protected void undeployProcess(AbstractProcess process, IProgressMonitor monitor) throws InvalidSessionException, ProcessDefinitionReadException, PageOutOfRangeException, ProcessDefinitionNotFoundException, ProcessDeletionException, DeletingEnabledProcessException, ProcessDisablementException {
 		long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
 		if(nbDeployedProcesses > 0){
 			List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
 			for(ProcessDeploymentInfo info : processes){
 				if(info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())){
 					monitor.subTask(Messages.bind(Messages.undeploying,getProcessLabel(process)));
-					try{
-						processApi.disableProcess(info.getProcessId()) ;
-					}catch (ProcessDisablementException e) {
-
-					}
-					processApi.deleteProcess(info.getProcessId()) ;
+					processApi.disableAndDelete(info.getProcessId()) ;
 				}
 			}
 		}
