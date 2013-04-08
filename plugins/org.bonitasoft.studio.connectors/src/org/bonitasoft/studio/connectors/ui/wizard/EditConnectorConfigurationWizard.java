@@ -70,10 +70,9 @@ public class EditConnectorConfigurationWizard extends ConnectorWizard {
 
 				checkDefinitionDependencies(definition) ;
 
-			//	clearConnectorConfiguration(definition) ;
 				connectorWorkingCopy.setConfiguration(conf);
 				extension = findCustomWizardExtension(definition) ;
-				recreateConnectorConfigurationPages(definition);
+				recreateConnectorConfigurationPages(definition,true);
 			}
 		}
 		return super.getNextPage(page);

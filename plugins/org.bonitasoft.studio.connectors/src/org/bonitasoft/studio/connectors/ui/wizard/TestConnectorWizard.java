@@ -46,124 +46,141 @@ import org.eclipse.swt.widgets.Display;
 public class TestConnectorWizard extends ConnectorWizard {
 
 
-    public TestConnectorWizard(){
-        super((EObject)null, null, null);
-        setForcePreviousAndNextButtons(true);
-        setWindowTitle(Messages.testConnectorTitle);
-    }
+	public TestConnectorWizard(){
+		super((EObject)null, null, null);
+		setForcePreviousAndNextButtons(true);
+		setWindowTitle(Messages.testConnectorTitle);
+	}
 
-    @Override
-    protected void initializeContainment() {
-        //KEEP IT EMPTY
-    }
-
-
-    @Override
-    protected void addOuputPage(ConnectorDefinition definition) {
-        //KEEP IT EMPTY
-    }
-
-    @Override
-    protected void addNameAndDescriptionPage() {
-        //KEEP IT EMPTY
-    }
-
-    @Override
-    protected IWizardPage getOutputPageFor(ConnectorDefinition definition) {
-        return null;
-    }
-
-    @Override
-    protected void clearConnectorConfiguration(ConnectorDefinition definition) {
-        ConnectorConfiguration configuration =  connectorWorkingCopy.getConfiguration() ;
-        configuration.getParameters().clear() ;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
-    @Override
-    public boolean performFinish() {
-        final ConnectorConfiguration configuration = connectorWorkingCopy.getConfiguration();
-        final String defId = connectorWorkingCopy.getDefinitionId() ;
-        final String defVersion = connectorWorkingCopy.getDefinitionVersion() ;
-        IImplementationRepositoryStore implStore = getImplementationStore();
-        final List<ConnectorImplementation> implementations =  implStore.getImplementations(defId,defVersion);
-
-        ConnectorImplementation impl = null ;
-        if(implementations.isEmpty()){
-            Display.getDefault().syncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                    MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.noImplementationFoundTitle,Messages.bind(Messages.noImplementationFoundMsg,defId+"-"+defVersion)) ;
-                }
-            }) ;
-            return false;
-        }else if(implementations.size() == 1){
-            impl = implementations.get(0);
-        }else{
-            impl = openImplementationSelection(defId, defVersion) ;
-            if(impl == null){
-                return false;
-            }
-        }
+	@Override
+	protected void initializeContainment() {
+		//KEEP IT EMPTY
+	}
 
 
-        TestConnectorOperation operation = new TestConnectorOperation() ;
-        operation.setImplementation(impl) ;
-        operation.setConnectorConfiguration(configuration) ;
-        Object result = null ;
-        try {
-            getContainer().run(true, false, operation) ;
-            result = operation.getResult() ;
-        } catch (InvocationTargetException e) {
-            result = e ;
-            BonitaStudioLog.error(e) ;
-        } catch (InterruptedException e) {
-            result = e ;
-            BonitaStudioLog.error(e) ;
-        }
+	@Override
+	protected void addOuputPage(ConnectorDefinition definition) {
+		//KEEP IT EMPTY
+	}
+
+	@Override
+	protected void addNameAndDescriptionPage() {
+		//KEEP IT EMPTY
+	}
+
+	@Override
+	protected IWizardPage getOutputPageFor(ConnectorDefinition definition) {
+		return null;
+	}
+
+	@Override
+	protected void clearConnectorConfiguration(ConnectorDefinition definition) {
+		ConnectorConfiguration configuration =  connectorWorkingCopy.getConfiguration() ;
+		configuration.getParameters().clear() ;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
+	 */
+	@Override
+	public boolean performFinish() {
+		final ConnectorConfiguration configuration = connectorWorkingCopy.getConfiguration();
+		final String defId = connectorWorkingCopy.getDefinitionId() ;
+		final String defVersion = connectorWorkingCopy.getDefinitionVersion() ;
+		IImplementationRepositoryStore implStore = getImplementationStore();
+		final List<ConnectorImplementation> implementations =  implStore.getImplementations(defId,defVersion);
+
+		ConnectorImplementation impl = null ;
+		if(implementations.isEmpty()){
+			Display.getDefault().syncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.noImplementationFoundTitle,Messages.bind(Messages.noImplementationFoundMsg,defId+"-"+defVersion)) ;
+				}
+			}) ;
+			return false;
+		}else if(implementations.size() == 1){
+			impl = implementations.get(0);
+		}else{
+			impl = openImplementationSelection(defId, defVersion) ;
+			if(impl == null){
+				return false;
+			}
+		}
 
 
-        if(result != null){
-            TestConnectorResultDialog dialog = new TestConnectorResultDialog(Display.getDefault().getActiveShell(), result) ;
-            dialog.open() ;
-        }
-        return false; //Keep wizard open on after test operation
-    }
-
-    protected ConnectorImplementation openImplementationSelection(String defId, String defVersion) {
-        SelectConnectorImplementationWizard wizard = new SelectConnectorImplementationWizard(defId,defVersion) ;
-        WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard ) ;
-        if(dialog.open() == Dialog.OK){
-            return  wizard.getConnectorImplementation() ;
-        }
-        return null;
-    }
-
-    protected IImplementationRepositoryStore getImplementationStore() {
-        return (IImplementationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
-    }
-
-    @Override
-    public Connector getOriginalConnector() {
-        return null;
-    }
-
-    @Override
-    public ConnectorDefinition getDefinition() {
-        ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-        if(connectorWorkingCopy.getDefinitionId() != null && !connectorWorkingCopy.getDefinitionId().isEmpty()){
-            return defStore.getDefinition(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion()) ;
-        }
-
-        return null;
-    }
+		TestConnectorOperation operation = new TestConnectorOperation() ;
+		operation.setImplementation(impl) ;
+		operation.setConnectorConfiguration(configuration) ;
+		Object result = null ;
+		try {
+			getContainer().run(true, false, operation) ;
+			result = operation.getResult() ;
+		} catch (InvocationTargetException e) {
+			result = e ;
+			BonitaStudioLog.error(e) ;
+		} catch (InterruptedException e) {
+			result = e ;
+			BonitaStudioLog.error(e) ;
+		}
 
 
-    @Override
-    public boolean isEditMode() {
-        return false;
-    }
+		if(result != null){
+			TestConnectorResultDialog dialog = new TestConnectorResultDialog(Display.getDefault().getActiveShell(), result) ;
+			dialog.open() ;
+		}
+		return false; //Keep wizard open on after test operation
+	}
+
+	protected ConnectorImplementation openImplementationSelection(String defId, String defVersion) {
+		SelectConnectorImplementationWizard wizard = new SelectConnectorImplementationWizard(defId,defVersion) ;
+		WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard ) ;
+		if(dialog.open() == Dialog.OK){
+			return  wizard.getConnectorImplementation() ;
+		}
+		return null;
+	}
+
+	protected IImplementationRepositoryStore getImplementationStore() {
+		return (IImplementationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+	}
+
+	@Override
+	public Connector getOriginalConnector() {
+		return null;
+	}
+
+	@Override
+	public ConnectorDefinition getDefinition() {
+		ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+		if(connectorWorkingCopy.getDefinitionId() != null && !connectorWorkingCopy.getDefinitionId().isEmpty()){
+			return defStore.getDefinition(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion()) ;
+		}
+
+		return null;
+	}
+
+	@Override
+	public IWizardPage getNextPage(IWizardPage page) {
+		if(page.equals(selectionPage)){
+			final ConnectorDefinition definition = selectionPage.getSelectedDefinition() ;
+			checkDefinitionDependencies(definition) ;
+			extension = findCustomWizardExtension(definition) ;
+			recreateConnectorConfigurationPages(definition,false);
+		}
+		
+		List<IWizardPage> pages = getAllPageList() ;
+		int index = pages.indexOf(page);
+		if (index == pages.size() - 1 || index == -1) {
+			// last page or page not found
+			return null;
+		}
+		return pages.get(index + 1);
+	}
+
+	@Override
+	public boolean isEditMode() {
+		return false;
+	}
 }

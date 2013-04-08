@@ -18,7 +18,6 @@ package org.bonitasoft.studio.connector.model.definition.dialog;
 
 import java.util.List;
 
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -122,14 +121,12 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
                         	IWizardPage previousNamePage =  namePage.getPreviousPage() ;
                         	showPage(namePage) ;
                         	namePage.setPreviousPage(previousNamePage) ;
-                        	connectorWizard.recreateConnectorConfigurationPages(def) ;
+                        	connectorWizard.recreateConnectorConfigurationPages(def,false) ;
                         } else {
                         	IWizardPage[] wizardPages = getWizard().getPages();
                         	if(wizardPages.length > 1){
-                        		IWizardPage firstPage = wizardPages[1];
-                        		showPage(firstPage);
-                        		connectorWizard.recreateConnectorConfigurationPages(def) ;
-                        		//showPage(firstPage.getNextPage());
+                        		IWizardPage firstPage = wizardPages[0];
+                        		showPage(firstPage.getNextPage());
                         	}
                         }
                         

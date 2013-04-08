@@ -63,7 +63,7 @@ public abstract class ExtensibleWizard extends Wizard {
         additionalPages.clear() ;
     }
 
-    private List<IWizardPage> getAllPageList(){
+    protected List<IWizardPage> getAllPageList(){
         IWizardPage[] pages =  super.getPages();
         List<IWizardPage> result = new ArrayList<IWizardPage>(Arrays.asList(pages)) ;
         result.addAll(additionalPages) ;

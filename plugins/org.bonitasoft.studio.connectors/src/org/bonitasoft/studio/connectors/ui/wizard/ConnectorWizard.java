@@ -100,7 +100,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	protected Connector originalConnector;
 	protected final Set<EStructuralFeature> featureToCheckForUniqueID ;
 	protected final EStructuralFeature connectorContainmentFeature;
-	private SelectConnectorDefinitionWizardPage selectionPage;
+	protected SelectConnectorDefinitionWizardPage selectionPage;
 	private SelectNameAndDescWizardPage namePage;
 	private DefinitionResourceProvider messageProvider;
 	protected CustomWizardExtension extension;
@@ -297,9 +297,9 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 			checkDefinitionDependencies(definition) ;
 
-			clearConnectorConfiguration(definition) ;
+			
 			extension = findCustomWizardExtension(definition) ;
-			recreateConnectorConfigurationPages(definition);
+			recreateConnectorConfigurationPages(definition,true);
 		}
 		return super.getNextPage(page);
 	}
@@ -342,7 +342,10 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	}
 
 	@Override
-	public void recreateConnectorConfigurationPages(final ConnectorDefinition definition) {
+	public void recreateConnectorConfigurationPages(final ConnectorDefinition definition, boolean clearConfiguration) {
+		if(clearConfiguration){
+			clearConnectorConfiguration(definition) ;
+		}
 		List<IWizardPage> pages = getPagesFor(definition) ;
 
 		//Remove already generated page in case of return
