@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test for Java connector wizard
 Bundle-SymbolicName: org.bonitasoft.studio.connector.wizard.java.test
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 6.0.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.bonitasoft.studio.connector.wizard.java.test
