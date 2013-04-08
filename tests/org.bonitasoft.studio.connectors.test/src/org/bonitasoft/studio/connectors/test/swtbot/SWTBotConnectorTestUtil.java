@@ -29,19 +29,13 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 /**
- * @author Aurï¿½lie Zara
+ * @author AurŽlie Zara
  * 
- */
-/**
- * @author aurelie
- *
- */
-/**
- * @author aurelie
- *
  */
 public class SWTBotConnectorTestUtil {
 
+	private static SWTBotTreeItem categoryItem;
+	
     /**
      * use it to access to the wizard "New definition..." (menu
      * DEvelopement>Connectors>New definition...)
@@ -228,10 +222,13 @@ public class SWTBotConnectorTestUtil {
                 .button(IDialogConstants.NEXT_LABEL).isEnabled());
         Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
                 .button(IDialogConstants.FINISH_LABEL).isEnabled());
+        categoryItem = null;
         bot.waitUntil(new ICondition() {
 
+		
+
 			public boolean test() throws Exception {
-				SWTBotTreeItem categoryItem = bot.tree().expandNode(categoryLabel);
+				categoryItem = bot.tree().expandNode(categoryLabel);
 				return !categoryItem.getNodes().isEmpty();
 			}
 
@@ -244,7 +241,7 @@ public class SWTBotConnectorTestUtil {
 			}
 		},10000,1000);
         
-       SWTBotTreeItem categoryItem = bot.tree().expandNode(categoryLabel);
+
        String cNode = null;
        for(String node : categoryItem.getNodes()){
     	   if(node.startsWith(connectorDefinitionLabel + " (" + version + ")")){
@@ -257,7 +254,7 @@ public class SWTBotConnectorTestUtil {
        bot.waitUntil(new ICondition() {
 
 			public boolean test() throws Exception {
-				bot.tree().select(categoryLabel).expandNode(categoryLabel).select(nodeToSelect);
+				categoryItem.select(nodeToSelect);
 				String selection = bot.tree().selection().get(0,0);
 				return selection != null &&  selection.startsWith(connectorDefinitionLabel);
 			}
