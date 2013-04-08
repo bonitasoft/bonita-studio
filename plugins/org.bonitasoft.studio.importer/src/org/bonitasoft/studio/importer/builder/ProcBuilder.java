@@ -680,8 +680,6 @@ public class ProcBuilder implements IProcBuilder {
 
         commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getElement_Name(), name)) ;
 
-
-        processIds.put((AbstractProcess) createdElement, id) ;
         currentContainer = createdElement ;
         currentStep = createdElement ;
         currentElement = createdElement ;
