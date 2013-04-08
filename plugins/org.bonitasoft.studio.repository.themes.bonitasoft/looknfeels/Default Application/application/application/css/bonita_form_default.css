@@ -118,6 +118,7 @@ button.bonita_form_button + button.bonita_form_button {
 }
 .bonita_form_field.list_container{
 	background: url(../images/form-select.png) no-repeat right center;
+	overflow: hidden;
 }
 
 input.bonita_form_field, select.bonita_form_field, select.bonita_datetime_list_item, .bonita_form_field.list_container {
