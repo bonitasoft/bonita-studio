@@ -108,13 +108,7 @@ public class ImportBosArchiveOperation {
                 return new Status(IStatus.ERROR,CommonRepositoryPlugin.PLUGIN_ID,Messages.invalidArchive);
             }
 
-            Properties manifestProperties = getManifestInfo(container);
-            if(manifestProperties != null){
-                final String version = manifestProperties.getProperty(ExportBosArchiveOperation.VERSION);
-                String toOpen = manifestProperties.getProperty(ExportBosArchiveOperation.TO_OPEN);
-                String[] array = toOpen.split(",");
-                resourceToOpen = new HashSet<String>(Arrays.asList(array));
-            }
+            updateResourcesToOpenList(container);
             FileActionDialog.activateYesNoToAll() ;
             final IResource[] folders = container.members(IContainer.FOLDER);
             final List<IResource> folderSortedList = new ArrayList<IResource>(Arrays.asList(folders));
@@ -165,23 +159,37 @@ public class ImportBosArchiveOperation {
         } catch (Exception e) {
             BonitaStudioLog.error(e);
         }finally{
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot() ;
-            IProject container = root.getProject(TMP_IMPORT_PROJECT) ;
-            if(container.exists()){
-                try {
-                    container.close( Repository.NULL_PROGRESS_MONITOR);
-                    container.refreshLocal(IResource.DEPTH_ZERO,  Repository.NULL_PROGRESS_MONITOR);
-                    container.delete(true, true, Repository.NULL_PROGRESS_MONITOR);
-                    container.refreshLocal(IResource.DEPTH_ZERO,  Repository.NULL_PROGRESS_MONITOR);
-                } catch (CoreException e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
+            cleanTmpProject();
         }
 
 
         return  status;
     }
+
+	private void updateResourcesToOpenList(IContainer container) {
+		Properties manifestProperties = getManifestInfo(container);
+		if(manifestProperties != null){
+		    final String version = manifestProperties.getProperty(ExportBosArchiveOperation.VERSION);
+		    String toOpen = manifestProperties.getProperty(ExportBosArchiveOperation.TO_OPEN);
+		    String[] array = toOpen.split(",");
+		    resourceToOpen = new HashSet<String>(Arrays.asList(array));
+		}
+	}
+
+	private void cleanTmpProject() {
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot() ;
+		IProject container = root.getProject(TMP_IMPORT_PROJECT) ;
+		if(container.exists()){
+		    try {
+		        container.close( Repository.NULL_PROGRESS_MONITOR);
+		        container.refreshLocal(IResource.DEPTH_ZERO,  Repository.NULL_PROGRESS_MONITOR);
+		        container.delete(true, true, Repository.NULL_PROGRESS_MONITOR);
+		        container.refreshLocal(IResource.DEPTH_ZERO,  Repository.NULL_PROGRESS_MONITOR);
+		    } catch (CoreException e) {
+		        BonitaStudioLog.error(e);
+		    }
+		}
+	}
 
     protected IContainer createTempProject(final File archive,IProgressMonitor monitor) throws CoreException {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot() ;
