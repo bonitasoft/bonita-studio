@@ -128,6 +128,7 @@ public class Messages extends NLS {
 	public static String noActionRequired;
 	public static String reviewRequired;
 	public static String actionRequired;
+	public static String migrationReportOf;
 	
 
     static {

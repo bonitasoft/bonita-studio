@@ -112,13 +112,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
 		final URI resourceURI = resource.getURI();
 		final File tmpFile = new File(resource.getURI().toFileString());
 		String nsURI = ReleaseUtils.getNamespaceURI(resourceURI);
-		Migrator targetMigrator = migrator;
-		if(migrator.getNsURIs().contains(nsURI) ){
-			targetMigrator = migrator;
-		}else{
-			targetMigrator = MigratorRegistry.getInstance().getMigrator(nsURI);
-		}
-
+		Migrator targetMigrator = getMigrator(nsURI);
 		if (targetMigrator != null) {
 			Release release =  getRelease(targetMigrator,resource);
 			if (release != null && !release.isLatestRelease()) {
@@ -155,6 +149,20 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
 		tmpFile.delete();
 		copyIs.close();
 		return originalStream;
+	}
+
+	/**
+	 * @param nsURI
+	 * @return
+	 */
+	public Migrator getMigrator(String nsURI) {
+		Migrator targetMigrator = migrator;
+		if(migrator.getNsURIs().contains(nsURI) ){
+			targetMigrator = migrator;
+		}else{
+			targetMigrator = MigratorRegistry.getInstance().getMigrator(nsURI);
+		}
+		return targetMigrator;
 	}
 
 	protected Release getRelease(Migrator targetMigrator, Resource resource) {

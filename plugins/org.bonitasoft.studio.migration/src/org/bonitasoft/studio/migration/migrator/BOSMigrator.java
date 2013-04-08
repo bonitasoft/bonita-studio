@@ -187,48 +187,6 @@ public class BOSMigrator  {
 		} catch (IOException e) {
 			throw new MigrationException("Model could not be saved", e);
 		}
-		URI uri = modelURIs.get(0);
-		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
-	    final Resource resource = editingDomain.getResourceSet().createResource(uri);
-	    try {
-			resource.load(Collections.EMPTY_MAP);
-			AbstractEMFOperation emfOperation = new AbstractEMFOperation(editingDomain, "Update report") {
-				
-				@Override
-				protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info)
-						throws ExecutionException {
-					final Report report = getReport();
-					String diagramName = "";
-					for(EObject root : resource.getContents()){
-						if(root instanceof MainProcess){
-							diagramName = ((MainProcess) root).getName()+"--"+((MainProcess) root).getVersion();
-						}
-					}
-					report.setName(Messages.bind(Messages.migrationReportOf,diagramName));
-					report.setSourceRelease(sourceRelease.getLabel());
-					
-					if(targetRelease != null){
-						report.setTargetRelease(targetRelease.getLabel());
-					}else{
-						report.setTargetRelease(Messages.currentVersion);
-					}
-					
-					resource.getContents().add(report);
-					return Status.OK_STATUS;
-				}
-			};
-			IOperationHistory history = PlatformUI.getWorkbench().getOperationSupport().getOperationHistory();
-			try {
-				history.execute(emfOperation, monitor, null);
-			} catch (ExecutionException e) {
-				BonitaStudioLog.error(e);
-			}
-			resource.save(Collections.emptyMap());
-			resource.unload();
-			editingDomain.dispose();
-		} catch (IOException e) {
-			throw new MigrationException("Model could not be loaded", e);
-		}
 	}
 
 	/**
@@ -291,10 +249,6 @@ public class BOSMigrator  {
 					numberOfSteps(sourceRelease, targetRelease));
 			EcoreForwardReconstructor reconstructor = new EcoreForwardReconstructor(
 					URI.createFileURI("test"));
-//			MigrationReconstructor migrationReconstructor = new MigrationReconstructor(
-//					modelURIs, sourceRelease, targetRelease, monitor,
-//					classLoader, level);
-//			reconstructor.addReconstructor(migrationReconstructor);
 			reportReconstructor = new BOSReportReconstructor(modelURIs, sourceRelease, targetRelease, monitor,
 					classLoader, level);
 			reconstructor.addReconstructor(reportReconstructor);
