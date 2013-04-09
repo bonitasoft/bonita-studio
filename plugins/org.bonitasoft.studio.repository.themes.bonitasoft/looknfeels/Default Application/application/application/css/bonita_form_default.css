@@ -52,7 +52,7 @@ button.bonita_form_button {
 	background: linear-gradient(to bottom,	#3d3d3d 0%, #272727 100%);
 	cursor: pointer;
 	color: #ffffff;
-	padding: 5px 10px;
+	padding: 0px 2px;
 	outline-color: #F9F9F9;
 	min-width: 90px;
 	border: 1px solid #B9B9B9;
@@ -674,3 +674,4 @@ div#bonita-object-area-from {
 select.bonita_form_field[multiple]{
 	height: auto;
 }
+
