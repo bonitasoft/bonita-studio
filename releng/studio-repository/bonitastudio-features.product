@@ -61,12 +61,12 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
    </plugins>
 
    <features>
-      <feature id="studio-feature" version="1.0.0.qualifier"/>
-      <feature id="platform-specific-feature" version="1.0.0.qualifier"/>
+      <feature id="studio-feature" version="6.0.0.qualifier"/>
+      <feature id="platform-specific-feature" version="6.0.0.qualifier"/>
       <feature id="org.eclipse.rcp"/>
-      <feature id="studio-bos-specific-feature" version="1.0.0.qualifier"/>
-      <feature id="bos-branding-feature" version="1.0.0.qualifier"/>
-      <feature id="rootfiles-feature" version="1.0.0.qualifier"/>
+      <feature id="studio-bos-specific-feature" version="6.0.0.qualifier"/>
+      <feature id="bos-branding-feature" version="6.0.0.qualifier"/>
+      <feature id="rootfiles-feature" version="6.0.0.qualifier"/>
    </features>
 
    <configurations>
