@@ -23,12 +23,8 @@ public final class Messages extends NLS {
 
     private static final String BUNDLE_NAME = "messages";//$NON-NLS-1$
 
-    public static String functionsTitleLabel;
-    public static String testGroupLabel ;
     public static String testButtonLabel;
     public static String initVariable;
-    public static String operatorTitleLabel;
-
     public static String functionDocTitle;
 
     public static String functionTitle;
@@ -45,14 +41,11 @@ public final class Messages extends NLS {
     public static String notEqualTooltip;
     public static String greaterThanOrEqualsTooltip;
     public static String greaterThanTooltip;
-    public static String dataTitleLabel;
     public static String evaluationErrorTitle;
     public static String saveWizardPageTitle;
     public static String saveWizardPageMessage;
     public static String saveWizardPageDescription;
     public static String nameLabel;
-    public static String saveMethodLabel;
-    public static String noMethodLabel;
     public static String overwriteQuestionTitle;
     public static String overwriteQuestionMessage;
     public static String openScriptWizardPage_title;
@@ -64,14 +57,9 @@ public final class Messages extends NLS {
     public static String warningLooseCurrentWorkTitle;
     public static String warningLooseCurrentWorkMessage;
     public static String noProcessVariableAvailable;
-    public static String classesNotSupportedTitle;
-    public static String classesNotSupportedMessage;
     public static String groovyEditorTitle;
     public static String noVariableToSetTitle;
     public static String noVariableToSetMessage;
-    public static String browseButtonLabel;
-    public static String unsupportesTypeTitle;
-    public static String unsupportesTypeMessage;
     public static String saveSuccesfullTitle;
     public static String saveSuccesfullMessage;
     public static String clearLabel;
@@ -79,16 +67,9 @@ public final class Messages extends NLS {
     public static String clearContentMessage;
     public static String processVariableLabel;
     public static String bonitaKeyWord;
-    public static String userDefinedCatLabel;
-    public static String stringCatLabel;
-    public static String numberCatLabel;
-    public static String collectionCatLabel;
-    public static String otherCatLabel;
     public static String bonitaCatLabel;
     public static String selectData;
     public static String groovyDocumentationLink;
-    public static String _UI_TOOLTIP_RESTORE_PANE;
-    public static String _UI_TOOLTIP_HIDE_PANE;
 
     public static String editorButtonLabel;
     public static String showPassword;
@@ -106,11 +87,7 @@ public final class Messages extends NLS {
     public static String readMultipleData_index;
     public static String readMultipleData_size;
 
-    public static String impossibleToOpenEditorTitle;
-    public static String impossibleToOpenEditorMsg;
-
     public static String wrongName;
-    public static String documentationMandatory;
     public static String scriptNameMustBeValid;
 
     public static String createScript;
@@ -119,20 +96,10 @@ public final class Messages extends NLS {
 
     public static String warning;
     public static String warningMessageSystemExit;
-
-    public static String editInFullEditor;
-
-    public static String showDependencies;
     public static String scriptEvaluation ;
-    public static String dependencies;
     public static String returnType;
-    public static String browse;
     public static String add;
     public static String remove;
-
-    public static String groovyScript;
-    public static String selectGroovyScriptToExport;
-
     public static String automaticResolution;
 
     public static String SelectProcessVariableLabel;
