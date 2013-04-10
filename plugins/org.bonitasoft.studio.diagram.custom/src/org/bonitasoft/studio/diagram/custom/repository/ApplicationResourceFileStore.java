@@ -44,8 +44,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edapt.common.EcoreUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -96,7 +94,6 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
 	};
 
 	private static final String PREVIEW_JPG = "preview.jpg";
-	private static final String PREVIEW_PNG = "preview.png";
 	private static final String File_EXTENSION = ".html";
 	private static final String HTML_FOLDER = "html";
 	private static final String RESOURCE_FOLDER = "application";
@@ -110,7 +107,7 @@ public class ApplicationResourceFileStore extends AbstractFileStore implements I
 	private static final String HOST_PAGE = "BonitaApplication.html";
 
 
-	public ApplicationResourceFileStore(String processUUID,IRepositoryStore store){
+	public ApplicationResourceFileStore(String processUUID,IRepositoryStore<?> store){
 		super(processUUID, store) ;
 		if(!getResource().exists()){
 			try {
