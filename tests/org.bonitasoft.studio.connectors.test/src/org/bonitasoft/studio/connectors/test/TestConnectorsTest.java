@@ -18,12 +18,23 @@
 package org.bonitasoft.studio.connectors.test;
 
 
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
+import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotStyledText;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.bonitasoft.studio.dependencies.i18n.Messages.selectMissingJarTitle;
 
 
 /**
@@ -53,34 +64,62 @@ public class TestConnectorsTest extends SWTBotGefTestCase {
      * @throws InterruptedException
      */
     @Test
-    @Ignore
     public void testTestGroovyConnector() throws InterruptedException {
-
-        //        SWTBotMenu menu = bot.menu("Connectors");
-        //        menu.menu("Test a Connector").click();
-        //
-        //        SWTBotShell shell = bot.shell("Test a Connector");
-        //        shell.activate();
-        //        bot.tree().select("Connectors");
-        //        bot.button("Next >").click();
-        //        bot.tree().expandNode("Scripting").select("Groovy -- Execute a Groovy script").click();
-        //
-        //        ConnectorConfRepositoryStore ccrs = (ConnectorConfRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
-        //        fail();
-        //		if(ccrs.getConnectorConfigurationsFor("GroovyConnector", "1.0").size() > 0)
-        //		bot.button("Next >").click();//pass through the page asking to reuse configuration
-        //		bot.button("Next >").click();
-        //		bot.text().setText("\"test string\"");
-        //		bot.button("Evaluate").click();
-        //		bot.shell("Results").activate();
-        //		System.out.println(bot.text().getText());
-        //		assertEquals("test string",bot.text().getText());
-        //		bot.button("Back").click();
-        //		bot.button("Close").click();
+    	SWTBotTestUtil.addDataType(bot, "voiture", "Voiture");
+    	
+    	String groovyScript = "import org.bonitasoft.voiture.Voiture;\nVoiture v=new Voiture();\nv.setAttr(\"\")\nreturn v;";
+    	testingGroovyConnector(bot, groovyScript, "org.bonitasoft.voiture", "Voiture : Voiture  [attr: ]");
     }
 
+	/**
+	 * 
+	 */
+	protected void testingGroovyConnector(SWTGefBot bot, String groovyScript, String jarToSelect, String result) {
+		bot.menu("Development").menu("Connectors").menu("Test connector...").click();
+    	bot.waitUntil(Conditions.shellIsActive("Test connector"));
+    	final SWTBotTreeItem script = bot.tree().getTreeItem("Script").expand();
+
+    	String grovyScript = null;
+    	for (String child : script.getNodes()) {
+    		if (child.contains("Groovy")) {
+    			grovyScript = child;
+    			break;
+    		}
+    	}
+    	script.getNode(grovyScript).select();
+    	Assert.assertTrue("Next button should be enabled.", bot.button("Next >").isEnabled());
+    	bot.button("Next >").click();
+    	SWTBotStyledText groovyText = bot.styledText();
+    	Assert.assertNotNull("StyledText not found", groovyText);
+    	groovyText.setText(groovyScript);
+    	Assert.assertTrue("Test button should be enabled.", bot.button("Test").isEnabled());
+    	bot.button("Test").click();
+
+    	bot.waitUntil(Conditions.shellIsActive(selectMissingJarTitle));
+    	SWTBotTable table = bot.table();
+    	Assert.assertNotNull("Jar Table is not found.", table);
+    	if(jarToSelect.isEmpty()){
+    		table.getTableItem(0).check();
+    	}else{
+    		table.getTableItem(jarToSelect).check();
+    	}
+    	bot.button(IDialogConstants.OK_LABEL).click();
+
+    	ConnectorConfRepositoryStore ccrs = (ConnectorConfRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
+    	if(ccrs.getFilterConfigurationsFor("GroovyConnector", "1.0").size() > 0)
+		bot.button(IDialogConstants.FINISH_LABEL).click();
+    	
+    	bot.waitUntil(Conditions.shellIsActive("Results"), 5000);
+    	
+    	assertEquals("Invalid ", bot.tree().getAllItems()[0].getText(), result);
+    	
+    	bot.button("< Back").click();
 
 
+    	bot.button(IDialogConstants.CANCEL_LABEL).click();
+	}
 
+
+    
 }
 

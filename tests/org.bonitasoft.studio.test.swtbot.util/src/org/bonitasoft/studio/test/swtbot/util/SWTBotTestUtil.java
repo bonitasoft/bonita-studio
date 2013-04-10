@@ -889,4 +889,28 @@ public class SWTBotTestUtil implements SWTBotConstants{
         
 	}
 	
+	public static void addDataType(SWTGefBot bot, String packageName , String dataTypeName) {
+		bot.menu("Development").menu("Data types").menu("New data type...").click();
+		bot.waitUntil(Conditions.shellIsActive("New data type"));
+		
+		bot.textWithLabel("Name",0).setText(packageName);
+		
+		bot.textWithLabel("Name",1).setText(dataTypeName);
+		bot.button(IDialogConstants.OK_LABEL).click();
+		
+		bot.waitUntil(Conditions.shellIsActive("Manage data types"));
+		bot.tree().select(packageName);
+		
+		bot.button("Create as JAR").click();
+		bot.waitUntil(Conditions.shellIsActive("Create as JAR"));
+		bot.button(IDialogConstants.OK_LABEL).click();
+
+		bot.waitUntil(Conditions.shellIsActive("Generation successful"), 60000);
+		
+		bot.button(IDialogConstants.OK_LABEL).click();
+		bot.button(IDialogConstants.FINISH_LABEL).click();
+		
+	}
+	
+	
 }

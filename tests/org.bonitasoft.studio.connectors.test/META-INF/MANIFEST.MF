@@ -37,3 +37,4 @@ Export-Package: org.bonitasoft.studio.connectors.test,
  org.bonitasoft.studio.connectors.test.exporter,
  org.bonitasoft.studio.connectors.test.importer,
  org.bonitasoft.studio.connectors.test.swtbot
+Import-Package: org.bonitasoft.studio.dependencies.i18n

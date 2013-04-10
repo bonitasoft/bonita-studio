@@ -43,7 +43,7 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
         final AvailableExpressionTypeFilter leftFilter =  new AvailableExpressionTypeFilter(new String[]{ 
                 ExpressionConstants.VARIABLE_TYPE}) ;
         final AvailableExpressionTypeFilter rightFilter =  new AvailableExpressionTypeFilter(new String[]{ 
-        		ExpressionConstants.CONSTANT_TYPE,
+        		 ExpressionConstants.CONSTANT_TYPE,
         		ExpressionConstants.CONNECTOR_OUTPUT_TYPE,
         		ExpressionConstants.VARIABLE_TYPE,
         		ExpressionConstants.PARAMETER_TYPE,

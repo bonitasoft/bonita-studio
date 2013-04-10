@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
@@ -44,6 +45,7 @@ import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
@@ -59,7 +61,10 @@ import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
+import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.DefinitionMapping;
+import org.bonitasoft.studio.model.configuration.Fragment;
+import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.configuration.util.ConfigurationAdapterFactory;
 import org.bonitasoft.studio.model.configuration.util.ConfigurationResourceFactoryImpl;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
@@ -69,13 +74,17 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -96,7 +105,8 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     private ConnectorConfiguration connectorConfiguration;
     private final Map<String, Map<String, Serializable>> inputValues = new HashMap<String, Map<String,Serializable>>() ;
     private static final ConnectorsConfigurationSynchronizer CONNECTORS_CONFIGURATION_SYNCHRONIZER = new ConnectorsConfigurationSynchronizer();
-
+    private Set<IRepositoryFileStore> additionalJars;
+    
     /* (non-Javadoc)
      * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
      */
@@ -115,7 +125,6 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
             processApi = BOSEngineManager.getInstance().getProcessAPI(session);
             Assert.isNotNull(processApi) ;
-            processApi.getNumberOfProcesses();
             final AbstractProcess proc = createAbstractProcess(implementation);
 
             final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
@@ -185,31 +194,42 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             }
         }
         //Add jars from managed jars to dependency list of the process used to test the connector
-        
-//        for(FragmentContainer fc : configuration.getProcessDependencies()){
-//            if(FragmentTypes.OTHER.equals(fc.getId())){
-//                final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
-//                if(libFolder.exists()){
-//                    try {
-//                        for(IResource f : libFolder.members()){
-//                            if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar")){
-//                                Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
-//                                fragment.setExported(true);
-//                                fragment.setKey(f.getName());
-//                                fragment.setValue(f.getName());
-//                                fragment.setType(FragmentTypes.JAR);
-//                                AdapterFactoryEditingDomain domain = createEditingDomain();
-//                             //   domain.getCommandStack().execute(AddCommand.create(domain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, fragment));
-//                            }
-//                        }
-//                    } catch (CoreException e) {
-//                        BonitaStudioLog.error(e);
-//                    }
-//                }
-//            }
-//        }
+    	if(additionalJars!=null){
+    		for(FragmentContainer fc : configuration.getProcessDependencies()){
+    			if(FragmentTypes.OTHER.equals(fc.getId())){
+    				final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
+    				if(libFolder.exists()){
+    					try {
+    						for(IResource f : libFolder.members()){
+    							if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar") && isSelectedJar(((IFile)f).getName())){
+    								Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
+    								fragment.setExported(true);
+    								fragment.setKey(f.getName());
+    								fragment.setValue(f.getName());
+    								fragment.setType(FragmentTypes.JAR);
+    								AdapterFactoryEditingDomain domain = createEditingDomain();
+    								domain.getCommandStack().execute(AddCommand.create(domain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, fragment));
+    							}
+    						}
+    					} catch (CoreException e) {
+    						BonitaStudioLog.error(e);
+    					}
+    				}
+    			}
+    		}
+    	}
     }
 
+    
+    private boolean isSelectedJar(String fileName){
+    	for(IRepositoryFileStore fileStore : additionalJars){
+    		if(fileStore.getName().equals(fileName)){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     private AdapterFactoryEditingDomain createEditingDomain() {
         ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
         adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
@@ -297,5 +317,13 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             addInputParameters(parameter.getKey(), parameter.getExpression()) ;
         }
     }
+
+	public Set<IRepositoryFileStore> getAdditionalJars() {
+		return additionalJars;
+	}
+
+	public void setAdditionalJars(Set<IRepositoryFileStore> additionalJars) {
+		this.additionalJars = additionalJars;
+	}
 
 }

@@ -40,6 +40,8 @@ public class Messages extends NLS {
     public static String informationDeleteJarTitle;
     public static String informationDeleteJarMessage;
     public static String search;
+	public static String popUpMessage;
+	public static String selectMissingJarTitle;
 
 
 }

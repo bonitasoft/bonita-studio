@@ -26,9 +26,11 @@ import org.bonitasoft.studio.connector.model.implementation.IImplementationRepos
 import org.bonitasoft.studio.connectors.configuration.SelectConnectorImplementationWizard;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
+import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -61,7 +63,10 @@ public class TestConfigurationListener implements ITestConfigurationListener {
         final String defVersion = configuration.getVersion() ;
         final List<ConnectorImplementation> implementations =  implStore.getImplementations(defId,defVersion);
 
-        ConnectorImplementation impl = null ;
+    	ManageConnectorJarDialog jd = new ManageConnectorJarDialog(Display.getDefault().getActiveShell()) ;
+		int retCode =jd.open();
+		
+		ConnectorImplementation impl = null ;
         if(implementations.isEmpty()){
             Display.getDefault().syncExec(new Runnable() {
 
@@ -80,7 +85,7 @@ public class TestConfigurationListener implements ITestConfigurationListener {
             }
         }
 
-
+        if(retCode == Window.OK){
         TestConnectorOperation operation = new TestConnectorOperation() ;
         operation.setImplementation(impl) ;
         operation.setConnectorConfiguration(configuration) ;
@@ -101,7 +106,7 @@ public class TestConfigurationListener implements ITestConfigurationListener {
             TestConnectorResultDialog dialog = new TestConnectorResultDialog(Display.getDefault().getActiveShell(), result) ;
             dialog.open() ;
         }
-
+        }
     }
 
     protected ConnectorImplementation openImplementationSelection(String defId,String defVersion) {

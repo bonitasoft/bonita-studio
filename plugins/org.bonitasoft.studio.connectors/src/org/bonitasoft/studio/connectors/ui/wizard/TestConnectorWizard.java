@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard;
 
+import org.eclipse.jface.window.Window;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.TestConnectorResultDialog;
+import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.emf.ecore.EObject;
@@ -90,6 +92,9 @@ public class TestConnectorWizard extends ConnectorWizard {
 		IImplementationRepositoryStore implStore = getImplementationStore();
 		final List<ConnectorImplementation> implementations =  implStore.getImplementations(defId,defVersion);
 
+		ManageConnectorJarDialog jd = new ManageConnectorJarDialog(getShell()) ;
+		int retCode =jd.open();
+
 		ConnectorImplementation impl = null ;
 		if(implementations.isEmpty()){
 			Display.getDefault().syncExec(new Runnable() {
@@ -109,26 +114,28 @@ public class TestConnectorWizard extends ConnectorWizard {
 			}
 		}
 
+		if(retCode == Window.OK){
+			TestConnectorOperation operation = new TestConnectorOperation() ;
+			operation.setImplementation(impl) ;
+			operation.setConnectorConfiguration(configuration) ;
+			operation.setAdditionalJars(jd.getSelectedJars());
+			Object result = null ;
+			try {
+				getContainer().run(true, false, operation) ;
+				result = operation.getResult() ;
+			} catch (InvocationTargetException e) {
+				result = e ;
+				BonitaStudioLog.error(e) ;
+			} catch (InterruptedException e) {
+				result = e ;
+				BonitaStudioLog.error(e) ;
+			}
 
-		TestConnectorOperation operation = new TestConnectorOperation() ;
-		operation.setImplementation(impl) ;
-		operation.setConnectorConfiguration(configuration) ;
-		Object result = null ;
-		try {
-			getContainer().run(true, false, operation) ;
-			result = operation.getResult() ;
-		} catch (InvocationTargetException e) {
-			result = e ;
-			BonitaStudioLog.error(e) ;
-		} catch (InterruptedException e) {
-			result = e ;
-			BonitaStudioLog.error(e) ;
-		}
 
-
-		if(result != null){
-			TestConnectorResultDialog dialog = new TestConnectorResultDialog(Display.getDefault().getActiveShell(), result) ;
-			dialog.open() ;
+			if(result != null){
+				TestConnectorResultDialog dialog = new TestConnectorResultDialog(Display.getDefault().getActiveShell(), result) ;
+				dialog.open() ;
+			}
 		}
 		return false; //Keep wizard open on after test operation
 	}
