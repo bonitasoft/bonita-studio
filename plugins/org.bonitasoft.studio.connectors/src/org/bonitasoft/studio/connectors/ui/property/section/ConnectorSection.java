@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-
+import static org.bonitasoft.studio.common.Messages.bosProductName;
 /**
  * 
  * @author Romain Bioteau
@@ -384,7 +384,7 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 
 	@Override
 	public String getSectionDescription() {
-		return Messages.connectorSectionDescription;
+		return Messages.bind(Messages.connectorSectionDescription, bosProductName);
 	}
 	
 	@Override
