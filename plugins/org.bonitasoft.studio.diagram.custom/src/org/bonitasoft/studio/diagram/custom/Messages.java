@@ -40,7 +40,6 @@ public class Messages extends NLS {
     public static String selectedItemsNotInSameProcess;
     public static String severalSubprocessEntryPoints;
     public static String cannotExtractSubprocessMessage;
-    public static String extractedSubprocess;
     public static String boundaryTool;
     public static String switchTool;
     public static String copyOfLabel;
@@ -51,19 +50,15 @@ public class Messages extends NLS {
     public static String OpenProcessButtonLabel ;
     public static String openProcessWizardPage_title;
     public static String openProcessWizardPage_desc;
-    public static String openExampleProcessWizardPage_title;
-    public static String openExampleProcessWizardPage_desc;
     public static String removeProcessLabel;
     public static String confirmProcessOverrideMessage;
     public static String confirmProcessOverrideTitle;
     public static String openingDiagramProgressText;
     public static String confirmProcessDeleteMessage;
     public static String confirmProcessDeleteTitle;
-    public static String openContributionForMoreExamples;
     public static String configurations;
     public static String applicationResources;
     public static String invalidResourceFileName_message;
-    public static String invalidResourceFileName_title;
     public static String defaultLaneName;
     public static String initiatorDescription;
     public static String configuration;
@@ -74,5 +69,6 @@ public class Messages extends NLS {
 	public static String deleteMessageFlow;
 	public static String readOnlyFileTitle;
 	public static String readOnlyFileWarning;
+	public static String invalidResourceFileName_title;
 
 }
