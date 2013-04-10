@@ -37,7 +37,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
-
+import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
 /**
  * @author Romain Bioteau
  *
@@ -52,7 +52,7 @@ public class SynchronizeOrganizationWizardPage extends WizardPage implements ISe
     public SynchronizeOrganizationWizardPage() {
         super(SynchronizeOrganizationWizardPage.class.getName());
         setTitle(Messages.synchronizeOrganizationTitle) ;
-        setDescription(Messages.synchronizeOrganizationDesc) ;
+        setDescription(Messages.bind(Messages.synchronizeOrganizationDesc, new Object[]{bonitaPortalModuleName})) ;
         organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
     }
 
