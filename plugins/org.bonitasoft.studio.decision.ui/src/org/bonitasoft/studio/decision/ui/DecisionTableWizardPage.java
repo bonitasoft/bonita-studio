@@ -36,14 +36,12 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
@@ -71,35 +69,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.emf.databinding.EMFDataBindingContext;
 
 /**
  * @author Mickael Istria
  *
  */
 public class DecisionTableWizardPage extends WizardPage {
-
-	/**
-	 * @author Mickael Istria
-	 *
-	 */
-	private final class ComparisonSymbolsLabelProvider extends LabelProvider {
-		@Override
-		public String getText(Object element) {
-			if ("==".equals(element)) {
-				return "=";
-			} else if ("!=".equals(element)) {
-				return "\u2260";
-			} else if ("<=".equals(element)) {
-				return "\u2264";
-			} else if (">=".equals(element)) {
-				return "\u2265";
-			} else {
-				return super.getText(element);
-			}
-		}
-	}
-	private ComparisonSymbolsLabelProvider symbolsLabelProvider = new ComparisonSymbolsLabelProvider();
 
 	/**
 	 * 
@@ -110,10 +85,8 @@ public class DecisionTableWizardPage extends WizardPage {
 	 */
 	private static final Color GRAY = new Color(Display.getCurrent(), 140, 140, 140);
 
-	private TransactionalEditingDomain editingDomain;
 	private DecisionTableLine lineWorkingCopy;
 	private DecisionTableLine toEditLine;
-	private EMFDataBindingContext dataBindingContext;
 
 	private Element container;
 	private DecisionTableWizard wizard;

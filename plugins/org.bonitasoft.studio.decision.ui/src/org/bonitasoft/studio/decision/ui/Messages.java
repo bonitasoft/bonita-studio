@@ -26,16 +26,10 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 
 	public static String errorMessageNoConditionForLineInDecisionTable;
-	public static String assertMessage;
-	public static String assertNotMessage;
-	public static String ignoreMessage;
 	public static String wizardPageTitle;
 	public static String wizardPageDesc;
 	public static String addCondition;
-	public static String add;
 	public static String addRow;
-	public static String label;
-	public static String result;
 	public static String defaultLine;
 	public static String table;
 	public static String deleteLineTitle;
@@ -44,8 +38,6 @@ public class Messages extends NLS {
 	public static String and;
 	public static String takeTransition;
 	public static String updateLine;
-	public static String clear;
-	public static String swapLabel;
 	public static String dontTakeTransition;
 	public static String tableDescriptionLabel;
 	public static String selectALine;
