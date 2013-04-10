@@ -55,7 +55,8 @@ import org.eclipse.ui.internal.about.InstallationDialog;
 import org.eclipse.ui.internal.dialogs.AboutFeaturesDialog;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
-
+import static org.bonitasoft.studio.common.Messages.bonitaBPMCommunity;
+import static org.bonitasoft.studio.common.Messages.corporateName;
 /**
  * @author Romain Bioteau
  *
@@ -200,7 +201,7 @@ public class AboutDialog extends TrayDialog {
             	
             	String buildId = System.getProperty("eclipse.buildId", null) ; 
             	String productVersion = System.getProperty("product.version", null) ; 
-                String aboutText = Messages.bind(Messages.aboutText,new Object[]{productVersion,buildId}) ;
+                String aboutText = Messages.bind(Messages.aboutText,new Object[]{productVersion,buildId, bonitaBPMCommunity,corporateName }) ;
                
                 
                 if (aboutText != null) {

@@ -44,7 +44,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 import org.eclipse.ui.progress.IProgressService;
-
+import static org.bonitasoft.studio.common.Messages.bonitaBPMCommunity;
 /**
  * @author Mickael Istria
  *
@@ -157,7 +157,7 @@ public class ImportFromEXchangeAction implements IIntroAction {
 			try {
 				new ZipFile(testFile);
 			} catch (Exception ex) {
-				return Messages.notLoggedIn;
+				return Messages.bind(Messages.notLoggedIn, new Object[]{bonitaBPMCommunity});
 			}
 			
 			try {

@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-
+import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
 /**
  * @author Mickael Istria
  *
@@ -70,7 +70,7 @@ public class ImportFileWizardPage extends WizardPage {
     protected ImportFileWizardPage() {
         super(ImportFileWizardPage.class.getName());
         setTitle(Messages.importFileTitle);
-        setDescription(Messages.importFileDescription);
+        setDescription(Messages.bind(Messages.importFileDescription, new Object[]{bonitaStudioModuleName}));
         setImageDescriptor(Pics.getWizban());
     }
 

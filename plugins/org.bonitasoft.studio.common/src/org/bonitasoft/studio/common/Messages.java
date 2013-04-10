@@ -313,4 +313,5 @@ public class Messages extends NLS {
 	public static String bonitaBPMTeamworkSubscription;
 	public static String bonitaBPMEfficiencySubscription;
 	public static String bonitaBPMPerformanceSubscription;
+	public static String corporateName;
 }
