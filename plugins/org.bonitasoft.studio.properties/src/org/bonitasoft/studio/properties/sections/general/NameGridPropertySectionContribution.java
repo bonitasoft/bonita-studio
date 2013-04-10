@@ -325,7 +325,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 				 }
 
 				 if(subprocessName != null && subprocessName.equals(oldPoolName) //same pool name
-						 && (subprocessVersion == null /*ie Latest*/ || subprocessVersion.equals(oldVersion))){ //same version or Latest
+						 && ((subprocessVersion == null || subprocessVersion.isEmpty() /*ie Latest*/) || subprocessVersion.equals(oldVersion))){ //same version or Latest
 					 activitiesToUpdateMsg.append(sub.getName()+" ("+process.getName()+")");
 					 activitiesToUpdateMsg.append(SWT.CR) ;
 					 toUpdate.add(sub) ;
@@ -420,6 +420,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 		 exp.setContent(value);
 		 exp.setReturnType(String.class.getName());
 		 exp.setType(ExpressionConstants.CONSTANT_TYPE);
+		 exp.setReturnTypeFixed(true);
 		 return exp;
 	 }
 
