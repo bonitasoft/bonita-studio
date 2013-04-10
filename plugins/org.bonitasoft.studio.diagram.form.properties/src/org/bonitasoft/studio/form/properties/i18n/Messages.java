@@ -25,14 +25,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
-    public static String AppearanceSection_CssClass;
-    public static String AppearanceSection_LabelCssClass;
     public static String AppearanceSection_StyleAttr;
-    public static String AppearanceSectione_StyleLabelAttr;
-    public static String AppearanceSection_Label;
-    public static String AppearanceSection_Widget;
     public static String AppearanceSection_ColumnWidth;
-    public static String AppearanceSection_Field;
     public static String AppearanceSection_LineHeight;
     public static String AppearanceSection_CustomStyle;
     public static String AppearanceSection_Size;
@@ -41,11 +35,6 @@ public class Messages extends NLS {
     public static String AppearanceSection_Text;
     public static String AppearanceSection_Font;
     public static String AppearanceSection_Class;
-    public static String AppearanceSection_HtmlAttr;
-    public static String AppearanceSection_HtmlAttr_example;
-    public static String AppearanceSection_TableCells;
-    public static String AppearanceSection_TableHeaders;
-    public static String AppearancePropertySection_hidden;
     public static String AppearancePropertySection_maxLength;
     public static String AppearancePropertySection_maxHeight;
     public static String AppearancePropertySection_maxLength_tooltip;
@@ -67,10 +56,6 @@ public class Messages extends NLS {
     public static String AppearancePropertySection_buttonNormalStyle;
 
     public static String GeneralSection_Name;
-    public static String GeneralSection_Description;
-    public static String GeneralSection_Label;
-    public static String GeneralSection_GroupTitle;
-    public static String GeneralSection_Type;
     public static String GeneralSection_EnableLabel;
     public static String GeneralSection_EnableLabel_tooltip;
     public static String GeneralSection_EnablePageLabel;
@@ -94,37 +79,15 @@ public class Messages extends NLS {
     public static String Restore;
 
     public static String ResourceSection_HTMLTemplate;
-    public static String ResourceSection_HTMLTemplate_tooltip;
-    public static String ResourceSection_CSS;
-    public static String ResourceSection_JavaScript;
-    public static String ResourceSection_ResourceFile;
     public static String AppearanceSection_Underscore_tooltip;
     public static String AppearanceSection_StrikeThrough_tooltip;
     public static String AppearancePropertySection_buttonLabelBehavior;
 
     public static String formFieldType;
 
-    public static String Action_VariableToSet;
-    public static String Action_CustomTreatment;
     public static String Action_InitialValue;
     public static String Action_AvailableValues;
-    public static String Action_InitialValue_tooltip;
-    public static String Action_VariableToSet_tooltip;
-    public static String Action_CustomTreatment_tooltip;
     public static String Action_ItemAlign;
-    public static String Action_EditList;
-    public static String Action_EditList_WizardTitle;
-    public static String Action_EditList_WizardDesc;
-
-    public static String shortExpr;
-    public static String shortExpr_tooltip;
-    public static String saveTo;
-    public static String saveTo_tooltip;
-
-    public static String createButton;
-
-    public static String preview;
-    public static String previewTheForm;
     public static String downloadOnly;
     public static String isMandatory;
     public static String isMandatory_tooltip;
@@ -134,8 +97,6 @@ public class Messages extends NLS {
     public static String mandatorySymbol;
     public static String mandatoryLabel;
 
-    public static String Widget_ImagePath;
-    public static String Widget_InitialDateFormat;
     public static String Widget_DisplayDateFormat;
     public static String Widget_DisplayDateFormat_tooltip;
     public static String Widget_Date_Format1;
@@ -169,12 +130,8 @@ public class Messages extends NLS {
     public static String data_tooltip_long;
     public static String data_tooltip_list;
     public static String data_tooltip_boolean;
-    public static String data_tooltip_file;
     public static String data_tooltip_image;
-    public static String data_tooltip_table;
 
-    public static String cellsCustomStyle;
-    public static String headerCustomStyle;
 
     public static String headers;
     public static String AppearancePropertySection_Down;
@@ -183,16 +140,6 @@ public class Messages extends NLS {
     public static String AppearancePropertySection_Left;
     public static String AppearancePropertySection_LabelPosition;
 
-    public static String downloadDefault;
-
-    public static String createDataButton;
-
-
-    public static String infoTableType;
-    public static String cellsValuesLabel;
-    public static String addRowButton;
-    public static String addColumnButton;
-    public static String removeRowButton;
     public static String removeColumnButton;
     public static String selectColumnNumber;
 
@@ -200,22 +147,10 @@ public class Messages extends NLS {
 
 
 
-    public static String imageIsALocalFile;
-
-    public static String dataName;
-
-    public static String pathToFile;
-
-    public static String addAction;
-
-    public static String outWidgetComboHint;
-
-    public static String Action_tableValues;
 
     public static String data_horizontalHeaderValues;
     public static String data_verticalHeaderValues;
     public static String data_allowSelectionInTable;
-    public static String data_multipleSelectionInTable;
     public static String data_initialSelectedTableValues;
     public static String data_initialSelectedTableValuesFromColumn;
     public static String data_allowAddRemoveColumn;
@@ -227,8 +162,6 @@ public class Messages extends NLS {
     public static String data_initialSelectedTableValuesFromColumn_hint;
     public static String data_tooltip_tableHeaders;
 
-    public static String table_setCells;
-    public static String table_setValues;
     public static String table_userFirstRowAsHeader;
     public static String table_userFirstColumnAsHeader;
     public static String table_paginationNumber;
@@ -243,13 +176,6 @@ public class Messages extends NLS {
     public static String injectWidgetIf;
     public static String data_tooltip_listonly;
     public static String imageIsAURL;
-    public static String fileURL;
-    public static String multipleFileURL;
-
-    public static String data_tooltip_image_variable;
-    public static String data_tooltip_image_url;
-    public static String data_tooltip_image_urllist;
-
     public static String asynchronousLabel;
     public static String refreshDelay;
 
@@ -306,7 +232,6 @@ public class Messages extends NLS {
     public static String filewidget_resource_hint_multiple;
     public static String data_tooltip_multiple_document;
     public static String createAnewDocument;
-    public static String tooltipMultipleDocNames;
     public static String updatingWidgetReferences;
     public static String fieldModifier;
     public static String modifierDescription;
