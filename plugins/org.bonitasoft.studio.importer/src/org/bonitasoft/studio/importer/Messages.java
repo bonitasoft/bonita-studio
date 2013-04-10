@@ -31,6 +31,5 @@ public class Messages extends NLS {
 	
 	public static String importFromXPDL;
 	public static String importFromBPMN;
-	public static String elementCreation;
 
 }
