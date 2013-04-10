@@ -40,7 +40,6 @@ public class Messages extends NLS {
 	public static String status;
 	public static String reviewed;
 	public static String information;
-	public static String filters;
 	public static String currentVersion;
 	public static String migrationReportOf;
 	public static String hideValidStatusAction;
