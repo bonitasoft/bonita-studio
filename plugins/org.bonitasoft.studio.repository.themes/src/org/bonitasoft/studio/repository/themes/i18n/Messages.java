@@ -26,9 +26,6 @@ import org.eclipse.osgi.util.NLS;
 public class Messages {
 	private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 	public static String themeRepository;
-	public static String initializingLookNFeelRepository;
-	public static String creating;
-	public static String openingLooknfeel;
 	public static String impossibleToOverwriteTitle;
 	public static String impossibleToOverwriteMsg;
 	
