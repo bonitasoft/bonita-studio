@@ -28,6 +28,8 @@ import org.bonitasoft.studio.application.contribution.IPreStartupContribution;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.job.StartEngineJob;
 import org.bonitasoft.studio.application.splash.BOSSplashHandler;
+import static org.bonitasoft.studio.common.Messages.bosProductName;
+import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.FileUtil;
@@ -137,7 +139,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
             }
             String version =  repository.getVersion() ;
             if(!ProductVersion.sameMinorVersion(version)){
-                MessageDialog.openWarning(Display.getDefault().getActiveShell(),Messages.badWorkspaceVersionTitle, Messages.bind(Messages.badWorkspaceVersionMessage,new Object[]{current,version,ProductVersion.CURRENT_VERSION})) ;
+                MessageDialog.openWarning(Display.getDefault().getActiveShell(),Messages.badWorkspaceVersionTitle, Messages.bind(Messages.badWorkspaceVersionMessage,new Object[]{current,version,bonitaStudioModuleName,ProductVersion.CURRENT_VERSION, bosProductName})) ;
                 CommonRepositoryPlugin.setCurrentRepository(RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME) ;
             }
         }
