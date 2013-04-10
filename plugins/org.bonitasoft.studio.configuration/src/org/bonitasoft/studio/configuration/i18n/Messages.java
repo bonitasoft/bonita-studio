@@ -37,12 +37,6 @@ public class Messages extends NLS {
     public static String selectProcessToConfigureTitle;
     public static String selectProcessToConfigureDesc ;
     public static String mustSelectProcessError;
-    public static String currentProcess;
-    public static String selectProcessButton;
-    public static String noProcessSelected;
-    public static String applyButtonLabel;
-    public static String importButtonLabel;
-    public static String exportButtonLabel;
     public static String mustSelectExportError;
     public static String exportWizardPageTitle;
     public static String exportWizardPageDesc;
@@ -52,8 +46,6 @@ public class Messages extends NLS {
     public static String importing;
     public static String runConfigurationTitle;
     public static String runConfigurationDesc;
-    public static String run;
-    public static String debug;
     public static String ConfigureButtonLabel;
     public static String username;
     public static String password;
@@ -79,7 +71,6 @@ public class Messages extends NLS {
     public static String inculdedBy;
     public static String applicationDependencies;
     public static String applicationDependenciesConfigurationDescription;
-    public static String addingImplementationDependencies;
     public static String displayAdvancedConfiguration;
     public static String configurationTitle;
 
