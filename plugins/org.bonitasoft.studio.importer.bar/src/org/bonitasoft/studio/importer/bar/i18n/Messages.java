@@ -30,7 +30,6 @@ public class Messages extends NLS {
 	public static String callActivityTargetNameProperty;
 	public static String callActivityTargetVersionMigrationDescription;
 	public static String callActivityTargetVersionProperty;
-	public static String attachmentDataRemovedDescription;
 	public static String dataProperty;
 	public static String document;
 	public static String documentProperty;
@@ -75,7 +74,6 @@ public class Messages extends NLS {
 	public static String actionProperty;
 	public static String widgetActionsMigrationDescription;
 	public static String widgetModifierMigrationDescription;
-	public static String widgetModifierNotSetMigrationDescription;
 	public static String widgetDataInputAtProcessLevelMigrationDescription;
 	public static String widgetDataInputMigrationDescription;
 	public static String displayLabelMigrationDescription;
@@ -125,9 +123,6 @@ public class Messages extends NLS {
 	public static String removeKpiMigrationDescription;
 	public static String simDataExpressionMigrationDescription;
 	public static String simDataChangeValueMigrationDescription;
-	public static String noActionRequired;
-	public static String reviewRequired;
-	public static String actionRequired;
 	public static String migrationReportOf;
 	
 
