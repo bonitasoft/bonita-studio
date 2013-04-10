@@ -29,29 +29,18 @@ public class Messages extends NLS {
         NLS.initializeMessages("messages", Messages.class);
     }
 
-    public static String BPMNFiles;
-    public static String allFiles;
-    public static String destBPMNFile;
-    public static String browse;
     public static String overwriteBPMNFile_title;
     public static String overwriteBPMNFile_message;
-    public static String warningAboutBPMNLabel;
-    public static String exportAsBPMNTitle;
-    public static String exportAsBPMNDesc;
-    public static String exportLimitations_title;
     public static String exportLimitations_message;
     public static String timerDefinitionNotExported;
     public static String connectorsNotExported;
-    public static String messagesNotExported;
     public static String defaultMappingToActivity;
-    public static String subprocessReferenceLost;
     public static String exportingTo;
     public static String exportSuccessfulTitle;
     public static String exportSuccessfulMessage;
     public static String exportFailedTitle;
     public static String exportFailedMessage;
     public static String exportAsImage;
-    public static String exportDiagramWizardTitle;
     public static String ExportButtonLabel;
 
 }
