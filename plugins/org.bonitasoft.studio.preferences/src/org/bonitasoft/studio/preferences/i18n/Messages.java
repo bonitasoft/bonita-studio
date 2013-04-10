@@ -36,30 +36,17 @@ public class Messages extends NLS {
     private Messages() {
     }
 
-    public static String consolePreferenceDescription;
-    public static String consolePreferenceWebBrowserLabel;
-    public static String useInternalWebBrowser;
-    public static String useExternalWebBrowser;
-    public static String bonitaAuthenticationGroup;
-    public static String consoleBrowserStyle;
-    public static String uiPreferenceSowConditionLabel;
-    public static String showNameOnTransitionLabel;
-    public static String showConditionOnTransitionLabel;
-    public static String uiPreferenceDescription;
     public static String deleteTenantOnExit;
     public static String reloadDefaultOrganization;
     public static String consoleLocaleLabel;
     public static String studioLocalLabel;
-    public static String bonitaPreferencePage_desc;
     public static String restartQuestion_title;
     public static String restartQuestion_msg;
     public static String automaticIdLabel;
     public static String automaticIdInfo;
     public static String defaultCoolbarAppearance;
-    public static String hidden;
     public static String small;
     public static String normal;
-    public static String applicationDeploymentMode;
     public static String BonitaPreferenceDialog_Advanced;
     public static String BonitaPreferenceDialog_appearance;
     public static String BonitaPreferenceDialog_back;
@@ -78,16 +65,12 @@ public class Messages extends NLS {
     public static String BonitaPreferenceDialog_Web;
     public static String warMode;
     public static String embeddedMode;
-    public static String showGridOnProcessDiagram;
-    public static String enableValidationLabel;
     public static String BonitaPreferenceDialog_UserXP_Settings;
     public static String BonitaPreferenceDialog_userProfile;
     public static String EclipsePreferences;
     public static String showPassword;
-    public static String applyingLooknFeel;
     public static String defaultAppliThemeLabel;
     public static String validateBeforeRun;
 	public static String BonitaPreferenceDialog_DBConnectors;
-	public static String BonitaPreferencePage_DBConnectors_Description;
 	
 }
