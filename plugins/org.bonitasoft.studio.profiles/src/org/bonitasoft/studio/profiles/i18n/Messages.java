@@ -27,57 +27,10 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 
 	private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
-	public static String ProfilePreferencePage_descriptionMessage;
-	public static String activateTooltip;
-	public static String addTooltip;
-	public static String editTooltip;
-	public static String deleteTooltip;
-	public static String actors_management_label;
-	public static String appearance_label;
-	public static String bam_label;
-	public static String connectors_label;
-	public static String contexts_label;
-	public static String data_management_label;
-	public static String dependencies_management_label;
-	public static String execution_label;
-	public static String forms_modeling_label;
-	public static String forms_templates_label;
-	public static String language_support_label;
-	public static String look_n_feel_label;
-	public static String process_modeling_label;
-	public static String simulation_label;
-	public static String validation_label;
-	public static String validators_label;
-	public static String initializingProfileRepository;
-	public static String profileRepository;
-	public static String modeling;
-	public static String extension;
-	public static String application;
-	public static String createProfileNameWizardTitle;
-	public static String createProfileNameWizardDesc;
-	public static String name;
-	public static String duplicateFrom;
-	public static String editProfileNameWizardTitle;
-	public static String editProfileNameWizardDesc;
-	public static String deleteProfileTitle;
-	public static String deleteProfileMsg;
-	public static String selectProfileWizardTitle;
-	public static String selectProfileWizardDesc;
-	public static String changeProfileHint;
-	public static String dontDisplayNexStartup ;
-	public static String defaultProfileDesc;
-	public static String extensionProfileDesc;
-	public static String applicationProfileDesc;
-	public static String bpaProfileDesc;
-	public static String description;
-	public static String userProfile;
-	public static String processDesignerDesc;
-	public static String creationError;
-	public static String creationErrorMsg;
-	public static String askForProfileOnStartup;
-	public static String applyingProfiles;
+	
 	public static String BusinessAnalyst_Label;
 	public static String ApplicationDeveloper_Label;
+	public static String profileRepository;
 	
 	static {
 		// initialize resource bundle

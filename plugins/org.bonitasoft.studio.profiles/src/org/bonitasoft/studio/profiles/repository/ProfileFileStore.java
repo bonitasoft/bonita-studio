@@ -40,7 +40,7 @@ public class ProfileFileStore extends PropertiesFileStore {
     private static final String DESCRIPTION = "description";
     private static final String PROVIDED = "provided";
 
-    public ProfileFileStore(String fileName, IRepositoryStore store) {
+    public ProfileFileStore(String fileName, IRepositoryStore<?> store) {
         super(fileName, store);
     }
 
