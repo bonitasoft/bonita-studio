@@ -34,9 +34,6 @@ public class Messages extends NLS {
 	public static String skip;
 	public static String done;
 	public static String undo;
-	public static String synchronize;
-	public static String synchronizationErrorTitle;
-	public static String synchronizationErrorMessage;
 	public static String synchronizing;
 	public static String UserGuidance;
 	
