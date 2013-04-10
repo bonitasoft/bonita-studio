@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2010-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,14 +25,15 @@ import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
 
-import org.bonitasoft.studio.application.actions.wizards.export.ExportActions;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 /**
@@ -57,7 +58,14 @@ public class TestExportProcessBar extends TestCase {
         File targetFolder = new File(System.getProperty("java.io.tmpdir")+File.separator+"testExportBar");
         PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
         targetFolder.mkdirs();
-        File generatedBarFile = new ExportActions().doExportProcessBar(new NullProgressMonitor(), proc,"Local", false, targetFolder);
+        ExportBarOperation ebo = new ExportBarOperation();
+        ebo.addProcessToDeploy(proc);
+        ebo.setTargetFolder(targetFolder.getAbsolutePath());
+        ebo.setConfigurationId("Local");
+        IStatus exportStatus = ebo.run(new NullProgressMonitor());
+        assertTrue("Export in bar has failed.", exportStatus.isOK());
+        
+        File generatedBarFile = ebo.getGeneratedBars().get(0);
 
         /*Check that attachment is in the bar*/
         ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));
@@ -89,8 +97,15 @@ public class TestExportProcessBar extends TestCase {
         File targetFolder = new File(System.getProperty("java.io.tmpdir")+File.separator+"testExportBar");
         PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
         targetFolder.mkdirs();
-
-        File generatedBarFile = new ExportActions().doExportProcessBar(new NullProgressMonitor(), proc,"Local", true, targetFolder);
+        
+        ExportBarOperation ebo = new ExportBarOperation();
+        ebo.addProcessToDeploy(proc);
+        ebo.setTargetFolder(targetFolder.getAbsolutePath());
+        ebo.setConfigurationId("Local");
+        IStatus exportStatus = ebo.run(new NullProgressMonitor());
+        assertTrue("Export in bar has failed.", exportStatus.isOK());
+        
+        File generatedBarFile = ebo.getGeneratedBars().get(0);
 
         /*Check that attachment is in the bar*/
         ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));

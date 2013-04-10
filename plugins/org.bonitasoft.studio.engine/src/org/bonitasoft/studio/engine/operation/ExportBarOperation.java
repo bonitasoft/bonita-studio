@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveFactory;
@@ -36,19 +37,22 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
  */
 public class ExportBarOperation  {
 
-    private final ArrayList<AbstractProcess> processes;
+    private final List<AbstractProcess> processes;
+    private final List<File> generatedBars;
     protected String configurationId;
     private String targetFolderPath;
     public IStatus status = Status.OK_STATUS;
 
     public ExportBarOperation() {
         processes = new ArrayList<AbstractProcess>() ;
+        generatedBars = new ArrayList<File>();
     }
 
 
@@ -66,7 +70,14 @@ public class ExportBarOperation  {
     public void setConfigurationId(String configurationId){
         this.configurationId = configurationId;
     }
-
+    
+    /**
+     * This method was planned only for test purpose.
+     * @return the list of bars generated during this export operation
+     */
+    public List<File> getGeneratedBars(){
+    	return generatedBars;
+    }
 
     public IStatus run(IProgressMonitor monitor)  {
         monitor.beginTask(Messages.exporting, IProgressMonitor.UNKNOWN) ;
@@ -104,8 +115,9 @@ public class ExportBarOperation  {
 
     protected IStatus exportBar( final AbstractProcess process, final File outputFile,IProgressMonitor monitor) {
         try {
-            final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(process,configurationId,Collections.EMPTY_SET);
+            final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(process,configurationId,Collections.<EObject> emptySet());
             writeBusinessArchiveToFile(outputFile, bar);
+            generatedBars.add(outputFile);
         } catch (final Exception ex) {
             BonitaStudioLog.error(ex);
             monitor.done() ;

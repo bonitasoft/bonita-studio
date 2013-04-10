@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2010-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,20 +18,16 @@
 package org.bonitasoft.studio.application.actions;
 
 
-import org.bonitasoft.studio.application.views.BonitaContentOutlineTreeView;
 import org.bonitasoft.studio.application.views.BonitaContentOutlineView;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -46,13 +42,8 @@ public class ShowOverviewHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         try {
-            IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-            ISelection selection = null ;
             final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
             IEditorPart editor = workbenchWindow.getActivePage().getActiveEditor() ;
-            if(part != null){
-                selection = part.getSite().getSelectionProvider().getSelection() ;
-            }
 
             BonitaContentOutlineView view  = (BonitaContentOutlineView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(BonitaContentOutlineView.VIEW_ID);
             if (editor != null && editor instanceof ProcessDiagramEditor ) {
