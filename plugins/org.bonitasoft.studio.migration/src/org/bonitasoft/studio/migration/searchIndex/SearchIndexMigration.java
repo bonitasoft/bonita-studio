@@ -5,7 +5,6 @@ package org.bonitasoft.studio.migration.searchIndex;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;

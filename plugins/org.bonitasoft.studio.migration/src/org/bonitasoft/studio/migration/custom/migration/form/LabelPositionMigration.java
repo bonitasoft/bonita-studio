@@ -18,9 +18,7 @@ package org.bonitasoft.studio.migration.custom.migration.form;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.bonitasoft.studio.model.form.LabelPosition;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;

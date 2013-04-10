@@ -22,7 +22,6 @@ import org.bonitasoft.studio.migration.preferences.BarImporterPreferenceConstant
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;

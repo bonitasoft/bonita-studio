@@ -18,22 +18,10 @@
 package org.bonitasoft.studio.migration.ui.view;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.properties.PropertySectionWithTabs;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
-import org.bonitasoft.studio.model.form.ViewForm;
-import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.AssociatedFile;
-import org.bonitasoft.studio.model.process.Connection;
-import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.FlowElement;
-import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.MultiInstantiation;
 import org.bonitasoft.studio.model.process.PageFlowTransition;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ResourceFile;
 import org.bonitasoft.studio.model.process.ResourceFolder;
@@ -44,7 +32,6 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.views.properties.tabbed.ISection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**

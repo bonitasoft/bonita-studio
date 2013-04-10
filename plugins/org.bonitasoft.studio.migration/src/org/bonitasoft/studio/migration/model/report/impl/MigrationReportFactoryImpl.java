@@ -6,14 +6,14 @@
  */
 package org.bonitasoft.studio.migration.model.report.impl;
 
-import org.bonitasoft.studio.migration.model.report.*;
-
+import org.bonitasoft.studio.migration.model.report.Change;
+import org.bonitasoft.studio.migration.model.report.MigrationReportFactory;
+import org.bonitasoft.studio.migration.model.report.MigrationReportPackage;
+import org.bonitasoft.studio.migration.model.report.Report;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**

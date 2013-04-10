@@ -6,13 +6,12 @@
  */
 package org.bonitasoft.studio.migration.model.report.util;
 
-import org.bonitasoft.studio.migration.model.report.*;
-
+import org.bonitasoft.studio.migration.model.report.Change;
+import org.bonitasoft.studio.migration.model.report.MigrationReportPackage;
+import org.bonitasoft.studio.migration.model.report.Report;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**

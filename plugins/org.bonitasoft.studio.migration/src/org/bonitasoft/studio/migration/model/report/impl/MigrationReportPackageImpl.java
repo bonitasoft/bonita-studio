@@ -10,12 +10,10 @@ import org.bonitasoft.studio.migration.model.report.Change;
 import org.bonitasoft.studio.migration.model.report.MigrationReportFactory;
 import org.bonitasoft.studio.migration.model.report.MigrationReportPackage;
 import org.bonitasoft.studio.migration.model.report.Report;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**

@@ -7,7 +7,6 @@
 package org.bonitasoft.studio.migration.model.report;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
