@@ -28,9 +28,6 @@ public class Messages extends NLS {
     public static String scriptTypeLabel;
     public static String name;
     public static String interpreter;
-    public static String defaultBehavior;
-    public static String persistData;
-    public static String propagationDescriptionHint;
     public static String returnType;
     public static String browse;
     public static String dateWidgetReturnTypeWarning;
