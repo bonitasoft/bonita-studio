@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.model.edit.custom.process;
 
-import org.bonitasoft.studio.model.edit.custom.i18n.Messages;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.provider.MainProcessItemProvider;
 import org.eclipse.emf.common.notify.AdapterFactory;

@@ -31,7 +31,6 @@ public class Messages extends NLS {
 	public static String takeTransitionAction;
 	public static String dontTakeTransitionAction;
 	public static String line;
-	public static String diagram;
 	public static String belongsTo;
 	public static String havingRole;
 
