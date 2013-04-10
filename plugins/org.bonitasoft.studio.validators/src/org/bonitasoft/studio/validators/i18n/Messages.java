@@ -29,27 +29,19 @@ public class Messages extends NLS {
     }
 
     public static String validators;
-    public static String createValidatorWizardPage_title;
-    public static String createValidatorWizardPage_description;
-    public static String createValidatorWizardPage_defaultMessage;
     public static String createValidatorWizardPage_displayNameLabel;
     public static String createValidatorWizardPage_packageLabel;
-    public static String createValidatorWizardPage_invalidPackageName;
     public static String createValidatorWizardPage_browsePackages;
     public static String createValidatorWizardPage_classNameLabel;
     public static String createValidator;
     public static String createValidatorWizardPage_generateValidator;
-    public static String createValidatorWizardPage_createFile;
 
     public static String ValidatorDefaultName;
     public static String Validator_ValidatorClass;
     public static String Validator_HtmlClass;
     public static String Validator_ErrorMessage;
     public static String Validator_Parameter;
-    public static String Validator_EditclassButton;
-    public static String Validator_EditclassButtonTooltip;
     public static String Validator_defaultValidator;
-    public static String Validator_EditParameterButton;
 
     public static String Validator_isBelow;
     public static String Validator_Above;
@@ -58,12 +50,6 @@ public class Messages extends NLS {
     public static String Remove;
     public static String Add;
     public static String createButton;
-    public static String deleteCustomValidatorTitle;
-    public static String deleteCustomValidatorMsg;
-    public static String validatorDependenciesTitle;
-    public static String validatorDependenciesDesc;
-    public static String beginToAddJars;
-    public static String validatorsConfigurationDescription;
     public static String editValidator;
     public static String dependencies;
     public static String missingClassname;
@@ -76,7 +62,6 @@ public class Messages extends NLS {
     public static String selectAValidatorWarning;
     public static String selectValidatorTitle;
     public static String selectValidatorDesc;
-    public static String manageJars;
     public static String validatorSource;
 	public static String missingPackageName;
 }
