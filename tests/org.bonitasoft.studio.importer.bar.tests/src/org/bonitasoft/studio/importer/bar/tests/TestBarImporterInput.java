@@ -76,4 +76,12 @@ public class TestBarImporterInput {
         assertNotNull("Fail to migrate bar file", migratedProc.exists());
     }
 
+    @Test
+    public void testv59BarWithDecisionTable() throws Exception{
+        final URL url = TestBarImporterInput.class.getResource("Maladie--1.5.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+    }
+
 }
