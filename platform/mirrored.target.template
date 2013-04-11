@@ -4,7 +4,7 @@
 <target includeMode="feature" name="mirrored" sequenceNumber="45">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<repository location="ftp://192.168.1.215/home/ic/p2_repository/"/>
+<repository location="XXX_REPOSITORY_URL_XXX"/>
 <unit id="org.eclipse.birt.feature.group" version="3.7.2.v20120213-BDF9E9bGTzuHh03p2c0AWvmC3Ltk"/>
 <unit id="org.eclipse.team.svn.resource.ignore.rules.jdt.feature.group" version="0.7.9.I20110602-1700"/>
 <unit id="org.eclipse.team.svn.feature.group" version="0.7.9.I20110819-1700"/>

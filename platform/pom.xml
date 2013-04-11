@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>platform</artifactId>
 	<version>6.0-SNAPSHOT</version>
@@ -11,10 +11,31 @@
 	<properties>
 		<tychoVersion>0.16.0</tychoVersion>
 		<tychoExtrasVersion>0.16.0</tychoExtrasVersion>
+		<p2MirrorUrl>ftp://192.168.1.215/home/ic/p2_repository/</p2MirrorUrl>
 	</properties>
 	<build>
 		<plugins>
-		<!-- enable tycho build extension -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Replace P2 Repository URL</id>
+						<phase>initialize</phase>
+						<configuration>
+							<tasks>
+								<echo>P2 Repository = ${p2MirrorUrl}</echo>
+								<copyfile dest="${basedir}/platform.target" src="${basedir}/mirrored.target.template" forceoverwrite="true"/>
+								<replace token="XXX_REPOSITORY_URL_XXX" value="${p2MirrorUrl}" file="${basedir}/platform.target" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- enable tycho build extension -->
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
@@ -88,8 +109,7 @@
 					</target>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
-
-
 </project>
