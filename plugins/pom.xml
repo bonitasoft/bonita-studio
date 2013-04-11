@@ -66,7 +66,6 @@
 		<module>org.bonitasoft.studio.repository.themes.bonitasoft</module>
 		<module>org.bonitasoft.studio.scripting</module>
 		<module>org.bonitasoft.studio.simulation</module>
-		<module>org.bonitasoft.studio.userguidance</module>
 		<module>org.bonitasoft.studio.validation</module>
 		<module>org.bonitasoft.studio.validators</module>
 		<module>org.bonitasoft.studio.xml</module>
