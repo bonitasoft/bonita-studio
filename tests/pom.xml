@@ -36,7 +36,6 @@
 		<module>org.bonitasoft.studio.simulation.tests</module>
 		<module>org.bonitasoft.studio.test.swtbot.util</module>
 		<module>org.bonitasoft.studio.tests.hotspot</module>
-		<module>org.bonitasoft.studio.userguidance.tests</module>
 		<module>org.bonitasoft.studio.util.tests</module>
 		<module>org.bonitasoft.studio.validators.test</module>
 		<module>org.bonitasoft.studio.workspace.test</module>
