@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-
+import static org.bonitasoft.studio.common.Messages.bosProductName;
 
 /**
  * @author Romain Bioteau
@@ -57,7 +57,7 @@ public class MigrationWarningWizardPage extends WizardPage {
         
         final Label textArea = new Label(mainComposite,  SWT.WRAP );
         textArea.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).hint(600, SWT.DEFAULT).create());
-        textArea.setText(Messages.importWarningMessageContent);
+        textArea.setText(Messages.bind(Messages.importWarningMessageContent, new Object[]{bosProductName}));
         
         final Composite captionComposite = new Composite(mainComposite,SWT.NONE);
         captionComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10,15).create());
