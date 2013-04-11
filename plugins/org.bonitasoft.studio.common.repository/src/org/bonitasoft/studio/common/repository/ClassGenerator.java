@@ -123,16 +123,16 @@ public class ClassGenerator {
                 StringBuilder executeMethodContent = new StringBuilder("@Override\nprotected void executeBusinessLogic() throws ConnectorException{\n\t") ;
                
                 
-                executeMethodContent.append("//TODO execute your business logic here\n\t//Do not forget to use generated setters in parent class to set your connector output\n\n}\n") ;
+                executeMethodContent.append("//Get access to the connector input parameters \n\t//getHost(); \n\t//getPassword(); \n\t//getUserName(); \n\n \t//TODO execute your business logic here \n\n \t// Set the output of the connector execution \n\t//setHasBeenSent(true); \n\n }\n") ;
                 
                 classType.createMethod(executeMethodContent.toString(), null,true,monitor) ;
                 
              executeMethodContent = new StringBuilder("@Override\npublic void connect() throws ConnectorException{\n\t");
-             executeMethodContent.append("//TODO initialize resource stream here\n\n}\n");
+             executeMethodContent.append("//[Optional] Open a connection to remote server\n\n}\n");
                 classType.createMethod(executeMethodContent.toString(),null, true, monitor);
                 
                 executeMethodContent = new StringBuilder("@Override\npublic void disconnect() throws ConnectorException{\n\t");
-                executeMethodContent.append("//TODO close resource stream here\n\n}\n");
+                executeMethodContent.append("//[Optional] Close connection to remote server\n\n}\n");
                 classType.createMethod(executeMethodContent.toString(),null, true, monitor);
                 
                 classType.getCompilationUnit().createImport("org.bonitasoft.engine.exception.ConnectorException", null, monitor);
@@ -196,6 +196,7 @@ public class ClassGenerator {
         }
 
         classWizard.setSuperClass(abstractClassName, false);
+//        classWizard.enableCommentControl(true);
         classWizard.setAddComments(true, false);
         classWizard.setModifiers(classWizard.F_PUBLIC, false);
         classWizard.setTypeName(className, false);
