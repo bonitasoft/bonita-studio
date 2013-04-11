@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.bonitasoft.studio</groupId>
+	<artifactId>mirror</artifactId>
+	<version>6.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<properties>
+		<tychoVersion>0.16.0</tychoVersion>
+		<tychoExtrasVersion>0.16.0</tychoExtrasVersion>
+	</properties>
+	<build>
+		<plugins>
+			<!-- enable tycho build extension -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tychoVersion}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho.extras</groupId>
+				<artifactId>tycho-p2-extras-plugin</artifactId>
+				<version>${tychoExtrasVersion}</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>mirror</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<source>
+						<!--source repositories to mirror from -->
+						<repository>
+							<url>http://tribix.sourceforge.net/update</url>
+							<layout>p2</layout>
+						</repository>
+						<repository>
+							<url>http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases-2.4.0/</url>
+							<layout>p2</layout>
+						</repository>
+						<repository>
+							<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
+							<layout>p2</layout>
+						</repository>
+						<repository>
+							<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</url>
+							<layout>p2</layout>
+						</repository>
+						<repository>
+							<url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>
+							<layout>p2</layout>
+						</repository>
+						<repository>
+							<url>http://download.eclipse.org/edapt/update-site/</url>
+							<layout>p2</layout>
+						</repository>
+						<repository>
+							<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/</url>
+							<layout>p2</layout>
+						</repository>
+						<repository>
+							<url>http://download.eclipse.org/technology/nebula/snapshot</url>
+							<layout>p2</layout>
+						</repository>
+						<repository>
+							<url>http://download.eclipse.org/modeling/emft/texo/updates/interim</url>
+							<layout>p2</layout>
+						</repository>
+						<repository>
+							<url>http://community.polarion.com/projects/subversive/download/eclipse/2.0/indigo-site/</url>
+							<layout>p2</layout>
+						</repository>
+						<repository>
+							<url>http://download.eclipse.org/releases/indigo</url>
+							<layout>p2</layout>
+						</repository>
+						<repository>
+							<url>http://dist.springsource.org/release/GRECLIPSE/e3.7/</url>
+							<layout>p2</layout>
+						</repository>
+					</source>
+
+					<!-- starting from here all configuration parameters are optional -->
+					<!-- they are only shown here with default values for documentation 
+						purpose -->
+
+					<!-- List of IUs to mirror. If omitted, allIUs will be mirrored. -->
+					<!-- Omitted IU version element means latest version of the IU -->
+					<ius>
+						<iu>
+							<id>org.eclipse.rcp.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.uguess.tribix.feature.group</id>
+							<version>2.5.2.201107181644</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.gmf.sdk.experimental.feature.group</id>
+							<version>1.2.0.201108160853</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.gmf.sdk.feature.group</id>
+							<version>2.4.0.201108160853</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.gmf.tooling.feature.group</id>
+							<version>2.4.0.201108160853</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.xtend.m2e.feature.group</id>
+							<version>2.3.1.v201208210947</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.xtend.sdk.feature.group</id>
+							<version>2.3.1.v201208210947</version>
+						</iu>
+						<iu>
+							<id>org.apache.commons.logging</id>
+							<version>1.1.1.v201101211721</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.swtbot.eclipse.feature.group</id>
+							<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.swtbot.eclipse.gef.feature.group</id>
+							<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.swtbot.ide.feature.group</id>
+							<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.swtbot.eclipse.test.junit4.feature.group</id>
+							<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.swtbot.forms.feature.group</id>
+							<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.swtbot.feature.group</id>
+							<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.edapt.recorder.feature.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.edapt.recorder.sdk.feature.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.edapt.runtime.feature.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.edapt.runtime.sdk.feature.feature.group</id>
+						</iu>
+						<iu>
+							<id>com.sun.syndication</id>
+							<version>0.9.0.v200803061811</version>
+						</iu>
+						<iu>
+							<id>com.sun.syndication</id>
+							<version>0.9.0.v200803061811</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.nebula.widgets.gallery.feature.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.texo.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.texo.sdk.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.texo.runtime.core.feature.group</id>
+						</iu>
+						<iu>
+							<id>org.polarion.eclipse.team.svn.connector.feature.group</id>
+							<version>2.2.2.I20110602-1700</version>
+						</iu>
+						<iu>
+							<id>org.polarion.eclipse.team.svn.connector.svnkit15.feature.group</id>
+							<version>2.2.2.I20110602-1700</version>
+						</iu>
+						<iu>
+							<id>org.polarion.eclipse.team.svn.connector.svnkit16.feature.group</id>
+							<version>2.2.2.I20110602-1700</version>
+						</iu>
+						<iu>
+							<id>org.polarion.eclipse.team.svn.connector.source.feature.group</id>
+							<version>2.2.2.I20110602-1700</version>
+						</iu>
+						<iu>
+							<id>org.codehaus.groovy18.feature.feature.group</id>
+							<version>2.7.2.xx-RELEASE-20121219-0800-e37</version>
+						</iu>
+						<iu>
+							<id>org.codehaus.groovy.eclipse.feature.feature.group</id>
+							<version>2.7.2.xx-RELEASE-20121219-0800-e37</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.birt.feature.group</id>
+							<version>3.7.2.v20120213-BDF9E9bGTzuHh03p2c0AWvmC3Ltk</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.team.svn.resource.ignore.rules.jdt.feature.group</id>
+							<version>0.7.9.I20110602-1700</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.team.svn.feature.group</id>
+							<version>0.7.9.I20110819-1700</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.datatools.enablement.sdk.feature.feature.group</id>
+							<version>1.9.2.v201109161655-7I9O7XFE9Jfxu0wIxMQtoLz0X-dE</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.datatools.sdk.feature.feature.group</id>
+							<version>1.9.2.v201109161655-7PA37eFEpPYv5_Ae3-6EjC5ZX4e5</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.rcp.source.feature.group</id>
+							<version>3.7.2.v20120120-1424-9DB5FmnFq5JCf1UA38R-kz0S0272</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.sdk.feature.group</id>
+							<version>2.7.2.v20120130-0943</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.equinox.sdk.feature.group</id>
+							<version>3.7.1.R37x_v20110907-7M7W8i8eNV4WsRkue-4Vq4J6pCyW</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.pde.feature.group</id>
+							<version>3.7.2.v20120120-1420-7b7rFUOFEx2Xnqafnpz0E--0</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.ecoretools.sdk.feature.group</id>
+							<version>1.0.0.v20110608-1633</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.compare.feature.group</id>
+							<version>1.2.2.v20120214-0915</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.compare.sdk.feature.group</id>
+							<version>1.2.2.v20120214-0915</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.transaction.sdk.feature.group</id>
+							<version>1.5.1.v20110823-1800-777T19A_WsXmjNatPxcrPm1rOKlH</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.oda.sdk.feature.group</id>
+							<version>1.0.2.v20120130-0943</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.emf.validation.sdk.feature.group</id>
+							<version>1.5.0.v20110502-1600-67O-96SGR55YJeZPedcQnghI6uFA</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.gef.sdk.feature.group</id>
+							<version>3.7.2.v20110927-2020-7G7W77A5WNgIRPdWXDIbNTSQPdQL</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.gmf.runtime.notation.sdk.feature.group</id>
+							<version>1.5.0.v20110426-2159-47D08xGD6ExNBM7CIJa3CIKK9t84</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.gmf.feature.group</id>
+							<version>1.5.0.v20110607-1200-7d9Q7HFYnmMEynz0X0qrbsDiK281</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.gmf.runtime.sdk.feature.group</id>
+							<version>1.5.0.v20110607-1200-67N09E9QnChoWswz-3wf_rz0kQ8Y</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.gmf.runtime.sdk.feature.group</id>
+							<version>1.5.0.v20110607-1200-67N09E9QnChoWswz-3wf_rz0kQ8Y</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.m2m.qvt.oml.sdk.feature.group</id>
+							<version>3.1.0.v20110314-1530-7U7A-CL5RuMpMxGs7uZhafWQlGUu</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.xsd.sdk.feature.group</id>
+							<version>2.7.1.v20120130-0943</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.jdt.feature.group</id>
+							<version>3.7.2.v20120120-1414-7z8gFcuFMP7BW5XTz0jLTnz0l9B1</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.wst.xml_ui.feature.feature.group</id>
+							<version>3.3.2.v201112072049-7H7EFZ7DxumTmce4khcSkIiqoD8eDMKlT8Oz011P</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.jst.ws.cxf.feature.feature.group</id>
+							<version>1.0.100.v201105171845-7H77DRFAKlZgjHCaHg65uE6I6I</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.wst.web_ui.feature.feature.group</id>
+							<version>3.3.2.v201111030500-7O7IFj6EMjB7yO1Xs_G1kMtQeOye6HTXFWve95_R</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.jst.server_adapters.feature.feature.group</id>
+							<version>3.2.100.v20110303-208Z7w31211419</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.jst.server_adapters.ext.feature.feature.group</id>
+							<version>3.3.2.v20111010_1242-777HFHzCcNBDjCbIUfEEE3</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.jst.server_ui.feature.feature.group</id>
+							<version>3.3.0.v201102200555-7A6FHr9xFcAVCFLZBBJLIR43A</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.jst.webpageeditor.feature.feature.group</id>
+							<version>2.3.6.v201201181342-46AB9oB5885D6R5D86</version>
+						</iu>
+						<iu>
+							<id>org.eclipse.wst.server_adapters.feature.feature.group</id>
+							<version>3.2.100.v20110303-51EoAkF77g8HBSc</version>
+						</iu>
+					</ius>
+					<!-- The destination directory to mirror to. -->
+					<destination>${project.build.directory}/repository</destination>
+					<!-- Whether only strict dependencies should be followed. -->
+					<!-- "strict" means perfect version match -->
+					<followStrictOnly>false</followStrictOnly>
+					<!-- Whether or not to follow optional requirements. -->
+					<includeOptional>true</includeOptional>
+					<!-- Whether or not to follow non-greedy requirements. -->
+					<includeNonGreedy>true</includeNonGreedy>
+					<!-- Filter properties. E.g. filter only one platform -->
+					<!-- <filter> -->
+					<!-- <osgi.os>linux</osgi.os> -->
+					<!-- <osgi.ws>gtk</osgi.ws> -->
+					<!-- <osgi.arch>x86_64</osgi.arch> -->
+					<!-- </filter> -->
+					<!-- Whether to filter the resulting set of IUs to only -->
+					<!-- include the latest version of each IU -->
+					<latestVersionOnly>false</latestVersionOnly>
+					<!-- don't mirror artifacts, only metadata -->
+					<mirrorMetadataOnly>false</mirrorMetadataOnly>
+					<!-- whether to compress the content.xml/artifacts.xml -->
+					<compress>false</compress>
+					<!-- whether to append to the target repository content -->
+					<append>true</append>
+					<!-- whether to mirror pack200 artifacts also. Available since tycho-extras 
+						0.17.0 -->
+					<!-- <includePacked>true</includePacked> -->
+				</configuration>
+			</plugin>
+		</plugins>
+		<extensions>
+			<!-- Enabling the use of FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0-beta-4</version>
+			</extension>
+		</extensions>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>publish-to-update-site</id>
+			<properties>
+				<!-- Properties relative to the distant host where to upload the repo -->
+				<ftp.url>ftp://192.168.1.215</ftp.url>
+				<ftp.toDir>home/ic/p2_repository</ftp.toDir>
+				<!-- Relative path to the repo being uploaded -->
+				<repo.path>${project.build.directory}/repository/</repo.path>
+			</properties>
+
+			<build>
+				<plugins>
+					<!-- Upload the repo to the server -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>wagon-maven-plugin</artifactId>
+						<version>1.0-beta-4</version>
+						<executions>
+							<execution>
+								<id>upload-repo</id>
+								<phase>install</phase>
+								<goals>
+									<goal>upload</goal>
+								</goals>
+								<configuration>
+									<fromDir>${repo.path}</fromDir>
+									<includes>**</includes>
+									<toDir>${ftp.toDir}</toDir>
+									<url>${ftp.url}</url>
+									<serverId>ftp-repository</serverId>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>
