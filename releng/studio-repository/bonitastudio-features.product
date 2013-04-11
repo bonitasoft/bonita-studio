@@ -87,7 +87,7 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <property name="osgi.nl" value="en" />
       <property name="osgi.nls.warnings" value="ignore" />
       <property name="portal.version" value="${bundle.version}" />
-      <property name="product.version" value="${project.version}" />
+      <property name="product.version" value="${project.parent.version}" />
       <property name="simulation.version" value="${simulation.version}" />
    </configurations>
 
