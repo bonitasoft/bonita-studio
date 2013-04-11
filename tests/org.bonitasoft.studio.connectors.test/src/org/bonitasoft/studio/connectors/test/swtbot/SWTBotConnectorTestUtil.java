@@ -46,7 +46,7 @@ public class SWTBotConnectorTestUtil {
         bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
         bot.menu("Development").menu("Connectors").menu("New definition...")
         .click();
-        bot.waitUntil(Conditions.shellIsActive("New definition..."),10000);
+        bot.waitUntil(Conditions.shellIsActive("New connector definition"),10000);
     }
 
     /**
