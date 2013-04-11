@@ -35,6 +35,7 @@ import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSequenceFlowEditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomSubProcessEvent2EditPart;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -164,8 +165,6 @@ public class ExtractSubprocess extends AbstractHandler {
 		processEp.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(cc));
 		cc.dispose();
 
-
-
 		IGraphicalEditPart  ep =  GMFTools.findEditPart(processEp, (EObject) poolReq.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class));  
 		ep.getEditingDomain().getCommandStack().execute(SetCommand.create(ep.getEditingDomain(), ((Node) ep.getNotationView()).getLayoutConstraint(), NotationPackage.eINSTANCE.getSize_Width(), size.width));
 		ep.getEditingDomain().getCommandStack().execute(SetCommand.create(ep.getEditingDomain(), ((Node) ep.getNotationView()).getLayoutConstraint(), NotationPackage.eINSTANCE.getSize_Height(), size.height));
@@ -219,24 +218,32 @@ public class ExtractSubprocess extends AbstractHandler {
 		int maxHeight=0;
 		for (IGraphicalEditPart element:elements){
 			if(!(element instanceof CustomSequenceFlowEditPart)){
+				IGraphicalEditPart parent = (IGraphicalEditPart) element.getParent();
+				while (!(parent instanceof CustomPoolEditPart)){
+					parent = (IGraphicalEditPart) parent.getParent();
+				}
 				Rectangle bounds = element.getFigure().getBounds().getCopy();
-				 FiguresHelper.translateToAbsolute(element.getFigure(), bounds);
-				int height = bounds.y;
+				
+				FiguresHelper.translateToAbsolute(element.getFigure(), bounds);
+				int height = bounds.y-parent.getFigure().getBounds().y;
 				if (height>maxHeight) {
 					maxHeight=height;
 					mostBottomElement=element;
 				}
 			}
 		}
-		IGraphicalEditPart parent = (IGraphicalEditPart)mostBottomElement.getParent().getParent();
-		if (parent instanceof CustomPoolEditPart){
-			return parent.getFigure().getBounds().height;
-		} else {
-			if (parent instanceof CustomLaneEditPart){
-				return maxHeight+mostBottomElement.getFigure().getBounds().height + 20;
-			}
-		}
-		return 0;
+//		IGraphicalEditPart parent = (IGraphicalEditPart)mostBottomElement.getParent().getParent();
+//		if (parent instanceof CustomPoolEditPart || parent instanceof CustomLaneEditPart){
+//			return maxHeight+mostBottomElement.getFigure().getBounds().height + 20 <250 ? 250 : maxHeight+mostBottomElement.getFigure().getBounds().height + 20 ;
+//		} else {
+//			if (parent instanceof CustomSubProcessEvent2EditPart){
+//				while (!(parent instanceof CustomPoolEditPart || parent instanceof CustomLaneEditPart)){
+//					parent = (IGraphicalEditPart) parent.getParent();
+//				}
+//					return maxHeight+mostBottomElement.getFigure().getBounds().height + 20;
+//			}
+//		}
+		return maxHeight+mostBottomElement.getFigure().getBounds().height + 20 <250 ? 250 : maxHeight+mostBottomElement.getFigure().getBounds().height + 20;
 	}
 	/**
 	 * @param req

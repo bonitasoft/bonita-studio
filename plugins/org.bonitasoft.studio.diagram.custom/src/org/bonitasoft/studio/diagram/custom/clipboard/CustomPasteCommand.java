@@ -321,7 +321,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 						Actor actor = ModelHelper.getParentLane(toCopyElement).getActor();
 						Actor copiedActorMappingType = EcoreUtil.copy(actor);
 						Actor existingActor = getExistingActor(pool.getActors(), copiedActorMappingType);
-						if (existingActor==null){
+						if (existingActor==null && copiedActorMappingType!=null){
 							pool.getActors().add(copiedActorMappingType);
 							existingActor = copiedActorMappingType;
 						}
