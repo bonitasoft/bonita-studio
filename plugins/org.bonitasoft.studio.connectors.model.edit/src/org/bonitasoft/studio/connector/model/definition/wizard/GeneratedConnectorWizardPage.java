@@ -51,7 +51,7 @@ public class GeneratedConnectorWizardPage extends AbstractConnectorConfiguration
         pageComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).spacing(3, 10).create());
         pageComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final Page page = getPage() ;
-        final PageComponentSwitch componentSwitch = new PageComponentSwitch(getContainer(),pageComposite,getElementContainer(),getDefinition(),getConfiguration(),context,getMessageProvider(),getExpressionTypeFilter()) ;
+        final PageComponentSwitch componentSwitch = getPageComponentSwitch(context, pageComposite) ;
 
         for(Component component : page.getWidget()){
             componentSwitch.doSwitch(component) ;
@@ -62,6 +62,11 @@ public class GeneratedConnectorWizardPage extends AbstractConnectorConfiguration
 
         return mainComposite ;
     }
+
+	protected PageComponentSwitch getPageComponentSwitch(
+			EMFDataBindingContext context, final Composite pageComposite) {
+		return new PageComponentSwitch(getContainer(),pageComposite,getElementContainer(),getDefinition(),getConfiguration(),context,getMessageProvider(),getExpressionTypeFilter());
+	}
 
 
 }

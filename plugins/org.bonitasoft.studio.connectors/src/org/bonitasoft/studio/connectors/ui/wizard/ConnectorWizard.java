@@ -93,7 +93,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	private static final String CUSTOM_WIZARD_ID = "org.bonitasoft.studio.connectors.connectorWizard";
 	private static final String DATABASE_ID ="database";
 	private static final String DATASOURCE_CONNECTOR_D = "database-datasource";
-	
+
 	protected final EObject container;
 	protected Connector connectorWorkingCopy;
 	private boolean editMode = false;
@@ -109,18 +109,18 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	private boolean useEvents = true;
 	private ViewerFilter expressionTypeFilter = new AvailableExpressionTypeFilter(new String[]{
-            ExpressionConstants.CONSTANT_TYPE,
-            ExpressionConstants.VARIABLE_TYPE,
-            ExpressionConstants.SCRIPT_TYPE,
-            ExpressionConstants.PARAMETER_TYPE
-    }) ;
+			ExpressionConstants.CONSTANT_TYPE,
+			ExpressionConstants.VARIABLE_TYPE,
+			ExpressionConstants.SCRIPT_TYPE,
+			ExpressionConstants.PARAMETER_TYPE
+	}) ;
 	private ViewerFilter formExpressionTypeFilter = new AvailableExpressionTypeFilter(new String[]{
-            ExpressionConstants.CONSTANT_TYPE,
-            ExpressionConstants.VARIABLE_TYPE,
-            ExpressionConstants.SCRIPT_TYPE,
-            ExpressionConstants.PARAMETER_TYPE,
-            ExpressionConstants.FORM_FIELD_TYPE
-    }) ;
+			ExpressionConstants.CONSTANT_TYPE,
+			ExpressionConstants.VARIABLE_TYPE,
+			ExpressionConstants.SCRIPT_TYPE,
+			ExpressionConstants.PARAMETER_TYPE,
+			ExpressionConstants.FORM_FIELD_TYPE
+	}) ;
 
 
 
@@ -147,7 +147,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		setWindowTitle(Messages.connectors);
 		initialize() ;
 	}
-	
+
 
 	protected void setEditMode(boolean isEdit) {
 		editMode = isEdit;
@@ -297,7 +297,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 			checkDefinitionDependencies(definition) ;
 
-			
+
 			extension = findCustomWizardExtension(definition) ;
 			recreateConnectorConfigurationPages(definition,true);
 		}
@@ -444,10 +444,15 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		}
 
 		if(extension != null && (!extension.hasCanBeUsedProvider() || extension.canBeUsed(definition,connectorWorkingCopy))){ //Extension page
-			for(AbstractConnectorConfigurationWizardPage p : extension.getPages()){
+			List<AbstractConnectorConfigurationWizardPage> advancedPages = extension.getPages();
+			for(AbstractConnectorConfigurationWizardPage p : advancedPages){
 				p.setMessageProvider(messageProvider) ;
 				p.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
 				p.setDefinition(definition) ;
+				int i = advancedPages.indexOf(p);
+				if(definition.getPage().size() >= i){
+					p.setPage(definition.getPage().get(i));
+				}
 				p.setElementContainer(container) ;
 				p.setExpressionTypeFilter(getExpressionTypeFilter());
 				result.add(p) ;
