@@ -124,7 +124,7 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 
 
     private void updateButtons() {
-        if (tableViewer != null && tableViewer != null) {
+        if (tableViewer != null) {
             IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
 
             if (!removeConnectorButton.isDisposed()) {
