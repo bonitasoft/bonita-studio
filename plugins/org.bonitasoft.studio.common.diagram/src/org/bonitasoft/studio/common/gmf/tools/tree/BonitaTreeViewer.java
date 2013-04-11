@@ -222,7 +222,9 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
 						Object ep = selection.getFirstElement();
 						if (ep instanceof IGraphicalEditPart){
 							EObject element = ((IGraphicalEditPart) ep).resolveSemanticElement();
-							treeViewer.getViewer().setSelection(new StructuredSelection(element));
+							if (element !=null){
+								treeViewer.getViewer().setSelection(new StructuredSelection(element));
+							}
 						}
 					
 					}
