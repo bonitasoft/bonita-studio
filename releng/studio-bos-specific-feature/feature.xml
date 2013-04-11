@@ -22,7 +22,7 @@ This software is licensed under GPL v2.
    </license>
 
    <requires>
-      <import feature="studio-feature" version="1.0.0.qualifier"/>
+      <import feature="studio-feature" version="6.0.0.qualifier" match="equivalent"/>
    </requires>
 
    <plugin
