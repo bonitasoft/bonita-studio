@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.internal.WorkbenchMessages;
-
+import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
 /**
  * @author Aurelien Pupier
  *
@@ -106,7 +106,7 @@ public abstract class FileStoreSelectDialog extends Dialog {
     private void createDescription(Composite mainComposite) {
         Label descriptionLabel = new Label(mainComposite, SWT.NONE);
         descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2,1).create());
-        descriptionLabel.setText(Messages.selectDocumentDescription);
+        descriptionLabel.setText(Messages.bind(Messages.selectDocumentDescription, new Object[]{bonitaPortalModuleName}));
     }
 
     private void createList(Composite mainComposite) {

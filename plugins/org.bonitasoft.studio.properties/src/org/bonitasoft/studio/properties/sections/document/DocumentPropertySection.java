@@ -79,6 +79,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import static org.bonitasoft.studio.common.Messages.bosProductName;
 
 /**
  * @author Aurelien Pupier
@@ -274,7 +275,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 		internalCheckbox = getWidgetFactory().createButton(documentTypeComposite, Messages.Internal, SWT.RADIO);
 		ControlDecoration controlDecorationForInternal = new ControlDecoration(internalCheckbox, SWT.RIGHT);
 		controlDecorationForInternal.setImage(Pics.getImage(PicsConstants.hint));
-		controlDecorationForInternal.setDescriptionText(Messages.explanationInternalDocument);
+		controlDecorationForInternal.setDescriptionText(Messages.bind(Messages.explanationInternalDocument, new Object[]{bosProductName}));
 		createDocumentBrowse(documentTypeComposite);
 	}
 

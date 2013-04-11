@@ -23,7 +23,7 @@ import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.widgets.Shell;
-
+import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
 /**
  * @author Aurelien Pupier
  *
@@ -49,6 +49,6 @@ public class SelectDocumentInBonitaStudioRepository extends FileStoreSelectDialo
 
     @Override
     protected String getDialogTitle() {
-        return Messages.selectDocumentDialogTitle;
+        return Messages.bind(Messages.selectDocumentDialogTitle, new Object[]{bonitaStudioModuleName});
     }
 }
