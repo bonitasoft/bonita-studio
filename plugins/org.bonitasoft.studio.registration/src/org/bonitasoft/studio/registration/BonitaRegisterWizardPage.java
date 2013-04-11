@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-
+import static org.bonitasoft.studio.common.Messages.bosProductName;
 /**
  * 	wizard page used to gather info from user
  * 
@@ -265,7 +265,7 @@ public class BonitaRegisterWizardPage extends WizardPage {
 	protected BonitaRegisterWizardPage(String pageName) {
 		super(pageName);
         setTitle(Messages.RegisterWizardPage_Title);
-        setDescription(Messages.RegisterWizardPage_Desc);
+        setDescription(Messages.bind(Messages.RegisterWizardPage_Desc, new Object[]{bosProductName}));
         setImageDescriptor(Pics.getWizban());
         initCurrentCountry();
 	}
