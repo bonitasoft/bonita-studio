@@ -57,7 +57,6 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -158,7 +157,6 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 
 	protected void createReturnTypeComposite(Composite parent) {
 		Composite typeComposite = new Composite(parent,SWT.NONE) ;
-		GridData listBoxData = new GridData(GridData.FILL_HORIZONTAL);
 		typeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
 		GridLayout gl = new GridLayout(3,false) ;
 		gl.marginWidth = 0 ;
