@@ -577,7 +577,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		}
 	}
 
-	private Input getConnectorInput(String inputName) {
+	protected Input getConnectorInput(String inputName) {
 		for(Input input : definition.getInput()){
 			if(input.getName().equals(inputName)){
 				return input ;
@@ -599,7 +599,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		return fieldLabel ;
 	}
 
-	private ConnectorParameter getConnectorParameter(String inputName, WidgetComponent object, Input input) {
+	protected ConnectorParameter getConnectorParameter(String inputName, WidgetComponent object, Input input) {
 		for(ConnectorParameter param : connectorConfiguration.getParameters()){
 			if(param.getKey().equals(inputName)){
 				if(param.getExpression() == null){
