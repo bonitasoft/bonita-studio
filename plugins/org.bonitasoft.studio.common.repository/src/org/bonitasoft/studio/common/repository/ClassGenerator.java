@@ -138,7 +138,7 @@ public class ClassGenerator {
                 classType.getCompilationUnit().createImport("org.bonitasoft.engine.exception.ConnectorException", null, monitor);
             }
             if(hierarchy.contains(abstractFilterType)){
-            	StringBuilder executeMethodContent = new StringBuilder("@Override\npublic validateInputParameters() throws ConnectorValidationException {\n\t");
+            	StringBuilder executeMethodContent = new StringBuilder("@Override\npublic void validateInputParameters() throws ConnectorValidationException {\n\t");
             	executeMethodContent.append("//TODO validate input parameters here \n\n}\n");
             	 classType.createMethod(executeMethodContent.toString(), null,true,monitor) ;
             	 
