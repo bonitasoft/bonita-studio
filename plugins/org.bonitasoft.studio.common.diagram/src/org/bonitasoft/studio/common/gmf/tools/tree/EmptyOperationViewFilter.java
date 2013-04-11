@@ -34,7 +34,7 @@ public class EmptyOperationViewFilter extends ViewerFilter {
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (element instanceof Operation){
 			Operation op = (Operation)element;
-			if ((op.getLeftOperand().getContent()==null || op.getLeftOperand().getContent().isEmpty()) && (op.getRightOperand().getContent()==null || op.getRightOperand().getContent().isEmpty())){
+			if (( op.getLeftOperand()==null || op.getLeftOperand().getContent()==null || op.getLeftOperand().getContent().isEmpty()) && ( op.getRightOperand()==null || op.getRightOperand().getContent()==null || op.getRightOperand().getContent().isEmpty())){
 				return false;
 			}
 		}
