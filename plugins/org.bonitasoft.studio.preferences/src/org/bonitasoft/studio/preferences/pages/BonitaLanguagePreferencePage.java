@@ -43,7 +43,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
-
+import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
 /**
  * @author Romain Bioteau
  *
@@ -70,7 +70,7 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
 
         createTitleBar(Messages.BonitaPreferenceDialog_language, Pics.getImage(PicsConstants.preferenceLanguage),false) ;
 
-        studioLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, Messages.studioLocalLabel, BonitaPreferenceConstants.getAvailableLocales(BonitaPreferenceConstants.AVAILABLE_LOCALES), getFieldEditorParent()) ;
+        studioLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, Messages.bind(Messages.studioLocalLabel, new Object[]{bonitaStudioModuleName}), BonitaPreferenceConstants.getAvailableLocales(BonitaPreferenceConstants.AVAILABLE_LOCALES), getFieldEditorParent()) ;
         webLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, Messages.consoleLocaleLabel, BonitaPreferenceConstants.getAvailableLocales(BonitaPreferenceConstants.AVAILABLE_LOCALES_USER_XP), getFieldEditorParent());
 
         addField(studioLocale);
@@ -115,7 +115,7 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
         }
         if (newLocale != null && newLocale.length() != 0) {
             changeLocale(newLocale);
-            if (MessageDialog.openQuestion(getShell(), Messages.restartQuestion_title, Messages.restartQuestion_msg)){
+            if (MessageDialog.openQuestion(getShell(), Messages.restartQuestion_title, Messages.bind(Messages.restartQuestion_msg, new Object[]{bonitaStudioModuleName}))){
                 PlatformUI.getWorkbench().close();
             }
         }

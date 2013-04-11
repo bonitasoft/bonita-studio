@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
+
 /**
  * @author Romain Bioteau 
  *
@@ -64,7 +66,7 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage i
 
 		createTitleBar(Messages.BonitaPreferenceDialog_Advanced, Pics.getImage(PicsConstants.preferenceAdvanced),false) ;
 
-		automaticId = new BooleanFieldEditor(BonitaPreferenceConstants.AUTOMATIC_ID, Messages.automaticIdLabel +" ("+Messages.automaticIdInfo+")", getFieldEditorParent());
+		automaticId = new BooleanFieldEditor(BonitaPreferenceConstants.AUTOMATIC_ID, Messages.automaticIdLabel +" ("+Messages.bind(Messages.automaticIdInfo, new Object[]{bonitaStudioModuleName})+")", getFieldEditorParent());
 		addField(automaticId);
 
 		IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.preferences.prefrenceFieldEditorContribution"); //$NON-NLS-1$
