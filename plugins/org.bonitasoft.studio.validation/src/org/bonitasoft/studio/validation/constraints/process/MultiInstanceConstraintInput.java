@@ -51,7 +51,7 @@ public class MultiInstanceConstraintInput extends AbstractLiveValidationMarkerCo
 	
 	private IStatus validateMultiInstantiation (IValidationContext ctx, Activity act){
 		MultiInstantiation mult = act.getMultiInstantiation();
-		if(mult!=null && mult.getInputData() != null && mult.getCollectionDataToMultiInstantiate()==null){
+		if(mult!=null && !mult.isUseCardinality() && mult.getInputData() != null && mult.getCollectionDataToMultiInstantiate()==null){
         	return ctx.createFailureStatus(new Object[] {Messages.Validation_MultiInstantiationInputData});
 		}
 		

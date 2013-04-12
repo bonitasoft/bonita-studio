@@ -54,7 +54,7 @@ public class MultiInstanceConstraintOutput extends AbstractLiveValidationMarkerC
 	
 	private IStatus validateMultiInstantiation (IValidationContext ctx, Activity act){
 		MultiInstantiation mult = act.getMultiInstantiation();
-		if(mult!=null && mult.getOutputData() != null && mult.getListDataContainingOutputResults()==null){
+		if(mult!=null && !mult.isUseCardinality() && mult.getOutputData() != null && mult.getListDataContainingOutputResults()==null){
         	return ctx.createFailureStatus(new Object[] {Messages.Validation_MultiInstantiationOutputData});
 		}
 		

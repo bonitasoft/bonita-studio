@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.properties.sections.loop;
 
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -65,6 +66,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -184,7 +186,7 @@ public class MultiInstantiationPropertyContribution implements IExtensibleGridPr
         ControlDecoration cdsequential = new ControlDecoration(sequentialButton, SWT.RIGHT,parametersComposite);
         cdsequential.setDescriptionText(Messages.multiInstance_sequentialDescription);
         cdsequential.setImage(Pics.getImage(PicsConstants.hint));
-        cdsequential.show();
+        
 
         Label completionConditionLabel = widgetFactory.createLabel(parametersComposite, Messages.multiInstance_completionConditionLabel);
         completionConditionViewer = new ExpressionViewer(parametersComposite, SWT.BORDER, widgetFactory, ProcessPackage.Literals.MULTI_INSTANTIATION__COMPLETION_CONDITION);
@@ -197,71 +199,125 @@ public class MultiInstantiationPropertyContribution implements IExtensibleGridPr
         cdCompletionCondition.setDescriptionText(Messages.multiInstance_completionConditionDescription);
         cdCompletionCondition.setImage(Pics.getImage(PicsConstants.hint));
         cdCompletionCondition.setMarginWidth(5);
+        
+        
+        // remove decorator if Collection multiInstance is not enabled
+        if(useCollectionButton.getSelection()){
+        cdsequential.show();
         cdCompletionCondition.show();
+        }
     }
 
 
     protected void createUseExpressionBlock(TabbedPropertySheetWidgetFactory widgetFactory,	Composite parametersComposite) {
     	
-        ModifyListener inputDataAndListOutputDataListener = new ModifyListener() {
+        SelectionListener inputDataAndListOutputDataListener = new SelectionListener() {
 			@Override
-			public void modifyText(ModifyEvent e) {
-				if(!inputDataChooser.getCombo().getText().isEmpty() && collectionDataChooser.getCombo().getText().isEmpty()){
-					cdInput.setImage(Pics.getImage(PicsConstants.error));
-					cdInput.setDescriptionText(Messages.errorInputDataMultiInstanceCollection);
-				}else{
-					cdInput.setImage(Pics.getImage(PicsConstants.hint));
-					cdInput.setDescriptionText(Messages.multiInstance_inputDataDescription);
-				}
+			public void widgetSelected(SelectionEvent e) {
+				updateInputDataDecorator();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
 			}
 		};
-    	
+		
+		ModifyListener inputDataAndListOutputDataModifyListener = new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				updateInputDataDecorator();
+				
+			}
+		};
+		
         useCollectionButton = widgetFactory.createButton(parametersComposite, Messages.multiInstance_useCollection, SWT.RADIO);
         ControlDecoration cdUseCollection = new ControlDecoration(useCollectionButton, SWT.RIGHT,parametersComposite);
         cdUseCollection.setDescriptionText(Messages.multiInstance_useCollectionDescription);
         cdUseCollection.setImage(Pics.getImage(PicsConstants.hint));
         collectionDataChooser = createChooser(widgetFactory, parametersComposite);
-        collectionDataChooser.getCombo().addModifyListener(inputDataAndListOutputDataListener);
+        collectionDataChooser.getCombo().addModifyListener(inputDataAndListOutputDataModifyListener);
 
         inputOutputDataComposite = widgetFactory.createComposite(parametersComposite);
         inputOutputDataComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(6).create());
         inputOutputDataComposite.setLayoutData(GridDataFactory.fillDefaults().span(3, 1).create());
+       
+        SelectionListener outputDataAndListOutputDataListener = new SelectionListener() {
+
+        	@Override
+        	public void widgetSelected(SelectionEvent e) {
+        		updateOutputDataDecorator();
+        	}
+        	@Override
+        	public void widgetDefaultSelected(SelectionEvent e) {
+        		// TODO Auto-generated method stub
+
+        	}
+        };
         
-        ModifyListener outputDataAndListOutputDataListener = new ModifyListener() {
+        ModifyListener outputDataAndListOutputDataModifyListener = new ModifyListener() {
+			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				if(!outputDataChooser.getCombo().getText().isEmpty() && listOutputDataChooser.getCombo().getText().isEmpty()){
-					cdOutputData.setImage(Pics.getImage(PicsConstants.error));
-					cdOutputData.setDescriptionText(Messages.errorOutputDataMultiInstanceCollection);
-				}else{
-					cdOutputData.setImage(Pics.getImage(PicsConstants.hint));
-					cdOutputData.setDescriptionText(Messages.multiInstance_outputDataDescription);
-				}
+				updateOutputDataDecorator();
+				
 			}
 		};
+		
+        
+      useCollectionButton.addSelectionListener(outputDataAndListOutputDataListener);
+      useCollectionButton.addSelectionListener(inputDataAndListOutputDataListener);
+
 
         widgetFactory.createLabel(inputOutputDataComposite, Messages.multiInstance_inputData);
         inputDataChooser = createChooser(widgetFactory, inputOutputDataComposite);
-        inputDataChooser.getCombo().addModifyListener(inputDataAndListOutputDataListener);
+        inputDataChooser.getCombo().addModifyListener(inputDataAndListOutputDataModifyListener);
         cdInput = new ControlDecoration(inputDataChooser.getControl(), SWT.LEFT,parametersComposite);
         cdInput.setImage(Pics.getImage(PicsConstants.hint));
         cdInput.setDescriptionText(Messages.multiInstance_inputDataDescription);
         widgetFactory.createLabel(inputOutputDataComposite, Messages.multiInstance_outputData);
         outputDataChooser = createChooser(widgetFactory, inputOutputDataComposite);
-        outputDataChooser.getCombo().addModifyListener(outputDataAndListOutputDataListener);
+        outputDataChooser.getCombo().addModifyListener(outputDataAndListOutputDataModifyListener);
         cdOutputData = new ControlDecoration(outputDataChooser.getControl(), SWT.LEFT,parametersComposite);
         cdOutputData.setImage(Pics.getImage(PicsConstants.hint));
         cdOutputData.setDescriptionText(Messages.multiInstance_outputDataDescription);
 
         widgetFactory.createLabel(parametersComposite, Messages.multiInstance_listOutputDataLabel);
         listOutputDataChooser = createChooser(widgetFactory, parametersComposite);
-        listOutputDataChooser.getCombo().addModifyListener(outputDataAndListOutputDataListener);
+        listOutputDataChooser.getCombo().addModifyListener(outputDataAndListOutputDataModifyListener);
         cdlistOutputData = new ControlDecoration(listOutputDataChooser.getControl(), SWT.LEFT,parametersComposite);
         cdlistOutputData.setImage(Pics.getImage(PicsConstants.hint));
         cdlistOutputData.setDescriptionText(Messages.multiInstance_listOutputDataDescription);
         
     }
+    
+	/**
+	 * 
+	 */
+    protected void updateOutputDataDecorator() {
+    	if(useCollectionButton.getSelection() && !outputDataChooser.getCombo().getText().isEmpty() && listOutputDataChooser.getCombo().getText().isEmpty()){
+    		cdOutputData.setImage(Pics.getImage(PicsConstants.error));
+    		cdOutputData.setDescriptionText(Messages.errorOutputDataMultiInstanceCollection);
+    	}else{
+    		cdOutputData.setImage(Pics.getImage(PicsConstants.hint));
+    		cdOutputData.setDescriptionText(Messages.multiInstance_outputDataDescription);
+    	}
+    }
 
+	/**
+	 * 
+	 */
+	protected void updateInputDataDecorator() {
+		if(useCollectionButton.getSelection() && !inputDataChooser.getCombo().getText().isEmpty() && collectionDataChooser.getCombo().getText().isEmpty()){
+			cdInput.setImage(Pics.getImage(PicsConstants.error));
+			cdInput.setDescriptionText(Messages.errorInputDataMultiInstanceCollection);
+		}else{
+			cdInput.setImage(Pics.getImage(PicsConstants.hint));
+			cdInput.setDescriptionText(Messages.multiInstance_inputDataDescription);
+		}
+	}
 
     protected void createCardinalityLine(TabbedPropertySheetWidgetFactory widgetFactory, Composite parametersComposite) {
     	useCardinalityButton = widgetFactory.createButton(parametersComposite, Messages.multiInstance_useCardinality, SWT.RADIO);
