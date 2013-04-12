@@ -97,13 +97,13 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 
 
 	private final Composite parent;
-	private final EMFDataBindingContext context;
+	protected final EMFDataBindingContext context;
 	private final ConnectorConfiguration connectorConfiguration;
-	private final EObject container;
-	private final ConnectorDefinition definition;
+	protected final EObject container;
+	protected final ConnectorDefinition definition;
 	private final java.util.List<Section> sections = new ArrayList<Section>() ;
-	private final DefinitionResourceProvider messageProvider;
-	private final ViewerFilter connectorExpressionContentTypeFilter;
+	protected final DefinitionResourceProvider messageProvider;
+	protected final ViewerFilter connectorExpressionContentTypeFilter;
 	private IWizardContainer iWizardContainer;
 
 	public PageComponentSwitch(IWizardContainer iWizardContainer, Composite parent,EObject container,ConnectorDefinition definition,ConnectorConfiguration connectorConfiguration, EMFDataBindingContext context,DefinitionResourceProvider messageProvider,ViewerFilter connectorExpressionContentTypeFilter) {
@@ -284,9 +284,6 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			viewer.addFilter(connectorExpressionContentTypeFilter);
 
 			Expression exp = (Expression) parameter.getExpression();
-//			if(!exp.getType().equals(ExpressionConstants.PATTERN_TYPE)){
-//				exp.setType(ExpressionConstants.PATTERN_TYPE);
-//			}
 			String desc = messageProvider.getFieldDescription(definition, object.getId()) ;
 			if(desc != null && !desc.isEmpty()){
 				viewer.setHint(desc) ;
@@ -328,7 +325,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		}
 	}
 
-	private String getLabel(String inputName) {
+	protected String getLabel(String inputName) {
 		String label =  messageProvider.getFieldLabel(definition, inputName) ;
 		if(label == null){
 			label = "" ;

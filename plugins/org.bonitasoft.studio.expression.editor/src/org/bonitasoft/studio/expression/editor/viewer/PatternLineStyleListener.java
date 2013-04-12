@@ -41,10 +41,10 @@ import org.eclipse.swt.widgets.Display;
  */
 public class PatternLineStyleListener implements LineStyleListener {
 
-	private Set<Expression> expressions = new HashSet<Expression>();
-	private FindReplaceDocumentAdapter finder;
-	private IDocument document;
-	private static Map<String,Integer> supportedTypes ;
+	protected Set<Expression> expressions = new HashSet<Expression>();
+	protected FindReplaceDocumentAdapter finder;
+	protected IDocument document;
+	protected static Map<String,Integer> supportedTypes ;
 	static{
 		supportedTypes = new HashMap<String,Integer>();
 		supportedTypes.put(ExpressionConstants.VARIABLE_TYPE, SWT.COLOR_DARK_RED);
@@ -63,14 +63,14 @@ public class PatternLineStyleListener implements LineStyleListener {
 	@Override
 	public void lineGetStyle(LineStyleEvent event) {
 		Vector<StyleRange> styles = new Vector<StyleRange>();
-		addExpressionStyles( event,  styles);
+		int lineOffset = event.lineOffset;
+		int lineLenght = event.lineText.length();
+		addExpressionStyles( lineOffset,lineLenght,  styles);
 		event.styles = styles.toArray(new StyleRange[styles.size()]);
 	}
 
 
-	protected void addExpressionStyles(LineStyleEvent event, Vector<StyleRange> styles){
-		int lineOffset = event.lineOffset;
-		int lineLenght = event.lineText.length();
+	protected void addExpressionStyles(int lineOffset, int lineLenght, Vector<StyleRange> styles){
 		final String content = document.get();
 		for (Expression exp : expressions) {
 			if(supportedTypes.keySet().contains(exp.getType())){

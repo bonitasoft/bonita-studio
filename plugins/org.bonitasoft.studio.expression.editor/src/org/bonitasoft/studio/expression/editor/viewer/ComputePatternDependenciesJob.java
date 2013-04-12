@@ -51,7 +51,7 @@ public class ComputePatternDependenciesJob extends Job {
 
 	@Override
 	protected IStatus run(final IProgressMonitor monitor) {
-		final String expression = document.get();
+		final String expression = getTextContent();
 		if (cache.get(expression) == null) {
 			final FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(document);
 			final Set<String> addedExp = new HashSet<String>();
@@ -76,6 +76,10 @@ public class ComputePatternDependenciesJob extends Job {
 			cache.put(expression, deps);
 		}
 		return Status.OK_STATUS;
+	}
+
+	protected String getTextContent() {
+		return document.get();
 	}
 
 	public List<EObject> getDependencies(final String expression) {

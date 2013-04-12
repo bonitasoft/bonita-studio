@@ -81,14 +81,14 @@ public class PatternExpressionViewer extends Composite {
 	private final IExpressionNatureProvider expressionNatureProvider = new ExpressionContentProvider();
 	private ExpressionContentAssistProcessor contentAssisProcessor;
 	private final Set<ViewerFilter> filters = new HashSet<ViewerFilter>();
-	private Expression expression;
+	protected Expression expression;
 	private List<Expression> filteredExpressions;
 	private PatternLineStyleListener patternLineStyle;
 	private ControlDecoration hintDecoration;
 	private ComputePatternDependenciesJob dependencyJob;
 	private MagicComposite mc;
 	private EMFDataBindingContext context;
-	private String mandatoryFieldLabel;
+	protected String mandatoryFieldLabel;
 	private EObject contextInput;
 	private Binding patternBinding;
 	private ControlDecoration helpDecoration;
@@ -180,7 +180,7 @@ public class PatternExpressionViewer extends Composite {
 	}
 
 
-	private void bindPatternExpression() {
+	protected void bindPatternExpression() {
 		UpdateValueStrategy startegy = new UpdateValueStrategy();
 		if(mandatoryFieldLabel != null){
 			startegy.setAfterConvertValidator(new EmptyInputValidator(mandatoryFieldLabel));
@@ -201,8 +201,9 @@ public class PatternExpressionViewer extends Composite {
 
 
 	protected void createTextViewer() {
-		viewer = new TextViewer(mc, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL) ;
+		viewer = createViewer(mc) ;
 		viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		configureTextViewer();
 
 		helpDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.RIGHT,this);
 		helpDecoration.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
@@ -217,9 +218,7 @@ public class PatternExpressionViewer extends Composite {
 		hintDecoration.hide();
 
 
-		viewer.setDocument(new Document());
-		patternLineStyle = new PatternLineStyleListener(viewer.getDocument());
-		viewer.getTextWidget().addLineStyleListener(patternLineStyle) ;
+
 		viewer.addTextListener(new ITextListener() {
 
 			@Override
@@ -227,13 +226,15 @@ public class PatternExpressionViewer extends Composite {
 				viewer.getTextWidget().notifyListeners(SWT.Modify,new Event());
 			}
 		});
+
 		contentAssisProcessor = new ExpressionContentAssistProcessor(viewer.getDocument()) ;
 		final ContentAssistant assistant = new ContentAssistant();
 		assistant.setContentAssistProcessor(contentAssisProcessor,IDocument.DEFAULT_CONTENT_TYPE);
 		assistant.setShowEmptyList(true);
-		assistant.install(viewer);
 		assistant.enableAutoActivation(true);
-		viewer.getControl().addKeyListener(new KeyAdapter() {
+		assistant.install(viewer);
+
+		viewer.getTextWidget().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 
@@ -268,6 +269,16 @@ public class PatternExpressionViewer extends Composite {
 		helpDecoration.show();
 	}
 
+	protected void configureTextViewer() {
+		viewer.setDocument(new Document());
+		patternLineStyle = new PatternLineStyleListener(viewer.getDocument());
+		viewer.getTextWidget().addLineStyleListener(patternLineStyle) ;
+	}
+
+	protected TextViewer createViewer(Composite parent) {
+		return new TextViewer(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+	}
+
 	private void updateExpressionDependencies() {
 		dependencyJob.schedule();
 	}
@@ -298,7 +309,9 @@ public class PatternExpressionViewer extends Composite {
 		filteredExpressions =  getFilteredExpressions() ;
 		Set<Expression> expressionSet = new HashSet<Expression>(filteredExpressions);
 		contentAssisProcessor.setExpressions(expressionSet);
-		patternLineStyle.setExpressions(expressionSet);
+		if(patternLineStyle != null){
+			patternLineStyle.setExpressions(expressionSet);
+		}
 		dependencyJob = new ComputePatternDependenciesJob(viewer.getDocument(),filteredExpressions) ;
 		dependencyJob.addJobChangeListener(new IJobChangeListener() {
 

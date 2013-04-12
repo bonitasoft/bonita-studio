@@ -59,7 +59,6 @@ public class GeneratedConnectorWizardPage extends AbstractConnectorConfiguration
         for(Section section : componentSwitch.getSectionsToExpand()){
             section.setExpanded(true) ;
         }
-
         return mainComposite ;
     }
 
