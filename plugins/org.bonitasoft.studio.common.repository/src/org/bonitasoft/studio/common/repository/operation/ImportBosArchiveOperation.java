@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
-
+import static org.bonitasoft.studio.common.Messages.bosProductName;
 
 /**
  * @author Romain Bioteau
@@ -105,7 +105,7 @@ public class ImportBosArchiveOperation {
             }
 
             if(!isValid){
-                return new Status(IStatus.ERROR,CommonRepositoryPlugin.PLUGIN_ID,Messages.invalidArchive);
+                return new Status(IStatus.ERROR,CommonRepositoryPlugin.PLUGIN_ID,Messages.bind(Messages.invalidArchive, new Object[]{bosProductName}));
             }
 
             updateResourcesToOpenList(container);
