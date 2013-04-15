@@ -288,8 +288,6 @@ public class PatternExpressionViewer extends Composite {
 
 	protected void configureTextViewer() {
 		viewer.setDocument(new Document());
-		patternLineStyle = new PatternLineStyleListener(viewer.getDocument());
-		viewer.getTextWidget().addLineStyleListener(patternLineStyle) ;
 	}
 
 	protected TextViewer createViewer(Composite parent) {

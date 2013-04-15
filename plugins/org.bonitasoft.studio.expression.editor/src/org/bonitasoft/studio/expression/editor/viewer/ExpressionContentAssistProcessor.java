@@ -41,7 +41,9 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
  */
 public class ExpressionContentAssistProcessor implements IContentAssistProcessor {
 
-    private final ContextInformationValidator contextInfoValidator;
+    private static final String DEL_PREFIX = "${";
+	private static final String DEL_SUFFIX = "}";
+	private final ContextInformationValidator contextInfoValidator;
     private Set<Expression> expressions;
     private final ExpressionLabelProvider labelProvider;
 
@@ -91,16 +93,23 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
             if(isSupportedType(expression.getType())){
                 if(!showAllProposals && expression.getName().startsWith(previousString.toString())){
                     final String pContent = expression.getName().substring(previousString.toString().length());
-                    proposals.add(new CompletionProposal(pContent, offset,0,pContent.length(),labelProvider.getImage(expression),labelProvider.getText(expression),null,null));
+                    final String replacementString = addDelimiters(pContent);
+					proposals.add(new CompletionProposal(replacementString, offset,0,replacementString.length(),labelProvider.getImage(expression),labelProvider.getText(expression),null,null));
                 }else if(showAllProposals){
-                    proposals.add(new CompletionProposal(expression.getName(), offset,0,expression.getName().length(),labelProvider.getImage(expression),labelProvider.getText(expression),null,null));
+                    final String replacementString = addDelimiters(expression.getName());
+					proposals.add(new CompletionProposal(replacementString, offset,0,replacementString.length(),labelProvider.getImage(expression),labelProvider.getText(expression),null,null));
                 }
             }
         }
         return proposals.toArray(new ICompletionProposal[proposals.size()]);
     }
 
-    private boolean isSupportedType(String type) {
+    protected String addDelimiters(String pContent) {
+		return DEL_PREFIX + pContent + DEL_SUFFIX;
+	}
+
+
+	private boolean isSupportedType(String type) {
         return ExpressionConstants.VARIABLE_TYPE.equals(type) || ExpressionConstants.PARAMETER_TYPE.equals(type) || ExpressionConstants.FORM_FIELD_TYPE.equals(type);
     }
 
@@ -142,7 +151,7 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
      */
     @Override
     public String getErrorMessage() {
-        return "dsfdsf";
+        return null;
     }
 
 
