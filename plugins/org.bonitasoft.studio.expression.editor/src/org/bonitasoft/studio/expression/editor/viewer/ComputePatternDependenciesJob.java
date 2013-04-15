@@ -63,7 +63,7 @@ public class ComputePatternDependenciesJob extends Job {
 					index = finder.find(0,exp.getName(), true, true, true, false);
 					while (index != null) {
 						if(!addedExp.contains(exp.getName())){
-							deps.add(EcoreUtil.copy(exp));
+							deps.add(EcoreUtil.copy(exp.getReferencedElements().get(0)));
 							addedExp.add(exp.getName());
 						}
 						i = i + index.getLength();
