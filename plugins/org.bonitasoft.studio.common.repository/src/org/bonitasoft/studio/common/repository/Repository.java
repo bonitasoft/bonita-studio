@@ -66,6 +66,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -75,6 +76,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -98,18 +100,13 @@ public class Repository implements IRepository {
 
 	private static final String REPOSITORY_STORE_EXTENSION_POINT_ID = "org.bonitasoft.studio.repositoryStore";
 	public static final IProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor() ;
-
 	private static final String CLASS = "class";
-
-
 
 	private String name;
 	private IProject project;
 	private SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
 
-	public Repository() {
-
-	}
+	public Repository() {}
 
 	@Override
 	public void createRepository(String repositoryName) {
@@ -218,7 +215,7 @@ public class Repository implements IRepository {
 
 	protected IRepositoryStore<? extends IRepositoryFileStore> createRepositoryStore(
 			IConfigurationElement configuration) throws CoreException {
-		final IRepositoryStore<? extends IRepositoryFileStore> store = (IRepositoryStore<? extends IRepositoryFileStore>) configuration.createExecutableExtension(CLASS) ;
+		final IRepositoryStore<? extends IRepositoryFileStore> store = (IRepositoryStore<?>) configuration.createExecutableExtension(CLASS) ;
 		store.createRepositoryStore(this) ;
 		return store;
 	}
@@ -672,7 +669,7 @@ public class Repository implements IRepository {
 				String repoName = path.segments()[0];
 				IFile file = getProject().getFile(path);
 				if(file.exists()){
-					for(IRepositoryStore store : getAllStores()){
+					for(IRepositoryStore<?> store : getAllStores()){
 						if(belongToRepositoryStore(store,file)){
 							IRepositoryFileStore fileStore = store.createRepositoryFileStore(file.getName());
 							if(fileStore != null && fileStore.getParentStore().getName().startsWith(repoName)){
@@ -687,7 +684,7 @@ public class Repository implements IRepository {
 		return null;
 	}
 
-	private boolean belongToRepositoryStore(IRepositoryStore store, IFile file) {
+	private boolean belongToRepositoryStore(IRepositoryStore<?> store, IFile file) {
 		final IFolder parentFolder = store.getResource();
 		if(parentFolder == null){
 			return false;
@@ -697,6 +694,15 @@ public class Repository implements IRepository {
 			current = current.getParent();
 		}
 		return current!=null && parentFolder.equals(current);
+	}
+
+	@Override
+	public void migrate() throws CoreException, MigrationException {
+		Assert.isNotNull(project);
+		for(IRepositoryStore<?> store : getAllStores()){
+			store.migrate();
+		}
+		project.getDescription().setComment(ProductVersion.CURRENT_VERSION) ;
 	}
 
 }

@@ -22,6 +22,8 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -59,5 +61,7 @@ public interface IRepositoryStore<T extends IRepositoryFileStore> {
     Set<String> getCompatibleExtensions() ;
 
     void refresh() ;
+
+	void migrate() throws CoreException, MigrationException;
 
 }

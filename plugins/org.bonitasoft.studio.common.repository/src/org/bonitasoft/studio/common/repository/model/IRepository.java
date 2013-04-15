@@ -23,7 +23,9 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.graphics.Image;
 
@@ -82,4 +84,6 @@ public interface IRepository extends IFileStoreChangeListener {
     URLClassLoader createProjectClassloader() ;
 
     IRepositoryFileStore asRepositoryFileStore(IFile res);
+
+	void migrate() throws CoreException, MigrationException;
 }

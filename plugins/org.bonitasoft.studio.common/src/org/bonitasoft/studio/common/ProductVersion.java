@@ -16,6 +16,9 @@
  */
 package org.bonitasoft.studio.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Romain Bioteau
  *
@@ -42,6 +45,12 @@ public class ProductVersion {
 
     public static final String CURRENT_VERSION = VERSION_6_0_0_GA;
 
+    public static final List<String> orderedVerions = new ArrayList<String>();
+    static{
+    	orderedVerions.add(VERSION_6_0_0_ALPHA);
+    	orderedVerions.add(VERSION_6_0_0_BETA);
+    	orderedVerions.add(VERSION_6_0_0_GA);
+    }
 
     public static boolean sameVersion(String version){
         return CURRENT_VERSION.equals(version);
@@ -60,5 +69,11 @@ public class ProductVersion {
         }
         return minor.equals(testedVersion) ;
     }
+
+	public static boolean canBeMigrated(String version) {
+		int latestVerionRank = orderedVerions.indexOf(CURRENT_VERSION);
+		int verisonRank = orderedVerions.indexOf(version);
+		return verisonRank != -1 && verisonRank < latestVerionRank;
+	}
 
 }

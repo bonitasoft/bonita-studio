@@ -39,6 +39,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -174,5 +175,10 @@ public class ApplicationResourceRepositoryStore extends AbstractRepositoryStore 
         }
         return createRepositoryFileStore(fileName);
     }
+
+	@Override
+	public void migrate() throws CoreException, MigrationException {
+		//NOTHING TO MIGRATE
+	}
 
 }
