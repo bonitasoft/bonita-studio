@@ -91,7 +91,7 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
                     categoryId.equals(DATA_MANAGEMENT) ||
                     categoryId.equals(DEPENDENCIES_MANAGEMENT) ||
                     categoryId.equals(CONTEXTS) ||
-                    categoryId.equals(BAM)){
+                    categoryId.equals(KPI)){
                 extensionFeatures.add(categoryId) ;
             }
 

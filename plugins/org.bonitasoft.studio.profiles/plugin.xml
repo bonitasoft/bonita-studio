@@ -220,8 +220,8 @@
             categoryId="org.bonitasoft.studio.profiles.contexts">
       </categoryActivityBinding>
       <categoryActivityBinding
-            activityId="org.bonitasoft.studio.profiles.bam.menu"
-            categoryId="org.bonitasoft.studio.profiles.bam">
+            activityId="org.bonitasoft.studio.profiles.kpi.menu"
+            categoryId="org.bonitasoft.studio.profiles.kpi">
       </categoryActivityBinding>
       <categoryActivityBinding
             activityId="org.bonitasoft.studio.profiles.dependencies.menu"
