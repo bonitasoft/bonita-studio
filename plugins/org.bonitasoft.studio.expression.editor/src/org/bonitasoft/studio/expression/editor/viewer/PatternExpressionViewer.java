@@ -65,6 +65,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Link;
 
@@ -102,7 +103,7 @@ public class PatternExpressionViewer extends Composite {
 		createTextViewer();
 		createExpressionViewer();
 		createEditorSwitch();
-		mc.hide(viewer.getControl());
+		mc.hide(getViewerControl());
 		mc.show(expressionViewer.getControl());
 
 	}
@@ -122,11 +123,11 @@ public class PatternExpressionViewer extends Composite {
 		if(ExpressionConstants.PATTERN_TYPE.equals(expression.getType())){
 			expression.setName("<pattern-expression>");
 			mc.hide(expressionViewer.getControl());
-			mc.show(viewer.getControl());
+			mc.show(getViewerControl());
 			helpDecoration.show();
 			mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
 		}else{
-			mc.hide(viewer.getControl());
+			mc.hide(getViewerControl());
 			mc.show(expressionViewer.getControl());
 			helpDecoration.hide();
 			mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
@@ -137,29 +138,45 @@ public class PatternExpressionViewer extends Composite {
 
 	protected void switchEditorType() {
 		if(MessageDialog.openQuestion(mc.getShell(), Messages.eraseExpressionTitle,Messages.eraseExpressionMsg)){
-			if(!expressionViewer.getControl().isVisible()){
-				helpDecoration.hide();
-				mc.hide(viewer.getControl());
-				mc.show(expressionViewer.getControl());
-				expression.setContent("");
-				expression.setName("");
-				expression.setInterpreter(null);
-				expression.setType(ExpressionConstants.CONSTANT_TYPE);
-				expressionViewer.setSelection(new StructuredSelection(expression));
-				mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+			if(!expressionMode()){
+				showExpressionViewer();
 			}else{
-				mc.hide(expressionViewer.getControl());
-				mc.show(viewer.getControl());
-				expression.setContent("");
-				expression.setName("<pattern-expression>");
-				expression.setInterpreter(null);
-				expression.setType(ExpressionConstants.PATTERN_TYPE);
-				helpDecoration.show();
-				bindPatternExpression();
-				mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
+				showTextViewer();
 			}
 			mc.layout(true, true);
 		}
+	}
+
+	protected void showTextViewer() {
+		mc.hide(expressionViewer.getControl());
+		mc.show(getViewerControl());
+		expression.setContent("");
+		expression.setName("<pattern-expression>");
+		expression.setInterpreter(null);
+		expression.setType(ExpressionConstants.PATTERN_TYPE);
+		helpDecoration.show();
+		bindPatternExpression();
+		mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
+	}
+
+	protected Control getViewerControl() {
+		return viewer.getControl();
+	}
+
+	protected void showExpressionViewer() {
+		helpDecoration.hide();
+		mc.hide(getViewerControl());
+		mc.show(expressionViewer.getControl());
+		expression.setContent("");
+		expression.setName("");
+		expression.setInterpreter(null);
+		expression.setType(ExpressionConstants.CONSTANT_TYPE);
+		expressionViewer.setSelection(new StructuredSelection(expression));
+		mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+	}
+
+	protected boolean expressionMode() {
+		return expressionViewer.getControl().isVisible();
 	}
 
 
