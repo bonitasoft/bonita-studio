@@ -77,6 +77,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -89,7 +90,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.Section;
-
+import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 /**
  * @author Romain Bioteau
  *
@@ -326,19 +327,25 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         testButton.setText(Messages.testButtonLabel) ;
         testButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END,SWT.FILL).create());
         testButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                final Map<String, Serializable> variables = TestGroovyScriptUtil.createVariablesMap(groovyViewer.getGroovyCompilationUnit(), nodes);
-                if(variables.isEmpty()){
-                    try {
-                        TestGroovyScriptUtil.evaluateExpression(groovyViewer.getGroovyCompilationUnit().getSource(), inputExpression.getReturnType(), Collections.EMPTY_MAP);
-                    } catch (JavaModelException e1) {
-                        BonitaStudioLog.error(e1);
-                    }
-                }else{
-                    new TestGroovyScriptDialog(Display.getDefault().getActiveShell(), nodes, groovyViewer.getGroovyCompilationUnit(),inputExpression.getReturnType(),variables).open() ;
-                }
-            }
+        	@Override
+        	public void widgetSelected(SelectionEvent e) {
+        		final Map<String, Serializable> variables = TestGroovyScriptUtil.createVariablesMap(groovyViewer.getGroovyCompilationUnit(), nodes);
+
+        		if(variables.isEmpty()){
+        			ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(Display.getDefault().getActiveShell());
+        			int retCode =mcjd.open();
+        			if(retCode == Window.OK){
+        				try {
+        					TestGroovyScriptUtil.evaluateExpression(groovyViewer.getGroovyCompilationUnit().getSource(), inputExpression.getReturnType(), Collections.EMPTY_MAP, mcjd.getSelectedJars());
+        				} catch (JavaModelException e1) {
+        					BonitaStudioLog.error(e1);
+        				}
+        			}
+        		}else{
+        				new TestGroovyScriptDialog(Display.getDefault().getActiveShell(), nodes, groovyViewer.getGroovyCompilationUnit(),inputExpression.getReturnType(),variables).open() ;
+        			}
+        		
+        	}
         });
 
     }

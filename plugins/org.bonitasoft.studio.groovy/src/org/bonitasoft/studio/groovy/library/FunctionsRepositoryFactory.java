@@ -35,7 +35,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-
+import static org.bonitasoft.studio.common.Messages.bonitaName;
 
 /**
  * @author Romain Bioteau
@@ -134,7 +134,7 @@ public class FunctionsRepositoryFactory {
 
     public static IFunctionCategory getBonitaFunctionCatgory(){
         if(bonitaCat == null) {
-            bonitaCat = new FunctionCategory(Messages.bonitaCatLabel);
+            bonitaCat = new FunctionCategory(bonitaName);
         }
 
         return bonitaCat;

@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
@@ -39,10 +40,13 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
+import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
+import org.bonitasoft.studio.groovy.repository.GroovyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.configuration.Fragment;
@@ -67,7 +71,8 @@ public class TestExpressionOperation implements IRunnableWithProgress {
     private Serializable result;
     private Map<String, Serializable> inputValues = new HashMap<String, Serializable>() ;
     private org.bonitasoft.studio.model.expression.Expression expression;
-
+    private Set<IRepositoryFileStore> additionalJars;
+    
     /* (non-Javadoc)
      * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
      */
@@ -90,21 +95,34 @@ public class TestExpressionOperation implements IRunnableWithProgress {
             configuration.setName("TestExpressionConfiguration");
             new ConfigurationSynchronizer(proc, configuration).synchronize();
             for(FragmentContainer fc : configuration.getProcessDependencies()){
-                if(FragmentTypes.OTHER.equals(fc.getId())){
-                    final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
-                    if(libFolder.exists()){
-                        for(IResource f : libFolder.members()){
-                            if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar")){
-                                Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
-                                fragment.setExported(true);
-                                fragment.setKey(f.getName());
-                                fragment.setValue(f.getName());
-                                fragment.setType(FragmentTypes.JAR);
-                                fc.getFragments().add(fragment);
-                            }
-                        }
+            	if(additionalJars!=null && FragmentTypes.OTHER.equals(fc.getId())){
+            		final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
+            		if(libFolder.exists()){
+            			for(IResource f : libFolder.members()){
+            				if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar") && isSelectedJar(((IFile)f).getName())){
+            					Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
+            					fragment.setExported(true);
+            					fragment.setKey(f.getName());
+            					fragment.setValue(f.getName());
+            					fragment.setType(FragmentTypes.JAR);
+            					fc.getFragments().add(fragment);
+            				}
+            			}
+            		}
+            	}
+            	if(FragmentTypes.GROOVY_SCRIPT.equals(fc.getId())){
+                    GroovyRepositoryStore store = (GroovyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(GroovyRepositoryStore.class) ;
+                    List<GroovyFileStore> fileStores = store.getChildren();
+                    for(IRepositoryFileStore fileStore : fileStores){
+                    	String name = fileStore.getName();
+                        Fragment newFragment = ConfigurationFactory.eINSTANCE.createFragment() ;
+                        newFragment.setType(FragmentTypes.GROOVY_SCRIPT) ;
+                        newFragment.setKey(name) ;
+                        newFragment.setValue(name);
+                        newFragment.setExported(true);
+                        fc.getFragments().add(newFragment);
                     }
-                }
+            	}
             }
 
             final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,configuration,Collections.EMPTY_SET);
@@ -136,7 +154,15 @@ public class TestExpressionOperation implements IRunnableWithProgress {
         }
     }
 
-
+    private boolean isSelectedJar(String fileName){
+    	for(IRepositoryFileStore fileStore : additionalJars){
+    		if(fileStore.getName().equals(fileName)){
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     private AbstractProcess createAbstractProcess() {
         AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
         proc.setName(TEST_EXPRESSION_POOL);
@@ -174,6 +200,12 @@ public class TestExpressionOperation implements IRunnableWithProgress {
         inputValues = variableMap;
     }
 
+	public Set<IRepositoryFileStore> getAdditionalJars() {
+		return additionalJars;
+	}
 
+	public void setAdditionalJars(Set<IRepositoryFileStore> additionalJars) {
+		this.additionalJars = additionalJars;
+	}
 
 }

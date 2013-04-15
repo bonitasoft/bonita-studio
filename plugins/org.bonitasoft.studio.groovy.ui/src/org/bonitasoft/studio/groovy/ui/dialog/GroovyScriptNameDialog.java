@@ -1,8 +1,7 @@
 package org.bonitasoft.studio.groovy.ui.dialog;
 
 
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.jface.dialogs.Dialog;
+import org.bonitasoft.studio.groovy.ui.Messages;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -13,7 +12,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.bonitasoft.studio.groovy.ui.Messages;
 
 public class GroovyScriptNameDialog extends InputDialog {
 
@@ -30,6 +28,8 @@ public class GroovyScriptNameDialog extends InputDialog {
 	        nameHelp.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK));
 	        nameHelp.setDescriptionText(Messages.nameHelp);
 	       
+	       
+	        
 	       
 		return control;
 	}

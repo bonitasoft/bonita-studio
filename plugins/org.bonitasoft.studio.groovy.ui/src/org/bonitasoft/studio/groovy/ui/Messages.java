@@ -24,24 +24,10 @@ public final class Messages extends NLS {
     private static final String BUNDLE_NAME = "messages";//$NON-NLS-1$
 
     public static String testButtonLabel;
-    public static String initVariable;
     public static String functionDocTitle;
 
     public static String functionTitle;
     public static String categoriesTitle;
-
-    public static String saveButtonLabel;
-    public static String loadButtonLabel;
-
-    public static String equalsTooltip;
-    public static String multiplyTooltip;
-    public static String divideTooltip;
-    public static String lessThanTooltip;
-    public static String lessThanOrEqualTooltip;
-    public static String notEqualTooltip;
-    public static String greaterThanOrEqualsTooltip;
-    public static String greaterThanTooltip;
-    public static String evaluationErrorTitle;
     public static String saveWizardPageTitle;
     public static String saveWizardPageMessage;
     public static String saveWizardPageDescription;
@@ -54,45 +40,18 @@ public final class Messages extends NLS {
     public static String confirmScriptDeleteTitle;
     public static String confirmScriptDeleteMessage;
     public static String openScriptLabel;
-    public static String warningLooseCurrentWorkTitle;
-    public static String warningLooseCurrentWorkMessage;
     public static String noProcessVariableAvailable;
-    public static String groovyEditorTitle;
-    public static String noVariableToSetTitle;
-    public static String noVariableToSetMessage;
     public static String saveSuccesfullTitle;
     public static String saveSuccesfullMessage;
-    public static String clearLabel;
-    public static String clearContentTitle;
-    public static String clearContentMessage;
     public static String processVariableLabel;
-    public static String bonitaKeyWord;
     public static String selectData;
     public static String groovyDocumentationLink;
-
-    public static String editorButtonLabel;
-    public static String showPassword;
-    public static String textAreaSelectDataLabel;
-
     public static String browseJava;
-    public static String openExpressionEditor;
-
-    public static String selectWriteToMultipleData_label;
-    public static String writeToMultipleData_append;
-    public static String writeToMultipleData_replace;
-
-    public static String readMultipleData_label;
-    public static String readMultipleData_wholeList;
-    public static String readMultipleData_index;
-    public static String readMultipleData_size;
-
     public static String wrongName;
     public static String scriptNameMustBeValid;
-
     public static String createScript;
     public static String scriptNameDialogTitle;
     public static String scriptNameDialogMessage;
-
     public static String warning;
     public static String warningMessageSystemExit;
     public static String scriptEvaluation ;

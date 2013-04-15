@@ -28,7 +28,6 @@ public final class Messages extends NLS {
 	public static String numberCatLabel;
 	public static String collectionCatLabel;
 	public static String otherCatLabel;
-	public static String bonitaCatLabel;
 	public static String groovyScriptRepository;
 	public static String groovyProvidedScriptRepository;
 

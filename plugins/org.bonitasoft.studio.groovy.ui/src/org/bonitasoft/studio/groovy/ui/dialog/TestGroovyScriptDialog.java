@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.viewer.TestGroovyScriptUtil;
@@ -36,6 +37,7 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -43,6 +45,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -103,7 +106,11 @@ public class TestGroovyScriptDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					TestGroovyScriptUtil.evaluateExpression(unit.getSource(),returnType, TestGroovyScriptUtil.getVariableValues(unit, nodes, widgetMap));
+					ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(Display.getDefault().getActiveShell());
+					int retCode =mcjd.open();
+					if(retCode == Window.OK){
+						TestGroovyScriptUtil.evaluateExpression(unit.getSource(),returnType, TestGroovyScriptUtil.getVariableValues(unit, nodes, widgetMap), mcjd.getSelectedJars());
+					}
 				} catch (JavaModelException e1) {
 					BonitaStudioLog.error(e1);
 				}

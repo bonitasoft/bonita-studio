@@ -40,6 +40,7 @@ import org.bonitasoft.engine.expression.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.groovy.GroovyDocumentUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
@@ -155,7 +156,7 @@ public class TestGroovyScriptUtil {
                          Object res = null;
                          try {
                              try {
-                                 res = testScript(widgetValueText, Object.class.getName(), Collections.EMPTY_MAP);
+                                 res = testScript(widgetValueText, Object.class.getName(), Collections.EMPTY_MAP, Collections.EMPTY_SET);
                              } catch (InvocationTargetException e) {
                                  BonitaStudioLog.error(e);
                              } catch (InterruptedException e) {
@@ -258,15 +259,16 @@ public class TestGroovyScriptUtil {
         return null;
     }
 
-    public static Object testScript(final String expression, final String returnType, final Map<String, Serializable> variableMap) throws GroovyException,  LoginException, ExpressionEvaluationException, InvocationTargetException, InterruptedException {
+    public static Object testScript(final String expression, final String returnType, final Map<String, Serializable> variableMap, Set<IRepositoryFileStore> additionalJars) throws GroovyException,  LoginException, ExpressionEvaluationException, InvocationTargetException, InterruptedException {
         final TestExpressionOperation operation = new TestExpressionOperation();
         operation.setExpression(ExpressionHelper.createGroovyScriptExpression(expression, returnType));
         operation.setContextMap(variableMap);
+        operation.setAdditionalJars(additionalJars);
         operation.run(Repository.NULL_PROGRESS_MONITOR);
         return operation.getResult();
     }
 
-    public static void evaluateExpression(final String expressionContent, final String returnType, final Map<String, Serializable> context) {
+    public static void evaluateExpression(final String expressionContent, final String returnType, final Map<String, Serializable> context, final Set<IRepositoryFileStore> additionalJars) {
         final IProgressService service = PlatformUI.getWorkbench().getProgressService();
         final IRunnableWithProgress testRunnable = new IRunnableWithProgress() {
 
@@ -275,7 +277,7 @@ public class TestGroovyScriptUtil {
                 monitor.beginTask(Messages.scriptEvaluation, IProgressMonitor.UNKNOWN);
                 Object result = null;
                 try {
-                    result = TestGroovyScriptUtil.testScript(expressionContent, returnType, context);
+                    result = TestGroovyScriptUtil.testScript(expressionContent, returnType, context, additionalJars);
                     monitor.done();
                 } catch (final Exception e1) {
                     result = e1;
