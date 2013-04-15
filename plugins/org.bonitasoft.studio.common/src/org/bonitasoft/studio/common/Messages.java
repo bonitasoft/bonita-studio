@@ -304,6 +304,7 @@ public class Messages extends NLS {
 
 	public static String seeDetailsButtonLabel;
 	public static String diagramNameOrVersionMustBeChanged;
+	public static String bonitaName;
 	public static String bosProductName;
 	public static String bosSPProductName;
 	public static String bonitaStudioModuleName;
