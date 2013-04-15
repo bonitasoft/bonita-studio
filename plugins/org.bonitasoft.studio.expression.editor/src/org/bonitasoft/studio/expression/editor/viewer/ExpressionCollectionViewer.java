@@ -976,6 +976,13 @@ public class ExpressionCollectionViewer {
     public void addExpressionNatureProvider(
             IExpressionNatureProvider expressionNatureProvider) {
         viewerExprProviders.add(expressionNatureProvider);
+        if(editingSupports != null && !editingSupports.isEmpty()){
+        	for(int i = 0 ; i< editingSupports.size() ;i++){
+        		if(i < viewerExprProviders.size()){
+        			editingSupports.get(i).setExpressionNatureProvider(viewerExprProviders.get(i));
+        		}
+        	}
+        }
     }
 
 }
