@@ -7646,5 +7646,9 @@
       </changes>
     </changes>
   </releases>
+  <releases date="2013-04-15T10:10:08.354+0200" label="6.0.0-ga-002">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.expression.PatternExpressionMigration"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
+  </releases>
   <releases/>
 </history:History>
