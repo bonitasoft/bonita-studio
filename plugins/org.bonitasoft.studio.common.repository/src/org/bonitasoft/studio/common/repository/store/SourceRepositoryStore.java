@@ -35,6 +35,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
@@ -221,5 +222,10 @@ public abstract class SourceRepositoryStore<T extends AbstractFileStore> extends
 		}
 
 		return null ;
+	}
+	
+	@Override
+	public void migrate() throws CoreException, MigrationException {
+		// NOTHING TO MIGRATE
 	}
 }

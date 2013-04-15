@@ -280,9 +280,6 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 	 @Override
 	 public void migrate() throws CoreException, MigrationException {
 		 for(IRepositoryFileStore fs : getChildren()){
-			 if(fs == null){
-				 System.out.println(getName());
-			 }
 			 if(!fs.isReadOnly() && fs.canBeShared()){
 				 final IResource r = fs.getResource();
 				 if(r instanceof IFile && r.exists()){
@@ -294,8 +291,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 						 iFile.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
 					 }
 				 }else{
-					 System.out.println("Cannot migrate resource "+r.getName() +" (not a file)");
-//					 throw new MigrationException("Cannot migrate resource "+r.getName() +" (not a file)", new Exception());
+					 throw new MigrationException("Cannot migrate resource "+r.getName() +" (not a file)", new Exception());
 				 }
 			 }
 		 }
