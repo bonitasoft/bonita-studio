@@ -140,10 +140,10 @@ public class PatternExpressionViewer extends Composite {
 		if(MessageDialog.openQuestion(mc.getShell(), Messages.eraseExpressionTitle,Messages.eraseExpressionMsg)){
 			if(!expressionMode()){
 				showExpressionViewer();
+				mc.layout(true, true);
 			}else{
 				showTextViewer();
 			}
-			mc.layout(true, true);
 		}
 	}
 
@@ -154,9 +154,13 @@ public class PatternExpressionViewer extends Composite {
 		expression.setName("<pattern-expression>");
 		expression.setInterpreter(null);
 		expression.setType(ExpressionConstants.PATTERN_TYPE);
-		helpDecoration.show();
 		bindPatternExpression();
 		mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
+		mc.layout(true, true);
+		helpDecoration.show();
+		if(hintDecoration.getDescriptionText() != null){
+			hintDecoration.show();
+		}
 	}
 
 	protected Control getViewerControl() {
@@ -165,12 +169,14 @@ public class PatternExpressionViewer extends Composite {
 
 	protected void showExpressionViewer() {
 		helpDecoration.hide();
+		hintDecoration.hide();
 		mc.hide(getViewerControl());
 		mc.show(expressionViewer.getControl());
 		expression.setContent("");
 		expression.setName("");
 		expression.setInterpreter(null);
 		expression.setType(ExpressionConstants.CONSTANT_TYPE);
+		expression.getReferencedElements().clear();
 		expressionViewer.setSelection(new StructuredSelection(expression));
 		mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 	}
@@ -190,6 +196,7 @@ public class PatternExpressionViewer extends Composite {
 
 	private void bindExpressionViewer() {
 		expressionViewer.setContext(contextInput);
+		expressionViewer.setInput(contextInput);
 		if(mandatoryFieldLabel != null){
 			expressionViewer.setMandatoryField(mandatoryFieldLabel, context);
 		}
@@ -206,6 +213,7 @@ public class PatternExpressionViewer extends Composite {
 			patternBinding.dispose();
 			patternBinding = null;
 		}
+		expression.getReferencedElements().clear();
 		patternBinding = context.bindValue(SWTObservables.observeText(viewer.getTextWidget(),SWT.Modify), EMFObservables.observeValue(expression, ExpressionPackage.Literals.EXPRESSION__CONTENT),startegy,null);
 	}
 
@@ -226,7 +234,8 @@ public class PatternExpressionViewer extends Composite {
 		helpDecoration.setImage(JFaceResources.getImage(Dialog.DLG_IMG_HELP));
 		helpDecoration.setDescriptionText(Messages.patternViewerHelp);
 		helpDecoration.setMarginWidth(2);
-
+		helpDecoration.hide();
+		
 		hintDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.LEFT,this);
 		hintDecoration.setImage(Pics.getImage(PicsConstants.hint));
 		hintDecoration.setMarginWidth(2);
@@ -279,7 +288,9 @@ public class PatternExpressionViewer extends Composite {
 
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
-				updateExpressionDependencies();
+				if(!expressionMode()){
+					updateExpressionDependencies();
+				}
 			}
 		});
 
