@@ -113,7 +113,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 						assertEquals("Invalid expression content", QUERY,exp.getContent());
 						assertEquals("Invalid expression return type",String.class.getName(),exp.getReturnType());
 						assertEquals("Invalid number of dependencies", 3,exp.getReferencedElements().size());
-						org.bonitasoft.engine.expression.Expression engineExp = EngineExpressionUtil.createPatternExpression(exp);
+						org.bonitasoft.engine.expression.Expression engineExp = EngineExpressionUtil.createExpression(exp);
 						assertEquals("Invalid expression convertion from studio to engine","SELECT ${"+DATA_NAME_1+"} from MyTable WHERE ${"+DATA_NAME_2+"}='"+DATA_NAME_3+"'",engineExp.getContent());
 					}
 				}
