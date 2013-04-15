@@ -67,7 +67,6 @@ public final class Messages extends NLS {
     public static String clearContentMessage;
     public static String processVariableLabel;
     public static String bonitaKeyWord;
-    public static String bonitaCatLabel;
     public static String selectData;
     public static String groovyDocumentationLink;
 
@@ -117,6 +116,8 @@ public final class Messages extends NLS {
 	public static String nameHelp;
 
 	public static String scriptNameAlreadyExists;
+
+	public static String wrongNameLowCase;
 
     private Messages() {
         // Do not instantiate

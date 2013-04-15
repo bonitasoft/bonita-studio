@@ -262,9 +262,12 @@ public class OpenScriptWizardPage extends WizardPage implements IWizardPage {
 			res.add(Messages.wrongName);
 		} else {
 			final String scriptName = newText;
-			if (scriptName.length() <= 3) {
+			String firstChar = scriptName.isEmpty() ? "" : scriptName.substring(0, 1);
+			if(!scriptName.isEmpty() && firstChar.equals(firstChar.toLowerCase())){
+				res.add(Messages.wrongNameLowCase);
+			}else if (scriptName.length() <= 3) {
 				res.add(Messages.wrongName);
-			} else {
+			}else {
 				IStatus validJavaIdentifierName = JavaConventions.validateJavaTypeName(scriptName, JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
 				if (validJavaIdentifierName.getSeverity() == IStatus.ERROR) {
 					res.add(Messages.scriptNameMustBeValid);
