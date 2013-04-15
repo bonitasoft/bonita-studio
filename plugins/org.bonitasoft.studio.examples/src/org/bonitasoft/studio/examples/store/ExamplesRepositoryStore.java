@@ -31,6 +31,8 @@ import org.bonitasoft.studio.examples.ExamplePlugin;
 import org.bonitasoft.studio.examples.i18n.Messages;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -166,5 +168,11 @@ public class ExamplesRepositoryStore implements IRepositoryStore<ExampleFileStor
         // TODO Auto-generated method stub
         return false;
     }
+
+	@Override
+	public void migrate() throws CoreException, MigrationException {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -2,12 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.bonitasoft.studio.repositoryStore">
-      <repositoryStore
-            class="org.bonitasoft.studio.examples.store.ExamplesRepositoryStore">
-      </repositoryStore>
-   </extension>
-   <extension
          point="org.eclipse.ui.commands">
            <command
             defaultHandler="org.bonitasoft.studio.examples.handler.OpenExampleDiagramCommandHandler"
