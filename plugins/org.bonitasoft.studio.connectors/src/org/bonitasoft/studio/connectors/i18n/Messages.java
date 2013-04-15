@@ -124,6 +124,11 @@ public class Messages extends NLS {
 	public static String testConnectorPOJOWarning;
 	public static String exceptionFound;
 	public static String successMessage;
+	public static String connectorExpressionViewerLabel; 			
+	public static String connectorExpressionViewerMessage;
+	public static String connectorTypeValidationMessage;
+	public static String connectorTypeIsExpressionValidationMessage;
+	public static String connectorItemToolTip;
 
     /**
      * @param event

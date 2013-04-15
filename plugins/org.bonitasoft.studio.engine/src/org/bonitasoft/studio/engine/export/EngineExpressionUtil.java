@@ -81,6 +81,19 @@ public class EngineExpressionUtil {
 		return builder.done();
 	}
 
+	public static org.bonitasoft.engine.core.operation.Operation createOperation(final Operation operation,boolean isExternal) {
+		final OperationBuilder builder = new OperationBuilder();
+		builder.createNewInstance();
+		builder.setType(OperatorType.valueOf(operation.getOperator().getType()));
+		builder.setOperator(operation.getOperator().getExpression());
+		final EList<String> operatorInputTypes = operation.getOperator().getInputTypes();
+		if (!operatorInputTypes.isEmpty()) {
+			builder.setOperatorInputType(operatorInputTypes.get(0));
+		}
+		builder.setRightOperand(createExpression(operation.getRightOperand()));
+		builder.setLeftOperand(createLeftOperand(operation.getLeftOperand(),isExternal));
+		return builder.done();
+	}
 	/**
 	 * Hack function because we want only constant in UI but we need a Variable type for the engine
 	 * 
@@ -172,6 +185,14 @@ public class EngineExpressionUtil {
 		final LeftOperandBuilder builder = new LeftOperandBuilder();
 		builder.createNewInstance();
 		builder.setName(leftOperand.getContent());
+		return builder.done();
+	}
+	
+	public static LeftOperand createLeftOperand(final org.bonitasoft.studio.model.expression.Expression leftOperand,boolean isExternal) {
+		final LeftOperandBuilder builder = new LeftOperandBuilder();
+		builder.createNewInstance();
+		builder.setName(leftOperand.getContent());
+		builder.setExternal(isExternal);
 		return builder.done();
 	}
 
@@ -362,6 +383,12 @@ public class EngineExpressionUtil {
 			BonitaStudioLog.error(e);
 			return null;
 		}
+	}
+	
+	public static Expression createXPATHExpression(String name,String returnType,String xmlContent ){
+		final ExpressionBuilder exp = new ExpressionBuilder();
+//		exp.createXPathExpression(name, xPathExpression, returnType, xmlContent);
+		return null;
 	}
 
 	public static Expression createVariableExpression(final Data element) {

@@ -31,6 +31,7 @@ import org.bonitasoft.studio.connectors.operation.TestConnectorOperation;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.TestConnectorResultDialog;
+import org.bonitasoft.studio.connectors.ui.wizard.page.TestConnectorOutputWizardPage;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.process.Connector;
@@ -62,7 +63,13 @@ public class TestConnectorWizard extends ConnectorWizard {
 
 	@Override
 	protected void addOuputPage(ConnectorDefinition definition) {
-		//KEEP IT EMPTY
+	final TestConnectorOutputWizardPage outputPage = new TestConnectorOutputWizardPage() ;
+	createDefaultOutputs(definition) ;
+	outputPage.setElementContainer(container) ;
+	outputPage.setConnector(connectorWorkingCopy) ;
+	outputPage.setDefinition(definition) ;
+	addAdditionalPage(outputPage) ;
+	
 	}
 
 	@Override
@@ -118,6 +125,7 @@ public class TestConnectorWizard extends ConnectorWizard {
 			TestConnectorOperation operation = new TestConnectorOperation() ;
 			operation.setImplementation(impl) ;
 			operation.setConnectorConfiguration(configuration) ;
+			operation.setConnectorOutput(connectorWorkingCopy);
 			operation.setAdditionalJars(jd.getSelectedJars());
 			Object result = null ;
 			try {
@@ -130,6 +138,7 @@ public class TestConnectorWizard extends ConnectorWizard {
 				result = e ;
 				BonitaStudioLog.error(e) ;
 			}
+
 
 
 			if(result != null){

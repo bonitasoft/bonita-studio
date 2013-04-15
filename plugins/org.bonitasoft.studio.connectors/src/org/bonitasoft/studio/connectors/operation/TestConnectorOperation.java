@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +42,9 @@ import org.bonitasoft.engine.exception.ProcessDeletionException;
 import org.bonitasoft.engine.exception.ProcessDisablementException;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.FragmentTypes;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -70,8 +73,15 @@ import org.bonitasoft.studio.model.configuration.util.ConfigurationResourceFacto
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataType;
+import org.bonitasoft.studio.model.process.JavaObjectData;
+import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.eclipse.core.resources.IFile;
@@ -97,16 +107,18 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
  *
  */
 public class TestConnectorOperation implements IRunnableWithProgress {
-
+	private static final String OUTPUT_NAME = "left_operand";
     private static final String TEST_CONNECTOR_POOL = "TEST_CONNECTOR_POOL";
     private final Map<String, org.bonitasoft.engine.expression.Expression> inputParameters = new HashMap<String, org.bonitasoft.engine.expression.Expression>() ;
     private Map<String, Serializable> result;
     private ConnectorImplementation implementation;
     private ConnectorConfiguration connectorConfiguration;
     private final Map<String, Map<String, Serializable>> inputValues = new HashMap<String, Map<String,Serializable>>() ;
+    private final Map<org.bonitasoft.engine.core.operation.Operation, Map<String, Serializable>> outputValues = new HashMap<org.bonitasoft.engine.core.operation.Operation,Map<String,Serializable>>();
     private static final ConnectorsConfigurationSynchronizer CONNECTORS_CONFIGURATION_SYNCHRONIZER = new ConnectorsConfigurationSynchronizer();
     private Set<IRepositoryFileStore> additionalJars;
     
+
     /* (non-Javadoc)
      * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
      */
@@ -139,7 +151,9 @@ public class TestConnectorOperation implements IRunnableWithProgress {
             processApi.enableProcess(procId) ;
            
             Thread.currentThread().setContextClassLoader(RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader());
-            result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(), inputParameters, inputValues, procId);
+         //  result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(), inputParameters, inputValues, procId);
+            result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(), inputParameters, inputValues, outputValues, procId);
+
         }catch (Exception e) {
             BonitaStudioLog.error(e);
             throw new InvocationTargetException(e);
@@ -256,6 +270,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         connector.setDefinitionId(implemen.getDefinitionId());
         connector.setDefinitionVersion(implemen.getDefinitionVersion());
         connector.setIgnoreErrors(false);
+        addDatasOnProcess(proc);
         proc.getConnectors().add(connector);
         return proc;
     }
@@ -265,12 +280,45 @@ public class TestConnectorOperation implements IRunnableWithProgress {
     }
 
 
+    private void addDatasOnProcess(AbstractProcess process){
+    	Set<org.bonitasoft.engine.core.operation.Operation> ops = outputValues.keySet();
+    	Iterator it= ops.iterator();
+    	JavaType type = ProcessFactory.eINSTANCE.createJavaType();
+  
+    	while(it.hasNext()){
+    		org.bonitasoft.engine.core.operation.Operation output = (org.bonitasoft.engine.core.operation.Operation) it.next();
+    		JavaObjectData data = ProcessFactory.eINSTANCE.createJavaObjectData();
+    		data.setName(output.getLeftOperand().getName());
+    		data.setDataType(type);
+    		data.setClassName(Object.class.getName());
+    		process.getData().add(data);
+    		}
+    		
+    	}
+    	
+    
+    
     protected void addInputParameters(String inputName,AbstractExpression expression){
         Expression exp =  EngineExpressionUtil.createExpression(expression) ;
         if(exp != null){
             inputParameters.put(inputName,exp) ;
             inputValues.put(inputName,Collections.EMPTY_MAP);
         }
+    }
+    
+    protected void addOutput(Operation operation, int cpt){
+    	org.bonitasoft.studio.model.expression.Expression exp = operation.getRightOperand();
+    	operation.getLeftOperand().setType(ExpressionConstants.VARIABLE_TYPE);
+    	operation.getLeftOperand().setReturnType(operation.getRightOperand().getReturnType());
+    	    	operation.getLeftOperand().setContent(OUTPUT_NAME+cpt);
+    	operation.getLeftOperand().setName(OUTPUT_NAME+cpt);
+    	Operator operator = ExpressionFactory.eINSTANCE.createOperator();
+    	operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+    	operation.setOperator(operator);
+    	org.bonitasoft.engine.core.operation.Operation op=EngineExpressionUtil.createOperation(operation,true);
+    	if (op!=null){
+    		outputValues.put(op, Collections.EMPTY_MAP);
+    	}
     }
 
     public void setImplementation(ConnectorImplementation implementation){
@@ -311,8 +359,16 @@ public class TestConnectorOperation implements IRunnableWithProgress {
         }
     }
 
+    public void setConnectorOutput(Connector connector){
+    	int i=0;
+    	for (Operation output:connector.getOutputs()){
+    		addOutput(output,i++);
+    	}
+    }
+    
     public void setConnectorConfiguration(ConnectorConfiguration configuration) {
         connectorConfiguration = configuration ;
+
         for(ConnectorParameter parameter : configuration.getParameters()){
             addInputParameters(parameter.getKey(), parameter.getExpression()) ;
         }
