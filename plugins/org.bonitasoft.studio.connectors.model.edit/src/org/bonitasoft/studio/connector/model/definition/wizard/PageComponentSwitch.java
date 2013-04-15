@@ -216,7 +216,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		return object;
 	}
 
-	protected void createRadioGroupControl(Composite composite, RadioGroup object) {
+	protected Composite createRadioGroupControl(Composite composite, RadioGroup object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
@@ -268,11 +268,13 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 				Button button = (Button) radioCompoiste.getChildren()[0] ;
 				button.setSelection(true) ;
 			}
+			return radioCompoiste;
 		}
+		return null;
 
 	}
 
-	protected void createTextAreaControl(Composite composite, TextArea object) {
+	protected PatternExpressionViewer createTextAreaControl(Composite composite, TextArea object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
@@ -300,10 +302,12 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			}
 		
 			viewer.setExpression(exp) ;
+			return viewer;
 		}
+		return null;
 	}
 
-	protected void createCheckboxControl(Composite composite, Checkbox object) {
+	protected CheckBoxExpressionViewer createCheckboxControl(Composite composite, Checkbox object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 		if(parameter != null){
@@ -322,7 +326,9 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			}
 			viewer.setSelection(new StructuredSelection(parameter.getExpression()));
 			context.bindValue(ViewersObservables.observeSingleSelection(viewer), EMFObservables.observeValue(parameter, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
+			return  viewer;
 		}
+		return null;
 	}
 
 	protected String getLabel(String inputName) {
@@ -334,7 +340,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		return label ;
 	}
 
-	protected void createTextControl(Composite composite, final Text object) {
+	protected ExpressionViewer createTextControl(Composite composite, final Text object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		if(input != null){
 			final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
@@ -353,14 +359,16 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 					viewer.setMessage(desc, IStatus.INFO) ;
 				}
 				context.bindValue(ViewersObservables.observeSingleSelection(viewer), EMFObservables.observeValue(parameter, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
+				return viewer;
 			}
 		} else {
 			//Should we create a label to warn final user?
 			BonitaStudioLog.log("WARNING: No input found with name "+object.getInputName());
 		}
+		return null;
 	}
 
-	protected void createScriptEditorControl(Composite composite, ScriptEditor object) {
+	protected Control createScriptEditorControl(Composite composite, ScriptEditor object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
@@ -390,11 +398,12 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 					}
 				});
 			}
+			return editor;
 		}
-
+		return null;
 	}
 
-	protected void createArrayControl(Composite composite, Array object) {
+	protected ExpressionCollectionViewer createArrayControl(Composite composite, Array object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
@@ -445,7 +454,9 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 					}
 				});
 			}
+			return viewer;
 		}
+		return null;
 	}
 
 	protected Section createGroupControl(Composite composite, Group object) {
@@ -455,7 +466,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		return groupSection;
 	}
 
-	protected void createListControl(Composite composite, List object) {
+	protected ExpressionCollectionViewer createListControl(Composite composite, List object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
@@ -505,11 +516,14 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 					}
 				});
 			}
+			
+			return viewer;
 		}
+		return null;
 
 	}
 
-	protected void createPasswordControl(Composite composite, Password object) {
+	protected ExpressionViewer createPasswordControl(Composite composite, Password object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
@@ -528,10 +542,12 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 				viewer.setMessage(desc, IStatus.INFO) ;
 			}
 			context.bindValue(ViewersObservables.observeSingleSelection(viewer), EMFObservables.observeValue(parameter, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
+			return viewer;
 		}
+		return null;
 	}
 
-	protected void createSelectControl(Composite composite, Select object) {
+	protected Combo createSelectControl(Composite composite, Select object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
@@ -570,8 +586,9 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 
 			((Expression) inputExpression).setType(ExpressionConstants.CONSTANT_TYPE) ;
 			((Expression) inputExpression).setReturnType(input.getType()) ;
-
+			return combo;
 		}
+		return null;
 	}
 
 	protected Input getConnectorInput(String inputName) {
