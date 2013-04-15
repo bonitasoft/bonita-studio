@@ -26,6 +26,7 @@ import org.bonitasoft.studio.groovy.Messages;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
+import static org.bonitasoft.studio.common.Messages.bonitaName;
 
 /**
  * @author Mickael Istria
@@ -37,7 +38,7 @@ public class TestFunctionRepository extends TestCase {
 		Job.getJobManager().join(BonitaJobsFamily.INIT_GROOVY_FUNCTIONS, new NullProgressMonitor());
 		IFunctionCategory bonitaCategory = null;
 		for (IFunctionCategory category : FunctionsRepositoryFactory.getFunctionCatgories().getCategories()) {
-			if (category.getName().equals(Messages.bonitaCatLabel)) {
+			if (category.getName().equals(bonitaName)) {
 				bonitaCategory = category;
 			}
 		}
