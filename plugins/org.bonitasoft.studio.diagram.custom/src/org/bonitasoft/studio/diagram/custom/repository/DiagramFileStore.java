@@ -235,7 +235,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(migrationView);
 					}
 				}
-
+				editor.setFocus(); //refresh coolbar button
 				return editor;
 			}
 		} catch (PartInitException e) {
