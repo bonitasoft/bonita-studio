@@ -56,11 +56,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.FindReplaceDocumentAdapter;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
 import org.eclipse.xtext.util.StringInputStream;
@@ -259,8 +254,6 @@ public class EngineExpressionUtil {
 			}
 			if(ExpressionConstants.CONDITION_TYPE.equals(simpleExpression.getType())){
 				return createComparisonExpression(exp, simpleExpression);
-			}else if(ExpressionConstants.PATTERN_TYPE.equals(simpleExpression.getType())){
-				return createPatternExpression(simpleExpression);
 			}else{
 				exp.createNewInstance(name);
 				exp.setContent(simpleExpression.getContent());
@@ -417,77 +410,6 @@ public class EngineExpressionUtil {
 			return exp.done();
 		} catch (final InvalidExpressionException e) {
 			BonitaStudioLog.error(e);
-			return null;
-		}
-	}
-
-	public static Expression createPatternExpression(org.bonitasoft.studio.model.expression.Expression patternExpression) {
-		final org.bonitasoft.studio.model.expression.Expression simpleExpression = (org.bonitasoft.studio.model.expression.Expression) patternExpression;
-		String content = simpleExpression.getContent();
-		if (content != null && !content.isEmpty()) {
-			final ExpressionBuilder exp = new ExpressionBuilder();
-			String name = simpleExpression.getName();
-			if(name == null || name.isEmpty()){
-				name = "<empty-name>";
-			}
-			exp.createNewInstance(name);
-			IDocument document = new Document();
-			document.set(content);
-			StringBuilder patternExpressionContent = new StringBuilder();
-			FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(document);
-			List<Expression> dependencies = createDependenciesList(simpleExpression);
-
-			int lenght = content.length();
-			int i = 0;
-			for (final Expression dep : dependencies) {
-				try {
-					IRegion index = null;
-					index = finder.find(i, dep.getName(), true, true, true, false);
-					while(index != null && index.getOffset() <  lenght){
-						if(isNotEscapeWord(content, index.getOffset())){
-							patternExpressionContent.append(content.substring(i, index.getOffset()));
-							patternExpressionContent.append("${");
-							patternExpressionContent.append(dep.getName());
-							patternExpressionContent.append("}");
-						}else{
-							patternExpressionContent.append(content.substring(i, index.getOffset()-1));
-							patternExpressionContent.append(content.substring(index.getOffset(),index.getOffset()+index.getLength()));
-						}
-						i = index.getOffset() + index.getLength();
-						if(i < lenght){
-							index = finder.find(i, dep.getName(), true, true, true, false);
-						}else{
-							index = null;
-						}
-					}
-				} catch (BadLocationException e) {
-					// Ignore
-				}
-				if(i < lenght){
-					patternExpressionContent.append(content.substring(i, lenght));
-				}
-				content = patternExpressionContent.toString();
-				lenght = content.length();
-				i = 0;
-				patternExpressionContent = new StringBuilder();
-				document.set(content);
-				finder = new FindReplaceDocumentAdapter(document);
-			}
-
-			exp.setContent(content);
-			final String engineExpressionType = toEngineExpressionType(simpleExpression);
-			exp.setExpressionType(engineExpressionType);
-			exp.setInterpreter("");
-
-			exp.setReturnType(simpleExpression.getReturnType());
-			exp.setDependencies(dependencies);
-			try {
-				return exp.done();
-			} catch (final InvalidExpressionException e) {
-				BonitaStudioLog.error(e);
-				return null;
-			}
-		} else {
 			return null;
 		}
 	}
