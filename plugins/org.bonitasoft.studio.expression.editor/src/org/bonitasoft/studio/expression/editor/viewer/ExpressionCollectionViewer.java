@@ -973,8 +973,7 @@ public class ExpressionCollectionViewer {
 		 removeRowButton.setText(removeCorrelation);
 	 }
 
-	 public void addExpressionNatureProvider(
-			 IExpressionNatureProvider expressionNatureProvider) {
+	 public void addExpressionNatureProvider(IExpressionNatureProvider expressionNatureProvider) {
 		 viewerExprProviders.add(expressionNatureProvider);
 		 if(editingSupports != null && !editingSupports.isEmpty()){
 			 for(int i = 0 ; i< editingSupports.size() ;i++){
