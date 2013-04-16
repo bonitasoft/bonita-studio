@@ -56,7 +56,11 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.session,
  org.bonitasoft.studio.dependencies.ui.dialog,
  org.eclipse.ui.part
-Export-Package: org.bonitasoft.studio.groovy.ui;x-friends:="org.bonitasoft.studio.tests.ex,org.bonitasoft.studio.tests,org.bonitasoft.groovy.tests",
+Export-Package: org.bonitasoft.studio.groovy.ui;
+  x-friends:="org.bonitasoft.studio.tests.ex,
+   org.bonitasoft.studio.tests,
+   org.bonitasoft.groovy.tests,
+   org.bonitasoft.studio.repository.tests.ex",
  org.bonitasoft.studio.groovy.ui.contentassist,
  org.bonitasoft.studio.groovy.ui.dialog,
  org.bonitasoft.studio.groovy.ui.handler,
