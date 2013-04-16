@@ -54,6 +54,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -385,5 +386,10 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
         }
 
         return file ;
+    }
+    
+    @Override
+    public void migrate() throws CoreException, MigrationException {
+    	// Nothing Todo
     }
 }
