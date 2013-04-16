@@ -12,6 +12,7 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
@@ -102,13 +103,13 @@ public class TestTextAreaInConnectorWizard extends SWTBotGefTestCase {
         boolean containsName = false;
         boolean containsMariage = false;
         for(EObject dep : exp.getReferencedElements()){
-            if(((Expression)dep).getName().equals("age")){
+            if(((Data)dep).getName().equals("age")){
                 containsAge = true;
             }
-            if(((Expression)dep).getName().equals("mariage")){
+            if(((Data)dep).getName().equals("mariage")){
                 containsMariage = true;
             }
-            if(((Expression)dep).getName().equals("name")){
+            if(((Data)dep).getName().equals("name")){
                 containsName = true;
             }
         }
