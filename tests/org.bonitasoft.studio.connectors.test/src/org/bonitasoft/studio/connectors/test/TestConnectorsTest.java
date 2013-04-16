@@ -51,7 +51,7 @@ public class TestConnectorsTest extends SWTBotGefTestCase {
     public static void setUpBeforeClass() {
         timeout = SWTBotPreferences.TIMEOUT;
         //more timeout because the dialog takes time to open
-        SWTBotPreferences.TIMEOUT = 20000;
+        SWTBotPreferences.TIMEOUT = 40000;
     }
 
     @AfterClass
@@ -75,20 +75,7 @@ public class TestConnectorsTest extends SWTBotGefTestCase {
 	 * 
 	 */
 	protected void testingGroovyConnector(SWTGefBot bot, String groovyScript, String jarToSelect, String result) {
-		bot.menu("Development").menu("Connectors").menu("Test connector...").click();
-    	bot.waitUntil(Conditions.shellIsActive("Test connector"));
-    	final SWTBotTreeItem script = bot.tree().getTreeItem("Script").expand();
-
-    	String grovyScript = null;
-    	for (String child : script.getNodes()) {
-    		if (child.contains("Groovy")) {
-    			grovyScript = child;
-    			break;
-    		}
-    	}
-    	script.getNode(grovyScript).select();
-    	Assert.assertTrue("Next button should be enabled.", bot.button("Next >").isEnabled());
-    	bot.button("Next >").click();
+		selectGroovyScriptConnector();
     	SWTBotStyledText groovyText = bot.styledText();
     	Assert.assertNotNull("StyledText not found", groovyText);
     	groovyText.setText(groovyScript);
@@ -119,6 +106,47 @@ public class TestConnectorsTest extends SWTBotGefTestCase {
     	bot.button(IDialogConstants.CANCEL_LABEL).click();
 	}
 
+	private void selectGroovyScriptConnector(){
+		bot.menu("Development").menu("Connectors").menu("Test connector...").click();
+    	bot.waitUntil(Conditions.shellIsActive("Test connector"));
+    	final SWTBotTreeItem script = bot.tree().getTreeItem("Script").expand();
+
+    	String grovyScript = null;
+    	for (String child : script.getNodes()) {
+    		if (child.contains("Groovy")) {
+    			grovyScript = child;
+    			break;
+    		}
+    	}
+    	script.getNode(grovyScript).select();
+    	Assert.assertTrue("Next button should be enabled.", bot.button("Next >").isEnabled());
+    	bot.button("Next >").click();
+	}
+	
+	
+	@Test
+	public void testingGroovyConnectorWithModifiedOutput(){
+		final String script="\"mon script\"";
+		final String script2="result+\" montre la transformation de l'output dans un connecteur\"";
+		final String result = "mon script montre la transformation de l'output dans un connecteur";
+		selectGroovyScriptConnector();
+		SWTBotStyledText groovyText = bot.styledText();
+    	Assert.assertNotNull("StyledText not found", groovyText);
+    	groovyText.setText(script);
+    	Assert.assertTrue("Test button should be enabled.", bot.button("Test").isEnabled());
+    	Assert.assertTrue("next button should be enabled",bot.button("Next >").isEnabled());
+    	bot.button("Next >").click();
+    	SWTBotTestUtil.clickOnPenToEditExpression(bot, 0);
+    	SWTBotTestUtil.setScriptExpression(bot, "result", script2, String.class.getName());
+    	bot.button("Test").click();
+    	bot.waitUntil(Conditions.shellIsActive(selectMissingJarTitle));
+    	bot.button(IDialogConstants.OK_LABEL).click();
+    	bot.waitUntil(Conditions.shellIsActive("Results"), 30000);
+    	Assert.assertEquals(result, bot.text().getText());
+    	bot.button("< Back").click();
+    	bot.button(IDialogConstants.CANCEL_LABEL).click();
+    	
+	}
 
     
 }
