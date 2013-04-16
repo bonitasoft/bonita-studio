@@ -584,8 +584,12 @@ public class Repository implements IRepository {
 	public IRepositoryStore<? extends IRepositoryFileStore> getRepositoryStore(IResource resource) {
 		for(IRepositoryStore<? extends IRepositoryFileStore> store : getAllStores()){
 			if(resource instanceof IFile){
+				IResource storeResource = store.getResource();
 				IResource parent = resource.getParent() ;
-				if(store.getResource() != null && store.getResource().equals(parent)){
+				while (parent != null && !storeResource.equals(parent)) {
+					parent = parent.getParent();
+				}
+				if(parent != null){
 					return store ;
 				}
 			}else{
