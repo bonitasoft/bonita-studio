@@ -23,6 +23,7 @@ import java.util.List;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Group;
 import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.actors.tests.SWTbot.SWTBotActorFilterUtil;
@@ -125,6 +126,10 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
             }
         }
         assertEquals("There should be two root groups",2, nbRootGroup);
+        for(User u : orga.getUsers().getUser()){
+            assertNotNull(u.getMetaDatas());
+            assertFalse("No metadata defined", u.getMetaDatas().getMetaData().isEmpty());
+        }
         synchronizeOrganization(organizationName);
         synchronizeOrganization("ACME");
     }
