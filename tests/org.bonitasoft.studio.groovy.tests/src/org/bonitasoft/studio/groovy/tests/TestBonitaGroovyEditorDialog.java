@@ -30,7 +30,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
+import static org.bonitasoft.studio.dependencies.i18n.Messages.selectMissingJarTitle;
 /**
  * @author Aurelien Pupier
  */
@@ -60,6 +60,8 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.shellIsActive("Edit expression"));
         bot.styledText().setText("\"test me\"");
         bot.button("Evaluate").click();
+        bot.waitUntil(Conditions.shellIsActive(selectMissingJarTitle));
+        bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive("Evaluation results"));
         assertEquals("test me", bot.text().getText()) ;
         bot.button(IDialogConstants.OK_LABEL).click();
