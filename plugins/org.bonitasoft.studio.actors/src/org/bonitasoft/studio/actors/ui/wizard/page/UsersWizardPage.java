@@ -890,6 +890,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		User user = OrganizationFactory.eINSTANCE.createUser() ;
 		user.setUserName(generateUsername()) ;
 		user.setPassword(createPassword(DEFAULT_USER_PASSWORD));
+		user.setMetaDatas( OrganizationFactory.eINSTANCE.createMetaDatasType());
 		if(!userList.isEmpty()){
 			final MetaDatasType metaDatas = userList.get(0).getMetaDatas();
 			if(metaDatas != null){
@@ -897,9 +898,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 					if(m!=null){
 						Metadata metadata = OrganizationFactory.eINSTANCE.createMetadata() ;
 						metadata.setName(m.getName()) ;
-						if(user.getMetaDatas()!=null){
-							user.getMetaDatas().getMetaData().add(metadata) ;
-						}
+						user.getMetaDatas().getMetaData().add(metadata) ;
 					}
 				}
 			}
