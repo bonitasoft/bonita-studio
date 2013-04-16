@@ -29,4 +29,5 @@ Require-Bundle: org.junit,
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
  org.bonitasoft.studio.importer;bundle-version="1.0.0"
 Export-Package: org.bonitasoft.studio.groovy.tests
-Import-Package: org.bonitasoft.studio.groovy.ui
+Import-Package: org.bonitasoft.studio.dependencies.i18n,
+ org.bonitasoft.studio.groovy.ui
