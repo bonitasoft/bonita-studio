@@ -54,7 +54,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
     private static final String DATA_NAME_1 = "myData1";
     private static final String DATA_NAME_2 = "myData2";
     private static final String DATA_NAME_3 = "myData3";
-	private static final String QUERY = "SELECT ${"+DATA_NAME_1+"} from MyTable WHERE ${"+DATA_NAME_2+"}='\\${"+DATA_NAME_3+"}'";
+	private static final String QUERY = "SELECT ${"+DATA_NAME_1+"} from MyTable WHERE ${"+DATA_NAME_2+"}='"+DATA_NAME_3+"'";
 	private static final String JDBC_DB_CONNECTOR_ID = "database-jdbc";
 	private static final String DB_CATEGORY_ID = "database";
 	private static final String GROOVY_SQL_QUERY = "\"SELECT \"+"+DATA_NAME_1+"+\" from MyTable WHERE \"+"+DATA_NAME_2+"+\"='\"+"+DATA_NAME_3+"+\"'\"";
