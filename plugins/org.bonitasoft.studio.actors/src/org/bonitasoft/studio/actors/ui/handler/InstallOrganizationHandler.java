@@ -33,8 +33,12 @@ import org.bonitasoft.engine.identity.User;
 import org.bonitasoft.engine.identity.UserCriterion;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.actors.ActorsPlugin;
+import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
+import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
+import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
+import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
-import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -45,6 +49,11 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
+import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
@@ -84,11 +93,7 @@ public class InstallOrganizationHandler extends AbstractHandler {
 				session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
 				IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session) ;
 				identityAPI.deleteOrganization() ;
-				File tmpFile = new File(ProjectUtil.getBonitaStudioWorkFolder(),"tmpOrganizationFile.xml") ;
-				tmpFile.delete() ;
-				file.export(tmpFile.getAbsolutePath()) ;
-				String content = getFileContent(tmpFile) ;
-				tmpFile.delete() ;
+				String content = export((OrganizationFileStore) file);
 				identityAPI.importOrganization(content) ;
 			}catch(final Exception e){
 				if(PlatformUI.isWorkbenchRunning()){
@@ -135,6 +140,22 @@ public class InstallOrganizationHandler extends AbstractHandler {
 
 		}
 		return null;
+	}
+
+	private String export(OrganizationFileStore file) throws IOException {
+		Organization organization =  file.getContent() ;
+		DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
+		Organization exportedCopy = EcoreUtil.copy(organization)  ;
+		exportedCopy.setName(null) ;
+		exportedCopy.setDescription(null) ;
+		root.setOrganization(exportedCopy) ;
+		final XMLProcessor processor = new OrganizationXMLProcessor() ;
+		final Resource resource = new XMLResourceImpl() ;
+		resource.getContents().add(root) ;
+		final Map<String, Object> options = new HashMap<String, Object>();
+		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+		options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+		return processor.saveToString(resource, options);
 	}
 
 	protected void applyAllProfileToUsers(IdentityAPI identityAPI, CommandAPI commandApi) throws Exception {
