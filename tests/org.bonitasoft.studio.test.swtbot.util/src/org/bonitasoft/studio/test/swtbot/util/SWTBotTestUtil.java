@@ -661,6 +661,11 @@ public class SWTBotTestUtil implements SWTBotConstants{
     public static void pressDelete(){
         getKeybord().pressShortcut(Keystrokes.DELETE);
     }
+    
+    
+    public static void clickOnPenToEditExpression(SWTGefBot bot, int index){
+    	bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, index).click();
+    }
 
     /**
      * 
