@@ -97,6 +97,10 @@
 
 
 		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-versions-plugin</artifactId>
+			</plugin>
 			<!-- enable tycho build extension -->
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
