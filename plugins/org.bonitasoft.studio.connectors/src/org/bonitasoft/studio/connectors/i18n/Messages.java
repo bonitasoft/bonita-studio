@@ -129,6 +129,7 @@ public class Messages extends NLS {
 	public static String connectorTypeValidationMessage;
 	public static String connectorTypeIsExpressionValidationMessage;
 	public static String connectorItemToolTip;
+	public static String unserializableOutputWarning;
 
     /**
      * @param event

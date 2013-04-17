@@ -29,15 +29,18 @@ import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider;
+import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -47,6 +50,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.w3c.dom.Document;
 
 /**
@@ -81,7 +85,13 @@ public class TestConnectorResultDialog extends Dialog {
         mainComposite = new Composite(parent,SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().hint(400, 400).grab(true, true).create());
         mainComposite.setLayout(new GridLayout(2, false));
-
+        Composite descriptionComposite = new Composite(mainComposite,SWT.NONE);
+        descriptionComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10,SWT.DEFAULT).create());
+        descriptionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2,1).create());
+        CLabel description = new CLabel(descriptionComposite,SWT.MULTI);
+        description.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create());
+        description.setText(Messages.unserializableOutputWarning);
+        description.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(org.eclipse.ui.ISharedImages.IMG_OBJS_WARN_TSK));
         if(testResultAsMap != null && !testResultAsMap.isEmpty()){
             Iterator<Entry<String, Object>> it = testResultAsMap.entrySet().iterator();
             while (it.hasNext()) {
