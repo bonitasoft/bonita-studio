@@ -13,8 +13,14 @@
 		<tychoExtrasVersion>0.16.0</tychoExtrasVersion>
 		<p2MirrorUrl>ftp://192.168.1.215/home/ic/p2_repository/</p2MirrorUrl>
 	</properties>
+
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-versions-plugin</artifactId>
+				<version>${tychoVersion}</version>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -25,8 +31,10 @@
 						<configuration>
 							<tasks>
 								<echo>P2 Repository = ${p2MirrorUrl}</echo>
-								<copyfile dest="${basedir}/platform.target" src="${basedir}/mirrored.target.template" forceoverwrite="true"/>
-								<replace token="XXX_REPOSITORY_URL_XXX" value="${p2MirrorUrl}" file="${basedir}/platform.target" />
+								<copyfile dest="${basedir}/platform.target" src="${basedir}/mirrored.target.template"
+									forceoverwrite="true" />
+								<replace token="XXX_REPOSITORY_URL_XXX" value="${p2MirrorUrl}"
+									file="${basedir}/platform.target" />
 							</tasks>
 						</configuration>
 						<goals>
