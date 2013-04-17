@@ -31,8 +31,10 @@
 	</properties>
 
 	<modules>
+		<module>patched-plugins</module>
 		<module>plugins</module>
 		<module>releng</module>
+		<module>tests</module>
 	</modules>
 
 
