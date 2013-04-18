@@ -10,8 +10,7 @@
 	<properties>
 		<!--forceContextQualifier-->
 		<tychoVersion>0.17.0</tychoVersion>
-		<tychoVersion>0.17.0</tychoVersion>
-		<tychoExtrasVersion>0.16.0</tychoExtrasVersion>
+		<tychoExtrasVersion>0.17.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>6.0.0-beta-007</bundle.version>
 		<engine.version>6.0.0-beta-018</engine.version>
