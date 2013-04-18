@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.expression.editor.provider;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 
 import org.eclipse.jface.viewers.CellLabelProvider;
@@ -35,6 +36,8 @@ public class ExpressionTypeLabelProvider extends CellLabelProvider{
 	public String getText(Object element) {
 		if(element instanceof IExpressionProvider){
 			return ((IExpressionProvider)element).getTypeLabel() ;
+		} else if (element instanceof String){
+			return ExpressionEditorService.getInstance().getExpressionProvider((String)element).getTypeLabel();
 		}
 		return null;
 	}

@@ -40,6 +40,7 @@ import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
+import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionToolbarContribution;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
@@ -721,7 +722,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		}else if(ExpressionConstants.CONNECTOR_TYPE.equals(expressionType)){
 			return ExpressionConstants.CONNECTOR_TYPE ;
 		}
-		
+
 
 		Set<String> cache = new HashSet<String>() ;
 		for(Expression e : getFilteredExpressions()){
@@ -750,8 +751,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		if(!composite.isDisposed()){
 			ILabelProvider labelProvider = (ILabelProvider) getLabelProvider();
 			Image icon = getLabelProviderImage(labelProvider, selectedExpression);
+			ExpressionTypeLabelProvider expTypeProvider = new ExpressionTypeLabelProvider(); 
+			String desc = expTypeProvider.getText(selectedExpression.getType());
 			if((textControl.getStyle() & SWT.BORDER) != 0){
 				typeDecoration.setImage(icon) ;
+				typeDecoration.setDescriptionText(desc);
 				if(!editing){
 					if(selectedExpression.getName() == null || selectedExpression.getName().isEmpty()){
 						if(!ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())){
