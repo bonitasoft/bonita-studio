@@ -232,7 +232,7 @@
 						<executions>
 							<execution>
 								<id>tag-trunk</id>
-								<phase>post-clean</phase>
+								<phase>pre-clean</phase>
 								<configuration>
 									<tasks>
 										<echo>Updating pom version from ${current.version} to ${tag.version}</echo>
@@ -259,7 +259,7 @@
 						<executions>
 							<execution>
 								<id>upgrade-trunk-snapshot</id>
-								<phase>post-clean</phase>
+								<phase>pre-clean</phase>
 								<configuration>
 									<tasks>
 										<echo>Updating pom version from ${tag.version} to ${current.version}</echo>
