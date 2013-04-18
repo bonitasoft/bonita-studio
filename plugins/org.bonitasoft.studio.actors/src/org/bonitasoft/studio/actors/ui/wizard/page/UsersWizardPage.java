@@ -72,8 +72,10 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -97,6 +99,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 	private static final String DEFAULT_USER_PASSWORD = "bpm";
 	private static final int TABFOLDER_HEIGHT = 240;
+	private static final int MIN_SC_WIDTH = 426;
+	private static final int MIN_SC_HEIGHT = 268;
 	private Text usernameText;
 	private Text passwordText;
 
@@ -463,26 +467,51 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		tab = new TabFolder(group, SWT.NONE) ;
 		tab.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create()) ;
 		tab.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
+		
+		
+
 		tab.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				Control control =null;
 				TabItem item = (TabItem) e.item ;
 				for(Control c : tab.getChildren()){
 					c.dispose() ;
 				}
-				if(item.equals(generalTab)){
-					generalTab.setControl(createGeneralControl(tab,generalWidgetMap)) ;
-				}else if(item.equals(personalTab)){
-					personalTab.setControl(createInfoControl(tab,personalWidgetMap)) ;
-				}else if(item.equals(profesionnalTab)){
-					profesionnalTab.setControl(createInfoControl(tab,professionalWidgetMap)) ;
-				}else if(item.equals(metadataTab)){
-					metadataTab.setControl(createMetadataControl(tab,metadataWidgetMap)) ;
-				}else if(item.equals(memberShipTab)){
-					memberShipTab.setControl(createMembershipControl(tab,membershipWidgetMap)) ;
-				}
 
+				
+				if(item.equals(generalTab)){
+					final ScrolledComposite sc = createScrolledComposite();
+					control=createGeneralControl(sc,generalWidgetMap);
+					sc.setContent(control);
+					
+					generalTab.setControl(sc) ;
+					
+					
+				}else if(item.equals(personalTab)){
+					final ScrolledComposite sc = createScrolledComposite();
+					control=createInfoControl(sc,personalWidgetMap);
+					sc.setContent(control);
+					personalTab.setControl(sc) ;
+					
+				}else if(item.equals(profesionnalTab)){
+					final ScrolledComposite sc = createScrolledComposite();
+					control = createInfoControl(sc,professionalWidgetMap);
+					sc.setContent(control);
+					profesionnalTab.setControl(sc) ;
+				}else if(item.equals(metadataTab)){
+					final ScrolledComposite sc = createScrolledComposite();
+					control = createMetadataControl(sc,metadataWidgetMap);
+					sc.setContent(control);
+					metadataTab.setControl(sc) ;
+				}else if(item.equals(memberShipTab)){
+					final ScrolledComposite sc = createScrolledComposite();
+					control = createMembershipControl(sc,membershipWidgetMap);
+					sc.setContent(control);
+					memberShipTab.setControl(sc) ;
+				}
+				
 				getInfoGroup().layout(true, true) ;
 
 				User selectedUser = (User) ((StructuredSelection) getViewer().getSelection()).getFirstElement() ;
@@ -515,11 +544,24 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		refreshBinding(null) ;
 	}
 
+	/**
+	 * @return
+	 */
+	private ScrolledComposite createScrolledComposite() {
+		final ScrolledComposite sc = new ScrolledComposite(tab, SWT.V_SCROLL);
+		sc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+		sc.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).create()) ;
+		sc.setMinSize(MIN_SC_WIDTH,MIN_SC_HEIGHT);
+		sc.setExpandHorizontal(true);
+		sc.setExpandVertical(true);
+		return sc;
+	}
+
 	protected Control createMembershipControl(Composite parent,Map<Membership, Map<EAttribute,Control>> widgetMap) {
 		widgetMap.clear() ;
 
 		Composite detailsInfoComposite = new Composite(parent, SWT.NONE) ;
-		detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, TABFOLDER_HEIGHT).create()) ;
+		detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
 		detailsInfoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(5).margins(5, 5).equalWidth(false).create()) ;
 
 		User selectedUser = (User) ((StructuredSelection) getViewer().getSelection()).getFirstElement() ;
@@ -613,7 +655,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 
 		Composite detailsInfoComposite = new Composite(parent, SWT.NONE) ;
-		detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, TABFOLDER_HEIGHT).create()) ;
+		detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
 		detailsInfoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).equalWidth(false).create()) ;
 
 		User selectedUser = (User) ((StructuredSelection) getViewer().getSelection()).getFirstElement() ;
@@ -710,10 +752,12 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		}else{
 			widgetMap.clear() ;
 		}
-
+	
+		
 		Composite detailsInfoComposite = new Composite(parent, SWT.NONE) ;
-		detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, TABFOLDER_HEIGHT).create()) ;
-		detailsInfoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).equalWidth(false).create()) ;
+		
+		detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).minSize(0, 0).create()) ;
+		detailsInfoComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).create()) ;
 
 		Label emailLabel = new Label(detailsInfoComposite, SWT.NONE) ;
 		emailLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.CENTER).create()) ;
@@ -830,9 +874,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		countryText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 		countryText.setMessage(Messages.coutryHint) ;
 		widgetMap.put(OrganizationPackage.Literals.CONTACT_DATA__COUNTRY, countryText) ;
-
-
-		return detailsInfoComposite ;
+	return detailsInfoComposite;	
+	
 	}
 
 	protected Control createGeneralControl(Composite parent,Map<EAttribute, Control> widgetMap) {
@@ -843,7 +886,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		}
 
 		Composite detailsInfoComposite = new Composite(parent, SWT.NONE) ;
-		detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, TABFOLDER_HEIGHT).create()) ;
+		detailsInfoComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
 		detailsInfoComposite.setLayout(GridLayoutFactory.swtDefaults().numColumns(2).margins(5, 5).equalWidth(false).create()) ;
 
 		Label titleLabel = new Label(detailsInfoComposite, SWT.NONE) ;
