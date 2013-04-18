@@ -73,7 +73,7 @@
 				</configuration>
 				<executions>
 					<execution>
-						<phase>generate-sources</phase>
+						<phase>pre-clean</phase>
 						<goals>
 							<goal>eclipse-run</goal>
 						</goals>
