@@ -31,6 +31,8 @@
 	</properties>
 
 	<modules>
+		<module>platform</module>
+		<module>patched-plugins</module>
 		<module>plugins</module>
 		<module>releng</module>
 		<module>tests</module>
