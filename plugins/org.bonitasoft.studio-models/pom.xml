@@ -89,8 +89,8 @@
 								<phase>pre-clean</phase>
 								<configuration>
 									<tasks>
-										<echo>Updating pom version from ${tag.version} to ${current.version}</echo>
-										<replace token="&lt;version&gt;${tag.version}&lt;/version&gt;" value="&lt;version&gt;${current.version}&lt;/version&gt;"
+										<echo>Updating pom version from ${current.version} to ${next.snapshot.version}</echo>
+										<replace token="&lt;version&gt;${current.version}&lt;/version&gt;" value="&lt;version&gt;${next.snapshot.version}&lt;/version&gt;"
 											file="${basedir}/pom.xml" />
 										<replace token="${current.model.version}" value="${next.snapshot.model.version}"
 											file="${basedir}/process.gmfgen" />
