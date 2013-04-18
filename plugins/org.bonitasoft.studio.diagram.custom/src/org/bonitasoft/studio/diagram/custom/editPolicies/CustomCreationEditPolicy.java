@@ -27,6 +27,8 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.diagram.tools.BonitaUnspecifiedTypeProcessCreationTool;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
+import org.bonitasoft.studio.common.emf.tools.EMFtoGEFCommandWrapper;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.diagram.custom.figures.IEventSelectionListener;
 import org.bonitasoft.studio.diagram.custom.figures.MenuEventFigure;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneCompartmentEditPart;
@@ -35,11 +37,19 @@ import org.bonitasoft.studio.diagram.custom.parts.CustomLaneNameEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubProcessEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubprocessEventCompartmentEditPart;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.StartTimerEvent;
+import org.bonitasoft.studio.model.process.StartTimerScriptType;
+import org.bonitasoft.studio.model.process.TimerEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolNameEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolPoolCompartmentEditPart;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.StartTimerEvent2EditPart;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
@@ -51,12 +61,16 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
@@ -105,6 +119,7 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 	 */
 	@Override
 	protected Command getReparentCommand(ChangeBoundsRequest request) {
+		CompoundCommand cc = new CompoundCommand();
 		if(getHost() instanceof ITextAwareEditPart){
 			return UnexecutableCommand.INSTANCE;
 		}		
@@ -115,7 +130,8 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 				&& request.getEditParts().get(0) != null 
 				&& ((EditPart) request.getEditParts().get(0)).getParent() instanceof CustomLaneCompartmentEditPart){
 			return UnexecutableCommand.INSTANCE;
-		}
+		} 
+		
 		if(getHost() instanceof CustomSubprocessEventCompartmentEditPart
 				&& request.getEditParts().get(0) != null){
 			for(Object child : request.getEditParts()){
@@ -123,9 +139,18 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 					if(!((IGraphicalEditPart) child).getTargetConnections().isEmpty() ||
 							!((IGraphicalEditPart) child).getSourceConnections().isEmpty()){
 						return  UnexecutableCommand.INSTANCE;
+					} else {
+						if (child instanceof StartTimerEvent2EditPart 
+								&& !(((IGraphicalEditPart) child).getParent() instanceof CustomSubprocessEventCompartmentEditPart) 
+								&& !((IGraphicalEditPart)child).getParent().equals(getHost())){
+							Command editCommand = editTimerEventValue((IGraphicalEditPart)child);
+							if (editCommand.canExecute()){
+								cc.add(editCommand);
+							}
+						}
 					}
 				}
-			}
+		}
 		}
 		if(getHost() instanceof CustomSubProcessEvent2EditPart){
 			return  UnexecutableCommand.INSTANCE;
@@ -137,8 +162,8 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 			}
 
 		}
-
-		return super.getReparentCommand(request);
+		cc.add(super.getReparentCommand(request));
+		return cc;
 	}
 	/**
 	 * Gets the command to create a new view (and optionally element) for an
@@ -398,6 +423,19 @@ public class CustomCreationEditPolicy extends CreationEditPolicy {
 		super.deactivate();
 		if(cursor != null)
 			cursor.dispose();
+	}
+	
+	private Command editTimerEventValue(IGraphicalEditPart timerPart){
+		CompoundCommand cc = new CompoundCommand();
+		StartTimerEvent timer = (StartTimerEvent) timerPart.resolveSemanticElement();
+		StartTimerScriptType scriptType = timer.getScriptType();
+		if (!(scriptType.equals(StartTimerScriptType.GROOVY) || scriptType.equals(StartTimerScriptType.CONSTANT)) ){
+			cc.add (new EMFtoGEFCommandWrapper(new SetCommand(timerPart.getEditingDomain(), timer.getCondition(),ExpressionPackage.Literals.EXPRESSION__CONTENT, ""),timerPart.getEditingDomain()));
+			cc.add(new EMFtoGEFCommandWrapper(new SetCommand(timerPart.getEditingDomain(), timer.getCondition(),ExpressionPackage.Literals.EXPRESSION__NAME, ""), timerPart.getEditingDomain()));
+			cc.add(new EMFtoGEFCommandWrapper(new SetCommand(timerPart.getEditingDomain(),timer,ProcessPackage.Literals.START_TIMER_EVENT__SCRIPT_TYPE,StartTimerScriptType.GROOVY),timerPart.getEditingDomain()));
+	
+		}
+		return cc;
 	}
 
 }
