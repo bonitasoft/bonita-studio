@@ -557,6 +557,11 @@
                            value="org.bonitasoft.studio.model.process.diagram.edit.parts.PoolPoolCompartmentEditPart">
                      </instanceof>
                   </not>
+                  <not>
+                     <instanceof
+                           value="org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart">
+                     </instanceof>
+                  </not>
                </iterate>
             </with>
          </and>
