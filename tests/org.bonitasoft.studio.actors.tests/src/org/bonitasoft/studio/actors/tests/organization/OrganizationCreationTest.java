@@ -128,7 +128,6 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         assertEquals("There should be two root groups",2, nbRootGroup);
         for(User u : orga.getUsers().getUser()){
             assertNotNull(u.getMetaDatas());
-            assertFalse("No metadata defined", u.getMetaDatas().getMetaData().isEmpty());
         }
         synchronizeOrganization(organizationName);
         synchronizeOrganization("ACME");
