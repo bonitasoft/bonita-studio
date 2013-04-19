@@ -18,9 +18,9 @@
 		<plugin>
 			<artifactId>maven-clean-plugin</artifactId>
 			<configuration>
-			   <directory>${basedir}</directory>
 				<filesets>
 					<fileset>
+						 <directory>${basedir}</directory>
 						<includes>
 							<include>*.log</include>
 							<include>*.hprof</include>
