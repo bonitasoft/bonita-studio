@@ -431,7 +431,7 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 		new Label(mainComposite, SWT.NONE) ; //FILLER
 		final Label dependenciesHintLabel = new Label(mainComposite, SWT.NONE) ;
 		dependenciesHintLabel.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create()) ;
-		dependenciesHintLabel.setText("Above dependencies are used for this definition input and output types") ;
+		dependenciesHintLabel.setText(Messages.dependenciesInfo) ;
 	}
 
 
