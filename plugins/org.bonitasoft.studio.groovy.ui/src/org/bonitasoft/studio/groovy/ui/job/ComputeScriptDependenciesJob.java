@@ -167,17 +167,13 @@ public class ComputeScriptDependenciesJob extends Job {
 	private boolean isInAStringExpression(String name, IRegion index,String expression) {
 		if(index.getOffset() > 0){
 			int nbStringChars1 = 0;
-			int nbStringChars2 = 0;
-
 			for(int i = 0 ; i<index.getOffset();i++){
 				char c = expression.charAt(i);
-				if('"' == c){
+				if('"' == c &&  (i == 0 || expression.charAt(i-1) != '\\')){
 					nbStringChars1++;
-				}else if('\'' == c){
-					nbStringChars2++;
 				}
 			}
-			return !(nbStringChars1 % 2 == 0 && nbStringChars2 % 2 == 0);
+			return !(nbStringChars1 % 2 == 0 );
 
 		}
 		return false;
