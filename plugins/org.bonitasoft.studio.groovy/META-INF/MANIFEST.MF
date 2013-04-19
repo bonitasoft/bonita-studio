@@ -32,11 +32,12 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.data;bundle-version="1.0.0",
  org.bonitasoft.studio.connectors.model;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.bonitasoft.engine.bpm.bar,
+Import-Package: org.bonitasoft.engine.api,
+ org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm.model,
- org.bonitasoft.engine.expression,
- org.bonitasoft.engine.api,
  org.bonitasoft.engine.connector,
+ org.bonitasoft.engine.expression,
+ org.bonitasoft.forms.server.validator,
  org.eclipse.jdt.core,
  org.eclipse.ui.part
 Bundle-ActivationPolicy: lazy
