@@ -342,6 +342,7 @@ public class Messages extends NLS {
     public static String Edit;
 	public static String emptyTable;
 	public static String emptyList;
+	public static String dependenciesInfo;
 
 
 
