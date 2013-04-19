@@ -33,10 +33,9 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
  */
 public class BonitaNodesElementTypeResolver implements ElementTypeResolver {
     public IElementType getElementType(GraphicalEditPart parentEditPart, EClass targetEClass) {
-        List<IElementType> allowedChildren  ;
-
+        final List<IElementType> allowedChildren = new ArrayList<IElementType>();
         if(parentEditPart instanceof ShapeCompartmentEditPart){
-            allowedChildren = new ArrayList<IElementType>();
+            
             allowedChildren.add(ProcessElementTypes.Activity_3006);
             allowedChildren.add(ProcessElementTypes.Task_3005);
             allowedChildren.add(ProcessElementTypes.CallActivity_3063);
@@ -65,7 +64,6 @@ public class BonitaNodesElementTypeResolver implements ElementTypeResolver {
             allowedChildren.add(ProcessElementTypes.StartErrorEvent_3060);
             allowedChildren.add(ProcessElementTypes.EndTerminatedEvent_3062);
         }else{
-            allowedChildren = new ArrayList<IElementType>();
             allowedChildren.add(ProcessElementTypes.Activity_2006);
             allowedChildren.add(ProcessElementTypes.Task_2004);
             allowedChildren.add(ProcessElementTypes.CallActivity_2036);

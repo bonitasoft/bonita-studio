@@ -103,11 +103,13 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
                 allowedChildren.add(ProcessElementTypes.IntermediateErrorCatchEvent_3029);
                 allowedChildren.add(ProcessElementTypes.BoundaryMessageEvent_3035);
                 allowedChildren.add(ProcessElementTypes.BoundaryTimerEvent_3043);
+                allowedChildren.add(ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3064);
                 allowedChildren.add(ProcessElementTypes.BoundarySignalEvent_3052);
             } else if (parentEditPart instanceof CallActivity2EditPart || parentEditPart instanceof CallActivityEditPart) {
                 allowedChildren.add(ProcessElementTypes.IntermediateErrorCatchEvent_3030);
                 allowedChildren.add(ProcessElementTypes.BoundaryMessageEvent_3036);
                 allowedChildren.add(ProcessElementTypes.BoundaryTimerEvent_3044);
+                allowedChildren.add(ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3065);
                 allowedChildren.add(ProcessElementTypes.BoundarySignalEvent_3053);
             } else if (parentEditPart instanceof ScriptTask2EditPart || parentEditPart instanceof ScriptTaskEditPart) {
                 allowedChildren.add(ProcessElementTypes.IntermediateErrorCatchEvent_3033);
@@ -264,39 +266,24 @@ public class BoundaryEventToolEditPolicy extends AbstractSingleSelectionEditPoli
                 clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.IntermediateErrorCatchEvent_3029));
                 clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryMessageEvent_3035));
                 clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryTimerEvent_3043));
+                clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3064));
                 clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundarySignalEvent_3052));
             } else if (getHost().getAdapter(CallActivity.class) != null) {
                 clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.IntermediateErrorCatchEvent_3030));
                 clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryMessageEvent_3036));
                 clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryTimerEvent_3044));
+                clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3065));
                 clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundarySignalEvent_3053));
             } else if (getHost().getAdapter(ServiceTask.class) != null) {
                 clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.IntermediateErrorCatchEvent_3032));
-                //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryMessageEvent_3039));
-                //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryTimerEvent_3047));
-                //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundarySignalEvent_3056));
             } else if (getHost().getAdapter(ScriptTask.class) != null) {
                 clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.IntermediateErrorCatchEvent_3033));
-                //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryMessageEvent_3040));
-                //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryTimerEvent_3048));
-                //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundarySignalEvent_3057));
-            }/* else if (getHost().getAdapter(SendTask.class) != null) {
-//			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.IntermediateErrorCatchEvent_3032));
-//			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryMessageEvent_3038));
-//			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryTimerEvent_3046));
-//			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundarySignalEvent_3055));
-	} */else if (getHost().getAdapter(ReceiveTask.class) != null) {
+            }else if (getHost().getAdapter(ReceiveTask.class) != null) {
 	    clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.IntermediateErrorCatchEvent_3031));
-	    //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryMessageEvent_3037));
-	    //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryTimerEvent_3045));
-	    //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundarySignalEvent_3054));
 	} else if (getHost().getAdapter(Task.class) == null && getHost().getAdapter(CallActivity.class) == null && getHost().getAdapter(SendTask.class) == null
 	        && getHost().getAdapter(ReceiveTask.class) == null && getHost().getAdapter(Activity.class) != null) {// automatic
 	    // task
 	    clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.IntermediateErrorCatchEvent_3034));
-	    //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryMessageEvent_3042));
-	    //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundaryTimerEvent_3049));
-	    //			clickableItems.add(createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.BoundarySignalEvent_3058));
 	}
 
             for (Pair<IFigure,MouseListener> item : clickableItems) {

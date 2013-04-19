@@ -994,6 +994,30 @@
       <accessors
           figure="//@figures.0/@descriptors.40/@actualFigure/@children.0"/>
     </descriptors>
+    <descriptors
+        name="NonInterruptingBoundaryTimerEventFigure">
+      <actualFigure
+          xsi:type="gmfgraph:SVGFigure"
+          name="NonInterruptingBoundaryTimerEventSVGFigure"
+          documentURI="platform:/plugin/org.bonitasoft.studio.pics/icons/figures/NonInterruptingBoundaryTimerEvent.svgz">
+        <layout
+            xsi:type="gmfgraph:GridLayout"/>
+        <maximumSize
+            dx="25"
+            dy="25"/>
+        <preferredSize
+            dx="25"
+            dy="25"/>
+        <children
+            xsi:type="gmfgraph:Label"
+            name="NonInterruptingBoundaryTimerEventNameFigure">
+          <layoutData
+              xsi:type="gmfgraph:GridLayoutData"
+              grabExcessHorizontalSpace="true"
+              grabExcessVerticalSpace="true"/>
+        </children>
+      </actualFigure>
+    </descriptors>
   </figures>
   <nodes
       name="CallActivity"
@@ -1400,6 +1424,19 @@
       <defaultSize
           dx="100"
           dy="50"/>
+    </facets>
+  </nodes>
+  <nodes
+      name="NonInterruptingBoundaryTimerEvent"
+      figure="NonInterruptingBoundaryTimerEventFigure"
+      affixedParentSide="SOUTH">
+    <facets
+        xsi:type="gmfgraph:AlignmentFacet"/>
+    <facets
+        xsi:type="gmfgraph:DefaultSizeFacet">
+      <defaultSize
+          dx="25"
+          dy="25"/>
     </facets>
   </nodes>
   <connections

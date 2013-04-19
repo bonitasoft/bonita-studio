@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
+import org.bonitasoft.studio.common.gmf.tools.GMFTools.ElementTypeResolver;
 import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.BonitaNodesElementTypeResolver;
 import org.bonitasoft.studio.diagram.custom.Messages;
@@ -33,6 +34,7 @@ import org.bonitasoft.studio.diagram.custom.figures.DropDownMenuFigure;
 import org.bonitasoft.studio.diagram.custom.figures.SlideMenuBarFigure;
 import org.bonitasoft.studio.model.process.ANDGateway;
 import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.studio.model.process.BoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.Connection;
@@ -47,6 +49,7 @@ import org.bonitasoft.studio.model.process.IntermediateCatchMessageEvent;
 import org.bonitasoft.studio.model.process.IntermediateCatchSignalEvent;
 import org.bonitasoft.studio.model.process.IntermediateThrowMessageEvent;
 import org.bonitasoft.studio.model.process.IntermediateThrowSignalEvent;
+import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ReceiveTask;
 import org.bonitasoft.studio.model.process.ScriptTask;
@@ -128,7 +131,7 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
 
 
 
-    private Pair<IFigure, MouseListener> createClickableItem(final Point location, final IGraphicalEditPart host, final IElementType type) {
+    protected Pair<IFigure, MouseListener> createClickableItem(final Point location, final IGraphicalEditPart host, final IElementType type) {
         ImageFigure image  ;
         /*Activity*/
         AdapterFactory factory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -160,7 +163,7 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
             public void mousePressed(MouseEvent me) {
                 ShapeNodeEditPart node = (ShapeNodeEditPart) host.getAdapter(ShapeNodeEditPart.class);
                 if(node != null){
-                    GraphicalEditPart targetEditPart = GMFTools.convert(type.getEClass(),node, new BonitaNodesElementTypeResolver(),GMFTools.PROCESS_DIAGRAM);
+                    GraphicalEditPart targetEditPart = GMFTools.convert(type.getEClass(),node, getElementTypeResolver(),GMFTools.PROCESS_DIAGRAM);
                     EditPart p = targetEditPart.getParent() ;
                     while(!(p instanceof MainProcessEditPart)){
                         p = p.getParent() ;
@@ -172,6 +175,8 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
                 }
             }
 
+			
+
             public void mouseDoubleClicked(MouseEvent me) {
 
             }
@@ -180,6 +185,10 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
 
         return new Pair<IFigure, MouseListener>(image, listener);
     }
+    
+    protected ElementTypeResolver getElementTypeResolver() {
+		return new BonitaNodesElementTypeResolver();
+	}
 
     private IFigure createClickableFigure(final Point location, final IGraphicalEditPart host, final IElementType type) {
         Pair<IFigure, MouseListener> item = createClickableItem(location, host, type);
@@ -253,7 +262,7 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
             composite.setSize(20, 20);
 
 
-            composite.setLocation(new Point(bounds.getLeft().x + 10, bounds.getBottomRight().y));
+            composite.setLocation(getIconLocation(bounds));
 
             toolBarFigure = new SlideMenuBarFigure(composite);
 
@@ -275,157 +284,7 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
                 }
             }) ;
 
-            List<Pair<IFigure, MouseListener>> clickableItems = new ArrayList<Pair<IFigure, MouseListener>>();
-
-            if(host2.getAdapter(Task.class) != null ){
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Activity_2006));
-            }else if(host2.getAdapter(CallActivity.class) != null ){
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.Activity_2006 ));
-            } else if(host2.getAdapter(ServiceTask.class) != null ){
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.Activity_2006 ));
-            } else if(host2.getAdapter(ScriptTask.class) != null ){
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.Activity_2006 ));
-            } else if(host2.getAdapter(ANDGateway.class) != null ){
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.XORGateway_2008 ));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.InclusiveGateway_2030));
-            } else if(host2.getAdapter(XORGateway.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ANDGateway_2009 ));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.InclusiveGateway_2030));
-            }else if(host2.getAdapter(InclusiveGateway.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.XORGateway_2008 ));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ANDGateway_2009 ));
-                //		}else if(getHost().getAdapter(IntermediateCatchTimerEvent.class) != null){
-                //			figure1 = createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.StartTimerEvent_2016 );
-            }else if(host2.getAdapter(StartSignalEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.StartMessageEvent_2010) );
-                if(!isInSubProcessEventPool()){
-                    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartEvent_2002));
-                }
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartTimerEvent_2016));
-                if(isInSubProcessEventPool()){
-                    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartErrorEvent_2033));
-                }
-            }else if(host2.getAdapter(StartTimerEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.StartMessageEvent_2010) );
-                if(!isInSubProcessEventPool()){
-                    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartEvent_2002));
-                }
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartSignalEvent_2022));
-                if(isInSubProcessEventPool()){
-                    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartErrorEvent_2033));
-                }
-            }else if(host2.getAdapter(StartErrorEvent.class) != null
-                    /*&& isInSubProcessEventPool()*/){//it must be in an EventSubProcessPool, notice no switch to Start allowed
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.StartMessageEvent_2010) );
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartSignalEvent_2022));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartTimerEvent_2016));
-            }else if(host2.getAdapter(SendTask.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036 ));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Activity_2006));
-            }else if(host2.getAdapter(ReceiveTask.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036 ));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Activity_2006));
-            } else if(host2.getAdapter(Task.class) == null
-                    && host2.getAdapter(CallActivity.class) == null
-                    && host2.getAdapter(SendTask.class) == null
-                    && host2.getAdapter(ReceiveTask.class) == null
-                    && host2.getAdapter(Activity.class) != null){//automatic task
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036 ));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
-                clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
-            }else if(host2.getAdapter(IntermediateCatchMessageEvent.class) != null){
-                //clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.StartMessageEvent_2010));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.IntermediateThrowMessageEvent_2014));
-                //	clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.EndMessageEvent_2011));
-            }else if(host2.getAdapter(IntermediateThrowMessageEvent.class) != null){
-                //	clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.StartMessageEvent_2010));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.IntermediateCatchMessageEvent_2013));
-                //	clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.EndMessageEvent_2011));
-            }else if(host2.getAdapter(EndMessageEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndEvent_2003));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndErrorEvent_2029));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndTerminatedEvent_2035));
-                //			clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.));
-                //			clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.IntermediateCatchMessageEvent_2013));
-            }else if(host2.getAdapter(CatchLinkEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.ThrowLinkEvent_2019));
-            }else if(host2.getAdapter(ThrowLinkEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.CatchLinkEvent_2018));
-            }else if(host2.getAdapter(IntermediateThrowSignalEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.IntermediateCatchSignalEvent_2021));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
-            }else if(host2.getAdapter(IntermediateCatchSignalEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.IntermediateThrowSignalEvent_2020));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
-            }else if(host2.getAdapter(EndSignalEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndMessageEvent_2011));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndEvent_2003));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndErrorEvent_2029));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndTerminatedEvent_2035));
-            }else if(host2.getAdapter(EndEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndMessageEvent_2011));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndErrorEvent_2029));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndTerminatedEvent_2035));
-            }else if(host2.getAdapter(StartEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartMessageEvent_2010));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartTimerEvent_2016));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartSignalEvent_2022));
-                if(isInSubProcessEventPool()){
-                    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartErrorEvent_2033));
-                }
-            }else if(host2.getAdapter(StartMessageEvent.class) != null){
-                if(!isInSubProcessEventPool()){
-                    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartEvent_2002));
-                }
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartTimerEvent_2016));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartSignalEvent_2022));
-                if(isInSubProcessEventPool()){
-                    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartErrorEvent_2033));
-                }
-            }else if(host2.getAdapter(EndErrorEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndMessageEvent_2011));;
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndEvent_2003));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndTerminatedEvent_2035));
-            } else if(host2.getAdapter(EndTerminatedEvent.class) != null){
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndMessageEvent_2011));;
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndEvent_2003));
-                clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndErrorEvent_2029));
-            }
+            List<Pair<IFigure, MouseListener>> clickableItems = getItems(host2);
 
             for(Pair<IFigure, MouseListener> item : clickableItems){
                 dropMenu.addToMenu(item.getFirst(),item.getSecond());
@@ -498,6 +357,170 @@ public class ActivitySwitchEditPolicy extends AbstractSingleSelectionEditPolicy 
             });
         }
     }
+
+	protected Point getIconLocation(Rectangle bounds) {
+		return new Point(bounds.getLeft().x + 10, bounds.getBottomRight().y);
+	}
+
+	protected List<Pair<IFigure, MouseListener>> getItems(
+			IGraphicalEditPart host2) {
+		List<Pair<IFigure, MouseListener>> clickableItems = new ArrayList<Pair<IFigure, MouseListener>>();
+
+		if(host2.getAdapter(Task.class) != null ){
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Activity_2006));
+		}else if(host2.getAdapter(CallActivity.class) != null ){
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.Activity_2006 ));
+		} else if(host2.getAdapter(ServiceTask.class) != null ){
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.Activity_2006 ));
+		} else if(host2.getAdapter(ScriptTask.class) != null ){
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.Activity_2006 ));
+		} else if(host2.getAdapter(ANDGateway.class) != null ){
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.XORGateway_2008 ));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.InclusiveGateway_2030));
+		} else if(host2.getAdapter(XORGateway.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ANDGateway_2009 ));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.InclusiveGateway_2030));
+		}else if(host2.getAdapter(InclusiveGateway.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.XORGateway_2008 ));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ANDGateway_2009 ));
+		    //		}else if(getHost().getAdapter(IntermediateCatchTimerEvent.class) != null){
+		    //			figure1 = createClickableItem(new Point(0, 0), getHost(), ProcessElementTypes.StartTimerEvent_2016 );
+		}else if(host2.getAdapter(StartSignalEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.StartMessageEvent_2010) );
+		    if(!isInSubProcessEventPool()){
+		        clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartEvent_2002));
+		    }
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartTimerEvent_2016));
+		    if(isInSubProcessEventPool()){
+		        clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartErrorEvent_2033));
+		    }
+		}else if(host2.getAdapter(StartTimerEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.StartMessageEvent_2010) );
+		    if(!isInSubProcessEventPool()){
+		        clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartEvent_2002));
+		    }
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartSignalEvent_2022));
+		    if(isInSubProcessEventPool()){
+		        clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartErrorEvent_2033));
+		    }
+		}else if(host2.getAdapter(StartErrorEvent.class) != null
+		        /*&& isInSubProcessEventPool()*/){//it must be in an EventSubProcessPool, notice no switch to Start allowed
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.StartMessageEvent_2010) );
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartSignalEvent_2022));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartTimerEvent_2016));
+		}else if(host2.getAdapter(SendTask.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036 ));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Activity_2006));
+		}else if(host2.getAdapter(ReceiveTask.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036 ));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Activity_2006));
+		} else if(host2.getAdapter(Task.class) == null
+		        && host2.getAdapter(CallActivity.class) == null
+		        && host2.getAdapter(SendTask.class) == null
+		        && host2.getAdapter(ReceiveTask.class) == null
+		        && host2.getAdapter(Activity.class) != null){//automatic task
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ServiceTask_2027));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.Task_2004));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.CallActivity_2036 ));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ReceiveTask_2025));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.SendTask_2026));
+		    clickableItems.add(createClickableItem(new Point(0, 0), host2, ProcessElementTypes.ScriptTask_2028));
+		}else if(host2.getAdapter(IntermediateCatchMessageEvent.class) != null){
+		    //clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.StartMessageEvent_2010));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.IntermediateThrowMessageEvent_2014));
+		    //	clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.EndMessageEvent_2011));
+		}else if(host2.getAdapter(IntermediateThrowMessageEvent.class) != null){
+		    //	clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.StartMessageEvent_2010));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.IntermediateCatchMessageEvent_2013));
+		    //	clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.EndMessageEvent_2011));
+		}else if(host2.getAdapter(EndMessageEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndEvent_2003));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndErrorEvent_2029));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndTerminatedEvent_2035));
+		    //			clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.));
+		    //			clickableItems.add(createClickableItem(new Point(0, 0),getHost(), ProcessElementTypes.IntermediateCatchMessageEvent_2013));
+		}else if(host2.getAdapter(CatchLinkEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.ThrowLinkEvent_2019));
+		}else if(host2.getAdapter(ThrowLinkEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.CatchLinkEvent_2018));
+		}else if(host2.getAdapter(IntermediateThrowSignalEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.IntermediateCatchSignalEvent_2021));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
+		}else if(host2.getAdapter(IntermediateCatchSignalEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.IntermediateThrowSignalEvent_2020));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
+		}else if(host2.getAdapter(EndSignalEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndMessageEvent_2011));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndEvent_2003));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndErrorEvent_2029));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndTerminatedEvent_2035));
+		}else if(host2.getAdapter(EndEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndMessageEvent_2011));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndErrorEvent_2029));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndTerminatedEvent_2035));
+		}else if(host2.getAdapter(StartEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartMessageEvent_2010));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartTimerEvent_2016));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartSignalEvent_2022));
+		    if(isInSubProcessEventPool()){
+		        clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartErrorEvent_2033));
+		    }
+		}else if(host2.getAdapter(StartMessageEvent.class) != null){
+		    if(!isInSubProcessEventPool()){
+		        clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartEvent_2002));
+		    }
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartTimerEvent_2016));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartSignalEvent_2022));
+		    if(isInSubProcessEventPool()){
+		        clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.StartErrorEvent_2033));
+		    }
+		}else if(host2.getAdapter(EndErrorEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndMessageEvent_2011));;
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndEvent_2003));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndTerminatedEvent_2035));
+		} else if(host2.getAdapter(EndTerminatedEvent.class) != null){
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndMessageEvent_2011));;
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndSignalEvent_2023));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndEvent_2003));
+		    clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.EndErrorEvent_2029));
+		}else  if(host2.getAdapter(NonInterruptingBoundaryTimerEvent.class) != null ){
+			 clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.BoundaryTimerEvent_3043));
+		}else  if(host2.getAdapter(BoundaryTimerEvent.class) != null ){
+			 clickableItems.add(createClickableItem(new Point(0, 0),host2, ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3064));
+		}
+		return clickableItems;
+	}
 
 
 

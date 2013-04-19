@@ -156,5 +156,9 @@
         xsi:type="gmftool:CreationTool"
         title="Send Task"
         description="Create a new Send Message Task"/>
+    <tools
+        xsi:type="gmftool:CreationTool"
+        title="Non-Interrupting Timer"
+        description="Create a new Non-Interrupting Timer event"/>
   </palette>
 </gmftool:ToolRegistry>

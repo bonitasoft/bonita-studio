@@ -396,6 +396,40 @@
             href="process.ecore#//Activity/BoundaryIntermediateEvents"/>
         <ownedChild>
           <domainMetaElement
+              href="process.ecore#//NonInterruptingBoundaryTimerEvent"/>
+          <domainInitializer
+              xsi:type="gmfmap:FeatureSeqInitializer">
+            <initializers
+                xsi:type="gmfmap:FeatureValueSpec">
+              <feature
+                  xsi:type="ecore:EAttribute"
+                  href="process.ecore#//Element/name"/>
+              <value
+                  body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+                  language="java"/>
+            </initializers>
+          </domainInitializer>
+          <labelMappings
+              xsi:type="gmfmap:FeatureLabelMapping">
+            <diagramLabel
+                href="process.gmfgraph#OutsideLabel"/>
+            <features
+                href="process.ecore#//Element/name"/>
+            <editableFeatures
+                href="process.ecore#//Element/name"/>
+          </labelMappings>
+          <tool
+              xsi:type="gmftool:CreationTool"
+              href="process.gmftool#//@palette/@tools.38"/>
+          <diagramNode
+              href="process.gmfgraph#NonInterruptingBoundaryTimerEvent"/>
+        </ownedChild>
+      </children>
+      <children>
+        <containmentFeature
+            href="process.ecore#//Activity/BoundaryIntermediateEvents"/>
+        <ownedChild>
+          <domainMetaElement
               href="process.ecore#//BoundaryTimerEvent"/>
           <domainInitializer
               xsi:type="gmfmap:FeatureSeqInitializer">
@@ -642,6 +676,40 @@
               href="process.gmftool#//@palette/@tools.28"/>
           <diagramNode
               href="process.gmfgraph#BoundaryMessageEvent"/>
+        </ownedChild>
+      </children>
+      <children>
+        <containmentFeature
+            href="process.ecore#//Activity/BoundaryIntermediateEvents"/>
+        <ownedChild>
+          <domainMetaElement
+              href="process.ecore#//NonInterruptingBoundaryTimerEvent"/>
+          <domainInitializer
+              xsi:type="gmfmap:FeatureSeqInitializer">
+            <initializers
+                xsi:type="gmfmap:FeatureValueSpec">
+              <feature
+                  xsi:type="ecore:EAttribute"
+                  href="process.ecore#//Element/name"/>
+              <value
+                  body="return org.bonitasoft.studio.common.NamingUtils.getInstance(self).generateName(self, self);"
+                  language="java"/>
+            </initializers>
+          </domainInitializer>
+          <labelMappings
+              xsi:type="gmfmap:FeatureLabelMapping">
+            <diagramLabel
+                href="process.gmfgraph#OutsideLabel"/>
+            <features
+                href="process.ecore#//Element/name"/>
+            <editableFeatures
+                href="process.ecore#//Element/name"/>
+          </labelMappings>
+          <tool
+              xsi:type="gmftool:CreationTool"
+              href="process.gmftool#//@palette/@tools.38"/>
+          <diagramNode
+              href="process.gmfgraph#NonInterruptingBoundaryTimerEvent"/>
         </ownedChild>
       </children>
       <children>

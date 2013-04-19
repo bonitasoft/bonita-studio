@@ -19,6 +19,7 @@ package org.bonitasoft.studio.diagram.custom.providers;
 
 import org.bonitasoft.studio.diagram.custom.editPolicies.AbstractSwitchLaneSelectionEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.ActivitySwitchEditPolicy;
+import org.bonitasoft.studio.diagram.custom.editPolicies.BoundaryEventSwitchEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.BoundaryEventToolEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomCreationEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomDragDropEditPolicy;
@@ -32,6 +33,7 @@ import org.bonitasoft.studio.diagram.custom.editPolicies.UpdateSizeLaneSelection
 import org.bonitasoft.studio.diagram.custom.editPolicies.UpdateSizePoolSelectionEditPolicy;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
+import org.bonitasoft.studio.model.process.BoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Event;
 import org.bonitasoft.studio.model.process.FlowElement;
@@ -105,6 +107,9 @@ public class CustomProcessEditPolicyProvider implements IEditPolicyProvider {
 				editPart.installEditPolicy(ActivitySwitchEditPolicy.SWITCH_TYPE_ROLE, new ActivitySwitchEditPolicy());
 			}
 			
+			if (resolveSemanticElement instanceof BoundaryTimerEvent) {
+				editPart.installEditPolicy(ActivitySwitchEditPolicy.SWITCH_TYPE_ROLE, new BoundaryEventSwitchEditPolicy());
+			}
 
 		}
 		

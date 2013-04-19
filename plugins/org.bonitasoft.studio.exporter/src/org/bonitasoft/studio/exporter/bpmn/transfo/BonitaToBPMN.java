@@ -96,6 +96,7 @@ import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
+import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -1097,6 +1098,12 @@ public class BonitaToBPMN implements IBonitaTransformer {
                     bpmnBoundary.getEventDefinition().add(eventDef);
                 }
 
+                if(boundaryEvent instanceof NonInterruptingBoundaryTimerEvent){
+                	bpmnBoundary.setCancelActivity(false);
+                }else{
+                	bpmnBoundary.setCancelActivity(true);
+                }
+                
                 bpmnBoundary.setAttachedToRef(QName.valueOf(bpmnBoundary.getId()));
                 bpmnProcess.getFlowElement().add(bpmnBoundary);
                 mapping.put(boundaryEvent, bpmnBoundary);

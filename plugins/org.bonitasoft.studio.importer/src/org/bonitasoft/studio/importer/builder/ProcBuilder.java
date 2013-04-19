@@ -1182,6 +1182,7 @@ public class ProcBuilder implements IProcBuilder {
                 case ERROR_BOUNDARY: return ProcessElementTypes.IntermediateErrorCatchEvent_3029;
                 case MESSAGE_BOUNDARY: return ProcessElementTypes.BoundaryMessageEvent_3035;
                 case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3043;
+                case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3064;
                 case SIGNAL_BOUNDARY: return ProcessElementTypes.BoundarySignalEvent_3052;
                 default:break;
             }
@@ -1190,6 +1191,7 @@ public class ProcBuilder implements IProcBuilder {
                 case ERROR_BOUNDARY: return ProcessElementTypes.IntermediateErrorCatchEvent_3030;
                 case MESSAGE_BOUNDARY: return ProcessElementTypes.BoundaryMessageEvent_3036;
                 case TIMER_BOUNDARY: return ProcessElementTypes.BoundaryTimerEvent_3044;
+                case NON_INTERRUPTING_TIMER_BOUNDARY: return ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3065;
                 case SIGNAL_BOUNDARY: return ProcessElementTypes.BoundarySignalEvent_3053;
                 default:break;
             }

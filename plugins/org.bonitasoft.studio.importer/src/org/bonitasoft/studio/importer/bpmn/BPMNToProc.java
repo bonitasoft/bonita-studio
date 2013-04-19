@@ -2078,8 +2078,10 @@ public class BPMNToProc extends ToProcProcessor {
                             .getEventDefinition()) {
                         if (e instanceof TMessageEventDefinition) {
                             return EventType.MESSAGE_BOUNDARY;
-                        } else if (e instanceof TTimerEventDefinition) {
+                        } else if (e instanceof TTimerEventDefinition && ((TBoundaryEvent) flowNode).isCancelActivity()) {
                             return EventType.TIMER_BOUNDARY;
+                         }else if (e instanceof TTimerEventDefinition && !((TBoundaryEvent) flowNode).isCancelActivity()) {
+                            return EventType.NON_INTERRUPTING_TIMER_BOUNDARY;
                         } else if (e instanceof TSignalEventDefinition) {
                             return EventType.SIGNAL_BOUNDARY;
                         } else if (e instanceof TErrorEventDefinition) {

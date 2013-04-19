@@ -52,11 +52,13 @@ public final class BoundaryElementTypeResolver implements ElementTypeResolver {
             allowedChildren.add(ProcessElementTypes.IntermediateErrorCatchEvent_3029);
             allowedChildren.add(ProcessElementTypes.BoundaryMessageEvent_3035);
             allowedChildren.add(ProcessElementTypes.BoundaryTimerEvent_3043);
+            allowedChildren.add(ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3064);
             allowedChildren.add(ProcessElementTypes.BoundarySignalEvent_3052);
         } else if (parentEditPart instanceof CallActivity2EditPart || parentEditPart instanceof CallActivityEditPart) {
             allowedChildren.add(ProcessElementTypes.IntermediateErrorCatchEvent_3030);
             allowedChildren.add(ProcessElementTypes.BoundaryMessageEvent_3036);
             allowedChildren.add(ProcessElementTypes.BoundaryTimerEvent_3044);
+            allowedChildren.add(ProcessElementTypes.NonInterruptingBoundaryTimerEvent_3065);
             allowedChildren.add(ProcessElementTypes.BoundarySignalEvent_3053);
         } else if (parentEditPart instanceof ScriptTask2EditPart || parentEditPart instanceof ScriptTaskEditPart) {
             allowedChildren.add(ProcessElementTypes.IntermediateErrorCatchEvent_3033);

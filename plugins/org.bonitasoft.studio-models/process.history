@@ -7650,5 +7650,29 @@
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.expression.PatternExpressionMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
   </releases>
-  <releases/>
+  <releases>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+          element="process.ecore#//NonInterruptingBoundaryTimerEvent">
+        <changes xsi:type="history:Set" element="process.ecore#//NonInterruptingBoundaryTimerEvent"
+            featureName="name" dataValue="NonInterruptingBoundaryTimerEvent"/>
+        <changes xsi:type="history:Add" element="process.ecore#//NonInterruptingBoundaryTimerEvent"
+            featureName="eSuperTypes" referenceValue="process.ecore#//BoundaryTimerEvent"/>
+      </changes>
+      <operation name="newClass">
+        <parameters name="ePackage">
+          <referenceValue element="process.ecore#/"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>NonInterruptingBoundaryTimerEvent</dataValue>
+        </parameters>
+        <parameters name="superClasses">
+          <referenceValue element="process.ecore#//BoundaryTimerEvent"/>
+        </parameters>
+        <parameters name="abstr">
+          <dataValue>false</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+  </releases>
 </history:History>

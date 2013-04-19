@@ -292,19 +292,7 @@ public class CustomProcessEditPartFactory extends ProcessEditPartFactory {
 
                 case SubProcessEventSubProcessCompartment2EditPart.VISUAL_ID :
                     return new CustomSubprocessEventCompartmentEditPart(view) ;
-                    /*
-			case BoundaryTimerEventLabelEditPart.VISUAL_ID :
-				return new CustomBoundaryTimerLabelEditPart(view) ;
 
-			case BoundaryTimerEventLabel2EditPart.VISUAL_ID :
-				return new CustomBoundaryTimer2LabelEditPart(view) ;
-
-			case IntermediateCatchTimerEventLabel2EditPart.VISUAL_ID :
-				return new CustomIntermediateTimer2LabelEditPart(view) ;
-
-			case StartTimerEventLabel2EditPart.VISUAL_ID :
-				return new CustomStartTimer2LabelEditPart(view) ;
-                     */
             }
         }
         return super.createEditPart(context, model);

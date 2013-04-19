@@ -31,10 +31,12 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
+import org.bonitasoft.studio.common.repository.BosResourceOptionsProvider;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
@@ -42,6 +44,7 @@ import org.bonitasoft.studio.diagram.custom.Activator;
 import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -58,7 +61,9 @@ import org.eclipse.emf.ecore.xmi.XMLOptions;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLOptionsImpl;
 import org.eclipse.emf.edapt.history.Release;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
@@ -295,6 +300,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 		XMLOptions options = new XMLOptionsImpl() ;
 		options.setProcessAnyXML(true) ;
 		loadOptions.put(XMLResource.OPTION_XML_OPTIONS, options);
+		loadOptions.putAll(BosResourceOptionsProvider.getLoadOptions(ProductVersion.CURRENT_VERSION));
 		try {
 			resource.load(loadOptions);
 		} catch (IOException e) {
@@ -312,4 +318,54 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 		}
 		return targetMigrator.getReleases().iterator().next(); //First release of all time
 	}
+	
+	@Override
+	protected Resource getTmpEMFResource(String fileName,InputStream inputStream) {
+		final EditingDomain editingDomain = getEditingDomain();
+		FileOutputStream fos = null;
+		File tmpFile = null ;
+		try{
+			tmpFile = File.createTempFile("tmp", fileName, ProjectUtil.getBonitaStudioWorkFolder());
+			fos = new FileOutputStream(tmpFile);
+			FileUtil.copy(inputStream, fos);
+			final Resource resource = editingDomain.getResourceSet().createResource(URI.createFileURI(tmpFile.getAbsolutePath()));
+			resource.save(ProcessDiagramEditorUtil.getSaveOptions());
+			return resource;
+		}catch (Exception e) {
+			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+		}finally{
+			if(fos != null){
+				try {
+					fos.close();
+				} catch (IOException e) {
+					BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
+				}
+			}
+			if(inputStream != null){
+				try{
+					inputStream.close();
+				} catch (IOException e) {
+					BonitaStudioLog.error(e,CommonRepositoryPlugin.PLUGIN_ID);
+				}
+			}
+		}
+
+		return null;
+	}
+	
+//	@Override
+//	protected InputStream handlePreImport(String fileName,InputStream inputStream) throws MigrationException {
+//		final InputStream is = super.handlePreImport(fileName, inputStream);
+//		final Resource r = getTmpEMFResource(fileName, is);
+//		Map<String, Object> options = (Map<String, Object>) ProcessDiagramEditorUtil.getSaveOptions();
+//		options.putAll(BosResourceOptionsProvider.getSaveOptions());
+//		try {
+//			r.save(options);
+//			File file = new File(r.getURI().toFileString());
+//		} catch (IOException e) {
+//			BonitaStudioLog.error(e, Activator.PLUGIN_ID);
+//		}
+//		
+//		return super.handlePreImport(fileName, inputStream);
+//	}
 }

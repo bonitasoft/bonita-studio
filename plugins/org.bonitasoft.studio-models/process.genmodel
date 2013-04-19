@@ -661,6 +661,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//MultiInstantiation/completionCondition"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MultiInstantiation/sequential"/>
     </genClasses>
+    <genClasses ecoreClass="process.ecore#//NonInterruptingBoundaryTimerEvent"/>
     <genClasses ecoreClass="process.ecore#//OperationContainer">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//OperationContainer/operations"/>
     </genClasses>
