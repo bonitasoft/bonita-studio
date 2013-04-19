@@ -450,7 +450,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 				p.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
 				p.setDefinition(definition) ;
 				int i = advancedPages.indexOf(p);
-				if(definition.getPage().size() >= i){
+				if(definition.getPage().size() > i){
 					p.setPage(definition.getPage().get(i));
 				}
 				p.setElementContainer(container) ;
