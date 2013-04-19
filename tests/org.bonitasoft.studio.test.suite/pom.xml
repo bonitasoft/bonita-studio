@@ -17,7 +17,6 @@
 		<plugins>
 		<plugin>
 			<artifactId>maven-clean-plugin</artifactId>
-			<version>2.5</version>
 			<configuration>
 			   <directory>${basedir}</directory>
 				<filesets>
