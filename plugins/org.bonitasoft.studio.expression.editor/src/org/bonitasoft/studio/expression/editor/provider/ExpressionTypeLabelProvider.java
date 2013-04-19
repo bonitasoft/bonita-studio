@@ -37,7 +37,12 @@ public class ExpressionTypeLabelProvider extends CellLabelProvider{
 		if(element instanceof IExpressionProvider){
 			return ((IExpressionProvider)element).getTypeLabel() ;
 		} else if (element instanceof String){
-			return ExpressionEditorService.getInstance().getExpressionProvider((String)element).getTypeLabel();
+			String label =  ExpressionEditorService.getInstance().getExpressionProvider((String)element).getTypeLabel();
+			if (label == null){
+				return element.toString();
+			} else {
+				return label;
+			}
 		}
 		return null;
 	}
