@@ -17,6 +17,8 @@
 package org.bonitasoft.studio.diagram.custom.repository;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,6 +61,7 @@ import org.eclipse.emf.ecore.xmi.XMLOptions;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLOptionsImpl;
 import org.eclipse.emf.edapt.history.Release;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.execution.Migrator;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -135,7 +138,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 			}
 		} else {
 			//return the process  with the higher version
-					AbstractProcess currentHigher = null;
+			AbstractProcess currentHigher = null;
 			for(AbstractProcess proc : getAllProcesses()){
 				if(proc.getName().equals(processName)){
 					if(currentHigher == null || proc.getVersion().compareTo(currentHigher.getVersion()) > 0){
@@ -206,28 +209,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 		final InputStream originalStream = copyIs.getCopy();
 		final String newFileName = getValidFileName(fileName,copyIs.getCopy());
 		copyIs.close();
-		final DiagramFileStore fs = super.doImportInputStream(newFileName, originalStream);
-		if(fs != null){
-			final MainProcess diagram = fs.getContent();
-			if(diagram != null){
-				if(!ConfigurationIdProvider.getConfigurationIdProvider().isConfigurationIdValid(diagram)){
-					fs.delete();
-					Display.getDefault().syncExec(new Runnable() {
-						
-						@Override
-						public void run() {
-							MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.incompatibleVersionTitle, Messages.incompatibleVersionMsg);
-						}
-					});
-					return null;
-				}
-				diagram.setConfigId(ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
-				fs.save(diagram);
-			}else{
-				return null;
-			}
-		}
-		return fs;
+		return super.doImportInputStream(newFileName, originalStream);
 	}
 
 
@@ -310,10 +292,64 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 		adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
 		adapterFactory.addAdapterFactory(new NotationAdapterFactory()) ;
 	}
-	
+
 	@Override
-    protected Release getRelease(Migrator targetMigrator, Resource resource) {
-    	final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
+	protected InputStream handlePreImport(String fileName,
+			InputStream inputStream) throws MigrationException {
+		final InputStream is = super.handlePreImport(fileName, inputStream);
+		CopyInputStream copyIs = null;
+		try{
+			copyIs = new CopyInputStream(is);
+			Resource r = getTmpEMFResource("beforeImport", copyIs.getCopy());
+			try {
+				r.load(Collections.EMPTY_MAP);
+			} catch (IOException e) {
+				BonitaStudioLog.error(e);
+			}
+			if(!r.getContents().isEmpty()){
+				final MainProcess diagram  = (MainProcess) r.getContents().get(0);
+				if(diagram != null){
+					if(!ConfigurationIdProvider.getConfigurationIdProvider().isConfigurationIdValid(diagram)){
+						Display.getDefault().syncExec(new Runnable() {
+
+							@Override
+							public void run() {
+								MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.incompatibleVersionTitle, Messages.incompatibleVersionMsg);
+							}
+						});
+						return null;
+					}
+					diagram.setConfigId(ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
+					try {
+						r.save(Collections.EMPTY_MAP);
+					} catch (IOException e) {
+						BonitaStudioLog.error(e);
+					}
+					try {
+						return new FileInputStream(new File(r.getURI().toFileString()));
+					} catch (FileNotFoundException e) {
+						BonitaStudioLog.error(e);
+					}finally{
+						copyIs.close();
+						try {
+							r.delete(Collections.EMPTY_MAP);
+						} catch (IOException e) {
+							BonitaStudioLog.error(e);
+						}
+					}
+				}else{
+					return null;
+				}
+			}
+			return copyIs.getCopy();
+		}finally{
+			copyIs.close();
+		}
+	}
+
+	@Override
+	protected Release getRelease(Migrator targetMigrator, Resource resource) {
+		final Map<Object, Object> loadOptions = new HashMap<Object, Object>();
 		//Ignore unknown features
 		loadOptions.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
 		XMLOptions options = new XMLOptionsImpl() ;
@@ -336,6 +372,6 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 		}
 		return targetMigrator.getReleases().iterator().next(); //First release of all time
 	}
-	
+
 
 }
