@@ -420,7 +420,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.38"/>
+              href="process.gmftool#//@palette/@tools.32"/>
           <diagramNode
               href="process.gmfgraph#NonInterruptingBoundaryTimerEvent"/>
         </ownedChild>
@@ -707,7 +707,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.38"/>
+              href="process.gmftool#//@palette/@tools.32"/>
           <diagramNode
               href="process.gmfgraph#NonInterruptingBoundaryTimerEvent"/>
         </ownedChild>
@@ -1077,7 +1077,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.36"/>
+          href="process.gmftool#//@palette/@tools.37"/>
       <diagramNode
           href="process.gmfgraph#Activity"/>
       <children
@@ -1209,7 +1209,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.37"/>
+          href="process.gmftool#//@palette/@tools.38"/>
       <diagramNode
           href="process.gmfgraph#Activity"/>
     </ownedChild>
@@ -1438,7 +1438,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.35"/>
+          href="process.gmftool#//@palette/@tools.36"/>
       <diagramNode
           href="process.gmfgraph#Activity"/>
       <children
@@ -1719,7 +1719,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.34"/>
+          href="process.gmftool#//@palette/@tools.35"/>
       <diagramNode
           href="process.gmfgraph#Activity"/>
       <children
@@ -3144,7 +3144,7 @@
           href="process.ecore#//Event"/>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.32"/>
+          href="process.gmftool#//@palette/@tools.33"/>
       <diagramNode
           href="process.gmfgraph#GenericEvent"/>
     </ownedChild>
