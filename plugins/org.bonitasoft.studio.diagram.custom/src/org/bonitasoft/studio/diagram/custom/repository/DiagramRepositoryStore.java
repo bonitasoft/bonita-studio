@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
@@ -64,7 +65,9 @@ import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gmf.runtime.notation.util.NotationAdapterFactory;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -203,7 +206,28 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 		final InputStream originalStream = copyIs.getCopy();
 		final String newFileName = getValidFileName(fileName,copyIs.getCopy());
 		copyIs.close();
-		return super.doImportInputStream(newFileName, originalStream);
+		final DiagramFileStore fs = super.doImportInputStream(newFileName, originalStream);
+		if(fs != null){
+			final MainProcess diagram = fs.getContent();
+			if(diagram != null){
+				if(!ConfigurationIdProvider.getConfigurationIdProvider().isConfigurationIdValid(diagram)){
+					fs.delete();
+					Display.getDefault().syncExec(new Runnable() {
+						
+						@Override
+						public void run() {
+							MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.incompatibleVersionTitle, Messages.incompatibleVersionMsg);
+						}
+					});
+					return null;
+				}
+				diagram.setConfigId(ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
+				fs.save(diagram);
+			}else{
+				return null;
+			}
+		}
+		return fs;
 	}
 
 

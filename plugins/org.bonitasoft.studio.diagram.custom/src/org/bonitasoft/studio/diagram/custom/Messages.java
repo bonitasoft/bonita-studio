@@ -70,5 +70,7 @@ public class Messages extends NLS {
 	public static String readOnlyFileTitle;
 	public static String readOnlyFileWarning;
 	public static String invalidResourceFileName_title;
+	public static String incompatibleVersionTitle;
+	public static String incompatibleVersionMsg;
 
 }

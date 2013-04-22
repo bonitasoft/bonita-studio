@@ -7650,6 +7650,39 @@
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.expression.PatternExpressionMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
   </releases>
+  <releases date="2013-04-22T11:30:12.379+0200" label="6.0.0-ga-003">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.UpdateConfigurationId">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//MainProcess" referenceName="eStructuralFeatures"
+            element="process.ecore#//MainProcess/configId">
+          <changes xsi:type="history:Set" element="process.ecore#//MainProcess/configId"
+              featureName="name" dataValue="configId"/>
+          <changes xsi:type="history:Set" element="process.ecore#//MainProcess/configId"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//MainProcess"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>configId</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+    </changes>
+  </releases>
   <releases>
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -7662,11 +7695,13 @@
       <operation name="newClass">
         <parameters name="ePackage">
           <referenceValue element="process.ecore#/"/>
+          <referenceValue element="process.ecore#/"/>
         </parameters>
         <parameters name="name">
           <dataValue>NonInterruptingBoundaryTimerEvent</dataValue>
         </parameters>
         <parameters name="superClasses">
+          <referenceValue element="process.ecore#//BoundaryTimerEvent"/>
           <referenceValue element="process.ecore#//BoundaryTimerEvent"/>
         </parameters>
         <parameters name="abstr">

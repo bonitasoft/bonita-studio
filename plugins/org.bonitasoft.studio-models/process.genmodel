@@ -636,6 +636,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//MainProcess/messageConnections"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MainProcess/generatedLibs"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MainProcess/enableValidation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//MainProcess/configId"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//Message">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//Message/throwEvent"/>
