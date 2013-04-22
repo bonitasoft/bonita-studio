@@ -20,7 +20,7 @@ package org.bonitasoft.studio.engine.test;
 import junit.framework.TestCase;
 
 import org.bonitasoft.engine.api.IdentityAPI;
-import org.bonitasoft.engine.api.ProcessManagementAPI;
+import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.actors.model.organization.Group;
 import org.bonitasoft.studio.actors.model.organization.Organization;
@@ -61,7 +61,7 @@ public class TestCheckTenantAfterStartup extends TestCase {
      * Check if the data base was droped and elements are retrieved
      */
     public void testCheckTenantIsEmptyAfterStartup() throws Exception {
-        final ProcessManagementAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
+        final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
 
         assertEquals("No process definition should exists",0, processApi.getNumberOfProcesses());
         assertEquals("No process instance should exists",0, processApi.getNumberOfProcessInstances());
