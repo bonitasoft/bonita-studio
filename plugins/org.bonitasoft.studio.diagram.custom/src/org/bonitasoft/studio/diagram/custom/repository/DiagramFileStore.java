@@ -21,12 +21,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.BosResourceOptionsProvider;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -174,20 +171,12 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
 
 		try {
-			resource.save(getSaveOptions()) ;
+			resource.save(ProcessDiagramEditorUtil.getSaveOptions()) ;
 		} catch (IOException e) {
 			BonitaStudioLog.error(e) ;
 		}
 	}
-	
 
-	protected Map<String, Object> getSaveOptions() {
-		Map<String, Object> options = BosResourceOptionsProvider.getSaveOptions();
-		for(Entry<?, ?> entry : ProcessDiagramEditorUtil.getSaveOptions().entrySet()){
-			options.put((String) entry.getKey(), entry.getValue());
-		}
-		return options;
-	}
 
 	@Override
 	protected IWorkbenchPart doOpen() {
