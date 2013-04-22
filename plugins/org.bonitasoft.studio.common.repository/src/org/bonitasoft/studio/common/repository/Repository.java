@@ -77,7 +77,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.edapt.migration.MigrationException;
-import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -125,18 +124,12 @@ public class Repository implements IRepository {
 			disableBuild();
 			open() ;
 			initializeProject(project);
-			initializeEMFFactories();
 			initRepositoryStores() ;
 			initClasspath(project) ;
 			enableBuild();
 		}catch(Exception e){
 			BonitaStudioLog.error(e);
 		}
-	}
-
-	protected void initializeEMFFactories() {
-		GMFResourceFactory.getDefaultLoadOptions().putAll(BosResourceOptionsProvider.getLoadOptions(ProductVersion.CURRENT_VERSION));
-		GMFResourceFactory.getDefaultSaveOptions().putAll(BosResourceOptionsProvider.getSaveOptions());
 	}
 
 	/* (non-Javadoc)
