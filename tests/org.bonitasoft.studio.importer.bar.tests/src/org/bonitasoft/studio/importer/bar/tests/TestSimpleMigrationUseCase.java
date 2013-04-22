@@ -54,6 +54,7 @@ import org.bonitasoft.studio.model.process.CorrelationTypeActive;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
+import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationPackage;
@@ -177,6 +178,9 @@ public class TestSimpleMigrationUseCase {
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<NonInterruptingBoundaryTimerEvent> boundaryEvents = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.NON_INTERRUPTING_BOUNDARY_TIMER_EVENT);
+		assertEquals("There should be non interrupting boundary events",2,boundaryEvents.size());
 	}
 
 	@Test
