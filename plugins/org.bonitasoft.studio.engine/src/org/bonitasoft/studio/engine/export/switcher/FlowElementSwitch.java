@@ -86,6 +86,7 @@ import org.bonitasoft.studio.model.process.IntermediateThrowSignalEvent;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
+import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.OperationContainer;
 import org.bonitasoft.studio.model.process.OutputMapping;
 import org.bonitasoft.studio.model.process.Pool;
@@ -535,7 +536,7 @@ public class FlowElementSwitch extends AbstractSwitch {
 
 	private void addBoundaryEvents(ActivityDefinitionBuilder taskBuilder, Activity activity) {
 		for(BoundaryEvent boundaryEvent :activity.getBoundaryIntermediateEvents()){
-			BoundaryEventDefinitionBuilder boundaryEventBuilder = taskBuilder.addBoundaryEvent(boundaryEvent.getName());
+			BoundaryEventDefinitionBuilder boundaryEventBuilder = taskBuilder.addBoundaryEvent(boundaryEvent.getName(),!(boundaryEvent instanceof NonInterruptingBoundaryTimerEvent));
 			if(boundaryEvent instanceof IntermediateErrorCatchEvent){
 				String errorCode = ((IntermediateErrorCatchEvent) boundaryEvent).getErrorCode();
 				if(errorCode != null && errorCode.trim().isEmpty()){
