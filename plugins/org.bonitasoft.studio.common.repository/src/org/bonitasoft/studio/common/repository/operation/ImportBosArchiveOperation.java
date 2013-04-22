@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.common.repository.operation;
 
+import static org.bonitasoft.studio.common.Messages.bosProductName;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,9 +33,11 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Pair;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.repository.BosResourceOptionsProvider;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -53,8 +57,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
 import org.eclipse.swt.widgets.Display;
-import static org.bonitasoft.studio.common.Messages.bosProductName;
 
 /**
  * @author Romain Bioteau
@@ -160,6 +164,7 @@ public class ImportBosArchiveOperation {
             BonitaStudioLog.error(e);
         }finally{
             cleanTmpProject();
+    	    GMFResourceFactory.getDefaultLoadOptions().putAll(BosResourceOptionsProvider.getLoadOptions(ProductVersion.CURRENT_VERSION));
         }
 
 
@@ -170,6 +175,7 @@ public class ImportBosArchiveOperation {
 		Properties manifestProperties = getManifestInfo(container);
 		if(manifestProperties != null){
 		    final String version = manifestProperties.getProperty(ExportBosArchiveOperation.VERSION);
+		    GMFResourceFactory.getDefaultLoadOptions().putAll(BosResourceOptionsProvider.getLoadOptions(version));
 		    String toOpen = manifestProperties.getProperty(ExportBosArchiveOperation.TO_OPEN);
 		    String[] array = toOpen.split(",");
 		    resourceToOpen = new HashSet<String>(Arrays.asList(array));
