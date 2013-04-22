@@ -82,6 +82,7 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm.model,
  org.bonitasoft.engine.bpm.model.data,
  org.bonitasoft.engine.exception,
+ org.bonitasoft.engine.identity,
  org.bonitasoft.engine.search,
  org.bonitasoft.engine.session,
  org.bonitasoft.studio.expression.editor.viewer
