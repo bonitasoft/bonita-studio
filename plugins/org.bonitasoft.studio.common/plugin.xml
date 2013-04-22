@@ -38,12 +38,5 @@
             name="Text Perspective">
       </perspective>
    </extension>
-   <extension
-         point="org.bonitasoft.studio.common.configurationIdProvider">
-      <configurationIdProvider
-            configurationIdProvider="org.bonitasoft.studio.common.ConfigurationIdProvider2"
-            priority="org.bonitasoft.studio.common.configurationIdProvider2">
-      </configurationIdProvider>
-   </extension>
 
 </plugin>
