@@ -130,7 +130,9 @@ public class TaskPriorityPropertySection implements IExtensibleGridPropertySecti
 	 */
 	public void setEObject(EObject object) {
 		task = (Task)object;
-		DiagramEventBroker.getInstance(editDomain).addNotificationListener(task,ProcessPackage.eINSTANCE.getTask_Priority(),notificationListener);
+		if(editDomain != null){
+			DiagramEventBroker.getInstance(editDomain).addNotificationListener(task,ProcessPackage.eINSTANCE.getTask_Priority(),notificationListener);
+		}
 	}
 
 	/* (non-Javadoc)
