@@ -124,6 +124,7 @@ public class Messages extends NLS {
 	public static String simDataExpressionMigrationDescription;
 	public static String simDataChangeValueMigrationDescription;
 	public static String migrationReportOf;
+	public static String deadlinesToNonInterruptingEventMigrationDescription;
 	
 
     static {

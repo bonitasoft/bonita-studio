@@ -18,6 +18,7 @@ package org.bonitasoft.studio.importer.bar.custom.migration;
 
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
+import org.bonitasoft.studio.migration.utils.DeadlineMigrationStore;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
@@ -35,9 +36,16 @@ public class RemoveDeadlinesMigration extends ReportCustomMigration {
 			throws MigrationException {
 		for(Instance deadline : model.getAllInstances("process.Deadline")){
 			Instance connector =  deadline.get("connector");
-			addReportChange((String) connector.get("name"),"Deadline", deadline.getContainer().getUuid(), Messages.removeDeadlinesMigrationDescription, Messages.connectorProperty, IStatus.ERROR);
+			Instance container = deadline.getContainer();
+			if(container != null && (container.instanceOf("process.Task") || container.instanceOf("process.CallActivity"))){
+				DeadlineMigrationStore.addDeadline(container.getUuid(),deadline);
+				addReportChange((String) connector.get("name"),"Deadline", deadline.getContainer().getUuid(), Messages.deadlinesToNonInterruptingEventMigrationDescription, Messages.connectorProperty, IStatus.ERROR);
+			}else{
+				addReportChange((String) connector.get("name"),"Deadline", deadline.getContainer().getUuid(), Messages.removeDeadlinesMigrationDescription, Messages.connectorProperty, IStatus.ERROR);
+			}
 			model.delete(deadline);
 		}
 	}
+
 
 }

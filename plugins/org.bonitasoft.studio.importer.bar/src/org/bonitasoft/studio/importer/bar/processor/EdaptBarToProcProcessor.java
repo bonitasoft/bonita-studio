@@ -57,6 +57,7 @@ import org.bonitasoft.studio.migration.migrator.BOSMigrator;
 import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.migration.preferences.BarImporterPreferenceConstants;
 import org.bonitasoft.studio.migration.ui.wizard.MigrationWarningWizard;
+import org.bonitasoft.studio.migration.utils.DeadlineMigrationStore;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
 import org.eclipse.core.commands.ExecutionException;
@@ -193,6 +194,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 					Collections.singletonList(resourceURI),getAlphaRelease(nextMigrator),
 					null, Repository.NULL_PROGRESS_MONITOR);
 			addMigrationReport(migrator,resourceURI,(String) sourceVersion,progressMonitor);
+			DeadlineMigrationStore.clearDeadlines();
 		}else{
 			throw new Exception("Invalid source proc file");
 		}
