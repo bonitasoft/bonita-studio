@@ -445,6 +445,7 @@ public class Messages extends NLS {
 	public static String isMandatory;
 	public static String errorOutputDataMultiInstanceCollection;
 	public static String errorInputDataMultiInstanceCollection;
+	public static String messagesSectionDescription;
 	
 	
 	

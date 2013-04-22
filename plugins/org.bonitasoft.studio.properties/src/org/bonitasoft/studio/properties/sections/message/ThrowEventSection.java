@@ -20,6 +20,7 @@ package org.bonitasoft.studio.properties.sections.message;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
@@ -66,7 +67,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 /**
  * @author Romain Bioteau
  */
-public abstract class ThrowEventSection extends AbstractModelerPropertySection {
+public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection {
 
     public static final int LIST_HEIGHT = 170;
     private FilteredTree filteredTree;
@@ -272,6 +273,11 @@ public abstract class ThrowEventSection extends AbstractModelerPropertySection {
                 DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(event,notificationListener);
             }
         }
+    }
+    
+    @Override
+    public String getSectionDescription() {
+    	return Messages.messagesSectionDescription;
     }
 
 }
