@@ -24,7 +24,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,7 +34,7 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.model.ProcessDefinition;
 import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
 import org.bonitasoft.engine.bpm.model.ProcessDeploymentInfo;
-import org.bonitasoft.engine.exception.DeletingEnabledProcessException;
+import org.bonitasoft.engine.exception.IllegalProcessStateException;
 import org.bonitasoft.engine.exception.InvalidSessionException;
 import org.bonitasoft.engine.exception.PageOutOfRangeException;
 import org.bonitasoft.engine.exception.ProcessDefinitionNotFoundException;
@@ -56,8 +55,6 @@ import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Assert;
@@ -74,10 +71,7 @@ import org.eclipse.ui.commands.ICommandService;
  */
 public class DeployProcessOperation  {
 
-	private final Set<String> undeployedParentProcess = new HashSet<String>();
 	private Set<EObject> excludedObject;
-	private final String deploymentMode;
-	private final Map<Object, Object> options = new HashMap<Object, Object>();
 	private ProcessManagementAPI processApi;
 	private String configurationId;
 	private final List<AbstractProcess> processes ;
@@ -86,7 +80,6 @@ public class DeployProcessOperation  {
 	public DeployProcessOperation() {
 		processes = new ArrayList<AbstractProcess>() ;
 		processIdsMap = new HashMap<AbstractProcess, Long>() ;
-		deploymentMode =  BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.APLLICATION_DEPLOYMENT_MODE) ;
 	}
 
 	public void setObjectToExclude(Set<EObject> excludedObject){
@@ -250,9 +243,10 @@ public class DeployProcessOperation  {
 	 * @throws ProcessDeletionException
 	 * @throws ProcessDefinitionNotFoundException
 	 * @throws ProcessDisablementException
+	 * @throws IllegalProcessStateException 
 	 * @throws Exception
 	 */
-	protected void undeploy(IProgressMonitor monitor) throws InvalidSessionException, PageOutOfRangeException, ProcessDefinitionReadException, ProcessDefinitionNotFoundException, ProcessDeletionException, DeletingEnabledProcessException, ProcessDisablementException {
+	protected void undeploy(IProgressMonitor monitor) throws InvalidSessionException, PageOutOfRangeException, ProcessDefinitionReadException, ProcessDefinitionNotFoundException, ProcessDeletionException,  ProcessDisablementException, IllegalProcessStateException {
 		for(AbstractProcess process : processes){
 			undeployProcess(process,monitor) ;
 		}
@@ -260,7 +254,7 @@ public class DeployProcessOperation  {
 
 
 
-	protected void undeployProcess(AbstractProcess process, IProgressMonitor monitor) throws InvalidSessionException, ProcessDefinitionReadException, PageOutOfRangeException, ProcessDefinitionNotFoundException, ProcessDeletionException, DeletingEnabledProcessException, ProcessDisablementException {
+	protected void undeployProcess(AbstractProcess process, IProgressMonitor monitor) throws InvalidSessionException, ProcessDefinitionReadException, PageOutOfRangeException, ProcessDefinitionNotFoundException, ProcessDeletionException,  ProcessDisablementException, IllegalProcessStateException {
 		long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
 		if(nbDeployedProcesses > 0){
 			List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
