@@ -31,12 +31,15 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Assignable;
+import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -313,6 +316,13 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
     
     @Override
 	public String getSectionDescription() {
-		return Messages.addRemoveActors;
+    	final EObject selectedEobject = getEObject();
+		if(selectedEobject instanceof AbstractProcess){
+    		return Messages.addRemoveActors;
+    	} else if(selectedEobject instanceof Lane){
+    		return Messages.actorDescriptionLane;
+    	} else {
+    		return Messages.actorDescriptionTask;
+    	}
 	}
 }

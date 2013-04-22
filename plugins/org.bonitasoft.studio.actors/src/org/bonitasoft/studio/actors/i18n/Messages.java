@@ -223,6 +223,8 @@ public class Messages extends NLS {
 	public static String importOrganizationSuccessfullTitle;
 	public static String importOrganizationSuccessfullMessage;
 	public static String errorSelectionGroups;
+	public static String actorDescriptionLane;
+	public static String actorDescriptionTask;
 
 
 
