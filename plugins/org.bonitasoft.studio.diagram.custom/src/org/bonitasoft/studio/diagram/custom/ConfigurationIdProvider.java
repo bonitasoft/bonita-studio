@@ -23,13 +23,17 @@ public class ConfigurationIdProvider implements IConfigurationIdProvider {
 
 	@Override
 	public Object getConfigurationId(MainProcess diagram) {
-		return diagram.getBonitaModelVersion() + diagram.getBonitaVersion();
+		return get(diagram);
 	}
 
 	@Override
 	public boolean isConfigurationIdValid(MainProcess diagram) {
 		Object configurationId = diagram.getConfigId();
-		return configurationId != null && configurationId.toString().equals(diagram.getBonitaModelVersion() + diagram.getBonitaVersion());
+		return configurationId != null && configurationId.toString().equals(get(diagram));
+	}
+
+	protected String get(MainProcess diagram) {
+		return diagram.getName() + diagram.getBonitaModelVersion() + diagram.getBonitaVersion();
 	}
 
 }
