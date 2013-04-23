@@ -217,12 +217,16 @@ public class BOSWebServerManager {
 		while (loginTry < MAX_LOGGING_TRY) {
 			APISession session = null;
 			try {
-				session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+				session = BOSEngineManager.getInstance().getLoginAPI().login(BOSEngineManager.BONITA_TECHNICAL_USER, BOSEngineManager.BONITA_TECHNICAL_USER);
 			} catch (Exception e) {
 
 			}finally{
 				if(session != null){
-					BOSEngineManager.getInstance().logoutDefaultTenant(session);
+					try {
+						BOSEngineManager.getInstance().getLoginAPI().logout(session);
+					} catch (Exception e) {
+						
+					} 
 					return ;
 				}
 				loginTry++;
