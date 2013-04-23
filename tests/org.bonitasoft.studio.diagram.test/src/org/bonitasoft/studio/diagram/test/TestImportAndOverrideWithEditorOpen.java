@@ -69,7 +69,7 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
     public void testImportAndOverrideWithProcessEditorOpen() throws Exception {
 
         /* import the base process to override */
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcWithSameNameAndVersion_1_0.bos", "BOS Archive", "ProcWithSameNameAndVersion", getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
         SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
@@ -79,7 +79,7 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
         assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
         assertEquals("Unique description 0", model.getDocumentation());
 
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "BOS Archive", "ProcWithSameNameAndVersion", getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
         botEditor = bot.activeEditor();
         gmfEditor = bot.gefEditor(botEditor.getTitle());
 
@@ -92,12 +92,12 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 
     @Test
     public void testImportAndOverrideWithFormEditorOpen() throws Exception {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "BOS Archive", "ProcWithSameNameAndVersion", getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
         SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
         SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_2ProcWithSameNameAndVersion_1_0.bos", "BOS Archive", "ProcWithSameNameAndVersion", getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_2ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
 
         botEditor = bot.activeEditor();
         gmfEditor = bot.gefEditor(botEditor.getTitle());

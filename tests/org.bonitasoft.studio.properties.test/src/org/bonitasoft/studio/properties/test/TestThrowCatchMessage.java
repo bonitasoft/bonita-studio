@@ -57,7 +57,7 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase {
 
     @Test
     public void testThrowCathMessage() throws IOException{
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "DemoMessageContentCorrelation-1.0.bos", "BOS Archive", "DemoMessageContentCorrelation", this.getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "DemoMessageContentCorrelation-1.0.bos", "Bonita 6.x", "DemoMessageContentCorrelation", this.getClass(), false);
         SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 

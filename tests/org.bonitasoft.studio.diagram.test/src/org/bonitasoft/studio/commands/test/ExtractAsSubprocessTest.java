@@ -204,7 +204,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
      */
     public void importProcess() throws IOException {
         ICondition newEditorCond = new OneMoreEditor(bot, bot.editors().size());
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "BoundaryProcess_1_0.bos", "BOS Archive", "BoundaryProcess", this.getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "BoundaryProcess_1_0.bos", "Bonita 6.x", "BoundaryProcess", this.getClass(), false);
         bot.waitUntil(newEditorCond);
     }
 

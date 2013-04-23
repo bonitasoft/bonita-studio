@@ -81,7 +81,7 @@ public class BPMNExportTests extends SWTBotGefTestCase {
     @Test
     @Ignore
     public void testExportToBPMN() throws Exception {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestExportToBPMNDiagram_1_0.bos", "BOS Archive", "TestExportToBPMN", this.getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestExportToBPMNDiagram_1_0.bos", "Bonita 6.x", "TestExportToBPMN", this.getClass(), false);
 
         MainProcess mainProcess = (MainProcess)((ProcessDiagramEditor)bot.activeEditor().getReference().getPart(false)).getDiagram().getElement();
         final Diagram diagramFor = ModelHelper.getDiagramFor(mainProcess,null);

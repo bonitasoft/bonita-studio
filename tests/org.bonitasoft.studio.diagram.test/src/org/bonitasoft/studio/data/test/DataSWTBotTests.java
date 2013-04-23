@@ -101,7 +101,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
 
     @Test
     public void testEditData() throws Exception {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcessWithData_1_0.bos", "BOS Archive", "ProcessWithData", this.getClass(), false);
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcessWithData_1_0.bos", "Bonita 6.x", "ProcessWithData", this.getClass(), false);
 
         SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
