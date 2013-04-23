@@ -53,5 +53,7 @@
 		<module>org.bonitasoft.studio.test.swtbot.suite</module>
 		<module>bos-tests-p2</module>
 	</modules>
+
+
 	
 </project>
