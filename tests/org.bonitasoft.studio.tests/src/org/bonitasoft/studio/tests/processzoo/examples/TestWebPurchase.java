@@ -53,7 +53,9 @@ import org.junit.runner.RunWith;
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstants{
-    private final String TEXT_FORM_FIELD ="Text Form Field";
+    
+	private static final String PAGEFLOW_LABEL = "Pageflow";
+	private final String TEXT_FORM_FIELD ="Text Form Field";
     private final String RADIO_FORM_FIELD="Radio Form Field";
     private String diagramTitle=null;
 
@@ -151,7 +153,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
     private void createSalesReviewForm(SWTBotGefEditor gmfEditor){
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Entry pageflow");
+        SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
         SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
         properties.bot().button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive("Add form..."));
@@ -213,7 +215,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
     private void createMoreInfoForm(SWTBotGefEditor gmfEditor){
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Entry pageflow");
+        SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
         SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
         properties.bot().button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive("Add form..."));
@@ -276,7 +278,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
     private void createPayForm(SWTBotGefEditor gmfEditor){
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Entry pageflow");
+        SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
         SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
         properties.bot().button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive("Add form..."));

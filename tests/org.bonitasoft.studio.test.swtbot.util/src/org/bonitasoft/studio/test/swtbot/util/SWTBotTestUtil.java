@@ -54,7 +54,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
@@ -87,7 +86,8 @@ import org.junit.Assert;
 
 public class SWTBotTestUtil implements SWTBotConstants{
 	
-    public static final int CONTEXTUALPALETTE_STEP = 0;
+    private static final String PAGEFLOW_LABEL = "Pageflow";
+	public static final int CONTEXTUALPALETTE_STEP = 0;
     public static final int CONTEXTUALPALETTE_GATEWAY = 1;
     public static final int CONTEXTUALPALETTE_SEQUENCEFLOW = 2;
     //TOOLBAREVENT doesn't work, create a comment
@@ -265,7 +265,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
         part.click();
         bot.viewById(VIEWS_PROPERTIES_APPLICATION).show();
         bot.viewById(VIEWS_PROPERTIES_APPLICATION).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Entry pageflow");
+        SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
         SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
         properties.bot().button("Add...").click();
         bot.waitUntil(Conditions.shellIsActive("Add form..."));

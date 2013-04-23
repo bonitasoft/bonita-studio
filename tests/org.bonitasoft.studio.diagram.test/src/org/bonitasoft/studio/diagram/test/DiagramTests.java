@@ -68,6 +68,8 @@ import static org.bonitasoft.studio.form.properties.i18n.Messages.formFieldType;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class DiagramTests extends SWTBotGefTestCase {
 	
+	private static final String PAGEFLOW_LABEL = "Pageflow";
+
 	//@Test TODO reactivate me
 	public void testBug1678() {
 		SWTBotTestUtil.createNewDiagram(bot);
@@ -192,7 +194,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 				//System.out.println("s = "+s);
 				gmfEditor.getEditPart(nametask).click();
 				bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
-				SWTBotTestUtil.selectTabbedPropertyView(bot, "Entry pageflow");
+				SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
 
 				// add a form
 				bot.button(addForm, 0).click();
@@ -251,7 +253,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 		gmfEditor.getEditPart("Step4").click();
 		
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Entry pageflow");
+		SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
 		
 		bot.button(addForm,0).click();
 		

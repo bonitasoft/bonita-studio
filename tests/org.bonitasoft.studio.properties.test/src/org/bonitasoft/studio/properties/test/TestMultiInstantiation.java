@@ -59,7 +59,8 @@ import org.junit.Test;
  */
 public class TestMultiInstantiation extends SWTBotGefTestCase {
 
-    private static boolean disablePopup;
+    private static final String PAGEFLOW_LABEL = "Pageflow";
+	private static boolean disablePopup;
 
     @BeforeClass
     public static void setUpBeforeClass() {
@@ -141,7 +142,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase {
 
         // FILL THE FORM
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Entry pageflow");
+        SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
 
         // Add a new Form
         bot.button("Add...").click();
