@@ -275,6 +275,8 @@ public class EngineExpressionUtil {
 			}
 			if(ExpressionConstants.CONDITION_TYPE.equals(simpleExpression.getType())){
 				return createComparisonExpression(exp, simpleExpression);
+			}if(ExpressionConstants.PATTERN_TYPE.equals(simpleExpression.getType())){
+				return createPatternExpression(exp, simpleExpression);
 			}else{
 				exp.createNewInstance(name);
 				exp.setContent(simpleExpression.getContent());
@@ -295,6 +297,35 @@ public class EngineExpressionUtil {
 				}
 			}
 		} else {
+			return null;
+		}
+	}
+
+	public static Expression createPatternExpression(ExpressionBuilder exp,
+			org.bonitasoft.studio.model.expression.Expression simpleExpression) {
+		exp.createNewInstance("<pattern-expression>");
+		exp.setContent(simpleExpression.getContent());
+		final String engineExpressionType = toEngineExpressionType(simpleExpression);
+		exp.setExpressionType(engineExpressionType);
+		if(ExpressionConstants.SCRIPT_TYPE.equals(engineExpressionType)){
+			exp.setInterpreter(simpleExpression.getInterpreter());
+		} else {
+			exp.setInterpreter("");
+		}
+		exp.setReturnType(simpleExpression.getReturnType());
+		final List<Expression> dependenciesList = createDependenciesList(simpleExpression);
+		List<Expression> toRemove = new ArrayList<Expression>();
+		for(Expression expression : dependenciesList){
+			if(!expression.getContent().contains("${"+expression.getName()+"}")){
+				toRemove.add(expression);
+			}
+		}
+		dependenciesList.removeAll(toRemove);
+		exp.setDependencies(dependenciesList);
+		try {
+			return exp.done();
+		} catch (final InvalidExpressionException e) {
+			BonitaStudioLog.error(e);
 			return null;
 		}
 	}
