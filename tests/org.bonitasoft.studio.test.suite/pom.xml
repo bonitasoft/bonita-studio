@@ -15,26 +15,26 @@
 
 	<build>
 		<plugins>
-		<plugin>
-			<artifactId>maven-clean-plugin</artifactId>
-			<configuration>
-				<filesets>
-					<fileset>
-						 <directory>${basedir}</directory>
-						<includes>
-							<include>*.log</include>
-							<include>*.hprof</include>
-							<include>*.proc</include>
-						</includes>
-						<followSymlinks>false</followSymlinks>
-					</fileset>
-					<fileset>
-						<directory>${project.parent.basedir}/lé test/plugins</directory>
-						<followSymlinks>false</followSymlinks>
-					</fileset>
-				</filesets>
-			</configuration>
-		</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							 <directory>${basedir}</directory>
+							<includes>
+								<include>*.log</include>
+								<include>*.hprof</include>
+								<include>*.proc</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+						<fileset>
+							<directory>${project.parent.basedir}/lé test/plugins</directory>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
