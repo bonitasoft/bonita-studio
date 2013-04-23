@@ -38,6 +38,8 @@ public class UpdateConfigurationId extends CustomMigration {
 			throws MigrationException {
 		for(Instance mainProc : model.getAllInstances("process.MainProcess")){
 			final MainProcess diagram = ProcessFactory.eINSTANCE.createMainProcess();
+			diagram.setName((String) mainProc.get("name"));
+			diagram.setVersion((String) mainProc.get("version"));
 			diagram.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
 			diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
 			mainProc.set("configId",ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
