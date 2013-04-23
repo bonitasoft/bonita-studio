@@ -92,9 +92,9 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
         for (Expression expression : sortedExpressions) {
             if(isSupportedType(expression.getType())){
                 if(!showAllProposals && expression.getName().startsWith(previousString.toString())){
-                    final String pContent = expression.getName().substring(previousString.toString().length());
+                    final String pContent = expression.getName();
                     final String replacementString = addDelimiters(pContent);
-					proposals.add(new CompletionProposal(replacementString, offset,0,replacementString.length(),labelProvider.getImage(expression),labelProvider.getText(expression),null,null));
+					proposals.add(new CompletionProposal(replacementString, offset-previousString.length(),previousString.length(),replacementString.length(),labelProvider.getImage(expression),labelProvider.getText(expression),null,null));
                 }else if(showAllProposals){
                     final String replacementString = addDelimiters(expression.getName());
 					proposals.add(new CompletionProposal(replacementString, offset,0,replacementString.length(),labelProvider.getImage(expression),labelProvider.getText(expression),null,null));
