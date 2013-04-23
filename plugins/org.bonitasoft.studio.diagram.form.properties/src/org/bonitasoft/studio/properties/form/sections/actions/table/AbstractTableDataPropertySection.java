@@ -43,7 +43,6 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -97,13 +96,6 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
     public AbstractTableDataPropertySection() {
 
     }
-
-    @Override
-    public void refresh() {
-        super.refresh();
-        
-    }
-
 
 
     protected void refreshDataBinding() {
