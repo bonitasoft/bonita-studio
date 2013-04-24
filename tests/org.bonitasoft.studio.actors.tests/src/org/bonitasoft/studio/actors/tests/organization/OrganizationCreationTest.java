@@ -82,25 +82,28 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         bot.button(Messages.add).click();
         bot.button(Messages.add).click();
         bot.button(IDialogConstants.NEXT_LABEL).click();
-        addNewUSer("user1",firstName1, lastName1,"", membershipList1);
+        String user1 = Messages.defaultUserName+1;
+        String user2 = Messages.defaultUserName+2;
+        String user3 = Messages.defaultUserName+3;
+        addNewUSer(user1,firstName1, lastName1,"", membershipList1);
         SWTBotTable table = bot.table();
         assertEquals("First Name " + firstName1 + " in table should be edited",
                 firstName1, table.cell(0, Messages.firstName));
         assertEquals("Last Name " + lastName1 + " in table should be edited",
                 lastName1, table.cell(0, Messages.lastName));
-        addNewUSer("user2",firstName2, lastName2,"user1", membershipList2);
+        addNewUSer(user2,firstName2, lastName2,user1, membershipList2);
         assertEquals("First Name " + firstName2 + " in table should be edited",
                 firstName2, table.cell(1, Messages.firstName));
         assertEquals("Last Name " + lastName2 + " in table should be edited",
                 lastName2, table.cell(1, Messages.lastName));
-        addNewUSer("user3",firstName3, lastName3,"user2", membershipList2);
+        addNewUSer(user3,firstName3, lastName3,user2, membershipList2);
         assertEquals("First Name " + firstName3 + " in table should be edited",
                 firstName3, table.cell(2, Messages.firstName));
         assertEquals("Last Name " + lastName3 + " in table should be edited",
                 lastName3, table.cell(2, Messages.lastName));
 
         bot.table().select(0);
-        bot.comboBoxWithLabel(Messages.manager).setSelection("user3");
+        bot.comboBoxWithLabel(Messages.manager).setSelection(user3);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),10000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
@@ -138,6 +141,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         bot.button(Messages.add).click();
         bot.tabItem(Messages.general).activate();
         bot.textWithLabel(Messages.userName).setText(username);
+        //bot.sleep(1000);
         if(manager != null && !manager.isEmpty()){
             bot.comboBoxWithLabel(Messages.manager).setSelection(manager);
         }
@@ -151,6 +155,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
             bot.comboBoxWithLabel("Role", i * 2).setSelection(
                     memberShip.get(i)[1]);
         }
+        //bot.sleep(1000);
     }
 
     private void synchronizeOrganization(String organizationName) {
