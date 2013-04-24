@@ -23,7 +23,6 @@ import org.bonitasoft.studio.actors.tests.organization.TestImportOrganization;
 import org.bonitasoft.studio.application.test.TestMenus;
 import org.bonitasoft.studio.application.test.TestOperationHistory;
 import org.bonitasoft.studio.application.test.TestShowEngineLog;
-import org.bonitasoft.studio.application.test.TestSwitchPalette;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -59,8 +58,8 @@ import org.bonitasoft.studio.tests.TestBugSave;
 import org.bonitasoft.studio.tests.TestFullScenario;
 import org.bonitasoft.studio.tests.TestPathSize;
 import org.bonitasoft.studio.tests.TestVersion;
-import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
 import org.bonitasoft.studio.tests.conditions.TestConditions;
+import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
 import org.bonitasoft.studio.workspace.test.TestInitialWorkspace;
 import org.eclipse.core.runtime.CoreException;
@@ -108,7 +107,6 @@ import org.junit.runners.Suite;
     TestAddJar.class,
     TestJavaDoc.class,
     TestOperationHistory.class,
-    TestSwitchPalette.class,//need to be in an English suite and when a process editor is open
     TestDecisionTableToGroovy.class,
     TestSubprocessEventExport.class,
     TestBonitaExportModel.class,
