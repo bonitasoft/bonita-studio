@@ -158,7 +158,7 @@ public class ExportConnectorArchiveOperation {
 		}finally{
 			if(implBackup != null){
 				final IRepositoryStore store = getImplementationStore();
-				IRepositoryFileStore implFile = store.getChild(NamingUtils.toConnectorImplementationFilename(implBackup.getImplementationId(), implBackup.getImplementationVersion(), true)) ;
+				IRepositoryFileStore implFile = store.getChild(NamingUtils.getEResourceFileName(implBackup, true)) ;
 				implFile.save(implBackup) ;
 			}
 
@@ -177,7 +177,7 @@ public class ExportConnectorArchiveOperation {
 	}
 
 	protected IStatus addImplementationJar(ConnectorImplementation implementation, IFolder classpathFolder, SourceRepositoryStore sourceStore, IRepositoryStore implStore, List<IResource> resourcesToExport) throws CoreException {
-		final String connectorJarName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)  +".jar";
+		final String connectorJarName = NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(), implementation.getImplementationVersion(),false) +".jar";
 		final IFile jarFile = classpathFolder.getFile(Path.fromOSString(connectorJarName)) ;
 		String qualifiedClassName = impl.getImplementationClassname() ;
 		String packageName ="" ;
@@ -368,7 +368,8 @@ public class ExportConnectorArchiveOperation {
 
 	protected void addConnectorImplementation(ConnectorImplementation impl, List<IResource> resourcesToExport,boolean includeSources) throws FileNotFoundException, CoreException {
 		final IRepositoryStore store = getImplementationStore() ;
-		final EMFFileStore fileStore = (EMFFileStore) store.getChild(NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), true)) ;
+		String fileName = NamingUtils.getEResourceFileName(impl,true);
+		final EMFFileStore fileStore = (EMFFileStore) store.getChild(fileName) ;
 		if(!fileStore.canBeShared()){
 			File f = new File(fileStore.getEMFResource().getURI().toFileString()) ;
 			if(f.exists()){
@@ -377,13 +378,12 @@ public class ExportConnectorArchiveOperation {
 				resourcesToExport.add(implFile) ;
 				cleanAfterExport.add(implFile) ;
 			}
-
 		}else{
 			implBackup = EcoreUtil.copy(impl);
-			String jarName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false) + ".jar" ;
+			String jarName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(),impl.getImplementationVersion(),false) + ".jar" ;
 			impl.getJarDependencies().getJarDependency().add(jarName) ;
 			impl.setHasSources(includeSources) ;
-			IRepositoryFileStore file = store.getChild(NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), true)) ;
+			IRepositoryFileStore file = store.getChild(fileName) ;
 			file.save(EcoreUtil.copy(impl)) ;
 			resourcesToExport.add(file.getResource()) ;
 		}

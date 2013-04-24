@@ -74,7 +74,7 @@ public class ConnectorResourceProvider implements IBOSArchiveFileStoreProvider {
 				}
 				final String implId = mapping.getImplementationId() ;
 				final String implVersion = mapping.getImplementationVersion() ;
-				final IRepositoryFileStore implementation = connectorImplStore.getChild(NamingUtils.toConnectorImplementationFilename(implId, implVersion, true)) ;
+				final IRepositoryFileStore implementation = connectorImplStore.getImplementationFileStore(implId, implVersion) ;
 				if(implementation != null && implementation.canBeShared()){
 					files.add(implementation) ;
 

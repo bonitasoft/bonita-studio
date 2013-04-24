@@ -103,7 +103,7 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
     protected void initialize() {
         implStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
         if(originalImpl != null){
-            fileStore = implStore.getChild(NamingUtils.toConnectorImplementationFilename(originalImpl.getImplementationId(),originalImpl.getImplementationVersion(),true)) ;
+            fileStore = implStore.getChild(NamingUtils.getEResourceFileName(originalImpl,true)) ;
         }
         defStore =  RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
         sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class) ;

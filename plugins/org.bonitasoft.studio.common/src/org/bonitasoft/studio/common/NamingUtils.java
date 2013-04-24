@@ -59,8 +59,10 @@ import org.bonitasoft.studio.model.process.TimerEvent;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.bonitasoft.studio.model.process.provider.ProcessItemProviderAdapterFactory;
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.ElementType;
 
@@ -869,6 +871,18 @@ public class NamingUtils {
 			}
 		}
 		return result;
+	}
+
+	public static String getEResourceFileName(EObject eObject,boolean includeExtension) {
+		Resource resource = eObject.eResource();
+		if(resource != null){
+			URI uri = resource.getURI();
+			if(!includeExtension){
+				uri = uri.trimFileExtension();
+			}
+			return URI.decode(uri.lastSegment());
+		}
+		return null;
 	}
 
 }

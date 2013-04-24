@@ -165,4 +165,17 @@ public class ActorFilterImplRepositoryStore extends AbstractEMFRepositoryStore<A
     }
 
 
+    @Override
+	public IRepositoryFileStore getImplementationFileStore(String implId,String implVersion) {
+		for(ActorFilterImplFileStore implStore : getChildren()){
+			ConnectorImplementation impl = implStore.getContent();
+			if(impl != null && implId.equals(impl.getImplementationId())
+					&& implVersion.equals(impl.getImplementationVersion())){
+				return implStore;
+			}
+		}
+		return null;
+	}
+
+
 }

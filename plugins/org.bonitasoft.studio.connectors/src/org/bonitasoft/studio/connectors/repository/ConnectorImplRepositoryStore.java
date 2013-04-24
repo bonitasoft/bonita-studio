@@ -41,132 +41,144 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ConnectorImplRepositoryStore extends AbstractEMFRepositoryStore<ConnectorImplFileStore> implements IImplementationRepositoryStore {
 
-    private static final String STORE_NAME = "connectors-impl";
-    private static final Set<String> extensions = new HashSet<String>() ;
-    public static final String CONNECTOR_IMPL_EXT = "impl";
-    static{
-        extensions.add(CONNECTOR_IMPL_EXT) ;
-    }
+	private static final String STORE_NAME = "connectors-impl";
+	private static final Set<String> extensions = new HashSet<String>() ;
+	public static final String CONNECTOR_IMPL_EXT = "impl";
+	static{
+		extensions.add(CONNECTOR_IMPL_EXT) ;
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
-     */
-    @Override
-    public ConnectorImplFileStore createRepositoryFileStore(String fileName) {
-        return new ConnectorImplFileStore(fileName, this);
-    }
-
-
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
-     */
-    @Override
-    public String getName() {
-        return STORE_NAME ;
-    }
-
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
-     */
-    @Override
-    public String getDisplayName() {
-        return Messages.connectorImplRepositoryName;
-    }
-
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
-     */
-    @Override
-    public Image getIcon() {
-        return Pics.getImage("connector_implem-new.png",ConnectorPlugin.getDefault());
-    }
-
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
-     */
-    @Override
-    public Set<String> getCompatibleExtensions() {
-        return extensions;
-    }
-
-    @Override
-    public ConnectorImplementation getImplementation(String id, String version) {
-        for(ConnectorImplementation impl : getImplementations()){
-            if(impl.getImplementationId().equals(id) && impl.getImplementationVersion().equals(version)){
-                return impl ;
-            }
-        }
-        return null;
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
+	 */
+	@Override
+	public ConnectorImplFileStore createRepositoryFileStore(String fileName) {
+		return new ConnectorImplFileStore(fileName, this);
+	}
 
 
-    @Override
-    public List<ConnectorImplementation> getImplementations() {
-        List<ConnectorImplementation> result = new ArrayList<ConnectorImplementation>();
-        for(IRepositoryFileStore fileStore : getChildren()){
-            ConnectorImplementation def = (ConnectorImplementation) fileStore.getContent() ;
-            if(def != null){
-                result.add(def) ;
-            }
-        }
-        return result ;
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
+	 */
+	@Override
+	public String getName() {
+		return STORE_NAME ;
+	}
 
-    @Override
-    public ConnectorImplFileStore getChild(String fileName) {
-        ConnectorImplFileStore file = super.getChild(fileName) ;
-        if(file == null){
-            URL url = ConnectorPlugin.getDefault().getBundle().getResource(STORE_NAME+ "/" +fileName);
-            if(url != null){
-                return new URLConnectorImplFileStore(url,this) ;
-            }else{
-                return null ;
-            }
-        }else{
-            return file ;
-        }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
+	 */
+	@Override
+	public String getDisplayName() {
+		return Messages.connectorImplRepositoryName;
+	}
 
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getIcon()
+	 */
+	@Override
+	public Image getIcon() {
+		return Pics.getImage("connector_implem-new.png",ConnectorPlugin.getDefault());
+	}
 
-    @Override
-    public List<ConnectorImplFileStore> getChildren() {
-        List<ConnectorImplFileStore> result = super.getChildren();
-        Enumeration<URL> connectorImplementations = ConnectorPlugin.getDefault().getBundle().findEntries(STORE_NAME, "*.impl", false);
-        if( connectorImplementations != null ){
-            while (connectorImplementations.hasMoreElements()) {
-                URL url = connectorImplementations.nextElement();
-                String[] segments = url.getFile().split("/") ;
-                String fileName = segments[segments.length-1] ;
-                if(fileName.lastIndexOf(".") != -1){
-                    String extension = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()) ;
-                    if(extensions.contains(extension)){
-                        result.add(new URLConnectorImplFileStore(url,this)) ;
-                    }
-                }
-            }
-        }
-        return result ;
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
+	 */
+	@Override
+	public Set<String> getCompatibleExtensions() {
+		return extensions;
+	}
+
+	@Override
+	public ConnectorImplementation getImplementation(String id, String version) {
+		for(ConnectorImplementation impl : getImplementations()){
+			if(impl.getImplementationId().equals(id) && impl.getImplementationVersion().equals(version)){
+				return impl ;
+			}
+		}
+		return null;
+	}
 
 
-    @Override
-    public List<ConnectorImplementation> getImplementations(String definitionId, String definitionVersion) {
-        List<ConnectorImplementation> implementations = new ArrayList<ConnectorImplementation>() ;
-        for(ConnectorImplementation impl : getImplementations()){
-            if(impl != null && definitionId.equals(impl.getDefinitionId())
-                    && definitionVersion.equals(impl.getDefinitionVersion())){
-                implementations.add(impl) ;
-            }
-        }
-        return implementations ;
+	@Override
+	public List<ConnectorImplementation> getImplementations() {
+		List<ConnectorImplementation> result = new ArrayList<ConnectorImplementation>();
+		for(IRepositoryFileStore fileStore : getChildren()){
+			ConnectorImplementation def = (ConnectorImplementation) fileStore.getContent() ;
+			if(def != null){
+				result.add(def) ;
+			}
+		}
+		return result ;
+	}
 
-    }
+	@Override
+	public ConnectorImplFileStore getChild(String fileName) {
+		ConnectorImplFileStore file = super.getChild(fileName) ;
+		if(file == null){
+			URL url = ConnectorPlugin.getDefault().getBundle().getResource(STORE_NAME+ "/" +fileName);
+			if(url != null){
+				return new URLConnectorImplFileStore(url,this) ;
+			}else{
+				return null ;
+			}
+		}else{
+			return file ;
+		}
+
+	}
+
+	@Override
+	public List<ConnectorImplFileStore> getChildren() {
+		List<ConnectorImplFileStore> result = super.getChildren();
+		Enumeration<URL> connectorImplementations = ConnectorPlugin.getDefault().getBundle().findEntries(STORE_NAME, "*.impl", false);
+		if( connectorImplementations != null ){
+			while (connectorImplementations.hasMoreElements()) {
+				URL url = connectorImplementations.nextElement();
+				String[] segments = url.getFile().split("/") ;
+				String fileName = segments[segments.length-1] ;
+				if(fileName.lastIndexOf(".") != -1){
+					String extension = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()) ;
+					if(extensions.contains(extension)){
+						result.add(new URLConnectorImplFileStore(url,this)) ;
+					}
+				}
+			}
+		}
+		return result ;
+	}
 
 
-    @Override
-    protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
-        adapterFactory.addAdapterFactory(new ConnectorImplementationAdapterFactory());
-    }
+	@Override
+	public List<ConnectorImplementation> getImplementations(String definitionId, String definitionVersion) {
+		List<ConnectorImplementation> implementations = new ArrayList<ConnectorImplementation>() ;
+		for(ConnectorImplementation impl : getImplementations()){
+			if(impl != null && definitionId.equals(impl.getDefinitionId())
+					&& definitionVersion.equals(impl.getDefinitionVersion())){
+				implementations.add(impl) ;
+			}
+		}
+		return implementations ;
+
+	}
+
+
+	@Override
+	protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
+		adapterFactory.addAdapterFactory(new ConnectorImplementationAdapterFactory());
+	}
+
+	@Override
+	public IRepositoryFileStore getImplementationFileStore(String implId,String implVersion) {
+		for(ConnectorImplFileStore implStore : getChildren()){
+			ConnectorImplementation impl = implStore.getContent();
+			if(impl != null && implId.equals(impl.getImplementationId())
+					&& implVersion.equals(impl.getImplementationVersion())){
+				return implStore;
+			}
+		}
+		return null;
+	}
 
 
 

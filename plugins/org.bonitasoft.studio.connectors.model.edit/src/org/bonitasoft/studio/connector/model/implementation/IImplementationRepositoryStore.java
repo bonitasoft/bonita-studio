@@ -18,6 +18,8 @@ package org.bonitasoft.studio.connector.model.implementation;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+
 
 /**
  * @author Romain Bioteau
@@ -30,5 +32,7 @@ public interface IImplementationRepositoryStore {
     ConnectorImplementation getImplementation(String id, String version) ;
 
     List<ConnectorImplementation> getImplementations(String definitionId, String definitionVersion) ;
+    
+    IRepositoryFileStore getImplementationFileStore(String implId,String implVersion);
 
 }
