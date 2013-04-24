@@ -42,6 +42,7 @@ public class ExportActorFilterWizard extends ExportConnectorWizard {
 
     public ExportActorFilterWizard(){
         super() ;
+        setWindowTitle(Messages.exportActorFilterTitle);
     }
 
     @Override

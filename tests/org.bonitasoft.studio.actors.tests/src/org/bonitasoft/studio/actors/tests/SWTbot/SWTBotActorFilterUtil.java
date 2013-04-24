@@ -28,7 +28,7 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 /**
- * @author Aurélie Zara
+ * @author Aurï¿½lie Zara
  * 
  */
 
@@ -223,7 +223,7 @@ bot.waitUntil(new ICondition() {
 	 */
 	public static void activateExportActorFilterShell(SWTBot bot) {
 		bot.menu("Development").menu("Actor filters").menu("Export...").click();
-		bot.waitUntil(Conditions.shellIsActive("Export connector"));
+		bot.waitUntil(Conditions.shellIsActive(Messages.exportActorFilterTitle));
 		bot.activeShell().setFocus();
 	}
 

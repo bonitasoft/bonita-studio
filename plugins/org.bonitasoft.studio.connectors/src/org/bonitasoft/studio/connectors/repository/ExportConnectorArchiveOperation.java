@@ -158,8 +158,16 @@ public class ExportConnectorArchiveOperation {
 		}finally{
 			if(implBackup != null){
 				final IRepositoryStore store = getImplementationStore();
-				IRepositoryFileStore implFile = store.getChild(NamingUtils.getEResourceFileName(implBackup, true)) ;
-				implFile.save(implBackup) ;
+				String fileName = NamingUtils.getEResourceFileName(implBackup, true);
+				if(fileName == null){
+					fileName = NamingUtils.toConnectorImplementationFilename(implBackup.getImplementationId(), implBackup.getImplementationVersion(), true);
+				}
+				IRepositoryFileStore implFile = store.getChild(fileName) ;
+				if(implFile != null){
+					implFile.save(implBackup) ;
+				}else{
+					return ValidationStatus.error(fileName + " not found in repository") ;
+				}
 			}
 
 			for(IResource r : cleanAfterExport){

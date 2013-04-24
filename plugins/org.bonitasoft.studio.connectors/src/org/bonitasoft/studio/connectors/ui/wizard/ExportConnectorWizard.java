@@ -99,8 +99,9 @@ public class ExportConnectorWizard extends Wizard {
             }) ;
 
         } catch (Exception e){
-            BonitaStudioLog.error(e) ;
+        	BonitaStudioLog.error(e) ;
         }
+        
 
         return true ;
     }
