@@ -269,6 +269,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	}
 
 	protected void createDefaultOutputs(ConnectorDefinition definition) {
+		connectorWorkingCopy.getOutputs().clear();
 		for(Output output : definition.getOutput()){
 			Operation operation = ExpressionFactory.eINSTANCE.createOperation() ;
 			Operator assignment = ExpressionFactory.eINSTANCE.createOperator() ;
