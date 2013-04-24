@@ -29,6 +29,7 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -176,7 +177,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
                     Object selection = ((StructuredSelection)configurationsTree.getViewer().getSelection()).getFirstElement() ;
                     if(selection instanceof ConnectorConfiguration){
                         Resource r = ((ConnectorConfiguration)selection).eResource() ;
-                        String fileName =  r.getURI().lastSegment() ;
+                        String fileName = URI.decode(r.getURI().lastSegment());
                         IRepositoryFileStore artifact = configurationStore.getChild(fileName) ;
                         if(artifact != null){
                             if(FileActionDialog.confirmDeletionQuestion(fileName)){
