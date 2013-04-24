@@ -316,7 +316,7 @@ public class EngineExpressionUtil {
 		final List<Expression> dependenciesList = createDependenciesList(simpleExpression);
 		List<Expression> toRemove = new ArrayList<Expression>();
 		for(Expression expression : dependenciesList){
-			if(!expression.getContent().contains("${"+expression.getName()+"}")){
+			if(!simpleExpression.getContent().contains("${"+expression.getName()+"}")){
 				toRemove.add(expression);
 			}
 		}
