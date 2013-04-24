@@ -46,6 +46,8 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.bonitasoft.studio.actors.i18n.Messages.useTaskActors;
+import static org.bonitasoft.studio.actors.i18n.Messages.selectActorTitle;
 
 /**
  * @author aurelie Zara
@@ -133,8 +135,8 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         bot.sleep(1000);
         bot.comboBoxWithLabel("Task type").setSelection("Human");
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Actors");
-        bot.radio("Use below actor").click();
-        bot.comboBoxWithLabel("Select actor").setSelection(0);
+        bot.radio(useTaskActors).click();
+        bot.comboBoxWithLabel(selectActorTitle).setSelection(0);
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
         Map<String,List<String>> options = new HashMap<String,List<String>>();
         List<String> choices = new ArrayList<String>();
@@ -198,8 +200,8 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         bot.sleep(1000);
         bot.comboBoxWithLabel("Task type").setSelection("Human");
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Actors");
-        bot.radio("Use below actor").click();
-        bot.comboBoxWithLabel("Select actor").setSelection(0);
+        bot.radio(useTaskActors).click();
+        bot.comboBoxWithLabel(selectActorTitle).setSelection(0);
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
         bot.button("Add...").click();
         SWTBotTestUtil.addNewData(bot, "comment", "Text", false, "add a comment");
@@ -260,8 +262,8 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         bot.sleep(1000);
         bot.comboBoxWithLabel("Task type").setSelection("Human");
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Actors");
-        bot.radio("Use below actor").click();
-        bot.comboBoxWithLabel("Select actor").setSelection("Actor1");
+        bot.radio(useTaskActors).click();
+        bot.comboBoxWithLabel(selectActorTitle).setSelection("Actor1");
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
         bot.button("Add...").click();
         SWTBotTestUtil.addNewData(bot, "chooseExpressDelivery", "Boolean", false, "true");
