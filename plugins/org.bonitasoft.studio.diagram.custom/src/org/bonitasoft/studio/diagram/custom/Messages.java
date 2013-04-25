@@ -72,5 +72,7 @@ public class Messages extends NLS {
 	public static String invalidResourceFileName_title;
 	public static String incompatibleVersionTitle;
 	public static String incompatibleVersionMsg;
+	public static String errorSubprocessDoesNotExist;
+	public static String errorSubprocessNotFound;
 
 }

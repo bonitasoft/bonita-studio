@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
+import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -35,6 +36,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -86,10 +88,20 @@ public class OpenLatestSubprocessCommand extends AbstractHandler {
                 if(r != null){
                     String fileName = r.getURI().lastSegment() ;
                     DiagramFileStore store = diagramSotre.getChild(URI.decode(fileName)) ;
-                    store.open() ;
+                    // if the diagram is already opened
+                    if(store.getOpenedEditor()!=null){
+                    	for(IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()){
+                    		if(ref.getEditorInput().getName().equals(store.getName())){
+                             	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(ref.getPart(true));
+                              	break;
+                    		}
+                    	} 
+                    }else{ //if the diagram referenced is not opened
+                    	store.open() ;
+                    }
                 } else {
-                    MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Subprocess not found",
-                            "Could not open specified subprocess, it probably doesn't exist");
+                    MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.errorSubprocessNotFound,
+                    		Messages.errorSubprocessDoesNotExist);
                     throw new ExecutionException("Could not open specified subprocess, it probably doesn't exist");
                 }
             }
