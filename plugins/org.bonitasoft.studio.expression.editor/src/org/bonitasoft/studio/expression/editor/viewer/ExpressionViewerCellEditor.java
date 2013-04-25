@@ -135,7 +135,7 @@ public class ExpressionViewerCellEditor extends CellEditor {
 				if (viewerControl != null
 						&& !viewerControl.isDisposed()
 						&& !viewerControl.equals(
-								((Control) e.widget).getParent())) {
+								((Control) e.widget).getParent().getParent())) {
 					if (!viewer.getContentProposal().hasProposalPopupFocus()) {
 						ExpressionViewerCellEditor.this.focusLost();
 						columnViewer.refresh(true);

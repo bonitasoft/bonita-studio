@@ -45,6 +45,7 @@ import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvi
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionToolbarContribution;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
+import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Widget;
@@ -84,7 +85,6 @@ import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
-import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -98,24 +98,11 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.MouseTrackListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
@@ -152,12 +139,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private List<IExpressionValidationListener> validationListeners = new ArrayList<IExpressionValidationListener>();
 	private ToolItem eraseControl;
 
-	/**
-	 * @return the eraseControl
-	 */
-	public ToolItem getEraseControl() {
-		return eraseControl;
-	}
 
 	protected final DisposeListener disposeListener = new DisposeListener() {
 
@@ -174,6 +155,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private ToolBar toolbar;
 	private List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<IExpressionToolbarContribution>();
 	private Map<String,IExpressionValidator> validatorsForType = new HashMap<String,IExpressionValidator>();
+	private boolean cellEditor = false;;
 
 	public ExpressionViewer(Composite composite,int style, EReference expressionReference) {
 		this(composite,style,null,null,expressionReference) ;
@@ -212,7 +194,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	}
 
 	protected void createToolbar(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
-		toolbar = new ToolBar(control, SWT.FLAT);
+		toolbar = new ToolBar(control, SWT.FLAT | SWT.NO_FOCUS);
 		toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).indent(20, 0).grab(false, false).create());
 		editControl = createEditToolItem(toolbar);
 		if(withConnector){
@@ -240,7 +222,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	}
 
 	protected ToolItem createEditToolItem(ToolBar tb) {
-		final ToolItem editControl = new ToolItem(tb, SWT.PUSH);
+		final ToolItem editControl = new ToolItem(tb, SWT.PUSH | SWT.NO_FOCUS);
 		editControl.setImage(Pics.getImage(PicsConstants.edit)) ;
 		editControl.setToolTipText(Messages.editAndContinue);
 
@@ -258,7 +240,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	}
 
 	protected ToolItem createEraseToolItem(ToolBar tb) {
-		eraseControl = new ToolItem(tb, SWT.PUSH);
+		eraseControl = new ToolItem(tb, SWT.PUSH | SWT.NO_FOCUS);
 		eraseControl.setImage(Pics.getImage(PicsConstants.clear));
 		eraseControl.setToolTipText(Messages.eraseExpression);
 
@@ -294,92 +276,22 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	}
 
 	protected void createTextControl(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
-		textControl = new Text(control,style | SWT.SEARCH ) ;
-		textControl.addPaintListener(new PaintListener() {
-
-			@Override
-			public void paintControl(PaintEvent e) {
-				GC gc = e.gc;
-				Display display = e.display ;
-				if(display!= null && gc != null){
-					Control focused = display.getFocusControl() ;
-					if(focused != null && focused.equals(textControl)){
-						gc.setForeground(display.getSystemColor(0));
-						gc.setBackground(display.getSystemColor(0));
-					//	gc.fillRectangle(0, 0, 20, 12);
-					}
-					gc.setForeground(display.getSystemColor(0));
-					gc.setBackground(display.getSystemColor(0));
-					int[] points = new int[]{e.width - 18,8,e.width - 12,8,e.width - 15,12};
-					gc.drawPolygon(points);
-					gc.fillPolygon(points);
-				}
-			}
-		});
-
-		textControl.addMouseMoveListener(new MouseMoveListener() {
-
-			@Override
-			public void mouseMove(MouseEvent e) {
-				int width = textControl.getBounds().width ;
-				if(e.widget.equals(textControl) && e.x >= width - 18 && e.x <= width - 12 && e.y >= 8 && e.y <= 12){
-					textControl.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
-				}else{
-					textControl.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_ARROW));
-				}
-
-			}
-		});
-
-		textControl.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				int width = textControl.getBounds().width ;
-				if(e.widget.equals(textControl) && e.x >= width - 18 && e.x <= width - 12 && e.y >= 8 && e.y <= 12){
-					if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
-						autoCompletion.getContentProposalAdapter().closeProposalPopup();
-					}else{
-						autoCompletion.getContentProposalAdapter().showProposalPopup();
-					}
-
-				}
-			}
-		});
-
-
-		textControl.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				//textControl.notifyListeners(SWT.Paint, new Event());
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				if(e.widget.equals(textControl)){
-					textControl.redraw();
-					textControl.update();
-					
-				}
-				//textControl.notifyListeners(SWT.Paint, new Event());
-			}
-		});
-
-	
+		final ContentAssistText contentAssistText = new ContentAssistText(control,new ExpressionLabelProvider(), style);
+		textControl = contentAssistText.getTextControl();
 		if(widgetFactory != null){
 			widgetFactory.adapt(textControl,false,false) ;
 		}
 		textControl.addDisposeListener(disposeListener) ;
 
-		typeDecoration = new ControlDecoration(textControl, SWT.RIGHT ,control) ;
+		typeDecoration = new ControlDecoration(contentAssistText, SWT.RIGHT ,control) ;
 		typeDecoration.setMarginWidth(2) ;
 
-		messageDecoration = new ControlDecoration(textControl, SWT.LEFT,control) ;
+		messageDecoration = new ControlDecoration(contentAssistText, SWT.LEFT,control) ;
 		messageDecoration.setShowHover(true) ;
 		messageDecoration.setMarginWidth(1) ;
 		messageDecoration.hide() ;
 
-		autoCompletion = new AutoCompletionField(textControl, new TextContentAdapter(), new ExpressionLabelProvider()) ;
+		autoCompletion = contentAssistText.getAutocompletion();
 		autoCompletion.addExpressionProposalListener(new IContentProposalListener() {
 
 			@Override
@@ -407,12 +319,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		int indent = 0 ;
 		if ((style & SWT.BORDER) != 0){
 			indent = 16 ;
+			cellEditor = false;
+		}else{
+			cellEditor = true;
 		}
-		textControl.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).indent(indent, 0).grab(true, false).create()) ;
-
-		/*Data for test purpose*/
-		textControl.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_TEXT);
-
+		contentAssistText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).indent(indent, 0).grab(true, false).create()) ;
 	}
 
 	protected void openEditDialog() {
@@ -549,7 +460,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			}
 		}
 		Set<Expression> filteredExpressions =  getFilteredExpressions() ;
-		setProposalsFiltering(expressionNatureProvider instanceof ExpressionContentProvider);
 		if(selectedExpression != null && ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())){
 			setProposalsFiltering(false);
 			autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_INSERT);
@@ -837,7 +747,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			Image icon = getLabelProviderImage(labelProvider, selectedExpression);
 			ExpressionTypeLabelProvider expTypeProvider = new ExpressionTypeLabelProvider(); 
 			String desc = expTypeProvider.getText(selectedExpression.getType());
-			if((textControl.getStyle() & SWT.BORDER) != 0){
+			if(!cellEditor){
 				typeDecoration.setImage(icon) ;
 				typeDecoration.setDescriptionText(desc);
 				if(!editing){
@@ -1016,7 +926,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		autoCompletion.getContentProposalProvider().setFiltering(filterProposal);
 	}
 
-
+	public ToolItem getEraseControl() {
+		return eraseControl;
+	}
 
 	protected Converter getNameConverter(){
 		Converter nameConverter = new Converter(String.class,String.class){

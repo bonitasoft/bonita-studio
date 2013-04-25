@@ -710,7 +710,7 @@ public class BonitaContentProposalAdapter {
 				GridData data = new GridData(GridData.FILL_BOTH);
 				data.heightHint = proposalTable.getItemHeight()
 						* POPUP_CHAR_HEIGHT;
-				data.widthHint = Math.max(control.getSize().x-20,
+				data.widthHint = Math.max(control.getSize().x,
 						POPUP_MINIMUM_WIDTH);
 				proposalTable.setLayoutData(data);
 				getShell().pack();
@@ -1147,7 +1147,7 @@ public class BonitaContentProposalAdapter {
 	 * The minimum pixel width for the popup. May be overridden by using
 	 * setInitialPopupSize.
 	 */
-	private static final int POPUP_MINIMUM_WIDTH = 200;
+	private static final int POPUP_MINIMUM_WIDTH = 100;
 
 	/*
 	 * The pixel offset of the popup from the bottom corner of the control.
