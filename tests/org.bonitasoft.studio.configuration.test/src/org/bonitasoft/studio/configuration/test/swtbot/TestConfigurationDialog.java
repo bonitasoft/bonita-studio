@@ -30,7 +30,6 @@ import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 /**
  * @author Romain Bioteau
  *
@@ -97,7 +96,9 @@ public class TestConfigurationDialog extends SWTBotGefTestCase {
         assertTrue("Proces dependencies menu should not be visible", notFound);
 
 
-        bot.checkBox().click();
+        if(!bot.checkBox().isChecked()){
+        	bot.checkBox().click();
+        }
         bot.table().getTableItem("Process dependencies").select();
 
         bot.button(IDialogConstants.FINISH_LABEL).click();

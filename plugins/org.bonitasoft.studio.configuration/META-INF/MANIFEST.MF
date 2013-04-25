@@ -30,5 +30,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.configuration,
  org.bonitasoft.studio.configuration.extension,
+ org.bonitasoft.studio.configuration.i18n,
  org.bonitasoft.studio.configuration.preferences,
  org.bonitasoft.studio.configuration.ui.handler

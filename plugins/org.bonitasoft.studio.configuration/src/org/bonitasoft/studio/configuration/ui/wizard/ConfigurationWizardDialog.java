@@ -81,7 +81,7 @@ import org.eclipse.ui.progress.IProgressService;
 public class ConfigurationWizardDialog extends WizardDialog implements ISelectionChangedListener,IPageChangedListener{
 
 
-    private static final String CONFIGURATION_WIZARD_DIALOG_ADVANCE_MODE = "ConfigurationWizardDialog_advanceMode";
+    private static final String CONFIGURATION_WIZARD_DIALOG_SIMPLE_MODE = "ConfigurationWizardDialog_simpleMode";
     private static final String EXPORT_CONFIGURATION_ACTION_ID = "org.bonitasoft.studio.configuration.exportConfigurationAction";
     private static final String CLASS = "class";
 
@@ -91,7 +91,7 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
     private TableViewer pageChooserViewer;
     private Image image;
     private Group group;
-    private boolean isAdvancedMode;
+    private boolean isSimpleMode;
     private IDialogSettings dialogSettings;
 
     public ConfigurationWizardDialog(Shell parentShell, IWizard newWizard) {
@@ -101,7 +101,7 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         if (dialogSettings == null) {
             dialogSettings = workbenchSettings.addNewSection(ConfigurationWizardDialog.class.getName());
         }
-        isAdvancedMode = dialogSettings.getBoolean(CONFIGURATION_WIZARD_DIALOG_ADVANCE_MODE);
+        isSimpleMode = dialogSettings.getBoolean(CONFIGURATION_WIZARD_DIALOG_SIMPLE_MODE);
     }
 
     @Override
@@ -321,12 +321,12 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
                 updateAdvancedCheckBox(checkBox.getSelection());
             }
         });
-        checkBox.setSelection(isAdvancedMode);
+        checkBox.setSelection(!isSimpleMode);
     }
 
     protected void updateAdvancedCheckBox(boolean isAdvanced) {
-        isAdvancedMode = isAdvanced;
-        dialogSettings.put(CONFIGURATION_WIZARD_DIALOG_ADVANCE_MODE, isAdvancedMode);
+        isSimpleMode = !isAdvanced;
+        dialogSettings.put(CONFIGURATION_WIZARD_DIALOG_SIMPLE_MODE, isSimpleMode);
         pageChooserViewer.refresh();
     }
 
@@ -351,7 +351,7 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 IProcessConfigurationWizardPage page = (IProcessConfigurationWizardPage) element;
-                if(isAdvancedMode){
+                if(!isSimpleMode){
                     return true;
                 }
                 return page.isDefault() || page.isConfigurationPageValid(getConfiguration()) != null;
