@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
@@ -135,7 +136,8 @@ public class ExpressionViewerCellEditor extends CellEditor {
 				if (viewerControl != null
 						&& !viewerControl.isDisposed()
 						&& !viewerControl.equals(
-								((Control) e.widget).getParent().getParent())) {
+								((Control) e.widget).getParent().getParent())
+								&& !(e.widget instanceof Link)) {
 					if (!viewer.getContentProposal().hasProposalPopupFocus()) {
 						ExpressionViewerCellEditor.this.focusLost();
 						columnViewer.refresh(true);
