@@ -44,6 +44,7 @@ import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.TestURLs;
 import org.bonitasoft.studio.tests.api.TestBonitaAPI;
 import org.bonitasoft.studio.tests.bug.TestBugs;
+import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
 import org.bonitasoft.studio.tests.data.TestDataRefactor;
 import org.bonitasoft.studio.tests.perspectives.TestAutomaticSwitchPerspective;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
@@ -74,6 +75,7 @@ import org.junit.runners.Suite;
     TestHtmlTemplateGenerator.class,
     TestPreviewForm.class,
     TestCommands.class,
+    TestDatabaseConnectorResulset.class,
     TestAutomaticSwitchPerspective.class,
     TestBOSArchiveImport.class,
     TestSimulationResourceRepository.class,
