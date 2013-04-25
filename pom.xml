@@ -19,6 +19,7 @@
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
 		<filters.version>6.0.0-beta-011</filters.version>
 		<p2MirrorUrl>ftp://192.168.1.215/home/ic/p2_repository/</p2MirrorUrl>
+		<tycho.testArgLine></tycho.testArgLine>
 	</properties>
 
 	<modules>
