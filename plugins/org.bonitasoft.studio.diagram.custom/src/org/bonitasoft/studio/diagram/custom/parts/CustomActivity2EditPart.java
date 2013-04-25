@@ -38,6 +38,9 @@ import org.eclipse.swt.graphics.RGB;
  */
 public class CustomActivity2EditPart extends Activity2EditPart {
 
+	private Color backgroundColor;
+	private Color foregroundColor;
+	
 	public CustomActivity2EditPart(View view) {
 		super(view);
 	}
@@ -70,17 +73,26 @@ public class CustomActivity2EditPart extends Activity2EditPart {
 	}    
 
 
+
 	@Override
 	protected void setBackgroundColor(Color color) {
 		if (primaryShape != null) {
-			((CustomSVGFigure)primaryShape).setColor(FigureUtilities.integerToColor(((LineStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()),color);
+			if(backgroundColor != null){
+				backgroundColor.dispose();
+			}
+			backgroundColor = FigureUtilities.integerToColor(((LineStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor());
+			((CustomSVGFigure)primaryShape).setColor(backgroundColor,color);
 		}
 	}
-
+	
 	@Override
 	protected void setForegroundColor(Color color) {
 		if (primaryShape != null) {
-			((CustomSVGFigure)primaryShape).setColor(color,FigureUtilities.integerToColor(((FillStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()));
+			if(foregroundColor != null){
+				foregroundColor.dispose();
+			}
+			foregroundColor = FigureUtilities.integerToColor(((FillStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor());
+			((CustomSVGFigure)primaryShape).setColor(color,foregroundColor);
 		}
 	}
 

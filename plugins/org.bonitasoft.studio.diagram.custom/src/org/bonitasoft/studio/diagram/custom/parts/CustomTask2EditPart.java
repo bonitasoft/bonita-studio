@@ -39,6 +39,9 @@ import org.eclipse.swt.graphics.RGB;
 public class CustomTask2EditPart extends Task2EditPart {
 
 
+	private Color backgroundColor;
+	private Color foregroundColor;
+
 	public CustomTask2EditPart(View view) {
 		super(view);
 	}
@@ -47,14 +50,22 @@ public class CustomTask2EditPart extends Task2EditPart {
 	@Override
 	protected void setBackgroundColor(Color color) {
 		if (primaryShape != null) {
-			((CustomSVGFigure)primaryShape).setColor(FigureUtilities.integerToColor(((LineStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()),color);
+			if(backgroundColor != null){
+				backgroundColor.dispose();
+			}
+			backgroundColor = FigureUtilities.integerToColor(((LineStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor());
+			((CustomSVGFigure)primaryShape).setColor(backgroundColor,color);
 		}
 	}
 	
 	@Override
 	protected void setForegroundColor(Color color) {
 		if (primaryShape != null) {
-			((CustomSVGFigure)primaryShape).setColor(color,FigureUtilities.integerToColor(((FillStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()));
+			if(foregroundColor != null){
+				foregroundColor.dispose();
+			}
+			foregroundColor = FigureUtilities.integerToColor(((FillStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor());
+			((CustomSVGFigure)primaryShape).setColor(color,foregroundColor);
 		}
 	}
 
@@ -63,21 +74,15 @@ public class CustomTask2EditPart extends Task2EditPart {
 	        Object preferenceStore = getDiagramPreferencesHint().getPreferenceStore();
 	        if (preferenceStore instanceof IPreferenceStore) {
 	            if (feature == NotationPackage.eINSTANCE.getLineStyle_LineColor()) {
-	                
 	                return FigureUtilities.RGBToInteger(new RGB(44,109,163));
-	                
 	            } else if (feature == NotationPackage.eINSTANCE
 	                .getFontStyle_FontColor()) {
-	                
 	                return FigureUtilities.RGBToInteger(PreferenceConverter
 	                    .getColor((IPreferenceStore) preferenceStore,
 	                        IPreferenceConstants.PREF_FONT_COLOR));
-	                
 	            } else if (feature == NotationPackage.eINSTANCE
 	                .getFillStyle_FillColor()) {
-	                
 	                return FigureUtilities.RGBToInteger(new RGB(184,185,218));
-	                
 	            }
 	        }
 

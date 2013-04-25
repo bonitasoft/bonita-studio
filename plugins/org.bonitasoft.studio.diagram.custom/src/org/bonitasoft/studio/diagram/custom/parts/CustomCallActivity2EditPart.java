@@ -41,7 +41,9 @@ import org.eclipse.swt.graphics.RGB;
  */
 public class CustomCallActivity2EditPart extends CallActivity2EditPart {
 
-
+	private Color backgroundColor;
+	private Color foregroundColor;
+	
     public CustomCallActivity2EditPart(View view) {
         super(view);
     }
@@ -53,19 +55,28 @@ public class CustomCallActivity2EditPart extends CallActivity2EditPart {
         return result;
     }
 
-    @Override
-    protected void setBackgroundColor(Color color) {
-        if (primaryShape != null) {
-            ((CustomSVGFigure)primaryShape).setColor(FigureUtilities.integerToColor(((LineStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()),color);
-        }
-    }
 
-    @Override
-    protected void setForegroundColor(Color color) {
-        if (primaryShape != null) {
-            ((CustomSVGFigure)primaryShape).setColor(color,FigureUtilities.integerToColor(((FillStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()));
-        }
-    }
+	@Override
+	protected void setBackgroundColor(Color color) {
+		if (primaryShape != null) {
+			if(backgroundColor != null){
+				backgroundColor.dispose();
+			}
+			backgroundColor = FigureUtilities.integerToColor(((LineStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor());
+			((CustomSVGFigure)primaryShape).setColor(backgroundColor,color);
+		}
+	}
+	
+	@Override
+	protected void setForegroundColor(Color color) {
+		if (primaryShape != null) {
+			if(foregroundColor != null){
+				foregroundColor.dispose();
+			}
+			foregroundColor = FigureUtilities.integerToColor(((FillStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor());
+			((CustomSVGFigure)primaryShape).setColor(color,foregroundColor);
+		}
+	}
 
     @Override
     public Object getPreferredValue(EStructuralFeature feature) {

@@ -429,7 +429,9 @@ public class CustomPoolEditPart extends PoolEditPart {
 	protected void setFont(FontData fontData) {
 		super.setFont(fontData);
 		if(fontData != null && ((Element)resolveSemanticElement()).getName() != null){
-			int height = FigureUtilities.getStringExtents(((Element)resolveSemanticElement()).getName(), new Font(Display.getCurrent(), fontData)).height ;
+			final Font font = new Font(Display.getCurrent(), fontData);
+			int height = FigureUtilities.getStringExtents(((Element)resolveSemanticElement()).getName(),font).height ;
+			font.dispose();
 			((CustomPoolFigure)getContentPane()).getLabelGridData().widthHint = height + 2; 
 		}
 	}
