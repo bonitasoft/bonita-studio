@@ -37,207 +37,207 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  */
 public class SelectImpl extends WidgetImpl implements Select {
     /**
-     * The cached value of the '{@link #getItems() <em>Items</em>}' attribute list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getItems() <em>Items</em>}' attribute list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getItems()
-     * @generated
-     * @ordered
-     */
+	 * @see #getItems()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<String> items;
 
     /**
-     * The default value of the '{@link #isReadOnly() <em>Read Only</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #isReadOnly() <em>Read Only</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #isReadOnly()
-     * @generated
-     * @ordered
-     */
+	 * @see #isReadOnly()
+	 * @generated
+	 * @ordered
+	 */
     protected static final boolean READ_ONLY_EDEFAULT = false;
 
     /**
-     * The cached value of the '{@link #isReadOnly() <em>Read Only</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isReadOnly() <em>Read Only</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #isReadOnly()
-     * @generated
-     * @ordered
-     */
+	 * @see #isReadOnly()
+	 * @generated
+	 * @ordered
+	 */
     protected boolean readOnly = READ_ONLY_EDEFAULT;
 
     /**
-     * This is true if the Read Only attribute has been set.
-     * <!-- begin-user-doc -->
+	 * This is true if the Read Only attribute has been set.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     protected boolean readOnlyESet;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected SelectImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ConnectorDefinitionPackage.Literals.SELECT;
-    }
+		return ConnectorDefinitionPackage.Literals.SELECT;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<String> getItems() {
-        if (items == null) {
-            items = new EDataTypeEList<String>(String.class, this, ConnectorDefinitionPackage.SELECT__ITEMS);
-        }
-        return items;
-    }
+		if (items == null) {
+			items = new EDataTypeEList<String>(String.class, this, ConnectorDefinitionPackage.SELECT__ITEMS);
+		}
+		return items;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public boolean isReadOnly() {
-        return readOnly;
-    }
+		return readOnly;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setReadOnly(boolean newReadOnly) {
-        boolean oldReadOnly = readOnly;
-        readOnly = newReadOnly;
-        boolean oldReadOnlyESet = readOnlyESet;
-        readOnlyESet = true;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectorDefinitionPackage.SELECT__READ_ONLY, oldReadOnly, readOnly, !oldReadOnlyESet));
-    }
+		boolean oldReadOnly = readOnly;
+		readOnly = newReadOnly;
+		boolean oldReadOnlyESet = readOnlyESet;
+		readOnlyESet = true;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ConnectorDefinitionPackage.SELECT__READ_ONLY, oldReadOnly, readOnly, !oldReadOnlyESet));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void unsetReadOnly() {
-        boolean oldReadOnly = readOnly;
-        boolean oldReadOnlyESet = readOnlyESet;
-        readOnly = READ_ONLY_EDEFAULT;
-        readOnlyESet = false;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.UNSET, ConnectorDefinitionPackage.SELECT__READ_ONLY, oldReadOnly, READ_ONLY_EDEFAULT, oldReadOnlyESet));
-    }
+		boolean oldReadOnly = readOnly;
+		boolean oldReadOnlyESet = readOnlyESet;
+		readOnly = READ_ONLY_EDEFAULT;
+		readOnlyESet = false;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.UNSET, ConnectorDefinitionPackage.SELECT__READ_ONLY, oldReadOnly, READ_ONLY_EDEFAULT, oldReadOnlyESet));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public boolean isSetReadOnly() {
-        return readOnlyESet;
-    }
+		return readOnlyESet;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.SELECT__ITEMS:
-                return getItems();
-            case ConnectorDefinitionPackage.SELECT__READ_ONLY:
-                return isReadOnly();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.SELECT__ITEMS:
+				return getItems();
+			case ConnectorDefinitionPackage.SELECT__READ_ONLY:
+				return isReadOnly();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.SELECT__ITEMS:
-                getItems().clear();
-                getItems().addAll((Collection<? extends String>)newValue);
-                return;
-            case ConnectorDefinitionPackage.SELECT__READ_ONLY:
-                setReadOnly((Boolean)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.SELECT__ITEMS:
+				getItems().clear();
+				getItems().addAll((Collection<? extends String>)newValue);
+				return;
+			case ConnectorDefinitionPackage.SELECT__READ_ONLY:
+				setReadOnly((Boolean)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.SELECT__ITEMS:
-                getItems().clear();
-                return;
-            case ConnectorDefinitionPackage.SELECT__READ_ONLY:
-                unsetReadOnly();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.SELECT__ITEMS:
+				getItems().clear();
+				return;
+			case ConnectorDefinitionPackage.SELECT__READ_ONLY:
+				unsetReadOnly();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.SELECT__ITEMS:
-                return items != null && !items.isEmpty();
-            case ConnectorDefinitionPackage.SELECT__READ_ONLY:
-                return isSetReadOnly();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.SELECT__ITEMS:
+				return items != null && !items.isEmpty();
+			case ConnectorDefinitionPackage.SELECT__READ_ONLY:
+				return isSetReadOnly();
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (items: ");
-        result.append(items);
-        result.append(", readOnly: ");
-        if (readOnlyESet) result.append(readOnly); else result.append("<unset>");
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (items: ");
+		result.append(items);
+		result.append(", readOnly: ");
+		if (readOnlyESet) result.append(readOnly); else result.append("<unset>");
+		result.append(')');
+		return result.toString();
+	}
 
 } //SelectImpl

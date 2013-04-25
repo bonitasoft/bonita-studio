@@ -49,7 +49,9 @@
 	</xsd:complexType>
 	<xsd:complexType name="Text">
 		<xsd:complexContent>
-			<xsd:extension base="Widget" />
+			<xsd:extension base="Widget">
+				<xsd:attribute name="showDocuments" type="xsd:boolean" default="false" />
+			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 	<xsd:complexType name="Password">
@@ -119,7 +121,9 @@
 	</xsd:complexType>
 	<xsd:complexType name="List">
 		<xsd:complexContent>
-			<xsd:extension base="Widget" />
+			<xsd:extension base="Widget">
+				<xsd:attribute name="showDocuments" type="xsd:boolean" default="false" />
+			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 	<xsd:complexType abstract="true" name="Component">

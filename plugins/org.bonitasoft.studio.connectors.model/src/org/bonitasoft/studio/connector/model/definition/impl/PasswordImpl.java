@@ -22,22 +22,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class PasswordImpl extends TextImpl implements Password {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected PasswordImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ConnectorDefinitionPackage.Literals.PASSWORD;
-    }
+		return ConnectorDefinitionPackage.Literals.PASSWORD;
+	}
 
 } //PasswordImpl

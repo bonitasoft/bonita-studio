@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<history:History xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<history:History xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:history="http://www.eclipse.org/emf/edapt/history/0.3">
   <releases date="2012-12-10T10:26:57.769+0100" label="6.0">
     <changes xsi:type="history:CompositeChange">
@@ -2152,5 +2153,104 @@
       </changes>
     </changes>
   </releases>
-  <releases/>
+  <releases>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="definition.ecore#//Text" referenceName="eStructuralFeatures"
+          element="definition.ecore#//Text/showDocuments">
+        <changes xsi:type="history:Set" element="definition.ecore#//Text/showDocuments"
+            featureName="name" dataValue="showDocuments"/>
+        <changes xsi:type="history:Set" element="definition.ecore#//Text/showDocuments"
+            featureName="defaultValueLiteral" dataValue="false"/>
+        <changes xsi:type="history:Set" element="definition.ecore#//Text/showDocuments"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="definition.ecore#//Text"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>showDocuments</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue>false</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:Create" target="definition.ecore#//Text/showDocuments"
+        referenceName="eAnnotations" element="definition.ecore#//Text/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//Text/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+        featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+    <changes xsi:type="history:Create" target="definition.ecore#//Text/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+        referenceName="details" element="definition.ecore#//Text/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//Text/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+        featureName="key" dataValue="k"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//Text/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+        featureName="key" dataValue="kind" oldDataValue="k"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//Text/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+        featureName="value" dataValue="attribute"/>
+    <changes xsi:type="history:Create" target="definition.ecore#//Text/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+        referenceName="details" element="definition.ecore#//Text/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//Text/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+        featureName="key" dataValue="name"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//Text/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+        featureName="value" dataValue="showDocuments"/>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="definition.ecore#//List" referenceName="eStructuralFeatures"
+          element="definition.ecore#//List/showDocuments">
+        <changes xsi:type="history:Set" element="definition.ecore#//List/showDocuments"
+            featureName="name" dataValue="showDocuments"/>
+        <changes xsi:type="history:Set" element="definition.ecore#//List/showDocuments"
+            featureName="defaultValueLiteral" dataValue="false"/>
+        <changes xsi:type="history:Set" element="definition.ecore#//List/showDocuments"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="definition.ecore#//List"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>showDocuments</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue>false</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:Create" target="definition.ecore#//List/showDocuments"
+        referenceName="eAnnotations" element="definition.ecore#//List/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//List/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+        featureName="source" dataValue="http:///org/eclipse/emf/ecore/util/ExtendedMetaData"/>
+    <changes xsi:type="history:Create" target="definition.ecore#//List/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+        referenceName="details" element="definition.ecore#//List/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//List/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+        featureName="key" dataValue="kind"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//List/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.0"
+        featureName="value" dataValue="attribute"/>
+    <changes xsi:type="history:Create" target="definition.ecore#//List/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%"
+        referenceName="details" element="definition.ecore#//List/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//List/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+        featureName="key" dataValue="name"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//List/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+        featureName="value" dataValue="showDocument"/>
+    <changes xsi:type="history:Set" element="definition.ecore#//List/showDocuments/%http:%2F%2F%2Forg%2Feclipse%2Femf%2Fecore%2Futil%2FExtendedMetaData%/@details.1"
+        featureName="value" dataValue="showDocuments" oldDataValue="showDocument"/>
+  </releases>
 </history:History>

@@ -34,7 +34,8 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
 
     private final Set<String> contentTypes;
 
-    public AvailableExpressionTypeFilter(String[] contentTypes){
+
+	public AvailableExpressionTypeFilter(String[] contentTypes){
         this.contentTypes = new HashSet<String>(Arrays.asList(contentTypes))  ;
         if(this.contentTypes.contains(ExpressionConstants.VARIABLE_TYPE)){
         	this.contentTypes.add(ExpressionConstants.JAVA_TYPE);
@@ -55,4 +56,8 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
         return true ;
     }
 
+
+    public Set<String> getContentTypes() {
+		return contentTypes;
+	}
 }

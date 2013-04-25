@@ -38,574 +38,574 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
  */
 public class ConnectorDefinitionItemProviderAdapterFactory extends ConnectorDefinitionAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**
-     * This keeps track of the root adapter factory that delegates to this adapter factory.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the root adapter factory that delegates to this adapter factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ComposedAdapterFactory parentAdapterFactory;
 
     /**
-     * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
-     * <!-- begin-user-doc -->
+	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
     /**
-     * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
-     * <!-- begin-user-doc -->
+	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected Collection<Object> supportedTypes = new ArrayList<Object>();
 
     /**
-     * This constructs an instance.
-     * <!-- begin-user-doc -->
+	 * This constructs an instance.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ConnectorDefinitionItemProviderAdapterFactory() {
-        supportedTypes.add(IEditingDomainItemProvider.class);
-        supportedTypes.add(IStructuredItemContentProvider.class);
-        supportedTypes.add(ITreeItemContentProvider.class);
-        supportedTypes.add(IItemLabelProvider.class);
-        supportedTypes.add(IItemPropertySource.class);
-    }
+		supportedTypes.add(IEditingDomainItemProvider.class);
+		supportedTypes.add(IStructuredItemContentProvider.class);
+		supportedTypes.add(ITreeItemContentProvider.class);
+		supportedTypes.add(IItemLabelProvider.class);
+		supportedTypes.add(IItemPropertySource.class);
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Array} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Array} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ArrayItemProvider arrayItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Array}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Array}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createArrayAdapter() {
-        if (arrayItemProvider == null) {
-            arrayItemProvider = new ArrayItemProvider(this);
-        }
+		if (arrayItemProvider == null) {
+			arrayItemProvider = new ArrayItemProvider(this);
+		}
 
-        return arrayItemProvider;
-    }
+		return arrayItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Category} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Category} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected CategoryItemProvider categoryItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Category}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Category}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createCategoryAdapter() {
-        if (categoryItemProvider == null) {
-            categoryItemProvider = new CategoryItemProvider(this);
-        }
+		if (categoryItemProvider == null) {
+			categoryItemProvider = new CategoryItemProvider(this);
+		}
 
-        return categoryItemProvider;
-    }
+		return categoryItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Checkbox} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Checkbox} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected CheckboxItemProvider checkboxItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Checkbox}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Checkbox}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createCheckboxAdapter() {
-        if (checkboxItemProvider == null) {
-            checkboxItemProvider = new CheckboxItemProvider(this);
-        }
+		if (checkboxItemProvider == null) {
+			checkboxItemProvider = new CheckboxItemProvider(this);
+		}
 
-        return checkboxItemProvider;
-    }
+		return checkboxItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.ConnectorDefinition} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.ConnectorDefinition} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ConnectorDefinitionItemProvider connectorDefinitionItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.ConnectorDefinition}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.ConnectorDefinition}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createConnectorDefinitionAdapter() {
-        if (connectorDefinitionItemProvider == null) {
-            connectorDefinitionItemProvider = new ConnectorDefinitionItemProvider(this);
-        }
+		if (connectorDefinitionItemProvider == null) {
+			connectorDefinitionItemProvider = new ConnectorDefinitionItemProvider(this);
+		}
 
-        return connectorDefinitionItemProvider;
-    }
+		return connectorDefinitionItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.DocumentRoot} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.DocumentRoot} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected DocumentRootItemProvider documentRootItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.DocumentRoot}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.DocumentRoot}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createDocumentRootAdapter() {
-        if (documentRootItemProvider == null) {
-            documentRootItemProvider = new DocumentRootItemProvider(this);
-        }
+		if (documentRootItemProvider == null) {
+			documentRootItemProvider = new DocumentRootItemProvider(this);
+		}
 
-        return documentRootItemProvider;
-    }
+		return documentRootItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Group} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Group} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected GroupItemProvider groupItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Group}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Group}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createGroupAdapter() {
-        if (groupItemProvider == null) {
-            groupItemProvider = new GroupItemProvider(this);
-        }
+		if (groupItemProvider == null) {
+			groupItemProvider = new GroupItemProvider(this);
+		}
 
-        return groupItemProvider;
-    }
+		return groupItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Input} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Input} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected InputItemProvider inputItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Input}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Input}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createInputAdapter() {
-        if (inputItemProvider == null) {
-            inputItemProvider = new InputItemProvider(this);
-        }
+		if (inputItemProvider == null) {
+			inputItemProvider = new InputItemProvider(this);
+		}
 
-        return inputItemProvider;
-    }
+		return inputItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.List} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.List} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ListItemProvider listItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.List}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.List}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createListAdapter() {
-        if (listItemProvider == null) {
-            listItemProvider = new ListItemProvider(this);
-        }
+		if (listItemProvider == null) {
+			listItemProvider = new ListItemProvider(this);
+		}
 
-        return listItemProvider;
-    }
+		return listItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Output} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Output} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected OutputItemProvider outputItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Output}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Output}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createOutputAdapter() {
-        if (outputItemProvider == null) {
-            outputItemProvider = new OutputItemProvider(this);
-        }
+		if (outputItemProvider == null) {
+			outputItemProvider = new OutputItemProvider(this);
+		}
 
-        return outputItemProvider;
-    }
+		return outputItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Page} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Page} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected PageItemProvider pageItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Page}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Page}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createPageAdapter() {
-        if (pageItemProvider == null) {
-            pageItemProvider = new PageItemProvider(this);
-        }
+		if (pageItemProvider == null) {
+			pageItemProvider = new PageItemProvider(this);
+		}
 
-        return pageItemProvider;
-    }
+		return pageItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Password} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Password} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected PasswordItemProvider passwordItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Password}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Password}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createPasswordAdapter() {
-        if (passwordItemProvider == null) {
-            passwordItemProvider = new PasswordItemProvider(this);
-        }
+		if (passwordItemProvider == null) {
+			passwordItemProvider = new PasswordItemProvider(this);
+		}
 
-        return passwordItemProvider;
-    }
+		return passwordItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.RadioGroup} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.RadioGroup} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RadioGroupItemProvider radioGroupItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.RadioGroup}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.RadioGroup}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createRadioGroupAdapter() {
-        if (radioGroupItemProvider == null) {
-            radioGroupItemProvider = new RadioGroupItemProvider(this);
-        }
+		if (radioGroupItemProvider == null) {
+			radioGroupItemProvider = new RadioGroupItemProvider(this);
+		}
 
-        return radioGroupItemProvider;
-    }
+		return radioGroupItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Select} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Select} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected SelectItemProvider selectItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Select}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Select}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createSelectAdapter() {
-        if (selectItemProvider == null) {
-            selectItemProvider = new SelectItemProvider(this);
-        }
+		if (selectItemProvider == null) {
+			selectItemProvider = new SelectItemProvider(this);
+		}
 
-        return selectItemProvider;
-    }
+		return selectItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Text} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.Text} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected TextItemProvider textItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Text}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.Text}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createTextAdapter() {
-        if (textItemProvider == null) {
-            textItemProvider = new TextItemProvider(this);
-        }
+		if (textItemProvider == null) {
+			textItemProvider = new TextItemProvider(this);
+		}
 
-        return textItemProvider;
-    }
+		return textItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.TextArea} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.TextArea} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected TextAreaItemProvider textAreaItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.TextArea}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.TextArea}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createTextAreaAdapter() {
-        if (textAreaItemProvider == null) {
-            textAreaItemProvider = new TextAreaItemProvider(this);
-        }
+		if (textAreaItemProvider == null) {
+			textAreaItemProvider = new TextAreaItemProvider(this);
+		}
 
-        return textAreaItemProvider;
-    }
+		return textAreaItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.WidgetComponent} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.WidgetComponent} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected WidgetComponentItemProvider widgetComponentItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.WidgetComponent}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.WidgetComponent}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createWidgetComponentAdapter() {
-        if (widgetComponentItemProvider == null) {
-            widgetComponentItemProvider = new WidgetComponentItemProvider(this);
-        }
+		if (widgetComponentItemProvider == null) {
+			widgetComponentItemProvider = new WidgetComponentItemProvider(this);
+		}
 
-        return widgetComponentItemProvider;
-    }
+		return widgetComponentItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition} instances.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	protected UnloadableConnectorDefinitionItemProvider unloadableConnectorDefinitionItemProvider;
 
 				/**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition}.
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	public Adapter createUnloadableConnectorDefinitionAdapter() {
-        if (unloadableConnectorDefinitionItemProvider == null) {
-            unloadableConnectorDefinitionItemProvider = new UnloadableConnectorDefinitionItemProvider(this);
-        }
+		if (unloadableConnectorDefinitionItemProvider == null) {
+			unloadableConnectorDefinitionItemProvider = new UnloadableConnectorDefinitionItemProvider(this);
+		}
 
-        return unloadableConnectorDefinitionItemProvider;
-    }
+		return unloadableConnectorDefinitionItemProvider;
+	}
 
 				/**
-     * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.ScriptEditor} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.bonitasoft.studio.connector.model.definition.ScriptEditor} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ScriptEditorItemProvider scriptEditorItemProvider;
 
                 /**
-     * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.ScriptEditor}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.bonitasoft.studio.connector.model.definition.ScriptEditor}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createScriptEditorAdapter() {
-        if (scriptEditorItemProvider == null) {
-            scriptEditorItemProvider = new ScriptEditorItemProvider(this);
-        }
+		if (scriptEditorItemProvider == null) {
+			scriptEditorItemProvider = new ScriptEditorItemProvider(this);
+		}
 
-        return scriptEditorItemProvider;
-    }
+		return scriptEditorItemProvider;
+	}
 
                 /**
-     * This returns the root adapter factory that contains this factory.
-     * <!-- begin-user-doc -->
+	 * This returns the root adapter factory that contains this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ComposeableAdapterFactory getRootAdapterFactory() {
-        return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
-    }
+		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
+	}
 
     /**
-     * This sets the composed adapter factory that contains this factory.
-     * <!-- begin-user-doc -->
+	 * This sets the composed adapter factory that contains this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
-        this.parentAdapterFactory = parentAdapterFactory;
-    }
+		this.parentAdapterFactory = parentAdapterFactory;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean isFactoryForType(Object type) {
-        return supportedTypes.contains(type) || super.isFactoryForType(type);
-    }
+		return supportedTypes.contains(type) || super.isFactoryForType(type);
+	}
 
     /**
-     * This implementation substitutes the factory itself as the key for the adapter.
-     * <!-- begin-user-doc -->
+	 * This implementation substitutes the factory itself as the key for the adapter.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter adapt(Notifier notifier, Object type) {
-        return super.adapt(notifier, this);
-    }
+		return super.adapt(notifier, this);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object adapt(Object object, Object type) {
-        if (isFactoryForType(type)) {
-            Object adapter = super.adapt(object, type);
-            if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
-                return adapter;
-            }
-        }
+		if (isFactoryForType(type)) {
+			Object adapter = super.adapt(object, type);
+			if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
+				return adapter;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
     /**
-     * This adds a listener.
-     * <!-- begin-user-doc -->
+	 * This adds a listener.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void addListener(INotifyChangedListener notifyChangedListener) {
-        changeNotifier.addListener(notifyChangedListener);
-    }
+		changeNotifier.addListener(notifyChangedListener);
+	}
 
     /**
-     * This removes a listener.
-     * <!-- begin-user-doc -->
+	 * This removes a listener.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void removeListener(INotifyChangedListener notifyChangedListener) {
-        changeNotifier.removeListener(notifyChangedListener);
-    }
+		changeNotifier.removeListener(notifyChangedListener);
+	}
 
     /**
-     * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
-     * <!-- begin-user-doc -->
+	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void fireNotifyChanged(Notification notification) {
-        changeNotifier.fireNotifyChanged(notification);
+		changeNotifier.fireNotifyChanged(notification);
 
-        if (parentAdapterFactory != null) {
-            parentAdapterFactory.fireNotifyChanged(notification);
-        }
-    }
+		if (parentAdapterFactory != null) {
+			parentAdapterFactory.fireNotifyChanged(notification);
+		}
+	}
 
     /**
-     * This disposes all of the item providers created by this factory. 
-     * <!-- begin-user-doc -->
+	 * This disposes all of the item providers created by this factory. 
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void dispose() {
-        if (arrayItemProvider != null) arrayItemProvider.dispose();
-        if (categoryItemProvider != null) categoryItemProvider.dispose();
-        if (checkboxItemProvider != null) checkboxItemProvider.dispose();
-        if (connectorDefinitionItemProvider != null) connectorDefinitionItemProvider.dispose();
-        if (documentRootItemProvider != null) documentRootItemProvider.dispose();
-        if (groupItemProvider != null) groupItemProvider.dispose();
-        if (inputItemProvider != null) inputItemProvider.dispose();
-        if (listItemProvider != null) listItemProvider.dispose();
-        if (outputItemProvider != null) outputItemProvider.dispose();
-        if (pageItemProvider != null) pageItemProvider.dispose();
-        if (passwordItemProvider != null) passwordItemProvider.dispose();
-        if (radioGroupItemProvider != null) radioGroupItemProvider.dispose();
-        if (selectItemProvider != null) selectItemProvider.dispose();
-        if (textItemProvider != null) textItemProvider.dispose();
-        if (textAreaItemProvider != null) textAreaItemProvider.dispose();
-        if (widgetComponentItemProvider != null) widgetComponentItemProvider.dispose();
-        if (unloadableConnectorDefinitionItemProvider != null) unloadableConnectorDefinitionItemProvider.dispose();
-        if (scriptEditorItemProvider != null) scriptEditorItemProvider.dispose();
-    }
+		if (arrayItemProvider != null) arrayItemProvider.dispose();
+		if (categoryItemProvider != null) categoryItemProvider.dispose();
+		if (checkboxItemProvider != null) checkboxItemProvider.dispose();
+		if (connectorDefinitionItemProvider != null) connectorDefinitionItemProvider.dispose();
+		if (documentRootItemProvider != null) documentRootItemProvider.dispose();
+		if (groupItemProvider != null) groupItemProvider.dispose();
+		if (inputItemProvider != null) inputItemProvider.dispose();
+		if (listItemProvider != null) listItemProvider.dispose();
+		if (outputItemProvider != null) outputItemProvider.dispose();
+		if (pageItemProvider != null) pageItemProvider.dispose();
+		if (passwordItemProvider != null) passwordItemProvider.dispose();
+		if (radioGroupItemProvider != null) radioGroupItemProvider.dispose();
+		if (selectItemProvider != null) selectItemProvider.dispose();
+		if (textItemProvider != null) textItemProvider.dispose();
+		if (textAreaItemProvider != null) textAreaItemProvider.dispose();
+		if (widgetComponentItemProvider != null) widgetComponentItemProvider.dispose();
+		if (unloadableConnectorDefinitionItemProvider != null) unloadableConnectorDefinitionItemProvider.dispose();
+		if (scriptEditorItemProvider != null) scriptEditorItemProvider.dispose();
+	}
 
 }

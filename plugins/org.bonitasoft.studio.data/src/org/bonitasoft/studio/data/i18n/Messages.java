@@ -112,6 +112,7 @@ public class Messages extends NLS {
     public static String datamoveErrorWrongTarget ;
     public static String dataMoveErrorTargetCantBeSource ;
 	public static String createAndNewButton;
+	public static String documentType;
 
     static {
         NLS.initializeMessages("messages", Messages.class);//$NON-NLS-1$

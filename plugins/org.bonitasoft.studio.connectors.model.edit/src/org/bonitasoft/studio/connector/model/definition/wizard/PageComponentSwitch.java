@@ -18,6 +18,8 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -40,6 +42,7 @@ import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionSwitch;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
@@ -103,10 +106,10 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 	protected final ConnectorDefinition definition;
 	private final java.util.List<Section> sections = new ArrayList<Section>() ;
 	protected final DefinitionResourceProvider messageProvider;
-	protected final ViewerFilter connectorExpressionContentTypeFilter;
+	protected final AvailableExpressionTypeFilter connectorExpressionContentTypeFilter;
 	private IWizardContainer iWizardContainer;
 
-	public PageComponentSwitch(IWizardContainer iWizardContainer, Composite parent,EObject container,ConnectorDefinition definition,ConnectorConfiguration connectorConfiguration, EMFDataBindingContext context,DefinitionResourceProvider messageProvider,ViewerFilter connectorExpressionContentTypeFilter) {
+	public PageComponentSwitch(IWizardContainer iWizardContainer, Composite parent,EObject container,ConnectorDefinition definition,ConnectorConfiguration connectorConfiguration, EMFDataBindingContext context,DefinitionResourceProvider messageProvider,AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
 		this.parent = parent ;
 		this.context = context ;
 		this.connectorConfiguration = connectorConfiguration ;
@@ -352,7 +355,14 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 				if(input.isMandatory()){
 					viewer.setMandatoryField(getLabel(object.getId()),context) ;
 				}
-				viewer.addFilter(connectorExpressionContentTypeFilter) ;
+				
+				if(object.isShowDocuments()){
+					Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
+					contentTypes.add(ExpressionConstants.DOCUMENT_TYPE);
+					viewer.addFilter(new AvailableExpressionTypeFilter(contentTypes.toArray(new String[contentTypes.size()])));
+				}else{
+					viewer.addFilter(connectorExpressionContentTypeFilter);
+				}
 				viewer.setInput(parameter) ;
 				String desc = messageProvider.getFieldDescription(definition, object.getId()) ;
 				if(desc != null && !desc.isEmpty()){
@@ -475,7 +485,14 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			@SuppressWarnings("unchecked")
 			final ExpressionCollectionViewer viewer = new ExpressionCollectionViewer(composite,0,false,1,true,Collections.EMPTY_LIST,true,false) ;
 			viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-			viewer.addFilter(connectorExpressionContentTypeFilter);
+		
+			if(object.isShowDocuments()){
+				Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
+				contentTypes.add(ExpressionConstants.DOCUMENT_TYPE);
+				viewer.addFilter(new AvailableExpressionTypeFilter(contentTypes.toArray(new String[contentTypes.size()])));
+			}else{
+				viewer.addFilter(connectorExpressionContentTypeFilter);
+			}
 			viewer.setInput(parameter) ;
 			viewer.setSelection(parameter.getExpression()) ;
 			viewer.addExpressionModeListener(new IExpressionModeListener() {

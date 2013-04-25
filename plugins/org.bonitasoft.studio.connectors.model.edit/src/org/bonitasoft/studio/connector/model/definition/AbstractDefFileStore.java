@@ -51,12 +51,15 @@ public abstract class AbstractDefFileStore extends EMFFileStore {
     public ConnectorDefinition getContent() {
         try {
             final DocumentRoot root = (DocumentRoot) super.getContent();
+            if(root == null){
+            	return null;
+            }
             return root.getConnectorDefinition();
         } catch (final Exception e) {
             BonitaStudioLog.error(e);
             final UnloadableConnectorDefinition connectorDefinition = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
-            connectorDefinition.setId(NamingUtils.getIdFromConnectorFilename(getName()));
-            connectorDefinition.setVersion(NamingUtils.getVersionFromConnectorFilename(getName()));
+            connectorDefinition.setId(getName());
+            connectorDefinition.setVersion("");
             return connectorDefinition;
         }
     }

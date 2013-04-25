@@ -22,22 +22,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class TextAreaImpl extends WidgetImpl implements TextArea {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected TextAreaImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ConnectorDefinitionPackage.Literals.TEXT_AREA;
-    }
+		return ConnectorDefinitionPackage.Literals.TEXT_AREA;
+	}
 
 } //TextAreaImpl

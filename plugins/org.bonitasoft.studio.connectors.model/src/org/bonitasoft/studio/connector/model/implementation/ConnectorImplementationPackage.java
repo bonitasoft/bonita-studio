@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EReference;
  * <!-- end-user-doc -->
  * @see org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory
  * @model kind="package"
+ *        annotation="http://www.eclipse.org/edapt historyURI='connector.history'"
  * @generated
  */
 public interface ConnectorImplementationPackage extends EPackage {

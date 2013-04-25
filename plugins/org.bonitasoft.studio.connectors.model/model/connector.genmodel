@@ -55,7 +55,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Input/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Input/type"/>
     </genClasses>
-    <genClasses ecoreClass="definition.ecore#//List"/>
+    <genClasses ecoreClass="definition.ecore#//List">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//List/showDocuments"/>
+    </genClasses>
     <genClasses ecoreClass="definition.ecore#//Output">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Output/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Output/type"/>
@@ -73,7 +75,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Select/items"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Select/readOnly"/>
     </genClasses>
-    <genClasses ecoreClass="definition.ecore#//Text"/>
+    <genClasses ecoreClass="definition.ecore#//Text">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Text/showDocuments"/>
+    </genClasses>
     <genClasses ecoreClass="definition.ecore#//TextArea"/>
     <genClasses image="false" ecoreClass="definition.ecore#//Widget"/>
     <genClasses ecoreClass="definition.ecore#//WidgetComponent">

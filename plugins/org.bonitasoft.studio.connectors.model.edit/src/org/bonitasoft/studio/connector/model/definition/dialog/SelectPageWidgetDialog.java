@@ -402,8 +402,12 @@ public class SelectPageWidgetDialog extends Dialog {
                                 || widget.eClass().equals(
                                         ConnectorDefinitionPackage.Literals.GROUP)
                                         || widget.eClass().equals(
-                                                ConnectorDefinitionPackage.Literals.SCRIPT_EDITOR);
-    }
+                                                ConnectorDefinitionPackage.Literals.SCRIPT_EDITOR)
+                                                || widget.eClass().equals(
+                                                		ConnectorDefinitionPackage.Literals.TEXT)
+                                                		|| widget.eClass().equals(
+                                                				ConnectorDefinitionPackage.Literals.LIST);
+    }	
 
     protected Control createSectionClient(Component widget) {
         if (section.getClient() != null) {
@@ -424,13 +428,39 @@ public class SelectPageWidgetDialog extends Dialog {
         } else if (widget.eClass().equals(
                 ConnectorDefinitionPackage.Literals.SCRIPT_EDITOR)) {
             return createScriptEditorComposite((ScriptEditor) widget);
+        }else if (widget.eClass().equals(ConnectorDefinitionPackage.Literals.TEXT)
+        		|| widget.eClass().equals(ConnectorDefinitionPackage.Literals.LIST)) {
+            return createShowDocumentsComposite(widget);
         } else {
             return new Composite(section, SWT.NONE);
         }
 
     }
 
-    private Control createScriptEditorComposite(ScriptEditor widget) {
+    private Control createShowDocumentsComposite(Component widget) {
+    	 final Composite mainComposite = new Composite(section, SWT.NONE);
+         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
+                 .grab(true, true).create());
+         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2)
+                 .margins(15, 0).create());
+         final Button showDocumentButton = new Button(mainComposite, SWT.CHECK) ;
+         showDocumentButton.setText(Messages.showDocuments);
+         showDocumentButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+     
+         if(widget instanceof org.bonitasoft.studio.connector.model.definition.Text){
+	         context.bindValue(SWTObservables.observeSelection(showDocumentButton),
+	                 EMFObservables.observeValue(widget,
+	                         ConnectorDefinitionPackage.Literals.TEXT__SHOW_DOCUMENTS));
+         }else if(widget instanceof org.bonitasoft.studio.connector.model.definition.List){
+        	    context.bindValue(SWTObservables.observeSelection(showDocumentButton),
+   	                 EMFObservables.observeValue(widget,
+   	                         ConnectorDefinitionPackage.Literals.LIST__SHOW_DOCUMENTS));
+         }
+
+         return mainComposite;
+	}
+
+	private Control createScriptEditorComposite(ScriptEditor widget) {
         final Composite mainComposite = new Composite(section, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).create());

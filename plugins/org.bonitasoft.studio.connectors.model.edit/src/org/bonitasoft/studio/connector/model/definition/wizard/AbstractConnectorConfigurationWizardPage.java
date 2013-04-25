@@ -21,6 +21,7 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
@@ -51,7 +52,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
     private final EMFDataBindingContext context;
     private WizardPageSupport supportPage;
     private DefinitionResourceProvider messageProvider;
-    private ViewerFilter connectorExpressionContentTypeFilter ;
+    private AvailableExpressionTypeFilter connectorExpressionContentTypeFilter ;
 
     public AbstractConnectorConfigurationWizardPage(){
         this(AbstractConnectorConfigurationWizardPage.class.getName()) ;
@@ -177,12 +178,11 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
         return super.getPreviousPage();
     }
 
-	public ViewerFilter getExpressionTypeFilter() {
+	public AvailableExpressionTypeFilter getExpressionTypeFilter() {
 		return connectorExpressionContentTypeFilter;
 	}
 
-	public void setExpressionTypeFilter(
-			ViewerFilter connectorExpressionContentTypeFilter) {
+	public void setExpressionTypeFilter(AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
 		this.connectorExpressionContentTypeFilter = connectorExpressionContentTypeFilter;
 	}
 

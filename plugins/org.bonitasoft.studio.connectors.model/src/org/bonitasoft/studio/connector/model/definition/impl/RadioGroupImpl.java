@@ -38,207 +38,207 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
  */
 public class RadioGroupImpl extends WidgetImpl implements RadioGroup {
     /**
-     * The cached value of the '{@link #getChoices() <em>Choices</em>}' attribute list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getChoices() <em>Choices</em>}' attribute list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getChoices()
-     * @generated
-     * @ordered
-     */
+	 * @see #getChoices()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<String> choices;
 
     /**
-     * The default value of the '{@link #getOrientation() <em>Orientation</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getOrientation() <em>Orientation</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getOrientation()
-     * @generated
-     * @ordered
-     */
+	 * @see #getOrientation()
+	 * @generated
+	 * @ordered
+	 */
     protected static final Orientation ORIENTATION_EDEFAULT = Orientation.HORIZONTAL;
 
     /**
-     * The cached value of the '{@link #getOrientation() <em>Orientation</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getOrientation() <em>Orientation</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getOrientation()
-     * @generated
-     * @ordered
-     */
+	 * @see #getOrientation()
+	 * @generated
+	 * @ordered
+	 */
     protected Orientation orientation = ORIENTATION_EDEFAULT;
 
     /**
-     * This is true if the Orientation attribute has been set.
-     * <!-- begin-user-doc -->
+	 * This is true if the Orientation attribute has been set.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     protected boolean orientationESet;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RadioGroupImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ConnectorDefinitionPackage.Literals.RADIO_GROUP;
-    }
+		return ConnectorDefinitionPackage.Literals.RADIO_GROUP;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<String> getChoices() {
-        if (choices == null) {
-            choices = new EDataTypeEList<String>(String.class, this, ConnectorDefinitionPackage.RADIO_GROUP__CHOICES);
-        }
-        return choices;
-    }
+		if (choices == null) {
+			choices = new EDataTypeEList<String>(String.class, this, ConnectorDefinitionPackage.RADIO_GROUP__CHOICES);
+		}
+		return choices;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Orientation getOrientation() {
-        return orientation;
-    }
+		return orientation;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setOrientation(Orientation newOrientation) {
-        Orientation oldOrientation = orientation;
-        orientation = newOrientation == null ? ORIENTATION_EDEFAULT : newOrientation;
-        boolean oldOrientationESet = orientationESet;
-        orientationESet = true;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION, oldOrientation, orientation, !oldOrientationESet));
-    }
+		Orientation oldOrientation = orientation;
+		orientation = newOrientation == null ? ORIENTATION_EDEFAULT : newOrientation;
+		boolean oldOrientationESet = orientationESet;
+		orientationESet = true;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION, oldOrientation, orientation, !oldOrientationESet));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void unsetOrientation() {
-        Orientation oldOrientation = orientation;
-        boolean oldOrientationESet = orientationESet;
-        orientation = ORIENTATION_EDEFAULT;
-        orientationESet = false;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.UNSET, ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION, oldOrientation, ORIENTATION_EDEFAULT, oldOrientationESet));
-    }
+		Orientation oldOrientation = orientation;
+		boolean oldOrientationESet = orientationESet;
+		orientation = ORIENTATION_EDEFAULT;
+		orientationESet = false;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.UNSET, ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION, oldOrientation, ORIENTATION_EDEFAULT, oldOrientationESet));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public boolean isSetOrientation() {
-        return orientationESet;
-    }
+		return orientationESet;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.RADIO_GROUP__CHOICES:
-                return getChoices();
-            case ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION:
-                return getOrientation();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.RADIO_GROUP__CHOICES:
+				return getChoices();
+			case ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION:
+				return getOrientation();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.RADIO_GROUP__CHOICES:
-                getChoices().clear();
-                getChoices().addAll((Collection<? extends String>)newValue);
-                return;
-            case ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION:
-                setOrientation((Orientation)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.RADIO_GROUP__CHOICES:
+				getChoices().clear();
+				getChoices().addAll((Collection<? extends String>)newValue);
+				return;
+			case ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION:
+				setOrientation((Orientation)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.RADIO_GROUP__CHOICES:
-                getChoices().clear();
-                return;
-            case ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION:
-                unsetOrientation();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.RADIO_GROUP__CHOICES:
+				getChoices().clear();
+				return;
+			case ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION:
+				unsetOrientation();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.RADIO_GROUP__CHOICES:
-                return choices != null && !choices.isEmpty();
-            case ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION:
-                return isSetOrientation();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.RADIO_GROUP__CHOICES:
+				return choices != null && !choices.isEmpty();
+			case ConnectorDefinitionPackage.RADIO_GROUP__ORIENTATION:
+				return isSetOrientation();
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (choices: ");
-        result.append(choices);
-        result.append(", orientation: ");
-        if (orientationESet) result.append(orientation); else result.append("<unset>");
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (choices: ");
+		result.append(choices);
+		result.append(", orientation: ");
+		if (orientationESet) result.append(orientation); else result.append("<unset>");
+		result.append(')');
+		return result.toString();
+	}
 
 } //RadioGroupImpl

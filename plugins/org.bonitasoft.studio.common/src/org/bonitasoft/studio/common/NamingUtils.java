@@ -841,14 +841,6 @@ public class NamingUtils {
 		}
 	}
 
-	public static String getIdFromConnectorFilename(String filename) {
-		return filename.substring(0,filename.lastIndexOf('-'));
-	}
-
-	public static String getVersionFromConnectorFilename(String filename) {
-		return filename.substring(filename.lastIndexOf('-')+1,filename.lastIndexOf('.'));
-	}
-
 	public static boolean isUTF8String(String inputString) throws UnsupportedEncodingException {
 		String encoded = URLEncoder.encode(inputString,UTF8)  ;
 		String decoded = URLDecoder.decode(encoded,UTF8) ;

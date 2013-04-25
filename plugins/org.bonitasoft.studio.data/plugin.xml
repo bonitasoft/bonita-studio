@@ -9,6 +9,9 @@
       <expressionProvider
             providerClass="org.bonitasoft.studio.data.provider.JavaExpressionProvider">
       </expressionProvider>
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.data.provider.DocumentExpressionProvider">
+      </expressionProvider>
    </extension>
    <extension
          point="org.bonitasoft.studio.repositoryStore">

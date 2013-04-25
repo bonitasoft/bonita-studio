@@ -22,22 +22,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class UnloadableConnectorDefinitionImpl extends ConnectorDefinitionImpl implements UnloadableConnectorDefinition {
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	protected UnloadableConnectorDefinitionImpl() {
-        super();
-    }
+		super();
+	}
 
 	/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	@Override
 	protected EClass eStaticClass() {
-        return ConnectorDefinitionPackage.Literals.UNLOADABLE_CONNECTOR_DEFINITION;
-    }
+		return ConnectorDefinitionPackage.Literals.UNLOADABLE_CONNECTOR_DEFINITION;
+	}
 
 } //UnloadableConnectorDefinitionImpl

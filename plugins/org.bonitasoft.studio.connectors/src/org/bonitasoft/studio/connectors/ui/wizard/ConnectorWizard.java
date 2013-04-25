@@ -108,13 +108,13 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	private List<CustomWizardExtension> contributions;
 
 	private boolean useEvents = true;
-	private ViewerFilter expressionTypeFilter = new AvailableExpressionTypeFilter(new String[]{
+	private AvailableExpressionTypeFilter expressionTypeFilter = new AvailableExpressionTypeFilter(new String[]{
 			ExpressionConstants.CONSTANT_TYPE,
 			ExpressionConstants.VARIABLE_TYPE,
 			ExpressionConstants.SCRIPT_TYPE,
 			ExpressionConstants.PARAMETER_TYPE
 	}) ;
-	private ViewerFilter formExpressionTypeFilter = new AvailableExpressionTypeFilter(new String[]{
+	private AvailableExpressionTypeFilter formExpressionTypeFilter = new AvailableExpressionTypeFilter(new String[]{
 			ExpressionConstants.CONSTANT_TYPE,
 			ExpressionConstants.VARIABLE_TYPE,
 			ExpressionConstants.SCRIPT_TYPE,
@@ -482,7 +482,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		return wizPage ;
 	}
 
-	protected ViewerFilter getExpressionTypeFilter() {
+	protected AvailableExpressionTypeFilter getExpressionTypeFilter() {
 		if(container instanceof Form || container instanceof SubmitFormButton){
 			return formExpressionTypeFilter;
 		}

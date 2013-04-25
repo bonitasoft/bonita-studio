@@ -30,137 +30,137 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class WidgetComponentImpl extends ComponentImpl implements WidgetComponent {
     /**
-     * The default value of the '{@link #getInputName() <em>Input Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getInputName() <em>Input Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getInputName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getInputName()
+	 * @generated
+	 * @ordered
+	 */
     protected static final String INPUT_NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getInputName() <em>Input Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getInputName() <em>Input Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getInputName()
-     * @generated
-     * @ordered
-     */
+	 * @see #getInputName()
+	 * @generated
+	 * @ordered
+	 */
     protected String inputName = INPUT_NAME_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected WidgetComponentImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ConnectorDefinitionPackage.Literals.WIDGET_COMPONENT;
-    }
+		return ConnectorDefinitionPackage.Literals.WIDGET_COMPONENT;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String getInputName() {
-        return inputName;
-    }
+		return inputName;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setInputName(String newInputName) {
-        String oldInputName = inputName;
-        inputName = newInputName;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectorDefinitionPackage.WIDGET_COMPONENT__INPUT_NAME, oldInputName, inputName));
-    }
+		String oldInputName = inputName;
+		inputName = newInputName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ConnectorDefinitionPackage.WIDGET_COMPONENT__INPUT_NAME, oldInputName, inputName));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.WIDGET_COMPONENT__INPUT_NAME:
-                return getInputName();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.WIDGET_COMPONENT__INPUT_NAME:
+				return getInputName();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.WIDGET_COMPONENT__INPUT_NAME:
-                setInputName((String)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.WIDGET_COMPONENT__INPUT_NAME:
+				setInputName((String)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.WIDGET_COMPONENT__INPUT_NAME:
-                setInputName(INPUT_NAME_EDEFAULT);
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.WIDGET_COMPONENT__INPUT_NAME:
+				setInputName(INPUT_NAME_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.WIDGET_COMPONENT__INPUT_NAME:
-                return INPUT_NAME_EDEFAULT == null ? inputName != null : !INPUT_NAME_EDEFAULT.equals(inputName);
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.WIDGET_COMPONENT__INPUT_NAME:
+				return INPUT_NAME_EDEFAULT == null ? inputName != null : !INPUT_NAME_EDEFAULT.equals(inputName);
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (inputName: ");
-        result.append(inputName);
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (inputName: ");
+		result.append(inputName);
+		result.append(')');
+		return result.toString();
+	}
 
 } //WidgetComponentImpl

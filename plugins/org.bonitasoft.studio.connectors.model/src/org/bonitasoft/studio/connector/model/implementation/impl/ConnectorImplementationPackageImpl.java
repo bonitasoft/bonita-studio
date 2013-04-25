@@ -392,18 +392,36 @@ public class ConnectorImplementationPackageImpl extends EPackageImpl implements 
 		createResource(eNS_URI);
 
 		// Create annotations
+		// http://www.eclipse.org/edapt
+		createEdaptAnnotations();
 		// http:///org/eclipse/emf/ecore/util/ExtendedMetaData
 		createExtendedMetaDataAnnotations();
 	}
 
     /**
+	 * Initializes the annotations for <b>http://www.eclipse.org/edapt</b>.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void createEdaptAnnotations() {
+		String source = "http://www.eclipse.org/edapt";		
+		addAnnotation
+		  (this, 
+		   source, 
+		   new String[] {
+			 "historyURI", "connector.history"
+		   });																
+	}
+
+				/**
 	 * Initializes the annotations for <b>http:///org/eclipse/emf/ecore/util/ExtendedMetaData</b>.
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @generated
 	 */
     protected void createExtendedMetaDataAnnotations() {
-		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";		
+		String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";			
 		addAnnotation
 		  (connectorImplementationEClass, 
 		   source, 

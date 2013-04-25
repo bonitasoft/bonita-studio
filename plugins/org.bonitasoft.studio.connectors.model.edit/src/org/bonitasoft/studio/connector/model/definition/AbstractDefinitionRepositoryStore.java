@@ -25,8 +25,13 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
                 def = (ConnectorDefinition) fileStore.getContent();
             }catch(Exception e){
                 def = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
-                def.setId(NamingUtils.getIdFromConnectorFilename(fileStore.getName()));
-                def.setVersion(NamingUtils.getVersionFromConnectorFilename(fileStore.getName()));
+                def.setId(fileStore.getName());
+                def.setVersion("");
+            }
+            if(def == null){
+            	  def = ConnectorDefinitionFactory.eINSTANCE.createUnloadableConnectorDefinition();
+                  def.setId(fileStore.getName());
+                  def.setVersion("");
             }
             result.add(def) ;
         }

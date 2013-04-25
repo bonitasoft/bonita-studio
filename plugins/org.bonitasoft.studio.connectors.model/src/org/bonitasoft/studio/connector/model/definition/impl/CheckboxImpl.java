@@ -22,22 +22,22 @@ import org.eclipse.emf.ecore.EClass;
  */
 public class CheckboxImpl extends WidgetImpl implements Checkbox {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected CheckboxImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ConnectorDefinitionPackage.Literals.CHECKBOX;
-    }
+		return ConnectorDefinitionPackage.Literals.CHECKBOX;
+	}
 
 } //CheckboxImpl

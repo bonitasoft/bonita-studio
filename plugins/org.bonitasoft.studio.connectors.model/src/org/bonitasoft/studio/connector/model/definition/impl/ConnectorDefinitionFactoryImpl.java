@@ -25,335 +25,335 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  */
 public class ConnectorDefinitionFactoryImpl extends EFactoryImpl implements ConnectorDefinitionFactory {
     /**
-     * Creates the default factory implementation.
-     * <!-- begin-user-doc -->
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public static ConnectorDefinitionFactory init() {
-        try {
-            ConnectorDefinitionFactory theConnectorDefinitionFactory = (ConnectorDefinitionFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.bonitasoft.org/ns/connector/definition/6.0"); 
-            if (theConnectorDefinitionFactory != null) {
-                return theConnectorDefinitionFactory;
-            }
-        }
-        catch (Exception exception) {
-            EcorePlugin.INSTANCE.log(exception);
-        }
-        return new ConnectorDefinitionFactoryImpl();
-    }
+		try {
+			ConnectorDefinitionFactory theConnectorDefinitionFactory = (ConnectorDefinitionFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.bonitasoft.org/ns/connector/definition/6.0"); 
+			if (theConnectorDefinitionFactory != null) {
+				return theConnectorDefinitionFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new ConnectorDefinitionFactoryImpl();
+	}
 
     /**
-     * Creates an instance of the factory.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ConnectorDefinitionFactoryImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EObject create(EClass eClass) {
-        switch (eClass.getClassifierID()) {
-            case ConnectorDefinitionPackage.ARRAY: return createArray();
-            case ConnectorDefinitionPackage.CATEGORY: return createCategory();
-            case ConnectorDefinitionPackage.CHECKBOX: return createCheckbox();
-            case ConnectorDefinitionPackage.CONNECTOR_DEFINITION: return createConnectorDefinition();
-            case ConnectorDefinitionPackage.DOCUMENT_ROOT: return createDocumentRoot();
-            case ConnectorDefinitionPackage.GROUP: return createGroup();
-            case ConnectorDefinitionPackage.INPUT: return createInput();
-            case ConnectorDefinitionPackage.LIST: return createList();
-            case ConnectorDefinitionPackage.OUTPUT: return createOutput();
-            case ConnectorDefinitionPackage.PAGE: return createPage();
-            case ConnectorDefinitionPackage.PASSWORD: return createPassword();
-            case ConnectorDefinitionPackage.RADIO_GROUP: return createRadioGroup();
-            case ConnectorDefinitionPackage.SELECT: return createSelect();
-            case ConnectorDefinitionPackage.TEXT: return createText();
-            case ConnectorDefinitionPackage.TEXT_AREA: return createTextArea();
-            case ConnectorDefinitionPackage.WIDGET_COMPONENT: return createWidgetComponent();
-            case ConnectorDefinitionPackage.UNLOADABLE_CONNECTOR_DEFINITION: return createUnloadableConnectorDefinition();
-            case ConnectorDefinitionPackage.SCRIPT_EDITOR: return createScriptEditor();
-            default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eClass.getClassifierID()) {
+			case ConnectorDefinitionPackage.ARRAY: return createArray();
+			case ConnectorDefinitionPackage.CATEGORY: return createCategory();
+			case ConnectorDefinitionPackage.CHECKBOX: return createCheckbox();
+			case ConnectorDefinitionPackage.CONNECTOR_DEFINITION: return createConnectorDefinition();
+			case ConnectorDefinitionPackage.DOCUMENT_ROOT: return createDocumentRoot();
+			case ConnectorDefinitionPackage.GROUP: return createGroup();
+			case ConnectorDefinitionPackage.INPUT: return createInput();
+			case ConnectorDefinitionPackage.LIST: return createList();
+			case ConnectorDefinitionPackage.OUTPUT: return createOutput();
+			case ConnectorDefinitionPackage.PAGE: return createPage();
+			case ConnectorDefinitionPackage.PASSWORD: return createPassword();
+			case ConnectorDefinitionPackage.RADIO_GROUP: return createRadioGroup();
+			case ConnectorDefinitionPackage.SELECT: return createSelect();
+			case ConnectorDefinitionPackage.TEXT: return createText();
+			case ConnectorDefinitionPackage.TEXT_AREA: return createTextArea();
+			case ConnectorDefinitionPackage.WIDGET_COMPONENT: return createWidgetComponent();
+			case ConnectorDefinitionPackage.UNLOADABLE_CONNECTOR_DEFINITION: return createUnloadableConnectorDefinition();
+			case ConnectorDefinitionPackage.SCRIPT_EDITOR: return createScriptEditor();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object createFromString(EDataType eDataType, String initialValue) {
-        switch (eDataType.getClassifierID()) {
-            case ConnectorDefinitionPackage.ORIENTATION:
-                return createOrientationFromString(eDataType, initialValue);
-            case ConnectorDefinitionPackage.ORIENTATION_OBJECT:
-                return createOrientationObjectFromString(eDataType, initialValue);
-            default:
-                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eDataType.getClassifierID()) {
+			case ConnectorDefinitionPackage.ORIENTATION:
+				return createOrientationFromString(eDataType, initialValue);
+			case ConnectorDefinitionPackage.ORIENTATION_OBJECT:
+				return createOrientationObjectFromString(eDataType, initialValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String convertToString(EDataType eDataType, Object instanceValue) {
-        switch (eDataType.getClassifierID()) {
-            case ConnectorDefinitionPackage.ORIENTATION:
-                return convertOrientationToString(eDataType, instanceValue);
-            case ConnectorDefinitionPackage.ORIENTATION_OBJECT:
-                return convertOrientationObjectToString(eDataType, instanceValue);
-            default:
-                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eDataType.getClassifierID()) {
+			case ConnectorDefinitionPackage.ORIENTATION:
+				return convertOrientationToString(eDataType, instanceValue);
+			case ConnectorDefinitionPackage.ORIENTATION_OBJECT:
+				return convertOrientationObjectToString(eDataType, instanceValue);
+			default:
+				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Array createArray() {
-        ArrayImpl array = new ArrayImpl();
-        return array;
-    }
+		ArrayImpl array = new ArrayImpl();
+		return array;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Category createCategory() {
-        CategoryImpl category = new CategoryImpl();
-        return category;
-    }
+		CategoryImpl category = new CategoryImpl();
+		return category;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Checkbox createCheckbox() {
-        CheckboxImpl checkbox = new CheckboxImpl();
-        return checkbox;
-    }
+		CheckboxImpl checkbox = new CheckboxImpl();
+		return checkbox;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ConnectorDefinition createConnectorDefinition() {
-        ConnectorDefinitionImpl connectorDefinition = new ConnectorDefinitionImpl();
-        return connectorDefinition;
-    }
+		ConnectorDefinitionImpl connectorDefinition = new ConnectorDefinitionImpl();
+		return connectorDefinition;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public DocumentRoot createDocumentRoot() {
-        DocumentRootImpl documentRoot = new DocumentRootImpl();
-        return documentRoot;
-    }
+		DocumentRootImpl documentRoot = new DocumentRootImpl();
+		return documentRoot;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Group createGroup() {
-        GroupImpl group = new GroupImpl();
-        return group;
-    }
+		GroupImpl group = new GroupImpl();
+		return group;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Input createInput() {
-        InputImpl input = new InputImpl();
-        return input;
-    }
+		InputImpl input = new InputImpl();
+		return input;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public List createList() {
-        ListImpl list = new ListImpl();
-        return list;
-    }
+		ListImpl list = new ListImpl();
+		return list;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Output createOutput() {
-        OutputImpl output = new OutputImpl();
-        return output;
-    }
+		OutputImpl output = new OutputImpl();
+		return output;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Page createPage() {
-        PageImpl page = new PageImpl();
-        return page;
-    }
+		PageImpl page = new PageImpl();
+		return page;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Password createPassword() {
-        PasswordImpl password = new PasswordImpl();
-        return password;
-    }
+		PasswordImpl password = new PasswordImpl();
+		return password;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public RadioGroup createRadioGroup() {
-        RadioGroupImpl radioGroup = new RadioGroupImpl();
-        return radioGroup;
-    }
+		RadioGroupImpl radioGroup = new RadioGroupImpl();
+		return radioGroup;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Select createSelect() {
-        SelectImpl select = new SelectImpl();
-        return select;
-    }
+		SelectImpl select = new SelectImpl();
+		return select;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Text createText() {
-        TextImpl text = new TextImpl();
-        return text;
-    }
+		TextImpl text = new TextImpl();
+		return text;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public TextArea createTextArea() {
-        TextAreaImpl textArea = new TextAreaImpl();
-        return textArea;
-    }
+		TextAreaImpl textArea = new TextAreaImpl();
+		return textArea;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public WidgetComponent createWidgetComponent() {
-        WidgetComponentImpl widgetComponent = new WidgetComponentImpl();
-        return widgetComponent;
-    }
+		WidgetComponentImpl widgetComponent = new WidgetComponentImpl();
+		return widgetComponent;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
 	public UnloadableConnectorDefinition createUnloadableConnectorDefinition() {
-        UnloadableConnectorDefinitionImpl unloadableConnectorDefinition = new UnloadableConnectorDefinitionImpl();
-        return unloadableConnectorDefinition;
-    }
+		UnloadableConnectorDefinitionImpl unloadableConnectorDefinition = new UnloadableConnectorDefinitionImpl();
+		return unloadableConnectorDefinition;
+	}
 
 				/**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ScriptEditor createScriptEditor() {
-        ScriptEditorImpl scriptEditor = new ScriptEditorImpl();
-        return scriptEditor;
-    }
+		ScriptEditorImpl scriptEditor = new ScriptEditorImpl();
+		return scriptEditor;
+	}
 
                 /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Orientation createOrientationFromString(EDataType eDataType, String initialValue) {
-        Orientation result = Orientation.get(initialValue);
-        if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-        return result;
-    }
+		Orientation result = Orientation.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String convertOrientationToString(EDataType eDataType, Object instanceValue) {
-        return instanceValue == null ? null : instanceValue.toString();
-    }
+		return instanceValue == null ? null : instanceValue.toString();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Orientation createOrientationObjectFromString(EDataType eDataType, String initialValue) {
-        return createOrientationFromString(ConnectorDefinitionPackage.Literals.ORIENTATION, initialValue);
-    }
+		return createOrientationFromString(ConnectorDefinitionPackage.Literals.ORIENTATION, initialValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String convertOrientationObjectToString(EDataType eDataType, Object instanceValue) {
-        return convertOrientationToString(ConnectorDefinitionPackage.Literals.ORIENTATION, instanceValue);
-    }
+		return convertOrientationToString(ConnectorDefinitionPackage.Literals.ORIENTATION, instanceValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ConnectorDefinitionPackage getConnectorDefinitionPackage() {
-        return (ConnectorDefinitionPackage)getEPackage();
-    }
+		return (ConnectorDefinitionPackage)getEPackage();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @deprecated
-     * @generated
-     */
+	 * @deprecated
+	 * @generated
+	 */
     @Deprecated
     public static ConnectorDefinitionPackage getPackage() {
-        return ConnectorDefinitionPackage.eINSTANCE;
-    }
+		return ConnectorDefinitionPackage.eINSTANCE;
+	}
 
 } //ConnectorDefinitionFactoryImpl

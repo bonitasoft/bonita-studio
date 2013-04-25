@@ -19,14 +19,14 @@ import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
  */
 public class ConnectorDefinitionResourceImpl extends XMLResourceImpl {
     /**
-     * Creates an instance of the resource.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the resource.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param uri the URI of the new resource.
-     * @generated
-     */
+	 * @param uri the URI of the new resource.
+	 * @generated
+	 */
     public ConnectorDefinitionResourceImpl(URI uri) {
-        super(uri);
-    }
+		super(uri);
+	}
 
 } //ConnectorDefinitionResourceImpl

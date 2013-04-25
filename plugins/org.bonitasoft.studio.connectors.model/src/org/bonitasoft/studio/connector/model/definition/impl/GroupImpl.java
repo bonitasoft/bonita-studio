@@ -41,219 +41,219 @@ import org.eclipse.emf.ecore.util.InternalEList;
  */
 public class GroupImpl extends ComponentImpl implements Group {
     /**
-     * The cached value of the '{@link #getWidget() <em>Widget</em>}' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getWidget() <em>Widget</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #getWidget()
-     * @generated
-     * @ordered
-     */
+	 * @see #getWidget()
+	 * @generated
+	 * @ordered
+	 */
     protected EList<Component> widget;
 
     /**
-     * The default value of the '{@link #isOptional() <em>Optional</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The default value of the '{@link #isOptional() <em>Optional</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #isOptional()
-     * @generated
-     * @ordered
-     */
+	 * @see #isOptional()
+	 * @generated
+	 * @ordered
+	 */
     protected static final boolean OPTIONAL_EDEFAULT = false;
 
     /**
-     * The cached value of the '{@link #isOptional() <em>Optional</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #isOptional() <em>Optional</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see #isOptional()
-     * @generated
-     * @ordered
-     */
+	 * @see #isOptional()
+	 * @generated
+	 * @ordered
+	 */
     protected boolean optional = OPTIONAL_EDEFAULT;
 
     /**
-     * This is true if the Optional attribute has been set.
-     * <!-- begin-user-doc -->
+	 * This is true if the Optional attribute has been set.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     protected boolean optionalESet;
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected GroupImpl() {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass() {
-        return ConnectorDefinitionPackage.Literals.GROUP;
-    }
+		return ConnectorDefinitionPackage.Literals.GROUP;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public EList<Component> getWidget() {
-        if (widget == null) {
-            widget = new EObjectContainmentEList<Component>(Component.class, this, ConnectorDefinitionPackage.GROUP__WIDGET);
-        }
-        return widget;
-    }
+		if (widget == null) {
+			widget = new EObjectContainmentEList<Component>(Component.class, this, ConnectorDefinitionPackage.GROUP__WIDGET);
+		}
+		return widget;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public boolean isOptional() {
-        return optional;
-    }
+		return optional;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setOptional(boolean newOptional) {
-        boolean oldOptional = optional;
-        optional = newOptional;
-        boolean oldOptionalESet = optionalESet;
-        optionalESet = true;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectorDefinitionPackage.GROUP__OPTIONAL, oldOptional, optional, !oldOptionalESet));
-    }
+		boolean oldOptional = optional;
+		optional = newOptional;
+		boolean oldOptionalESet = optionalESet;
+		optionalESet = true;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ConnectorDefinitionPackage.GROUP__OPTIONAL, oldOptional, optional, !oldOptionalESet));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void unsetOptional() {
-        boolean oldOptional = optional;
-        boolean oldOptionalESet = optionalESet;
-        optional = OPTIONAL_EDEFAULT;
-        optionalESet = false;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.UNSET, ConnectorDefinitionPackage.GROUP__OPTIONAL, oldOptional, OPTIONAL_EDEFAULT, oldOptionalESet));
-    }
+		boolean oldOptional = optional;
+		boolean oldOptionalESet = optionalESet;
+		optional = OPTIONAL_EDEFAULT;
+		optionalESet = false;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.UNSET, ConnectorDefinitionPackage.GROUP__OPTIONAL, oldOptional, OPTIONAL_EDEFAULT, oldOptionalESet));
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public boolean isSetOptional() {
-        return optionalESet;
-    }
+		return optionalESet;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.GROUP__WIDGET:
-                return ((InternalEList<?>)getWidget()).basicRemove(otherEnd, msgs);
-        }
-        return super.eInverseRemove(otherEnd, featureID, msgs);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.GROUP__WIDGET:
+				return ((InternalEList<?>)getWidget()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.GROUP__WIDGET:
-                return getWidget();
-            case ConnectorDefinitionPackage.GROUP__OPTIONAL:
-                return isOptional();
-        }
-        return super.eGet(featureID, resolve, coreType);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.GROUP__WIDGET:
+				return getWidget();
+			case ConnectorDefinitionPackage.GROUP__OPTIONAL:
+				return isOptional();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.GROUP__WIDGET:
-                getWidget().clear();
-                getWidget().addAll((Collection<? extends Component>)newValue);
-                return;
-            case ConnectorDefinitionPackage.GROUP__OPTIONAL:
-                setOptional((Boolean)newValue);
-                return;
-        }
-        super.eSet(featureID, newValue);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.GROUP__WIDGET:
+				getWidget().clear();
+				getWidget().addAll((Collection<? extends Component>)newValue);
+				return;
+			case ConnectorDefinitionPackage.GROUP__OPTIONAL:
+				setOptional((Boolean)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public void eUnset(int featureID) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.GROUP__WIDGET:
-                getWidget().clear();
-                return;
-            case ConnectorDefinitionPackage.GROUP__OPTIONAL:
-                unsetOptional();
-                return;
-        }
-        super.eUnset(featureID);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.GROUP__WIDGET:
+				getWidget().clear();
+				return;
+			case ConnectorDefinitionPackage.GROUP__OPTIONAL:
+				unsetOptional();
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean eIsSet(int featureID) {
-        switch (featureID) {
-            case ConnectorDefinitionPackage.GROUP__WIDGET:
-                return widget != null && !widget.isEmpty();
-            case ConnectorDefinitionPackage.GROUP__OPTIONAL:
-                return isSetOptional();
-        }
-        return super.eIsSet(featureID);
-    }
+		switch (featureID) {
+			case ConnectorDefinitionPackage.GROUP__WIDGET:
+				return widget != null && !widget.isEmpty();
+			case ConnectorDefinitionPackage.GROUP__OPTIONAL:
+				return isSetOptional();
+		}
+		return super.eIsSet(featureID);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-        StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (optional: ");
-        if (optionalESet) result.append(optional); else result.append("<unset>");
-        result.append(')');
-        return result.toString();
-    }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (optional: ");
+		if (optionalESet) result.append(optional); else result.append("<unset>");
+		result.append(')');
+		return result.toString();
+	}
 
 } //GroupImpl
