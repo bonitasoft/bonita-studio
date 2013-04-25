@@ -23,6 +23,7 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.Task2EditPart;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.graphics.ColorRegistry;
 import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -50,10 +51,7 @@ public class CustomTask2EditPart extends Task2EditPart {
 	@Override
 	protected void setBackgroundColor(Color color) {
 		if (primaryShape != null) {
-			if(backgroundColor != null){
-				backgroundColor.dispose();
-			}
-			backgroundColor = FigureUtilities.integerToColor(((LineStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor());
+			backgroundColor = ColorRegistry.getInstance().getColor(((LineStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor());
 			((CustomSVGFigure)primaryShape).setColor(backgroundColor,color);
 		}
 	}
@@ -61,10 +59,7 @@ public class CustomTask2EditPart extends Task2EditPart {
 	@Override
 	protected void setForegroundColor(Color color) {
 		if (primaryShape != null) {
-			if(foregroundColor != null){
-				foregroundColor.dispose();
-			}
-			foregroundColor = FigureUtilities.integerToColor(((FillStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor());
+			foregroundColor = ColorRegistry.getInstance().getColor(((FillStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor());
 			((CustomSVGFigure)primaryShape).setColor(color,foregroundColor);
 		}
 	}

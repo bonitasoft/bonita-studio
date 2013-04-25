@@ -44,6 +44,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IResizableCompartmentEditPar
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.internal.tools.CompartmentCollapseTracker;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.graphics.ColorRegistry;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -110,8 +111,9 @@ public class SubprocessCollapseHandle extends AbstractHandle implements Property
 				}
 				for(Object child : getChildren()){
 					if(child instanceof DecoratorSVGFigure){
-						((DecoratorSVGFigure) child).setColor(FigureUtilities.integerToColor((Integer) ((IGraphicalEditPart)getOwner().getParent()).getStructuralFeatureValue(NotationPackage.eINSTANCE.getLineStyle_LineColor()))
-								,FigureUtilities.integerToColor((Integer) ((IGraphicalEditPart)getOwner().getParent()).getStructuralFeatureValue(NotationPackage.eINSTANCE.getFillStyle_FillColor())));
+						final IGraphicalEditPart parentEditpart = (IGraphicalEditPart)getOwner().getParent();
+						((DecoratorSVGFigure) child).setColor(ColorRegistry.getInstance().getColor((Integer) parentEditpart.getStructuralFeatureValue(NotationPackage.eINSTANCE.getLineStyle_LineColor()))
+								,ColorRegistry.getInstance().getColor((Integer) parentEditpart.getStructuralFeatureValue(NotationPackage.eINSTANCE.getFillStyle_FillColor())));
 					}
 				}
 				return;
@@ -167,14 +169,14 @@ public class SubprocessCollapseHandle extends AbstractHandle implements Property
 			}
 			for(Object child : getChildren()){
 				if(child instanceof DecoratorSVGFigure){
-					((DecoratorSVGFigure) child).setColor(FigureUtilities.integerToColor((Integer) ((IGraphicalEditPart)getOwner().getParent()).getStructuralFeatureValue(NotationPackage.eINSTANCE.getLineStyle_LineColor()))
-							,FigureUtilities.integerToColor((Integer) ((IGraphicalEditPart)getOwner().getParent()).getStructuralFeatureValue(NotationPackage.eINSTANCE.getFillStyle_FillColor())));
+					((DecoratorSVGFigure) child).setColor(ColorRegistry.getInstance().getColor((Integer) ((IGraphicalEditPart)getOwner().getParent()).getStructuralFeatureValue(NotationPackage.eINSTANCE.getLineStyle_LineColor()))
+							,ColorRegistry.getInstance().getColor((Integer) ((IGraphicalEditPart)getOwner().getParent()).getStructuralFeatureValue(NotationPackage.eINSTANCE.getFillStyle_FillColor())));
 				}
 			}
 		}else if(NotationPackage.eINSTANCE.getLineStyle_LineColor()==notification.getFeature()){
 			for(Object child : getChildren()){
 				if(child instanceof DecoratorSVGFigure){
-					((DecoratorSVGFigure) child).setColor(FigureUtilities.integerToColor(notification.getNewIntValue()),FigureUtilities.integerToColor((Integer) ((IGraphicalEditPart)getOwner().getParent()).getStructuralFeatureValue(NotationPackage.eINSTANCE.getFillStyle_FillColor())));
+					((DecoratorSVGFigure) child).setColor(ColorRegistry.getInstance().getColor(notification.getNewIntValue()),ColorRegistry.getInstance().getColor((Integer) ((IGraphicalEditPart)getOwner().getParent()).getStructuralFeatureValue(NotationPackage.eINSTANCE.getFillStyle_FillColor())));
 				}
 			}
 		}

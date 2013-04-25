@@ -71,7 +71,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.DiagramGuide;
 import org.eclipse.gmf.runtime.diagram.ui.internal.ruler.commands.ChangeGuideCommand;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.graphics.ColorRegistry;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.Guide;
@@ -158,8 +158,9 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
 						/*In other case use a svgFigure*/
 
 						Rectangle bounds = ((ShapeEditPart)child).getFigure().getBounds() ; 
-						Color background = FigureUtilities.integerToColor(((FillStyle) ((IGraphicalEditPart)child).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()) ;
-						Color foreground = FigureUtilities.integerToColor(((LineStyle) ((IGraphicalEditPart)child).getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()) ; 
+						final View childNotationView = ((IGraphicalEditPart)child).getNotationView();
+						Color background = ColorRegistry.getInstance().getColor(((FillStyle) childNotationView.getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()) ;
+						Color foreground = ColorRegistry.getInstance().getColor(((LineStyle) childNotationView.getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()) ; 
 						res = FiguresHelper.getSelectedFigure(((ShapeEditPart)child).resolveSemanticElement().eClass(),bounds.width,bounds.height,foreground,background);
 						res.getSize().performScale(((DiagramRootEditPart) getHost().getRoot()).getZoomManager().getZoom()) ;
 

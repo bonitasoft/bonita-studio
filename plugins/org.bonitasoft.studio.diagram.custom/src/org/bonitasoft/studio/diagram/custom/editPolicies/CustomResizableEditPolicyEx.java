@@ -55,6 +55,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.graphics.ColorRegistry;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
@@ -106,8 +107,8 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 			return r;
 		}else if(isSubprocessEvent){
 			EventSubprocessFigureWrapper figure = new EventSubprocessFigureWrapper() ;
-			Color background = FigureUtilities.integerToColor(((FillStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()) ;
-			Color foreground = FigureUtilities.integerToColor(((LineStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()) ; 
+			Color background = ColorRegistry.getInstance().getColor(((FillStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()) ;
+			Color foreground = ColorRegistry.getInstance().getColor(((LineStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()) ; 
 			figure.setForegroundColor(foreground) ;
 			figure.setBackgroundColor(background) ;
 			figure.setOpaque(false) ;
@@ -116,8 +117,8 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 			return figure ;
 		}else{
 			Rectangle bounds = ((ShapeEditPart)getHost()).getFigure().getBounds().getCopy() ; 
-			Color background = FigureUtilities.integerToColor(((FillStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()) ;
-			Color foreground = FigureUtilities.integerToColor(((LineStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()) ; 
+			Color background = ColorRegistry.getInstance().getColor(((FillStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()) ;
+			Color foreground = ColorRegistry.getInstance().getColor(((LineStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()) ; 
 			IFigure res = FiguresHelper.getSelectedFigure(((ShapeEditPart)getHost()).resolveSemanticElement().eClass(),bounds.width,bounds.height,foreground,background);
 			if(res != null){
 				addFeedback(res);
@@ -164,17 +165,17 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 				feedback.getBounds().setLocation(rect.x, rect.y) ;
 				if(feedback instanceof CustomSVGFigure){
 					((CustomSVGFigure) feedback).setColor(FigureUtilities.lighter(ColorConstants.red), 
-							FigureUtilities.integerToColor(((FillStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor())) ;
+							ColorRegistry.getInstance().getColor(((FillStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor())) ;
 				}else{
 					feedback.setForegroundColor(FigureUtilities.lighter(ColorConstants.red)) ;
 				}
 
 				return ;
 			}else{
-				Color foreground = FigureUtilities.integerToColor(((LineStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()) ; 
+				Color foreground = ColorRegistry.getInstance().getColor(((LineStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()) ; 
 				if(feedback instanceof CustomSVGFigure){
 					((CustomSVGFigure) feedback).setColor(foreground, 
-							FigureUtilities.integerToColor(((FillStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor())) ;
+							ColorRegistry.getInstance().getColor(((FillStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor())) ;
 				}else{
 					feedback.setForegroundColor(foreground) ;
 				}

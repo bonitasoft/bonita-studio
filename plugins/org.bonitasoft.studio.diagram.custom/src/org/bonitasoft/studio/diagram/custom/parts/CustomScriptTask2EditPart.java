@@ -21,6 +21,7 @@ import org.bonitasoft.studio.model.process.diagram.edit.parts.ScriptTask2EditPar
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.graphics.ColorRegistry;
 import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -36,9 +37,6 @@ import org.eclipse.swt.graphics.RGB;
  */
 public class CustomScriptTask2EditPart extends ScriptTask2EditPart {
 
-	private Color backgroundColor;
-	private Color foregroundColor;
-
 	public CustomScriptTask2EditPart(View view) {
 		super(view);
 	}
@@ -47,22 +45,14 @@ public class CustomScriptTask2EditPart extends ScriptTask2EditPart {
 	@Override
 	protected void setBackgroundColor(Color color) {
 		if (primaryShape != null) {
-			if(backgroundColor != null){
-				backgroundColor.dispose();
-			}
-			backgroundColor = FigureUtilities.integerToColor(((LineStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor());
-			((CustomSVGFigure)primaryShape).setColor(backgroundColor,color);
+			((CustomSVGFigure)primaryShape).setColor(ColorRegistry.getInstance().getColor(((LineStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()),color);
 		}
 	}
 	
 	@Override
 	protected void setForegroundColor(Color color) {
 		if (primaryShape != null) {
-			if(foregroundColor != null){
-				foregroundColor.dispose();
-			}
-			foregroundColor = FigureUtilities.integerToColor(((FillStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor());
-			((CustomSVGFigure)primaryShape).setColor(color,foregroundColor);
+			((CustomSVGFigure)primaryShape).setColor(color,ColorRegistry.getInstance().getColor(((FillStyle)getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor()));
 		}
 	}
 	
