@@ -50,8 +50,6 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -75,23 +73,6 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
     private final AdapterFactoryContentProvider adapterFactoryContentProvider = new AdapterFactoryContentProvider(adapterFactory);
     private final AdapterFactoryLabelProvider adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(adapterFactory){
 
-        private Image image;
-
-        @Override
-        public Image getImage(Object object) {
-            image = resiezedImage(super.getImage(object))  ;
-            return image;
-        }
-
-
-        @Override
-        public void dispose() {
-            super.dispose();
-            if(image != null) {
-                image.dispose() ;
-            }
-        }
-
         @Override
         public String getText(Object object) {
             if(((EObject)object).eContainingFeature() != null && ((EObject)object).eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())){
@@ -105,15 +86,6 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
             return super.getText(object);
         }
 
-        
-        protected Image resiezedImage(Image image) {
-            if(image != null && image.getImageData() != null){
-                ImageData data = image.getImageData().scaledTo(16, 16) ;
-                return new Image(Display.getDefault(), data);
-            }else{
-                return image ;
-            }
-        }
     };
 
 
