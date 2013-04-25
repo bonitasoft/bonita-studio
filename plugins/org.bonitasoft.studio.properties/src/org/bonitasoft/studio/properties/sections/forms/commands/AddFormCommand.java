@@ -38,6 +38,7 @@ import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
+import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.form.WidgetLayoutInfo;
 import org.bonitasoft.studio.model.process.Data;
@@ -47,6 +48,7 @@ import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.form.part.ValidateAction;
+import org.bonitasoft.studio.model.process.diagram.form.providers.ElementInitializers;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils.WidgetEnum;
@@ -200,6 +202,8 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             displayLabel.setReturnTypeFixed(true);
             displayLabel.setContent(key.getName());
             tempWidget.setDisplayLabel(displayLabel);
+            Expression insertWidgetIf = createInsertWidgetIfScript(); 
+            tempWidget.setInjectWidgetScript(insertWidgetIf);
             WidgetLayoutInfo wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
             wLayout.setLine(myForm.getWidgets().size());
             wLayout.setHorizontalSpan(nCol);
@@ -271,6 +275,8 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             previousLabel.setReturnTypeFixed(true);
             tempWidget.setDisplayLabel(previousLabel);
             tempWidget.setName(NamingUtils.convertToId(previousName, tempWidget));
+            Expression insertWidgetIf = createInsertWidgetIfScript(); 
+            tempWidget.setInjectWidgetScript(insertWidgetIf);
             wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
             wLayout.setLine(Math.max(myForm.getWidgets().size(), minButtonLine));
             tempWidget.setWidgetLayoutInfo(wLayout);
@@ -281,6 +287,9 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             // add a submit button
             tempWidget = FormFactory.eINSTANCE.createSubmitFormButton();
             String submitButtonName = NamingUtils.getInstance(pageFlow).generateName(tempWidget, pageFlow);
+            tempWidget.setName(NamingUtils.convertToId(submitButtonName, tempWidget));
+           
+         
             Expression submitLabel = ExpressionFactory.eINSTANCE.createExpression();
             submitLabel.setName(submitButtonName);
             submitLabel.setType(ExpressionConstants.CONSTANT_TYPE);
@@ -288,7 +297,9 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             submitLabel.setReturnTypeFixed(true);
             submitLabel.setContent(submitButtonName);
             tempWidget.setDisplayLabel(submitLabel);
-            tempWidget.setName(NamingUtils.convertToId(submitButtonName, tempWidget));
+           
+            Expression insertWidgetIf = createInsertWidgetIfScript(); 
+            tempWidget.setInjectWidgetScript(insertWidgetIf);
             wLayout = FormFactory.eINSTANCE.createWidgetLayoutInfo();
             wLayout.setLine(Math.max(((List<?>) pageFlow.eGet(feature)).size() != 0 ? myForm.getWidgets().size() - 1 : myForm.getWidgets().size(), minButtonLine));
             if (((List<?>) pageFlow.eGet(feature)).size() != 0) {
@@ -361,6 +372,13 @@ public class AddFormCommand extends AbstractTransactionalCommand {
     @Override
     public boolean canUndo() {
         return false;//avoid issues when a form was created an en editor is open on it
+    }
+    
+    private Expression createInsertWidgetIfScript(){
+    	Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression("");
+    	exp.setReturnType(Boolean.class.getName());
+    	exp.setReturnTypeFixed(true);
+    	return exp ;	
     }
 
 }
