@@ -82,7 +82,7 @@ public class TestDatabaseConnectorResulset {
 	    public void testDatabaseConnectorResultset() throws Exception{
 	    	 final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
 	         ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-	         URL fileURL1 = FileLocator.toFileURL(TestDatabaseConnectorResulset.class.getResource("testDatabaseResultSet-1.0.bos")); //$NON-NLS-1$
+	         URL fileURL1 = FileLocator.toFileURL(TestDatabaseConnectorResulset.class.getResource("testDatabaseResultSet-2.0.bos")); //$NON-NLS-1$
 	         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
 	         op.run(new NullProgressMonitor());
 	         ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
@@ -97,7 +97,7 @@ public class TestDatabaseConnectorResulset {
 	         ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
 	         runProcessCommand.execute(ee);
 	         
-	         long processId=processApi.getProcessDefinitionId("testDatabaseResultSet", "1.0");
+	         long processId=processApi.getProcessDefinitionId("testDatabaseResultSet", "2.0");
 	         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
 	         assertNotNull(processDef);
 	         processApi.startProcess(processId);
