@@ -44,7 +44,7 @@ import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.draw2d.ui.graphics.ColorRegistry;
 import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -86,9 +86,9 @@ public class SelectionFeedbackEditPolicy extends SelectionEditPolicy implements 
 
 				Point topLeft = r.getTopLeft();
 				Point bottomRight = r.getBottomRight();
-				Color backGroundColor = null ; 
+				Color backGroundColor = null ;
 				if(useSelectionColor){
-					backGroundColor = FigureUtilities.integerToColor(selectionColor) ;
+					backGroundColor = ColorRegistry.getInstance().getColor(selectionColor) ;
 				}else{
 					backGroundColor=FiguresHelper.getFeedbackColor(eClass) ;
 				}
@@ -112,7 +112,7 @@ public class SelectionFeedbackEditPolicy extends SelectionEditPolicy implements 
 
 			public void figureMoved(IFigure source) {
 				hideFeedback();
-				List selectedEditPart = getHost().getViewer().getSelectedEditParts() ;
+				List<?> selectedEditPart = getHost().getViewer().getSelectedEditParts() ;
 				if(selectedEditPart.contains(getHost())){
 
 					if(!figureIsDisplayed()){
