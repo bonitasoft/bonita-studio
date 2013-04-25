@@ -392,6 +392,9 @@ public class EngineExpressionUtil {
 		if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(type)) {
 			return ExpressionType.TYPE_INPUT.name();
 		}
+		if(ExpressionConstants.DOCUMENT_TYPE.equals(type)){
+			return ExpressionConstants.CONSTANT_TYPE;
+		}
 		if (ExpressionConstants.VARIABLE_TYPE.equals(type) &&  !expression.getReferencedElements().isEmpty()) {
 			final Data data = (Data) expression.getReferencedElements().get(0);
 			final String ds = data.getDatasourceId();
