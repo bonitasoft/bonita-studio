@@ -35,6 +35,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
+import org.bonitasoft.studio.expression.editor.autocompletion.BonitaContentProposalAdapter;
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
@@ -97,11 +98,24 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.MouseTrackListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
@@ -280,8 +294,78 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	}
 
 	protected void createTextControl(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
-		textControl = new Text(control,style) ;
+		textControl = new Text(control,style | SWT.SEARCH ) ;
+		textControl.addPaintListener(new PaintListener() {
 
+			@Override
+			public void paintControl(PaintEvent e) {
+				GC gc = e.gc;
+				Display display = e.display ;
+				if(display!= null && gc != null){
+					Control focused = display.getFocusControl() ;
+					if(focused != null && focused.equals(textControl)){
+						gc.setForeground(display.getSystemColor(0));
+						gc.setBackground(display.getSystemColor(0));
+					//	gc.fillRectangle(0, 0, 20, 12);
+					}
+					gc.setForeground(display.getSystemColor(0));
+					gc.setBackground(display.getSystemColor(0));
+					int[] points = new int[]{e.width - 18,8,e.width - 12,8,e.width - 15,12};
+					gc.drawPolygon(points);
+					gc.fillPolygon(points);
+				}
+			}
+		});
+
+		textControl.addMouseMoveListener(new MouseMoveListener() {
+
+			@Override
+			public void mouseMove(MouseEvent e) {
+				int width = textControl.getBounds().width ;
+				if(e.widget.equals(textControl) && e.x >= width - 18 && e.x <= width - 12 && e.y >= 8 && e.y <= 12){
+					textControl.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_HAND));
+				}else{
+					textControl.setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_ARROW));
+				}
+
+			}
+		});
+
+		textControl.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				int width = textControl.getBounds().width ;
+				if(e.widget.equals(textControl) && e.x >= width - 18 && e.x <= width - 12 && e.y >= 8 && e.y <= 12){
+					if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
+						autoCompletion.getContentProposalAdapter().closeProposalPopup();
+					}else{
+						autoCompletion.getContentProposalAdapter().showProposalPopup();
+					}
+
+				}
+			}
+		});
+
+
+		textControl.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				//textControl.notifyListeners(SWT.Paint, new Event());
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				if(e.widget.equals(textControl)){
+					textControl.redraw();
+					textControl.update();
+					
+				}
+				//textControl.notifyListeners(SWT.Paint, new Event());
+			}
+		});
+
+	
 		if(widgetFactory != null){
 			widgetFactory.adapt(textControl,false,false) ;
 		}
@@ -385,7 +469,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		}
 	}
 
-	public ContentProposalAdapter getContentProposal(){
+	public BonitaContentProposalAdapter getContentProposal(){
 		return autoCompletion.getContentProposalAdapter() ;
 	}
 

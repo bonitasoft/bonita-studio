@@ -15,14 +15,14 @@ import org.eclipse.swt.widgets.Control;
 public class AutoCompletionField {
 
     private final ExpressionProposalProvider contentProposalProvider;
-    private final  ContentProposalAdapter  contentProposalAdapter;
+    private final BonitaContentProposalAdapter  contentProposalAdapter;
 
 
     public AutoCompletionField(final Control control,final IControlContentAdapter controlContentAdapter,final ILabelProvider proposalLabelProvider) {
 
         contentProposalProvider = new ExpressionProposalProvider(proposalLabelProvider);
         contentProposalProvider.setFiltering(true);
-        contentProposalAdapter = new ContentProposalAdapter(control, controlContentAdapter, contentProposalProvider, null, null);
+        contentProposalAdapter = new BonitaContentProposalAdapter(control, controlContentAdapter, contentProposalProvider, null, null);
         if(proposalLabelProvider != null){
             contentProposalAdapter.setLabelProvider(proposalLabelProvider) ;
         }
@@ -43,7 +43,7 @@ public class AutoCompletionField {
         return contentProposalProvider;
     }
 
-    public ContentProposalAdapter getContentProposalAdapter() {
+    public BonitaContentProposalAdapter getContentProposalAdapter() {
         return contentProposalAdapter;
     }
 
