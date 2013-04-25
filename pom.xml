@@ -7,6 +7,7 @@
 	<artifactId>studio</artifactId>
 	<version>6.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	<name>Bonita Studio</name>
 	<properties>
 		<!--forceContextQualifier-->
 		<tychoVersion>0.17.0</tychoVersion>
@@ -17,18 +18,6 @@
 		<connector.version>6.0.0-beta-014</connector.version>
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
 		<filters.version>6.0.0-beta-011</filters.version>
-		<jacoco.reportDir>${user.home}/target/jacoco/</jacoco.reportDir>
-		<jacoco.file>${user.home}/target/jacoco-studio.exec</jacoco.file>
-		<jacoco.version>0.6.0.201210061924</jacoco.version>
-		<!-- Sonar -->
-		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-		<!-- The destination file for the code coverage report has to be set to 
-			the same value in the parent pom and in each module pom. Then JaCoCo will 
-			add up information in the same report, so that, it will give the cross-module 
-			code coverage. -->
-		<sonar.jacoco.reportPath>${jacoco.file}</sonar.jacoco.reportPath>
-		<sonar.jacoco.itReportPath>${user.home}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<p2MirrorUrl>ftp://192.168.1.215/home/ic/p2_repository/</p2MirrorUrl>
 	</properties>
 
@@ -180,34 +169,6 @@
 					</filters>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<configuration>
-
-					<destFile>${sonar.jacoco.reportPath}</destFile>
-
-				</configuration>
-				<executions>
-					<execution>
-						<id>prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
-							<dataFile>${sonar.jacoco.reportPath}</dataFile>
-							<outputDirectory>${jacoco.reportDir}</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
 	</build>
 
@@ -225,10 +186,44 @@
 		</profile>
 
 		<profile>
-			<id>sonar</id>
+			<id>codeCoverage</id>
 			<modules>
 				<module>tests</module>
 			</modules>
+			<properties>
+    			<!-- Properties to enable jacoco code coverage analysis -->
+    			<jacoco.version>0.6.2.201302030002</jacoco.version>
+    			<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    			<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+   				<sonar.jacoco.itReportPath>../target/jacoco.exec</sonar.jacoco.itReportPath>
+  			</properties>
+			<build>
+			<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<destFile>${sonar.jacoco.reportPath}</destFile>
+				</configuration>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						 <configuration>
+              				<!-- Where to put jacoco coverage report -->
+              				<destFile>${sonar.jacoco.itReportPath}</destFile>
+              				<includes>
+								<include>org.bonitasoft.studio.*</include>
+							</includes>
+							<append>true</append>
+            			</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			</plugins>
+			</build>
 		</profile>
 		
 		<profile>

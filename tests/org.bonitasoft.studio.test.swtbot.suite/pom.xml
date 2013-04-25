@@ -28,7 +28,7 @@
 					<includes>
 						<include>**/AllSWTBotTests*.java</include>
 					</includes>
-					<argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=640m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=SWTBotTests.hprof -Dbonita.client.home=${license.dir} -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=ALL</argLine>
+					<argLine>${tycho.testArgLine} -Xms512m -Xmx1024m -XX:MaxPermSize=640m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=SWTBotTests.hprof -Dbonita.client.home=${license.dir} -Dorg.eclipse.swt.browser.DefaultType=mozilla -Dbonita.noregister=1 -Dbonita.noExpireWarning=1 -Declipse.log.level=ALL</argLine>
 					<appArgLine>-nl en</appArgLine>
 					<work>${project.parent.basedir}/lé test</work>
 					<bundleStartLevel>
@@ -51,22 +51,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>${jacoco.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<configuration>
-							<!-- Where to put jacoco it coverage report -->
-							<destFile>${sonar.jacoco.itReportPath}</destFile>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
     			<artifactId>maven-clean-plugin</artifactId>
     			<version>2.4.1</version>
     			<configuration>
@@ -80,5 +64,7 @@
   			</plugin>
 		</plugins>
 	</build>
-
+	<properties>
+   			<sonar.jacoco.itReportPath>../../../../bos-studio/target/jacoco.exec</sonar.jacoco.itReportPath>
+  		</properties>
 </project>
