@@ -18,6 +18,7 @@ package org.bonitasoft.studio.expression.editor.widget;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -49,8 +50,8 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	private ToolBar tb;
 
 	public ContentAssistText(Composite parent, ILabelProvider contentProposalLabelProvider, int style) {
-		super(parent, SWT.NONE);
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(1, 1).spacing(32, 0).create());
+		super(parent, SWT.NO_BACKGROUND);
+		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(3, 3).spacing(32, 0).create());
 		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		if ((style & SWT.BORDER) == 0){
 			drawBorder = false;
@@ -59,14 +60,14 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		}
 		
 		textControl = new Text(this,style | SWT.SINGLE);
-		textControl.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).create());
+		textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		/*Data for test purpose*/
 		textControl.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_TEXT);
-		tb = new ToolBar(this,SWT.FLAT | SWT.NO_FOCUS);
+		tb = new ToolBar(this, SWT.FLAT | SWT.NO_FOCUS);
 		tb.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		tb.setLayoutData(GridDataFactory.swtDefaults().create());
-		final ToolItem ti = new ToolItem(tb, SWT.DROP_DOWN | SWT.FLAT);
-		ti.setText(" ");//Hack to display item with right layout
+		final ToolItem ti = new ToolItem(tb, SWT.FLAT | SWT.NO_FOCUS);
+		ti.setImage(Pics.getImage("resize_S.gif"));
 		ti.addSelectionListener(new SelectionAdapter() {
 
 			@Override
