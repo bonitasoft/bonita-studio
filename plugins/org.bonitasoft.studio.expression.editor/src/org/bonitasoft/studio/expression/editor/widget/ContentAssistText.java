@@ -83,7 +83,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 			@Override
 			public void paintControl(PaintEvent e) {
 				if(drawBorder) {
-					if(e.data == null & e.x < getBounds().width - 24){ //Hack to avaid clipping effect on toolitem
+					if(e.data == null & e.x < getBounds().width - 24){ //Hack to avoid clipping effect on toolitem
 						paintControlBorder(e);
 					}
 				}
@@ -101,11 +101,6 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		autoCompletion = new AutoCompletionField(textControl, new TextContentAdapter(), contentProposalLabelProvider) ;
 	}
 
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		super.update();
-	}
 	
 	protected void paintControlBorder(PaintEvent e) {
 		GC gc = e.gc;
