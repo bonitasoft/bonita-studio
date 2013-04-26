@@ -18,7 +18,6 @@ package org.bonitasoft.studio.expression.editor.widget;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
-import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -29,6 +28,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -46,10 +46,11 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	private Text textControl;
 	private AutoCompletionField autoCompletion;
 	private boolean drawBorder = true;
+	private ToolBar tb;
 
 	public ContentAssistText(Composite parent, ILabelProvider contentProposalLabelProvider, int style) {
 		super(parent, SWT.NONE);
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(3, 3).spacing(0, 0).create());
+		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(1, 1).spacing(32, 0).create());
 		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		if ((style & SWT.BORDER) == 0){
 			drawBorder = false;
@@ -57,15 +58,15 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 			style = style ^ SWT.BORDER;
 		}
 		
-		textControl = new Text(this,style);
-		textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		textControl = new Text(this,style | SWT.SINGLE);
+		textControl.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).create());
 		/*Data for test purpose*/
 		textControl.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_TEXT);
-		final ToolBar tb = new ToolBar(this, SWT.FLAT | SWT.NO_FOCUS);
+		tb = new ToolBar(this,SWT.FLAT | SWT.NO_FOCUS);
 		tb.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		tb.setLayoutData(GridDataFactory.swtDefaults().create());
-		final ToolItem ti = new ToolItem(tb, SWT.FLAT | SWT.NO_FOCUS);
-		ti.setImage(Pics.getImage("resize_S.gif"));
+		final ToolItem ti = new ToolItem(tb, SWT.DROP_DOWN | SWT.FLAT);
+		ti.setText(" ");//Hack to display item with right layout
 		ti.addSelectionListener(new SelectionAdapter() {
 
 			@Override
@@ -80,7 +81,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
-				if(drawBorder){
+				if(drawBorder) {
 				   paintControlBorder(e);
 				}
 			}
@@ -105,20 +106,31 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 			GC parentGC  =null;
 			if(focused == null || !focused.equals(textControl)){
 				parentGC = new GC(ContentAssistText.this);
-				parentGC.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
 				Rectangle r = ContentAssistText.this.getBounds();
+				parentGC.setClipping(getBorderPath(r, display));
+				parentGC.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
 				parentGC.setLineWidth(1);
 				parentGC.drawRectangle(0, 0, r.width-1, r.height-1);
 			}else{
 				final Composite parent = focused.getParent();
 				parentGC = new GC(parent);
-				parentGC.setForeground(e.display.getSystemColor(SWT.COLOR_WIDGET_BORDER));
 				Rectangle r = parent.getBounds();
+				parentGC.setClipping(getBorderPath(r, display));
+				parentGC.setForeground(e.display.getSystemColor(SWT.COLOR_WIDGET_BORDER));
 				parentGC.setLineWidth(1);
 				parentGC.drawRectangle(0, 0, r.width-1, r.height-1);
 			}
 			parentGC.dispose();
 		}
+	}
+
+	private Path getBorderPath(Rectangle widgetBounds, Display display) {
+		final Path path = new Path(display);
+		path.addRectangle(0,0,2,widgetBounds.height);//Left border
+		path.addRectangle(0,0,widgetBounds.width-1,2);//Top border
+		path.addRectangle(0, widgetBounds.height-1, widgetBounds.width-1,2);//Bottom border
+		path.addRectangle(widgetBounds.width-1, 0, 2,widgetBounds.height);//Right border
+		return path;
 	}
 
 	public Text getTextControl() {
@@ -127,6 +139,10 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 
 	public AutoCompletionField getAutocompletion() {
 		return autoCompletion;
+	}
+
+	public ToolBar getToolbar() {
+		return tb;
 	}
 
 }

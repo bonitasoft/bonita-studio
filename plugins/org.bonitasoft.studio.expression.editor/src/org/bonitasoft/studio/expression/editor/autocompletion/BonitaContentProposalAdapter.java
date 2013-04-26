@@ -557,6 +557,8 @@ public class BonitaContentProposalAdapter {
 			}
 		}
 
+		private static final int TB_OFFSET = 32;
+
 		/*
 		 * The listener installed on the target control.
 		 */
@@ -710,7 +712,7 @@ public class BonitaContentProposalAdapter {
 				GridData data = new GridData(GridData.FILL_BOTH);
 				data.heightHint = proposalTable.getItemHeight()
 						* POPUP_CHAR_HEIGHT;
-				data.widthHint = Math.max(control.getSize().x,
+				data.widthHint = Math.max(control.getSize().x+TB_OFFSET,
 						POPUP_MINIMUM_WIDTH);
 				proposalTable.setLayoutData(data);
 				getShell().pack();
