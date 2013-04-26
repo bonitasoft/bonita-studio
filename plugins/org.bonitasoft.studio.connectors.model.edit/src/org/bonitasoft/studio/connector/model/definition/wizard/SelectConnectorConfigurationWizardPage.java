@@ -177,7 +177,7 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
                     Object selection = ((StructuredSelection)configurationsTree.getViewer().getSelection()).getFirstElement() ;
                     if(selection instanceof ConnectorConfiguration){
                         Resource r = ((ConnectorConfiguration)selection).eResource() ;
-                        String fileName = URI.decode(r.getURI().lastSegment());
+                        String fileName =  URI.decode(r.getURI().lastSegment()) ;
                         IRepositoryFileStore artifact = configurationStore.getChild(fileName) ;
                         if(artifact != null){
                             if(FileActionDialog.confirmDeletionQuestion(fileName)){

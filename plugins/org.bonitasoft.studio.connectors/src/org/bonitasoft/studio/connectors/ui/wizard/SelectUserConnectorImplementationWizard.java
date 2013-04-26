@@ -41,6 +41,7 @@ public class SelectUserConnectorImplementationWizard extends AbstractSelectImple
 
     public SelectUserConnectorImplementationWizard(){
         super() ;
+        setWindowTitle(Messages.selectConnectorImplementationTitle);
     }
 
     @Override

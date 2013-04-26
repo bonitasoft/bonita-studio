@@ -280,6 +280,7 @@ public class Messages extends NLS {
     public static String inputIsEmpty;
     public static String displayName;
     public static String definitionAlreadyExists;
+    public static String whitespaceInDefinitionIDNotAllowed;
     public static String connectorI18NTitle;
     public static String connectorI18NDesc;
     public static String countryName;

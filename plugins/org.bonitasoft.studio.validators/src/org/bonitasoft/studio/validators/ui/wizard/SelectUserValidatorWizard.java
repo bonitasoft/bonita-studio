@@ -18,6 +18,7 @@ package org.bonitasoft.studio.validators.ui.wizard;
 
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.validators.descriptor.validator.ValidatorDescriptor;
+import org.bonitasoft.studio.validators.i18n.Messages;
 import org.eclipse.jface.wizard.Wizard;
 
 
@@ -32,6 +33,7 @@ public class SelectUserValidatorWizard extends Wizard {
 
     public SelectUserValidatorWizard(){
         setDefaultPageImageDescriptor(Pics.getWizban()) ;
+        setWindowTitle(Messages.selectValidatorTitle);
     }
 
     @Override

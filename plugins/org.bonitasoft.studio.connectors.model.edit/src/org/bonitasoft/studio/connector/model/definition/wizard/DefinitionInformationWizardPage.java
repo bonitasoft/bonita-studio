@@ -162,6 +162,13 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 
 			@Override
 			protected IStatus validate() {
+				if(observableIdText.getValue().toString().contains(" ")){
+					return  ValidationStatus.error(Messages.whitespaceInDefinitionIDNotAllowed) ;
+				}
+				if(observableVersionText.getValue().toString().contains(" ")){
+					return  ValidationStatus.error(Messages.whitespaceInDefinitionIDNotAllowed) ;
+				}
+				
 				String defID = NamingUtils.toConnectorDefinitionFilename(observableIdText.getValue().toString(), observableVersionText.getValue().toString(), false) ;
 				for(ConnectorDefinition def : existingDefinitions){
 					String existingId = NamingUtils.toConnectorDefinitionFilename(def.getId(), def.getVersion(), false) ;

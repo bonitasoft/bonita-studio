@@ -30,6 +30,7 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
@@ -113,7 +114,7 @@ public class SelectConnectorImplementationWizardPage extends WizardPage implemen
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if(selectedImplementation != null){
-                    String fileName = selectedImplementation.eResource().getURI().lastSegment() ;
+                    String fileName = URI.decode(selectedImplementation.eResource().getURI().lastSegment()) ;
                     IRepositoryFileStore file = implStore.getChild(fileName) ;
                     if(FileActionDialog.confirmDeletionQuestion(fileName)){
                         file.delete() ;

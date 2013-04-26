@@ -242,6 +242,9 @@ public class ImplementationWizardPage extends NewTypeWizardPage implements ISele
 
             @Override
             public IStatus validate(Object value) {
+            	if(value.toString().contains(" ")){
+            		return  ValidationStatus.error("Whitespace is not allowed in version id") ;
+            	}
                 if(!FileUtil.isValidName(NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(),value.toString(), true))){
                     return  ValidationStatus.error(Messages.invalidFileName) ;
                 }
@@ -255,6 +258,9 @@ public class ImplementationWizardPage extends NewTypeWizardPage implements ISele
 
             @Override
             protected IStatus validate() {
+            	if(observableIdText.getValue().toString().contains(" ")){
+            		return  ValidationStatus.error("Whitespace is not allowed in definition id") ;
+            	}
                 String implID = NamingUtils.toConnectorImplementationFilename(observableIdText.getValue().toString(),observableVersionText.getValue().toString(), false) ;
                 for(ConnectorImplementation impl : existingImpl){
                     String existingId = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(),impl.getImplementationVersion(), false) ;
