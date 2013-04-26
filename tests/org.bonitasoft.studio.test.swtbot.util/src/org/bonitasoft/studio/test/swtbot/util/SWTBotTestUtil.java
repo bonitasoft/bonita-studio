@@ -306,6 +306,19 @@ public class SWTBotTestUtil implements SWTBotConstants{
             tree.expandNode(laneName).click();
         }
     }
+    
+    public static void selectElementFromFormOverview(final SWTGefBot bot,String widgetName){
+    	final SWTBotView view = bot.viewById(SWTBotTestUtil.VIEWS_TREE_OVERVIEW);
+        view.show();
+        view.setFocus();
+        final SWTBotTree tree = bot.treeWithId(BONITA_OVERVIEW_TREE_ID);
+        tree.setFocus();
+        bot.waitUntil(Conditions.widgetIsEnabled( tree.getTreeItem(widgetName)));
+        tree.select(widgetName);
+        //tree.getTreeItem(widgetName).select(widgetName);
+        
+        //tree.getTreeItem(widgetName).click();
+    }
 
     /**
      * @param gmfEditor
