@@ -46,8 +46,14 @@ public class DocumentExpressionProvider implements IExpressionProvider {
 	@Override
 	public Set<Expression> getExpressions(EObject context) {
 		Set<Expression> result = new HashSet<Expression>() ;
-		Pool process =  (Pool) ModelHelper.getParentProcess(context);
-		if(context != null){
+		Pool process = null;
+		if(!(context instanceof Pool)){
+			EObject parent = ModelHelper.getParentProcess(context);
+			if(parent instanceof Pool){
+				process = (Pool) parent;
+			}
+		}
+		if(context != null && process != null){
 			for(Document d : process.getDocuments()){
 				result.add(createExpression(d));
 			}
