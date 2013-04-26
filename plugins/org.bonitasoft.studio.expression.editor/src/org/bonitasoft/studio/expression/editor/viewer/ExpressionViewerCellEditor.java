@@ -133,14 +133,18 @@ public class ExpressionViewerCellEditor extends CellEditor {
 
 			@Override
 			public void handleEvent(Event e) {
-				if (viewerControl != null
-						&& !viewerControl.isDisposed()
-						&& !viewerControl.equals(
-								((Control) e.widget).getParent().getParent())
-								&& !(e.widget instanceof Link)) {
-					if (!viewer.getContentProposal().hasProposalPopupFocus()) {
-						ExpressionViewerCellEditor.this.focusLost();
-						columnViewer.refresh(true);
+				if(e.widget != null){
+					final Composite widgetParentOFEvent = ((Control) e.widget).getParent();
+					if (viewerControl != null
+							&& !viewerControl.isDisposed()
+							&& widgetParentOFEvent != null
+							&& !viewerControl.equals(
+									widgetParentOFEvent.getParent())
+									&& !(e.widget instanceof Link)) {
+						if (!viewer.getContentProposal().hasProposalPopupFocus()) {
+							ExpressionViewerCellEditor.this.focusLost();
+							columnViewer.refresh(true);
+						}
 					}
 				}
 			}
