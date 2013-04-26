@@ -130,10 +130,10 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 
 	private Path getBorderPath(Rectangle widgetBounds, Display display) {
 		final Path path = new Path(display);
-		path.addRectangle(-1,-1,3,widgetBounds.height);//Left border
-		path.addRectangle(-1,-1,widgetBounds.width,3);//Top border
-		path.addRectangle(-1, widgetBounds.height-1, widgetBounds.width,3);//Bottom border
-		path.addRectangle(widgetBounds.width-1, -1, 3,widgetBounds.height+1);//Right border
+		path.addRectangle(0,0,1,widgetBounds.height);//Left border
+		path.addRectangle(1,0,widgetBounds.width-2,1);//Top border
+		path.addRectangle(1, widgetBounds.height-1, widgetBounds.width-2,1);//Bottom border
+		path.addRectangle(widgetBounds.width-1, 0, 1,widgetBounds.height);//Right border
 		return path;
 	}
 
