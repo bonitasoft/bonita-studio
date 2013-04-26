@@ -26,6 +26,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.Before;
@@ -148,8 +149,8 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 			public String getFailureMessage() {
 				return "Cannot select tree item";
 			}
-		},10000,1000);
-		assertTrue("Remove button is not enabled",bot.button("Remove").isEnabled());
+		},10000,500);
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.button("Remove")));
 		bot.button("Remove").click();
 		bot.waitUntil(new ICondition() {
 			
