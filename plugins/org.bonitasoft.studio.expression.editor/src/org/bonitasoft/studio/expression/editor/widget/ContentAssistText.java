@@ -50,7 +50,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	private ToolBar tb;
 
 	public ContentAssistText(Composite parent, ILabelProvider contentProposalLabelProvider, int style) {
-		super(parent, SWT.NO_BACKGROUND);
+		super(parent, SWT.NONE);
 		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(3, 3).spacing(32, 0).create());
 		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		if ((style & SWT.BORDER) == 0){
