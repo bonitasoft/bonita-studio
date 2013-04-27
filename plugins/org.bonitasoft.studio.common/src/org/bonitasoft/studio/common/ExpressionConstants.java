@@ -57,6 +57,8 @@ public interface ExpressionConstants {
     String SET_DOCUMENT_OPERATOR = ActionType.DOCUMENT_CREATE_UPDATE.name();
     String VARIABLE_TYPE_FOR_FORM_OUPUT = "VARIABLE_TYPE_FOR_FORM_OUPUT";
     String DOCUMENT_VALUE_RETURN_TYPE = DocumentValue.class.getName();
+	String DOCUMENT_REF_TYPE = "DOCUMENT_REF_TYPE";
+	String ALL_TYPES = "ALL_TYPES";
    
 
   

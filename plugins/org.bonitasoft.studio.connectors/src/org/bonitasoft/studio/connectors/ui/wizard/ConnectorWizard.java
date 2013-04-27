@@ -81,7 +81,6 @@ import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardPage;
 
 /**
@@ -121,8 +120,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 			ExpressionConstants.PARAMETER_TYPE,
 			ExpressionConstants.FORM_FIELD_TYPE
 	}) ;
-
-
+	private List<ConnectorDefinition> definitions;
 
 	public ConnectorWizard(EObject container,EStructuralFeature connectorContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID){
 		this.container = container ;
@@ -164,6 +162,8 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		for(IConfigurationElement element :  BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(CUSTOM_WIZARD_ID)){
 			contributions.add(new CustomWizardExtension(element));
 		}
+		IDefinitionRepositoryStore defStore = getDefinitionStore();
+		definitions = defStore.getDefinitions();
 	}
 
 	protected void initializeContainment() {
@@ -203,7 +203,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		addNameAndDescriptionPage();
 		if(editMode){
 			final IDefinitionRepositoryStore definitionStore = getDefinitionStore();
-			final ConnectorDefinition definition =  definitionStore.getDefinition(connectorWorkingCopy.getDefinitionId(),connectorWorkingCopy.getDefinitionVersion()) ;
+			final ConnectorDefinition definition =  definitionStore.getDefinition(connectorWorkingCopy.getDefinitionId(),connectorWorkingCopy.getDefinitionVersion(),definitions) ;
 			extension = findCustomWizardExtension(definition) ;
 			List<IWizardPage> pages = getPagesFor(definition) ;
 			for(IWizardPage p : pages){
@@ -512,12 +512,12 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	@Override
 	public ConnectorDefinition getDefinition() {
-		ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+		IDefinitionRepositoryStore defStore = getDefinitionStore();
 		if(originalConnector != null){
-			return defStore.getDefinition(originalConnector.getDefinitionId(), originalConnector.getDefinitionVersion()) ;
+			return defStore.getDefinition(originalConnector.getDefinitionId(), originalConnector.getDefinitionVersion(),definitions) ;
 		}else{
 			if(connectorWorkingCopy.getDefinitionId() != null && !connectorWorkingCopy.getDefinitionId().isEmpty()){
-				return defStore.getDefinition(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion()) ;
+				return defStore.getDefinition(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion(),definitions) ;
 			}
 		}
 		return null;

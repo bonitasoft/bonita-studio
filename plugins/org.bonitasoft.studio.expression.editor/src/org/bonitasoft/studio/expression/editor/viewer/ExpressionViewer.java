@@ -81,6 +81,7 @@ import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -103,6 +104,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
@@ -195,7 +197,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 	protected void createToolbar(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
 		toolbar = new ToolBar(control, SWT.FLAT | SWT.NO_FOCUS);
-		toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).indent(20, 0).grab(false, false).create());
+		toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
 		editControl = createEditToolItem(toolbar);
 		if(withConnector){
 			createToolBarExtension(toolbar);
@@ -253,6 +255,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				if(!ExpressionConstants.CONDITION_TYPE.equals(type)){
 					type=ExpressionConstants.CONSTANT_TYPE;
 				}
+				if(ExpressionConstants.SCRIPT_TYPE.equals(type)){
+					if(!MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.cleanExpressionTitle, Messages.cleanExpressionMsg)){
+						return;
+					}
+				}
 				if(editingDomain != null){
 					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, type));
 					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__NAME,""));
@@ -267,6 +274,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 					selectedExpression.getConnectors().clear();
 				}
 				textControl.setText("");
+				validate();
 				refresh();
 			}
 		}) ;
@@ -283,8 +291,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		}
 		textControl.addDisposeListener(disposeListener) ;
 
-		typeDecoration = new ControlDecoration(contentAssistText, SWT.RIGHT ,control) ;
-		typeDecoration.setMarginWidth(2) ;
+		typeDecoration = new ControlDecoration(contentAssistText.getToolbar(), SWT.LEFT ,control) ;
+		typeDecoration.setMarginWidth(0) ;
 
 		messageDecoration = new ControlDecoration(contentAssistText, SWT.LEFT,control) ;
 		messageDecoration.setShowHover(true) ;
@@ -418,6 +426,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 					autoCompletion.getContentProposalAdapter().setEnabled(true);
 					autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 				}
+				validate();
 				refresh() ;
 			} else {
 				selectedExpression = null;
@@ -557,30 +566,36 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 			@Override
 			public IStatus validate(Object value) {
-				final IExpressionValidator validator = validatorsForType.get(selectedExpression.getType());
+				IExpressionValidator validator = null;
+				if( selectedExpression != null){
+					validator = validatorsForType.get(selectedExpression.getType());
+				}
+				if(validator == null){
+					validator = validatorsForType.get(ExpressionConstants.ALL_TYPES);
+				}
 				if(validator != null){
 					validator.setDomain(editingDomain);
 					validator.setContext(context);
-					validator.setInputExpression(selectedExpression);
+					if(selectedExpression != null){
+						validator.setInputExpression(selectedExpression);
+					}
 					final IStatus status = validator.validate(value);
-					if(externalDataBindingContext == null){//Display error at expression editor level
-						if(status.isOK()){
-							setMessage(null, status.getSeverity());
-						}else{
-							String message= status.getMessage();
-							if(status instanceof MultiStatus){
-								StringBuilder sb = new StringBuilder();
-								for(IStatus statusChild : status.getChildren()){
-									sb.append(statusChild.getMessage());
-									sb.append("\n");
-								}
-								if(sb.length()>0){
-									sb.delete(sb.length()-1, sb.length());
-								}
-								message = sb.toString();
+					if(status.isOK()){
+						setMessage(null, status.getSeverity());
+					}else{
+						String message= status.getMessage();
+						if(status instanceof MultiStatus){
+							StringBuilder sb = new StringBuilder();
+							for(IStatus statusChild : status.getChildren()){
+								sb.append(statusChild.getMessage());
+								sb.append("\n");
 							}
-							setMessage(message, status.getSeverity());
+							if(sb.length()>0){
+								sb.delete(sb.length()-1, sb.length());
+							}
+							message = sb.toString();
 						}
+						setMessage(message, status.getSeverity());
 					}
 					return status;
 				}else{
@@ -607,6 +622,20 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			}
 		});
 
+		bindEditableText(typeObservable);
+		nameObservable.addValueChangeListener(new IValueChangeListener() {
+
+			@Override
+			public void handleValueChange(ValueChangeEvent arg0) {
+				fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, getSelection()));
+			}
+		});
+		if(externalDataBindingContext != null){
+			externalDataBindingContext.addBinding(expressionBinding);
+		}
+	}
+
+	protected void bindEditableText(IObservableValue typeObservable) {
 		UpdateValueStrategy modelToTargetTypeStrategy = new UpdateValueStrategy();
 		modelToTargetTypeStrategy.setConverter(new Converter(String.class,Boolean.class){
 
@@ -631,16 +660,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				typeObservable,
 				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),
 				modelToTargetTypeStrategy) ;
-		nameObservable.addValueChangeListener(new IValueChangeListener() {
-
-			@Override
-			public void handleValueChange(ValueChangeEvent arg0) {
-				fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, getSelection()));
-			}
-		});
-		if(externalDataBindingContext != null){
-			externalDataBindingContext.addBinding(expressionBinding);
-		}
 	}
 
 
@@ -702,7 +721,10 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	}
 
 	protected String getContentTypeFromInput(String input) {
-		String expressionType = selectedExpression.getType() ;
+		String expressionType = ExpressionConstants.CONSTANT_TYPE;
+		if(selectedExpression != null){
+			expressionType = selectedExpression.getType() ;
+		}
 		if(CONSTANT_TYPE.equals(expressionType)){
 			return expressionType;
 		}
@@ -888,9 +910,14 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			editingDomain = null ;
 			disposeDomain = false ;
 		}
+		if(expressionBinding != null && externalDataBindingContext != null){
+			externalDataBindingContext.removeBinding(expressionBinding);
+			expressionBinding.dispose();
+		}
 		if(internalDataBindingContext != null){
 			internalDataBindingContext.dispose() ;
 		}
+
 		super.handleDispose(event);
 	}
 
@@ -955,5 +982,15 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		if(!validationListeners.contains(listener)){
 			validationListeners.add(listener);
 		}
+	}
+
+	public void validate() {
+		if(expressionBinding != null && expressionBinding.getTarget() != null){
+			expressionBinding.validateTargetToModel();
+		}
+	}
+
+	public void setExternalDataBindingContext(DataBindingContext ctx){
+		this.externalDataBindingContext = ctx;
 	}
 }

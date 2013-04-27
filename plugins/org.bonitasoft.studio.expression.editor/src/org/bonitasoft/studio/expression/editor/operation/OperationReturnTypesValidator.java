@@ -16,33 +16,54 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
+import org.bonitasoft.engine.bpm.model.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
+import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.Info;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class OperationReturnTypesValidator implements IValidator {
+public class OperationReturnTypesValidator implements IExpressionValidator {
 
 	private Expression dataExpression;
+	private ExpressionTypeLabelProvider typeLabelProvider = new ExpressionTypeLabelProvider();
+	private OperatorLabelProvider operatorLabelProvider = new OperatorLabelProvider();
+	private Expression inputExpression;
+
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
 	 */
 	@Override
-	public IStatus validate(Object expression) {
-		if(expression instanceof Expression){
+	public IStatus validate(Object value) {
+		Expression expression = null;
+		if(value instanceof Expression){
+			expression = (Expression) value;
+		}else if( inputExpression != null){
+			expression = inputExpression;
+		}
+		if(expression != null){
+			String expressionContent = expression.getContent();
+			if(value instanceof String){//Expression content to validate
+				expressionContent = value.toString();
+			}
 			EObject container = ((Expression) expression).eContainer() ;
+			String expressionName = ((Expression) expression).getName();
+			if(expressionName == null || expressionName.isEmpty()){
+				expressionName = value.toString();
+			}
 			if(container instanceof Operation){
 				final Operation operation = (Operation) container;
 
@@ -50,9 +71,18 @@ public class OperationReturnTypesValidator implements IValidator {
 				if(parent instanceof Info){
 					return ValidationStatus.ok();
 				}
-
-				if(ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operation.getOperator().getType())){
-					if(dataExpression != null && dataExpression.getContent() != null && !dataExpression.getContent().isEmpty() && ((Expression) expression).getContent() != null && !((Expression) expression).getContent().isEmpty()){
+				
+				if(value instanceof String){//Expression content to validate
+					
+				}
+				final String operatorType = operation.getOperator().getType();
+				if(dataExpression != null &&  dataExpression.getContent() != null 
+						&& !dataExpression.getContent().isEmpty() && expressionContent != null 
+						&& !expressionContent.isEmpty()){
+					if(ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operatorType)){
+						if(!ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType())){
+							return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,typeLabelProvider.getText(dataExpression.getType()),operatorLabelProvider.getText(operation.getOperator())));
+						}
 						if(!operation.getOperator().getInputTypes().isEmpty()){
 							String typeName = operation.getOperator().getInputTypes().get(0);
 							try{
@@ -61,65 +91,87 @@ public class OperationReturnTypesValidator implements IValidator {
 								if(!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)){
 									return ValidationStatus.warning(Messages.bind(
 											Messages.invalidReturnTypeBetween,dataExpression.getName(),
-											((Expression) expression).getName()));
+											expressionName));
 								}
 							}catch (Exception e) {
 								if(!operation.getOperator().getInputTypes().get(0).equals(((Expression) expression).getReturnType())){
 									return ValidationStatus.warning(Messages.bind(
 											Messages.invalidReturnTypeFor,
-											((Expression) expression).getName()));
+											expressionName));
 								}
 							}
 						}
-					}
-					return ValidationStatus.ok();
-				}
-				if (ExpressionConstants.XPATH_UPDATE_OPERATOR.equals(operation.getOperator().getType())){
-					if (dataExpression!=null && dataExpression.getContent()!=null && !dataExpression.getContent().isEmpty()){
-						if (!operation.getOperator().getInputTypes().isEmpty()){
-							String typeName = operation.getOperator().getInputTypes().get(0);
-							try{
-								Class<?> dataReturnTypeClass = Class.forName(typeName);
-								Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
-								if(!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)){
-									return ValidationStatus.warning(Messages.bind(
-											Messages.invalidReturnTypeBetween,dataExpression.getName(),
-											((Expression) expression).getName()));
-								}
-							}catch (Exception e) {
-								if(!operation.getOperator().getInputTypes().get(0).equals(((Expression) expression).getReturnType())){
-									return ValidationStatus.warning(Messages.bind(
-											Messages.invalidReturnTypeFor,
-											((Expression) expression).getName()));
+						return ValidationStatus.ok();
+					}else if (ExpressionConstants.XPATH_UPDATE_OPERATOR.equals(operatorType)){
+						if(!ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType())){
+							return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,typeLabelProvider.getText(dataExpression.getType()),operatorLabelProvider.getText(operation.getOperator())));
+						}
+						if (dataExpression!=null && dataExpression.getContent()!=null && !dataExpression.getContent().isEmpty()){
+							if (!operation.getOperator().getInputTypes().isEmpty()){
+								String typeName = operation.getOperator().getInputTypes().get(0);
+								try{
+									Class<?> dataReturnTypeClass = Class.forName(typeName);
+									Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
+									if(!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)){
+										return ValidationStatus.warning(Messages.bind(
+												Messages.invalidReturnTypeBetween,dataExpression.getName(),
+												expressionName));
+									}
+								}catch (Exception e) {
+									if(!operation.getOperator().getInputTypes().get(0).equals(((Expression) expression).getReturnType())){
+										return ValidationStatus.warning(Messages.bind(
+												Messages.invalidReturnTypeFor,
+												expressionName));
+									}
 								}
 							}
 						}
+						return ValidationStatus.ok();
+					}else if(ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(operatorType)){
+						if(!ExpressionConstants.DOCUMENT_REF_TYPE.equals(dataExpression.getType())){
+							return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,typeLabelProvider.getText(dataExpression.getType()),operatorLabelProvider.getText(operation.getOperator())));
+						}
+						if (dataExpression!=null && dataExpression.getContent()!=null && !dataExpression.getContent().isEmpty()){
+							String typeName = dataExpression.getReturnType();
+							String actionType = ((Expression) expression).getReturnType();
+							if(!(actionType.equals(DocumentValue.class.getName()) && typeName.equals(String.class.getName()))){
+								return ValidationStatus.error(Messages.bind(
+										Messages.invalidReturnTypeBetween,dataExpression.getName(),
+										expressionName)+ "\n"+ Messages.documentValueExprected);
+							}else{
+								return ValidationStatus.ok();
+							}
+						}
+					}else if(ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operatorType)){
+						if(ExpressionConstants.DOCUMENT_REF_TYPE.equals(dataExpression.getType())){
+							return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,typeLabelProvider.getText(dataExpression.getType()),operatorLabelProvider.getText(operation.getOperator())));
+						}
 					}
-					return ValidationStatus.ok();
-				}
-				if(ExpressionConstants.MESSAGE_ID_TYPE.equals(operation.getRightOperand().getType())){
-					return ValidationStatus.ok();
-				}
+					if(ExpressionConstants.MESSAGE_ID_TYPE.equals(operation.getRightOperand().getType())){
+						return ValidationStatus.ok();
+					}
 
-				if(ModelHelper.isAnExpressionCopy((Expression) expression)){
-					return ValidationStatus.ok();
+					if(ModelHelper.isAnExpressionCopy((Expression) expression)){
+						return ValidationStatus.ok();
+					}
+
 				}
 			}
 
-			if(dataExpression != null && dataExpression.getContent() != null && !dataExpression.getContent().isEmpty() && ((Expression) expression).getContent() != null && !((Expression) expression).getContent().isEmpty()){
+			if(dataExpression != null && dataExpression.getContent() != null && !dataExpression.getContent().isEmpty() && expressionContent != null && !expressionContent.isEmpty()){
 				try{
 					Class<?> dataReturnTypeClass = Class.forName(dataExpression.getReturnType());
 					Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
 					if(!dataReturnTypeClass.isAssignableFrom(expressionReturnTypeClass)){
 						return ValidationStatus.warning(Messages.bind(
 								Messages.invalidReturnTypeBetween,dataExpression.getName(),
-								((Expression) expression).getName()));
+								expressionName));
 					}
 				}catch (Exception e) {
 					if(!dataExpression.getReturnType().equals(((Expression) expression).getReturnType())){
 						return ValidationStatus.warning(Messages.bind(
 								Messages.invalidReturnTypeFor,
-								((Expression) expression).getName()));
+								expressionName));
 					}
 				}
 
@@ -130,6 +182,20 @@ public class OperationReturnTypesValidator implements IValidator {
 
 	public void setDataExpression(Expression dataExpression){
 		this.dataExpression =dataExpression ;
+	}
+
+	@Override
+	public void setInputExpression(Expression inputExpression) {
+		this.inputExpression = inputExpression;
+	}
+
+	@Override
+	public void setDomain(EditingDomain domain) {
+
+	}
+
+	@Override
+	public void setContext(EObject context) {
 	}
 
 }

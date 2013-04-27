@@ -277,6 +277,8 @@ public class EngineExpressionUtil {
 				return createComparisonExpression(exp, simpleExpression);
 			}if(ExpressionConstants.PATTERN_TYPE.equals(simpleExpression.getType())){
 				return createPatternExpression(exp, simpleExpression);
+			}if(ExpressionConstants.DOCUMENT_TYPE.equals(simpleExpression.getType())){
+				return createDocumentExpression(exp, simpleExpression);
 			}else{
 				exp.createNewInstance(name);
 				exp.setContent(simpleExpression.getContent());
@@ -299,6 +301,17 @@ public class EngineExpressionUtil {
 		} else {
 			return null;
 		}
+	}
+
+	public static Expression createDocumentExpression(ExpressionBuilder exp,
+			org.bonitasoft.studio.model.expression.Expression simpleExpression) {
+		Expression expression = null;
+		try {
+			expression = exp.createDocumentReferenceExpression(simpleExpression.getName());
+		} catch (InvalidExpressionException e) {
+			BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
+		}
+		return expression;
 	}
 
 	public static Expression createPatternExpression(ExpressionBuilder exp,
@@ -392,7 +405,7 @@ public class EngineExpressionUtil {
 		if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(type)) {
 			return ExpressionType.TYPE_INPUT.name();
 		}
-		if(ExpressionConstants.DOCUMENT_TYPE.equals(type)){
+		if(ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)){
 			return ExpressionConstants.CONSTANT_TYPE;
 		}
 		if (ExpressionConstants.VARIABLE_TYPE.equals(type) &&  !expression.getReferencedElements().isEmpty()) {

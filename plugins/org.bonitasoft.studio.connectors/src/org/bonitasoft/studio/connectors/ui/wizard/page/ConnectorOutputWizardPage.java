@@ -35,32 +35,36 @@ import org.eclipse.swt.widgets.Control;
 public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage {
 
 
-    @Override
-    protected Control doCreateControl(Composite parent,EMFDataBindingContext context) {
+    private OperationsComposite lineComposite;
+
+
+	@Override
+    protected Control doCreateControl(Composite parent,final EMFDataBindingContext context) {
         final Composite mainComposite = new Composite(parent, SWT.NONE) ;
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create()) ;
         final AvailableExpressionTypeFilter leftFilter =  new AvailableExpressionTypeFilter(new String[]{ 
-                ExpressionConstants.VARIABLE_TYPE}) ;
+                ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.DOCUMENT_REF_TYPE}) ;
         final AvailableExpressionTypeFilter rightFilter =  new AvailableExpressionTypeFilter(new String[]{ 
         		 ExpressionConstants.CONSTANT_TYPE,
         		ExpressionConstants.CONNECTOR_OUTPUT_TYPE,
         		ExpressionConstants.VARIABLE_TYPE,
         		ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.SCRIPT_TYPE
+                ExpressionConstants.SCRIPT_TYPE,
+                ExpressionConstants.DOCUMENT_TYPE
         }) ;
 
-        final OperationsComposite lineComposite = new OperationsComposite(null, mainComposite, rightFilter, leftFilter,false) ;
+        lineComposite = new OperationsComposite(null, mainComposite, rightFilter, leftFilter) ;
         lineComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-        lineComposite.setEObject(getConnector()) ;
         lineComposite.setContext(context) ;
+        lineComposite.setEObject(getConnector()) ;
         if(getOutputDataFeature() != null){
             lineComposite.setStorageExpressionNatureContentProvider(new DataExpressionNatureProvider(getOutputDataFeature())) ;
         }
         lineComposite.fillTable() ;
         return mainComposite ;
     }
-
 
 
 }

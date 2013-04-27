@@ -18,8 +18,13 @@
 package org.bonitasoft.studio.data.provider;
 
 import java.util.List;
+import java.util.Set;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.PageFlow;
@@ -30,10 +35,30 @@ import org.eclipse.emf.ecore.EObject;
  * /!\ not declared in extension points, we don't want it in the list, it is only used in Operation output
  *
  */
-public class DataExpressionProviderForFormOutput extends DataExpressionProvider {
+public class DataExpressionNatureProviderForFormOutput extends DataExpressionProvider implements IExpressionNatureProvider {
+
+	private EObject context;
 
 	protected List<Data> getDataInForm(Form form, final EObject formContainer) {
 		return ModelHelper.getAccessibleDataInFormsWithNoRestriction((PageFlow) formContainer, form.eContainmentFeature());
+	}
+
+	@Override
+	public Expression[] getExpressions() {
+		final Set<Expression> expressions = getExpressions(context);
+		expressions.addAll(ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE).getExpressions(context));
+		return expressions.toArray(new Expression[expressions.size()]);
+	}
+
+	@Override
+	public void setContext(EObject context) {
+		this.context = context;
+		
+	}
+
+	@Override
+	public EObject getContext() {
+		return context;
 	}
 	
 }

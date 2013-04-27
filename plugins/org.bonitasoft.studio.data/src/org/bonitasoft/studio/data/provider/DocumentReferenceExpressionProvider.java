@@ -40,7 +40,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Romain Bioteau
  *
  */
-public class DocumentExpressionProvider implements IExpressionProvider {
+public class DocumentReferenceExpressionProvider implements IExpressionProvider {
 
 	
 	@Override
@@ -63,7 +63,7 @@ public class DocumentExpressionProvider implements IExpressionProvider {
 
 	@Override
 	public String getExpressionType() {
-		return ExpressionConstants.DOCUMENT_TYPE;
+		return ExpressionConstants.DOCUMENT_REF_TYPE;
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class DocumentExpressionProvider implements IExpressionProvider {
 
 	@Override
 	public String getTypeLabel() {
-		return Messages.documentType;
+		return Messages.documentReferenceType;
 	}
 
 	@Override

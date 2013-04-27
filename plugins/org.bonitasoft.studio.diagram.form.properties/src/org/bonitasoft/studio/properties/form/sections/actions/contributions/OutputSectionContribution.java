@@ -20,7 +20,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
-import org.bonitasoft.studio.data.provider.DataExpressionProviderForFormOutput;
+import org.bonitasoft.studio.data.provider.DataExpressionNatureProviderForFormOutput;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
@@ -34,7 +34,6 @@ import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.ViewForm;
 import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.properties.form.provider.ExpressionViewerVariableFilter;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -67,11 +66,17 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
     			ExpressionConstants.VARIABLE_TYPE,
     			ExpressionConstants.SCRIPT_TYPE,
     			ExpressionConstants.PARAMETER_TYPE,
-    			ExpressionConstants.FORM_FIELD_TYPE
+    			ExpressionConstants.FORM_FIELD_TYPE,
+    			ExpressionConstants.DOCUMENT_TYPE
+        }) ;
+    	
+     	AvailableExpressionTypeFilter storageExpressionFilter =  new AvailableExpressionTypeFilter(new String[]{
+    			ExpressionConstants.VARIABLE_TYPE,
+    			ExpressionConstants.DOCUMENT_REF_TYPE
         }) ;
 
-        operationViewer = new OperationViewer(composite, widgetFactory,getEditingDomain(), expressionFilter, new ExpressionViewerVariableFilter()) ;
-        operationViewer.setStorageExpressionContentProvider(new DataExpressionProviderForFormOutput());
+        operationViewer = new OperationViewer(composite, widgetFactory,getEditingDomain(), expressionFilter, storageExpressionFilter) ;
+        operationViewer.setStorageExpressionNatureProvider(new DataExpressionNatureProviderForFormOutput());
         operationViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
         bindWidgets();
@@ -133,11 +138,6 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
 
     }
 
-    public void refresh() {
-        if(operationViewer != null){
-            operationViewer.refresh() ;
-        }
-    }
 
     public void setEObject(EObject object) {
         element = (Widget) object;
@@ -150,5 +150,11 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
     public void setSelection(ISelection selection) {
 
     }
+
+
+
+	public void refresh() {
+	
+	}
 
 }

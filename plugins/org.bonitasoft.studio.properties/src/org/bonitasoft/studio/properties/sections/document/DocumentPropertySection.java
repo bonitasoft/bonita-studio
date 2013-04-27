@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.properties.sections.document;
 
+import static org.bonitasoft.studio.common.Messages.bosProductName;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,6 +25,8 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.ElementForIdLabelProvider;
+import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -41,13 +45,15 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DeleteCommand;
-import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
@@ -79,7 +85,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-import static org.bonitasoft.studio.common.Messages.bosProductName;
 
 /**
  * @author Aurelien Pupier
@@ -191,7 +196,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 				for(Document existingDocument : getPool().getDocuments()){
 					existingNames.add(existingDocument.getName());
 				}
-				newDocument.setName(NamingUtils.generateNewName(existingNames, Messages.documentDefaultName));
+				newDocument.setName(NamingUtils.generateNewName(existingNames, Messages.documentDefaultName.toLowerCase()).toLowerCase());
 				newDocument.setUrl(ExpressionFactory.eINSTANCE.createExpression());
 				final Expression mimetypeExpression = ExpressionFactory.eINSTANCE.createExpression();
 				mimetypeExpression.setName("application/octet-stream");
@@ -366,10 +371,22 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 				);
 		documentMimeTypeViewer.setInput(documentSelected);
 
-		IObservableValue nameObserved = EMFEditProperties.value(getEditingDomain(), ProcessPackage.Literals.ELEMENT__NAME).observeDetail(documentSelected);
-		emfDataBindingContext.bindValue(
+		final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
+		targetToModel.setAfterGetValidator(new InputLengthValidator(Messages.name, 50));
+		targetToModel.setBeforeSetValidator(new GroovyReferenceValidator(Messages.name));
+		final IObservableValue nameObserved = EMFEditProperties.value(getEditingDomain(), ProcessPackage.Literals.ELEMENT__NAME).observeDetail(documentSelected);
+		ControlDecorationSupport.create(emfDataBindingContext.bindValue(
 				SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentNameText, SWT.Modify)),
-				nameObserved);
+				nameObserved,targetToModel,null),SWT.LEFT);
+		nameObserved.addValueChangeListener(new IValueChangeListener() {
+
+			@Override
+			public void handleValueChange(ValueChangeEvent event) {
+				if(documentListViewer != null && !documentListViewer.getList().isDisposed()){
+					documentListViewer.refresh();
+				}
+			}
+		});
 
 		IObservableValue descriptionObserved = EMFEditProperties.value(getEditingDomain(), ProcessPackage.Literals.ELEMENT__DOCUMENTATION).observeDetail(documentSelected);
 		emfDataBindingContext.bindValue(

@@ -19,10 +19,9 @@ package org.bonitasoft.studio.properties.form.sections.actions;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
-import org.bonitasoft.studio.data.provider.DataExpressionProviderForFormOutput;
+import org.bonitasoft.studio.data.provider.DataExpressionNatureProviderForFormOutput;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
-import org.bonitasoft.studio.properties.form.provider.ExpressionViewerVariableFilter;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -39,76 +38,81 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  */
 public class FormActionsPropertySection extends AbstractBonitaDescriptionSection {
 
-    protected OperationsComposite table;
-    protected Composite mainComposite;
-    protected TabbedPropertySheetPage tabbedPropertySheetPage;
-
-    @Override
-    public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-        tabbedPropertySheetPage = aTabbedPropertySheetPage;
-        mainComposite = getWidgetFactory().createComposite(parent);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        table = createActionLinesComposite();
-        table.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-    }
-
-    protected OperationsComposite createActionLinesComposite() {
-    	AvailableExpressionTypeFilter actionFilter =  new AvailableExpressionTypeFilter(new String[]{
-    			ExpressionConstants.CONSTANT_TYPE,
-    			ExpressionConstants.VARIABLE_TYPE,
-    			ExpressionConstants.PARAMETER_TYPE,
-    			ExpressionConstants.SCRIPT_TYPE,
-    			ExpressionConstants.FORM_FIELD_TYPE
-        }) ;
-
-        final OperationsComposite operationsComposite = new OperationsComposite(tabbedPropertySheetPage, mainComposite, actionFilter, new ExpressionViewerVariableFilter(),false);
-		operationsComposite.setStorageExpressionContentProvider(new DataExpressionProviderForFormOutput());
-        return operationsComposite;
-    }
-
-    @Override
-    public void refresh() {
-        super.refresh();
-        table.refresh() ;
-    }
-
-    @Override
-    public void setInput(IWorkbenchPart part, ISelection selection) {
-        super.setInput(part, selection);
-        table.setEObject(getEObject());
-        table.setContext(new EMFDataBindingContext());
-        table.removeLinesUI();
-        table.fillTable();
-    }
-
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.eclipse.gmf.runtime.diagram.ui.properties.sections.
-     * AbstractModelerPropertySection#dispose()
-     */
-    @Override
-    public void dispose() {
-        super.dispose();
-        if(table != null){
-            table.dispose();
-        }
-    }
-
-    /**
-     * @return the mainComposite
-     */
-    public Composite getMainComposite() {
-        return mainComposite;
-    }
+	protected OperationsComposite table;
+	protected Composite mainComposite;
+	protected TabbedPropertySheetPage tabbedPropertySheetPage;
+	private Object lastEObject;
 
 	@Override
-	public String getSectionDescription() {
-		// TODO Auto-generated method stub
-		return null;
+	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
+		super.createControls(parent, aTabbedPropertySheetPage);
+		tabbedPropertySheetPage = aTabbedPropertySheetPage;
+		mainComposite = getWidgetFactory().createComposite(parent);
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
+		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		table = createActionLinesComposite();
+		table.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 	}
+
+	protected OperationsComposite createActionLinesComposite() {
+		AvailableExpressionTypeFilter actionFilter =  new AvailableExpressionTypeFilter(new String[]{
+				ExpressionConstants.CONSTANT_TYPE,
+				ExpressionConstants.VARIABLE_TYPE,
+				ExpressionConstants.PARAMETER_TYPE,
+				ExpressionConstants.SCRIPT_TYPE,
+				ExpressionConstants.FORM_FIELD_TYPE,
+				ExpressionConstants.DOCUMENT_TYPE
+		}) ;
+
+		AvailableExpressionTypeFilter storageFilter =  new AvailableExpressionTypeFilter(new String[]{
+				ExpressionConstants.VARIABLE_TYPE,
+				ExpressionConstants.DOCUMENT_REF_TYPE
+		}) ;
+
+		final OperationsComposite operationsComposite = new OperationsComposite(tabbedPropertySheetPage, mainComposite, actionFilter, storageFilter);
+		operationsComposite.setStorageExpressionNatureContentProvider(new DataExpressionNatureProviderForFormOutput());
+		return operationsComposite;
+	}
+
+
+	@Override
+	public void setInput(IWorkbenchPart part, ISelection selection) {
+		super.setInput(part, selection);
+		if(lastEObject == null || (lastEObject != null && !lastEObject.equals(getEObject()))){
+			table.setEObject(getEObject());
+			table.setContext(new EMFDataBindingContext());
+			table.removeLinesUI();
+			table.fillTable();
+			table.refresh() ;
+		}
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.gmf.runtime.diagram.ui.properties.sections.
+	 * AbstractModelerPropertySection#dispose()
+	 */
+	 @Override
+	 public void dispose() {
+		super.dispose();
+		if(table != null){
+			table.dispose();
+		}
+	 }
+
+	 /**
+	  * @return the mainComposite
+	  */
+	 public Composite getMainComposite() {
+		 return mainComposite;
+	 }
+
+	 @Override
+	 public String getSectionDescription() {
+		 // TODO Auto-generated method stub
+		 return null;
+	 }
 
 }

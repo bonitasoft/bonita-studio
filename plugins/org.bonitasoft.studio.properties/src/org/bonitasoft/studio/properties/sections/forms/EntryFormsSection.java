@@ -26,6 +26,7 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -53,11 +54,14 @@ public class EntryFormsSection extends AbstractFormsSection {
     protected Text autoLoginLogin;
     protected CLabel autoLoginLabel;
     protected DataBindingContext thisContext;
+	private EObject lastEObject;
 
     @Override
     public void setInput(IWorkbenchPart part, ISelection selection) {
         super.setInput(part, selection);
-        refreshDataBinding();
+        if(lastEObject == null || (lastEObject != null && !lastEObject.equals(getEObject()))){
+            refreshDataBinding();
+		}
     }
 
     @Override

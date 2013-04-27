@@ -44,4 +44,5 @@ Export-Package: org.bonitasoft.studio.data.attachment.repository,
  org.bonitasoft.studio.data.ui.property.section,
  org.bonitasoft.studio.data.util
 Import-Package: org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model
+ org.bonitasoft.engine.bpm.model,
+ org.bonitasoft.engine.bpm.model.document

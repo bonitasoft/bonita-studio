@@ -64,12 +64,13 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage {
     @Override
     public void dispose() {
         super.dispose();
-        if(context != null){
-            context.dispose() ;
-        }
         if(pageSupport != null){
             pageSupport.dispose() ;
         }
+        if(context != null){
+            context.dispose() ;
+        }
+    
     }
 
     public ConnectorDefinition getDefinition() {

@@ -38,4 +38,5 @@ Export-Package: org.bonitasoft.studio.expression.editor,
  org.bonitasoft.studio.expression.editor.operation,
  org.bonitasoft.studio.expression.editor.provider,
  org.bonitasoft.studio.expression.editor.viewer
-Import-Package: org.bonitasoft.engine.expression
+Import-Package: org.bonitasoft.engine.bpm.model.document,
+ org.bonitasoft.engine.expression

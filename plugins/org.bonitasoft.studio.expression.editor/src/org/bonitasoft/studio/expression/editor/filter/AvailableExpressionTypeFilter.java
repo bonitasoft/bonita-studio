@@ -32,32 +32,33 @@ import org.eclipse.jface.viewers.ViewerFilter;
  */
 public class AvailableExpressionTypeFilter extends ViewerFilter {
 
-    private final Set<String> contentTypes;
+	private final Set<String> contentTypes;
 
 
 	public AvailableExpressionTypeFilter(String[] contentTypes){
-        this.contentTypes = new HashSet<String>(Arrays.asList(contentTypes))  ;
-        if(this.contentTypes.contains(ExpressionConstants.VARIABLE_TYPE)){
-        	this.contentTypes.add(ExpressionConstants.JAVA_TYPE);
-         	this.contentTypes.add(ExpressionConstants.XPATH_TYPE);
-        }
-    }
+		this.contentTypes = new HashSet<String>(Arrays.asList(contentTypes))  ;
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-     */
-    @Override
-    public boolean select(Viewer viewer, Object context, Object element) {
-        if(element instanceof Expression){
-            return contentTypes.contains(((Expression)element).getType());
-        } else if(element instanceof IExpressionProvider){
-            return contentTypes.contains(((IExpressionProvider) element).getExpressionType());
-        }
-        return true ;
-    }
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	public boolean select(Viewer viewer, Object context, Object element) {
+		if(this.contentTypes.contains(ExpressionConstants.VARIABLE_TYPE)){
+			this.contentTypes.add(ExpressionConstants.JAVA_TYPE);
+			this.contentTypes.add(ExpressionConstants.XPATH_TYPE);
+		}
+		if(element instanceof Expression){
+			return contentTypes.contains(((Expression)element).getType());
+		} else if(element instanceof IExpressionProvider){
+			return contentTypes.contains(((IExpressionProvider) element).getExpressionType());
+		}
+		return true ;
+	}
 
 
-    public Set<String> getContentTypes() {
+	public Set<String> getContentTypes() {
 		return contentTypes;
 	}
 }

@@ -105,9 +105,9 @@ public class DataStyledTreeLabelProvider extends StyledCellLabelProvider impleme
             }
             styledString.append(decoration, StyledString.DECORATIONS_STYLER);
             if(d.getDefaultValue() != null
-                    && d.getDefaultValue().getContent() != null
-                    && !d.getDefaultValue().getContent().isEmpty()){
-                String content =  d.getDefaultValue().getContent();
+                    && d.getDefaultValue().getName() != null
+                    && !d.getDefaultValue().getName().isEmpty()){
+                String content =  d.getDefaultValue().getName();
                 content  = Messages.defaultValue+": "  + content.replaceAll("\n", " ")  ;
                 styledString.append(" -- ",StyledString.DECORATIONS_STYLER) ;
                 styledString.append(content, StyledString.QUALIFIER_STYLER);

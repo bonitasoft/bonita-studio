@@ -36,67 +36,68 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  */
 public class OperationsPropertySection extends AbstractBonitaDescriptionSection {
 
-    protected OperationsComposite operationComposite;
-    protected TabbedPropertySheetPage tabbedPropertySheetPage;
+	protected OperationsComposite operationComposite;
+	protected TabbedPropertySheetPage tabbedPropertySheetPage;
+	private Object lastEObject;
 
-    @Override
-    public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
-        super.createControls(parent, aTabbedPropertySheetPage);
-        tabbedPropertySheetPage = aTabbedPropertySheetPage;
-        final Composite  mainComposite = getWidgetFactory().createComposite(super.composite);
-        mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create());
-       //getWidgetFactory().createLabel(mainComposite, Messages.operationExplanation) ;
+	@Override
+	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
+		super.createControls(parent, aTabbedPropertySheetPage);
+		tabbedPropertySheetPage = aTabbedPropertySheetPage;
+		final Composite  mainComposite = getWidgetFactory().createComposite(super.composite);
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
+		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create());
+		//getWidgetFactory().createLabel(mainComposite, Messages.operationExplanation) ;
 
-        operationComposite = createActionLinesComposite(mainComposite);
-        operationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-    }
+		operationComposite = createActionLinesComposite(mainComposite);
+		operationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+	}
 
-    protected OperationsComposite createActionLinesComposite(Composite parent) {
-    	AvailableExpressionTypeFilter actionFilter =  new AvailableExpressionTypeFilter(new String[]{
-    			ExpressionConstants.CONSTANT_TYPE,
-    			ExpressionConstants.VARIABLE_TYPE,
-    			ExpressionConstants.SCRIPT_TYPE,
-    			ExpressionConstants.PARAMETER_TYPE
-        }) ;
+	protected OperationsComposite createActionLinesComposite(Composite parent) {
+		AvailableExpressionTypeFilter actionFilter =  new AvailableExpressionTypeFilter(new String[]{
+				ExpressionConstants.CONSTANT_TYPE,
+				ExpressionConstants.VARIABLE_TYPE,
+				ExpressionConstants.SCRIPT_TYPE,
+				ExpressionConstants.PARAMETER_TYPE,
+				ExpressionConstants.DOCUMENT_TYPE
+		}) ;
 
-        AvailableExpressionTypeFilter dataFilter =  new AvailableExpressionTypeFilter(new String[]{
-                ExpressionConstants.VARIABLE_TYPE,
-                ExpressionConstants.SEARCH_INDEX_TYPE
-        }) ;
+		AvailableExpressionTypeFilter dataFilter =  new AvailableExpressionTypeFilter(new String[]{
+				ExpressionConstants.VARIABLE_TYPE,
+				ExpressionConstants.SEARCH_INDEX_TYPE,
+				ExpressionConstants.DOCUMENT_REF_TYPE
+		}) ;
 
-        return new OperationsComposite(tabbedPropertySheetPage, parent, actionFilter, dataFilter,true);
-    }
+		return new OperationsComposite(tabbedPropertySheetPage, parent, actionFilter, dataFilter);
+	}
 
-    @Override
-    public void refresh() {
-        super.refresh();
-        operationComposite.refresh() ;
-    }
-
-    @Override
-    public void setInput(IWorkbenchPart part, ISelection selection) {
-        super.setInput(part, selection);
-        operationComposite.setEObject(getEObject());
-        operationComposite.setContext(new EMFDataBindingContext());
-        operationComposite.removeLinesUI();
-        operationComposite.fillTable();
-    }
+	@Override
+	public void setInput(IWorkbenchPart part, ISelection selection) {
+		super.setInput(part, selection);
+		if(lastEObject == null || (lastEObject != null && !lastEObject.equals(getEObject()))){
+			lastEObject = getEObject();
+			operationComposite.setEObject(getEObject());
+			operationComposite.setContext(new EMFDataBindingContext());
+			operationComposite.removeLinesUI();
+			operationComposite.fillTable();
+			operationComposite.refresh();
+		}
+	}
 
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.eclipse.gmf.runtime.diagram.ui.properties.sections.
-     * AbstractModelerPropertySection#dispose()
-     */
-    @Override
-    public void dispose() {
-        super.dispose();
-        if(operationComposite != null){
-            operationComposite.dispose();
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.gmf.runtime.diagram.ui.properties.sections.
+	 * AbstractModelerPropertySection#dispose()
+	 */
+	@Override
+	public void dispose() {
+		super.dispose();
+		if(operationComposite != null){
+			operationComposite.dispose();
+		}
+	}
 
 	@Override
 	public String getSectionDescription() {

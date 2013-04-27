@@ -72,6 +72,12 @@ public class Messages extends NLS {
     public static String messageDataId;
     public static String availableIds;
 	public static String expressionTypeToolTip;
+	public static String changeOperator;
+	public static String incompatibleExpressionTypeForOperator;
+	public static String documentValueExprected;
+    public static String cleanExpressionTitle;
+    public static String cleanExpressionMsg;
+
 
     private Messages() {
         // Do not instantiate

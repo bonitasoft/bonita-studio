@@ -16,19 +16,18 @@ package org.bonitasoft.studio.data.ui.wizard;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IWidgetContribtution;
+import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -88,8 +87,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaConventions;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.internal.core.search.JavaSearchScope;
@@ -141,9 +138,6 @@ import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 public class DataWizardPage extends WizardPage {
 
 	private static final String GENERATE_DATA_CONTRIBUTION_ID = "org.bonitasoft.studio.propertiies.generateData";
-
-	public static final String[] KEYWORDS = new String[] { BonitaConstants.API_ACCESSOR, BonitaConstants.ENGINE_EXECUTION_CONTEXT, BonitaConstants.ACTIVITY_INSTANCE_ID,
-		BonitaConstants.PROCESS_DEFINITION_ID, BonitaConstants.ROOT_PROCESS_INSTANCE_ID, BonitaConstants.PARENT_PROCESS_INSTANCE_ID };
 
 	private Data data;
 	private final EObject container;
@@ -511,23 +505,8 @@ public class DataWizardPage extends WizardPage {
 						}
 					}
 				}
-
-				if (!value.toString().isEmpty()) {
-					if (Character.isUpperCase(value.toString().charAt(0))) {
-						return ValidationStatus.error(Messages.nameMustStartWithLowerCase);
-					}
-				}
-
-				if(value.toString() != null && !value.toString().isEmpty() && Arrays.asList(KEYWORDS).contains(value.toString())){
-					return ValidationStatus.error("Name field issue:\nReserved keyword.");
-				}
-
-				final IStatus javaConventionNameStatus = JavaConventions.validateFieldName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
-				if(!javaConventionNameStatus.isOK()){
-					return ValidationStatus.error("Name field issue:\n"+javaConventionNameStatus.getMessage());
-				}
-
-				return javaConventionNameStatus;
+				
+				return new GroovyReferenceValidator(Messages.name).validate(value);
 			}
 		});
 

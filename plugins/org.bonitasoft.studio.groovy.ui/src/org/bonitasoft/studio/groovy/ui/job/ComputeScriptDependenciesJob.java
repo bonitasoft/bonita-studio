@@ -157,6 +157,14 @@ public class ComputeScriptDependenciesJob extends Job {
 						}
 					}
 				}
+				
+				final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_TYPE);
+				for (final Expression e : provider.getExpressions(context)) {
+					if (e.getName().equals(name)) {
+						deps.add(EcoreUtil.copy(e.getReferencedElements().get(0)));
+						continue variablesloop;
+					}
+				}
 
 			}
 			cache.put(expression, deps);

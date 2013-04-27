@@ -315,4 +315,7 @@ public class Messages extends NLS {
 	public static String bonitaBPMEfficiencySubscription;
 	public static String bonitaBPMPerformanceSubscription;
 	public static String corporateName;
+    public static String nameMustStartWithLowerCase;
+	public static String reservedKeyword;
+	public static String nameFieldIssue;
 }

@@ -10,7 +10,10 @@
             providerClass="org.bonitasoft.studio.data.provider.JavaExpressionProvider">
       </expressionProvider>
       <expressionProvider
-            providerClass="org.bonitasoft.studio.data.provider.DocumentExpressionProvider">
+            providerClass="org.bonitasoft.studio.data.provider.DocumentReferenceExpressionProvider">
+      </expressionProvider>
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.data.provider.DocumentObjectExpressionProvider">
       </expressionProvider>
    </extension>
    <extension

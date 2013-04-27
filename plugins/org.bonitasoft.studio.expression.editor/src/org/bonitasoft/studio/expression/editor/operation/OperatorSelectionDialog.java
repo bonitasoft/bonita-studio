@@ -73,6 +73,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
         operatorTypeList.add(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
         operatorTypeList.add(ExpressionConstants.JAVA_METHOD_OPERATOR) ;
         operatorTypeList.add(ExpressionConstants.XPATH_UPDATE_OPERATOR) ;
+        operatorTypeList.add(ExpressionConstants.SET_DOCUMENT_OPERATOR) ;
     }
 
     protected OperatorSelectionDialog(Shell parentShell,Operation operation) {
@@ -135,6 +136,8 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
                     }else{
                         return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
                     }
+                }else if(exp != null && !exp.getReferencedElements().isEmpty() && ExpressionConstants.DOCUMENT_REF_TYPE.equals(exp.getType())){
+                	 return element.equals(ExpressionConstants.SET_DOCUMENT_OPERATOR);
                 }
                 return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
             }
@@ -172,16 +175,11 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
     public void selectionChanged(SelectionChangedEvent event) {
         Expression exp = operation.getLeftOperand() ;
         String operatorType = (String) ((IStructuredSelection) event.getSelection()).getFirstElement() ;
-
-
         createOperatorEditorFor(section, operatorType, operator, exp) ;
 
         relayout() ;
-        if(!operatorType.equals(ExpressionConstants.ASSIGNMENT_OPERATOR)){
-        	enableOKButton(false) ;
-        }else{
-        	enableOKButton(true) ;
-        }
+        enableOKButton(true) ;
+        
     }
 
     private void relayout() {

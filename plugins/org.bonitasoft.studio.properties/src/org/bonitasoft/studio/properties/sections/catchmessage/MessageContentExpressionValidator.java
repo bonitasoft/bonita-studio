@@ -20,6 +20,7 @@ package org.bonitasoft.studio.properties.sections.catchmessage;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
@@ -27,24 +28,27 @@ import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
  * @author aurelie Zara
  *
  */
-public class MessageContentExpressionValidator implements IValidator {
+public class MessageContentExpressionValidator implements IExpressionValidator {
 
-    AbstractCatchMessageEvent messageEvent;
-
+    private AbstractCatchMessageEvent messageEvent;
+	private Expression inputExpression;
+	private EditingDomain domain;
+	private EObject context;
+	
     @Override
-    public IStatus validate(Object arg0) {
-        if ( messageEvent !=null && arg0 instanceof Expression){
-            String expr = ((Expression)arg0).getName();
-            if(expr == null){
+    public IStatus validate(Object value) {
+        if ( messageEvent !=null){
+            String expr = value.toString();
+            if(expr == null || expr.isEmpty()){
                 return ValidationStatus.ok();
             }
             MessageFlow incomingMessag = messageEvent.getIncomingMessag();
@@ -79,5 +83,20 @@ public class MessageContentExpressionValidator implements IValidator {
             messageEvent = (AbstractCatchMessageEvent)object;
         }
     }
+
+	@Override
+	public void setInputExpression(Expression inputExpression) {
+		this.inputExpression = inputExpression;
+	}
+
+	@Override
+	public void setDomain(EditingDomain domain) {
+		this.domain = domain;
+	}
+
+	@Override
+	public void setContext(EObject context) {
+		this.context = context;
+	}
 
 }

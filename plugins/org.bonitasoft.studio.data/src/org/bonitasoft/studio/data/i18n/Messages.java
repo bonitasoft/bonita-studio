@@ -88,7 +88,6 @@ public class Messages extends NLS {
     public static String isMultiple;
     public static String multiplicity_hint;
     public static String pickADate;
-    public static String nameMustStartWithLowerCase;
     public static String stringTypeHint;
     public static String integerTypeHint;
     public static String booleanTypeHint;
@@ -113,6 +112,7 @@ public class Messages extends NLS {
     public static String dataMoveErrorTargetCantBeSource ;
 	public static String createAndNewButton;
 	public static String documentType;
+	public static String documentReferenceType;
 
     static {
         NLS.initializeMessages("messages", Messages.class);//$NON-NLS-1$
