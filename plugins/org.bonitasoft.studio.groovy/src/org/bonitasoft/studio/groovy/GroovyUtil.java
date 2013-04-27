@@ -605,6 +605,7 @@ public class GroovyUtil {
 		return new ScriptVariable(p.getName(), p.getTypeClassname());
 	}
 
+
 	public static ScriptVariable createScriptVariable(final Expression e) {
 		if (org.bonitasoft.studio.common.ExpressionConstants.FORM_FIELD_TYPE
 				.equals(e.getType())) {
@@ -631,7 +632,9 @@ public class GroovyUtil {
 		} else if (org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE
 				.equals(e.getType())) {
 			return new ScriptVariable(e.getContent(), e.getType());
-		}
+		}else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
+			 return new ScriptVariable(e.getContent(), e.getReturnType());
+		 }
 		return null;
 	}
 }
