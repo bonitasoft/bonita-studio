@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.expression.editor.i18n;
 
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Romain Bioteau
@@ -77,6 +76,7 @@ public class Messages extends NLS {
 	public static String documentValueExprected;
     public static String cleanExpressionTitle;
     public static String cleanExpressionMsg;
+	public static String selectTarget;
 
 
     private Messages() {

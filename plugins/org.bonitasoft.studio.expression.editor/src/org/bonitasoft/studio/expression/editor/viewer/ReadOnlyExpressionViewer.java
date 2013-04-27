@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
+import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -41,6 +42,7 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 	protected void createTextControl(int style,
 			TabbedPropertySheetWidgetFactory widgetFactory) {
 		super.createTextControl(style | SWT.READ_ONLY, widgetFactory);
+		getTextControl().setMessage(Messages.selectTarget);
 	}
 	
 	@Override

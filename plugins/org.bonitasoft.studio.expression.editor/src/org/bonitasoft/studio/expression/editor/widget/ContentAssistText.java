@@ -30,6 +30,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Path;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -51,13 +52,16 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 
 	public ContentAssistText(Composite parent, ILabelProvider contentProposalLabelProvider, int style) {
 		super(parent, SWT.NONE);
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(3, 3).spacing(32, 0).create());
-		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		Point margins = new Point(3, 3);
 		if ((style & SWT.BORDER) == 0){
 			drawBorder = false;
+			margins = new Point(0, 0);
 		}else{
 			style = style ^ SWT.BORDER;
 		}
+		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(margins).spacing(32, 0).create());
+		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		
 		
 		textControl = new Text(this,style | SWT.SINGLE);
 		textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
