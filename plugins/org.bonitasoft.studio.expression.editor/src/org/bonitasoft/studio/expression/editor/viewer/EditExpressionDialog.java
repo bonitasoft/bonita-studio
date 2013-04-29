@@ -78,6 +78,7 @@ public class EditExpressionDialog extends TrayDialog {
     protected IExpressionEditor currentExpressionEditor;
     private ISelection oldSelection ;
     protected final ViewerFilter[] viewerTypeFilters;
+    private boolean isPassword;
     private final Listener openTrayListener = new Listener() {
 
         @Override
@@ -94,8 +95,9 @@ public class EditExpressionDialog extends TrayDialog {
         }
     };
     protected Control helpControl;
+	
 
-    protected EditExpressionDialog(Shell parentShell,Expression inputExpression,EObject context,EditingDomain domain, ViewerFilter[] viewerTypeFilters) {
+    protected EditExpressionDialog(Shell parentShell,boolean isPassword, Expression inputExpression,EObject context,EditingDomain domain, ViewerFilter[] viewerTypeFilters) {
         super(parentShell);
         this.inputExpression = inputExpression ;
         if(this.inputExpression == null){
@@ -104,6 +106,7 @@ public class EditExpressionDialog extends TrayDialog {
         this.context = context ;
         this.domain = domain ;
         this.viewerTypeFilters = viewerTypeFilters;
+        this.isPassword = isPassword;
         setHelpAvailable(true);
         if (isResizable()) {
             setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE
@@ -257,7 +260,7 @@ public class EditExpressionDialog extends TrayDialog {
 
         currentExpressionEditor = provider.getExpressionEditor(inputExpression,context);
         if(currentExpressionEditor != null){
-            currentExpressionEditor.createExpressionEditor(contentComposite) ;
+            currentExpressionEditor.createExpressionEditor(contentComposite,isPassword) ;
             contentComposite.layout(true, true) ;
             if(helpControl != null){
                 helpControl.setVisible(currentExpressionEditor.provideDialogTray());

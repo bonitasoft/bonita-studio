@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.Shell;
 public class GroovyScriptFileDialog extends EditExpressionDialog {
 
     public GroovyScriptFileDialog(Shell parentShell, Expression inputExpression, EObject context, EditingDomain domain, ViewerFilter[] viewerTypeFilters) {
-        super(parentShell, inputExpression, context, domain, viewerTypeFilters);
+        super(parentShell, false, inputExpression, context, domain, viewerTypeFilters);
         if (isResizable()) {
             setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE
                     | getDefaultOrientation());

@@ -36,6 +36,8 @@ public interface IExpressionEditor {
 
     Control createExpressionEditor(Composite parent) ;
 
+    Control createExpressionEditor(Composite contentComposite, boolean isPassword);
+    
     void bindExpression(EMFDataBindingContext dataBindingContext,EObject context, Expression inputExpression, ViewerFilter[] viewerTypeFilters);
 
     boolean canFinish() ;
@@ -55,4 +57,6 @@ public interface IExpressionEditor {
     Control getTextControl();
 
     IObservable getContentObservable();
+
+    
 }

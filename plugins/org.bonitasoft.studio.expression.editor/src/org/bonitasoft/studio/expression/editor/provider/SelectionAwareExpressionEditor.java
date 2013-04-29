@@ -21,6 +21,8 @@ import java.util.List;
 
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.jface.dialogs.DialogTray;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
@@ -66,5 +68,11 @@ public abstract class SelectionAwareExpressionEditor implements IExpressionEdito
     @Override
     public IObservable getContentObservable() {
         return null;
+    }
+    
+    @Override
+    public Control createExpressionEditor(Composite contentComposite,
+    		boolean isPassword) {
+    	return createExpressionEditor(contentComposite);
     }
 }

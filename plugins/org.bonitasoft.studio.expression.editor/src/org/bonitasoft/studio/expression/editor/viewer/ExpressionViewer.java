@@ -157,6 +157,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private ToolBar toolbar;
 	private List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<IExpressionToolbarContribution>();
 	private Map<String,IExpressionValidator> validatorsForType = new HashMap<String,IExpressionValidator>();
+	private boolean isPassword;
 
 	public ExpressionViewer(Composite composite,int style, EReference expressionReference) {
 		this(composite,style,null,null,expressionReference) ;
@@ -324,6 +325,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		}) ;
 
 		int indent = 0 ;
+		if ((style & SWT.PASSWORD) != 0){
+			isPassword = true;
+		}
 		if ((style & SWT.BORDER) != 0){
 			indent = 16 ;
 		}
@@ -342,7 +346,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				}
 			}
 		}
-		EditExpressionDialog dialog = new EditExpressionDialog(control.getShell(),EcoreUtil.copy(selectedExpression),editInput,editingDomain, filters.toArray(new ViewerFilter[filters.size()])) ;
+		EditExpressionDialog dialog = new EditExpressionDialog(control.getShell(),isPassword,EcoreUtil.copy(selectedExpression),editInput,editingDomain, filters.toArray(new ViewerFilter[filters.size()])) ;
 		if(dialog.open() == Dialog.OK){
 			Expression newExpression = dialog.getExpression();
 			updateSelection(newExpression) ;

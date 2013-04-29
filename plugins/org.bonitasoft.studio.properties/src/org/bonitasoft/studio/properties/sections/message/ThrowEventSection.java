@@ -25,6 +25,7 @@ import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.SendTask;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.message.commands.DeleteMessageCommand;
@@ -37,8 +38,6 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -82,6 +81,7 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
         }
     };
     protected TabbedPropertySheetPage aTabbedPropertySheetPage;
+	private Button addEventButton;
 
     @Override
     public void refresh() {
@@ -121,7 +121,7 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
         Composite buttonsComposite = getWidgetFactory().createPlainComposite(mainComposite, SWT.NONE);
         buttonsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
         buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create());
-        createAddEventButton(buttonsComposite);
+        addEventButton = createAddEventButton(buttonsComposite);
         updateEventButton = createUpdateConnectorButton(buttonsComposite);
         removeEventButton = createRemoveConnectorButton(buttonsComposite);
 
@@ -158,6 +158,12 @@ public abstract class ThrowEventSection extends AbstractBonitaDescriptionSection
 
         if(!updateEventButton.isDisposed()) {
             updateEventButton.setEnabled(selection.size() == 1);
+        }
+        
+        if(eObject instanceof SendTask){
+        	if(!addEventButton.isDisposed()) {
+        		addEventButton.setEnabled(((SendTask) eObject).getEvents().isEmpty());
+            }
         }
 
     }
