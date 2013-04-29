@@ -87,9 +87,8 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
         bot.textWithLabel("text").setText("hello world");
         bot.sleep(1000); // Due to delayed observable on databinding
         bot.button(IDialogConstants.NEXT_LABEL).click();
-        if (dataName!=null && !dataName.isEmpty()){
-        	bot.comboBox().setSelection(dataName + " (java.lang.String)");
-        }
+        SWTBotTestUtil.setOutputStorageExpressionByName(bot, dataName, 0);
+
         bot.button(IDialogConstants.FINISH_LABEL).click();
 		bot.table().select(
 				name + " -- " + connectorDefId + " (" + version
