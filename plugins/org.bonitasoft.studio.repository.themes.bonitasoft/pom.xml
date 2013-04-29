@@ -11,4 +11,51 @@
   <artifactId>org.bonitasoft.studio.repository.themes.bonitasoft</artifactId>
   <version>6.0.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
+  
+  <properties>
+  	<LNFDir>${basedir}/looknfeels/Default Application</LNFDir>
+  </properties>
+  
+  <build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							 <directory>${LNFDir}</directory>
+							 <followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Retrieve Default Look'n'Feel</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.bonitasoft.forms</groupId>
+									<artifactId>forms-design</artifactId>
+									<version>${bundle.version}</version>
+									<type>zip</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${LNFDir}</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+  
 </project>
