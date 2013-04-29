@@ -197,7 +197,7 @@ public class TimerConditionWizardPage extends WizardPage {
         if (getCondition() != null) {
             conditionContent = getCondition().getContent();
         }
-        if (conditionContent != null) {
+        if (conditionContent != null && !conditionContent.isEmpty()) {
             if (DateUtil.isDuration(conditionContent) && !ExpressionConstants.SCRIPT_TYPE.equals(getCondition().getType())) {
                 durationChoice.setSelection(true);
                 stack.topControl = durationComposite;
