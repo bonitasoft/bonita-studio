@@ -227,7 +227,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 					bot.waitUntil(new ICondition() {
 						
 						public boolean test() throws Exception {
-							return bot.textWithId(ExpressionViewer.SWTBOT_ID_EXPRESSIONVIEWER_TEXT,1).getText().equals("theInteger");
+							return bot.textWithId(ExpressionViewer.SWTBOT_ID_EXPRESSIONVIEWER_TEXT,2).getText().equals("theInteger");
 						}
 						
 						public void init(SWTBot bot) {
