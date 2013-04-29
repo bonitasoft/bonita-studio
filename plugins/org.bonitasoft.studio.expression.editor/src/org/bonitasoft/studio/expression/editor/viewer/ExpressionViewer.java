@@ -98,10 +98,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -158,6 +160,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<IExpressionToolbarContribution>();
 	private Map<String,IExpressionValidator> validatorsForType = new HashMap<String,IExpressionValidator>();
 	private boolean isPassword;
+	private DefaultToolTip textTooltip;
 
 	public ExpressionViewer(Composite composite,int style, EReference expressionReference) {
 		this(composite,style,null,null,expressionReference) ;
@@ -291,6 +294,17 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		}
 		textControl.addDisposeListener(disposeListener) ;
 
+		textTooltip = new DefaultToolTip(textControl){
+			@Override
+			protected boolean shouldCreateToolTip(Event event) {
+				return super.shouldCreateToolTip(event) && getText(event) != null;
+			}
+		};
+		textTooltip.setShift(new Point(5, 5));
+		textTooltip.setRespectMonitorBounds(true);
+		textTooltip.setPopupDelay(100);
+		
+		
 		typeDecoration = new ControlDecoration(contentAssistText.getToolbar(), SWT.LEFT ,control) ;
 		typeDecoration.setMarginWidth(0) ;
 
@@ -645,11 +659,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				final boolean isScriptType = ExpressionConstants.SCRIPT_TYPE.equals(from.toString());
 				final boolean isConnectorType = from.toString().equals(ExpressionConstants.CONNECTOR_TYPE);
 				if(isScriptType){
-					getTextControl().setToolTipText(Messages.editScriptExpressionTooltip);
+					textTooltip.setText(Messages.editScriptExpressionTooltip);
 				}else if(isConnectorType){
-					getTextControl().setToolTipText(Messages.editConnectorExpressionTooltip);
+					textTooltip.setText(Messages.editConnectorExpressionTooltip);
 				}else{
-					getTextControl().setToolTipText(null);
+					textTooltip.setText(null);
 				}
 				return !(isScriptType || isConnectorType);
 			}
