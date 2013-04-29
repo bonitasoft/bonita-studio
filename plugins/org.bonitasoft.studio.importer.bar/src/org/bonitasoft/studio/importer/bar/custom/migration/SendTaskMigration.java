@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
@@ -38,12 +39,16 @@ public class SendTaskMigration extends ReportCustomMigration {
 		for(Instance sendTask : model.getAllInstances("process.SendTask")){
 			List<Instance> events = sendTask.get("events");
 			if(events.size() > 1){
+				events.size();
+				final List<Instance> toRemove = new ArrayList<Instance>();
 				for(int i = 0 ; i< events.size() ;i++){
 					if(i != 0){
-						Instance instance = events.remove(i);
-						addReportChange((String) sendTask.get("name"), Messages.messagesProperty, sendTask.getUuid(),Messages.bind(Messages.removeMessageEventFromSendTaskDescription,instance.get("name")), Messages.messagesProperty, IStatus.ERROR);
-						model.delete(instance);
+						toRemove.add(events.get(i));
+						addReportChange((String) sendTask.get("name"), events.get(i).getType().getEClass().getName(), sendTask.getUuid(),Messages.bind(Messages.removeMessageEventFromSendTaskDescription,events.get(i).get("name")), Messages.messagesProperty, IStatus.ERROR);
 					}
+				}
+				for(Instance instance : toRemove){
+					model.delete(instance);
 				}
 			}
 		}
