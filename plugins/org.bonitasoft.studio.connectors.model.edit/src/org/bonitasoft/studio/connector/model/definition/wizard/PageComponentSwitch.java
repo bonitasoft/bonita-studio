@@ -413,7 +413,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		return null;
 	}
 
-	protected ExpressionCollectionViewer createArrayControl(Composite composite, Array object) {
+	protected ExpressionCollectionViewer createArrayControl(Composite composite, final Array object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
@@ -458,7 +458,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 						TableExpression value = (TableExpression) inputObservable.getValue();
 						tableValue.getValue();
 						if(value.getExpressions().isEmpty()){
-							return ValidationStatus.error(Messages.bind(Messages.emptyTable,getLabel(input.getName())));
+							return ValidationStatus.error(Messages.bind(Messages.emptyTable,getLabel(object.getId())));
 						}
 						return ValidationStatus.ok();
 					}
@@ -476,7 +476,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		return groupSection;
 	}
 
-	protected ExpressionCollectionViewer createListControl(Composite composite, List object) {
+	protected ExpressionCollectionViewer createListControl(Composite composite, final List object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
@@ -527,7 +527,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 						ListExpression value = (ListExpression) inputObservable.getValue();
 						listValue.getValue();
 						if(value.getExpressions().isEmpty()){
-							return ValidationStatus.error(Messages.bind(Messages.emptyList,getLabel(input.getName())));
+							return ValidationStatus.error(Messages.bind(Messages.emptyList,getLabel(object.getId())));
 						}
 						return ValidationStatus.ok();
 					}
