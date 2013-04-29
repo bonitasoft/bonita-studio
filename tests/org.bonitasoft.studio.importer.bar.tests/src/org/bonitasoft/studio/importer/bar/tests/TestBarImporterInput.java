@@ -83,5 +83,13 @@ public class TestBarImporterInput {
         assertNotNull("Fail to migrate bar file", migratedProc);
         assertNotNull("Fail to migrate bar file", migratedProc.exists());
     }
+    
+    @Test
+    public void testv59BarWithWidgetDependency() throws Exception{
+        final URL url = TestBarImporterInput.class.getResource("RicezioneDocumento--1.1.bar");
+        final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+        assertNotNull("Fail to migrate bar file", migratedProc);
+        assertNotNull("Fail to migrate bar file", migratedProc.exists());
+    }
 
 }
