@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -65,7 +66,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -103,6 +106,22 @@ public class ExpressionCollectionViewer {
 	private Button downRowSortButton;
 	private List<ViewerFilter> viewerFilters = new ArrayList<ViewerFilter>();
 	private final List<IExpressionNatureProvider> viewerExprProviders = new ArrayList<IExpressionNatureProvider>();
+	private final SelectionAdapter removeRowListener = new SelectionAdapter() {
+		@Override
+		public void widgetSelected(SelectionEvent event) {
+			super.widgetSelected(event);
+			if (viewer != null && viewer.getSelection() != null
+					&& !viewer.getSelection().isEmpty()) {
+				int indexRowToRemove = viewer.getTable()
+						.getSelectionIndex();
+				removeRow(indexRowToRemove);
+			}
+			for (Listener l : listeners) {
+				l.handleEvent(new Event());
+			}
+		}
+	};
+
 
 	public void setEditingDomain(EditingDomain editingDomain) {
 		this.editingDomain = editingDomain;
@@ -151,8 +170,7 @@ public class ExpressionCollectionViewer {
 			widgetFactory.adapt(mainComposite);
 		}
 
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0, 0)
-				.create());
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0, 0).create());
 
 		createTableViewerComposite(widgetFactory);
 		createButtonComposite(widgetFactory);
@@ -173,11 +191,8 @@ public class ExpressionCollectionViewer {
 		});
 		viewer.getTable().addMouseListener(new MouseListener() {
 
-
-
 			@Override
 			public void mouseUp(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 
@@ -188,19 +203,11 @@ public class ExpressionCollectionViewer {
 
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 		});
 
 		updateButtons();
-		// viewer.getTable().addControlListener(new ControlAdapter() {
-			// @Override
-			// public void controlResized(ControlEvent e) {
-				// refresh();
-				// }
-			// });
-		// refresh();
 	}
 
 	protected void createTableViewerComposite(
@@ -212,19 +219,13 @@ public class ExpressionCollectionViewer {
 			viewerComposite = new Composite(mainComposite, SWT.NONE);
 		}
 
-		viewerComposite.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, true).create());
-		viewerComposite.setLayout(GridLayoutFactory.fillDefaults()
-				.numColumns(2).margins(0, 0).create());
-
-		viewer = new TableViewer(viewerComposite, SWT.BORDER
-				| SWT.FULL_SELECTION);
-		viewer.getControl().setLayoutData(
-				GridDataFactory.fillDefaults().grab(true, true)
-				.hint(SWT.DEFAULT, 70).create());
+		viewerComposite.setLayoutData(GridDataFactory.fillDefaults().indent(12, 0).grab(true, true).create());
+		viewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
+		Table table = new Table(viewerComposite, SWT.BORDER| SWT.FULL_SELECTION);
+		viewer = new TableViewer(table);
+		viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 70).create());
 		viewer.getTable().setLinesVisible(true);
-		viewer.getTable().setHeaderVisible(
-				captions != null && !captions.isEmpty());
+		viewer.getTable().setHeaderVisible(captions != null && !captions.isEmpty());
 
 		provider = new ExpressionCollectionContentProvider();
 		viewer.setContentProvider(provider);
@@ -232,6 +233,28 @@ public class ExpressionCollectionViewer {
 		for (int i = 0; i < Math.max(minNbCol, getNbCols()); i++) {
 			addColumnToViewer(i);
 		}
+		viewer.getTable().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				if(minNbRow == 0 || getNbRows() < minNbRow){
+					Point point = new Point(e.x,e.y);
+					TableItem item = viewer.getTable().getItem(point);
+					int currentWidth = 0;
+					int colIndex = 0;
+					for(int i = 0; i<viewer.getTable().getColumns().length ; i++){
+						TableColumn c = viewer.getTable().getColumns()[i];
+						if(point.x >= currentWidth && point.x  < currentWidth + c.getWidth()){
+							colIndex = i;
+							break;
+						}
+						currentWidth = currentWidth + c.getWidth();
+					}
+					if(item == null){
+						addRow(colIndex);
+					}
+				}
+			}
+		});
 
 	}
 
@@ -438,6 +461,61 @@ public class ExpressionCollectionViewer {
 		refresh();
 	}
 
+	protected void addRow(final int colIndexToEdit) {
+		Object expressionInput = viewer.getInput();
+		AbstractExpression newExpression = null;
+		if (expressionInput instanceof ListExpression) {
+			newExpression = ExpressionFactory.eINSTANCE
+					.createExpression();
+			((ListExpression) expressionInput).getExpressions().add(
+					(Expression) newExpression);
+
+		} else if (expressionInput instanceof TableExpression) {
+			ListExpression rowExp = ExpressionFactory.eINSTANCE
+					.createListExpression();
+			EList<Expression> expressions = rowExp.getExpressions();
+			for (int i = 0; i < Math.max(getNbCols(), minNbCol); i++) {
+				Expression cellExpression = ExpressionFactory.eINSTANCE
+						.createExpression();
+				expressions.add(cellExpression);
+			}
+			if (editingDomain == null) {
+				editingDomain = TransactionUtil
+						.getEditingDomain(expressionInput);
+			}
+			if (editingDomain != null) {
+				editingDomain
+				.getCommandStack()
+				.execute(
+						AddCommand
+						.create(editingDomain,
+								expressionInput,
+								ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS,
+								rowExp));
+			} else {
+				((TableExpression) expressionInput).getExpressions()
+				.add(rowExp);
+
+			}
+			newExpression = rowExp;
+		}
+
+		refresh();
+		final AbstractExpression expressionToEdit= newExpression;
+		Display.getDefault().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				if (!viewer.getControl().isDisposed()) {
+					viewer.getTable().layout();
+					viewer.refresh();
+					viewer.editElement(expressionToEdit, colIndexToEdit);
+				}
+				updateButtons();
+			}
+		});
+	}
+
 	private void createColButtons(
 			TabbedPropertySheetWidgetFactory widgetFactory,
 			Composite buttonComposite) {
@@ -500,46 +578,10 @@ public class ExpressionCollectionViewer {
 		addRowButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				super.widgetSelected(e);
-				Object expressionInput = viewer.getInput();
-				Expression newExpression = null;
-				if (expressionInput instanceof ListExpression) {
-					newExpression = ExpressionFactory.eINSTANCE
-							.createExpression();
-					((ListExpression) expressionInput).getExpressions().add(
-							newExpression);
-				} else if (expressionInput instanceof TableExpression) {
-					ListExpression rowExp = ExpressionFactory.eINSTANCE
-							.createListExpression();
-					EList<Expression> expressions = rowExp.getExpressions();
-					for (int i = 0; i < Math.max(getNbCols(), minNbCol); i++) {
-						newExpression = ExpressionFactory.eINSTANCE
-								.createExpression();
-						expressions.add(newExpression);
-					}
-					if (editingDomain == null) {
-						editingDomain = TransactionUtil
-								.getEditingDomain(expressionInput);
-					}
-					if (editingDomain != null) {
-						editingDomain
-						.getCommandStack()
-						.execute(
-								AddCommand
-								.create(editingDomain,
-										expressionInput,
-										ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS,
-										rowExp));
-					} else {
-						((TableExpression) expressionInput).getExpressions()
-						.add(rowExp);
-					}
-
-				}
-
-				refresh();
-				viewer.editElement(newExpression, 0);
+				addRow(0);
 			}
+
+
 		});
 
 		removeRowButton = null;
@@ -551,21 +593,8 @@ public class ExpressionCollectionViewer {
 			removeRowButton.setText(Messages.removeRow);
 		}
 
-		removeRowButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				super.widgetSelected(event);
-				if (viewer != null && viewer.getSelection() != null
-						&& !viewer.getSelection().isEmpty()) {
-					int indexRowToRemove = viewer.getTable()
-							.getSelectionIndex();
-					removeRow(indexRowToRemove);
-				}
-				for (Listener l : listeners) {
-					l.handleEvent(new Event());
-				}
-			}
-		});
+
+		removeRowButton.addSelectionListener(removeRowListener);
 	}
 
 	protected void switchTableMode() {
@@ -614,7 +643,7 @@ public class ExpressionCollectionViewer {
 		}
 
 		final ExpressionCollectionEditingSupport editingSupport = new ExpressionCollectionEditingSupport(
-				column.getViewer(), index, editingDomain);
+				column.getViewer(), index, editingDomain,removeRowListener);
 		if (context != null) {
 			editingSupport.setInput(context);
 		}
@@ -763,7 +792,6 @@ public class ExpressionCollectionViewer {
 				updateButtons();
 			}
 		});
-
 	}
 
 	protected void updateButtons() {
@@ -802,7 +830,7 @@ public class ExpressionCollectionViewer {
 	 * @return either the List<String> describing a table, or a groovy
 	 *         expression returning a List<Object>
 	 */
-	 public AbstractExpression getValue() {
+	public AbstractExpression getValue() {
 		if (isTableMode) {
 			return (AbstractExpression) viewer.getInput();
 		} else {
@@ -814,185 +842,189 @@ public class ExpressionCollectionViewer {
 	/**
 	 * @param gridData
 	 */
-	 public void setLayoutData(Object layoutData) {
-		 mainComposite.setLayoutData(layoutData);
-		 refresh();
-	 }
+	public void setLayoutData(Object layoutData) {
+		mainComposite.setLayoutData(layoutData);
+		refresh();
+	}
 
-	 /**
-	  * @param listener
-	  */
-	 public void addModifyListener(Listener listener) {
-		 listeners.add(listener);
-		 if (expressionEditor != null) {
-			 expressionEditor.getTextControl().addListener(SWT.Modify, listener);
-		 }
-	 }
+	/**
+	 * @param listener
+	 */
+	public void addModifyListener(Listener listener) {
+		listeners.add(listener);
+		if (expressionEditor != null) {
+			expressionEditor.getTextControl().addListener(SWT.Modify, listener);
+		}
+	}
 
-	 public TableViewer getViewer() {
-		 return viewer;
-	 }
+	public TableViewer getViewer() {
+		return viewer;
+	}
 
-	 public boolean isEmpty() {
-		 if (isTableMode) {
-			 AbstractExpression value = getValue();
-			 if (value instanceof ListExpression) {
-				 return ((ListExpression) value).getExpressions().isEmpty();
-			 } else if (value instanceof TableExpression) {
-				 return ((TableExpression) value).getExpressions().isEmpty();
-			 }
-			 return true;
-		 } else {
-			 AbstractExpression value = getValue();
-			 if (value instanceof Expression) {
-				 return ((Expression) value).getContent() == null
-						 || ((Expression) value).getContent().isEmpty();
-			 }
-			 return true;
-		 }
-	 }
-
-
-	 public void setSelection(AbstractExpression input) {
-		 if (input instanceof Expression && expressionEditor != null) {
-			 initializeTableOrExpression(false);
-			 expressionEditor.setSelection(new StructuredSelection(input));
-		 } else if (input instanceof ListExpression
-				 || input instanceof TableExpression) {
-			 initializeTableOrExpression(true);
-			 viewer.setInput(input);
-			 if (input instanceof TableExpression
-					 && !((TableExpression) input).getExpressions().isEmpty()) {
-				 updateColumns();
-			 }
-		 }
-	 }
+	public boolean isEmpty() {
+		if (isTableMode) {
+			AbstractExpression value = getValue();
+			if (value instanceof ListExpression) {
+				return ((ListExpression) value).getExpressions().isEmpty();
+			} else if (value instanceof TableExpression) {
+				return ((TableExpression) value).getExpressions().isEmpty();
+			}
+			return true;
+		} else {
+			AbstractExpression value = getValue();
+			if (value instanceof Expression) {
+				return ((Expression) value).getContent() == null
+						|| ((Expression) value).getContent().isEmpty();
+			}
+			return true;
+		}
+	}
 
 
-	 public void addFilter(ViewerFilter viewerFilter) {
-		 viewerFilters.add(viewerFilter);
-		 if (expressionEditor != null) {
-			 expressionEditor.addFilter(viewerFilter);
-		 }
-	 }
+	public void setSelection(AbstractExpression input) {
+		if (input instanceof Expression && expressionEditor != null) {
+			initializeTableOrExpression(false);
+			expressionEditor.setSelection(new StructuredSelection(input));
+		} else if (input instanceof ListExpression
+				|| input instanceof TableExpression) {
+			initializeTableOrExpression(true);
+			viewer.setInput(input);
+			if (input instanceof TableExpression
+					&& !((TableExpression) input).getExpressions().isEmpty()) {
+				updateColumns();
+			}
+		}
+	}
 
 
-	 public void removeFilter(ViewerFilter viewerFilter) {
-		 viewerFilters.remove(viewerFilter);
-		 if (expressionEditor != null) {
-			 expressionEditor.removeFilter(viewerFilter);
-		 }
-	 }
-
-	 public void setInput(Object input) {
-		 context = input;
-		 if(expressionEditor != null){
-			 expressionEditor.setInput(context);
-		 }
-		 for (ExpressionCollectionEditingSupport es : editingSupports) {
-			 es.setInput(context);
-			 if(viewerFilters.size() > editingSupports.indexOf(es)  ){
-				 ViewerFilter filter = viewerFilters.get(editingSupports.indexOf(es));
-				 if(filter != null){
-					 es.addFilter(filter);
-				 }
-
-			 }
-			 if(viewerExprProviders.size() > editingSupports.indexOf(es)  ){
-				 IExpressionNatureProvider natureProvider = viewerExprProviders.get(editingSupports.indexOf(es));
-				 if(natureProvider != null){
-					 es.setExpressionNatureProvider(natureProvider);
-				 }
-
-			 }
-
-		 }
-	 }
+	public void addFilter(ViewerFilter viewerFilter) {
+		viewerFilters.add(viewerFilter);
+		if (expressionEditor != null) {
+			expressionEditor.addFilter(viewerFilter);
+		}
+	}
 
 
-	 public void addExpressionModeListener(IExpressionModeListener listener) {
-		 modeListeners.add(listener);
-	 }
+	public void removeFilter(ViewerFilter viewerFilter) {
+		viewerFilters.remove(viewerFilter);
+		if (expressionEditor != null) {
+			expressionEditor.removeFilter(viewerFilter);
+		}
+	}
 
-	 public void removeExpressionModeListener(IExpressionModeListener listener) {
-		 modeListeners.remove(listener);
-	 }
+	public void setInput(Object input) {
+		context = input;
+		if(expressionEditor != null){
+			expressionEditor.setInput(context);
+		}
+		for (ExpressionCollectionEditingSupport es : editingSupports) {
+			es.setInput(context);
+			if(viewerFilters.size() > editingSupports.indexOf(es)  ){
+				ViewerFilter filter = viewerFilters.get(editingSupports.indexOf(es));
+				if(filter != null){
+					es.addFilter(filter);
+				}
+
+			}
+			if(viewerExprProviders.size() > editingSupports.indexOf(es)  ){
+				IExpressionNatureProvider natureProvider = viewerExprProviders.get(editingSupports.indexOf(es));
+				if(natureProvider != null){
+					es.setExpressionNatureProvider(natureProvider);
+				}
+
+			}
+
+		}
+	}
 
 
-	 public Button getAddRowButton() {
-		 return addRowButton;
-	 }
+	public void addExpressionModeListener(IExpressionModeListener listener) {
+		modeListeners.add(listener);
+	}
 
-	 public void setViewerFilters(List<ViewerFilter> viewerFilters) {
-		 this.viewerFilters = viewerFilters;
-		 if(expressionEditor != null){
-			 for(ViewerFilter filter : viewerFilters){
-				 expressionEditor.addFilter(filter);
-			 }
-		 }
-	 }
+	public void removeExpressionModeListener(IExpressionModeListener listener) {
+		modeListeners.remove(listener);
+	}
 
-	 public Button getRemoveRowButton() {
-		 return removeRowButton;
-	 }
 
-	 private int getNbCols() {
-		 Object input = viewer.getInput();
-		 if (input != null) {
-			 if (input instanceof ListExpression) {
-				 return 1;
-			 } else {
-				 EList<ListExpression> expressions = ((TableExpression) input)
-						 .getExpressions();
-				 return expressions.isEmpty() ? 0 : expressions.get(0)
-						 .getExpressions().size();
-			 }
-		 } else {
-			 return 0;
-		 }
-	 }
+	public Button getAddRowButton() {
+		return addRowButton;
+	}
 
-	 private int getNbRows() {
-		 Object input = viewer.getInput();
-		 if (input != null) {
-			 if (input instanceof TableExpression) {
-				 return ((TableExpression) input).getExpressions().size();
-			 } else {
-				 return ((ListExpression) input).getExpressions().size();
-			 }
-		 } else {
-			 return 0;
-		 }
-	 }
+	public void setViewerFilters(List<ViewerFilter> viewerFilters) {
+		this.viewerFilters = viewerFilters;
+		if(expressionEditor != null){
+			for(ViewerFilter filter : viewerFilters){
+				expressionEditor.addFilter(filter);
+			}
+		}
+	}
 
-	 public void setAddRowLabel(String addCorrelation) {
-		 addRowButton.setText(addCorrelation);
-	 }
+	public Button getRemoveRowButton() {
+		return removeRowButton;
+	}
 
-	 public void setRemoveRowLabel(String removeCorrelation) {
-		 removeRowButton.setText(removeCorrelation);
-	 }
+	private int getNbCols() {
+		Object input = viewer.getInput();
+		if (input != null) {
+			if (input instanceof ListExpression) {
+				return 1;
+			} else {
+				EList<ListExpression> expressions = ((TableExpression) input)
+						.getExpressions();
+				return expressions.isEmpty() ? 0 : expressions.get(0)
+						.getExpressions().size();
+			}
+		} else {
+			return 0;
+		}
+	}
 
-	 public void addExpressionNatureProvider(IExpressionNatureProvider expressionNatureProvider) {
-		 viewerExprProviders.add(expressionNatureProvider);
-		 if(editingSupports != null && !editingSupports.isEmpty()){
-			 for(int i = 0 ; i< editingSupports.size() ;i++){
-				 if(i < viewerExprProviders.size()){
-					 editingSupports.get(i).setExpressionNatureProvider(viewerExprProviders.get(i));
-				 }
-			 }
-		 }
-	 }
+	private int getNbRows() {
+		Object input = viewer.getInput();
+		if (input != null) {
+			if (input instanceof TableExpression) {
+				return ((TableExpression) input).getExpressions().size();
+			} else {
+				return ((ListExpression) input).getExpressions().size();
+			}
+		} else {
+			return 0;
+		}
+	}
 
-	 public void removeExpressionNatureProvider(int index){
-		 if(editingSupports != null && !editingSupports.isEmpty()){
-			 if(index < editingSupports.size()){
-				 editingSupports.get(index).setExpressionNatureProvider(null);
-			 }
-		 }
-		 if(index < viewerExprProviders.size()){
-			 viewerExprProviders.remove(index);
-		 }
-	 }
+	public void setAddRowLabel(String addCorrelation) {
+		if(addRowButton != null){
+			addRowButton.setText(addCorrelation);
+		}
+	}
+
+	public void setRemoveRowLabel(String removeCorrelation) {
+		if(removeRowButton != null){
+			removeRowButton.setText(removeCorrelation);
+		} 
+	}
+
+	public void addExpressionNatureProvider(IExpressionNatureProvider expressionNatureProvider) {
+		viewerExprProviders.add(expressionNatureProvider);
+		if(editingSupports != null && !editingSupports.isEmpty()){
+			for(int i = 0 ; i< editingSupports.size() ;i++){
+				if(i < viewerExprProviders.size()){
+					editingSupports.get(i).setExpressionNatureProvider(viewerExprProviders.get(i));
+				}
+			}
+		}
+	}
+
+	public void removeExpressionNatureProvider(int index){
+		if(editingSupports != null && !editingSupports.isEmpty()){
+			if(index < editingSupports.size()){
+				editingSupports.get(index).setExpressionNatureProvider(null);
+			}
+		}
+		if(index < viewerExprProviders.size()){
+			viewerExprProviders.remove(index);
+		}
+	}
 
 }

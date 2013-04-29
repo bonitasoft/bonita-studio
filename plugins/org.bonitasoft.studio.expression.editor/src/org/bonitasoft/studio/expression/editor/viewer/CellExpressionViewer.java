@@ -29,8 +29,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -38,9 +36,9 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  *
  */
 public class CellExpressionViewer extends ExpressionViewer {
+	
 	private int colIndex;
 	private String fullText="";
-	
 	
 	public CellExpressionViewer(Composite composite, int style,
 			TabbedPropertySheetWidgetFactory widgetFactory,
@@ -51,7 +49,7 @@ public class CellExpressionViewer extends ExpressionViewer {
 
 	@Override
 	 protected void createToolbar(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
-		 Link editControl = new Link(control, SWT.NONE) ;
+		 final Link editControl = new Link(control, SWT.NO_FOCUS) ;
          editControl.setText("<A>"+Messages.editAndContinue+"</A>") ;
          editControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE)) ;
          editControl.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
@@ -68,33 +66,34 @@ public class CellExpressionViewer extends ExpressionViewer {
 	
 	@Override
 	protected Converter getNameConverter(){
-		Converter nameConverter = new Converter(String.class,String.class){
-
-			@Override
-			public Object convert(Object fromObject) {
-				String input  = (String) fromObject ;
-                Composite composite = getTextControl().getParent().getParent();
-                int width = 150;
-                if(composite instanceof Table){
-                	  width=((Table)composite).getColumn(colIndex).getWidth();
-                }else if(composite instanceof Tree){
-                	  width=((Tree)composite).getColumn(colIndex).getWidth();
-                }
-                String troncatedLabel = getTroncatedLabel(input,width);
-                if (input != null && !fullText.equals(input) && !input.equals(getTroncatedLabel(fullText, width))){
-                		setFullText(input);
-                }
-                getTextControl().setText(troncatedLabel);
-                getTextControl().setSelection(troncatedLabel.length());
-                updateContentType(getContentTypeFromInput(fullText)) ;
-                updateContent(getContentFromInput(fullText)) ;
-                refresh() ;
-
-                return  fullText;
-			}
-    		
-    	};
-    	return nameConverter;
+		return super.getNameConverter();
+//		Converter nameConverter = new Converter(String.class,String.class){
+//
+//			@Override
+//			public Object convert(Object fromObject) {
+//				String input  = (String) fromObject ;
+//                Composite composite = getTextControl().getParent().getParent();
+//                int width = 150;
+//                if(composite instanceof Table){
+//                	  width=((Table)composite).getColumn(colIndex).getWidth();
+//                }else if(composite instanceof Tree){
+//                	  width=((Tree)composite).getColumn(colIndex).getWidth();
+//                }
+//                String troncatedLabel = getTroncatedLabel(input,width);
+//                if (input != null && !fullText.equals(input) && !input.equals(getTroncatedLabel(fullText, width))){
+//                		setFullText(input);
+//                }
+//                getTextControl().setText(troncatedLabel);
+//                getTextControl().setSelection(troncatedLabel.length());
+//                updateContentType(getContentTypeFromInput(fullText)) ;
+//                updateContent(getContentFromInput(fullText)) ;
+//                refresh() ;
+//
+//                return  fullText;
+//			}
+//    		
+//    	};
+//    	return nameConverter;
 	}
 	
 	

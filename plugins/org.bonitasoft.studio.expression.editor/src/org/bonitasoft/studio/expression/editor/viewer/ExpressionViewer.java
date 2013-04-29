@@ -157,7 +157,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private ToolBar toolbar;
 	private List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<IExpressionToolbarContribution>();
 	private Map<String,IExpressionValidator> validatorsForType = new HashMap<String,IExpressionValidator>();
-	private boolean cellEditor = false;;
 
 	public ExpressionViewer(Composite composite,int style, EReference expressionReference) {
 		this(composite,style,null,null,expressionReference) ;
@@ -327,9 +326,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		int indent = 0 ;
 		if ((style & SWT.BORDER) != 0){
 			indent = 16 ;
-			cellEditor = false;
-		}else{
-			cellEditor = true;
 		}
 		contentAssistText.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).indent(indent, 0).grab(true, false).create()) ;
 	}
@@ -406,11 +402,12 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 	@Override
 	public void setSelection(ISelection selection, boolean reveal) {
-		bindExpression() ;
+
 		if(selection instanceof IStructuredSelection){
 			Object sel = ((IStructuredSelection) selection).getFirstElement() ;
 			if(sel instanceof Expression){
 				selectedExpression = (Expression) sel ;
+				bindExpression() ;
 				if(editingDomain == null){
 					editingDomain = TransactionUtil.getEditingDomain(selectedExpression);
 				}
@@ -665,7 +662,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 
 	protected void updateContent(String newContent) {
-		if(!newContent.equals(selectedExpression.getContent())){
+		if(newContent != null && !newContent.equals(selectedExpression.getContent())){
 			if(editingDomain != null){
 				editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT, newContent)) ;
 			}else{
@@ -697,7 +694,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 
 	protected String getContentFromInput(String input) {
-		if(selectedExpression.getType().equals(ExpressionConstants.SCRIPT_TYPE)){
+		if(selectedExpression.getType().equals(ExpressionConstants.SCRIPT_TYPE) || selectedExpression.getType().equals(ExpressionConstants.PATTERN_TYPE)){
 			return selectedExpression.getContent() ; //NO CONTENT UPDATE WHEN TYPE IS SCRIPT
 		}
 
@@ -721,10 +718,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	}
 
 	protected String getContentTypeFromInput(String input) {
-		String expressionType = ExpressionConstants.CONSTANT_TYPE;
-		if(selectedExpression != null){
-			expressionType = selectedExpression.getType() ;
-		}
+		Assert.isNotNull(selectedExpression);
+		String	expressionType = selectedExpression.getType() ;
 		if(CONSTANT_TYPE.equals(expressionType)){
 			return expressionType;
 		}
@@ -737,6 +732,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			return ExpressionConstants.CONDITION_TYPE ;
 		}else if(ExpressionConstants.CONNECTOR_TYPE.equals(expressionType)){
 			return ExpressionConstants.CONNECTOR_TYPE ;
+		}else if(ExpressionConstants.PATTERN_TYPE.equals(expressionType)){
+			return ExpressionConstants.PATTERN_TYPE ;
 		}
 
 
@@ -769,20 +766,18 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			Image icon = getLabelProviderImage(labelProvider, selectedExpression);
 			ExpressionTypeLabelProvider expTypeProvider = new ExpressionTypeLabelProvider(); 
 			String desc = expTypeProvider.getText(selectedExpression.getType());
-			if(!cellEditor){
-				typeDecoration.setImage(icon) ;
-				typeDecoration.setDescriptionText(desc);
-				if(!editing){
-					if(selectedExpression.getName() == null || selectedExpression.getName().isEmpty()){
-						if(!ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())){
-							if( typeDecoration.isVisible()){
-								typeDecoration.hide() ;
-							}
+			typeDecoration.setImage(icon) ;
+			typeDecoration.setDescriptionText(desc);
+			if(!editing){
+				if(selectedExpression.getName() == null || selectedExpression.getName().isEmpty()){
+					if(!ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())){
+						if( typeDecoration.isVisible()){
+							typeDecoration.hide() ;
 						}
-					}else{
-						if(!typeDecoration.isVisible()){
-							typeDecoration.show() ;
-						}
+					}
+				}else{
+					if(!typeDecoration.isVisible()){
+						typeDecoration.show() ;
 					}
 				}
 			}

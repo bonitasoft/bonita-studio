@@ -126,13 +126,14 @@ public class PatternExpressionViewer extends Composite {
 			mc.show(getViewerControl());
 			helpDecoration.show();
 			mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(15, 25, 0, 0).create());
+			bindPatternExpression();
 		}else{
 			mc.hide(getViewerControl());
 			mc.show(expressionViewer.getControl());
 			helpDecoration.hide();
 			mc.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+			bindExpressionViewer();
 		}
-		bindExpression();
 		mc.layout(true, true);
 	}
 
@@ -140,9 +141,11 @@ public class PatternExpressionViewer extends Composite {
 		if(MessageDialog.openQuestion(mc.getShell(), Messages.eraseExpressionTitle,Messages.eraseExpressionMsg)){
 			if(!expressionMode()){
 				showExpressionViewer();
+				bindExpressionViewer();
 				mc.layout(true, true);
 			}else{
 				showTextViewer();
+				bindPatternExpression();
 			}
 		}
 	}
@@ -200,6 +203,7 @@ public class PatternExpressionViewer extends Composite {
 		if(mandatoryFieldLabel != null){
 			expressionViewer.setMandatoryField(mandatoryFieldLabel, context);
 		}
+		expressionViewer.setExternalDataBindingContext(context);
 		expressionViewer.setSelection(new StructuredSelection(expression));
 	}
 

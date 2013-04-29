@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
@@ -50,22 +51,24 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 	protected final List<ViewerFilter> filters;
 	protected EditingDomain editingDomain;
 	private IExpressionNatureProvider expressionNatureProvider;
+	private SelectionListener removeRowListener;
 
 	/**
 	 * @param viewer
 	 * @param textOrDataFactory
 	 * @param dontUseFormField
 	 */
-	public ExpressionCollectionEditingSupport(ColumnViewer viewer, int colIndex) {
-		this(viewer, colIndex, null);
+	public ExpressionCollectionEditingSupport(ColumnViewer viewer, int colIndex, SelectionListener removeRowListener) {
+		this(viewer, colIndex, null, removeRowListener);
 	}
 
 	public ExpressionCollectionEditingSupport(ColumnViewer viewer,
-			int colIndex, EditingDomain editingDomain) {
+			int colIndex, EditingDomain editingDomain, SelectionListener removeRowListener) {
 		super(viewer);
 		this.colIndex = colIndex;
 		filters = new ArrayList<ViewerFilter>();
 		this.editingDomain = editingDomain;
+		this.removeRowListener = removeRowListener;
 	}
 
 	@Override
@@ -91,7 +94,7 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 	protected CellEditor getCellEditor(Object element) {
 		ExpressionViewerCellEditor editor = new ExpressionViewerCellEditor(
 				getViewer(), (Composite) getViewer().getControl(),
-				editingDomain,colIndex);
+				editingDomain,colIndex,removeRowListener);
 		if (expressionNatureProvider != null) {
 			editor.setExpressionNatureProvider(expressionNatureProvider);
 		}
