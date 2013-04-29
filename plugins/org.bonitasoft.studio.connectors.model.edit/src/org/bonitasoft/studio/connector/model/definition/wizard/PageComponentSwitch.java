@@ -327,8 +327,15 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			if(desc != null && !desc.isEmpty()){
 				viewer.setMessage(desc,IStatus.INFO) ;
 			}
+			if(((Expression) parameter.getExpression()).getName() == null){
+				Expression falseExp = ((Expression) parameter.getExpression());
+				falseExp.setContent(Boolean.FALSE.toString());
+				falseExp.setName(Boolean.FALSE.toString());
+				falseExp.setContent(Boolean.FALSE.toString());
+				falseExp.setReturnType(Boolean.class.getName());
+				falseExp.setType(ExpressionConstants.CONSTANT_TYPE);
+			}
 			viewer.setSelection(new StructuredSelection(parameter.getExpression()));
-			context.bindValue(ViewersObservables.observeSingleSelection(viewer), EMFObservables.observeValue(parameter, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
 			return  viewer;
 		}
 		return null;

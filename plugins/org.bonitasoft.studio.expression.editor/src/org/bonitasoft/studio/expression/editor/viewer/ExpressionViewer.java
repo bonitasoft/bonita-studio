@@ -127,7 +127,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private AutoCompletionField autoCompletion;
 	protected EMFDataBindingContext internalDataBindingContext;
 	protected EditingDomain editingDomain;
-	private Expression selectedExpression;
+	protected Expression selectedExpression;
 	private final Set<ViewerFilter> filters;
 	private String example;
 	private ControlDecoration messageDecoration;
