@@ -69,7 +69,7 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
 		Label valueLabel = new Label(mainComposite, SWT.NONE) ;
 		valueLabel.setText(Messages.value) ;
 		if(isPassword){
-			valueText = new Text(mainComposite, SWT.BORDER | SWT.PASSWORD | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL) ;
+			valueText = new Text(mainComposite, SWT.BORDER | SWT.PASSWORD) ;
 		}else{
 			valueText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL) ;
 		}
