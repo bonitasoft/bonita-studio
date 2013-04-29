@@ -31,6 +31,7 @@ import junit.framework.Assert;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Task;
@@ -46,7 +47,11 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTabItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -57,7 +62,7 @@ import org.junit.Test;
  * @author Florine Boudin
  *
  */
-public class TestMultiInstantiation extends SWTBotGefTestCase {
+public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotConstants {
 
     private static final String PAGEFLOW_LABEL = "Pageflow";
 	private static boolean disablePopup;
@@ -153,13 +158,13 @@ public class TestMultiInstantiation extends SWTBotGefTestCase {
         gmfEditor = bot.gefEditor("Step1");
 
         // configure the nbTicketsAvailable widget to a Message field
-        setWidgetProperties(gmfEditor,  "nbTicketsAvailable",  null, "Message", null,  null);
+        setWidgetProperties(gmfEditor,  "nbTicketsAvailable",  null, "Message", null,0,  null);
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
         SWTBotTestUtil.setScriptExpression( bot, "nbTicketsAvailable",  "\"Only \"+nbTicketsAvailable+\" tickets available.\"",  "java.lang.String" );
 
 
         // configure the nbTickets widget to a text field
-        setWidgetProperties(gmfEditor,  "nbTickets",  "Nbr de Tickets à reserver", "Text field", "0",  "nbTickets (java.lang.Integer)");
+        setWidgetProperties(gmfEditor,  "nbTickets",  "Nbr de Tickets à reserver", "Text field", "0",  1, "nbTickets");
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
         SWTBotTestUtil.setScriptExpression( bot, "nbTickets",  "Integer.valueOf(field_nbTickets)",  "java.lang.Integer" );
 
@@ -257,7 +262,8 @@ public class TestMultiInstantiation extends SWTBotGefTestCase {
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Operations");
         bot.button("Add").click();
 
-        bot.comboBox().setSelection("vip (java.util.List) -- TYPE_VARIABLE");
+     
+        SWTBotTestUtil.setOutputStorageExpressionByName(bot,"vip",0);
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
         String expressionScript = "List vipList = new ArrayList(vip)\nvipList.remove(vipName)\nreturn vipList";
         SWTBotTestUtil.setScriptExpression( bot,"removeUser", expressionScript, "java.util.List");
@@ -436,7 +442,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase {
         propertyBot.setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
         SWTBotTable table = bot.table();
-        table.select("vip -- java.util.List -- Default value: [\"Armelle\",\"Ben\",\"Cedric\",\"Damien\"]");
+        table.select("vip -- java.util.List -- Default value: vipScript");
         bot.button("Remove").click();
         bot.waitUntil(Conditions.shellIsActive(deleteDataDialogTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
@@ -489,7 +495,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase {
      * @param outputOperation
      */
     private void setWidgetProperties(SWTBotGefEditor gmfEditor, String widgetName, String widgetLabel, String widgetFieldType,
-            String initValue, String outputOperation) {
+            String initValue, int outputViewerIndex,String outputOperation) {
 
         gmfEditor.getEditPart(widgetName).click();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
@@ -506,10 +512,8 @@ public class TestMultiInstantiation extends SWTBotGefTestCase {
             bot.textWithLabel(Action_InitialValue).setText(initValue);
         }
         if(outputOperation!=null){
-            bot.comboBoxWithLabel("Output operation").setSelection(outputOperation);
+        	SWTBotTestUtil.setOutputStorageExpressionByName(bot, outputOperation, outputViewerIndex);
         }
-
-
     }
 
 

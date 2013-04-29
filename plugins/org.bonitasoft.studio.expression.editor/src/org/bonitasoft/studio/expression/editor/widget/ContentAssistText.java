@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.ToolItem;
  */
 public class ContentAssistText extends Composite implements SWTBotConstants {
 
+
 	private Text textControl;
 	private AutoCompletionField autoCompletion;
 	private boolean drawBorder = true;
@@ -90,6 +91,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		tb.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		tb.setLayoutData(GridDataFactory.swtDefaults().create());
 		final ToolItem ti = new ToolItem(tb, SWT.FLAT | SWT.NO_FOCUS);
+		ti.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN);
 		ti.setImage(Pics.getImage("resize_S.gif"));
 		ti.addSelectionListener(new SelectionAdapter() {
 

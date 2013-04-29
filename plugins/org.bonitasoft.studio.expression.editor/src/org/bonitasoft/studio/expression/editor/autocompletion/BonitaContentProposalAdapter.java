@@ -13,6 +13,7 @@ package org.bonitasoft.studio.expression.editor.autocompletion;
 
 import java.util.ArrayList;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.bindings.keys.KeyStroke;
@@ -68,7 +69,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @since 3.2
  */
-public class BonitaContentProposalAdapter {
+public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 	/*
 	 * The lightweight popup used to show content proposals for a text field. If
@@ -559,6 +560,7 @@ public class BonitaContentProposalAdapter {
 
 		private static final int TB_OFFSET = 32;
 
+
 		/*
 		 * The listener installed on the target control.
 		 */
@@ -618,6 +620,12 @@ public class BonitaContentProposalAdapter {
 			this.proposals = proposals;
 		}
 
+		@Override
+		protected void configureShell(Shell shell) {
+			super.configureShell(shell);
+			shell.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_SHELL);
+		}
+		
 		/*
 		 * (non-Javadoc)
 		 * @see org.eclipse.jface.dialogs.PopupDialog#getForeground()
@@ -659,7 +667,7 @@ public class BonitaContentProposalAdapter {
 			} else {
 				proposalTable = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 			}
-
+			proposalTable.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_TABLE);
 			// set the proposals to force population of the table.
 			setProposals(filterProposals(proposals, filterText));
 
