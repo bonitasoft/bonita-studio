@@ -233,8 +233,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 
 
     private void createServerSocket() {
-        BOSWebServerManager.getInstance().copyTomcatBundleInWorkspace(monitor) ;
-        BonitaHomeUtil.initBonitaHome();
         if(PlatformUtil.isHeadless()){
             return ;
         }

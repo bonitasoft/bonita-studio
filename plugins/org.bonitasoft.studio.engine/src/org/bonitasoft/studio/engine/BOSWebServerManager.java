@@ -128,7 +128,8 @@ public class BOSWebServerManager {
 		File tomcatFolder = null;
 		try {
 			final File targetFolder = new File(tomcatInstanceLocation);
-			if(!targetFolder.exists()){
+			final File tomcatLib = new File(targetFolder,"lib");
+			if(!tomcatLib.exists()){
 				BonitaStudioLog.debug("Copying tomcat bundle in worksapce...", EnginePlugin.PLUGIN_ID);
 				URL url = ProjectUtil.getConsoleLibsBundle().getResource("tomcat") ;
 				tomcatFolder = new File(FileLocator.toFileURL(url).getFile());
@@ -147,6 +148,8 @@ public class BOSWebServerManager {
 	 */
 	public synchronized void startServer(IProgressMonitor monitor) {
 		if(!serverIsStarted()){
+			BonitaHomeUtil.initBonitaHome();
+			copyTomcatBundleInWorkspace(monitor);
 			monitor.subTask(Messages.startingWebServer);
 			if(BonitaStudioLog.isLoggable(IStatus.OK)){
 				BonitaStudioLog.debug("Starting tomcat...", EnginePlugin.PLUGIN_ID);
