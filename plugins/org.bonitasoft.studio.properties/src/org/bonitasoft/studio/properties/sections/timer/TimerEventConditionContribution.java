@@ -182,7 +182,7 @@ public class TimerEventConditionContribution implements IExtensibleGridPropertyS
         } else if (DateUtil.isDuration(condition.getContent())) {
             conditionLabel = DateUtil.getDisplayDuration(condition.getContent());
         } else {
-            conditionLabel = condition.getContent();
+            conditionLabel = condition.getName();
         }
         return conditionLabel;
     }
