@@ -51,7 +51,8 @@ public class WidgetMigration extends ReportCustomMigration {
 	public void migrateBefore(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance widget : model.getAllInstances("form.Widget")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+			final Instance widgetContainer = widget.getContainer();
+			if(widgetContainer != null && !(widgetContainer.instanceOf("expression.Expression"))){
 				final Instance action = widget.get("script");
 				if(action != null){
 					final String inputScript = action.get("inputScript");
@@ -177,7 +178,8 @@ public class WidgetMigration extends ReportCustomMigration {
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance widget : model.getAllInstances("form.Widget")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+			final Instance widgetContainer = widget.getContainer();
+			if(widgetContainer != null && !(widgetContainer.instanceOf("expression.Expression"))){
 				setWidgetActions(widget);
 				setReturnTypeModifier(widget);
 				setInputScripts(widget, model);

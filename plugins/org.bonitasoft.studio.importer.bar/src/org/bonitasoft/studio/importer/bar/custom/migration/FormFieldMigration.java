@@ -43,12 +43,14 @@ public class FormFieldMigration extends ReportCustomMigration {
 	public void migrateBefore(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance widget : model.getAllInstances("form.FormField")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+			final Instance widgetContainer = widget.getContainer();
+			if(widgetContainer != null && !(widgetContainer.instanceOf("expression.Expression"))){
 				storeExampleMessages(widget);
 			}
 		}
 		for(Instance widget : model.getAllInstances("form.MultipleValuatedFormField")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+			final Instance widgetContainer = widget.getContainer();
+			if(widgetContainer != null && !(widgetContainer.instanceOf("expression.Expression"))){
 				storeDefaultValues(widget);
 				storeDefaultValuesAfterEvent(widget);
 			}
@@ -83,12 +85,14 @@ public class FormFieldMigration extends ReportCustomMigration {
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance widget : model.getAllInstances("form.FormField")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+			final Instance widgetContainer = widget.getContainer();
+			if(widgetContainer != null && !(widgetContainer.instanceOf("expression.Expression"))){
 				setExampleMessage(model, widget);
 			}
 		}
 		for(Instance widget : model.getAllInstances("form.MultipleValuatedFormField")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+			final Instance widgetContainer = widget.getContainer();
+			if(widgetContainer != null && !(widgetContainer.instanceOf("expression.Expression"))){
 				setDefaultValue(model, widget);
 				setDefaultValueAfterEvent(model, widget);
 			}

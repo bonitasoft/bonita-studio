@@ -45,7 +45,8 @@ public class DuplicableMigration extends ReportCustomMigration {
 	public void migrateBefore(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance widget : model.getAllInstances("form.Duplicable")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+			final Instance widgetContainer = widget.getContainer();
+			if(widgetContainer != null && !(widgetContainer.instanceOf("expression.Expression"))){
 				storeMaxNumberOfDuplications(widget);
 				storeMinNumberOfDuplications(widget);
 				storeDisplayLabelForAdds(widget);
@@ -104,7 +105,8 @@ public class DuplicableMigration extends ReportCustomMigration {
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance widget : model.getAllInstances("form.Duplicable")){
-			if(!(widget.getContainer().instanceOf("expression.Expression"))){
+			final Instance widgetContainer = widget.getContainer();
+			if(widgetContainer != null && !(widgetContainer.instanceOf("expression.Expression"))){
 				setMaxNumberOfDuplications(widget,model);
 				setMinNumberOfDuplications(widget,model);
 				setDisplayLabelForAdds(widget,model);
