@@ -67,7 +67,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 
 
 		textControl = new Text(this,style | SWT.SINGLE);
-
+		textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		textControl.addFocusListener(new FocusListener() {
 			
