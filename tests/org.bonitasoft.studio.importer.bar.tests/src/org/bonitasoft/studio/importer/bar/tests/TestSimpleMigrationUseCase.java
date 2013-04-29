@@ -559,5 +559,18 @@ public class TestSimpleMigrationUseCase {
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
+	
+	@Test
+	public void testSendTaskMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("TestSendTaskMigration--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<AbstractKPIBinding> messages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.MESSAGE);
+		assertTrue("Send Task should have one message only",messages.size() == 1);
+		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
 
 }

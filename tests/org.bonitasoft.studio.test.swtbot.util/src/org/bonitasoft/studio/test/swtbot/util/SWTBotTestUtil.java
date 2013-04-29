@@ -929,6 +929,18 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 		
 	}
+
+	public static void setOutputStorageExpressionByName(SWTBot bot,String storageExpressionName, int index) {
+		bot.toolbarButtonWithId(SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN,index).click();
+    	final SWTBot proposalBot = bot.shellWithId(SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_SHELL).bot();
+    	final SWTBotTable proposalTAble = proposalBot.tableWithId(SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_TABLE);
+		int row = proposalTAble.indexOf(storageExpressionName, 0);
+		if(row == -1){
+			throw new WidgetNotFoundException(storageExpressionName + " not found in proposals");
+		}
+		proposalTAble.select(row);
+		SWTBotTestUtil.pressEnter();
+	}
 	
 	
 }
