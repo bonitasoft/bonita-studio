@@ -19,6 +19,7 @@ package org.bonitasoft.studio.properties.test;
 
 import java.io.IOException;
 
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -37,7 +38,7 @@ import org.junit.runner.RunWith;
  */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class TestThrowCatchMessage extends SWTBotGefTestCase {
+public class TestThrowCatchMessage extends SWTBotGefTestCase implements SWTBotConstants {
     private final String catchMessageEventName="send order";
     private final String sectionTitle="Messages";
     private final String messageContentSectionTitle="Message content";
@@ -137,15 +138,14 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
         SWTBotTestUtil.selectTabbedPropertyView(bot, messageContentSectionTitle);
         bot.button(Messages.autoFillMessageContent).click();
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.comboBox()),5000);
-        assertEquals(bot.comboBox(0).selection(),messageContent1+" ("+String.class.getName()+")");
-        assertEquals(bot.comboBox(1).selection(),messageContent2+" ("+String.class.getName()+")");
-        assertEquals(bot.comboBox(2).selection(),messageContent3+" ("+String.class.getName()+")");
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.text()),5000);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT)),5000);
+        assertEquals(bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT,0).getText(),messageContent1);
+        assertEquals(bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT,2).getText(),messageContent2);
+        assertEquals(bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT,4).getText(),messageContent3);
         //index for expression viewer start at index 1 because of the description in the form widget section
-        assertEquals(messageContent1,bot.text(1).getText());
-        assertEquals(messageContent2,bot.text(2).getText());
-        assertEquals(messageContent3,bot.text(3).getText());
+        assertEquals(messageContent1,bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT,1).getText());
+        assertEquals(messageContent2,bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT,3).getText());
+        assertEquals(messageContent3,bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT,5).getText());
     }
 
     private void editCorrelation(){
