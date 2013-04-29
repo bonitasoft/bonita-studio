@@ -74,14 +74,27 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 			@Override
 			public void focusLost(FocusEvent e) {
 				if(textControl.equals(e.widget)){
-					ContentAssistText.this.redraw();
+					Display.getDefault().asyncExec(new Runnable() {
+						
+						@Override
+						public void run() {
+							ContentAssistText.this.redraw();
+						}
+					});
+			
 				}
 			}
 			
 			@Override
 			public void focusGained(FocusEvent e) {
 				if(textControl.equals(e.widget)){
-					ContentAssistText.this.redraw();
+					Display.getDefault().asyncExec(new Runnable() {
+						
+						@Override
+						public void run() {
+							ContentAssistText.this.redraw();
+						}
+					});
 				}
 			}
 		});
