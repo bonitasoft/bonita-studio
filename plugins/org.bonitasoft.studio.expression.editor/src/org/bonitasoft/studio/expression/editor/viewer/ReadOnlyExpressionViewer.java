@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
@@ -42,6 +43,7 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 	protected void createTextControl(int style,
 			TabbedPropertySheetWidgetFactory widgetFactory) {
 		super.createTextControl(style | SWT.READ_ONLY, widgetFactory);
+		getTextControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		getTextControl().setMessage(Messages.selectTarget);
 	}
 	
