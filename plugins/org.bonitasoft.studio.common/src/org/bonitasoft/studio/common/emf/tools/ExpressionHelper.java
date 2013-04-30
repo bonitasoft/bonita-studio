@@ -104,4 +104,12 @@ public class ExpressionHelper {
         return  exp;
     }
 
+    public static Expression createConstantExpression(String name,String content, String returnClassName) {
+        final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+        exp.setType(ExpressionConstants.CONSTANT_TYPE);
+        exp.setName(name);
+        exp.setContent(content);
+        exp.setReturnType(returnClassName);
+        return  exp;
+    }
 }
