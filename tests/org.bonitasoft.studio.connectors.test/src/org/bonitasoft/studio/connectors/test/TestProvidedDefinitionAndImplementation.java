@@ -24,7 +24,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -37,6 +36,7 @@ import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementat
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
@@ -71,19 +71,26 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 					testReport.append("Missing definition version for "+resourceName);
 				}
 
-				if(!NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), true).equals(resourceName)){
-					testReport.append("\n");
-					testReport.append("Resource name doesn't match id and version for "+resourceName);
-				}
+//NO MORE A CONSTRAINT
+//				if(!NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), true).equals(resourceName)){
+//					testReport.append("\n");
+//					testReport.append("Resource name doesn't match id and version for "+resourceName);
+//				}
 
 				if(!(definition.getIcon() != null && !definition.getIcon().isEmpty())){
 					testReport.append("\n");
 					testReport.append("Missing definition icon for "+resourceName);
 				}
 
-				if(connectorResourceProvider.getDefinitionIcon(definition) == null){
+				final Image definitionIcon = connectorResourceProvider.getDefinitionIcon(definition);
+				if(definitionIcon == null){
 					testReport.append("\n");
 					testReport.append("Missing definition icon file for "+resourceName);
+				}else{
+					if(definitionIcon.getImageData().width != 16 && definitionIcon.getImageData().height != 16){
+						testReport.append("\n");
+						testReport.append("Definition icon file must be 16x16 for "+resourceName);
+					}
 				}
 
 				if(definition.getCategory().isEmpty()){
@@ -210,10 +217,12 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 					testReport.append("\n");
 					testReport.append("Missing implementation classname for "+resourceName);
 				}
-				if(!NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(), implementation.getImplementationVersion(), true).equals(resourceName)){
-					testReport.append("\n");
-					testReport.append("Resource name doesn't match id and version for "+resourceName);
-				}
+
+				//NO MORE A CONSTRAINT
+//				if(!NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(), implementation.getImplementationVersion(), true).equals(resourceName)){
+//					testReport.append("\n");
+//					testReport.append("Resource name doesn't match id and version for "+resourceName);
+//				}
 
 				if(implementation.getDefinitionId() == null || implementation.getDefinitionId().isEmpty()){
 					testReport.append("\n");
