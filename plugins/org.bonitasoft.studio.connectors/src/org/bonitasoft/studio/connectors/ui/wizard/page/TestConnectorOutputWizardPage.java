@@ -17,29 +17,25 @@
 
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.connectors.i18n.Messages;
-import org.eclipse.core.databinding.Binding;
-import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
-import org.eclipse.jface.databinding.viewers.ViewerProperties;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -81,45 +77,38 @@ AbstractConnectorOutputWizardPage {
 			outputExpressionViewer.addFilter(connectorOutputFilter);
 			outputExpressionViewer.setContext(getConnector());
 			outputExpressionViewer.setMessage(Messages.connectorExpressionViewerMessage, IStatus.INFO);
+			outputExpressionViewer.setExternalDataBindingContext(context);
+			outputExpressionViewer.setInput(output);
+			outputExpressionViewer.addExpressionValidator(ExpressionConstants.ALL_TYPES, new IExpressionValidator() {
 
+				private Expression inputExpression;
 
-			IValidator validator = new IValidator() {
 				@Override
 				public IStatus validate(Object value) {
-					if(value!= null && value instanceof Expression){
-						Expression exp = (Expression) value;
-						if(exp.getType().equals(ExpressionConstants.SCRIPT_TYPE) || exp.getType().equals(ExpressionConstants.CONNECTOR_OUTPUT_TYPE)) {
-							return ValidationStatus.ok();
-						}
-						return ValidationStatus.error(Messages.connectorTypeValidationMessage);
-					}else{
-						return ValidationStatus.error(Messages.connectorTypeIsExpressionValidationMessage);
+					Expression exp = (Expression) inputExpression;
+					if(exp.getType().equals(ExpressionConstants.SCRIPT_TYPE) || exp.getType().equals(ExpressionConstants.CONNECTOR_OUTPUT_TYPE)) {
+						return ValidationStatus.ok();
 					}
+					return ValidationStatus.error(Messages.connectorTypeValidationMessage);
 				}
-			};
-
-			UpdateValueStrategy strategy = new UpdateValueStrategy();
-			strategy.setBeforeSetValidator(validator);
-
-
-			final Binding binding = context.bindValue(ViewersObservables.observeSingleSelection(outputExpressionViewer), EMFObservables.observeValue(output, ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND), strategy, null);
-
-			// add listener to catch changes in the expression viewer
-			ISelectionChangedListener updateExpressionListener = new ISelectionChangedListener() {
 
 				@Override
-				public void selectionChanged(SelectionChangedEvent arg0) {
-					if (binding.getTarget() != null) {
-						binding.validateTargetToModel();
-						IStatus status = (IStatus) binding.getValidationStatus().getValue();
-						outputExpressionViewer.setMessage(status.getMessage(),status.getSeverity());
-					}
+				public void setInputExpression(Expression inputExpression) {
+					this.inputExpression = inputExpression;
 				}
-			};
-			outputExpressionViewer.addSelectionChangedListener(updateExpressionListener);
-			outputExpressionViewer.addExpressionEditorChangedListener(updateExpressionListener);
 
-			outputExpressionViewer.setInput(output);
+				@Override
+				public void setDomain(EditingDomain domain) {
+
+				}
+
+				@Override
+				public void setContext(EObject context) {
+
+				}
+			});
+
+			context.bindValue(ViewersObservables.observeSingleSelection(outputExpressionViewer), EMFObservables.observeValue(output, ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND));
 			outputExpressionViewer.setProposalsFiltering(false);
 		}
 		return mainComposite ;

@@ -334,6 +334,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 					copy.setReturnTypeFixed(selectedExpression.isReturnTypeFixed());
 					updateSelection(copy);
 					fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, new StructuredSelection(selectedExpression)));
+					validate();
 				}
 			}
 		}) ;
@@ -577,7 +578,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		if(mandatoryFieldName != null){
 			targetToModelNameStrategy.setBeforeSetValidator(new EmptyInputValidator(mandatoryFieldName)) ;
 		}
-		targetToModelNameStrategy.setAfterGetValidator(new IValidator() {
+		targetToModelNameStrategy.setAfterConvertValidator(new IValidator() {
 
 			@Override
 			public IStatus validate(Object value) {
@@ -594,6 +595,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 					if(selectedExpression != null){
 						validator.setInputExpression(selectedExpression);
 					}
+					setMessage(null, IStatus.OK);
 					final IStatus status = validator.validate(value);
 					if(status.isOK()){
 						setMessage(null, status.getSeverity());
@@ -819,13 +821,13 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			if(icon != null){
 				messageDecoration.setImage(icon);
 			}
-			if(!messageDecoration.isVisible()){
+			
 				messageDecoration.show() ;
-			}
+			
 		}else{
-			if(messageDecoration.isVisible()){
+	
 				messageDecoration.hide() ;
-			}
+			
 		}
 	}
 
@@ -907,6 +909,10 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		}else{
 			if(messageKind == IStatus.WARNING){
 				messages.remove(IStatus.ERROR);
+			}
+			if(messageKind == IStatus.INFO){
+				messages.remove(IStatus.ERROR);
+				messages.remove(IStatus.WARNING);
 			}
 			messages.put(messageKind,message) ;
 		}
