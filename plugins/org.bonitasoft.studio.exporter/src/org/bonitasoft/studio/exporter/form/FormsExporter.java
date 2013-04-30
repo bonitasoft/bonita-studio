@@ -102,7 +102,6 @@ import org.bonitasoft.studio.model.process.ConsultationPageFlowType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.DateType;
-import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.Event;
@@ -884,27 +883,6 @@ public class FormsExporter {
 			}
 		}
 	}
-
-	//    protected void addImageDocument(final IFormBuilder builder, final Widget widget) throws InvalidFormDefinitionException {
-	//        final Document document = ((ImageWidget) widget).getDocument();
-	//        if (widget.get() == FileWidgetInputType.DOCUMENT) {
-	//            final Document document = widget.getDocument();
-	//            if (document != null) {
-	//                final Expression documentExpression = ExpressionHelper.createExpressionFromDocument(document);
-	//                addInitialValueExpression(builder, documentExpression);
-	//            }
-	//        } else if (widget.getInputType() == FileWidgetInputType.URL) {
-	//            final Expression inputExpression = widget.getInputExpression();
-	//            if (inputExpression != null && inputExpression.getContent() != null && !inputExpression.getContent().isEmpty()) {
-	//                addInitialValueExpression(builder, inputExpression);
-	//            }
-	//        } else if (widget.getInputType() == FileWidgetInputType.RESOURCE) {
-	//            final String resourcePath = widget.getInitialResourcePath();
-	//            if (resourcePath != null && !resourcePath.isEmpty()) {
-	//                builder.addInitialValueResource(resourcePath);
-	//            }
-	//        }
-	//    }
 
 	private boolean isARootResource(AbstractProcess process, Expression path) {
 		final ResourceTreeContentProvider provider = new ResourceTreeContentProvider();
