@@ -7710,5 +7710,8 @@
       </changes>
     </changes>
   </releases>
+  <releases date="2013-04-30T18:37:32.795+0200" label="6.0.0-ga-004">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetActionMigration"/>
+  </releases>
   <releases/>
 </history:History>

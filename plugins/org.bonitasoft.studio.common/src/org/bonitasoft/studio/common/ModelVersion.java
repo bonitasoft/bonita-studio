@@ -40,8 +40,9 @@ public class ModelVersion {
     public static final String VERSION_6_0_0_GA_001 = "6.0.0-ga-001";
     public static final String VERSION_6_0_0_GA_002 = "6.0.0-ga-002";
     public static final String VERSION_6_0_0_GA_003 = "6.0.0-ga-003";
+    public static final String VERSION_6_0_0_GA_004 = "6.0.0-ga-004";
 
-    public static final String CURRENT_VERSION = VERSION_6_0_0_GA_003;
+    public static final String CURRENT_VERSION = VERSION_6_0_0_GA_004;
 
 
     public static boolean sameVersion(String version){

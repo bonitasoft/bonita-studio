@@ -115,6 +115,14 @@ public class StringToExpressionConverter {
 		operation.set("leftOperand", leftOperand);
 		return operation;
 	}
+	
+	public static Instance createOperation(Model model,Instance leftOperand,Instance operator,Instance rightOperand){
+		final Instance op = model.newInstance("expression.Operation");
+		op.set("rightOperand", rightOperand);
+		op.set("operator", operator);
+		op.set("leftOperand", leftOperand);
+		return op;
+	}
 
 	private Instance getParentWidget(Instance groovyScriptInstance) {
 		Instance current = groovyScriptInstance;
