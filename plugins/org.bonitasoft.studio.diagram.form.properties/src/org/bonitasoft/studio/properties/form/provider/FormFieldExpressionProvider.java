@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.engine.bpm.model.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
@@ -29,6 +30,7 @@ import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Duplicable;
+import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.NextFormButton;
@@ -186,7 +188,11 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 			if(w instanceof TextFormField && w.getReturnTypeModifier() != null ){
 				exp.setReturnType(w.getReturnTypeModifier()) ;
 			}else{
-				exp.setReturnType(w.getAssociatedReturnType()) ;
+				if(w instanceof FileWidget){
+					exp.setReturnType(DocumentValue.class.getName());
+				}else{
+					exp.setReturnType(w.getAssociatedReturnType()) ;
+				}
 			}
 		}
 		exp.getReferencedElements().add(EcoreUtil.copy(w)) ;

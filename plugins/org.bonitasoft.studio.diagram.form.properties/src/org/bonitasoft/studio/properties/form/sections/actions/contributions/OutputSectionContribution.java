@@ -28,7 +28,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
-import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.FormPackage;
@@ -129,7 +128,7 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
     }
 
     public boolean isRelevantFor(EObject eObject) {
-        if(eObject instanceof FormField && !(eObject instanceof FileWidget) && ! ModelHelper.isInDuplicatedGrp(eObject)){
+        if(eObject instanceof FormField && ! ModelHelper.isInDuplicatedGrp(eObject)){
             Form form = ModelHelper.getForm((Widget) eObject);
             return !(form instanceof ViewForm);
         }else{

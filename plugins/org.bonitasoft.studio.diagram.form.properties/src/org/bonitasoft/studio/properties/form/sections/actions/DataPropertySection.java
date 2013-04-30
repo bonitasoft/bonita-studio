@@ -12,7 +12,6 @@ import org.bonitasoft.studio.properties.form.sections.actions.contributions.Avai
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.DateFormFielContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.DateFormatContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.DefaultValueContribution;
-import org.bonitasoft.studio.properties.form.sections.actions.contributions.DocumentOutputSectionContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.DurationContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.FileGridPropertySectionContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.HtmlInitialValueContribution;
@@ -80,7 +79,6 @@ public class DataPropertySection extends ExtensibleGridPropertySection {
         addContribution(new DefaultValueContribution());
         addContribution(new WidgetModifierContribution());
         addContribution(new OutputSectionContribution());
-        addContribution(new DocumentOutputSectionContribution());
         addContribution(new ItemAlignmentContribution());
 
 

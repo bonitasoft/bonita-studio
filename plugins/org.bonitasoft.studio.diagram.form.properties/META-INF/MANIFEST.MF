@@ -51,3 +51,4 @@ Export-Package: org.bonitasoft.studio.form.properties.i18n;
  org.bonitasoft.studio.properties.form.sections.actions.contributions,
  org.bonitasoft.studio.properties.form.sections.appearance,
  org.bonitasoft.studio.properties.form.sections.appearance.contributions
+Import-Package: org.bonitasoft.engine.bpm.model.document
