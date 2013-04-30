@@ -69,13 +69,12 @@ public class ExpressionViewerCellEditor extends CellEditor {
 		viewer.setEditingDomain(editingDomain);
 		this.columnViewer = columnViewer;
 		this.colIndex=colIndex;
-		this.removeRowListener = removeRowListener;
+		this.removeRowListener = null;
 		this.parent  = parent;
 	}
 
 	private void createRemoveRowDecorator(final Composite parent,SelectionListener removeRowListener) {
 		deleteRow = new ControlDecoration(parent.getParent(),SWT.LEFT | SWT.TOP){
-			private int lastY;
 
 			protected org.eclipse.swt.graphics.Rectangle getDecorationRectangle(Control targetControl) {
 				Rectangle r = super.getDecorationRectangle(targetControl);
@@ -91,9 +90,9 @@ public class ExpressionViewerCellEditor extends CellEditor {
 						headerOffeset = 4;
 					}
 					y = y + headerOffeset;
-
-					lastY = y;
-					r.y = r.y + lastY;
+					
+					Point newPoint = ((Table)parent).getVerticalBar().getSize();
+					r.y = r.y + ( y % newPoint.y) ;
 					r.width = r.width + 10;
 					return r;
 				}
