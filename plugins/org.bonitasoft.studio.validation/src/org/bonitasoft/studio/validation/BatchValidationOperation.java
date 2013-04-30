@@ -38,7 +38,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.diagram.ui.OffscreenEditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
@@ -124,7 +126,13 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 				}
 			}
 		}
-		ResourceSet rSet = d.eResource().getResourceSet() ;
+		final Resource eResource = d.eResource();
+		ResourceSet rSet = null;
+		if(eResource != null){
+			rSet= eResource.getResourceSet() ;
+		}else{
+			 rSet = new ResourceSetImpl();
+		}
 		if(GMFEditingDomainFactory.getInstance().getEditingDomain(rSet) == null){
 			GMFEditingDomainFactory.getInstance().createEditingDomain(rSet) ;
 		}
