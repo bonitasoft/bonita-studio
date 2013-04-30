@@ -479,9 +479,9 @@ public class FormsExporter {
 	}
 
 	protected void addWidgetAction(final Widget w, final PageFlow pageflow, final IFormBuilder builder) throws InvalidFormDefinitionException {
-//		if (w instanceof FileWidget) {
-//			addDocumentAction(w, builder);
-//		} else 
+		//		if (w instanceof FileWidget) {
+		//			addDocumentAction(w, builder);
+		//		} else 
 		if (w instanceof FormField) {
 			final Operation action = ((FormField) w).getAction();
 			if (action != null) {
@@ -860,11 +860,8 @@ public class FormsExporter {
 			final Widget widget) throws InvalidFormDefinitionException {
 		if (((ImageWidget) widget).getImgPath() != null) {
 			if (((ImageWidget) widget).isIsADocument()) {
-				final Document document = ((ImageWidget) widget).getDocument();
-				if (document != null) {
-					final Expression documentExpression = ExpressionHelper.createExpressionFromDocument(document);
-					addInitialValueExpression(builder, documentExpression);
-				}
+				final Expression documentExpression = ((ImageWidget) widget).getImgPath();
+				addInitialValueExpression(builder, documentExpression);
 			} else {
 				final Expression path = ((ImageWidget) widget).getImgPath();
 				final String type = path.getType();
