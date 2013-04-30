@@ -295,10 +295,8 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 
 		createDefaultProcessArtifact(editingDomain,fileStore.getContent()) ;
 		fileStore.save(null) ;
-
-
-		editingDomain.dispose() ;
 		shell.dispose() ;
+		editingDomain.dispose() ;
 	}
 
 
