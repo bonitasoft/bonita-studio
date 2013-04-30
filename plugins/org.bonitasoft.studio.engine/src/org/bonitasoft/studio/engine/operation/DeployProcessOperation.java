@@ -261,7 +261,12 @@ public class DeployProcessOperation  {
 			for(ProcessDeploymentInfo info : processes){
 				if(info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())){
 					monitor.subTask(Messages.bind(Messages.undeploying,getProcessLabel(process)));
-					processApi.disableAndDelete(info.getProcessId()) ;
+					try{
+						processApi.disableProcess(info.getProcessId());
+					}catch (ProcessDisablementException e) {
+				
+					}
+					processApi.deleteProcess(info.getProcessId()) ;
 				}
 			}
 		}

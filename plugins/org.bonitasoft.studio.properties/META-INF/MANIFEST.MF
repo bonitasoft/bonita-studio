@@ -62,5 +62,6 @@ Export-Package: org.bonitasoft.studio.properties.filters,
  org.bonitasoft.studio.properties.sections.resources,
  org.bonitasoft.studio.properties.sections.transientdata
 Import-Package: org.bonitasoft.engine.bpm.model,
+ org.bonitasoft.engine.bpm.model.document,
  org.codehaus.groovy.ast
 

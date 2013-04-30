@@ -479,9 +479,10 @@ public class FormsExporter {
 	}
 
 	protected void addWidgetAction(final Widget w, final PageFlow pageflow, final IFormBuilder builder) throws InvalidFormDefinitionException {
-		if (w instanceof FileWidget) {
-			addDocumentAction(w, builder);
-		} else if (w instanceof FormField) {
+//		if (w instanceof FileWidget) {
+//			addDocumentAction(w, builder);
+//		} else 
+		if (w instanceof FormField) {
 			final Operation action = ((FormField) w).getAction();
 			if (action != null) {
 				if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty()
@@ -1486,22 +1487,20 @@ public class FormsExporter {
 
 	protected void addDocumentInitialValue(final FileWidget widget, final IFormBuilder builder) throws InvalidFormDefinitionException {
 		final FileWidgetInputType widgetInputType = widget.getInputType();
-		if (widgetInputType == FileWidgetInputType.DOCUMENT) {
-			final Document document = widget.getDocument();
-			if (document != null) {
-				final Expression documentExpression = ExpressionHelper.createExpressionFromDocument(document);				
-				addInitialValueExpression(builder, documentExpression);
-			}
-		} else if (widgetInputType == FileWidgetInputType.URL) {
+		switch(widgetInputType){
+		case DOCUMENT : builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.ALL);break;
+		case URL : builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.URL);break;
+		case RESOURCE : builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.FILE);break;
+		default : break;
+		}
+		if (widgetInputType == FileWidgetInputType.URL || widgetInputType == FileWidgetInputType.DOCUMENT) {
 			final Expression inputExpression = widget.getInputExpression();
 			if (inputExpression != null && inputExpression.getContent() != null && !inputExpression.getContent().isEmpty()) {
-				builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.URL);
 				addInitialValueExpression(builder, inputExpression);
 			}
 		} else if (widgetInputType == FileWidgetInputType.RESOURCE) {
 			final String resourcePath = widget.getInitialResourcePath();
 			if (resourcePath != null && !resourcePath.isEmpty()) {
-				builder.addFileWidgetInputType(org.bonitasoft.forms.client.model.FileWidgetInputType.FILE);
 				builder.addInitialValueResource(resourcePath);
 			}
 		}
@@ -1646,9 +1645,9 @@ public class FormsExporter {
 						&& formFieldScript.getLeftOperand() != null && formFieldScript.getLeftOperand().getReferencedElements() != null
 						&& !formFieldScript.getLeftOperand().getReferencedElements().isEmpty()) {
 
-					final Data data = (Data) formFieldScript.getLeftOperand().getReferencedElements().get(0);
-
-					if (data != null) {
+					final EObject element = formFieldScript.getLeftOperand().getReferencedElements().get(0);
+					if (element instanceof Data) {
+						final Data data = (Data) element;
 						if (data.getDataType().eClass().equals(ProcessPackage.eINSTANCE.getDateType())) {
 							builder.addValidator(formField.getName() + "_default_validator",
 									DefaultValidatorsProperties.getInstance().getDefaultValidator(Date.class.getName()), null, ValidatorPosition.BOTTOM);

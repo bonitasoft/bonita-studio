@@ -261,7 +261,7 @@ public class OperationViewer extends Composite {
 
 	protected ReadOnlyExpressionViewer createStorageViewer() {
 		final ReadOnlyExpressionViewer storageViewer = new ReadOnlyExpressionViewer(this,SWT.BORDER,widgetFactory,editingDomain,ExpressionPackage.Literals.OPERATION__LEFT_OPERAND) ;
-		storageViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).grab(false, false).create());
+		storageViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(230, SWT.DEFAULT).grab(false, false).create());
 		if(storageExpressionFilter != null){
 			storageViewer.addFilter(storageExpressionFilter) ;
 		}

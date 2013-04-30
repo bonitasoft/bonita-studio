@@ -77,6 +77,7 @@ public class Messages extends NLS {
     public static String cleanExpressionTitle;
     public static String cleanExpressionMsg;
 	public static String selectTarget;
+	public static String incompatibleStorageReturnType;
 
 
     private Messages() {

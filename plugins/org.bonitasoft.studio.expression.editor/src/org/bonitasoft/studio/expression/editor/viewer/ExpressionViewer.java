@@ -809,7 +809,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		if (message != null){
 			messageDecoration.setDescriptionText(message.getValue()) ;
 			if(message.getKey() == IStatus.INFO){
-				messageDecoration.setShowOnlyOnFocus(true);
+				//Issue with focus
+				messageDecoration.setShowOnlyOnFocus(false);
 			}else{
 				messageDecoration.setShowOnlyOnFocus(false);
 			}
@@ -904,6 +905,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			messages.remove(IStatus.ERROR);
 			messages.remove(IStatus.WARNING);
 		}else{
+			if(messageKind == IStatus.WARNING){
+				messages.remove(IStatus.ERROR);
+			}
 			messages.put(messageKind,message) ;
 		}
 		refresh();

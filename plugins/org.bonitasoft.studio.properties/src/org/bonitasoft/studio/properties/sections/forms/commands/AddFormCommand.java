@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.bonitasoft.engine.bpm.model.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -38,7 +39,6 @@ import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
-import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.form.WidgetLayoutInfo;
 import org.bonitasoft.studio.model.process.Data;
@@ -48,7 +48,6 @@ import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.form.part.ValidateAction;
-import org.bonitasoft.studio.model.process.diagram.form.providers.ElementInitializers;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils.WidgetEnum;
@@ -250,7 +249,12 @@ public class AddFormCommand extends AbstractTransactionalCommand {
                     }
                 }else if(key instanceof Document && tempWidget instanceof FileWidget){
                     final Document doc = (Document) key;
-                    ((FileWidget) tempWidget).setOutputDocumentName(doc.getName()) ;
+                    currentExpression.setReturnType(String.class.getName()) ;
+                    if(!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool)){ //Do not set input expression if we are in an instantiation form
+                        ((FormField) tempWidget).setInputExpression(currentExpression);
+                    }
+                    final Operation action = createDocumentOutputOperation(tempWidget, doc);
+                    ((FormField) tempWidget).setAction(action) ;
                 }
 
 
@@ -324,7 +328,30 @@ public class AddFormCommand extends AbstractTransactionalCommand {
         return CommandResult.newOKCommandResult(form);
     }
 
-    protected Operation createDataOutputOperation(Widget tempWidget, Data data) {
+    protected Operation createDocumentOutputOperation(Widget tempWidget,Document doc) {
+    	Operation action = ExpressionFactory.eINSTANCE.createOperation() ;
+        Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
+        assignment.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR) ;
+        action.setOperator(assignment) ;
+        Expression storageExpression = ExpressionFactory.eINSTANCE.createExpression();
+        storageExpression.setContent(doc.getName()) ;
+        storageExpression.setName(doc.getName()) ;
+        storageExpression.setType(ExpressionConstants.DOCUMENT_REF_TYPE) ;
+        storageExpression.setReturnType(String.class.getName()) ;
+        storageExpression.getReferencedElements().add(EcoreUtil.copy(doc)) ;
+        action.setLeftOperand(storageExpression) ;
+
+        Expression actionExpression = ExpressionFactory.eINSTANCE.createExpression();
+        actionExpression.setContent("field_"+tempWidget.getName()) ;
+        actionExpression.setName("field_"+tempWidget.getName()) ;
+        actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE) ;
+        actionExpression.setReturnType(DocumentValue.class.getName()) ;
+        actionExpression.getReferencedElements().add(EcoreUtil.copy(tempWidget)) ;
+        action.setRightOperand(actionExpression) ;
+        return action;
+	}
+
+	protected Operation createDataOutputOperation(Widget tempWidget, Data data) {
         Operation action = ExpressionFactory.eINSTANCE.createOperation() ;
         Operator assignment = ExpressionFactory.eINSTANCE.createOperator();
         assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR) ;

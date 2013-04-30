@@ -31,7 +31,6 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -52,6 +51,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	private AutoCompletionField autoCompletion;
 	private boolean drawBorder = true;
 	private ToolBar tb;
+	private boolean isReadOnly = false;
 
 	public ContentAssistText(Composite parent, ILabelProvider contentProposalLabelProvider, int style) {
 		super(parent, SWT.NONE);
@@ -62,7 +62,14 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		}else{
 			style = style ^ SWT.BORDER;
 		}
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(margins).spacing(32, 0).create());
+		if((style & SWT.READ_ONLY) != 0){
+			isReadOnly = true;
+		}
+		int indent = 32;
+		if(isReadOnly){
+			indent = 18;
+		}
+		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(margins).spacing(indent, 0).create());
 		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 
 
@@ -70,26 +77,26 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		textControl.addFocusListener(new FocusListener() {
-			
+
 			@Override
 			public void focusLost(FocusEvent e) {
 				if(textControl.equals(e.widget)){
 					Display.getDefault().asyncExec(new Runnable() {
-						
+
 						@Override
 						public void run() {
 							ContentAssistText.this.redraw();
 						}
 					});
-			
+
 				}
 			}
-			
+
 			@Override
 			public void focusGained(FocusEvent e) {
 				if(textControl.equals(e.widget)){
 					Display.getDefault().asyncExec(new Runnable() {
-						
+
 						@Override
 						public void run() {
 							ContentAssistText.this.redraw();
@@ -117,7 +124,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 				}
 			}
 		});
-	
+
 		addPaintListener(new PaintListener() {
 
 			@Override
@@ -132,36 +139,23 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 
 
 	protected void paintControlBorder(PaintEvent e) {
-		//if(ContentAssistText.this.equals(e.widget)){
-			GC gc = e.gc;
-			Display display = e.display ;
-			if(display!= null && gc != null && !gc.isDisposed()){
-				Control focused = display.getFocusControl() ;
-				GC parentGC  = gc;
-				parentGC.setAdvanced(true);
-				Rectangle r = ContentAssistText.this.getBounds();
-
-				//parentGC.setClipping(getBorderPath(r, display));
-				if(focused == null || !focused.getParent().equals(ContentAssistText.this)){
-					parentGC.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
-				}else{
-					parentGC.setForeground(display.getSystemColor(SWT.COLOR_WIDGET_BORDER));
-				}
-				parentGC.setLineWidth(1);
-				parentGC.drawRectangle(0, 0, r.width-1, r.height-1);
-				
+		GC gc = e.gc;
+		Display display = e.display ;
+		if(display!= null && gc != null && !gc.isDisposed()){
+			Control focused = display.getFocusControl() ;
+			GC parentGC  = gc;
+			parentGC.setAdvanced(true);
+			Rectangle r = ContentAssistText.this.getBounds();
+			if(focused == null || !focused.getParent().equals(ContentAssistText.this)){
+				parentGC.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
+			}else{
+				parentGC.setForeground(display.getSystemColor(SWT.COLOR_WIDGET_BORDER));
 			}
-		//}
+			parentGC.setLineWidth(1);
+			parentGC.drawRectangle(0, 0, r.width-1, r.height-1);
+		}
 	}
 
-	private Path getBorderPath(Rectangle widgetBounds, Display display) {
-		final Path path = new Path(display);
-		path.addRectangle(0,0,1,widgetBounds.height);//Left border
-		path.addRectangle(1,0,widgetBounds.width-2,1);//Top border
-		path.addRectangle(1, widgetBounds.height-1, widgetBounds.width-2,1);//Bottom border
-		path.addRectangle(widgetBounds.width-1, 0, 1,widgetBounds.height);//Right border
-		return path;
-	}
 
 	public Text getTextControl() {
 		return textControl;

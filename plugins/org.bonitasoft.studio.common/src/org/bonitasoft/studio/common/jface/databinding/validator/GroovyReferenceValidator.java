@@ -35,19 +35,31 @@ public class GroovyReferenceValidator implements IValidator {
 	public static final String[] KEYWORDS = new String[] { BonitaConstants.API_ACCESSOR, BonitaConstants.ENGINE_EXECUTION_CONTEXT, BonitaConstants.ACTIVITY_INSTANCE_ID,
 		BonitaConstants.PROCESS_DEFINITION_ID, BonitaConstants.ROOT_PROCESS_INSTANCE_ID, BonitaConstants.PARENT_PROCESS_INSTANCE_ID };
 	private String fieldName;
-	
-	public GroovyReferenceValidator(String fieldName){
+	private boolean checkEmptyField;
+
+	public GroovyReferenceValidator(String fieldName,boolean checkEmptyField){
 		this.fieldName = fieldName;
+		this.checkEmptyField = checkEmptyField;
 	}
 	
+	public GroovyReferenceValidator(String fieldName){
+		this(fieldName,true);
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
 	 */
 	@Override
 	public IStatus validate(Object value) {
-		final IStatus s = new EmptyInputValidator(fieldName).validate(value);
-		if(!s.isOK()){
-			return s;
+		if(checkEmptyField){
+			final IStatus s = new EmptyInputValidator(fieldName).validate(value);
+			if(!s.isOK()){
+				return s;
+			}
+		}else{
+			if(value == null || value.toString().isEmpty()){
+				return ValidationStatus.ok();
+			}
 		}
 		if (!value.toString().isEmpty()) {
 			if (Character.isUpperCase(value.toString().charAt(0))) {
@@ -61,10 +73,12 @@ public class GroovyReferenceValidator implements IValidator {
 
 		final IStatus javaConventionNameStatus = JavaConventions.validateFieldName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
 		if(!javaConventionNameStatus.isOK()){
-			return ValidationStatus.error(Messages.bind(Messages.nameFieldIssue,javaConventionNameStatus.getMessage()));
+			return ValidationStatus.error(javaConventionNameStatus.getMessage());
 		}
-
-		return javaConventionNameStatus;
+		if(!javaConventionNameStatus.isOK()){
+			return javaConventionNameStatus;
+		}
+		return ValidationStatus.ok();
 	}
 
 }

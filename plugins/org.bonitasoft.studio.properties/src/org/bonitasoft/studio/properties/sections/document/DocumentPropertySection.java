@@ -41,7 +41,6 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -94,7 +93,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 
 	private ListViewer documentListViewer;
 	private EMFDataBindingContext emfDataBindingContext;
-	private DataBindingContext dataBindingContext;
+
 	private Text documentNameText;
 	private Text documentDescriptionText;
 	private Button internalCheckbox;
@@ -105,6 +104,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 	private Button browseButton;
 	private Button externalCheckbox;
 	private Composite detailsComposite;
+	private ControlDecorationSupport decorationSupport;
 
 	public DocumentPropertySection() {
 		//keep it for reflective instanciation by Eclipse
@@ -113,14 +113,6 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 	@Override
 	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);
-		if(emfDataBindingContext != null){
-			emfDataBindingContext.dispose();
-		}
-		emfDataBindingContext = new EMFDataBindingContext();
-		if(dataBindingContext != null){
-			dataBindingContext.dispose();
-		}
-		dataBindingContext = new DataBindingContext();
 		Composite mainComposite = getWidgetFactory().createComposite(parent);
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create());
@@ -163,6 +155,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 
 			}
 		});
+
 		createButtons(masterComposite);
 		documentListViewer = createList(masterComposite);
 	}
@@ -173,6 +166,25 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 		ListViewer documentListViewer = new ListViewer(list);
 		documentListViewer.setLabelProvider(new ElementForIdLabelProvider());
 		documentListViewer.setContentProvider(new ObservableListContentProvider());
+		documentListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				final ISelection listSelection = event.getSelection();
+				if(listSelection.isEmpty()){
+					removeButton.setEnabled(false);
+					detailsComposite.setVisible(false);
+				} else {
+					detailsComposite.setVisible(true);
+					removeButton.setEnabled(true);
+					final Document document = (Document) ((IStructuredSelection) listSelection).getFirstElement();
+					documentUrlViewer.getTextControl().setEnabled(!document.isIsInternal());
+					documentUrlViewer.getButtonControl().setEnabled(!document.isIsInternal());
+					documentTextId.setEnabled(document.isIsInternal());
+					browseButton.setEnabled(document.isIsInternal());
+				}
+			}
+		});
 		return documentListViewer;
 	}
 
@@ -320,28 +332,26 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 
 		final IObservableValue documentSelected = ViewersObservables.observeSingleSelection(documentListViewer);
 		bindDetails(documentSelected);
-		documentListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+//		
+//		if(documentSelected.getValue() != null){
+//			bindDetails(documentSelected);
+//		}
+//		documentSelected.addValueChangeListener(new IValueChangeListener() {
+//			
+//			@Override
+//			public void handleValueChange(ValueChangeEvent event) {
+//				final IObservableValue documentSelected =(IObservableValue) event.diff.getNewValue();
+//				if(documentSelected.getValue() != null){
+//					bindDetails(documentSelected);
+//				}
+//			}
+//		});
+		
 
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-				final ISelection listSelection = event.getSelection();
-				if(listSelection.isEmpty()){
-					removeButton.setEnabled(false);
-					detailsComposite.setVisible(false);
-				} else {
-					detailsComposite.setVisible(true);
-					removeButton.setEnabled(true);
-					final Document document = (Document) documentSelected.getValue();
-					documentUrlViewer.getTextControl().setEnabled(!document.isIsInternal());
-					documentUrlViewer.getButtonControl().setEnabled(!document.isIsInternal());
-					documentTextId.setEnabled(document.isIsInternal());
-					browseButton.setEnabled(document.isIsInternal());
-				}
 
-			}
-		});
 
 		documentListViewer.setSelection(new StructuredSelection());
+
 	}
 
 	protected void bindList() {
@@ -373,9 +383,9 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 
 		final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
 		targetToModel.setAfterGetValidator(new InputLengthValidator(Messages.name, 50));
-		targetToModel.setBeforeSetValidator(new GroovyReferenceValidator(Messages.name));
+		targetToModel.setBeforeSetValidator(new GroovyReferenceValidator(Messages.name,false));
 		final IObservableValue nameObserved = EMFEditProperties.value(getEditingDomain(), ProcessPackage.Literals.ELEMENT__NAME).observeDetail(documentSelected);
-		ControlDecorationSupport.create(emfDataBindingContext.bindValue(
+		decorationSupport = ControlDecorationSupport.create(emfDataBindingContext.bindValue(
 				SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentNameText, SWT.Modify)),
 				nameObserved,targetToModel,null),SWT.LEFT);
 		nameObserved.addValueChangeListener(new IValueChangeListener() {
@@ -448,10 +458,13 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 
 	@Override
 	public void dispose() {
-		super.dispose();
+		if(decorationSupport != null){
+			decorationSupport.dispose();
+		}
 		if(emfDataBindingContext != null){
 			emfDataBindingContext.dispose();
 		}
+		super.dispose();
 	}
 
 	@Override

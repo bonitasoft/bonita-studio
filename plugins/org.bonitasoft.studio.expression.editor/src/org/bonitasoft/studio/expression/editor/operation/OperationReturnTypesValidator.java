@@ -71,9 +71,9 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 				if(parent instanceof Info){
 					return ValidationStatus.ok();
 				}
-				
+
 				if(value instanceof String){//Expression content to validate
-					
+
 				}
 				final String operatorType = operation.getOperator().getType();
 				if(dataExpression != null &&  dataExpression.getContent() != null 
@@ -128,14 +128,14 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 						}
 						return ValidationStatus.ok();
 					}else if(ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(operatorType)){
-						if(!ExpressionConstants.DOCUMENT_REF_TYPE.equals(dataExpression.getType())){
-							return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,typeLabelProvider.getText(dataExpression.getType()),operatorLabelProvider.getText(operation.getOperator())));
+						if(!String.class.getName().equals(dataExpression.getReturnType())){
+							return ValidationStatus.error(Messages.bind(Messages.incompatibleStorageReturnType,dataExpression.getName(),operatorLabelProvider.getText(operation.getOperator())));
 						}
 						if (dataExpression!=null && dataExpression.getContent()!=null && !dataExpression.getContent().isEmpty()){
 							String typeName = dataExpression.getReturnType();
 							String actionType = ((Expression) expression).getReturnType();
 							if(!(actionType.equals(DocumentValue.class.getName()) && typeName.equals(String.class.getName()))){
-								return ValidationStatus.error(Messages.bind(
+								return ValidationStatus.warning(Messages.bind(
 										Messages.invalidReturnTypeBetween,dataExpression.getName(),
 										expressionName)+ "\n"+ Messages.documentValueExprected);
 							}else{
