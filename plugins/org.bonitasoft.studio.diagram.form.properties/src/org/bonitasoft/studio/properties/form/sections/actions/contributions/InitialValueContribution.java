@@ -84,15 +84,7 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
     protected void doCreateControl(TabbedPropertySheetWidgetFactory widgetFactory) {
         /*Create control for initial value*/
         expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, true) ;
-        expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{
-                ExpressionConstants.VARIABLE_TYPE,
-                ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.CONSTANT_TYPE,
-                ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.FORM_FIELD_TYPE,
-                ExpressionConstants.XPATH_TYPE,
-                ExpressionConstants.I18N_TYPE})) ;
+        expressionViewer.addFilter(getExpressionViewerFilter()) ;
         if(widget instanceof CheckBoxSingleFormField){
             expressionViewer.setMessage(Messages.data_tooltip_boolean,IStatus.INFO);
         } else {
@@ -104,6 +96,18 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
         createAllowHtmlButton(composite, widgetFactory);
     }
 
+	protected AvailableExpressionTypeFilter getExpressionViewerFilter() {
+		return new AvailableExpressionTypeFilter(new String[]{
+                ExpressionConstants.VARIABLE_TYPE,
+                ExpressionConstants.SCRIPT_TYPE,
+                ExpressionConstants.CONSTANT_TYPE,
+                ExpressionConstants.PARAMETER_TYPE,
+                ExpressionConstants.SCRIPT_TYPE,
+                ExpressionConstants.FORM_FIELD_TYPE,
+                ExpressionConstants.XPATH_TYPE,
+                ExpressionConstants.I18N_TYPE});
+	}
+
     private void initCreateControl(Composite composite) {
         this.composite = composite;
         composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -111,12 +115,15 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
             dataBindingContext.dispose();
         }
         dataBindingContext = new EMFDataBindingContext();
+        composite.setLayout(getCompositeLayout());
+    }
 
-        GridLayout layout = new GridLayout(1, false);
+	protected GridLayout getCompositeLayout() {
+		GridLayout layout = new GridLayout(1, false);
         layout.marginHeight = MARGIN_HEIGHT;
         layout.marginWidth = MARGIN_WIDTH;
-        composite.setLayout(layout);
-    }
+		return layout;
+	}
 
     protected void createAllowHtmlButton(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory) {
         //HTML can be an issue only with these two kind of widget

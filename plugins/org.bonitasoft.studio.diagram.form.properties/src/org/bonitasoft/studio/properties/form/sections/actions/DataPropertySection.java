@@ -15,7 +15,8 @@ import org.bonitasoft.studio.properties.form.sections.actions.contributions.Defa
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.DurationContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.FileGridPropertySectionContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.HtmlInitialValueContribution;
-import org.bonitasoft.studio.properties.form.sections.actions.contributions.ImagePathContribution;
+import org.bonitasoft.studio.properties.form.sections.actions.contributions.ImageKindContribution;
+import org.bonitasoft.studio.properties.form.sections.actions.contributions.ImageWidgetInitialValueContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.InitialValueContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.ItemAlignmentContribution;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.MaxItemsSectionContribution;
@@ -65,7 +66,8 @@ public class DataPropertySection extends ExtensibleGridPropertySection {
         }
         //line1
         addContribution(new FileGridPropertySectionContribution());
-        addContribution(new ImagePathContribution());
+        addContribution(new ImageKindContribution());
+        addContribution(new ImageWidgetInitialValueContribution());
         addContribution(new InitialValueContribution());
         addContribution(new HtmlInitialValueContribution());
         addContribution(new DateFormFielContribution());
