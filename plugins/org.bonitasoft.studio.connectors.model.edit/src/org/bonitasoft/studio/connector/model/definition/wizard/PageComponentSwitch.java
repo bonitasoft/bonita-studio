@@ -365,7 +365,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 				
 				if(object.isShowDocuments()){
 					Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
-					contentTypes.add(ExpressionConstants.DOCUMENT_TYPE);
+					contentTypes.add(ExpressionConstants.DOCUMENT_REF_TYPE);
 					viewer.addFilter(new AvailableExpressionTypeFilter(contentTypes.toArray(new String[contentTypes.size()])));
 				}else{
 					viewer.addFilter(connectorExpressionContentTypeFilter);
@@ -495,7 +495,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		
 			if(object.isShowDocuments()){
 				Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
-				contentTypes.add(ExpressionConstants.DOCUMENT_TYPE);
+				contentTypes.add(ExpressionConstants.DOCUMENT_REF_TYPE);
 				viewer.addFilter(new AvailableExpressionTypeFilter(contentTypes.toArray(new String[contentTypes.size()])));
 			}else{
 				viewer.addFilter(connectorExpressionContentTypeFilter);
