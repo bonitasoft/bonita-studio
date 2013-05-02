@@ -99,6 +99,7 @@ import org.bonitasoft.studio.model.process.ReceiveTask;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.SendTask;
 import org.bonitasoft.studio.model.process.SourceElement;
+import org.bonitasoft.studio.model.process.StartErrorEvent;
 import org.bonitasoft.studio.model.process.StartEvent;
 import org.bonitasoft.studio.model.process.StartMessageEvent;
 import org.bonitasoft.studio.model.process.StartSignalEvent;
@@ -554,7 +555,15 @@ public class FlowElementSwitch extends AbstractSwitch {
 		addDescription(eventBuilder, endEvent.getDocumentation()) ;
 		return endEvent;
 	}
-
+	
+	@Override
+	public Element caseStartErrorEvent(StartErrorEvent startErrorEvent) {
+		StartEventDefinitionBuilder eventBuilder = builder.addStartEvent(startErrorEvent.getName());
+		eventBuilder.addErrorEventTrigger(startErrorEvent.getErrorCode());
+		addDescription(eventBuilder, startErrorEvent.getDocumentation()) ;
+		return startErrorEvent;
+	}
+		
 	@Override
 	public Element caseEndErrorEvent(EndErrorEvent endErrorEvent) {
 		EndEventDefinitionBuilder eventBuilder = builder.addEndEvent(endErrorEvent.getName());
