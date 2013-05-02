@@ -344,8 +344,23 @@ public class CustomLaneEditPart extends LaneEditPart {
 					getMapMode().DPtoLP(100)));
 			createContents();
 		}
-
-
+		
+		@Override
+		public void validate() {
+			super.validate();
+			if(fFigureLaneNameFigure != null){
+				fFigureLaneNameFigure.validate();
+			}
+		}
+		
+		@Override
+		public void invalidate() {
+			super.invalidate();
+			if(fFigureLaneNameFigure != null){
+				fFigureLaneNameFigure.invalidate();
+			}
+		}
+	
 		private void createContents() {
 
 			fFigureLaneNameFigure = new VerticalLabel();
@@ -430,5 +445,16 @@ public class CustomLaneEditPart extends LaneEditPart {
 			((CustomLaneFigure)getContentPane()).getLabelGridData().widthHint = height + 2  ; 
 		}
 	}
-
+	
+	@Override
+	public void activate() {
+		super.activate();
+		primaryShape.validate();
+	}
+	
+	@Override
+	public void deactivate() {
+		super.deactivate();
+		primaryShape.invalidate();
+	}
 }

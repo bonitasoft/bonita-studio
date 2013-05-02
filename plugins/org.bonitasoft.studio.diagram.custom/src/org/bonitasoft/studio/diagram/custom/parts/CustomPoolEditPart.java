@@ -248,7 +248,21 @@ public class CustomPoolEditPart extends PoolEditPart {
 			createContents();
 		}
 
-
+		@Override
+		public void validate() {
+			super.validate();
+			if(fFigurePoolNameFigure != null){
+				fFigurePoolNameFigure.validate();
+			}
+		}
+		
+		@Override
+		public void invalidate() {
+			super.invalidate();
+			if(fFigurePoolNameFigure != null){
+				fFigurePoolNameFigure.invalidate();
+			}
+		}
 
 		/**
 		 * @generated
@@ -434,5 +448,17 @@ public class CustomPoolEditPart extends PoolEditPart {
 			font.dispose();
 			((CustomPoolFigure)getContentPane()).getLabelGridData().widthHint = height + 2; 
 		}
+	}
+	
+	@Override
+	public void activate() {
+		super.activate();
+		primaryShape.validate();
+	}
+	
+	@Override
+	public void deactivate() {
+		super.deactivate();
+		primaryShape.invalidate();
 	}
 }
