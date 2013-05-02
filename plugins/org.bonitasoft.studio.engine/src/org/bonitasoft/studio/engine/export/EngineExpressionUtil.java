@@ -29,6 +29,7 @@ import org.bonitasoft.engine.exception.InvalidExpressionException;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.expression.ExpressionBuilder;
 import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.engine.expression.XPathReturnType;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -51,6 +52,7 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.XMLData;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -280,7 +282,9 @@ public class EngineExpressionUtil {
 				return createPatternExpression(exp, simpleExpression);
 			}if(ExpressionConstants.DOCUMENT_TYPE.equals(simpleExpression.getType())){
 				return createDocumentExpression(exp, simpleExpression);
-			}else{
+			} if (ExpressionConstants.XPATH_TYPE.equals(simpleExpression.getType())){
+				return createXPATHExpression(exp,simpleExpression);
+		}else{
 				exp.createNewInstance(name);
 				exp.setContent(simpleExpression.getContent());
 				final String engineExpressionType = toEngineExpressionType(simpleExpression);
@@ -433,12 +437,38 @@ public class EngineExpressionUtil {
 		}
 	}
 	
-	public static Expression createXPATHExpression(String name,String returnType,String xmlContent ){
-		final ExpressionBuilder exp = new ExpressionBuilder();
-//		exp.createXPathExpression(name, xPathExpression, returnType, xmlContent);
+	public static Expression createXPATHExpression(final ExpressionBuilder exp,final org.bonitasoft.studio.model.expression.Expression expression ){
+		try {
+			exp.createXPathExpression(expression.getName(), expression.getContent(), getXPathReturnType(expression.getReturnType()), null);
+		//	exp.createXPathExpressionWithDataAsContent(expression.getName(), expression.getContent(), getXPathReturnType(expression.getReturnType()),((XMLData)expression.getReferencedElements().get(0)).getName());
+			return exp.done();
+		} catch (InvalidExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
+	private static XPathReturnType getXPathReturnType(String returnType){
+		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_BOOLEAN)){
+			return XPathReturnType.BOOLEAN;
+		} 
+		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_DOUBLE)){
+			return XPathReturnType.DOUBLE;
+		}
+		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_STRING)){
+			return XPathReturnType.STRING;
+		}
+		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_NODE)){
+			return XPathReturnType.NODE;
+		}
+		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_LIST_OF_NODES)){
+			return XPathReturnType.NODE_LIST;
+		}
+		return XPathReturnType.STRING;
+	}
+	
+	
 	public static Expression createVariableExpression(final Data element) {
 		final String datasourceId = element.getDatasourceId();
 		String type = ExpressionConstants.VARIABLE_TYPE;

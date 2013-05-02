@@ -25,5 +25,10 @@
             providerClass="org.bonitasoft.studio.xml.export.XSDResourceProvider">
       </bosArchiveProvider>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.expression.expressionProvider">
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.xml.ui.XPathExpressionProvider"></expressionProvider>
+   </extension>
 
 </plugin>

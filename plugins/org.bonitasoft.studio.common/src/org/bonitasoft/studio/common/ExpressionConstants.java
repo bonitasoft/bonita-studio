@@ -42,6 +42,7 @@ public interface ExpressionConstants {
     String SEARCH_INDEX_TYPE="SEARCH_INDEX_TYPE";
 
     String CONNECTOR_TYPE = "CONNECTOR_TYPE" ;
+
     String XPATH_TYPE = ExpressionType.TYPE_XPATH_READ.name();
     String JAVA_TYPE = ExpressionType.TYPE_JAVA_METHOD_CALL.name();
 

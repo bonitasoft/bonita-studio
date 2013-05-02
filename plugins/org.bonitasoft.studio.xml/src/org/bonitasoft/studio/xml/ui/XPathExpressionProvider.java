@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.xml.ui;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -41,6 +42,15 @@ public class XPathExpressionProvider implements IExpressionProvider {
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionProvider#getExpressions(org.eclipse.emf.ecore.EObject)
 	 */
 	public Set<Expression> getExpressions(EObject context) {
+		Set<Expression> exprSet = new HashSet<Expression>();
+		IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.VARIABLE_TYPE) ;
+		if(provider != null){
+			for(Expression exp : provider.getExpressions(context)){
+				if(exp.getReferencedElements().get(0) instanceof XMLData){
+					exprSet.add(exp);
+				}
+			}
+		}
 		return Collections.emptySet();
 	}
 
