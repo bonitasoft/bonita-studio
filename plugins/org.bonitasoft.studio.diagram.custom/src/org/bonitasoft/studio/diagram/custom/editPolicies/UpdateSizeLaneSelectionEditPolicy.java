@@ -26,6 +26,7 @@ import org.bonitasoft.studio.diagram.custom.commands.UpdatePoolSizeCommand;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomMainProcessEditPart;
 import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.ExecutionException;
@@ -158,11 +159,53 @@ public class UpdateSizeLaneSelectionEditPolicy extends SelectionEditPolicy imple
 		if(zoomManager.getZoom() > GMFTools.MINIMAL_ZOOM_DISPLAY){
 			showSelectionForAddBottom();
 			showSelectionForRemoveBottom();
+			showSelectionForAddRight(zoomManager.getZoom());
+			showSelectionForRemoveRight(zoomManager.getZoom());
 		}
 
 	}
 
+	private void showSelectionForAddRight(double zoom) {
+		IFigure poolFigure = getPoolEditPart().getFigure();
+		Rectangle ref = poolFigure.getBounds();
+		IFigure f = new ImageFigure(Pics.getImage(PicsConstants.plusBlack));
+		f.setSize(20, 20);
+		f.setLocation(ref.getRight().translate(10, -20));
+		f.getBounds().performScale(zoom) ;
+		f.addMouseListener(new MouseListenerForSpan(UpdateSizePoolSelectionEditPolicy.ADD_RIGHT));
+		layer.add(f);
+		figures.add(f);
 
+	}
+
+	 private IGraphicalEditPart getPoolEditPart() {
+		EditPart ep = getHost();
+		if(ep instanceof IGraphicalEditPart){
+			IGraphicalEditPart pool = (IGraphicalEditPart) ep;
+			while (pool != null && !(pool instanceof PoolEditPart)) {
+				pool = (IGraphicalEditPart) pool.getParent();
+			}
+			if(pool != null){
+				return pool;
+			}
+		}
+		return null;
+	}
+
+
+	private void showSelectionForRemoveRight(double zoom) {
+	        IFigure poolFigure = getPoolEditPart().getFigure();
+	        Rectangle ref = poolFigure.getBounds();
+	        IFigure f = new ImageFigure(Pics.getImage(PicsConstants.minusBlack));
+	        f.setSize(20, 20);
+	        f.setLocation(ref.getLeft().translate(-25, -10));
+
+	        f.addMouseListener(new MouseListenerForSpan(UpdateSizePoolSelectionEditPolicy.REMOVE_RIGHT));
+	        f.getBounds().performScale(zoom);
+	        layer.add(f);
+	        figures.add(f);
+	    }
+	
 	private ShapeNodeEditPart findLaneEditPart(EditPart host) {
 		EditPart result = host ;
 		EditPart tempEditPart = result;
@@ -170,7 +213,7 @@ public class UpdateSizeLaneSelectionEditPolicy extends SelectionEditPolicy imple
 		while(!(result instanceof CustomLaneEditPart) && result != null){
 			result = result.getParent() ;
 		}
-		
+
 		if(result == null){
 			return null ;
 		}
@@ -279,12 +322,17 @@ public class UpdateSizeLaneSelectionEditPolicy extends SelectionEditPolicy imple
 
 				int y = ((Viewport)p).getVerticalRangeModel().getValue() ;
 
-				IUndoableOperation c = new UpdatePoolSizeCommand((IGraphicalEditPart) laneEditPart, type);
+				IGraphicalEditPart targetEp = laneEditPart;
+				if(type.equals(UpdateSizePoolSelectionEditPolicy.ADD_RIGHT)||type.equals(UpdateSizePoolSelectionEditPolicy.REMOVE_LEFT)){
+					targetEp = getPoolEditPart();
+				}
+				
+				IUndoableOperation c = new UpdatePoolSizeCommand(targetEp, type);
 				OperationHistoryFactory.getOperationHistory().execute(c,null,null);
 				me.consume();
 
 
-				laneEditPart.getViewer().setSelection(new StructuredSelection(laneEditPart));
+				laneEditPart.getViewer().setSelection(new StructuredSelection(targetEp));
 				refresh();
 				laneEditPart.getViewer().setSelection(new StructuredSelection(getHost()));
 
