@@ -279,11 +279,11 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 
     private void addDatasOnProcess(AbstractProcess process){
     	Set<org.bonitasoft.engine.core.operation.Operation> ops = outputValues.keySet();
-    	Iterator it= ops.iterator();
+    	Iterator<org.bonitasoft.engine.core.operation.Operation> it= ops.iterator();
     	JavaType type = ProcessFactory.eINSTANCE.createJavaType();
   
     	while(it.hasNext()){
-    		org.bonitasoft.engine.core.operation.Operation output = (org.bonitasoft.engine.core.operation.Operation) it.next();
+    		org.bonitasoft.engine.core.operation.Operation output = it.next();
     		JavaObjectData data = ProcessFactory.eINSTANCE.createJavaObjectData();
     		data.setName(output.getLeftOperand().getName());
     		data.setDataType(type);
