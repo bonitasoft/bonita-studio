@@ -16,13 +16,8 @@
  */
 package org.bonitasoft.studio.engine.export;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,9 +29,7 @@ import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
 import org.bonitasoft.engine.bpm.model.DesignProcessDefinition;
-import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
@@ -44,7 +37,6 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.gmf.tools.CopyToImageUtilEx;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -70,7 +62,6 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -94,7 +85,6 @@ import org.eclipse.ui.PlatformUI;
 public class BarExporter {
 
     private static final String PROCESS_DEFINITION_EXPORTER_ID = "org.bonitasoft.studio.engine.processDefinitionExporter";
-    private static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
     private static final String BAR_RESOURCE_PROVIDERS_EXTENSION_POINT = "org.bonitasoft.studio.common.barResourcesProvider";
     private static final String BAR_APPLICATION_RESOURCE_PROVIDERS_EXTENSION_POINT = "org.bonitasoft.studio.exporter.barApplicationResourceProvider";
 
@@ -326,7 +316,7 @@ public class BarExporter {
     private void addProcessImage(BusinessArchiveBuilder builder, final AbstractProcess process) throws CoreException {
         if(PlatformUI.isWorkbenchRunning()){
             final String processName = process.getName()+"_"+process.getVersion();
-            final String path = TMP_DIR + File.separatorChar + processName +".png" ; //$NON-NLS-1$
+            final String path = processName +".png" ; //$NON-NLS-1$
 
             try {
                 Diagram diagram = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process),null);
@@ -343,73 +333,28 @@ public class BarExporter {
                 }
                 diagram = (Diagram) resource.getEObject(diagram.eResource().getURIFragment(diagram));
                 CopyToImageUtilEx copyToImageUtil = new CopyToImageUtilEx();
-                ByteArrayInputStream stream = null;
+                byte[] imageBytes = null;
                 try {
-                    if(!new File(TMP_DIR).exists()){
-                        new File(TMP_DIR).mkdir() ;
-                    }
-                    File newFile = new File(TMP_DIR, processName +".png");
-                    newFile.delete();
-
-                    byte[] imageBytes = copyToImageUtil.copyToImageByteArray(diagram, process,800, 800, ImageFileFormat.PNG, new NullProgressMonitor(), new PreferencesHint("exportToImage"), true) ;
-                    stream = new ByteArrayInputStream(imageBytes);
-                    FileOutputStream fos = new FileOutputStream(newFile);
-                    FileUtil.copy(stream, fos);
-                    fos.close();
+                    imageBytes = copyToImageUtil.copyToImageByteArray(diagram, process, ImageFileFormat.PNG, Repository.NULL_PROGRESS_MONITOR, new PreferencesHint("exportToImage"), true) ;
                 } catch (Exception e) {
                     BonitaStudioLog.error(e);
                     return ;
                 } finally {
-                    if(stream != null){
-                        try {
-                            stream.close();
-                        } catch (IOException e) {
-                            BonitaStudioLog.error(e);
-                        }
-                    }
                     editingDomain.dispose() ;
                 }
-
-
+                if(imageBytes != null){
+                    try {
+                        builder.addExternalResource(new BarResource(path,imageBytes));
+                    } catch (Exception e) {
+                        BonitaStudioLog.log("Process image file generation has failed"); //$NON-NLS-1$
+                    }
+                }
             }catch (Exception e) {
                 BonitaStudioLog.error(e);
             }
-
-
-            final File imgFile = new File(path);
-            if(imgFile.exists()){
-                try {
-                    builder.addExternalResource(createBarResource(imgFile,""));
-                } catch (Exception e) {
-                    BonitaStudioLog.log("Process image file generation has failed"); //$NON-NLS-1$
-                } finally{
-                    PlatformUtil.delete(imgFile, Repository.NULL_PROGRESS_MONITOR);
-                }
-            }else{
-                BonitaStudioLog.log("Process image file generation has failed"); //$NON-NLS-1$
-            }
         }
     }
 
-    /**
-     * @param file
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @return a BarResource
-     */
-    private BarResource createBarResource(final File file,String barPathPrefix) throws FileNotFoundException, IOException {
-        if (!file.exists()) {
-            throw new  FileNotFoundException(file.getName());
-        }
-        byte[] jarBytes = new byte[(int) file.length()];
-        InputStream stream = new FileInputStream(file);
-        stream.read(jarBytes);
-        stream.close();
-        if(barPathPrefix != null && !barPathPrefix.isEmpty() && !barPathPrefix.endsWith("/")){
-            barPathPrefix = barPathPrefix+"/" ;
-        }
-        return new BarResource(barPathPrefix+file.getName(), jarBytes);
-    }
     
     private boolean checkActorMappingGroup(ActorMapping mapping){
     	
