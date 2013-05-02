@@ -274,7 +274,7 @@
                 </propertySection>
                 <propertySection
                       class="org.bonitasoft.studio.properties.sections.catchmessage.CatchMessageEventCorrelationSection"
-                      filter="org.bonitasoft.studio.properties.filters.CatchMessageEventFilter"
+                      filter="org.bonitasoft.studio.properties.filters.CatchMessageEventCorrelationFilter"
                       id="section.general.tab.catchMessage.correlation"
                       tab="tab.catchMessage.correlation"
                       viewID="org.bonitasoft.studio.views.properties.process.general">
