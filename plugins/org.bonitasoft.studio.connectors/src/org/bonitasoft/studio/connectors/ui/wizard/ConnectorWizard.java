@@ -173,7 +173,8 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 			EObject containerCopy = null ;
 			for(EObject element : ModelHelper.getAllItemsOfType(processCopy, container.eClass())){
 				if(element instanceof Element && container instanceof Element){
-					if(((Element) element).getName().equals(((Element)container).getName())){
+					final String containerName = ((Element)container).getName();
+					if(((Element) element).getName().equals(containerName)){
 						containerCopy = element ;
 						break ;
 					}
@@ -508,6 +509,10 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	public Connector getOriginalConnector() {
 		return originalConnector;
+	}
+	
+	public Connector getWorkingCopyConnector() {
+		return connectorWorkingCopy;
 	}
 
 	@Override

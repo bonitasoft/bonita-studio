@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.dialog.AbstractDefinitionWizardDialog;
 import org.bonitasoft.studio.connector.model.definition.dialog.ITestConfigurationListener;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Shell;
 
@@ -36,13 +37,17 @@ public class ActorFilterDefinitionWizardDialog extends AbstractDefinitionWizardD
         super(parentShell, newWizard, RepositoryManager.getInstance().getRepositoryStore(ActorFilterConfRepositoryStore.class),RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class), null);
     }
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.connector.model.definition.dialog.AbstractDefinitionWizardDialog#getTestListener()
-     */
-    @Override
-    protected ITestConfigurationListener getTestListener(ConnectorConfiguration configuration) {
-        return null;
-    }
+	@Override
+	protected ITestConfigurationListener getTestListener(
+			ConnectorConfiguration configuration, Connector connector) {
+		return null;
+	}
+
+	@Override
+	protected ITestConfigurationListener getTestListener(
+			ConnectorConfiguration configuration, IWizard wizard) {
+		return null;
+	}
 
 
 }

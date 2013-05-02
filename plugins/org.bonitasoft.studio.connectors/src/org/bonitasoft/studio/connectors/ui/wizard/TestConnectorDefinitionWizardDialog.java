@@ -25,6 +25,7 @@ import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Composite;
@@ -47,13 +48,17 @@ public class TestConnectorDefinitionWizardDialog extends AbstractDefinitionWizar
         getButton(IDialogConstants.FINISH_ID).setText(Messages.testConfiguration);
     }
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.connector.model.definition.dialog.AbstractDefinitionWizardDialog#getTestListener()
-     */
-    @Override
-    protected ITestConfigurationListener getTestListener(ConnectorConfiguration configuration) {
-        return null;
-    }
+	@Override
+	protected ITestConfigurationListener getTestListener(
+			ConnectorConfiguration configuration, Connector connector) {
+		return null;
+	}
+
+	@Override
+	protected ITestConfigurationListener getTestListener(
+			ConnectorConfiguration configuration, IWizard wizard) {
+		return null;
+	}
 
 
 }
