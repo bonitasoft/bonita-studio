@@ -113,6 +113,8 @@ public class Messages extends NLS {
 	public static String createAndNewButton;
 	public static String documentType;
 	public static String documentReferenceType;
+	public static String xmlDefaultValueTooLongMessage;
+	public static String xmlDefaultValueTooLongTitle;
 
     static {
         NLS.initializeMessages("messages", Messages.class);//$NON-NLS-1$

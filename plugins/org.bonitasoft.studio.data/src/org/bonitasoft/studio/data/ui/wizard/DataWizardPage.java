@@ -14,7 +14,9 @@
  */
 package org.bonitasoft.studio.data.ui.wizard;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
@@ -157,6 +159,7 @@ public class DataWizardPage extends WizardPage {
 	private IViewerObservableValue observeSingleSelectionTypeCombo;
 	private IViewerObservableValue observeSingleSelectionDefaultValueExpression;
 	final private String multipleReturnType = List.class.getName();
+	private Button browseXMLButton;
 
 	private final ViewerFilter typeViewerFilter = new ViewerFilter() {
 
@@ -197,6 +200,7 @@ public class DataWizardPage extends WizardPage {
 			}
 
 			updateMoreSection(newType);
+			updateBrowseXMLButton(newType);
 			final Shell s = getShell();
 			if(s != null){
 				final Point defaultSize = s.getSize();
@@ -505,7 +509,7 @@ public class DataWizardPage extends WizardPage {
 						}
 					}
 				}
-				
+
 				return new GroovyReferenceValidator(Messages.name).validate(value);
 			}
 		});
@@ -694,6 +698,7 @@ public class DataWizardPage extends WizardPage {
 		});
 
 		updateMoreSection(data.getDataType());
+		updateBrowseXMLButton(data.getDataType());
 	}
 
 	protected void createDefaultValue(final Composite parent) {
@@ -701,8 +706,12 @@ public class DataWizardPage extends WizardPage {
 		defaultValueLabel.setText(Messages.defaultValueLabel);
 		defaultValueLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
-		defaultValueViewer = new ExpressionViewer(parent, SWT.BORDER, ProcessPackage.Literals.DATA__DEFAULT_VALUE);
-		defaultValueViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+		Composite defaultValueComposite = new Composite (parent,SWT.NONE);
+		defaultValueComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		defaultValueComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
+
+		defaultValueViewer = new ExpressionViewer(defaultValueComposite, SWT.BORDER, ProcessPackage.Literals.DATA__DEFAULT_VALUE);
+		defaultValueViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		defaultValueViewer.setContext(container);
 
 
@@ -726,6 +735,62 @@ public class DataWizardPage extends WizardPage {
 			}
 		});
 		defaultValueViewer.setInput(data);
+		browseXMLButton = new Button(defaultValueComposite, SWT.FLAT);
+		browseXMLButton.setText(Messages.browseClasses);
+
+		browseXMLButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
+				fd.setFilterExtensions(new String[] { "*.xml" });
+				String file = fd.open();
+				if (file != null) {
+					FileReader fr = null;
+					BufferedReader br = null;
+					try {
+						fr = new FileReader(file);
+						br = new BufferedReader(fr);
+						String temp;
+						StringBuilder builder = new StringBuilder();
+						while ((temp = br.readLine()) != null) {
+							builder.append(temp);
+							// builder.append(System.getProperty("line.separator"))
+							// ;
+						}
+
+						defaultValueViewer.getTextControl().setText(builder.toString());
+						if (!defaultValueViewer.getTextControl().getText().equals(builder.toString())) {
+							MessageDialog.openError(getShell(), Messages.xmlDefaultValueTooLongTitle, Messages.xmlDefaultValueTooLongMessage);
+						}
+					} catch (Exception e1) {
+						BonitaStudioLog.error(e1);
+					} finally {
+						if (fr != null) {
+							try {
+								fr.close();
+							} catch (IOException e1) {
+								BonitaStudioLog.error(e1);
+							}
+						}
+						if (br != null) {
+							try {
+								br.close();
+							} catch (IOException e1) {
+								BonitaStudioLog.error(e1);
+							}
+						}
+					}
+				}
+
+			}
+
+		});
+
+		if (data.getDataType()!=null && data.getDataType() instanceof XMLData) {
+			browseXMLButton.setVisible(true);
+		} else {
+			browseXMLButton.setVisible(false);
+		}
 	}
 
 	protected void createTypeChooser(final Composite parent) {
@@ -785,6 +850,16 @@ public class DataWizardPage extends WizardPage {
 				moreSection.setExpanded(true);
 			} else {
 				moreSection.setClient(new Composite(moreSection, SWT.NONE));
+			}
+		}
+	}
+
+	protected void updateBrowseXMLButton(final DataType type){
+		if (browseXMLButton!=null){
+			if (type instanceof XMLType){
+				browseXMLButton.setVisible(true);
+			} else {
+				browseXMLButton.setVisible(false);
 			}
 		}
 	}
@@ -1035,4 +1110,13 @@ public class DataWizardPage extends WizardPage {
 		return data;
 	}
 
+	protected String getXMLInstanceLabel(EObject container2) {
+		AbstractProcess process = ModelHelper.getMainProcess(container);
+		for (DataType dataType : process.getDatatypes()) {
+			if (dataType instanceof XMLType) {
+				return dataType.getName();
+			}
+		}
+		return null;
+	}
 }

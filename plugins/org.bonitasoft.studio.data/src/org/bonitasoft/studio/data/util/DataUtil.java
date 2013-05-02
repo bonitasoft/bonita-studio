@@ -74,7 +74,7 @@ public class DataUtil {
                 } else if(t instanceof BooleanType)  {
                     sb.append(Boolean.class.getName());
                 }else if(t instanceof XMLType)  {
-                    sb.append(Document.class.getName());
+                    sb.append(String.class.getName());
                 }else if(t instanceof EnumType)  {
                     sb.append(String.class.getName());
                 } else {
