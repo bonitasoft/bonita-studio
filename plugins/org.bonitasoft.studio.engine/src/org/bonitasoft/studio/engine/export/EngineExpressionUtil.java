@@ -120,7 +120,8 @@ public class EngineExpressionUtil {
 
 	public static List<Expression> createDependenciesList(final org.bonitasoft.studio.model.expression.Expression expression) {
 		final List<Expression> result = new ArrayList<Expression>();
-		if (expression.getType().equals(ExpressionConstants.SCRIPT_TYPE) || expression.getType().equals(ExpressionConstants.PATTERN_TYPE)) {
+		if (expression.getType().equals(ExpressionConstants.SCRIPT_TYPE) || expression.getType().equals(ExpressionConstants.PATTERN_TYPE)
+				|| expression.getType().equals(ExpressionConstants.JAVA_TYPE) || expression.getType().equals(ExpressionConstants.XPATH_TYPE)) {
 			for (final EObject element : expression.getReferencedElements()) {
 				if (element instanceof Data) {
 					result.add(createVariableExpression((Data) element));

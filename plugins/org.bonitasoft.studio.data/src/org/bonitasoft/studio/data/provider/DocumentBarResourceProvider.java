@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.extension.BARResourcesProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -81,6 +82,7 @@ public class DocumentBarResourceProvider implements BARResourcesProvider {
         if (file.exists()) {
             byte[] jarBytes = new byte[(int) file.length()];
             InputStream stream = new FileInputStream(file);
+           // FileUtil.copy(in, out)
             stream.read(jarBytes);
             stream.close();
             if(barPathPrefix != null && !barPathPrefix.isEmpty() && !barPathPrefix.endsWith("/")){

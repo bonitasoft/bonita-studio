@@ -49,6 +49,9 @@ import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.JavaObjectData;
+import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;
@@ -303,8 +306,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		textTooltip.setShift(new Point(5, 5));
 		textTooltip.setRespectMonitorBounds(true);
 		textTooltip.setPopupDelay(100);
-		
-		
+
+
 		typeDecoration = new ControlDecoration(contentAssistText.getToolbar(), SWT.LEFT ,control) ;
 		typeDecoration.setMarginWidth(0) ;
 
@@ -660,14 +663,16 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			public Object convert(Object from) {
 				final boolean isScriptType = ExpressionConstants.SCRIPT_TYPE.equals(from.toString());
 				final boolean isConnectorType = from.toString().equals(ExpressionConstants.CONNECTOR_TYPE);
-				if(isScriptType){
+				final boolean isXPathType = from.toString().equals(ExpressionConstants.XPATH_TYPE);
+				final boolean isJavaType = from.toString().equals(ExpressionConstants.JAVA_TYPE);
+				if(isScriptType || isXPathType || isJavaType){
 					textTooltip.setText(Messages.editScriptExpressionTooltip);
 				}else if(isConnectorType){
 					textTooltip.setText(Messages.editConnectorExpressionTooltip);
 				}else{
 					textTooltip.setText(null);
 				}
-				return !(isScriptType || isConnectorType);
+				return !(isScriptType || isConnectorType || isJavaType || isXPathType);
 			}
 
 		});
@@ -714,8 +719,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 
 	protected String getContentFromInput(String input) {
-		if(selectedExpression.getType().equals(ExpressionConstants.SCRIPT_TYPE) || selectedExpression.getType().equals(ExpressionConstants.PATTERN_TYPE)){
-			return selectedExpression.getContent() ; //NO CONTENT UPDATE WHEN TYPE IS SCRIPT
+		if(selectedExpression.getType().equals(ExpressionConstants.SCRIPT_TYPE) 
+				|| selectedExpression.getType().equals(ExpressionConstants.PATTERN_TYPE)
+				|| selectedExpression.getType().equals(ExpressionConstants.XPATH_TYPE)
+				|| selectedExpression.getType().equals(ExpressionConstants.JAVA_TYPE)){
+			return selectedExpression.getContent() ; //NO CONTENT UPDATE WHEN THOSES TYPES
 		}
 
 		Set<String> cache = new HashSet<String>() ;
@@ -754,7 +762,12 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			return ExpressionConstants.CONNECTOR_TYPE ;
 		}else if(ExpressionConstants.PATTERN_TYPE.equals(expressionType)){
 			return ExpressionConstants.PATTERN_TYPE ;
+		}else if(ExpressionConstants.JAVA_TYPE.equals(expressionType)){
+			return ExpressionConstants.JAVA_TYPE ;
+		}else if(ExpressionConstants.XPATH_TYPE.equals(expressionType)){
+			return ExpressionConstants.XPATH_TYPE ;
 		}
+
 
 
 		Set<String> cache = new HashSet<String>() ;
@@ -821,13 +834,13 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			if(icon != null){
 				messageDecoration.setImage(icon);
 			}
-			
-				messageDecoration.show() ;
-			
+
+			messageDecoration.show() ;
+
 		}else{
-	
-				messageDecoration.hide() ;
-			
+
+			messageDecoration.hide() ;
+
 		}
 	}
 

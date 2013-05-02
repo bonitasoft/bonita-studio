@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.data.provider;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -56,6 +57,7 @@ import org.eclipse.jdt.internal.ui.viewsupport.JavaUILabelProvider;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -71,7 +73,6 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -85,7 +86,6 @@ import org.eclipse.swt.widgets.Text;
 public class JavaExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
 	private TableViewer viewer;
-	private GridLayout gridLayout;
 	private Expression editorInputExpression;
 	private Composite mainComposite;
 	private Text typeText;
@@ -98,8 +98,7 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 	public Control createExpressionEditor(Composite parent) {
 		mainComposite = new Composite(parent, SWT.NONE) ;
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-		gridLayout = new GridLayout(2, true) ;
-		mainComposite.setLayout(gridLayout) ;
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).create()) ;
 
 		viewer = new TableViewer(mainComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL) ;
 
@@ -135,13 +134,11 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 					}
 					if(className != null){
 						javaTreeviewer.setInput(className);
-						IMethod selectedMethod  =getJavaSelectionFromContent() ;
-						if(selectedMethod != null){
-							javaTreeviewer.expandAll() ;
-							javaTreeviewer.setSelection(new StructuredSelection(selectedMethod)) ;
-							javaTreeviewer.getTree().setFocus() ;
+						javaTreeviewer.expandAll() ;
+						//	javaTreeviewer.setSelection(new StructuredSelection(selectedMethod)) ;
+						javaTreeviewer.getTree().setFocus() ;
 
-						}
+
 						javaTreeviewer.getTree().getShell().layout(true,true ) ;
 						JavaExpressionEditor.this.fireSelectionChanged();
 					}
@@ -150,7 +147,6 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 		}) ;
 
 		createBrowseJavaObjectForReadExpression(mainComposite) ;
-
 		createReturnTypeComposite(parent) ;
 
 		return mainComposite;
@@ -159,10 +155,7 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 	protected void createReturnTypeComposite(Composite parent) {
 		Composite typeComposite = new Composite(parent,SWT.NONE) ;
 		typeComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-		GridLayout gl = new GridLayout(2,false) ;
-		gl.marginWidth = 0 ;
-		gl.marginHeight = 0 ;
-		typeComposite.setLayout(gl) ;
+		typeComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create()) ;
 
 		Label typeLabel = new Label(typeComposite, SWT.NONE) ;
 		typeLabel.setText(Messages.returnType) ;
@@ -175,16 +168,12 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 
 
 	protected void createBrowseJavaObjectForReadExpression(Composite composite) {
-		viewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create()) ;
-		Composite res = new Composite(composite,SWT.NONE) ;
+		final Composite res = new Composite(composite,SWT.NONE) ;
 		res.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
-		GridLayout gl= new GridLayout(1, false) ;
-		gl.marginHeight = 0 ;
-		gl.marginWidth = 0 ;
-		res.setLayout(gl) ;
+		res.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create()) ;
 
 
-		Label label = new Label(res, SWT.NONE);
+		final Label label = new Label(res, SWT.NONE);
 		label.setText(Messages.browseJava);
 		javaTreeviewer = new TreeViewer(res, SWT.SINGLE | SWT.BORDER);
 		javaTreeviewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -209,9 +198,6 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 			public void selectionChanged(SelectionChangedEvent event) {
 				ITreeSelection selection = (ITreeSelection) event.getSelection();
 				if(!selection.isEmpty()){
-
-					editorInputExpression.setContent(getJavaScript(selection)) ;
-
 					JavaExpressionEditor.this.fireSelectionChanged();
 					javaTreeviewer.getTree().setFocus() ;
 				}
@@ -232,15 +218,13 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 			}
 			if(className != null){
 				String content = editorInputExpression.getContent() ;
-				if(content != null && content.startsWith(className) && content.length() > className.length()){
-					content = content.substring(className.length()+1) ;
-
+				if(content != null){
 					IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
 					IType type = null;
 					try {
-						type = project.findType(className);
+						type = ((PojoBrowserContentProvider) getContentProvider()).getType();
 						for(IMethod m : type.getMethods()){
-							String method = m.getElementName()+m.getSignature() ;
+							String method = m.getElementName() ;
 							if(method.equals(content)){
 								return m ;
 							}
@@ -321,18 +305,8 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 	public void bindExpression(EMFDataBindingContext dataBindingContext,EObject context,Expression inputExpression,ViewerFilter[] filters) {
 
 		editorInputExpression = inputExpression ;
-
 		setContentProvider(new PojoBrowserContentProvider()) ;
-
-
 		javaTreeviewer.setContentProvider(getContentProvider());
-		if(editorInputExpression.getContent() != null){
-			IMethod selection = getJavaSelectionFromContent() ;
-			if(selection != null){
-				javaTreeviewer.setSelection(new StructuredSelection(selection)) ;
-			}
-		}
-
 
 		Set<Data> input = new HashSet<Data>() ;
 		IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.VARIABLE_TYPE) ;
@@ -354,7 +328,13 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 
 			@Override
 			public Object convert(Object data) {
-				return ((Data) data).getName() +" - "+editorInputExpression.getContent();
+				if(data instanceof Data){
+					return ((Data) data).getName() +" - "+ ((JavaObjectData) data).getClassName()+"#"+editorInputExpression.getContent() ;
+				}else if (data instanceof IMethod){
+					final JavaObjectData data2 = (JavaObjectData) editorInputExpression.getReferencedElements().get(0);
+					return data2.getName() +" - "+ data2.getClassName()+"#"+((IMethod)data).getElementName() ;
+				}
+				return null;
 			}
 
 		};
@@ -362,15 +342,45 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 
 
 		UpdateValueStrategy selectionToContent = new UpdateValueStrategy() ;
-		IConverter contentConverter = new Converter(Data.class,String.class){
+		IConverter contentConverter = new Converter(Object.class,String.class){
 
 			@Override
-			public Object convert(Object data) {
-				return editorInputExpression.getContent();
+			public Object convert(Object value) {
+				if(value instanceof IMethod){
+					return ((IMethod) value).getElementName();
+				}
+				Object selection = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+				if( selection instanceof Data ){
+					return ((Data) selection).getName();
+				}
+				return null;
 			}
 
 		};
 		selectionToContent.setConverter(contentConverter) ;
+
+		UpdateValueStrategy methodToSelection = new UpdateValueStrategy() ;
+		IConverter methodToSelectionConverter = new Converter(String.class,IMethod.class){
+
+			@Override
+			public Object convert(Object methodName) {
+				IType type = ((PojoBrowserContentProvider) getContentProvider()).getType();
+				if(type != null){
+					try {
+						for(IMethod method : type.getMethods()){
+							if(method.getElementName().equals(methodName)){
+								return method ;
+							}
+						}
+					} catch (JavaModelException e) {
+
+					}
+				}
+				return null ;
+			}
+
+		};
+		methodToSelection.setConverter(methodToSelectionConverter);
 
 		UpdateValueStrategy selectionToReturnType = new UpdateValueStrategy() ;
 		IConverter returnTypeConverter = new Converter(IType.class,String.class){
@@ -433,21 +443,23 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 
 			@Override
 			public Object convert(Object dataList) {
-				List<Data> list = (List<Data>) dataList;
-				if(list.isEmpty()){
-					return null;
-				} else {
-					return list.get(0) ;
+				Data d = ((List<Data>) dataList).get(0);
+				Collection<Data> inputData = (Collection<Data>) viewer.getInput();
+				for(Data data : inputData){
+					if(data.getName().equals(d.getName()) && data.getDataType().getName().equals(d.getDataType().getName())){
+						return data ;
+					}
 				}
+				return null ;
 			}
 
 		};
 		referencedDataToSelection.setConverter(referencetoDataConverter) ;
-
-		dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), nameObservable,selectionToName,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER))  ;
-		dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), contentObservable,selectionToContent,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER))  ;
-		dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(javaTreeviewer), returnTypeObservable,selectionToReturnType,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER))  ;
 		dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), referenceObservable,selectionToReferencedData,referencedDataToSelection)  ;
+		dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(viewer), nameObservable,selectionToName,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER))  ;
+		dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(javaTreeviewer), nameObservable,selectionToName,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER))  ;
+		dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(javaTreeviewer), contentObservable,selectionToContent,methodToSelection)  ;
+		dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(javaTreeviewer), returnTypeObservable,selectionToReturnType,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER))  ;
 		dataBindingContext.bindValue(SWTObservables.observeText(typeText, SWT.Modify), returnTypeObservable)  ;
 	}
 

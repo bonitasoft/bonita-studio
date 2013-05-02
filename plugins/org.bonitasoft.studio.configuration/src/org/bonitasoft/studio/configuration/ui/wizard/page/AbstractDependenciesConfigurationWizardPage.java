@@ -326,22 +326,22 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
             }
         }) ;
 
-        final Button manageJarButton = new Button(buttonComposite, SWT.FLAT) ;
-        manageJarButton.setLayoutData(GridDataFactory.fillDefaults().create()) ;
-        manageJarButton.setText(Messages.manageJars) ;
-        manageJarButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                final ICommandService commandService =  (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
-                Command cmd =  commandService.getCommand("org.bonitasoft.studio.dependencies.manageJars") ;
-                try {
-                    cmd.executeWithChecks(new ExecutionEvent()) ;
-                } catch (Exception e1){
-                    BonitaStudioLog.error(e1) ;
-                }
-                treeViewer.refresh() ;
-            }
-        }) ;
+//        final Button manageJarButton = new Button(buttonComposite, SWT.FLAT) ;
+//        manageJarButton.setLayoutData(GridDataFactory.fillDefaults().create()) ;
+//        manageJarButton.setText(Messages.manageJars) ;
+//        manageJarButton.addSelectionListener(new SelectionAdapter() {
+//            @Override
+//            public void widgetSelected(SelectionEvent e) {
+//                final ICommandService commandService =  (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
+//                Command cmd =  commandService.getCommand("org.bonitasoft.studio.dependencies.manageJars") ;
+//                try {
+//                    cmd.executeWithChecks(new ExecutionEvent()) ;
+//                } catch (Exception e1){
+//                    BonitaStudioLog.error(e1) ;
+//                }
+//                treeViewer.refresh() ;
+//            }
+//        }) ;
         return mainComposite ;
     }
 

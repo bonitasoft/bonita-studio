@@ -46,6 +46,12 @@ import org.eclipse.ui.PlatformUI;
  */
 public class PojoBrowserContentProvider implements ITreeContentProvider {
 
+	private IType type;
+
+	public IType getType() {
+		return type;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -73,7 +79,6 @@ public class PojoBrowserContentProvider implements ITreeContentProvider {
 	 */
 	public Object[] getElements(Object inputElement) {
 		if(inputElement instanceof String ){
-			IType type = null ;
 			try {
 				type = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(inputElement.toString());
 			} catch (JavaModelException e1) {
