@@ -211,9 +211,9 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>org.bonitasoft.console</groupId>
-									<artifactId>studio-integration</artifactId>
-									<version>${bundle.version}</version>
+									<groupId>org.bonitasoft.web.tooling</groupId>
+									<artifactId>studio-watchdog</artifactId>
+									<version>6.0.0</version>
 									<type>war</type>
 								</artifactItem>
 							</artifactItems>
