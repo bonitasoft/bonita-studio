@@ -89,6 +89,7 @@ public class BOSWebServerManager {
 	protected final String tomcatInstanceLocation = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),"tomcat").getAbsolutePath();
 
 	protected static final String WATCHDOG_PORT_PROPERTY = "org.bonitasoft.studio.watchdog.port";
+    private static final String WATCHDOG_TIMER = "org.bonitasoft.studio.watchdog.timer";
 	private static final int MIN_PORT_NUMBER = 1024;
 	private static final int MAX_PORT_NUMBER = 65535;
 	private static final int MAX_SERVER_START_TIME = 300000;
@@ -398,6 +399,7 @@ public class BOSWebServerManager {
 			BonitaStudioLog.debug("Port "+oldPort+" is not availble for server watchdog, studio will use next available port : "+WATCHDOG_PORT,EnginePlugin.PLUGIN_ID);
 		}
 		addSystemProperty(args, WATCHDOG_PORT_PROPERTY,String.valueOf(WATCHDOG_PORT));
+		addSystemProperty(args, WATCHDOG_TIMER, "20000");
 		addSystemProperty(args, "eclipse.product", Platform.getProduct().getApplication());
 		return args.toString();
 	}
