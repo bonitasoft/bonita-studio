@@ -33,6 +33,7 @@ import org.bonitasoft.studio.properties.test.TestThrowCatchMessage;
 import org.bonitasoft.studio.tests.IHeapDumper;
 import org.bonitasoft.studio.tests.bug.TestBugsSWTBot;
 import org.bonitasoft.studio.tests.data.TestData;
+import org.bonitasoft.studio.tests.debug.TestDebugFeature;
 import org.bonitasoft.studio.tests.pagetemplate.TestPageTemplate;
 import org.bonitasoft.studio.tests.processzoo.examples.TestWebPurchase;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
@@ -96,6 +97,7 @@ import org.junit.runners.Suite;
     TestUndoRedoStackLimit.class,
     TestOpenDiagram.class,
     TestDeleteTaskWithForm.class,
+    TestDebugFeature.class,
     //WORKAROUND: put at the end otherwise when doing a new run after, it fails
     ConnectorDefinitionTranslationsTest.class
 })
