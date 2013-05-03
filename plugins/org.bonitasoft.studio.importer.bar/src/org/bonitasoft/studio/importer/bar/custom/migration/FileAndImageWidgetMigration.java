@@ -56,13 +56,13 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 		}
 		removeAttachmentData(model);
 	}
-	
-    protected void removeAttachmentData(Model model) {
-        for (Instance data : model.getAllInstances("process.AttachmentData")) {
-        	attachmentDatas.put(data.copy(),data.getContainer());
-            model.delete(data);
-        }
-    }
+
+	protected void removeAttachmentData(Model model) {
+		for (Instance data : model.getAllInstances("process.AttachmentData")) {
+			attachmentDatas.put(data.copy(),data.getContainer());
+			model.delete(data);
+		}
+	}
 
 	private void storeFileData(Instance widget) {
 		final Instance data = widget.get("fileData");
@@ -157,24 +157,25 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 	}
 
 	private void createDocuments(Model model){
-		 for (Instance attachmentData:attachmentDatas.keySet()){
-	        	Instance process = attachmentDatas.get(attachmentData);
-	        	Instance document = model.newInstance("process.Document");
-	        	
-	        	document.set("isInternal", true);
-	        	String name = attachmentData.get("name");
-	        	document.set("name",name);
-	        	String defaultValue = attachmentData.get("barPath");
-	        	if(defaultValue != null && defaultValue.startsWith("attachments/")){
-	        		defaultValue = defaultValue.substring("attachments/".length());
-	        	}
-	        	document.set("defaultValueIdOfDocumentStore", defaultValue);
-	        	String doc = attachmentData.get("documentation");
-	        	document.set("documentation", doc);
-	        	process.add("documents", document);
-	        	addReportChange(name,Messages.document, process.getUuid(),Messages.documentCreationDescription,Messages.documentProperty, IStatus.WARNING);
-	        	model.delete(attachmentData);
-	        }
+		for (Instance attachmentData:attachmentDatas.keySet()){
+			Instance process = attachmentDatas.get(attachmentData);
+			if(process.instanceOf("process.Pool")){
+				Instance document = model.newInstance("process.Document");
+				document.set("isInternal", true);
+				String name = attachmentData.get("name");
+				document.set("name",name);
+				String defaultValue = attachmentData.get("barPath");
+				if(defaultValue != null && defaultValue.startsWith("attachments/")){
+					defaultValue = defaultValue.substring("attachments/".length());
+				}
+				document.set("defaultValueIdOfDocumentStore", defaultValue);
+				String doc = attachmentData.get("documentation");
+				document.set("documentation", doc);
+				process.add("documents", document);
+				addReportChange(name,Messages.document, process.getUuid(),Messages.documentCreationDescription,Messages.documentProperty, IStatus.WARNING);
+			}
+			model.delete(attachmentData);
+		}
 	}
 
 }
