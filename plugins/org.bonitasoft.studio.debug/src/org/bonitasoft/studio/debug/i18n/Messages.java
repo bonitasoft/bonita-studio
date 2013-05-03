@@ -33,9 +33,7 @@ public class Messages extends NLS {
 	public static String selectAll;
 	public static String unSelectAll;
 	public static String DebugProcessButtonLabel;
-
-
-
+	public static String debugProcessWizardtitle;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

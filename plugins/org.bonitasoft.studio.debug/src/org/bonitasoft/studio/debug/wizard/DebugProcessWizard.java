@@ -19,6 +19,7 @@ package org.bonitasoft.studio.debug.wizard;
 
 import java.util.Set;
 
+import org.bonitasoft.studio.debug.i18n.Messages;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.wizard.IWizard;
@@ -37,6 +38,7 @@ public class DebugProcessWizard extends Wizard implements IWizard {
 
 	public DebugProcessWizard(MainProcess process){
 		this.process = process ;
+		setWindowTitle(Messages.debugProcessWizardtitle);
 	}
 	@Override
 	public void addPages() {
