@@ -123,6 +123,7 @@ import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepository
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -1623,13 +1624,14 @@ public class FormsExporter {
 					final EObject element = formFieldScript.getLeftOperand().getReferencedElements().get(0);
 					if (element instanceof Data) {
 						final Data data = (Data) element;
-						if (data.getDataType().eClass().equals(ProcessPackage.eINSTANCE.getDateType())) {
+						final EClass dataTypeEclass = data.getDataType().eClass();
+						if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getDateType())) {
 							builder.addValidator(formField.getName() + "_default_validator",
 									DefaultValidatorsProperties.getInstance().getDefaultValidator(Date.class.getName()), null, ValidatorPosition.BOTTOM);
 							builder.addLabelExpression("#dateFieldValidatorLabel", "#dateFieldValidatorLabel", ExpressionConstants.CONSTANT_TYPE,
 									String.class.getName(), null);
 						}
-						if (data.getDataType().eClass().equals(ProcessPackage.eINSTANCE.getIntegerType()) && !(formField instanceof DurationFormField)) {// no
+						if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getIntegerType()) && !(formField instanceof DurationFormField)) {// no
 							// validator
 							// for
 							// durationFormfield
@@ -1638,14 +1640,26 @@ public class FormsExporter {
 							// a
 							// long)
 							builder.addValidator(formField.getName() + "_default_validator",
-									DefaultValidatorsProperties.getInstance().getDefaultValidator(Long.class.getName()), null, ValidatorPosition.BOTTOM);
-							builder.addLabelExpression("#numericLongFieldValidatorLabel", "#numericLongFieldValidatorLabel", ExpressionConstants.CONSTANT_TYPE,
+									DefaultValidatorsProperties.getInstance().getDefaultValidator(Integer.class.getName()), null, ValidatorPosition.BOTTOM);
+							builder.addLabelExpression("#numericIntegerFieldValidatorLabel", "#numericIntegerFieldValidatorLabel", ExpressionConstants.CONSTANT_TYPE,
 									String.class.getName(), null);
 						}
-						if (data.getDataType().eClass().equals(ProcessPackage.eINSTANCE.getFloatType())) {
+						if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getFloatType())) {
+							builder.addValidator(formField.getName() + "_default_validator",
+									DefaultValidatorsProperties.getInstance().getDefaultValidator(Float.class.getName()), null, ValidatorPosition.BOTTOM);
+							builder.addLabelExpression("#numericFloatFieldValidatorLabel", "#numericFloatFieldValidatorLabel",
+									ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
+						}
+						if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getDoubleType())) {
 							builder.addValidator(formField.getName() + "_default_validator",
 									DefaultValidatorsProperties.getInstance().getDefaultValidator(Double.class.getName()), null, ValidatorPosition.BOTTOM);
 							builder.addLabelExpression("#numericDoubleFieldValidatorLabel", "#numericDoubleFieldValidatorLabel",
+									ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
+						}
+						if (dataTypeEclass.equals(ProcessPackage.eINSTANCE.getLongType())) {
+							builder.addValidator(formField.getName() + "_default_validator",
+									DefaultValidatorsProperties.getInstance().getDefaultValidator(Long.class.getName()), null, ValidatorPosition.BOTTOM);
+							builder.addLabelExpression("#numericLongFieldValidatorLabel", "#numericLongFieldValidatorLabel",
 									ExpressionConstants.CONSTANT_TYPE, String.class.getName(), null);
 						}
 					}
