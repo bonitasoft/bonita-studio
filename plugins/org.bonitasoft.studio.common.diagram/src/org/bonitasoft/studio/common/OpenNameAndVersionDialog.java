@@ -173,6 +173,9 @@ public class OpenNameAndVersionDialog extends Dialog {
                         }
                     }
                 } else {
+                	if(name.equals(srcName) && version.equals(srcVersion)){
+                		return ValidationStatus.ok();
+                	}
                 	List<AbstractProcess> diagramPools = ModelHelper.getAllProcesses(diagram);
                 	for (AbstractProcess process:diagramPools){
                 		if (name.equals(process.getName())&& version.equals(process.getVersion())){
