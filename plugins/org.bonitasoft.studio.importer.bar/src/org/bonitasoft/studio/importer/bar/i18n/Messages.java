@@ -126,6 +126,7 @@ public class Messages extends NLS {
 	public static String migrationReportOf;
 	public static String deadlinesToNonInterruptingEventMigrationDescription;
 	public static String removeMessageEventFromSendTaskDescription;
+	public static String attachementDataRemovedFromMessage;
 	
 
     static {

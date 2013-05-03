@@ -173,6 +173,8 @@ public class FileAndImageWidgetMigration extends ReportCustomMigration {
 				document.set("documentation", doc);
 				process.add("documents", document);
 				addReportChange(name,Messages.document, process.getUuid(),Messages.documentCreationDescription,Messages.documentProperty, IStatus.WARNING);
+			}else{
+				addReportChange((String) process.get("name"),process.getEClass().getName(), process.getUuid(),Messages.bind(Messages.attachementDataRemovedFromMessage,attachmentData.get("name")),Messages.messagesProperty, IStatus.ERROR);
 			}
 			model.delete(attachmentData);
 		}
