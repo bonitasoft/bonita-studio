@@ -174,11 +174,14 @@ public class XSDContentProvider implements ITreeContentProvider {
 			element instanceof XSDSimpleTypeDefinition ||
 			element instanceof XSDAttributeUse ||
 			element instanceof XSDAttributeDeclaration ||
-			(element instanceof XSDElementDeclaration && ((XSDElementDeclaration)element).getType() instanceof XSDSimpleTypeDefinition)
-			);
+			(element instanceof XSDElementDeclaration && ((XSDElementDeclaration)element).getType() instanceof XSDSimpleTypeDefinition));
 	}
 	
 	public void setElement(XSDElementDeclaration element) {
 		this.inputElement = element;
+	}
+
+	public XSDElementDeclaration getElement() {
+		return this.inputElement;
 	}
 }

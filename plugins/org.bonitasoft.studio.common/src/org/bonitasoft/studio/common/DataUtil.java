@@ -66,7 +66,7 @@ public class DataUtil {
         } else if (type instanceof EnumType) {
             return String.class.getName() ;
         } else if (type instanceof XMLType) {
-            return Document.class.getName();
+            return String.class.getName();
         }
         return null;
     }

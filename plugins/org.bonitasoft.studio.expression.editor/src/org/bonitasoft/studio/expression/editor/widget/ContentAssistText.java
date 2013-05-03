@@ -85,7 +85,9 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 
 						@Override
 						public void run() {
-							ContentAssistText.this.redraw();
+							if(!ContentAssistText.this.isDisposed()){
+								ContentAssistText.this.redraw();
+							}
 						}
 					});
 
@@ -99,7 +101,10 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 
 						@Override
 						public void run() {
-							ContentAssistText.this.redraw();
+							if(!ContentAssistText.this.isDisposed()){
+								ContentAssistText.this.redraw();
+							}
+							
 						}
 					});
 				}

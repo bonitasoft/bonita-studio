@@ -65,7 +65,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -135,10 +134,7 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 					if(className != null){
 						javaTreeviewer.setInput(className);
 						javaTreeviewer.expandAll() ;
-						//	javaTreeviewer.setSelection(new StructuredSelection(selectedMethod)) ;
 						javaTreeviewer.getTree().setFocus() ;
-
-
 						javaTreeviewer.getTree().getShell().layout(true,true ) ;
 						JavaExpressionEditor.this.fireSelectionChanged();
 					}

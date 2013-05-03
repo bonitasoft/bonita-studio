@@ -41,7 +41,9 @@ import org.eclipse.xsd.XSDSchema;
  */
 public class XSDFileStore extends EMFFileStore {
 
-    public XSDFileStore(String fileName, IRepositoryStore parentStore) {
+    private static final String ECORE_TYPE_NS = "http://www.eclipse.org/emf/2002/Ecore";
+
+	public XSDFileStore(String fileName, IRepositoryStore parentStore) {
         super(fileName, parentStore);
     }
 
@@ -110,7 +112,10 @@ public class XSDFileStore extends EMFFileStore {
         XSDSchema schema =  (XSDSchema) getContent() ;
         if(schema != null){
             for (XSDElementDeclaration element :schema.getElementDeclarations()) {
-                res.add(element.getName());
+               if(!ECORE_TYPE_NS.equals(element.getTargetNamespace())){
+            	   res.add(element.getName());
+               }
+            	
             }
         }
         return res;

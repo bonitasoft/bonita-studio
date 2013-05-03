@@ -33,6 +33,7 @@ import org.bonitasoft.engine.expression.XPathReturnType;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.exporter.ExporterTools;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -52,6 +53,8 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataAware;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -61,6 +64,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
 import org.eclipse.xtext.util.StringInputStream;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.google.inject.Injector;
 
@@ -190,7 +195,7 @@ public class EngineExpressionUtil {
 		builder.setName(leftOperand.getContent());
 		return builder.done();
 	}
-	
+
 	public static LeftOperand createLeftOperand(final org.bonitasoft.studio.model.expression.Expression leftOperand,boolean isExternal) {
 		final LeftOperandBuilder builder = new LeftOperandBuilder();
 		builder.createNewInstance();
@@ -284,7 +289,7 @@ public class EngineExpressionUtil {
 				return createDocumentExpression(exp, simpleExpression);
 			} if (ExpressionConstants.XPATH_TYPE.equals(simpleExpression.getType())){
 				return createXPATHExpression(exp,simpleExpression);
-		}else{
+			}else{
 				exp.createNewInstance(name);
 				exp.setContent(simpleExpression.getContent());
 				final String engineExpressionType = toEngineExpressionType(simpleExpression);
@@ -436,11 +441,25 @@ public class EngineExpressionUtil {
 			return null;
 		}
 	}
-	
+
 	public static Expression createXPATHExpression(final ExpressionBuilder exp,final org.bonitasoft.studio.model.expression.Expression expression ){
 		try {
-			exp.createXPathExpression(expression.getName(), expression.getContent(), getXPathReturnType(expression.getReturnType()), null);
-		//	exp.createXPathExpressionWithDataAsContent(expression.getName(), expression.getContent(), getXPathReturnType(expression.getReturnType()),((XMLData)expression.getReferencedElements().get(0)).getName());
+
+			XMLData data = (XMLData)expression.getReferencedElements().get(0);
+			List<XMLData> dataList = ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(expression), ProcessPackage.Literals.XML_DATA);
+			XMLData originalData = null;
+			for(XMLData d : dataList){
+				if(d.eContainer() instanceof DataAware){
+					if(d.getName().equals(data.getName()) && d.getDefaultValue() != null && !d.getDefaultValue().getContent().isEmpty()){
+						originalData = d;
+						break;
+					}
+				}
+			}
+			exp.createNewInstance(expression.getName()).setExpressionType(ExpressionType.TYPE_XPATH_READ).setContent(expression.getContent());
+			exp.setReturnType(expression.getReturnType());
+			//	exp.createXPathExpressionWithDataAsContent(expression.getName(), expression.getContent(), getXPathReturnType(expression.getReturnType()),((XMLData)expression.getReferencedElements().get(0)).getName());
+			exp.setDependencies(createDependenciesList(expression));
 			return exp.done();
 		} catch (InvalidExpressionException e) {
 			// TODO Auto-generated catch block
@@ -467,8 +486,8 @@ public class EngineExpressionUtil {
 		}
 		return XPathReturnType.STRING;
 	}
-	
-	
+
+
 	public static Expression createVariableExpression(final Data element) {
 		final String datasourceId = element.getDatasourceId();
 		String type = ExpressionConstants.VARIABLE_TYPE;
