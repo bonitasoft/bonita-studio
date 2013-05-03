@@ -29,6 +29,7 @@ import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDesc
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.Dialog;
@@ -139,7 +140,7 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
         saveItem = new ToolItem(toolbar, SWT.NO_FOCUS | SWT.FLAT) ;
         saveItem.setImage(Pics.getImage("save_conf.png")) ;
         saveItem.setText(Messages.saveConfiguration) ;
-        ITestConfigurationListener listener = getTestListener(null);
+        ITestConfigurationListener listener = getTestListener(null, (IWizard)null);
         if(implStore != null && listener != null){
             testItem = new ToolItem(toolbar, SWT.NO_FOCUS | SWT.FLAT) ;
             testItem.setImage(Pics.getImage("test.png")) ;
@@ -166,7 +167,8 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
                 if(testConfigurationListener != null){
                     testItem.removeListener(SWT.Selection, testConfigurationListener) ;
                 }
-                testConfigurationListener = getTestListener(connectorConfPage.getConfiguration()) ;
+
+                testConfigurationListener = getTestListener(connectorConfPage.getConfiguration(), getWizard()) ;
                 testItem.addListener(SWT.Selection,testConfigurationListener) ;
                 testItem.setEnabled(getButton(IDialogConstants.FINISH_ID).isEnabled());
             }
@@ -188,7 +190,9 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
         }
     }
 
-    @Override
+
+
+	@Override
     public void showPage(IWizardPage page) {
         super.showPage(page);
         if(page instanceof AbstractConnectorConfigurationWizardPage){
@@ -207,6 +211,6 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
     }
 
 
-    protected abstract ITestConfigurationListener getTestListener(ConnectorConfiguration configuration) ;
-
+    protected abstract ITestConfigurationListener getTestListener(ConnectorConfiguration configuration, Connector connector) ;
+    protected abstract ITestConfigurationListener getTestListener(ConnectorConfiguration configuration,	IWizard wizard);
 }
