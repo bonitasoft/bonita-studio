@@ -73,8 +73,8 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
 	public static final String PROC_EXT = "proc";
 
-	private final NotificationListener poolListener = new PoolNotificationListerner();
-
+	private final NotificationListener poolListener = new PoolNotificationListener();
+	
 	public DiagramFileStore(String fileName, IRepositoryStore store) {
 		super(fileName, store);
 	}

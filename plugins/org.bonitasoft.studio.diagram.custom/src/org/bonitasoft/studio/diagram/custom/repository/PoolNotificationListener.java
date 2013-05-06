@@ -20,7 +20,6 @@ package org.bonitasoft.studio.diagram.custom.repository;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -38,13 +37,14 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
+import org.eclipse.gmf.runtime.diagram.core.listener.NotificationUtil;
 
 /**
  * 
  * @author Romain Bioteau
  *
  */
-public class PoolNotificationListerner implements NotificationListener {
+public class PoolNotificationListener implements NotificationListener {
 
 
 	public void notifyChanged(Notification notification) {
@@ -56,47 +56,50 @@ public class PoolNotificationListerner implements NotificationListener {
 		// Listen for changes to features.
 		switch (notification.getFeatureID(AbstractProcess.class)) {
 		case ProcessPackage.ABSTRACT_PROCESS__ELEMENTS:
-			if (notification.getNewValue() instanceof Pool) { //Pool added
-				Pool pool = (Pool) notification.getNewValue();
-				TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pool) ;
+			if(NotificationUtil.isElementAddedToSlot(notification) || NotificationUtil.isElementRemovedFromSlot(notification)){
+				if (notification.getNewValue() instanceof Pool) { //Pool added
+					Pool pool = (Pool) notification.getNewValue();
+					TransactionalEditingDomain editingDomain = TransactionUtil.getEditingDomain(pool) ;
 
-				// check that process is not empty
-				String processUUID = ModelHelper.getEObjectID(pool) ;
-				IRepositoryFileStore confFile = processConfStore.createRepositoryFileStore(processUUID+".conf") ;
-				final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
-				conf.setVersion(ModelVersion.CURRENT_VERSION);
-				confFile.save(conf) ;
+					// check that process is not empty
+					String processUUID = ModelHelper.getEObjectID(pool) ;
+					IRepositoryFileStore confFile = processConfStore.createRepositoryFileStore(processUUID+".conf") ;
+					final Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
+					conf.setVersion(ModelVersion.CURRENT_VERSION);
+					confFile.save(conf) ;
 
-				ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
-				if (artifact == null) {
-					String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME) ;
-					ApplicationLookNFeelFileStore file = (ApplicationLookNFeelFileStore) lookNFeelStore.getChild(themeId) ;
-					CompoundCommand templateCommand = WebTemplatesUtil.createAddTemplateCommand(editingDomain, pool, file);
-					// add an empty application folder
-					editingDomain.getCommandStack().execute(templateCommand);
-					org.eclipse.emf.common.command.Command createDefaultResourceFolders = WebTemplatesUtil.createDefaultResourceFolders(editingDomain, pool);
-					if (createDefaultResourceFolders != null) {
-						editingDomain.getCommandStack().execute(createDefaultResourceFolders);
+					ApplicationResourceFileStore artifact = (ApplicationResourceFileStore) resourceStore.getChild(processUUID) ;
+					if (artifact == null) {
+						String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME) ;
+						ApplicationLookNFeelFileStore file = (ApplicationLookNFeelFileStore) lookNFeelStore.getChild(themeId) ;
+						CompoundCommand templateCommand = WebTemplatesUtil.createAddTemplateCommand(editingDomain, pool, file);
+						// add an empty application folder
+						editingDomain.getCommandStack().execute(templateCommand);
+						org.eclipse.emf.common.command.Command createDefaultResourceFolders = WebTemplatesUtil.createDefaultResourceFolders(editingDomain, pool);
+						if (createDefaultResourceFolders != null) {
+							editingDomain.getCommandStack().execute(createDefaultResourceFolders);
+						}
 					}
-				}
-			} else if(notification.getNewValue() == null && notification.getOldValue() instanceof Pool){//Pool removed
-				Set<String> poolIds = diagramStore.getAllProcessIds() ;
-				for(IRepositoryFileStore file : processConfStore.getChildren()){
-					String id = file.getName() ;
-					id = id.substring(0, id.lastIndexOf(".")) ;
-					if(!poolIds.contains(id)){
-						file.delete() ;
+				} else if(notification.getNewValue() == null && notification.getOldValue() instanceof Pool){//Pool removed
+					Set<String> poolIds = diagramStore.getAllProcessIds() ;
+					for(IRepositoryFileStore file : processConfStore.getChildren()){
+						String id = file.getName() ;
+						id = id.substring(0, id.lastIndexOf(".")) ;
+						if(!poolIds.contains(id)){
+							file.delete() ;
+						}
 					}
-				}
 
-				for(IRepositoryFileStore file : resourceStore.getChildren()){
-					String id = file.getName() ;
-					if(!poolIds.contains(id)){
-						file.delete() ;
+					for(IRepositoryFileStore file : resourceStore.getChildren()){
+						String id = file.getName() ;
+						if(!poolIds.contains(id)){
+							file.delete() ;
+						}
 					}
 				}
 			}
 			break;
+
 		}
 	}
 
