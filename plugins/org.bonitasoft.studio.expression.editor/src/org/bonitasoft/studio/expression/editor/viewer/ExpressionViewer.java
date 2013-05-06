@@ -666,8 +666,12 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				final boolean isConnectorType = from.toString().equals(ExpressionConstants.CONNECTOR_TYPE);
 				final boolean isXPathType = from.toString().equals(ExpressionConstants.XPATH_TYPE);
 				final boolean isJavaType = from.toString().equals(ExpressionConstants.JAVA_TYPE);
-				if(isScriptType || isXPathType || isJavaType){
+				if(isScriptType){
 					textTooltip.setText(Messages.editScriptExpressionTooltip);
+				}else if(isXPathType){
+					textTooltip.setText(Messages.editXpathExpressionTooltip);
+				}else if(isJavaType){
+					textTooltip.setText(Messages.editJavaExpressionTooltip);
 				}else if(isConnectorType){
 					textTooltip.setText(Messages.editConnectorExpressionTooltip);
 				}else{

@@ -80,6 +80,8 @@ public class Messages extends NLS {
 	public static String incompatibleStorageReturnType;
 	public static String handleShellCloseEventTitle;
 	public static String handleShellCloseEventMessage;
+	public static String editXpathExpressionTooltip;
+	public static String editJavaExpressionTooltip;
 
 
     private Messages() {
