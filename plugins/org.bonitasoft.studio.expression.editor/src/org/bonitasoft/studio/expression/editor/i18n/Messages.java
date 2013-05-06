@@ -78,6 +78,8 @@ public class Messages extends NLS {
     public static String cleanExpressionMsg;
 	public static String selectTarget;
 	public static String incompatibleStorageReturnType;
+	public static String handleShellCloseEventTitle;
+	public static String handleShellCloseEventMessage;
 
 
     private Messages() {

@@ -36,6 +36,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.DialogTray;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -69,279 +70,287 @@ import org.eclipse.swt.widgets.ToolItem;
  */
 public class EditExpressionDialog extends TrayDialog {
 
-    protected Expression inputExpression;
-    private TableViewer expressionTypeViewer;
-    protected final EObject context;
-    protected Composite contentComposite;
-    protected EMFDataBindingContext dataBindingContext;
-    protected final EditingDomain domain;
-    protected IExpressionEditor currentExpressionEditor;
-    private ISelection oldSelection ;
-    protected final ViewerFilter[] viewerTypeFilters;
-    private boolean isPassword;
-    private final Listener openTrayListener = new Listener() {
+	protected Expression inputExpression;
+	private TableViewer expressionTypeViewer;
+	protected final EObject context;
+	protected Composite contentComposite;
+	protected EMFDataBindingContext dataBindingContext;
+	protected final EditingDomain domain;
+	protected IExpressionEditor currentExpressionEditor;
+	private ISelection oldSelection ;
+	protected final ViewerFilter[] viewerTypeFilters;
+	private boolean isPassword;
+	private final Listener openTrayListener = new Listener() {
 
-        @Override
-        public void handleEvent(Event event) {
-            if (getShell() != null
-                    && currentExpressionEditor != null
-                    && currentExpressionEditor.provideDialogTray()
-                    && getTray() == null) {
-                final DialogTray tray = currentExpressionEditor.createDialogTray();
-                openTray(tray);
-            }else{
-                closeTray();
-            }
-        }
-    };
-    protected Control helpControl;
-	
-
-    protected EditExpressionDialog(Shell parentShell,boolean isPassword, Expression inputExpression,EObject context,EditingDomain domain, ViewerFilter[] viewerTypeFilters) {
-        super(parentShell);
-        this.inputExpression = inputExpression ;
-        if(this.inputExpression == null){
-            this.inputExpression = ExpressionFactory.eINSTANCE.createExpression() ;
-        }
-        this.context = context ;
-        this.domain = domain ;
-        this.viewerTypeFilters = viewerTypeFilters;
-        this.isPassword = isPassword;
-        setHelpAvailable(true);
-        if (isResizable()) {
-            setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE
-                    | getDefaultOrientation() | SWT.SHEET);
-        } else {
-            setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL
-                    | getDefaultOrientation() | SWT.SHEET);
-        }
-    }
-
-    @Override
-    public void create() {
-        super.create();
-        getShell().layout(true,true);
-    }
-
-    @Override
-    protected void configureShell(Shell newShell) {
-        super.configureShell(newShell);
-        newShell.setText(Messages.editExpression) ;
-    }
-
-    @Override
-    protected Point getInitialSize() {
-        return new Point(600, 460);
-    }
-
-    @Override
-    protected Control createDialogArea(Composite parent) {
-        Composite composite = (Composite) super.createDialogArea(parent) ;
+		@Override
+		public void handleEvent(Event event) {
+			if (getShell() != null
+					&& currentExpressionEditor != null
+					&& currentExpressionEditor.provideDialogTray()
+					&& getTray() == null) {
+				final DialogTray tray = currentExpressionEditor.createDialogTray();
+				openTray(tray);
+			}else{
+				closeTray();
+			}
+		}
+	};
+	protected Control helpControl;
 
 
-        composite.setLayout(new GridLayout(2, false));
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
+	protected EditExpressionDialog(Shell parentShell,boolean isPassword, Expression inputExpression,EObject context,EditingDomain domain, ViewerFilter[] viewerTypeFilters) {
+		super(parentShell);
+		this.inputExpression = inputExpression ;
+		if(this.inputExpression == null){
+			this.inputExpression = ExpressionFactory.eINSTANCE.createExpression() ;
+		}
+		this.context = context ;
+		this.domain = domain ;
+		this.viewerTypeFilters = viewerTypeFilters;
+		this.isPassword = isPassword;
+		setHelpAvailable(true);
+		if (isResizable()) {
+			setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE
+					| getDefaultOrientation() | SWT.SHEET);
+		} else {
+			setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL
+					| getDefaultOrientation() | SWT.SHEET);
+		}
+	}
 
-        createExpressionTypePanel(composite) ;
-        createExpressionContentPanel(composite) ;
+	@Override
+	public void create() {
+		super.create();
+		getShell().layout(true,true);
+	}
 
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText(Messages.editExpression) ;
+	}
 
-        if(inputExpression.getType() == null){
-            inputExpression.setType(ExpressionConstants.CONSTANT_TYPE) ;
-        }
+	@Override
+	protected Point getInitialSize() {
+		return new Point(600, 460);
+	}
 
-        IExpressionProvider currentProvider =  ExpressionEditorService.getInstance().getExpressionProvider(inputExpression.getType()) ;
-        if(currentProvider != null && expressionTypeViewer != null){
-            expressionTypeViewer.setSelection(new StructuredSelection(currentProvider)) ;
-        }
-        return composite;
-    }
-
-    protected void createExpressionContentPanel(Composite parentForm) {
-        contentComposite = new Composite(parentForm, SWT.NONE) ;
-        contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
-        contentComposite.setLayout(new GridLayout(1, false)) ;
-    }
-
-    protected void createExpressionTypePanel(Composite parentForm) {
-        Composite parentComposite = new Composite(parentForm, SWT.NONE) ;
-        parentComposite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create()) ;
-        parentComposite.setLayout(new GridLayout(1, false)) ;
-
-        Label expressionTypeLabel = new Label(parentComposite, SWT.NONE) ;
-        expressionTypeLabel.setText(Messages.expressionTypeLabel) ;
-        expressionTypeLabel.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create()) ;
-
-        expressionTypeViewer = new TableViewer(parentComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE) ;
-        expressionTypeViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-
-        expressionTypeViewer.setContentProvider(new ExpressionTypeContentProvider()) ;
-        expressionTypeViewer.setLabelProvider(new ExpressionTypeLabelProvider()) ;
-        expressionTypeViewer.setSorter(new ViewerSorter(){
-            @Override
-            public int compare(Viewer viewer, Object e1, Object e2) {
-                IExpressionProvider p1 = (IExpressionProvider) e1 ;
-                IExpressionProvider p2 = (IExpressionProvider) e2 ;
-                return p1.getTypeLabel().compareTo(p2.getTypeLabel());
-            }
-        }) ;
-        if(viewerTypeFilters != null){
-            expressionTypeViewer.setFilters(viewerTypeFilters);
-        }
-        ColumnViewerToolTipSupport.enableFor(expressionTypeViewer, ToolTip.NO_RECREATE);
-        expressionTypeViewer.setInput(context) ;
-        expressionTypeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                if(!event.getSelection().equals(oldSelection)){
-                    oldSelection = event.getSelection() ;
-                    expressionTypeChanged(event.getSelection()) ;
-                    Button okButton = getButton(OK) ;
-                    if(okButton != null && !okButton.isDisposed()){
-                        okButton.setEnabled(currentExpressionEditor.canFinish()) ;
-                    }
-                }
-            }
-        }) ;
-
-        expressionTypeViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                getShell().layout(true, true) ;
-            }
-        }) ;
-    }
-
-    @Override
-    protected boolean isResizable() {
-    	return true;
-    }
-    
-    protected void expressionTypeChanged(ISelection selection) {
-        if(!selection.isEmpty()){
-            final IExpressionProvider provider =  (IExpressionProvider) ((StructuredSelection) selection).getFirstElement() ;
-            BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-
-                @Override
-                public void run() {
-                    showContent(provider.getExpressionType()) ;
-                }
-            });
-
-        }
-    }
-
-    @Override
-    protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
-        final Button button =  super.createButton(parent, id, label, defaultButton);
-        if(id == OK){
-            if(currentExpressionEditor != null){
-                button.setEnabled(currentExpressionEditor.canFinish()) ;
-            }
-        }
-        return button ;
-
-    }
-
-    protected void showContent(String type) {
-        IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(type) ;
-
-        Assert.isNotNull(provider) ;
-
-        for(Control c : contentComposite.getChildren()){
-            c.dispose() ;
-        }
-
-        if(currentExpressionEditor != null){
-            currentExpressionEditor.dispose() ;
-        }
-
-        currentExpressionEditor = provider.getExpressionEditor(inputExpression,context);
-        if(currentExpressionEditor != null){
-            currentExpressionEditor.createExpressionEditor(contentComposite,isPassword) ;
-            contentComposite.layout(true, true) ;
-            if(helpControl != null){
-                helpControl.setVisible(currentExpressionEditor.provideDialogTray());
-                if(getTray() != null){
-                    closeTray();
-                }
-            }
-            if(dataBindingContext != null){
-                dataBindingContext.dispose() ;
-            }
-            dataBindingContext = new EMFDataBindingContext() ;
-
-            UpdateValueStrategy	selectionToExpressionType  = new UpdateValueStrategy() ;
-            IConverter convert = new Converter(IExpressionProvider.class,String.class) {
-
-                @Override
-                public Object convert(Object arg0) {
-                    return ((IExpressionProvider)arg0).getExpressionType();
-                }
-            };
-            selectionToExpressionType.setConverter(convert) ;
-
-            if(domain != null){
-                domain.getCommandStack().execute(SetCommand.create(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__TYPE,type));
-            }else{
-                inputExpression.setType(type) ;
-            }
-            currentExpressionEditor.bindExpression(dataBindingContext,context,inputExpression,viewerTypeFilters) ;
-            currentExpressionEditor.addListener(new Listener() {
-                @Override
-                public void handleEvent(Event event) {
-                    Button okButton = getButton(OK) ;
-                    if(okButton != null && !okButton.isDisposed()){
-                        okButton.setEnabled(currentExpressionEditor.canFinish()) ;
-                    }
-                }
-            }) ;
-            DialogSupport.create(this, dataBindingContext);
-        }
-    }
-
-    @Override
-    protected void okPressed() {
-        if(currentExpressionEditor != null){
-            currentExpressionEditor.okPressed();
-        }
-        super.okPressed();
-    }
-
-    @Override
-    public boolean close() {
-        if(getTray() != null){
-            closeTray();
-        }
-        if(currentExpressionEditor != null){
-            currentExpressionEditor.dispose();
-        }
-        return super.close();
-    }
-
-    @Override
-    protected Control createHelpControl(Composite parent) {
-        helpControl = super.createHelpControl(parent);
-        ToolItem item = ((ToolBar)helpControl).getItem(0);
-        Listener[] listeners = item.getListeners(SWT.Selection);
-        if(listeners.length > 0 ){
-            for(Listener l : listeners){
-                item.removeListener(SWT.Selection, l);
-            }
-        }
-        item.addListener(SWT.Selection, openTrayListener );
-        if(currentExpressionEditor!= null){
-            helpControl.setVisible(currentExpressionEditor.provideDialogTray());
-        }
-        return helpControl;
-    }
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		Composite composite = (Composite) super.createDialogArea(parent) ;
 
 
+		composite.setLayout(new GridLayout(2, false));
+		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
 
-    public Expression getExpression() {
-        return inputExpression;
-    }
+		createExpressionTypePanel(composite) ;
+		createExpressionContentPanel(composite) ;
+
+
+		if(inputExpression.getType() == null){
+			inputExpression.setType(ExpressionConstants.CONSTANT_TYPE) ;
+		}
+
+		IExpressionProvider currentProvider =  ExpressionEditorService.getInstance().getExpressionProvider(inputExpression.getType()) ;
+		if(currentProvider != null && expressionTypeViewer != null){
+			expressionTypeViewer.setSelection(new StructuredSelection(currentProvider)) ;
+		}
+		return composite;
+	}
+
+	protected void createExpressionContentPanel(Composite parentForm) {
+		contentComposite = new Composite(parentForm, SWT.NONE) ;
+		contentComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
+		contentComposite.setLayout(new GridLayout(1, false)) ;
+	}
+
+	protected void createExpressionTypePanel(Composite parentForm) {
+		Composite parentComposite = new Composite(parentForm, SWT.NONE) ;
+		parentComposite.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.FILL).grab(false, true).create()) ;
+		parentComposite.setLayout(new GridLayout(1, false)) ;
+
+		Label expressionTypeLabel = new Label(parentComposite, SWT.NONE) ;
+		expressionTypeLabel.setText(Messages.expressionTypeLabel) ;
+		expressionTypeLabel.setLayoutData(GridDataFactory.swtDefaults().grab(true, false).create()) ;
+
+		expressionTypeViewer = new TableViewer(parentComposite, SWT.FULL_SELECTION | SWT.BORDER | SWT.SINGLE) ;
+		expressionTypeViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
+
+		expressionTypeViewer.setContentProvider(new ExpressionTypeContentProvider()) ;
+		expressionTypeViewer.setLabelProvider(new ExpressionTypeLabelProvider()) ;
+		expressionTypeViewer.setSorter(new ViewerSorter(){
+			@Override
+			public int compare(Viewer viewer, Object e1, Object e2) {
+				IExpressionProvider p1 = (IExpressionProvider) e1 ;
+				IExpressionProvider p2 = (IExpressionProvider) e2 ;
+				return p1.getTypeLabel().compareTo(p2.getTypeLabel());
+			}
+		}) ;
+		if(viewerTypeFilters != null){
+			expressionTypeViewer.setFilters(viewerTypeFilters);
+		}
+		ColumnViewerToolTipSupport.enableFor(expressionTypeViewer, ToolTip.NO_RECREATE);
+		expressionTypeViewer.setInput(context) ;
+		expressionTypeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				if(!event.getSelection().equals(oldSelection)){
+					oldSelection = event.getSelection() ;
+					expressionTypeChanged(event.getSelection()) ;
+					Button okButton = getButton(OK) ;
+					if(okButton != null && !okButton.isDisposed()){
+						okButton.setEnabled(currentExpressionEditor.canFinish()) ;
+					}
+				}
+			}
+		}) ;
+
+		expressionTypeViewer.addPostSelectionChangedListener(new ISelectionChangedListener() {
+
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				getShell().layout(true, true) ;
+			}
+		}) ;
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
+
+	protected void expressionTypeChanged(ISelection selection) {
+		if(!selection.isEmpty()){
+			final IExpressionProvider provider =  (IExpressionProvider) ((StructuredSelection) selection).getFirstElement() ;
+			BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+
+				@Override
+				public void run() {
+					showContent(provider.getExpressionType()) ;
+				}
+			});
+
+		}
+	}
+
+	@Override
+	protected Button createButton(Composite parent, int id, String label, boolean defaultButton) {
+		final Button button =  super.createButton(parent, id, label, defaultButton);
+		if(id == OK){
+			if(currentExpressionEditor != null){
+				button.setEnabled(currentExpressionEditor.canFinish()) ;
+			}
+		}
+		return button ;
+
+	}
+
+	protected void showContent(String type) {
+		IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(type) ;
+
+		Assert.isNotNull(provider) ;
+
+		for(Control c : contentComposite.getChildren()){
+			c.dispose() ;
+		}
+
+		if(currentExpressionEditor != null){
+			currentExpressionEditor.dispose() ;
+		}
+
+		currentExpressionEditor = provider.getExpressionEditor(inputExpression,context);
+		if(currentExpressionEditor != null){
+			currentExpressionEditor.createExpressionEditor(contentComposite,isPassword) ;
+			contentComposite.layout(true, true) ;
+			if(helpControl != null){
+				helpControl.setVisible(currentExpressionEditor.provideDialogTray());
+				if(getTray() != null){
+					closeTray();
+				}
+			}
+			if(dataBindingContext != null){
+				dataBindingContext.dispose() ;
+			}
+			dataBindingContext = new EMFDataBindingContext() ;
+
+			UpdateValueStrategy	selectionToExpressionType  = new UpdateValueStrategy() ;
+			IConverter convert = new Converter(IExpressionProvider.class,String.class) {
+
+				@Override
+				public Object convert(Object arg0) {
+					return ((IExpressionProvider)arg0).getExpressionType();
+				}
+			};
+			selectionToExpressionType.setConverter(convert) ;
+
+			if(domain != null){
+				domain.getCommandStack().execute(SetCommand.create(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__TYPE,type));
+			}else{
+				inputExpression.setType(type) ;
+			}
+			currentExpressionEditor.bindExpression(dataBindingContext,context,inputExpression,viewerTypeFilters) ;
+			currentExpressionEditor.addListener(new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					Button okButton = getButton(OK) ;
+					if(okButton != null && !okButton.isDisposed()){
+						okButton.setEnabled(currentExpressionEditor.canFinish()) ;
+					}
+				}
+			}) ;
+			DialogSupport.create(this, dataBindingContext);
+		}
+	}
+
+	@Override
+	protected void okPressed() {
+		if(currentExpressionEditor != null){
+			currentExpressionEditor.okPressed();
+		}
+		super.okPressed();
+	}
+
+	@Override
+	public boolean close() {
+		if(getTray() != null){
+			closeTray();
+		}
+		if(currentExpressionEditor != null){
+			currentExpressionEditor.dispose();
+		}
+		return super.close();
+	}
+
+	@Override
+	protected boolean canHandleShellCloseEvent() {
+		if(MessageDialog.openQuestion(getShell(), Messages.handleShellCloseEventTitle, Messages.handleShellCloseEventMessage)){
+			return super.canHandleShellCloseEvent();
+		}
+		return false;
+	}
+
+	@Override
+	protected Control createHelpControl(Composite parent) {
+		helpControl = super.createHelpControl(parent);
+		ToolItem item = ((ToolBar)helpControl).getItem(0);
+		Listener[] listeners = item.getListeners(SWT.Selection);
+		if(listeners.length > 0 ){
+			for(Listener l : listeners){
+				item.removeListener(SWT.Selection, l);
+			}
+		}
+		item.addListener(SWT.Selection, openTrayListener );
+		if(currentExpressionEditor!= null){
+			helpControl.setVisible(currentExpressionEditor.provideDialogTray());
+		}
+		return helpControl;
+	}
+
+
+
+	public Expression getExpression() {
+		return inputExpression;
+	}
 
 }
