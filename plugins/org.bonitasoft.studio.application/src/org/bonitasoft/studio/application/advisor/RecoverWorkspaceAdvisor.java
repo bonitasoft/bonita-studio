@@ -5,7 +5,6 @@ package org.bonitasoft.studio.application.advisor;
 
 import java.io.File;
 
-import org.bonitasoft.studio.application.BonitaStudioWorkbenchAdvisor;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.ui.PlatformUI;
