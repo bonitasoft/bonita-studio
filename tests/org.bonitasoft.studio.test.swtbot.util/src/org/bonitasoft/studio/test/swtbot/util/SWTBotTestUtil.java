@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.data.complex.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.UpdateSizePoolSelectionEditPolicy;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -417,7 +418,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
      * @param defaultValue
      */
     public static void addNewData(SWTBot bot,String name, String type, boolean multiplicity,String defaultValue){
-        bot.waitUntil(Conditions.shellIsActive("New variable"));
+        bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.data.i18n.Messages.newVariable));
         bot.textWithLabel(org.bonitasoft.studio.properties.i18n.Messages.name).setText(name);
         bot.comboBoxWithLabel(org.bonitasoft.studio.properties.i18n.Messages.datatypeLabel).setSelection(type);
         if (multiplicity){
@@ -428,6 +429,22 @@ public class SWTBotTestUtil implements SWTBotConstants{
         }
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
+    
+	public static void addNewCustomDataInitWithScript(SWTGefBot bot,
+			String name, String type, String defaultValueAsScript) {
+		bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.data.i18n.Messages.newVariable));
+		bot.textWithLabel(org.bonitasoft.studio.properties.i18n.Messages.name).setText(name);
+		bot.comboBoxWithLabel(org.bonitasoft.studio.properties.i18n.Messages.datatypeLabel).setSelection(org.bonitasoft.studio.common.Messages.JavaType);
+		bot.button(org.bonitasoft.studio.data.i18n.Messages.browseClasses).click();
+		bot.text().setText(type);
+		bot.waitUntil(Conditions.tableHasRows(bot.table(), 1));
+		bot.table().select(0);
+		bot.button(IDialogConstants.OK_LABEL).click();
+		bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.data.i18n.Messages.newVariable));
+		clickOnPenToEditExpression(bot, 0);
+		SWTBotTestUtil.setScriptExpression(bot, "result", defaultValueAsScript, type);
+		bot.button(IDialogConstants.FINISH_LABEL).click();
+	}
 
     /**
      * add data with option wizard configuration (only for defined types as String Integer Boolean etc.)
@@ -437,7 +454,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
      * @param multiplicity
      * @param defaultValue
      */
-    public static void addCustomData(SWTBot bot,String name,String type,Map<String,List<String>> options,boolean isMultiple,String defaultValue){
+    public static void addListOfOptionData(SWTBot bot,String name,String type,Map<String,List<String>> options,boolean isMultiple,String defaultValue){
         bot.waitUntil(Conditions.shellIsActive("New variable"));
         bot.textWithLabel(org.bonitasoft.studio.properties.i18n.Messages.name).setText(name);
         bot.comboBoxWithLabel(org.bonitasoft.studio.properties.i18n.Messages.datatypeLabel).setSelection(type);
@@ -907,23 +924,23 @@ public class SWTBotTestUtil implements SWTBotConstants{
         
 	}
 	
-	public static void addDataType(SWTGefBot bot, String packageName , String dataTypeName) {
+	public static void addDataTypeAsJar(SWTGefBot bot, String packageName , String dataTypeName) {
 		bot.menu("Development").menu("Data types").menu("New data type...").click();
-		bot.waitUntil(Conditions.shellIsActive("New data type"));
+		bot.waitUntil(Conditions.shellIsActive(Messages.newDataType_title));
 		
-		bot.textWithLabel("Name",0).setText(packageName);
+		bot.textWithLabel(Messages.name,0).setText(packageName);
 		
-		bot.textWithLabel("Name",1).setText(dataTypeName);
+		bot.textWithLabel(Messages.name,1).setText(dataTypeName);
 		bot.button(IDialogConstants.OK_LABEL).click();
 		
-		bot.waitUntil(Conditions.shellIsActive("Manage data types"));
+		bot.waitUntil(Conditions.shellIsActive(Messages.editComplexTypeWizardTitle));
 		bot.tree().select(packageName);
 		
-		bot.button("Create as JAR").click();
-		bot.waitUntil(Conditions.shellIsActive("Create as JAR"));
+		bot.button(Messages.ExportAsJAR).click();
+		bot.waitUntil(Conditions.shellIsActive(Messages.ExportAsJAR));
 		bot.button(IDialogConstants.OK_LABEL).click();
 
-		bot.waitUntil(Conditions.shellIsActive("Generation successful"), 60000);
+		bot.waitUntil(Conditions.shellIsActive(Messages.generationCompleted_title), 60000);
 		
 		bot.button(IDialogConstants.OK_LABEL).click();
 		bot.button(IDialogConstants.FINISH_LABEL).click();
@@ -941,6 +958,8 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		proposalTAble.select(row);
 		SWTBotTestUtil.pressEnter();
 	}
+
+
 	
 	
 }

@@ -65,7 +65,7 @@ public class TestConnectorsTest extends SWTBotGefTestCase {
      */
     @Test
     public void testTestGroovyConnector() throws InterruptedException {
-    	SWTBotTestUtil.addDataType(bot, "voiture", "Voiture");
+    	SWTBotTestUtil.addDataTypeAsJar(bot, "voiture", "Voiture");
     	
     	String groovyScript = "import org.bonitasoft.voiture.Voiture;\nVoiture v=new Voiture();\nv.setAttr(\"\")\nreturn v;";
     	testingGroovyConnector(bot, groovyScript, "org.bonitasoft.voiture", "Voiture : Voiture  [attr: ]");

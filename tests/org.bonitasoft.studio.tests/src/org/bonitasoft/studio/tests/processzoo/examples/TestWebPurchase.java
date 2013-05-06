@@ -17,6 +17,9 @@
  */
 package org.bonitasoft.studio.tests.processzoo.examples;
 
+import static org.bonitasoft.studio.actors.i18n.Messages.selectActorTitle;
+import static org.bonitasoft.studio.actors.i18n.Messages.useTaskActors;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,15 +42,11 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.bonitasoft.studio.actors.i18n.Messages.useTaskActors;
-import static org.bonitasoft.studio.actors.i18n.Messages.selectActorTitle;
 
 /**
  * @author aurelie Zara
@@ -110,7 +109,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         choices.add("Laptop");
         options.put("PromotionalProducts", choices);
         bot.button(Messages.Add).click();
-        SWTBotTestUtil.addCustomData(bot, "products", "Text", options, false, "TV");
+        SWTBotTestUtil.addListOfOptionData(bot, "products", "Text", options, false, "TV");
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Actors");
         bot.button("Add").click();
         bot.table().click(0,0);
@@ -145,7 +144,7 @@ public class TestWebPurchase extends SWTBotGefTestCase implements SWTBotConstant
         choices.add("More Info");
         options.put("Approval", choices);
         bot.button(Messages.Add).click();
-        SWTBotTestUtil.addCustomData(bot, "decision", "Text", options, false, "Approve");
+        SWTBotTestUtil.addListOfOptionData(bot, "decision", "Text", options, false, "Approve");
         createSalesReviewForm(gmfEditor);
         bot.editorByTitle(diagramTitle).show();
         bot.editorByTitle(diagramTitle).setFocus();
