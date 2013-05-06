@@ -49,9 +49,6 @@ import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.databinding.Binding;
@@ -133,7 +130,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	protected EMFDataBindingContext internalDataBindingContext;
 	protected EditingDomain editingDomain;
 	protected Expression selectedExpression;
-	private final Set<ViewerFilter> filters;
+	protected final Set<ViewerFilter> filters;
 	private String example;
 	private ControlDecoration messageDecoration;
 	private boolean disposeDomain = false;
@@ -162,7 +159,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private ToolBar toolbar;
 	private List<IExpressionToolbarContribution> toolbarContributions = new ArrayList<IExpressionToolbarContribution>();
 	private Map<String,IExpressionValidator> validatorsForType = new HashMap<String,IExpressionValidator>();
-	private boolean isPassword;
+	protected boolean isPassword;
 	private DefaultToolTip textTooltip;
 
 	public ExpressionViewer(Composite composite,int style, EReference expressionReference) {
@@ -258,13 +255,13 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			@Override
 			public void handleEvent(Event event) {
 				String type = selectedExpression.getType();
-				if(!ExpressionConstants.CONDITION_TYPE.equals(type)){
-					type=ExpressionConstants.CONSTANT_TYPE;
-				}
 				if(ExpressionConstants.SCRIPT_TYPE.equals(type)){
 					if(!MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.cleanExpressionTitle, Messages.cleanExpressionMsg)){
 						return;
 					}
+				}
+				if(!ExpressionConstants.CONDITION_TYPE.equals(type)){
+					type=ExpressionConstants.CONSTANT_TYPE;
 				}
 				if(editingDomain != null){
 					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE, type));
@@ -364,7 +361,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				}
 			}
 		}
-		EditExpressionDialog dialog = new EditExpressionDialog(control.getShell(),isPassword,EcoreUtil.copy(selectedExpression),editInput,editingDomain, filters.toArray(new ViewerFilter[filters.size()])) ;
+		EditExpressionDialog dialog = createEditDialog(editInput) ;
 		if(dialog.open() == Dialog.OK){
 			Expression newExpression = dialog.getExpression();
 			updateSelection(newExpression) ;
@@ -379,6 +376,10 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			refresh();
 			fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression))) ;
 		}
+	}
+
+	protected EditExpressionDialog createEditDialog(EObject editInput) {
+		return new EditExpressionDialog(control.getShell(),isPassword,EcoreUtil.copy(selectedExpression),editInput,editingDomain, filters.toArray(new ViewerFilter[filters.size()]));
 	}
 
 	protected void fireExpressionEditorChanged(SelectionChangedEvent selectionChangedEvent) {

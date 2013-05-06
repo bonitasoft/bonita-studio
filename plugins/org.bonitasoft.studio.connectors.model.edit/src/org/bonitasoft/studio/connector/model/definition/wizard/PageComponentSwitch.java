@@ -43,10 +43,10 @@ import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinition
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.CheckBoxExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
+import org.bonitasoft.studio.expression.editor.viewer.GroovyOnlyExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.IExpressionModeListener;
 import org.bonitasoft.studio.expression.editor.viewer.PatternExpressionViewer;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
@@ -59,8 +59,6 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.scripting.extensions.IScriptLanguageProvider;
-import org.bonitasoft.studio.scripting.extensions.ScriptLanguageService;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.MultiValidator;
@@ -74,7 +72,6 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -83,7 +80,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -294,7 +290,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 				viewer.setHint(desc) ;
 			}
 			viewer.setContextInput(container);
-		
+
 			UpdateValueStrategy startegy = new UpdateValueStrategy();
 			if(input.isMandatory()){
 				startegy.setAfterConvertValidator(new EmptyInputValidator(getLabel(object.getId())));
@@ -303,7 +299,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			if(input.isMandatory()){
 				viewer.setMandatoryField(getLabel(object.getId())) ;
 			}
-		
+
 			viewer.setExpression(exp) ;
 			return viewer;
 		}
@@ -362,7 +358,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 				if(input.isMandatory()){
 					viewer.setMandatoryField(getLabel(object.getId()),context) ;
 				}
-				
+
 				if(object.isShowDocuments()){
 					Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
 					contentTypes.add(ExpressionConstants.DOCUMENT_REF_TYPE);
@@ -385,37 +381,26 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		return null;
 	}
 
-	protected Control createScriptEditorControl(Composite composite, ScriptEditor object) {
+	protected ExpressionViewer createScriptEditorControl(Composite composite, ScriptEditor object) {
 		final Input input = getConnectorInput(object.getInputName()) ;
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
 		if(parameter != null){
-			final Label label = createFieldLabel(composite,SWT.CENTER,object.getId(),input.isMandatory()) ;
-			label.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create());
-			IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(object.getInterpreter()) ;
-			if(provider == null){
-				throw new RuntimeException("No script editor available for "+object.getInterpreter()+" interpreter");
-			}
-			Expression inputExpression = (Expression) parameter.getExpression();
-			final IExpressionEditor groovyExpressionEditor = provider.getExpressionEditor() ;
-			final Composite editorComposite = new Composite(composite, SWT.NONE);
-			editorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).hint(300, 220).create());
-			editorComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
-			Control editor = groovyExpressionEditor.createExpressionEditor(editorComposite);
-			editor.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-			groovyExpressionEditor.bindExpression(context, container, inputExpression, new ViewerFilter[]{connectorExpressionContentTypeFilter});
+			createFieldLabel(composite,SWT.CENTER,object.getId(),input.isMandatory()) ;
+			final ExpressionViewer viewer = new GroovyOnlyExpressionViewer(composite,SWT.BORDER, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION) ;
+			viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+			viewer.setContext(container);
 			if(input.isMandatory()){
-				final EmptyInputValidator validator =  new EmptyInputValidator(getLabel(input.getName()));
-				final IObservableValue textObservable = (IObservableValue) groovyExpressionEditor.getContentObservable();
-				context.addValidationStatusProvider(new MultiValidator() {
-
-					@Override
-					protected IStatus validate() {
-						return validator.validate(textObservable.getValue());
-					}
-				});
+				viewer.setMandatoryField(getLabel(object.getId()),context) ;
 			}
-			return editor;
+			viewer.addFilter(connectorExpressionContentTypeFilter);
+			viewer.setInput(parameter) ;
+			String desc = messageProvider.getFieldDescription(definition, object.getId()) ;
+			if(desc != null && !desc.isEmpty()){
+				viewer.setMessage(desc, IStatus.INFO) ;
+			}
+			context.bindValue(ViewersObservables.observeSingleSelection(viewer), EMFObservables.observeValue(parameter, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION));
+			return viewer;
 		}
 		return null;
 	}
@@ -492,7 +477,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			@SuppressWarnings("unchecked")
 			final ExpressionCollectionViewer viewer = new ExpressionCollectionViewer(composite,0,false,1,true,Collections.EMPTY_LIST,true,false) ;
 			viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-		
+
 			if(object.isShowDocuments()){
 				Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
 				contentTypes.add(ExpressionConstants.DOCUMENT_REF_TYPE);
@@ -540,7 +525,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 					}
 				});
 			}
-			
+
 			return viewer;
 		}
 		return null;
@@ -680,7 +665,6 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			expression.setName(input.getDefaultValue()) ;
 			expression.setContent(input.getDefaultValue()) ;
 			if(widget instanceof ScriptEditor){
-				expression.setName(input.getName()+"Script") ;
 				expression.setType(ExpressionConstants.SCRIPT_TYPE);
 				expression.setInterpreter(((ScriptEditor) widget).getInterpreter());
 			}else if(widget instanceof TextArea){
