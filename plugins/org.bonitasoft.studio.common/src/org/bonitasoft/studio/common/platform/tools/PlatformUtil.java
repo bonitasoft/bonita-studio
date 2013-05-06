@@ -125,16 +125,18 @@ public class PlatformUtil {
 	 * open the intro
 	 */
 	public static void openIntroIfNoOtherEditorOpen(){
-		final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if(activePage != null){
-			/*Open intro if there is no other editor opened*/
-			final IEditorReference[] editors = activePage.getEditorReferences();
-			if (editors.length == 0){//if there is no other editor opened
-				final String productId = Platform.getProduct().getId();
-				if (isABonitaProduct(productId)) {//and that we are in BOS or BOS-SP
-					openIntro();
-				}else{
-					closeIntro();
+		if(PlatformUI.isWorkbenchRunning()){
+			final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			if(activePage != null){
+				/*Open intro if there is no other editor opened*/
+				final IEditorReference[] editors = activePage.getEditorReferences();
+				if (editors.length == 0){//if there is no other editor opened
+					final String productId = Platform.getProduct().getId();
+					if (isABonitaProduct(productId)) {//and that we are in BOS or BOS-SP
+						openIntro();
+					}else{
+						closeIntro();
+					}
 				}
 			}
 		}
