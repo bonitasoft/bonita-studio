@@ -78,6 +78,11 @@ public class Messages extends NLS {
 
 	public static String jreNotFoundMessage;
 
+	public static String previewButton;
+	public static String advancedPreviewButton;
+	public static String lnfForPreview;
+	public static String browserForPreview;
+
 
 
 

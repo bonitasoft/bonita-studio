@@ -17,17 +17,14 @@
  */
 package org.bonitasoft.studio.application.views.form;
 
+import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.jface.ListContentProvider;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
 import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -36,8 +33,6 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.browser.BrowserManager;
 import org.eclipse.ui.internal.browser.IBrowserDescriptor;
 import org.eclipse.ui.part.ViewPart;
@@ -46,50 +41,12 @@ import org.eclipse.ui.part.ViewPart;
  * @author Aurelien pupier
  *
  */
-public class FormPreviewPropertiesView extends ViewPart implements ISelectionListener,ISelectionChangedListener,ISelectionProvider{
-	
-	
+public class FormPreviewPropertiesView extends ViewPart{
+		
 	public static final String VIEW_ID = "org.bonitasoft.studio.views.properties.form.preview";
 	
 	public FormPreviewPropertiesView(){
 		super();
-	}
-	
-	@Override
-	public void addSelectionChangedListener(ISelectionChangedListener listener) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public ISelection getSelection() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void removeSelectionChangedListener(
-			ISelectionChangedListener listener) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setSelection(ISelection selection) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void selectionChanged(SelectionChangedEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -113,7 +70,7 @@ public class FormPreviewPropertiesView extends ViewPart implements ISelectionLis
 	
 	private void createPreviewButton(Composite buttonsComposite) {
 		Button previewButton = new Button(buttonsComposite, SWT.FLAT);
-		previewButton.setText("Preview");
+		previewButton.setText(Messages.previewButton);
 		previewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -126,7 +83,7 @@ public class FormPreviewPropertiesView extends ViewPart implements ISelectionLis
 
 	private void createAdvancedPreviewButton(Composite buttonsComposite) {
 		Button previewButton = new Button(buttonsComposite, SWT.FLAT);
-		previewButton.setText("Advanced Preview...");
+		previewButton.setText(Messages.advancedPreviewButton);
 		previewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -134,15 +91,14 @@ public class FormPreviewPropertiesView extends ViewPart implements ISelectionLis
 				//TODO: call Advanced Form preview Operation!
 			}
 			
-		});
-		
+		});		
 	}
 
 	private void createLookNFeelSelection(Composite mainComposite) {
 		Composite lnfComposite = new Composite(mainComposite, SWT.NONE);
 		lnfComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 		
-		new Label(lnfComposite, SWT.NONE).setText("Look & Feel:");
+		new Label(lnfComposite, SWT.NONE).setText(Messages.lnfForPreview);
 		ComboViewer lnfCombo = new ComboViewer(lnfComposite, SWT.BORDER | SWT.READ_ONLY);
 		lnfCombo.setContentProvider(new ListContentProvider());
 		lnfCombo.setLabelProvider(new FileStoreLabelProvider());
@@ -158,15 +114,19 @@ public class FormPreviewPropertiesView extends ViewPart implements ISelectionLis
 		Composite browserComposite = new Composite(mainComposite, SWT.NONE);
 		browserComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 		
-		new Label(browserComposite, SWT.NONE).setText("Browser:");
+		new Label(browserComposite, SWT.NONE).setText(Messages.browserForPreview);
 		ComboViewer webBrowserCombo = new ComboViewer(browserComposite, SWT.BORDER | SWT.READ_ONLY);
 		webBrowserCombo.setLabelProvider(new BrowserTableLabelProvider());
-		webBrowserCombo.setContentProvider(new ListContentProvider());		
+		webBrowserCombo.setContentProvider(new ListContentProvider());
 		webBrowserCombo.setInput(BrowserManager.getInstance().getWebBrowsers());
 		//TODO: define the default value
 		webBrowserCombo.setSelection(new StructuredSelection());
 	}
 
+	/**
+	 * Copy pasted from internal Eclipse code
+	 *
+	 */
 	class BrowserTableLabelProvider extends LabelProvider {
 		
 		@Override
@@ -176,18 +136,16 @@ public class FormPreviewPropertiesView extends ViewPart implements ISelectionLis
 		}
 
 		protected String notNull(String s) {
-			if (s == null)
+			if (s == null){
 				return ""; //$NON-NLS-1$
+			}
 			return s;
 		}
 	}
-
-
-
+	
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-		
+		//TODO: should we recalculate available browser and looknfeel?
 	}
 
 }
