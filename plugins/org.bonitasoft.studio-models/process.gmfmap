@@ -836,12 +836,6 @@
       </children>
       <children
           compartment="//@nodes.5/@ownedChild/@compartments.0"
-          referencedChild="//@nodes.5/@ownedChild">
-        <containmentFeature
-            href="process.ecore#//Container/elements"/>
-      </children>
-      <children
-          compartment="//@nodes.5/@ownedChild/@compartments.0"
           referencedChild="//@nodes.3/@ownedChild">
         <containmentFeature
             href="process.ecore#//Container/elements"/>
@@ -979,7 +973,7 @@
             href="process.ecore#//Container/elements"/>
       </children>
       <compartments
-          children="//@nodes.5/@ownedChild/@children.0 //@nodes.5/@ownedChild/@children.10 //@nodes.5/@ownedChild/@children.22 //@nodes.5/@ownedChild/@children.1 //@nodes.5/@ownedChild/@children.13 //@nodes.5/@ownedChild/@children.21 //@nodes.5/@ownedChild/@children.23 //@nodes.5/@ownedChild/@children.25 //@nodes.5/@ownedChild/@children.26 //@nodes.5/@ownedChild/@children.11 //@nodes.5/@ownedChild/@children.20 //@nodes.5/@ownedChild/@children.17 //@nodes.5/@ownedChild/@children.14 //@nodes.5/@ownedChild/@children.19 //@nodes.5/@ownedChild/@children.5 //@nodes.5/@ownedChild/@children.8 //@nodes.5/@ownedChild/@children.6 //@nodes.5/@ownedChild/@children.7 //@nodes.5/@ownedChild/@children.12 //@nodes.5/@ownedChild/@children.18 //@nodes.5/@ownedChild/@children.16 //@nodes.5/@ownedChild/@children.2 //@nodes.5/@ownedChild/@children.3 //@nodes.5/@ownedChild/@children.4 //@nodes.5/@ownedChild/@children.15 //@nodes.5/@ownedChild/@children.9 //@nodes.5/@ownedChild/@children.24">
+          children="//@nodes.5/@ownedChild/@children.0 //@nodes.5/@ownedChild/@children.9 //@nodes.5/@ownedChild/@children.21 //@nodes.5/@ownedChild/@children.1 //@nodes.5/@ownedChild/@children.12 //@nodes.5/@ownedChild/@children.20 //@nodes.5/@ownedChild/@children.22 //@nodes.5/@ownedChild/@children.24 //@nodes.5/@ownedChild/@children.25 //@nodes.5/@ownedChild/@children.10 //@nodes.5/@ownedChild/@children.19 //@nodes.5/@ownedChild/@children.16 //@nodes.5/@ownedChild/@children.13 //@nodes.5/@ownedChild/@children.18 //@nodes.5/@ownedChild/@children.4 //@nodes.5/@ownedChild/@children.7 //@nodes.5/@ownedChild/@children.5 //@nodes.5/@ownedChild/@children.6 //@nodes.5/@ownedChild/@children.11 //@nodes.5/@ownedChild/@children.17 //@nodes.5/@ownedChild/@children.15 //@nodes.5/@ownedChild/@children.2 //@nodes.5/@ownedChild/@children.3 //@nodes.5/@ownedChild/@children.14 //@nodes.5/@ownedChild/@children.8 //@nodes.5/@ownedChild/@children.23">
         <compartment
             href="process.gmfgraph#EventSubProcessCompartment"/>
       </compartments>
