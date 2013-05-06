@@ -30,7 +30,7 @@ public class FileStoreLabelProvider extends LabelProvider {
 	@Override
 	public String getText(Object element) {
 		if(element instanceof IRepositoryStore){
-			return ((IRepositoryStore) element).getDisplayName();
+			return ((IRepositoryStore<?>) element).getDisplayName();
 		}else if(element instanceof IRepositoryFileStore){
 			return ((IRepositoryFileStore) element).getDisplayName();
 		}
@@ -40,7 +40,7 @@ public class FileStoreLabelProvider extends LabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		if(element instanceof IRepositoryStore){
-			return ((IRepositoryStore) element).getIcon();
+			return ((IRepositoryStore<?>) element).getIcon();
 		}else if(element instanceof IRepositoryFileStore){
 			return ((IRepositoryFileStore) element).getIcon();
 		}
