@@ -704,42 +704,6 @@
                </target>
             </constraint>
             <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.InclusiveGatewayConstraint"
-                  id="org.bonitasoft.studio.validation.inclusiveGateway"
-                  lang="java"
-                  mode="Live"
-                  name="InclusiveGateway"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
-               <target
-                     class="InclusiveGateway">
-                  <event
-                        name="Add">
-                     <feature
-                           name="incoming">
-                     </feature>
-                  </event>
-                  <event
-                        name="Remove">
-                     <feature
-                           name="incoming">
-                     </feature>
-                  </event>
-               </target>
-               <target
-                     class="Shape">
-                  <event
-                        name="Set">
-                     <feature
-                           name="element">
-                     </feature>
-                  </event>
-               </target>
-            </constraint>
-            <constraint
                   class="org.bonitasoft.studio.validation.constraints.MaxLengthNames"
                   id="org.bonitasoft.studio.validation.constraints.maxlengthnames"
                   isEnabledByDefault="true"
@@ -872,6 +836,21 @@
                </message>
                <target
                      class="Activity">
+               </target>
+            </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.InclusiveMergeGatewayConstraint"
+                  id="org.bonitasoft.studio.validation.constraints.inclusiveMerge"
+                  lang="java"
+                  mode="Batch"
+                  name="Inclusive merge"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="InclusiveGateway">
                </target>
             </constraint>
          </constraints>
