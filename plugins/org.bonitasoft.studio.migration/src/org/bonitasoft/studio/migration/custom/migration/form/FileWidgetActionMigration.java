@@ -51,6 +51,10 @@ public class FileWidgetActionMigration extends CustomMigration {
 						false);
 				final Instance operator = model.newInstance("expression.Operator");
 				operator.set("type", ExpressionConstants.SET_DOCUMENT_OPERATOR);
+				final Instance oldOperation = fileWidget.get("action");
+				if(oldOperation != null){
+					model.delete(oldOperation);
+				}
 				final Instance actionOperation = StringToExpressionConverter.createOperation(model, storageExpression, operator, actionExpression);
 				fileWidget.set("action", actionOperation);
 			}
@@ -66,6 +70,10 @@ public class FileWidgetActionMigration extends CustomMigration {
 						String.class.getName(), 
 						ExpressionConstants.DOCUMENT_REF_TYPE,
 						false);
+				Instance oldExpressionInstance = imageWidget.get("imgPath");
+				if(oldExpressionInstance != null){
+					model.delete(oldExpressionInstance);
+				}
 				imageWidget.set("imgPath", inputExpression);
 			}
 		}
