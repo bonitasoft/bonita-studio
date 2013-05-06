@@ -736,6 +736,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//SequenceFlow/conditionType"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//SequenceFlow/decisionTable"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EReference process.ecore#//SequenceFlow/condition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//SequenceFlow/pathToken"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//ServiceTask"/>
     <genClasses ecoreClass="process.ecore#//SignalEvent">

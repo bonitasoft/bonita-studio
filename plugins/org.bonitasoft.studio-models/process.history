@@ -7712,6 +7712,37 @@
   </releases>
   <releases date="2013-04-30T18:37:32.795+0200" label="6.0.0-ga-004">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetActionMigration"/>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//SequenceFlow" referenceName="eStructuralFeatures"
+          element="process.ecore#//SequenceFlow/pathToken">
+        <changes xsi:type="history:Set" element="process.ecore#//SequenceFlow/pathToken"
+            featureName="name" dataValue="pathToken"/>
+        <changes xsi:type="history:Set" element="process.ecore#//SequenceFlow/pathToken"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//SequenceFlow"/>
+          <referenceValue element="process.ecore#//SequenceFlow"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>pathToken</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
   </releases>
   <releases/>
 </history:History>

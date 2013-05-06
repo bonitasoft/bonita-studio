@@ -449,6 +449,8 @@
         eType="#//decision/DecisionTable" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="ecore:EClass expression.ecore#//Expression"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pathToken" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral=""/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="SequenceFlowConditionType">
     <eLiterals name="EXPRESSION" literal="EXPRESSION"/>
