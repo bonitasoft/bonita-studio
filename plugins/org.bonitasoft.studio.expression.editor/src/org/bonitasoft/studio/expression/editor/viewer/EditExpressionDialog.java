@@ -122,6 +122,16 @@ public class EditExpressionDialog extends TrayDialog {
 	@Override
 	public void create() {
 		super.create();
+		
+		if(inputExpression.getType() == null){
+			inputExpression.setType(ExpressionConstants.CONSTANT_TYPE) ;
+		}
+
+		IExpressionProvider currentProvider =  ExpressionEditorService.getInstance().getExpressionProvider(inputExpression.getType()) ;
+		if(currentProvider != null && expressionTypeViewer != null){
+			expressionTypeViewer.setSelection(new StructuredSelection(currentProvider)) ;
+		}
+		
 		getShell().layout(true,true);
 	}
 
@@ -147,15 +157,6 @@ public class EditExpressionDialog extends TrayDialog {
 		createExpressionTypePanel(composite) ;
 		createExpressionContentPanel(composite) ;
 
-
-		if(inputExpression.getType() == null){
-			inputExpression.setType(ExpressionConstants.CONSTANT_TYPE) ;
-		}
-
-		IExpressionProvider currentProvider =  ExpressionEditorService.getInstance().getExpressionProvider(inputExpression.getType()) ;
-		if(currentProvider != null && expressionTypeViewer != null){
-			expressionTypeViewer.setSelection(new StructuredSelection(currentProvider)) ;
-		}
 		return composite;
 	}
 
@@ -266,7 +267,11 @@ public class EditExpressionDialog extends TrayDialog {
 			contentComposite.layout(true, true) ;
 			if(helpControl != null){
 				helpControl.setVisible(currentExpressionEditor.provideDialogTray());
-				if(getTray() != null){
+				if(currentExpressionEditor.provideDialogTray()){
+					ToolItem item = ((ToolBar)helpControl).getItem(0);
+					item.setSelection(true);
+					openTrayListener.handleEvent(new Event());
+				}else if(getTray() != null){
 					closeTray();
 				}
 			}
