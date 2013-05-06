@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.expression.editor.viewer;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
@@ -324,6 +325,9 @@ public class EditExpressionDialog extends TrayDialog {
 
 	@Override
 	protected boolean canHandleShellCloseEvent() {
+		if(FileActionDialog.getDisablePopup()){
+			return true;
+		}
 		if(MessageDialog.openQuestion(getShell(), Messages.handleShellCloseEventTitle, Messages.handleShellCloseEventMessage)){
 			return super.canHandleShellCloseEvent();
 		}
