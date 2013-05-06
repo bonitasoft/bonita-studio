@@ -484,18 +484,18 @@
 			<mustBeWritable>1</mustBeWritable>
 			<mustExist>1</mustExist>
 			<ruleList>
-					 <isFalse>
-                            <value>true</value>
-                        </isFalse>
-<!-- 				<compareValues> -->
-<!--                     <logic>equals</logic> -->
-<!--                     <value1>${retrieveWorksapce}</value1> -->
-<!--                     <value2>true</value2> -->
-<!--                 </compareValues> -->
+<!-- 					 <isFalse>-->
+<!--                             <value>true</value>-->
+<!--                         </isFalse>-->
+ 				<compareValues>
+                     <logic>equals</logic>
+                     <value1>${retrieveWorksapce}</value1>
+                     <value2>true</value2>
+                 </compareValues>
             </ruleList>
 			<validationActionList>
 				<findFile>
-					<baseDirectory>${Oldworkspace}/studio</baseDirectory>
+					<baseDirectory>${Oldworkspace}</baseDirectory>
 					<customErrorMessage>${msg(workspace.location.validation.error)}</customErrorMessage>
 					<pattern>workspace</pattern>
 					<variable>workspaceFound</variable>
@@ -509,7 +509,7 @@
                     <actionList>
 		               <runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/studio/workspace" -newWorkspaceLocation "${installdir}/workspace"</programArguments>
+							<programArguments>-jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace"</programArguments>
 							<progressText>${msg(workspace.recovery.progressMessage)}</progressText>
 							<ruleList>
 								<platformTest>
@@ -534,7 +534,7 @@
 						</runProgram>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/studio/workspace" -newWorkspaceLocation "${installdir}/workspace"</programArguments>
+							<programArguments>-XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace"</programArguments>
 							<progressText>${msg(workspace.recovery.progressMessage)}</progressText>
 							<ruleList>
 								<platformTest>
