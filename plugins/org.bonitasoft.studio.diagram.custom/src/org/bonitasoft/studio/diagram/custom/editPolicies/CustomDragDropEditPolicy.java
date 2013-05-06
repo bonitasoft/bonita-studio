@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -61,10 +62,10 @@ public class CustomDragDropEditPolicy extends DragDropEditPolicy {
 
 	@Override
 	protected Command getDropCommand(ChangeBoundsRequest request) {
-		if(dropNotAllowed(request)){//disallow to move to another process
+		if(dropNotAllowed(request)){
 			return UnexecutableCommand.INSTANCE;
 		}
-		return super.getDropCommand(request);	
+		return super.getDropCommand(request);
 	}
 	
 	private boolean dropNotAllowed(ChangeBoundsRequest request) {
@@ -72,13 +73,32 @@ public class CustomDragDropEditPolicy extends DragDropEditPolicy {
 				|| getHost() instanceof PoolEditPart 
 				|| isAnIllegalMove(request)
 				|| isTargetaCollapseSubprocess(request)
+				|| isSourceAndTargetAreEventSubProc(request)
 				|| isSourceFromExpandSubprocessAndSourceAlreadyConnected(request)
 				|| (getHost().getParent() != null && getHost().getParent() instanceof MainProcessEditPart)
 				|| isInvalidBoundaryMove(request)
 				|| !isMovingToAnotherProcess(request);
 	}
 
+	private boolean isSourceAndTargetAreEventSubProc(ChangeBoundsRequest request) {
+		final EditPartViewer hostViewer = getHost().getViewer();
+		if(hostViewer.findObjectAt(request.getLocation()) instanceof IGraphicalEditPart){
+			IGraphicalEditPart target = (IGraphicalEditPart) hostViewer.findObjectAt(request.getLocation());
+			if(target.resolveSemanticElement() instanceof SubProcessEvent){
+				for(Object ep : request.getEditParts()){
+					if(ep instanceof IGraphicalEditPart){
+						if(((IGraphicalEditPart) ep).resolveSemanticElement() instanceof SubProcessEvent){
+							return true ;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	private boolean isAnIllegalMove(ChangeBoundsRequest request) {
+		//STart event can't be moved to SubProcessEvent
 		if(getHost().getViewer().findObjectAt(request.getLocation()) instanceof IGraphicalEditPart){
 			IGraphicalEditPart target = (IGraphicalEditPart) getHost().getViewer().findObjectAt(request.getLocation());
 			if(target.resolveSemanticElement() instanceof SubProcessEvent){
@@ -91,6 +111,7 @@ public class CustomDragDropEditPolicy extends DragDropEditPolicy {
 				}
 			}
 		}
+		//Start error event can't be put in Pool or lane
 		for(Object ep : request.getEditParts()){
 			if(ep instanceof IGraphicalEditPart){
 				if(((IGraphicalEditPart) ep).resolveSemanticElement() instanceof StartErrorEvent){
@@ -102,7 +123,7 @@ public class CustomDragDropEditPolicy extends DragDropEditPolicy {
 		}
 
 		
-		
+		//Pool can't be moved
 		if(getHost() instanceof MainProcessEditPart){
 			for(Object ep : request.getEditParts()){
 				if(ep instanceof IGraphicalEditPart){
