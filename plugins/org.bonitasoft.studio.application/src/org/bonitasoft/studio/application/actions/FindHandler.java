@@ -18,7 +18,6 @@
 package org.bonitasoft.studio.application.actions;
 
 import org.bonitasoft.studio.application.views.BonitaContentOutlineTreeView;
-import org.bonitasoft.studio.application.views.BonitaContentOutlineView;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
