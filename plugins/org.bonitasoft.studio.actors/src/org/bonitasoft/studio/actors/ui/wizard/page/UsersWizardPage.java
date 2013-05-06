@@ -500,12 +500,14 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 					control = createInfoControl(sc,professionalWidgetMap);
 					sc.setContent(control);
 					profesionnalTab.setControl(sc) ;
-				}else if(item.equals(metadataTab)){
-					final ScrolledComposite sc = createScrolledComposite();
-					control = createMetadataControl(sc,metadataWidgetMap);
-					sc.setContent(control);
-					metadataTab.setControl(sc) ;
-				}else if(item.equals(memberShipTab)){
+				}
+//				else if(item.equals(metadataTab)){
+//					final ScrolledComposite sc = createScrolledComposite();
+//					control = createMetadataControl(sc,metadataWidgetMap);
+//					sc.setContent(control);
+//					metadataTab.setControl(sc) ;
+//				}
+				else if(item.equals(memberShipTab)){
 					final ScrolledComposite sc = createScrolledComposite();
 					control = createMembershipControl(sc,membershipWidgetMap);
 					sc.setContent(control);
@@ -537,8 +539,8 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 		profesionnalTab = new TabItem(tab, SWT.NONE) ;
 		profesionnalTab.setText(Messages.professionalData) ;
 
-		metadataTab = new TabItem(tab, SWT.NONE) ;
-		metadataTab.setText(Messages.metadata) ;
+//		metadataTab = new TabItem(tab, SWT.NONE) ;
+//		metadataTab.setText(Messages.metadata) ;
 
 		getViewer().setSelection(new StructuredSelection()) ;
 		refreshBinding(null) ;
