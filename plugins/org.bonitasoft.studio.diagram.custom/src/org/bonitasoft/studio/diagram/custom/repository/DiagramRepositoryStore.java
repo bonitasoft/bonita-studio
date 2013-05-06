@@ -294,7 +294,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 	}
 
 	@Override
-	protected InputStream handlePreImport(String fileName,
+	protected InputStream handlePreImport(final String fileName,
 			InputStream inputStream) throws MigrationException {
 		final InputStream is = super.handlePreImport(fileName, inputStream);
 		CopyInputStream copyIs = null;
@@ -314,6 +314,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
 							@Override
 							public void run() {
+								BonitaStudioLog.log("Incompatible Version for "+fileName);
 								MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.incompatibleVersionTitle, Messages.incompatibleVersionMsg);
 							}
 						});
