@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.validation.ui.view;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -41,7 +42,6 @@ public class SeverityColumnLabelProvider extends StyledCellLabelProvider
 	 * 
 	 */
 	public SeverityColumnLabelProvider() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -49,7 +49,6 @@ public class SeverityColumnLabelProvider extends StyledCellLabelProvider
 	 */
 	public SeverityColumnLabelProvider(int style) {
 		super(style);
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)
@@ -57,7 +56,7 @@ public class SeverityColumnLabelProvider extends StyledCellLabelProvider
 	 */
 	@Override
 	public Image getImage(Object element) {
-		// TODO Auto-generated method stub
+		//Use paint instead of getimage in order to have image drawn in the middle of the cell
 		return null;
 	}
 
@@ -95,6 +94,7 @@ public class SeverityColumnLabelProvider extends StyledCellLabelProvider
 				int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
 
 				event.gc.drawImage(image, x, y);
+				
 			} catch (CoreException e) {
 				BonitaStudioLog.error(e);
 			}
@@ -115,5 +115,24 @@ public class SeverityColumnLabelProvider extends StyledCellLabelProvider
 		}
 
 		return null;
+	}
+		
+	@Override
+	public String getToolTipText(Object element) {
+		if(element instanceof Marker && ((Marker) element).exists()){
+			try {
+				final int severity = (Integer) ((Marker) element).getAttribute("severity");
+				switch (severity) {
+				case IMarker.SEVERITY_WARNING: return Messages.errorTooltip;
+				case IMarker.SEVERITY_INFO: return Messages.infoTooltip;
+				case IMarker.SEVERITY_ERROR: return Messages.errorTooltip;
+				default:break;
+				}
+
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e);
+			}		
+		}
+		return super.getToolTipText(element);
 	}
 }

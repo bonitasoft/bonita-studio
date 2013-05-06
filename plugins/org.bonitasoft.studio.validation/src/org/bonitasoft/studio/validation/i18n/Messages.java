@@ -70,6 +70,8 @@ public class Messages extends NLS {
 	public static String Validation_MultiInstantiationOutputData;
 	public static String Validation_MultiInstantiationInputData;
 	public static String leftOperandMissing;
+	public static String errorTooltip;
+	public static String infoTooltip;
 
     
     static {

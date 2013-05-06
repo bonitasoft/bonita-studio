@@ -39,6 +39,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -123,11 +124,9 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				validateAction.run();
+				tableViewer.refresh(true, true);
 			}
 		});
-
-
-
 	}
 
 	/**
@@ -236,6 +235,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 		severityColumn = new TableViewerColumn(tableViewer, SWT.NONE);
 		severityColumn.getColumn().setText(Messages.validationViewSeverityColumnName);
 		severityColumn.setLabelProvider(new SeverityColumnLabelProvider());
+		ColumnViewerToolTipSupport.enableFor(severityColumn.getViewer());
 	}
 
 
