@@ -37,6 +37,10 @@ public class DriversAssociationFileStoreContribution implements
 	private static final String MYSQL_DEFINITION_ID = "database-mysql";
 	private static final String MYSQL_DRIVER_JARNAME = "mysql-connector-java-5.1.23-bin.jar";
 	
+	
+	
+	
+	private static final String POSTGRES_DEFINITION_84_ID = "database-postgresql84";
 	private static final String POSTGRES_DEFINITION_ID = "database-postgresql92";
 	private static final String POSTGRES_DRIVER_JARNAME = "postgresql-9.2-1002.jdbc4.jar";
 	
@@ -66,6 +70,7 @@ public class DriversAssociationFileStoreContribution implements
 	public void execute(IRepositoryStore<? extends IRepositoryFileStore> repository) {
 		createDatabaseDriverAssociation(repository,MYSQL_DEFINITION_ID,MYSQL_DRIVER_JARNAME);
 		createDatabaseDriverAssociation(repository, POSTGRES_DEFINITION_ID, POSTGRES_DRIVER_JARNAME);
+		createDatabaseDriverAssociation(repository, POSTGRES_DEFINITION_84_ID, POSTGRES_DRIVER_JARNAME);
 		createDatabaseDriverAssociation(repository, SQLSERVER_2008_DEFINITION_ID, SQLSERVER_DRIVER_JARNAME);
 		createDatabaseDriverAssociation(repository, SQLSERVER_2012_DEFINITION_ID, SQLSERVER_DRIVER_JARNAME);
 		createDatabaseDriverAssociation(repository, ORACLE_11G_DEFINITION_ID, ORACLE_DRIVER_JARNAME);
