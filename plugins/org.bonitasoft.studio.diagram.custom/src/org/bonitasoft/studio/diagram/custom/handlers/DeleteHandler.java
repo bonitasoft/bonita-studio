@@ -30,17 +30,21 @@ import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
@@ -155,12 +159,16 @@ public class DeleteHandler extends AbstractHandler {
 	
 	public void removeMessage(MessageFlow flow){
 		AbstractCatchMessageEvent catchEvent = flow.getTarget();
-		TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(catchEvent) ;
+		ThrowMessageEvent thowEvent = flow.getSource();
+		Assert.isNotNull(catchEvent);
+		Assert.isNotNull(thowEvent);
+		EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(catchEvent) ;
+		Assert.isNotNull(domain);
 		CompoundCommand cc = new CompoundCommand();
 		List<Message> messages =flow.getSource().getEvents();
 		for (Message message:messages){
 			if (flow.getName().equals(message.getName())){
-				cc.append(RemoveCommand.create(domain, flow.getSource(),ProcessPackage.Literals.THROW_MESSAGE_EVENT__EVENTS, message));
+				cc.append(DeleteCommand.create(domain,message));
 				break;
 			}
 		}
