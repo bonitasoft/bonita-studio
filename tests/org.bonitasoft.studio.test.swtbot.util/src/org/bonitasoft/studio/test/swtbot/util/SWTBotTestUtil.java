@@ -437,7 +437,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		bot.comboBoxWithLabel(org.bonitasoft.studio.properties.i18n.Messages.datatypeLabel).setSelection(org.bonitasoft.studio.common.Messages.JavaType);
 		bot.button(org.bonitasoft.studio.data.i18n.Messages.browseClasses).click();
 		bot.text().setText(type);
-		bot.waitUntil(Conditions.tableHasRows(bot.table(), 1));
+		bot.waitUntil(Conditions.tableHasRows(bot.table(), 2));
 		bot.table().select(0);
 		bot.button(IDialogConstants.OK_LABEL).click();
 		bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.data.i18n.Messages.newVariable));
