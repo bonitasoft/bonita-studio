@@ -25,6 +25,7 @@ import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.Lane;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.MessageFlow;
 import org.bonitasoft.studio.model.process.PageFlow;
@@ -158,11 +159,13 @@ public class DeleteHandler extends AbstractHandler {
 
 	
 	public void removeMessage(MessageFlow flow){
+		MainProcess diagram = ModelHelper.getMainProcess(flow);
+		Assert.isNotNull(diagram);
 		AbstractCatchMessageEvent catchEvent = flow.getTarget();
 		ThrowMessageEvent thowEvent = flow.getSource();
 		Assert.isNotNull(catchEvent);
 		Assert.isNotNull(thowEvent);
-		EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(catchEvent) ;
+		EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(diagram) ;
 		Assert.isNotNull(domain);
 		CompoundCommand cc = new CompoundCommand();
 		List<Message> messages =flow.getSource().getEvents();
