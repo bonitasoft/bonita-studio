@@ -290,7 +290,7 @@ public class AddMessageEventWizardPage extends WizardPage implements IWizardPage
         captions.add(Messages.messageContentID);
         captions.add(Messages.expressionName);
 
-        final ExpressionCollectionViewer ecv = new ExpressionCollectionViewer(group,5 , false, 2, true, captions, false, false);
+        final ExpressionCollectionViewer ecv = new ExpressionCollectionViewer(group,0, false, 2, true, captions, false, false);
         ecv.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         ecv.setAddRowLabel(Messages.addMessageContentButton);
         ecv.setRemoveRowLabel(Messages.removeMessageContent);
