@@ -2,7 +2,7 @@
 <feature
       id="org.bonitasoft.studio.bos.translations"
       label="Translations for BOS bundles"
-      version="6.0.0.qualifier"
+      version="1.0.0.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
@@ -18,7 +18,9 @@
    </license>
 
    <requires>
-      <import feature="org.bonitasoft.studio.bos" version="1.0.0.qualifier"/>
+      <import feature="org.bonitasoft.studio.bos" version="6.0.0" match="equivalent"/>
+      <import feature="org.eclipse.rcp" version="3.7.2.v20120120-1424-9DB5FmnFq5JCf1UA38R-kz0S0272" match="greaterOrEqual"/>
+      <import feature="platform-specific-feature" version="6.0.0" match="equivalent"/>
    </requires>
 
    <plugin
