@@ -36,7 +36,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.data.complex.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.diagram.custom.editPolicies.UpdateSizePoolSelectionEditPolicy;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -76,6 +75,7 @@ import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
@@ -729,8 +729,9 @@ public class SWTBotTestUtil implements SWTBotConstants{
         // select the variable
         SWTBotTable tableVar = bot.table(1);
         for(int i =0;i<tableVar.rowCount();i++ ){
-            if(tableVar.getTableItem(i).getText().startsWith(variableName+" --")){
-                tableVar.getTableItem(i).select();
+            final SWTBotTableItem tableItem = tableVar.getTableItem(i);
+			if(tableItem.getText().startsWith(variableName+" --")){
+                tableItem.select();
                 break;
             }
         }
@@ -927,29 +928,6 @@ public class SWTBotTestUtil implements SWTBotConstants{
         
 	}
 	
-	public static void addDataTypeAsJar(SWTGefBot bot, String packageName , String dataTypeName) {
-		bot.menu("Development").menu("Data types").menu("New data type...").click();
-		bot.waitUntil(Conditions.shellIsActive(Messages.newDataType_title));
-		
-		bot.textWithLabel(Messages.name,0).setText(packageName);
-		
-		bot.textWithLabel(Messages.name,1).setText(dataTypeName);
-		bot.button(IDialogConstants.OK_LABEL).click();
-		
-		bot.waitUntil(Conditions.shellIsActive(Messages.editComplexTypeWizardTitle));
-		bot.tree().select(packageName);
-		
-		bot.button(Messages.ExportAsJAR).click();
-		bot.waitUntil(Conditions.shellIsActive(Messages.ExportAsJAR));
-		bot.button(IDialogConstants.OK_LABEL).click();
-
-		bot.waitUntil(Conditions.shellIsActive(Messages.generationCompleted_title), 60000);
-		
-		bot.button(IDialogConstants.OK_LABEL).click();
-		bot.button(IDialogConstants.FINISH_LABEL).click();
-		
-	}
-
 	public static void setOutputStorageExpressionByName(SWTBot bot,String storageExpressionName, int index) {
 		bot.toolbarButtonWithId(SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN,index).click();
     	final SWTBot proposalBot = bot.shellWithId(SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_SHELL).bot();
