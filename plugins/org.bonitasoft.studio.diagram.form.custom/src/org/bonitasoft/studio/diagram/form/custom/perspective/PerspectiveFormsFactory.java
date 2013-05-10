@@ -53,6 +53,7 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 		bottomRight.addView("org.bonitasoft.studio.views.properties.form.general");
 		bottomRight.addView("org.bonitasoft.studio.views.properties.form.appearance");
 		bottomRight.addView("org.bonitasoft.studio.validation.view");
+		bottomRight.addView("org.bonitasoft.studio.views.properties.form.preview");
 
 		for (String viewId : BonitaPerspectivesUtils.getContributedPropertiesViews(FORM_PERSPECTIVE_ID)) {
 			bottomRight.addView(viewId);
