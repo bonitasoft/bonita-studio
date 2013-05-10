@@ -96,6 +96,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 
 
     public static void createNewDiagram(final SWTWorkbenchBot bot){
+    	final long timebeforeCreatenewDiagram = System.currentTimeMillis();    	
         final int nbEditorsBefore = bot.editors().size();
         SWTBotMenu menu = bot.menu("Diagram");
         menu.menu("New").click();
@@ -115,6 +116,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
                 return "Editor for new diagram has not been opened or is dirty after new";
             }
         }, 30000);
+        System.out.println("Time to create a new diagram: "+String.valueOf(System.currentTimeMillis()-timebeforeCreatenewDiagram));
     }
 
     public static IStatus selectAndRunFirstPoolFound(final SWTGefBot bot) throws ExecutionException {
