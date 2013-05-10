@@ -2,48 +2,48 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.bonitasoft.studio.translations</groupId>
-  <artifactId>pt_BR</artifactId>
+  <groupId>org.bonitasoft.studio</groupId>
+  <artifactId>plugins</artifactId>
   <version>6.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
-    <module>org.bonitasoft.studio.application.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.common.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.common.repository.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.connector.wizard.sap.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.connectors.evaluation.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.connectors.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.connectors.wizards.java.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.console.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.datas.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.debug.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.decision.core.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.decision.ui.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.diagram.custom.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.diagram.form.custom.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.diagram.form.properties.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.engine.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.exporter.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.groovy.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.groovy.ui.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.importer.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.intro.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.jpdl.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.model.edit.custom.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.preferences.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.presentation.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.profiles.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.properties.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.registration.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.remotedeploy.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.repository.connectors.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.repository.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.repository.themes.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.simulation.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.userguidance.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.validation.nl_pt_BR</module>
-    <module>org.bonitasoft.studio.xml.nl_pt_BR</module>
-    <module>org.omg.schema.spec.bpmn.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.application.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.common.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.common.repository.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.connector.wizard.sap.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.connectors.evaluation.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.connectors.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.connectors.wizards.java.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.console.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.datas.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.debug.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.decision.core.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.decision.ui.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.diagram.custom.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.diagram.form.custom.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.diagram.form.properties.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.engine.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.exporter.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.groovy.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.groovy.ui.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.importer.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.intro.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.jpdl.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.model.edit.custom.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.preferences.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.presentation.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.profiles.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.properties.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.registration.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.remotedeploy.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.repository.connectors.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.repository.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.repository.themes.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.simulation.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.userguidance.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.validation.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.xml.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.omg.schema.spec.bpmn.nl_pt_BR</module>
   </modules>
   <build>
     <plugins>

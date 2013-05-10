@@ -15,6 +15,7 @@
 
 
 	<modules>
+		<module>org.bonitasoft.studio.application</module>
 		<module>org.bonitasoft.studio-models</module>
 		<module>org.bonitasoft.studio.console.libs</module>
 		<module>org.bonitasoft.studio.simulation.libs</module>
@@ -22,8 +23,7 @@
 		<module>org.bonitasoft.studio.model.edit</module>
 		<module>org.bonitasoft.studio.diagram</module>
 		<module>org.bonitasoft.studio.diagram.form</module>
-		<module>org.bonitasoft.studio.actors</module>
-		<module>org.bonitasoft.studio.application</module>
+		<module>org.bonitasoft.studio.actors</module>		
 		<module>org.bonitasoft.studio.common</module>
 		<module>org.bonitasoft.studio.common.diagram</module>
 		<module>org.bonitasoft.studio.common.repository</module>
@@ -73,6 +73,198 @@
 		<module>org.bonitasoft.studio.xpdl</module>
 		<module>org.omg.schema.spec.bpmn</module>
 		<module>org.bonitasoft.studio.logging.extension</module>
+		<module>../translations/de/org.bonitasoft.studio.application.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.common.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.common.repository.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.connectors.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.debug.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.decision.core.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.decision.ui.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.diagram.custom.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.diagram.form.custom.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.diagram.form.properties.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.engine.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.exporter.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.groovy.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.groovy.ui.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.importer.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.intro.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.jpdl.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.model.edit.custom.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.preferences.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.presentation.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.properties.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.registration.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.simulation.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.validation.nl_de</module>
+    <module>../translations/de/org.bonitasoft.studio.xml.nl_de</module>
+    <module>../translations/de/org.omg.schema.spec.bpmn.nl_de</module>
+    <module>../translations/es/org.bonitasoft.studio.application.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.common.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.common.repository.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.connectors.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.debug.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.decision.core.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.decision.ui.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.diagram.custom.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.diagram.form.custom.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.diagram.form.properties.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.engine.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.exporter.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.groovy.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.groovy.ui.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.importer.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.intro.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.jpdl.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.model.edit.custom.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.preferences.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.presentation.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.profiles.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.properties.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.registration.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.simulation.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.validation.nl_es</module>
+    <module>../translations/es/org.bonitasoft.studio.xml.nl_es</module>
+    <module>../translations/es/org.omg.schema.spec.bpmn.nl_es</module>
+    <module>../translations/fr/org.bonitasoft.studio.application.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.common.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.common.repository.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.connectors.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.debug.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.decision.core.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.decision.ui.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.diagram.custom.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.diagram.form.custom.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.diagram.form.properties.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.engine.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.exporter.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.groovy.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.groovy.ui.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.importer.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.intro.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.jpdl.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.model.edit.custom.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.preferences.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.presentation.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.profiles.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.properties.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.registration.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.repository.themes.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.simulation.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.validation.nl_fr</module>
+    <module>../translations/fr/org.bonitasoft.studio.xml.nl_fr</module>
+    <module>../translations/fr/org.omg.schema.spec.bpmn.nl_fr</module>
+     <module>../translations/it/org.bonitasoft.studio.application.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.common.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.common.repository.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.connectors.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.debug.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.decision.core.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.decision.ui.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.diagram.custom.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.diagram.form.custom.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.diagram.form.properties.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.engine.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.exporter.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.groovy.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.groovy.ui.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.importer.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.intro.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.jpdl.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.model.edit.custom.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.preferences.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.presentation.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.profiles.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.properties.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.registration.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.simulation.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.validation.nl_it</module>
+    <module>../translations/it/org.bonitasoft.studio.xml.nl_it</module>
+    <module>../translations/it/org.omg.schema.spec.bpmn.nl_it</module>
+    <module>../translations/pt/org.bonitasoft.studio.application.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.common.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.common.repository.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.connectors.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.debug.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.decision.core.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.decision.ui.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.diagram.custom.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.diagram.form.custom.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.diagram.form.properties.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.engine.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.exporter.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.groovy.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.groovy.ui.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.importer.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.intro.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.jpdl.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.model.edit.custom.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.preferences.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.presentation.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.profiles.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.properties.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.registration.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.repository.themes.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.simulation.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.validation.nl_pt</module>
+    <module>../translations/pt/org.bonitasoft.studio.xml.nl_pt</module>
+    <module>../translations/pt/org.omg.schema.spec.bpmn.nl_pt</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.application.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.common.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.common.repository.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.connectors.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.debug.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.decision.core.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.decision.ui.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.diagram.custom.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.diagram.form.custom.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.diagram.form.properties.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.engine.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.exporter.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.groovy.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.groovy.ui.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.importer.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.intro.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.jpdl.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.model.edit.custom.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.preferences.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.presentation.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.profiles.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.properties.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.registration.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.repository.themes.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.simulation.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.validation.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.bonitasoft.studio.xml.nl_pt_BR</module>
+    <module>../translations/pt_BR/org.omg.schema.spec.bpmn.nl_pt_BR</module>
+    <module>../translations/zh/org.bonitasoft.studio.application.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.common.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.common.repository.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.connectors.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.debug.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.decision.core.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.decision.ui.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.diagram.custom.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.diagram.form.custom.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.diagram.form.properties.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.engine.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.exporter.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.groovy.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.groovy.ui.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.importer.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.intro.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.jpdl.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.model.edit.custom.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.preferences.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.presentation.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.profiles.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.properties.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.registration.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.repository.themes.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.simulation.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.validation.nl_zh</module>
+    <module>../translations/zh/org.bonitasoft.studio.xml.nl_zh</module>
+    <module>../translations/zh/org.omg.schema.spec.bpmn.nl_zh</module>
 	</modules>
 <properties>
    			<sonar.jacoco.itReportPath>../../target/jacoco.exec</sonar.jacoco.itReportPath>
