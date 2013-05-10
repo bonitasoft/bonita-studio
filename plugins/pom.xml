@@ -73,7 +73,7 @@
 		<module>org.bonitasoft.studio.xpdl</module>
 		<module>org.omg.schema.spec.bpmn</module>
 		<module>org.bonitasoft.studio.logging.extension</module>
-		<module>../translations/de/org.bonitasoft.studio.application.nl_de</module>
+<!-- 		<module>../translations/de/org.bonitasoft.studio.application.nl_de</module>
     <module>../translations/de/org.bonitasoft.studio.common.nl_de</module>
     <module>../translations/de/org.bonitasoft.studio.common.repository.nl_de</module>
     <module>../translations/de/org.bonitasoft.studio.connectors.nl_de</module>
@@ -264,7 +264,7 @@
     <module>../translations/zh/org.bonitasoft.studio.simulation.nl_zh</module>
     <module>../translations/zh/org.bonitasoft.studio.validation.nl_zh</module>
     <module>../translations/zh/org.bonitasoft.studio.xml.nl_zh</module>
-    <module>../translations/zh/org.omg.schema.spec.bpmn.nl_zh</module>
+    <module>../translations/zh/org.omg.schema.spec.bpmn.nl_zh</module> -->
 	</modules>
 <properties>
    			<sonar.jacoco.itReportPath>../../target/jacoco.exec</sonar.jacoco.itReportPath>
