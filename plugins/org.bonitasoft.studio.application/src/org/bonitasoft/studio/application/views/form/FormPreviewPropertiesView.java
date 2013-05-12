@@ -18,10 +18,18 @@
 package org.bonitasoft.studio.application.views.form;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.ListContentProvider;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.provider.FileStoreLabelProvider;
+import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
+import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
 import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -44,9 +52,14 @@ import org.eclipse.ui.part.ViewPart;
 public class FormPreviewPropertiesView extends ViewPart{
 		
 	public static final String VIEW_ID = "org.bonitasoft.studio.views.properties.form.preview";
+	private LookNFeelRepositoryStore repositoryStore;
+	private ComboViewer webBrowserCombo;
+	private ComboViewer lnfCombo; 
+	private DataBindingContext context;
 	
 	public FormPreviewPropertiesView(){
 		super();
+		context = new DataBindingContext();
 	}
 
 	@Override
@@ -65,7 +78,7 @@ public class FormPreviewPropertiesView extends ViewPart{
 		buttonsComposite.setLayout(new RowLayout());
 		
 		createPreviewButton(buttonsComposite);
-		createAdvancedPreviewButton(buttonsComposite);
+	//	createAdvancedPreviewButton(buttonsComposite);
 	}
 	
 	private void createPreviewButton(Composite buttonsComposite) {
@@ -99,15 +112,12 @@ public class FormPreviewPropertiesView extends ViewPart{
 		lnfComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 		
 		new Label(lnfComposite, SWT.NONE).setText(Messages.lnfForPreview);
-		ComboViewer lnfCombo = new ComboViewer(lnfComposite, SWT.BORDER | SWT.READ_ONLY);
+		lnfCombo = new ComboViewer(lnfComposite, SWT.BORDER | SWT.READ_ONLY);
 		lnfCombo.setContentProvider(new ListContentProvider());
 		lnfCombo.setLabelProvider(new FileStoreLabelProvider());
-		final LookNFeelRepositoryStore repositoryStore = (LookNFeelRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);		
+		repositoryStore = (LookNFeelRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);		
 		lnfCombo.setInput(repositoryStore.getApplicationLookNFeels());
-		
-		//TODO: set a default value, register it in PrefernceStore? Calculate it from process?
-		lnfCombo.setSelection(new StructuredSelection());
-		
+		lnfCombo.setSelection(new StructuredSelection(getCurrentLookNFeel()));
 	}
 	
 	private void createBrowserSelection(Composite mainComposite) {
@@ -115,12 +125,11 @@ public class FormPreviewPropertiesView extends ViewPart{
 		browserComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 		
 		new Label(browserComposite, SWT.NONE).setText(Messages.browserForPreview);
-		ComboViewer webBrowserCombo = new ComboViewer(browserComposite, SWT.BORDER | SWT.READ_ONLY);
+		webBrowserCombo = new ComboViewer(browserComposite, SWT.BORDER | SWT.READ_ONLY);
 		webBrowserCombo.setLabelProvider(new BrowserTableLabelProvider());
 		webBrowserCombo.setContentProvider(new ListContentProvider());
 		webBrowserCombo.setInput(BrowserManager.getInstance().getWebBrowsers());
-		//TODO: define the default value
-		webBrowserCombo.setSelection(new StructuredSelection());
+		webBrowserCombo.setSelection(new StructuredSelection(BrowserManager.getInstance().getWebBrowsers()));
 	}
 
 	/**
@@ -145,7 +154,17 @@ public class FormPreviewPropertiesView extends ViewPart{
 	
 	@Override
 	public void setFocus() {
-		//TODO: should we recalculate available browser and looknfeel?
+		lnfCombo.setSelection(new StructuredSelection(getCurrentLookNFeel()));
+		webBrowserCombo.setSelection(new StructuredSelection(BrowserManager.getInstance().getWebBrowsers()));
+	}
+	
+	private ApplicationLookNFeelFileStore getCurrentLookNFeel(){
+		if ((getSite().getPage().getActiveEditor() instanceof FormDiagramEditor)){
+			Form form = (Form) ((FormDiagramEditor)getSite().getPage().getActiveEditor()).getDiagramEditPart().resolveSemanticElement();
+			AbstractProcess process = ModelHelper.getParentProcess(form);
+			return (ApplicationLookNFeelFileStore) repositoryStore.getChild(process.getBasedOnLookAndFeel());
+		}
+		return null;
 	}
 
 }
