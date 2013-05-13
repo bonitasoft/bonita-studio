@@ -250,15 +250,13 @@ public class AddFormCommand extends AbstractTransactionalCommand {
                 }else if(key instanceof Document && tempWidget instanceof FileWidget){
                     final Document doc = (Document) key;
                     currentExpression.setReturnType(String.class.getName()) ;
+                    currentExpression.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
                     if(!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool)){ //Do not set input expression if we are in an instantiation form
                         ((FormField) tempWidget).setInputExpression(currentExpression);
                     }
                     final Operation action = createDocumentOutputOperation(tempWidget, doc);
                     ((FormField) tempWidget).setAction(action) ;
                 }
-
-
-
                 myForm.getWidgets().add(tempWidget);
             }
         }
