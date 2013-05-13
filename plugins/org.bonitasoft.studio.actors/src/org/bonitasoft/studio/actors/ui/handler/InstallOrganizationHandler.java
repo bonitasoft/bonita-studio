@@ -16,21 +16,21 @@
  */
 package org.bonitasoft.studio.actors.ui.handler;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.engine.api.CommandAPI;
 import org.bonitasoft.engine.api.IdentityAPI;
+import org.bonitasoft.engine.api.ProfileAPI;
 import org.bonitasoft.engine.identity.User;
 import org.bonitasoft.engine.identity.UserCriterion;
+import org.bonitasoft.engine.search.Order;
+import org.bonitasoft.engine.search.SearchOptions;
+import org.bonitasoft.engine.search.SearchOptionsBuilder;
+import org.bonitasoft.engine.search.SearchResult;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
@@ -54,7 +54,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
@@ -64,22 +63,18 @@ import org.eclipse.ui.PlatformUI;
  */
 public class InstallOrganizationHandler extends AbstractHandler {
 
-	private static final String PROFILE_ID = "profileId";
-	private static final String USER_ID = "userId";
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		if(event != null){
 			String id = event.getParameter("artifact") ;
-			IRepositoryStore organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
+			IRepositoryStore<?> organizationStore = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
 			IRepositoryFileStore file = organizationStore.getChild(id) ;
 			if(file == null){
 				BonitaStudioLog.warning("Organization : "+ id +" not found !",ActorsPlugin.PLUGIN_ID) ;
-				List<IRepositoryFileStore> organizationFiles = organizationStore.getChildren();
+				List<? extends IRepositoryFileStore> organizationFiles = organizationStore.getChildren();
 				if(organizationFiles.isEmpty()){
 					BonitaStudioLog.warning("No organization found in repository",ActorsPlugin.PLUGIN_ID) ;
 					return null;
@@ -117,8 +112,8 @@ public class InstallOrganizationHandler extends AbstractHandler {
 			try{
 				session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
 				IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session) ;
-				CommandAPI commandApi =   BOSEngineManager.getInstance().getCommandAPI(session) ;
-				applyAllProfileToUsers(identityAPI,commandApi) ;
+				ProfileAPI profileAPI =   BOSEngineManager.getInstance().getProfileAPI(session) ;
+				applyAllProfileToUsers(identityAPI,profileAPI) ;
 			}catch (final Exception e) {
 				if(PlatformUI.isWorkbenchRunning()){
 					Display.getDefault().syncExec(new Runnable() {
@@ -158,16 +153,11 @@ public class InstallOrganizationHandler extends AbstractHandler {
 		return processor.saveToString(resource, options);
 	}
 
-	protected void applyAllProfileToUsers(IdentityAPI identityAPI, CommandAPI commandApi) throws Exception {
-		final Map<String, Serializable> searchParameters = new HashMap<String, Serializable>();
-		searchParameters.put("fromIndex", 0);
-		searchParameters.put("numberOfProfiles", Integer.MAX_VALUE);
-		searchParameters.put("field", "name");
-		searchParameters.put("order", "DESC");
-
+	protected void applyAllProfileToUsers(IdentityAPI identityAPI, ProfileAPI profileAPI) throws Exception {
 		final List<Long> profiles = new ArrayList<Long>() ;
-		final List<Map<String, Serializable>> searchedProfiles = (List<Map<String, Serializable>>) commandApi.execute("searchProfile", searchParameters);
-		for(Map<String, Serializable> profile : searchedProfiles){
+		final SearchOptions options = new SearchOptionsBuilder(0, Integer.MAX_VALUE).sort("name", Order.DESC).done();
+		final SearchResult<HashMap<String, Serializable>> searchedProfiles = profileAPI.searchProfiles(options);
+		for(Map<String, Serializable> profile : searchedProfiles.getResult()){
 			long profileId =  (Long) profile.get("id") ;
 			profiles.add(profileId) ;
 		}
@@ -176,34 +166,9 @@ public class InstallOrganizationHandler extends AbstractHandler {
 		for(User u : users){
 			long id =  u.getId() ;
 			for(Long profile : profiles){
-				final Map<String, Serializable> addProfileMemberParams = new HashMap<String, Serializable>();
-				addProfileMemberParams.put(PROFILE_ID, profile);
-				addProfileMemberParams.put(USER_ID, id);
-				commandApi.execute("addProfileMember", addProfileMemberParams);
+				profileAPI.createProfileMember(profile, id, -1L, -1L);
 			}
 		}
-	}
-
-	private String getFileContent(File file){
-		try
-		{
-			final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
-			final StringBuilder sb = new StringBuilder();
-			String line = ""; //$NON-NLS-1$
-			while((line = reader.readLine()) != null)
-			{
-				sb.append(line);
-				sb.append(SWT.CR);
-			}
-			reader.close();
-
-			return sb.toString() ;
-		}
-		catch (IOException ioe)
-		{
-			BonitaStudioLog.error(ioe);
-		}
-		return null;
 	}
 
 }

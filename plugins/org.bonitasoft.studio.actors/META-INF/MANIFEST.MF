@@ -45,5 +45,6 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.filter,
  org.bonitasoft.engine.identity,
+ org.bonitasoft.engine.search,
  org.bonitasoft.engine.session
 Bundle-Activator: org.bonitasoft.studio.actors.ActorsPlugin
