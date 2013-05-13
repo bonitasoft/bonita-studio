@@ -66,6 +66,8 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
       <feature id="studio-bos-specific-feature" version="6.0.0.qualifier"/>
       <feature id="bos-branding-feature" version="6.0.0.qualifier"/>
       <feature id="rootfiles-feature" version="6.0.0.qualifier"/>
+      <feature id="org.bonitasoft.studio.bos.translations" version="6.0.0.qualifier"/>
+      <feature id="org.bonitasoft.studio.translations" version="6.0.0.qualifier"/>
    </features>
 
    <configurations>
