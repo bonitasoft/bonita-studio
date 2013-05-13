@@ -68,6 +68,7 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 		if(newData !=null){
 			//TODO : find an intelligent way to search references to the oldData and replace them with the new one instead of writing specific code for each usecase
 			updateDataReferenceInVariableExpressions(cc);
+			updateDataReferenceInExpressions(cc);
 			if(updateDataReferences ){
 				updateDataInListsOfData(cc);
 				updateDataReferenceInMultinstanciation(cc);
@@ -77,6 +78,20 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 		}
 		domain.getCommandStack().execute(cc) ;
 		monitor.done() ;
+	}
+
+	private void updateDataReferenceInExpressions(CompoundCommand cc) {
+		List<Expression> expressions = ModelHelper.getAllItemsOfType(parentProcess, ExpressionPackage.Literals.EXPRESSION) ;
+		for(Expression exp : expressions){
+			for(EObject dependency : exp.getReferencedElements()){
+				if(dependency instanceof Data){
+					if(((Data)dependency).getName().equals(oldData.getName())){
+						cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, dependency));
+						cc.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(newData)));
+					}
+				}
+			}
+		}
 	}
 
 	private void removeAllDataReferences(CompoundCommand cc) {
@@ -136,10 +151,7 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 				cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, newData.getName()));
 				//update return type
 				cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, DataUtil.getTechnicalTypeFor(newData)));
-				//update referenced data
-				cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, exp.getReferencedElements()));
-				cc.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(newData)));
-			}
+			}	
 		}
 	}
 
