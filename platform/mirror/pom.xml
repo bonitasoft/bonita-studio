@@ -10,9 +10,11 @@
 	<packaging>pom</packaging>
 	<properties>
 		<tychoVersion>0.17.0</tychoVersion>
-		<tychoExtrasVersion>0.17.0</tychoExtrasVersion>
-		<sourceTargetFile>${project.build.directory}/../../../original_platform.target</sourceTargetFile>		
+		<tychoExtrasVersion>0.17.0</tychoExtrasVersion>	
 	</properties>
+	<!-- Currently it generates a compressed update site,
+	we need to extract artifacts.xml and content.xml from their jar- -->
+	<!-- Password is required to upload via FTP, you can pass them them through settings.xml in server tag -->
 	<build>
 		<plugins>
 			<!-- enable tycho build extension -->
@@ -45,7 +47,7 @@
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ftp</artifactId>
-				<version>1.0-beta-4</version>
+				<version>2.4</version>
 			</extension>
 		</extensions>
 	</build>
@@ -56,7 +58,7 @@
 			<properties>
 				<!-- Properties relative to the distant host where to upload the repo -->
 				<ftp.url>ftp://192.168.1.215</ftp.url>
-				<ftp.toDir>home/ic/p2_repository</ftp.toDir>
+				<ftp.toDir>home/ic/p2_repository_test</ftp.toDir>
 				<!-- Relative path to the repo being uploaded -->
 				<repo.path>${project.build.directory}/mirror.target.repo/</repo.path>
 			</properties>
