@@ -243,7 +243,7 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
 
     public static String getInstalledThemeId() {
       //String id = PropertiesFactory.getPlatformProperties().getProperty("currentTheme") ;
-        return "" ;
+        return "default" ;
     }
 
 
