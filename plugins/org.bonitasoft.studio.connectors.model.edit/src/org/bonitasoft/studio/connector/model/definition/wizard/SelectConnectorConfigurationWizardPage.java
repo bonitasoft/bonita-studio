@@ -17,6 +17,9 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
+import static org.bonitasoft.studio.common.jface.SWTBotConstants.SELECTION_CONNECTOR_CONFIGURATION_TREE_ID;
+import static org.bonitasoft.studio.common.jface.SWTBotConstants.SWTBOT_WIDGET_ID_KEY;
+
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -50,8 +53,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
-import static org.bonitasoft.studio.common.jface.SWTBotConstants.SELECTION_CONNECTOR_CONFIGURATION_TREE_ID;
-import static org.bonitasoft.studio.common.jface.SWTBotConstants.SWTBOT_WIDGET_ID_KEY;
 /**
  * @author Romain Bioteau
  *
@@ -151,6 +152,10 @@ public class SelectConnectorConfigurationWizardPage extends WizardSelectionPage 
 
         configurationsTree.getViewer().setInput(new Object()) ;
         configurationsTree.setFocus() ;
+        //Avoid bug with filtered tree on linux
+        if(configurationsTree.getViewer().getTree().getItemCount() > 0){
+        	selectedConfiguration = (ConnectorConfiguration)configurationsTree.getViewer().getTree().getItem(0).getData();
+        }
         createRemoveButton(composite);
 
     }
