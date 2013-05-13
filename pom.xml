@@ -13,8 +13,8 @@
 		<tychoVersion>0.17.0</tychoVersion>
 		<tychoExtrasVersion>0.17.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
-		<bundle.version>6.0.0-beta-010</bundle.version>
-		<engine.version>6.0.0-beta-021</engine.version>
+		<bundle.version>6.0.0-beta-011</bundle.version>
+		<engine.version>6.0.0-beta-023</engine.version>
 		<connector.version>6.0.0-beta-015</connector.version>
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
 		<filters.version>6.0.0-beta-011</filters.version>
