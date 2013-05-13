@@ -71,6 +71,7 @@ public class TransitionOrderingPropertySection extends AbstractBonitaDescription
 		super.createControls(parent, aTabbedPropertySheetPage);
 		Composite mainComposite = getWidgetFactory().createComposite(parent);
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(2).create());
+		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		//createExplanationLabel(mainComposite);
 		createButtons(mainComposite);
 		createList(mainComposite);
@@ -88,7 +89,7 @@ public class TransitionOrderingPropertySection extends AbstractBonitaDescription
 	
 	protected void createList(Composite mainComposite) {
 		List list = getWidgetFactory().createList(mainComposite, SWT.BORDER | SWT.V_SCROLL);
-		list.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		list.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 90).create());
 		listViewer = new ListViewer(list);
 		listViewer.setContentProvider(new ObservableListContentProvider());
 		listViewer.setLabelProvider(new LabelProvider(){
