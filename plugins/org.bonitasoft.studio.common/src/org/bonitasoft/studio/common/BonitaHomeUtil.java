@@ -177,12 +177,7 @@ public class BonitaHomeUtil {
 	}
 
 	public static File getDefaultTenantSecurityConfigFile(long tenantId) {
-		try {
-			return new File(WebBonitaConstantsUtils.getInstance(tenantId).getConfFolder(),"security-config.properties");
-		} catch (IOException e) {
-			BonitaStudioLog.error(e) ;
-		}
-		return null ;
+		return new File(WebBonitaConstantsUtils.getInstance(tenantId).getConfFolder(),"security-config.properties");
 	}
 
 	public static File getDefaultPlatformTenantConfigFile() {

@@ -18,12 +18,10 @@
 package org.bonitasoft.studio.engine.preferences;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bonitasoft.console.common.server.preferences.constants.WebBonitaConstantsUtils;
-import org.bonitasoft.console.common.server.preferences.properties.PropertiesFactory;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -148,11 +146,7 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         }
         if(artifact != null){
             File target = null;
-            try {
-                target = new File(BonitaHomeUtil.getBonitaHome(),WEB_CONSTANTS.getConsoleThemeFolder().getAbsolutePath()+File.separatorChar+artifact.getName());
-            } catch (IOException e1) {
-                BonitaStudioLog.error(e1) ;
-            }
+            target = new File(BonitaHomeUtil.getBonitaHome(),WEB_CONSTANTS.getConsoleThemeFolder().getAbsolutePath()+File.separatorChar+artifact.getName());
             target.delete() ;
             target.mkdirs() ;
             File zipFile = new File(target,artifact.getName()+".zip") ;
@@ -161,11 +155,11 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
             //	store.exportRepositoryFileStore(target, artifact, new NullProgressMonitor()) ;
             PlatformUtil.unzipZipFiles(zipFile, target, new NullProgressMonitor()) ;
             zipFile.delete() ;
-            try {
-                PropertiesFactory.getPlatformProperties().setProperty("currentTheme",artifact.getName()) ;
-            } catch (IOException e) {
-                BonitaStudioLog.error(e) ;
-            }
+//            try {
+//                PropertiesFactory.getPlatformProperties().setProperty("currentTheme",artifact.getName()) ;
+//            } catch (IOException e) {
+//                BonitaStudioLog.error(e) ;
+//            }
         }
     }
 
@@ -248,8 +242,8 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
     }
 
     public static String getInstalledThemeId() {
-        String id = PropertiesFactory.getPlatformProperties().getProperty("currentTheme") ;
-        return id ;
+      //String id = PropertiesFactory.getPlatformProperties().getProperty("currentTheme") ;
+        return "" ;
     }
 
 

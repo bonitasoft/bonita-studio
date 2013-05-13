@@ -81,16 +81,16 @@ public class BonitaConstants {
 
     public static final String REST_SERVER_EXCEPTION = "rest.server.exception";
 
-    public static final String API_ACCESSOR = ExpressionConstants.API_ACCESSOR.getEngineName();
+    public static final String API_ACCESSOR = ExpressionConstants.API_ACCESSOR.getEngineConstantName();
 
-    public static final String ENGINE_EXECUTION_CONTEXT = ExpressionConstants.ENGINE_EXECUTION_CONTEXT.getEngineName();
+    public static final String ENGINE_EXECUTION_CONTEXT = ExpressionConstants.ENGINE_EXECUTION_CONTEXT.getEngineConstantName();
 
-    public static final String ACTIVITY_INSTANCE_ID = ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineName();
+    public static final String ACTIVITY_INSTANCE_ID = ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineConstantName();
 
-    public static final String PROCESS_DEFINITION_ID = ExpressionConstants.PROCESS_DEFINITION_ID.getEngineName();
+    public static final String PROCESS_DEFINITION_ID = ExpressionConstants.PROCESS_DEFINITION_ID.getEngineConstantName();
 
-    public static final String PARENT_PROCESS_INSTANCE_ID = ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineName();
+    public static final String PARENT_PROCESS_INSTANCE_ID = ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineConstantName();
 
-    public static final String ROOT_PROCESS_INSTANCE_ID = ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineName();
+    public static final String ROOT_PROCESS_INSTANCE_ID = ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineConstantName();
 
 }

@@ -31,7 +31,6 @@ import org.bonitasoft.engine.bpm.model.FlowElementBuilder;
 import org.bonitasoft.engine.bpm.model.GatewayDefinitionBuilder;
 import org.bonitasoft.engine.bpm.model.GatewayType;
 import org.bonitasoft.engine.bpm.model.IntermediateCatchEventDefinitionBuilder;
-import org.bonitasoft.engine.bpm.model.IntermediateCatchMessageEventTriggerDefinitionBuilder;
 import org.bonitasoft.engine.bpm.model.IntermediateThrowEventDefinitionBuilder;
 import org.bonitasoft.engine.bpm.model.MultiInstanceLoopCharacteristicsBuilder;
 import org.bonitasoft.engine.bpm.model.ProcessDefinitionBuilder;
@@ -47,7 +46,7 @@ import org.bonitasoft.engine.bpm.model.event.trigger.TimerType;
 import org.bonitasoft.engine.core.operation.LeftOperandBuilder;
 import org.bonitasoft.engine.core.operation.OperationBuilder;
 import org.bonitasoft.engine.core.operation.OperatorType;
-import org.bonitasoft.engine.exception.InvalidExpressionException;
+import org.bonitasoft.engine.exception.expression.InvalidExpressionException;
 import org.bonitasoft.engine.expression.ExpressionBuilder;
 import org.bonitasoft.engine.expression.ExpressionInterpreter;
 import org.bonitasoft.engine.expression.ExpressionType;
@@ -245,7 +244,7 @@ public class FlowElementSwitch extends AbstractSwitch {
 		IntermediateCatchEventDefinitionBuilder eventBuilder = builder.addIntermediateCatchEvent(object.getName()) ;
 		String message =  object.getEvent() ;
 		if(message != null){
-			IntermediateCatchMessageEventTriggerDefinitionBuilder triggerBuilder =  eventBuilder.addMessageEventTrigger(message) ;
+			CatchMessageEventTriggerDefinitionBuilder triggerBuilder =  eventBuilder.addMessageEventTrigger(message) ;
 			addMessageContent(object, triggerBuilder);
 			addMessageCorrelation(object, triggerBuilder);
 		}
@@ -259,7 +258,7 @@ public class FlowElementSwitch extends AbstractSwitch {
 		}	
 	}
 
-	private void addMessageCorrelation(AbstractCatchMessageEvent messageEvent, IntermediateCatchMessageEventTriggerDefinitionBuilder triggerBuilder){
+	private void addMessageCorrelation(AbstractCatchMessageEvent messageEvent, CatchMessageEventTriggerDefinitionBuilder triggerBuilder){
 		if(messageEvent.getCorrelation() != null){
 			for(ListExpression row : messageEvent.getCorrelation().getExpressions()){
 				List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;

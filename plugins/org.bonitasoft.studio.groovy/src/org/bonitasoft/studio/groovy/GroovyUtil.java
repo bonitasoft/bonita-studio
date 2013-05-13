@@ -98,12 +98,12 @@ public class GroovyUtil {
 			"native", "interface", "any", "double", "volatile", "as", "assert",
 			"goto", "enum", "int", "boolean", "char", "false", "true",
 			"static", "abstract", "continue", "import", "void", "long",
-			"strictfp", ExpressionConstants.API_ACCESSOR.getEngineName(),
-			ExpressionConstants.ENGINE_EXECUTION_CONTEXT.getEngineName(),
-			ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineName(),
-			ExpressionConstants.PROCESS_DEFINITION_ID.getEngineName(),
-			ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineName(),
-			ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineName() };
+			"strictfp", ExpressionConstants.API_ACCESSOR.getEngineConstantName(),
+			ExpressionConstants.ENGINE_EXECUTION_CONTEXT.getEngineConstantName(),
+			ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineConstantName(),
+			ExpressionConstants.PROCESS_DEFINITION_ID.getEngineConstantName(),
+			ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineConstantName(),
+			ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineConstantName() };
 
 	private static Map<String, Expression> expressions;
 
@@ -357,7 +357,7 @@ public class GroovyUtil {
 		final ArrayList<String> result = new ArrayList<String>(
 				bonitaConstantsFor.size());
 		for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
-			result.add(expressionConstants.getEngineName());
+			result.add(expressionConstants.getEngineConstantName());
 		}
 		if (context!=null && context instanceof Validator){
 			result.add(AbstractFormValidator.CLICKED_BUTTON_VARNAME);
@@ -369,7 +369,7 @@ public class GroovyUtil {
 			final EObject element) {
 		final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(element);
 		for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
-			result.add(new ScriptVariable(expressionConstants.getEngineName(),
+			result.add(new ScriptVariable(expressionConstants.getEngineConstantName(),
 					expressionConstants.getReturnType()));
 		}
 		if (element!=null && element instanceof Validator){
@@ -383,7 +383,7 @@ public class GroovyUtil {
 			final ExpressionConstants[] values = ExpressionConstants.values();
 			expressions = new HashMap<String, Expression>(values.length);
 			for (final ExpressionConstants constant : values) {
-				expressions.put(constant.getEngineName(),
+				expressions.put(constant.getEngineConstantName(),
 						createExpression(constant));
 			}
 		}
@@ -394,8 +394,8 @@ public class GroovyUtil {
 			final ExpressionConstants engineConstant) {
 		final Expression exp = ExpressionFactory.eINSTANCE.createExpression();
 		exp.setType(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
-		exp.setContent(engineConstant.getEngineName());
-		exp.setName(engineConstant.getEngineName());
+		exp.setContent(engineConstant.getEngineConstantName());
+		exp.setName(engineConstant.getEngineConstantName());
 		exp.setReturnType(engineConstant.getReturnType());
 		return exp;
 	}

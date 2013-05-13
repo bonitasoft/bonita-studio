@@ -101,13 +101,13 @@ public class TestGroovyScriptUtil {
         TYPES.add(OBJECT);
 
         PROVIDED_VARIABLES = new HashSet<String>();
-        PROVIDED_VARIABLES.add(ExpressionConstants.API_ACCESSOR.getEngineName());
-        PROVIDED_VARIABLES.add(ExpressionConstants.ENGINE_EXECUTION_CONTEXT.getEngineName());
-        PROVIDED_VARIABLES.add(ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineName());
-        PROVIDED_VARIABLES.add(ExpressionConstants.PROCESS_DEFINITION_ID.getEngineName());
-        PROVIDED_VARIABLES.add(ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineName());
-        PROVIDED_VARIABLES.add(ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineName());
-        PROVIDED_VARIABLES.add(ExpressionConstants.LOGGED_USER_ID.getEngineName());
+        PROVIDED_VARIABLES.add(ExpressionConstants.API_ACCESSOR.getEngineConstantName());
+        PROVIDED_VARIABLES.add(ExpressionConstants.ENGINE_EXECUTION_CONTEXT.getEngineConstantName());
+        PROVIDED_VARIABLES.add(ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineConstantName());
+        PROVIDED_VARIABLES.add(ExpressionConstants.PROCESS_DEFINITION_ID.getEngineConstantName());
+        PROVIDED_VARIABLES.add(ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineConstantName());
+        PROVIDED_VARIABLES.add(ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineConstantName());
+        PROVIDED_VARIABLES.add(ExpressionConstants.LOGGED_USER_ID.getEngineConstantName());
     }
 
     public static Map<String, Serializable> getVariableValues(final GroovyCompilationUnit unit, final List<ScriptVariable> nodes,

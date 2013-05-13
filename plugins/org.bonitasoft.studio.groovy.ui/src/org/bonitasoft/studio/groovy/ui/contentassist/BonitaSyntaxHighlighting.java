@@ -33,18 +33,18 @@ public class BonitaSyntaxHighlighting implements IHighlightingExtender {
     public static List<String> BONITA_KEYWORDS = new ArrayList<String>();
 
     static {
-        BONITA_KEYWORDS.add(ExpressionConstants.API_ACCESSOR.getEngineName());
-        BONITA_KEYWORDS.add(ExpressionConstants.ENGINE_EXECUTION_CONTEXT.getEngineName());
-        BONITA_KEYWORDS.add(ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES.getEngineName());
-        BONITA_KEYWORDS.add(ExpressionConstants.NUMBER_OF_TERMINATED_INSTANCES.getEngineName());
-        BONITA_KEYWORDS.add(ExpressionConstants.NUMBER_OF_COMPLETED_INSTANCES.getEngineName());
-        BONITA_KEYWORDS.add(ExpressionConstants.NUMBER_OF_INSTANCES.getEngineName());
-        BONITA_KEYWORDS.add(ExpressionConstants.PROCESS_DEFINITION_ID.getEngineName());
-        BONITA_KEYWORDS.add(ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineName());
-        BONITA_KEYWORDS.add(ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineName());
-        BONITA_KEYWORDS.add(ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineName());
-        BONITA_KEYWORDS.add(ExpressionConstants.LOOP_COUNTER.getEngineName());
-        BONITA_KEYWORDS.add(ExpressionConstants.LOGGED_USER_ID.getEngineName());
+        BONITA_KEYWORDS.add(ExpressionConstants.API_ACCESSOR.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.ENGINE_EXECUTION_CONTEXT.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.NUMBER_OF_TERMINATED_INSTANCES.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.NUMBER_OF_COMPLETED_INSTANCES.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.NUMBER_OF_INSTANCES.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.PROCESS_DEFINITION_ID.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.LOOP_COUNTER.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.LOGGED_USER_ID.getEngineConstantName());
         BONITA_KEYWORDS.add(AbstractFormValidator.CLICKED_BUTTON_VARNAME);
     }
 
