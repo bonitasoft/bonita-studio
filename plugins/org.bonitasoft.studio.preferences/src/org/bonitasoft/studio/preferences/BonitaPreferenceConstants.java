@@ -46,31 +46,31 @@ public class BonitaPreferenceConstants {
     public static final String CURRENT_STUDIO_LOCALE = "currentStudioLocale"; //$NON-NLS-1$
     public static final String AUTOMATIC_ID = "automaticId"; //$NON-NLS-1$
     public static final Locale[] AVAILABLE_LOCALES_USER_XP = {
-        Locale.ENGLISH
-        //        Locale.GERMAN,
-        //        new Locale("es"),
+        Locale.ENGLISH,
+        Locale.GERMAN,
+        new Locale("es"),
         //        new Locale("cat"),
         //        new Locale("et"),
-        //        Locale.FRENCH,
+        Locale.FRENCH,
         //        new Locale("hr"),
         //        new Locale("hu"),
-        //        new Locale("it"),
+       	Locale.ITALIAN,
         //        new Locale("nl"),
         //        new Locale("pt"),
-        //        new Locale("pt","BR"),
+        new Locale("pt","BR"),
         //        new Locale("ru"),
         //        new Locale("tr"),
         //        Locale.CHINESE
     };
     public static final Locale[] AVAILABLE_LOCALES = {
-        Locale.ENGLISH
-        //        new Locale("es"),
-        //        Locale.FRENCH,
-        //        Locale.GERMAN,
-        //        Locale.ITALIAN,
-        //        new Locale("pt"),
-        //        new Locale("pt","BR"),
-        //        new Locale("zh")
+        Locale.ENGLISH,
+                new Locale("es"),
+                Locale.FRENCH,
+                Locale.GERMAN,
+                Locale.ITALIAN,
+                //new Locale("pt"),
+                new Locale("pt","BR")//,
+                //new Locale("zh")
     };
 
     public static final String SHOW_CONDITION_ON_TRANSITION = "showConditiononTransition"; //$NON-NLS-1$
