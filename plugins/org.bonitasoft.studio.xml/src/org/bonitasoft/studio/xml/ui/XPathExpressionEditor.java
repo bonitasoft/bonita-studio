@@ -54,8 +54,8 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.IElementComparer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -99,8 +99,6 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
 	 */
 	@Override
 	public Control createExpressionEditor(Composite parent) {
-		final XSDRepositoryStore xsdStore = (XSDRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(XSDRepositoryStore.class) ;
-
 		mainComposite = new Composite(parent,SWT.NONE) ;
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
 		mainComposite.setLayout(new GridLayout(2, true)) ;
@@ -158,9 +156,8 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
 
 		typeCombo = new ComboViewer(typeComposite, SWT.BORDER | SWT.READ_ONLY) ;
 		typeCombo.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create()) ;
-		IStructuredContentProvider typeProvider = new XPathReturnTypeContentProvider();
-		typeCombo.setContentProvider(typeProvider);
-		typeCombo.setInput(new Object());
+		typeCombo.setContentProvider(new ArrayContentProvider());
+		typeCombo.setInput(XPathReturnType.getAvailableReturnTypes());
 		typeCombo.setSelection(new StructuredSelection(XPathReturnType.XPATH_STRING));
 
 	}
@@ -360,7 +357,25 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
 
 		xsdViewer = new TreeViewer(composite);
 		provider = new XSDContentProvider(true);
-
+		xsdViewer.setComparer(new IElementComparer() {
+			
+			@Override
+			public int hashCode(Object element) {
+				return element.hashCode();
+			}
+			
+			@Override
+			public boolean equals(Object a, Object b) {
+				if(a instanceof XSDAttributeDeclaration  && b instanceof XSDAttributeDeclaration ){
+					return ((XSDAttributeDeclaration)a).getName().equals(((XSDAttributeDeclaration)b).getName()) &&
+							((XSDAttributeDeclaration)a).getType().getName().equals(((XSDAttributeDeclaration)b).getType().getName());
+				}else if(a instanceof XSDElementDeclaration  && b instanceof XSDElementDeclaration){
+					return ((XSDElementDeclaration)a).getName().equals(((XSDElementDeclaration)b).getName()) &&
+							((XSDElementDeclaration)a).getType().getName().equals(((XSDElementDeclaration)b).getType().getName());
+				}
+				return a.equals(b);
+			}
+		});
 		xsdViewer.setContentProvider(provider);
 		XSDLabelProvider labelProvider = new XSDLabelProvider();
 		xsdViewer.setLabelProvider(new DecoratingLabelProvider(labelProvider, labelProvider));
@@ -371,13 +386,6 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
 
 		text = new Text(composite, SWT.WRAP | SWT.BORDER);
 		text.setLayoutData(GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 40).create());
-		//		text.addModifyListener(new ModifyListener() {
-		//			@Override
-		//			public void modifyText(ModifyEvent e) {
-		//				editorInputExpression.setContent(text.getText()) ;
-		//			}
-		//		});
-
 
 		xsdViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
