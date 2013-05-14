@@ -1116,7 +1116,7 @@ public class DataWizardPage extends WizardPage {
 		namespaceLabel.setText(Messages.selectXMLNamespace);
 		namespaceLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
-		nsCombo = new Combo(xmlTypeComposite, SWT.NONE);
+		nsCombo = new Combo(xmlTypeComposite, SWT.BORDER | SWT.SINGLE);
 		nsCombo.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 
 		final Button addXSDButton = new Button(xmlTypeComposite, SWT.PUSH);
@@ -1177,7 +1177,7 @@ public class DataWizardPage extends WizardPage {
 		elementLabel.setText(Messages.selectXMLElement);
 		elementLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
-		elementCombo = new Combo(xmlTypeComposite, SWT.NONE);
+		elementCombo = new Combo(xmlTypeComposite, SWT.BORDER | SWT.SINGLE);
 		elementCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 
 		return xmlTypeComposite;
