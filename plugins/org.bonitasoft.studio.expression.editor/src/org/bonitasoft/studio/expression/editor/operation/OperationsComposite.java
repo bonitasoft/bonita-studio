@@ -292,9 +292,13 @@ public class OperationsComposite extends Composite {
 
 	public void refresh() {
 		Shell shell = mainComposite.getShell();
+		Point compositesize = mainComposite.getSize();
+		Point newcompositesize = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 		Point defaultSize = shell.getSize();
 		Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		shell.setSize(defaultSize.x, size.y);
+		if(compositesize.y < newcompositesize.y){
+			shell.setSize(defaultSize.x, size.y);
+		}
 		shell.layout(true,true);
 
 		if (tabbedPropertySheetPage != null) {
