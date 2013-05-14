@@ -187,12 +187,13 @@ public class LineAndColumnSectionContribution implements IExtensibleGridProperty
 		
 		EList<Column> columns;
 		EList<Line> lines;
-		if(widget.eContainer() instanceof Form){
-			columns = ((Form) widget.eContainer()).getColumns();
-			lines = ((Form) widget.eContainer()).getLines();
+		final EObject widgetContainer = widget.eContainer();
+		if(widgetContainer instanceof Form){
+			columns = ((Form) widgetContainer).getColumns();
+			lines = ((Form) widgetContainer).getLines();
 		}else{
-			columns = ((Group) widget.eContainer()).getColumns();
-			lines = ((Group) widget.eContainer()).getLines();
+			columns = ((Group) widgetContainer).getColumns();
+			lines = ((Group) widgetContainer).getLines();
 		}
 //		textColumn.setText("0");
 //		textLine.setText("0");
