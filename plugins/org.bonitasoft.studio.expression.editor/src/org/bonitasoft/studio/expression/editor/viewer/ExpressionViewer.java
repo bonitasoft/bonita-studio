@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -323,11 +322,17 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 					ExpressionProposal prop = (ExpressionProposal) proposal ;
 					final Expression copy = EcoreUtil.copy((Expression) prop.getExpression());
 					if(copy.getType().equals(ExpressionConstants.FORM_FIELD_TYPE)){
-						final Widget w = ModelHelper.getParentWidget(copy);
-						if(w != null){
-							final String returnTypeModifier = w.getReturnTypeModifier();
-							if(returnTypeModifier != null){
-								copy.setReturnType(returnTypeModifier);
+						EObject parent = context;
+						if(parent == null){
+							parent = expressionNatureProvider.getContext();
+						}
+						if(parent instanceof Widget){
+							final Widget w = (Widget) parent;
+							if(w != null){
+								final String returnTypeModifier = w.getReturnTypeModifier();
+								if(returnTypeModifier != null){
+									copy.setReturnType(returnTypeModifier);
+								}
 							}
 						}
 					}
