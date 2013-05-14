@@ -49,6 +49,7 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.common.repository.operation.ExportBosArchiveOperation;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
@@ -532,39 +533,22 @@ public class Repository implements IRepository {
 		IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
 		boolean disableConfirmation = FileActionDialog.getDisablePopup();
 		FileActionDialog.setDisablePopup(!askOverwrite);
-		try {
-			service.run(true, false, new IRunnableWithProgress() {
-
-				@Override
-				public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
-					ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
-					operation.setArchiveFile(archiveFile.getAbsolutePath());
-					operation.run(monitor) ;
-				}
-			}) ;
-		} catch (Exception e) {
-			BonitaStudioLog.error(e) ;
-		}finally{
-			FileActionDialog.setDisablePopup(disableConfirmation);
-		}
+		final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();
+		operation.setArchiveFile(archiveFile.getAbsolutePath());
+		operation.run(NULL_PROGRESS_MONITOR) ;
+		FileActionDialog.setDisablePopup(disableConfirmation);
 	}
 
 	@Override
 	public void exportToArchive(final String fileName) {
-		IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
-		try {
-			service.run(true, false, new IRunnableWithProgress() {
-
-				@SuppressWarnings("restriction")
-				@Override
-				public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
-					ArchiveFileExportOperation operation =	new ArchiveFileExportOperation(project, fileName) ;
-					operation.run(monitor) ;
-				}
-			}) ;
-		} catch (Exception e) {
-			BonitaStudioLog.error(e) ;
+		final ExportBosArchiveOperation operation = new ExportBosArchiveOperation();
+		operation.setDestinationPath(fileName);
+		Set<IResource> allResources = new HashSet<IResource>();
+		for(IRepositoryStore store : getAllExportableStores()){
+			allResources.add(store.getResource());
 		}
+		operation.setResources(allResources);
+		operation.run(NULL_PROGRESS_MONITOR) ;
 	}
 
 
