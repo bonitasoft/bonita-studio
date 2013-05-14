@@ -16,7 +16,6 @@
 package org.bonitasoft.studio.groovy;
 
 import java.lang.reflect.Modifier;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -80,31 +79,9 @@ import org.eclipse.jdt.core.JavaModelException;
 public class GroovyUtil {
 
 	public static final String GROOVY_PREFIX = "${"; //$NON-NLS-1$
-
 	public static final String GROOVY_SUFFIX = "}"; //$NON-NLS-1$
-
-	public static final String NOW_DATE_GROOVY_EXPRESSION = "${new java.util.Date()}"; //$NON-NLS-1$
-
 	public static final String GROOVY_CONSTANT_SEPARATOR = "\'";
-
-	public static URLClassLoader urlClassLoader;
-
-	public static final String[] KEYWORDS = new String[] { "class", "extends",
-			"implements", "package", "return", "def", "try", "finally", "this",
-			"new", "catch", "switch", "case", "default", "while", "if", "else",
-			"elseif", "private", "protected", "final", "for", "in", "byte",
-			"short", "break", "instanceof", "synchronized", "const", "float",
-			"null", "throws", "do", "super", "with", "threadsafe", "transient",
-			"native", "interface", "any", "double", "volatile", "as", "assert",
-			"goto", "enum", "int", "boolean", "char", "false", "true",
-			"static", "abstract", "continue", "import", "void", "long",
-			"strictfp", ExpressionConstants.API_ACCESSOR.getEngineConstantName(),
-			ExpressionConstants.ENGINE_EXECUTION_CONTEXT.getEngineConstantName(),
-			ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineConstantName(),
-			ExpressionConstants.PROCESS_DEFINITION_ID.getEngineConstantName(),
-			ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineConstantName(),
-			ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineConstantName() };
-
+	
 	private static Map<String, Expression> expressions;
 
 	public static ScriptVariable createScriptVariable(final SimulationData d) {
@@ -136,54 +113,7 @@ public class GroovyUtil {
 		return Object.class;
 	}
 
-	// @SuppressWarnings("rawtypes")
-	// public static FieldNode createFiledNodeVariable(Data data) {
-	// final DataType type = data.getDataType();
-	// Class clazz = DataUtil.getClassForData(data) ;
-	// if (clazz == null) {
-	//            BonitaStudioLog.log(new IllegalArgumentException("class null for type:" + type.getName())); //$NON-NLS-1$
-	// return null;
-	// }
-	//
-	// ClassNode classNode = null;
-	// if (data.isMultiple()) {
-	// classNode = new ClassNode(List.class);
-	// classNode.setGenericsTypes(new GenericsType[] { new GenericsType(new
-	// ClassNode(clazz)) });
-	// } else {
-	// classNode = new ClassNode(clazz);
-	// }
-	// return new FieldNode(data.getName(), Modifier.PUBLIC, classNode,
-	// classNode, null);
-	// }
-
-	// /**
-	// * create a field node for a widget: return a var : field_<widget_name>
-	// *
-	// * @param w
-	// * @return
-	// */
-	// public static FieldNode createFieldNodeVariable(Widget w) {
-	// Class<?> clazz = Class.forName(w.getAssociatedReturnType());
-	// return new FieldNode(ExporterTools.FIELD_IDENTIFIER + w.getName(),
-	// Modifier.PUBLIC, new ClassNode(clazz), new ClassNode(clazz), null);
-	// }
-
-	// public static List<FieldNode> createVariablesFromProcess(AbstractProcess
-	// process) {
-	// List<FieldNode> result = new ArrayList<FieldNode>();
-	// if (process != null) {
-	// for (Data d : process.getData()) {
-	// FieldNode f = createFiledNodeVariable(d);
-	// if (f != null) {
-	// result.add(f);
-	// }
-	// }
-	// }
-	//
-	// return result;
-	// }
-
+	
 	public static List<ScriptVariable> createScriptVariablesFromSimulationElement(
 			final Element elem) {
 		if (elem == null) {
@@ -340,13 +270,14 @@ public class GroovyUtil {
 		}
 
 		if (context instanceof Task) {
-			result.add(ExpressionConstants.LOGGED_USER_ID);
+			result.add(ExpressionConstants.TASK_ASSIGNEE_ID);
 		} else if (context instanceof Widget
 				&& ModelHelper.getPageFlow((Widget) context) != null) {
 			result.add(ExpressionConstants.LOGGED_USER_ID);
+			result.add(ExpressionConstants.TASK_ASSIGNEE_ID);
 		} else if (context instanceof Form) {
 			result.add(ExpressionConstants.LOGGED_USER_ID);
-		
+			result.add(ExpressionConstants.TASK_ASSIGNEE_ID);
 		}
 
 		return result;
