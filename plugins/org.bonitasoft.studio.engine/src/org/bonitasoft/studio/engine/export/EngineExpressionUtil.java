@@ -29,11 +29,9 @@ import org.bonitasoft.engine.exception.expression.InvalidExpressionException;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.expression.ExpressionBuilder;
 import org.bonitasoft.engine.expression.ExpressionType;
-import org.bonitasoft.engine.expression.XPathReturnType;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.exporter.ExporterTools;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -53,9 +51,7 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataAware;
-import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.XMLData;
+import org.bonitasoft.studio.model.process.Document;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -138,11 +134,23 @@ public class EngineExpressionUtil {
 					result.add(createExpression((org.bonitasoft.studio.model.expression.Expression) element));
 				} else if (element instanceof Widget) {
 					result.add(createWidgetExpression((Widget) element));
+				} else if (element instanceof Document) {
+					result.add(createDocumentExpression((Document) element));
 				}
 			}
 		}
 
 		return result;
+	}
+
+	private static Expression createDocumentExpression(Document element) {
+		final ExpressionBuilder exp = new ExpressionBuilder();
+		try {
+			return exp.createDocumentReferenceExpression(element.getName());
+		} catch (InvalidExpressionException e) {
+			BonitaStudioLog.error(e);
+			return null;
+		}	
 	}
 
 	/**
@@ -442,48 +450,34 @@ public class EngineExpressionUtil {
 
 	public static Expression createXPATHExpression(final ExpressionBuilder exp,final org.bonitasoft.studio.model.expression.Expression expression ){
 		try {
-
-			XMLData data = (XMLData)expression.getReferencedElements().get(0);
-			List<XMLData> dataList = ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(expression), ProcessPackage.Literals.XML_DATA);
-			XMLData originalData = null;
-			for(XMLData d : dataList){
-				if(d.eContainer() instanceof DataAware){
-					if(d.getName().equals(data.getName()) && d.getDefaultValue() != null && !d.getDefaultValue().getContent().isEmpty()){
-						originalData = d;
-						break;
-					}
-				}
-			}
 			exp.createNewInstance(expression.getName()).setExpressionType(ExpressionType.TYPE_XPATH_READ).setContent(expression.getContent());
 			exp.setReturnType(expression.getReturnType());
-			//	exp.createXPathExpressionWithDataAsContent(expression.getName(), expression.getContent(), getXPathReturnType(expression.getReturnType()),((XMLData)expression.getReferencedElements().get(0)).getName());
 			exp.setDependencies(createDependenciesList(expression));
 			return exp.done();
 		} catch (InvalidExpressionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
 		}
 		return null;
 	}
 
-	private static XPathReturnType getXPathReturnType(String returnType){
-		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_BOOLEAN)){
-			return XPathReturnType.BOOLEAN;
-		} 
-		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_DOUBLE)){
-			return XPathReturnType.DOUBLE;
-		}
-		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_STRING)){
-			return XPathReturnType.STRING;
-		}
-		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_NODE)){
-			return XPathReturnType.NODE;
-		}
-		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_LIST_OF_NODES)){
-			return XPathReturnType.NODE_LIST;
-		}
-		return XPathReturnType.STRING;
-	}
+//	private static XPathReturnType getXPathReturnType(String returnType){
+//		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_BOOLEAN)){
+//			return XPathReturnType.BOOLEAN;
+//		} 
+//		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_DOUBLE)){
+//			return XPathReturnType.DOUBLE;
+//		}
+//		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_STRING)){
+//			return XPathReturnType.STRING;
+//		}
+//		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_NODE)){
+//			return XPathReturnType.NODE;
+//		}
+//		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_LIST_OF_NODES)){
+//			return XPathReturnType.NODE_LIST;
+//		}
+//		return XPathReturnType.STRING;
+//	}
 
 
 	public static Expression createVariableExpression(final Data element) {
