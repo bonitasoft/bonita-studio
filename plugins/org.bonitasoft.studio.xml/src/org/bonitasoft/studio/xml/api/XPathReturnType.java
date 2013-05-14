@@ -30,12 +30,15 @@ public class XPathReturnType {
 	
 	public static final String XPATH_STRING = String.class.getName();
 	public static final String XPATH_BOOLEAN =Boolean.class.getName();
+	public static final String XPATH_INTEGER = Integer.class.getName();
+	public static final String XPATH_FLOAT = Float.class.getName();
+	public static final String XPATH_LONG = Long.class.getName();
 	public static final String XPATH_DOUBLE = Double.class.getName();
 	public static final String XPATH_NODE = org.w3c.dom.Node.class.getName();
 	public static final String XPATH_LIST_OF_NODES = NodeList.class.getName();
 	
 	public static String[] getAvailableReturnTypes(){
-		String[] types = {XPATH_BOOLEAN,XPATH_DOUBLE,XPATH_LIST_OF_NODES,XPATH_NODE,XPATH_STRING};
+		String[] types = {XPATH_BOOLEAN,XPATH_INTEGER,XPATH_FLOAT,XPATH_LONG,XPATH_DOUBLE,XPATH_LIST_OF_NODES,XPATH_NODE,XPATH_STRING};
 		return types;
 	}
 	
@@ -51,8 +54,17 @@ public class XPathReturnType {
 	}
 	
 	public static String convertEcoreTypeToXPATHReturnType(String type,boolean isNode){
-		if (type.equals("EInt")||type.equals("ELONG") ||type.equals("EDouble")||type.equals("EFloat")){
+		if (type.equals("EDouble")){
 			return XPATH_DOUBLE;
+		}
+		if (type.equals("EFloat")){
+			return XPATH_FLOAT;
+		}
+		if (type.equals("ELONG")){
+			return XPATH_LONG;
+		}
+		if (type.equals("EInt")){
+			return XPATH_INTEGER;
 		}
 		if (type.equals("EBoolean")){
 			return XPATH_BOOLEAN;
