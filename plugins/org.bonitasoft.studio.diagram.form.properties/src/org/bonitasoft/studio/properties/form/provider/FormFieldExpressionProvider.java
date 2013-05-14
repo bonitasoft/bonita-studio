@@ -32,6 +32,7 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.FormButton;
 import org.bonitasoft.studio.model.form.FormField;
 import org.bonitasoft.studio.model.form.NextFormButton;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
@@ -90,7 +91,6 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 			}
 
 			//Add all widgets from the pageflow not in the same form
-
 			final AbstractPageFlow pageFlow = ModelHelper.getPageFlow((Widget) relevantParent);
 			if (pageFlow != null ) {
 				List<? extends Form> forms= getForms(pageFlow, ModelHelper.getForm((Widget) relevantParent));
@@ -113,7 +113,7 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 					List<? extends Form> forms= getForms(pageFlow, (Form) relevantParent);					
 					for (Form f : forms){
 						for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
-							if (w instanceof FormField){
+							if (w instanceof FormField || w instanceof FormButton){
 								result.add( createExpression(w) ) ;
 							}
 						}
