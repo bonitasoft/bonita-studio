@@ -42,29 +42,7 @@ public class BonitaFormTreeViewer extends BonitaTreeViewer implements ISelection
 		List<Object> newSelection = new ArrayList<Object>() ;
 		for (int i = 0; i < ties.length; i++){
 			if(ties[i].getData() instanceof EObject){
-				IGraphicalEditPart ep = null ;
-				EObject elem =	(EObject) ties[i].getData() ;
-				if(elem instanceof Element){
-					ep = GMFTools.findEditPart(diagramEditPart, (Element) elem)  ;
-				}else{
-					while(elem != null && !(elem instanceof Element)){
-						elem = elem.eContainer() ;
-					}
-					if(elem == null){
-						return ;
-					}else{
-						ep = GMFTools.findEditPart(diagramEditPart, (Element) elem)  ;
-					}
-				}
-				while(ep == null) {
-					if(elem.eContainer() == null){
-						break ;
-					}
-					elem =elem.eContainer() ;
-					if( elem instanceof Element){
-						ep = GMFTools.findEditPart(diagramEditPart,(Element) elem) ;
-					}
-				}
+				IGraphicalEditPart ep = findEditPartFor((EObject) ties[i].getData());
 				if(ep != null){
 					newSelection.add(ep) ;
 				}
@@ -80,10 +58,38 @@ public class BonitaFormTreeViewer extends BonitaTreeViewer implements ISelection
 		}
 
 	}
-	
-	
+
+
 	protected void handlTreeDoubleClick() {
 		//NOTHING TO DO
+	}
+
+
+	@Override
+	protected IGraphicalEditPart findEditPartFor(EObject elem) {
+		IGraphicalEditPart ep = null;
+		if(elem instanceof Element){
+			ep = GMFTools.findEditPart(diagramEditPart, (Element) elem)  ;
+		}else{
+			while(elem != null && !(elem instanceof Element)){
+				elem = elem.eContainer() ;
+			}
+			if(elem == null){
+				return null;
+			}else{
+				ep = GMFTools.findEditPart(diagramEditPart, (Element) elem)  ;
+			}
+		}
+		while(ep == null) {
+			if(elem.eContainer() == null){
+				break ;
+			}
+			elem =elem.eContainer() ;
+			if( elem instanceof Element){
+				ep = GMFTools.findEditPart(diagramEditPart,(Element) elem) ;
+			}
+		}
+		return ep ;
 	}
 
 }

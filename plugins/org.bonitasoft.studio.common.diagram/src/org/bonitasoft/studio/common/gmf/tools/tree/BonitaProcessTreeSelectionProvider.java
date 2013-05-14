@@ -100,7 +100,7 @@ public class BonitaProcessTreeSelectionProvider {
         }else if(element instanceof Lane){
             return "tab.lane" ;
         }else if(element instanceof AssociatedFile){
-            if(((AssociatedFile)element).getPath().endsWith(".html")){
+            if(((AssociatedFile)element).getPath() != null && ((AssociatedFile)element).getPath().endsWith(".html")){
                 return "tab.lookandfeel" ;
             }else{
                 return "tab.resource" ;

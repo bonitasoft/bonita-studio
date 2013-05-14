@@ -48,8 +48,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -189,21 +187,19 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
 							if (ep instanceof IGraphicalEditPart){
 								EObject element = ((IGraphicalEditPart) ep).resolveSemanticElement();
 								if (element !=null){
-									treeViewer.getViewer().setSelection(new StructuredSelection(element));
+									Object selected = ((IStructuredSelection) treeViewer.getViewer().getSelection()).getFirstElement();
+									if(selected != null && selected instanceof EObject){
+										IGraphicalEditPart foundEP = findEditPartFor((EObject) selected);
+										if(!foundEP.equals(ep)){
+											treeViewer.getViewer().setSelection(new StructuredSelection(element));
+										}
+									}
 								}
 							}
 						}				
 					}
 				}
 			});
-//            TransactionUtil.getEditingDomain(resolveSemanticElement).getCommandStack().addCommandStackListener(new CommandStackListener() {
-//				
-//				@Override
-//				public void commandStackChanged(EventObject event) {
-//					treeViewer.getViewer().refresh();
-//				}
-//			});
-            
         }
     }
 
@@ -238,23 +234,30 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         }
 
         final Tree tree =  treeViewer.getViewer().getTree();
-
-        tree.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
-                handleTreeSelection(tree);
-            }
-
-
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
-            }
-        });
+        treeViewer.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				  handleTreeSelection(tree);
+			}
+		});
+//        tree.addSelectionListener(new SelectionListener() {
+//            public void widgetSelected(SelectionEvent e) {
+//           //     handleTreeSelection(tree);
+//            }
+//
+//
+//            public void widgetDefaultSelected(SelectionEvent e) {
+//                widgetSelected(e);
+//            }
+//        });
         super.hookControl();
     }
 
 
     protected abstract void handleTreeSelection(final Tree tree) ;
 
+    protected abstract IGraphicalEditPart findEditPartFor(EObject elem);
 
 
     /**
