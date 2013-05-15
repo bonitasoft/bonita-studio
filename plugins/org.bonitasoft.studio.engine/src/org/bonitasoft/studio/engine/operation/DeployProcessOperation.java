@@ -29,17 +29,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bonitasoft.engine.api.ProcessManagementAPI;
+import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.model.ProcessDefinition;
 import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
 import org.bonitasoft.engine.bpm.model.ProcessDeploymentInfo;
-import org.bonitasoft.engine.exception.IllegalProcessStateException;
-import org.bonitasoft.engine.exception.PageOutOfRangeException;
-import org.bonitasoft.engine.exception.platform.InvalidSessionException;
-import org.bonitasoft.engine.exception.process.ProcessDefinitionNotFoundException;
-import org.bonitasoft.engine.exception.process.ProcessDefinitionReadException;
-import org.bonitasoft.engine.exception.process.ProcessDeletionException;
 import org.bonitasoft.engine.exception.process.ProcessDeployException;
 import org.bonitasoft.engine.exception.process.ProcessDisablementException;
 import org.bonitasoft.engine.exception.process.ProcessEnablementException;
@@ -72,7 +66,6 @@ import org.eclipse.ui.commands.ICommandService;
 public class DeployProcessOperation  {
 
 	private Set<EObject> excludedObject;
-	private ProcessManagementAPI processApi;
 	private String configurationId;
 	private final List<AbstractProcess> processes ;
 	private final Map<AbstractProcess, Long> processIdsMap;
@@ -110,19 +103,7 @@ public class DeployProcessOperation  {
 
 
 	public IStatus run(IProgressMonitor monitor)  {
-		assert(!processes.isEmpty());
-
-		Configuration configuration = BarExporter.getInstance().getConfiguration(processes.get(0), configurationId);
-		APISession session;
-		try {
-			session = BOSEngineManager.getInstance().loginTenant(configuration.getUsername(), configuration.getPassword(), monitor);
-		} catch (Exception e1) {
-			return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,Messages.bind(Messages.loginFailed,configuration.getUsername()),e1);
-		} 
-		if(session == null){
-			return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,Messages.bind(Messages.loginFailed,configuration.getUsername()));
-		}
-		processApi = BOSEngineManager.getInstance().getProcessAPI(session);
+		Assert.isTrue(!processes.isEmpty());
 		try {
 			undeploy(monitor);
 		} catch (Exception e) {
@@ -138,11 +119,21 @@ public class DeployProcessOperation  {
 		} catch (Exception e) {
 			BonitaStudioLog.error(e) ;
 			return new Status(Status.ERROR,EnginePlugin.PLUGIN_ID,Messages.deploymentFailedMessage,e) ;
-		} finally{
-			if(session != null){
-				BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
-			}
 		}
+	}
+
+	protected APISession createSession(AbstractProcess process, IProgressMonitor monitor) throws Exception{
+		Configuration configuration = BarExporter.getInstance().getConfiguration(process, configurationId);
+		APISession session;
+		try {
+			session = BOSEngineManager.getInstance().loginTenant(configuration.getUsername(), configuration.getPassword(), monitor);
+		} catch (Exception e1) {
+			throw new Exception(Messages.bind(Messages.loginFailed,new String[]{configuration.getUsername(),process.getName(),process.getVersion()}),e1);
+		} 
+		if(session == null){
+			throw new Exception(Messages.bind(Messages.loginFailed,new String[]{configuration.getUsername(),process.getName(),process.getVersion()}));
+		}
+		return session;
 	}
 
 
@@ -187,10 +178,12 @@ public class DeployProcessOperation  {
 
 	private IStatus deployProcess(AbstractProcess process ,IProgressMonitor monitor) throws Exception {
 		monitor.subTask(Messages.bind(Messages.deployingProcess, getProcessLabel(process)));
-
 		BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(process,configurationId,excludedObject);
 		ProcessDefinition def = null ;
+		APISession session = null;
 		try {
+			session = createSession(process,monitor);
+			final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
 			def = processApi.deploy(bar) ;
 			//TODO Use definition state to detect resolution issues
 		}  catch (ProcessDeployException e) {
@@ -199,20 +192,26 @@ public class DeployProcessOperation  {
 				BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
 			}
 			return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e.getMessage(),e);
-
 		} catch (Exception e1){
 			if(process != null){
 				BonitaStudioLog.error("Error when trying to deploy the process named: "+ process.getName(),EnginePlugin.PLUGIN_ID);
 			}
 			BonitaStudioLog.error(e1,EnginePlugin.PLUGIN_ID);
 			return new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID, e1.getMessage(),e1);
+		}finally{
+			if(session != null){
+				BOSEngineManager.getInstance().logoutDefaultTenant(session);
+			}
 		}
 		processIdsMap.put(process,def.getId());
 		return Status.OK_STATUS ;
 	}
 
 	protected IStatus enableProcess(final AbstractProcess process,IProgressMonitor monitor) throws Exception {
+		APISession session = null;
 		try {
+			session = createSession(process,monitor);
+			final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
 			processApi.enableProcess(processIdsMap.get(process)) ;
 		}  catch (ProcessEnablementException e) {
 			BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
@@ -230,23 +229,20 @@ public class DeployProcessOperation  {
 			}else{
 				return Status.CANCEL_STATUS ;
 			}
+		}finally{
+			if(session != null){
+				BOSEngineManager.getInstance().logoutDefaultTenant(session);
+			}
 		}
 		return Status.OK_STATUS;
 	}
 
 	/**
 	 * @param monitor
-	 * @throws ProcessDefinitionReadException
-	 * @throws PageOutOfRangeException
-	 * @throws InvalidSessionException
 	 * @throws DeletingEnabledProcessException
-	 * @throws ProcessDeletionException
-	 * @throws ProcessDefinitionNotFoundException
-	 * @throws ProcessDisablementException
-	 * @throws IllegalProcessStateException 
 	 * @throws Exception
 	 */
-	protected void undeploy(IProgressMonitor monitor) throws InvalidSessionException, PageOutOfRangeException, ProcessDefinitionReadException, ProcessDefinitionNotFoundException, ProcessDeletionException,  ProcessDisablementException, IllegalProcessStateException {
+	protected void undeploy(IProgressMonitor monitor) throws Exception {
 		for(AbstractProcess process : processes){
 			undeployProcess(process,monitor) ;
 		}
@@ -254,20 +250,28 @@ public class DeployProcessOperation  {
 
 
 
-	protected void undeployProcess(AbstractProcess process, IProgressMonitor monitor) throws InvalidSessionException, ProcessDefinitionReadException, PageOutOfRangeException, ProcessDefinitionNotFoundException, ProcessDeletionException,  ProcessDisablementException, IllegalProcessStateException {
-		long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
-		if(nbDeployedProcesses > 0){
-			List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
-			for(ProcessDeploymentInfo info : processes){
-				if(info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())){
-					monitor.subTask(Messages.bind(Messages.undeploying,getProcessLabel(process)));
-					try{
-						processApi.disableProcess(info.getProcessId());
-					}catch (ProcessDisablementException e) {
-				
+	protected void undeployProcess(AbstractProcess process, IProgressMonitor monitor) throws Exception {
+		final APISession session = createSession(process,monitor);
+		try{
+			final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
+			long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
+			if(nbDeployedProcesses > 0){
+				List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
+				for(ProcessDeploymentInfo info : processes){
+					if(info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())){
+						monitor.subTask(Messages.bind(Messages.undeploying,getProcessLabel(process)));
+						try{
+							processApi.disableProcess(info.getProcessId());
+						}catch (ProcessDisablementException e) {
+
+						}
+						processApi.deleteProcess(info.getProcessId()) ;
 					}
-					processApi.deleteProcess(info.getProcessId()) ;
 				}
+			}
+		}finally{
+			if(session != null){
+				BOSEngineManager.getInstance().logoutDefaultTenant(session);
 			}
 		}
 	}
