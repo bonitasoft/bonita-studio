@@ -121,7 +121,7 @@ public class CustomWizardExtension {
 
     public boolean appliesTo(ConnectorDefinition definition){
         return definition.getId().equals(definitionId) 
-        		/*&& definition.getVersion().equals(definitionVersion)*/ ;
+        		&& (definitionVersion == null || definitionVersion.isEmpty() || definition.getVersion().equals(definitionVersion)) ;
     }
 
 
