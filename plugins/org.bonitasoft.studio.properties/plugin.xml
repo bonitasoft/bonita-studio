@@ -70,12 +70,6 @@
                label="%tab.forms.entry">
          </propertyTab>
          <propertyTab
-               afterTab="tab.forms.entry"
-               category="domain"
-               id="tab.forms.view"
-               label="%tab.forms.view">
-         </propertyTab>
-         <propertyTab
                afterTab="tab.forms.view"
                category="domain"
                id="tab.forms.overview"
