@@ -38,6 +38,7 @@ import org.bonitasoft.forms.server.builder.IFormBuilder;
 import org.bonitasoft.forms.server.builder.impl.FormBuilderImpl;
 import org.bonitasoft.forms.server.exception.InvalidFormDefinitionException;
 import org.bonitasoft.forms.server.provider.impl.util.FormServiceProviderUtil;
+import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
@@ -221,13 +222,13 @@ public class FormsExporter {
 	 * @throws InvalidFormDefinitionException
 	 */
 	protected void exportViewPageFlow(final ViewPageFlow viewPageFlow, final IFormBuilder builder) throws InvalidFormDefinitionException {
-		if (viewPageFlow.getViewPageFlowType() == ConsultationPageFlowType.PAGEFLOW) {
-			if (viewPageFlow instanceof AbstractProcess) {
-				addProcessConsultationPageFlow(viewPageFlow, builder);
-			} else {
-				addConsultationPageFlow(viewPageFlow, builder);
-			}
-		}
+//		if (viewPageFlow.getViewPageFlowType() == ConsultationPageFlowType.PAGEFLOW) {
+//			if (viewPageFlow instanceof AbstractProcess) {
+//				addProcessConsultationPageFlow(viewPageFlow, builder);
+//			} else {
+//				addConsultationPageFlow(viewPageFlow, builder);
+//			}
+//		}
 	}
 
 	/**
@@ -590,7 +591,7 @@ public class FormsExporter {
 				} else if (data.isMultiple()) {
 					defaultValue = null;// "${[]}";
 				}
-				builder.addTransientData(data.getName(), getReturnTypeClassFor(data));
+				builder.addTransientData(data.getName(), DataUtil.getTechnicalTypeFor(data));
 				if (defaultValue != null) {
 					addTransientDataExpression(builder, defaultValue);
 				}
@@ -604,41 +605,41 @@ public class FormsExporter {
 				engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter()  );
 		addExpressionDependency(builder, engineExpression);
 	}
-
-	/**
-	 * @param theData
-	 * @return the class of the data as string
-	 */
-	public String getReturnTypeClassFor(final Data data) {
-		final DataType dataType = data.getDataType();
-		if (data.isMultiple()) {
-			return List.class.getName();
-		} else if (data.getDataType() instanceof EnumType) {
-			// TODO no enum
-		} else if (dataType instanceof DateType) { // To be tested before
-			// StringType
-			return Date.class.getName();
-		} else if (dataType instanceof StringType) {
-			return String.class.getName();
-		} else if (dataType instanceof BooleanType) {
-			return Boolean.class.getName();
-		} else if (dataType instanceof IntegerType) {
-			return Long.class.getName();
-		} else if (dataType instanceof FloatType) {
-			return Double.class.getName();
-		} else if (dataType instanceof JavaType) {
-			final JavaObjectData javaObjectData = (JavaObjectData) data;
-			if (javaObjectData.getClassName() != null) {
-				return javaObjectData.getClassName();
-			} else {
-				return Object.class.getName();
-			}
-		} else if (dataType instanceof XMLType) {
-			// TODO no xml
-		}
-
-		return String.class.getName();
-	}
+//
+//	/**
+//	 * @param theData
+//	 * @return the class of the data as string
+//	 */
+//	public String getReturnTypeClassFor(final Data data) {
+//		final DataType dataType = data.getDataType();
+//		if (data.isMultiple()) {
+//			return List.class.getName();
+//		} else if (data.getDataType() instanceof EnumType) {
+//			// TODO no enum
+//		} else if (dataType instanceof DateType) { // To be tested before
+//			// StringType
+//			return Date.class.getName();
+//		} else if (dataType instanceof StringType) {
+//			return String.class.getName();
+//		} else if (dataType instanceof BooleanType) {
+//			return Boolean.class.getName();
+//		} else if (dataType instanceof IntegerType) {
+//			return Long.class.getName();
+//		} else if (dataType instanceof FloatType) {
+//			return Double.class.getName();
+//		} else if (dataType instanceof JavaType) {
+//			final JavaObjectData javaObjectData = (JavaObjectData) data;
+//			if (javaObjectData.getClassName() != null) {
+//				return javaObjectData.getClassName();
+//			} else {
+//				return Object.class.getName();
+//			}
+//		} else if (dataType instanceof XMLType) {
+//			// TODO no xml
+//		}
+//
+//		return String.class.getName();
+//	}
 
 	/**
 	 * @param task
