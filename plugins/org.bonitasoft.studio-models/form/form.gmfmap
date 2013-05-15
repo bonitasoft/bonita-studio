@@ -3725,7 +3725,7 @@
               xsi:type="ecore:EReference"
               href="../form.ecore#//Widget/inputExpression"/>
           <value
-              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;return exp ;"
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(Long.class.getName());&#xD;&#xA;return exp ;"
               language="java"/>
         </initializers>
         <initializers
