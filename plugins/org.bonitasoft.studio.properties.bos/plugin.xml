@@ -31,14 +31,6 @@
               viewID="org.bonitasoft.studio.views.properties.application">
         </propertySection>
         <propertySection
-              class="org.bonitasoft.studio.properties.sections.forms.ViewPageFlowTabbedSection"
-              enablesFor="1"
-              filter="org.bonitasoft.studio.properties.filters.ViewPageFlowFilter"
-              id="section.forms.view"
-              tab="tab.forms.view"
-              viewID="org.bonitasoft.studio.views.properties.application">
-        </propertySection>
-        <propertySection
               class="org.bonitasoft.studio.properties.bos.message.ThrowEventSectionBOS"
               enablesFor="1"
               filter="org.bonitasoft.studio.properties.filters.ThrowMessageEventFilter"
