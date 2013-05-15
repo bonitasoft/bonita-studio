@@ -42,6 +42,10 @@ public class ComputePatternDependenciesJob extends Job {
 	private IDocument document;
 	private List<Expression> filteredExpressions;
 
+	public void setFilteredExpressions(List<Expression> filteredExpressions) {
+		this.filteredExpressions = filteredExpressions;
+	}
+
 	public ComputePatternDependenciesJob(final IDocument document,List<Expression> filteredExpressions) {
 		super(ComputePatternDependenciesJob.class.getName());
 		cache = new HashMap<String, List<EObject>>();
