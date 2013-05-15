@@ -64,7 +64,7 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="DefinitionVersion" type="string" use="required">
+         <attribute name="DefinitionVersion" type="string">
             <annotation>
                <documentation>
                   
