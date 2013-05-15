@@ -20,11 +20,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.osgi.framework.Bundle;
 
 
 /**
@@ -33,52 +37,55 @@ import java.util.ResourceBundle.Control;
  */
 public class DefinitionControl extends Control {
 
-    private final String pathToBundles;
+	private final Bundle osgiBundle;
+	private final String storeName;
 
-    public DefinitionControl(String pathToBundles){
-        this.pathToBundles = pathToBundles ;
-    }
+	public DefinitionControl(Bundle bundle, String storeName){
+		this.osgiBundle = bundle ;
+		this.storeName = storeName;
+	}
 
-    @Override
-    public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
-            throws IllegalAccessException, InstantiationException, IOException {
+	@Override
+	public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
+			throws IllegalAccessException, InstantiationException, IOException {
 
-        if(!format.equals("java.properties")){
-            return null ;
-        }
+		if(!format.equals("java.properties")){
+			return null ;
+		}
 
-        String bundleName = toBundleName(baseName, locale);
-        ResourceBundle bundle = null;
+		String bundleName = toBundleName(baseName, locale);
+		ResourceBundle bundle = null;
 
 
-        InputStreamReader reader = null;
-        FileInputStream fis = null;
-        try {
+		InputStreamReader reader = null;
+		FileInputStream fis = null;
+		try {
+			URL fileurl = osgiBundle.getResource(storeName+"/"+bundleName);
+			if(fileurl != null){
+				File file = new File(FileLocator.toFileURL(fileurl).getFile());
+				if (file.isFile()) { // Also checks for existance
+					fis = new FileInputStream(file);
+					reader = new InputStreamReader(fis, Charset.forName("UTF-8"));
+					bundle = new PropertyResourceBundle(reader);
+				}
+			}
+		} finally {
+			if(reader != null){
+				reader.close() ;
+			}
+			if(fis != null){
+				fis.close() ;
+			}
+		}
+		return bundle;
+	}
 
-            File file = new File(pathToBundles, bundleName);
-
-            if (file.isFile()) { // Also checks for existance
-                fis = new FileInputStream(file);
-                reader = new InputStreamReader(fis, Charset.forName("UTF-8"));
-                bundle = new PropertyResourceBundle(reader);
-            }
-        } finally {
-            if(reader != null){
-                reader.close() ;
-            }
-            if(fis != null){
-                fis.close() ;
-            }
-        }
-        return bundle;
-    }
-
-    @Override
-    public String toBundleName(String baseName, Locale locale) {
-        if(locale == null || locale.toString().isEmpty()){
-            return baseName + ".properties";
-        }
-        return baseName + "_" + locale.toString() + ".properties";
-    }
+	@Override
+	public String toBundleName(String baseName, Locale locale) {
+		if(locale == null || locale.toString().isEmpty()){
+			return baseName + ".properties";
+		}
+		return baseName + "_" + locale.toString() + ".properties";
+	}
 
 }

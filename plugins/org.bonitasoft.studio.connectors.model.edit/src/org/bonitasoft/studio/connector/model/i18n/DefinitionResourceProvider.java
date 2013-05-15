@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -92,7 +91,7 @@ public class DefinitionResourceProvider {
     private final IRepositoryStore<? extends IRepositoryFileStore> store;
     private final Bundle bundle;
     private DefinitionControl pluginControl;
-    private DefinitionControl storeControl;
+    private StoreControl storeControl;
     private ArrayList<Category> categories;
     private final static Map<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider> INSTANCES_MAP;
 
@@ -126,10 +125,8 @@ public class DefinitionResourceProvider {
         definitionImageRegistry = createImageRegistry();
         try {
             URL url = bundle.getResource(store.getName());
-            pluginControl = new DefinitionControl(FileLocator.toFileURL(url)
-                    .getFile());
-            storeControl = new DefinitionControl(store.getResource()
-                    .getLocation().toFile().getAbsolutePath());
+            pluginControl = new DefinitionControl(bundle,store.getName());
+            storeControl = new StoreControl(store.getResource().getLocation().toFile().getAbsolutePath());
         } catch (Exception e) {
             BonitaStudioLog.error(e);
         }
