@@ -36,13 +36,15 @@ public class CustomAssociatedFileItemProvider extends AssociatedFileItemProvider
 	@Override
 	public String getText(Object object) {
 		String path = ((AssociatedFile) object).getPath() ;
-
 		AbstractProcess proc = EditModelHelper.getParentProcess((AssociatedFile)object) ;
 		if(proc != null){
 			String id = EditModelHelper.getEObjectID(proc) ;
-			if(id != null && path.contains(id)){
+			if(id != null && path != null && path.contains(id)){
 				path = path.substring(path.indexOf(id)+id.length(), path.length()) ;
 			}
+		}
+		if(path == null){
+			return "";
 		}
 		return "File "+path ;
 	}
