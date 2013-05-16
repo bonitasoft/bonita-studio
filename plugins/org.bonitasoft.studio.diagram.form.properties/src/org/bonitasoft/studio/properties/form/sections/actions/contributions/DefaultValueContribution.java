@@ -93,7 +93,7 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
     }
 
     public String getLabel() {
-        return Messages.Action_InitialValue;
+        return Messages.Action_SelectedValue;
     }
 
     public boolean isRelevantFor(EObject eObject) {

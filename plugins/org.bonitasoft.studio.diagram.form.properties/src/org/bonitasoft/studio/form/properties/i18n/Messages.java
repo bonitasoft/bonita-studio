@@ -240,6 +240,8 @@ public class Messages extends NLS {
 
 	public static String generateFromEnumTooltip;
 
+	public static String Action_SelectedValue;
+
 
 
     static {
