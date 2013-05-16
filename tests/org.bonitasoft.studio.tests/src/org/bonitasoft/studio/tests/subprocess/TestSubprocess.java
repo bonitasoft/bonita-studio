@@ -67,7 +67,7 @@ public class TestSubprocess {
 	private APISession session;
 
 	@Before
-	public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, org.bonitasoft.engine.exception.LoginException {
+	public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
 		session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
 	}
 
