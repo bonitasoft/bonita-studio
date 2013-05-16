@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
@@ -173,10 +174,11 @@ public class SelectPageWidgetDialog extends Dialog {
         idLabel.setLayoutData(GridDataFactory.fillDefaults()
                 .align(SWT.END, SWT.CENTER).create());
         idLabel.setText(Messages.widgetId + "*");
+        
+        
 
         final Text idText = new Text(mainComposite, SWT.BORDER);
-        idText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
-                .create());
+        idText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
         idTextObservable = SWTObservables.observeText(idText, SWT.Modify);
         bindComponentId(idText);
 
@@ -358,6 +360,12 @@ public class SelectPageWidgetDialog extends Dialog {
             public IStatus validate(Object value) {
                 if (value == null || value.toString().isEmpty()) {
                     return ValidationStatus.error(Messages.idIsEmpty);
+                }
+                if(value.toString().contains(" ")){
+                	return ValidationStatus.error(Messages.noWhiteSpaceInPageID);
+                }
+                 if(!FileUtil.isValidName(value.toString())){
+                	return ValidationStatus.error(Messages.idIsInvalid);
                 }
                 if (existingWidgetIds.contains(value.toString().toLowerCase())) {
                     return ValidationStatus.error(Messages.idAlreadyExists);

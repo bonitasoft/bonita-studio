@@ -18,6 +18,7 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 
 import java.util.Properties;
 
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
@@ -153,7 +154,11 @@ public class PageWidgetsWizardPage extends WizardPage implements ISelectionChang
             public IStatus validate(Object value) {
                 if(value == null || value.toString().isEmpty()){
                     return ValidationStatus.error(Messages.idIsEmpty) ;
-                }
+                }else if(value.toString().contains(" ")){
+					return  ValidationStatus.error(Messages.noWhiteSpaceInPageID) ;
+				}else if(!FileUtil.isValidName(value.toString())){
+					return  ValidationStatus.error(Messages.idIsInvalid) ;
+				}
                 for(Page p : definition.getPage()){
                     if(!p.equals(originalPage) && p.getId().equals(value.toString())){
                         return ValidationStatus.error(Messages.idAlreadyExists) ;
