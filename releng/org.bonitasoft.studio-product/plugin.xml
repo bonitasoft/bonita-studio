@@ -3,18 +3,18 @@
 <plugin>
   <extension
          id="product"
-         name="Bonita Studio"
+         name="BonitaBPM"
          point="org.eclipse.core.runtime.products">
       <product
             application="org.bonitasoft.studio.application.application"
-            name="Bonita Studio">
+            name="BonitaBPM">
             <property
                   name="windowImages"
                   value="icons/bonitasoft-icon-16-16-transparent.png,icons/bonitasoft-icon-32-32-transparent.png,icons/bonitasoft-icon-48-48-transparent.png,icons/bonitasoft-icon-64-64-transparent.png,icons/bonitasoft-icon-128-128-transparent.png">
             </property>
   		<property
                name="appName"
-               value="Bonita Studio">
+               value="BonitBPM">
          </property>
          <property
                name="aboutText"
