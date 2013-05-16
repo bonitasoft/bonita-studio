@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.test.TestProvidedDefinitionAndImplementation;
 import org.bonitasoft.studio.diagram.form.custom.tests.TestCommands;
+import org.bonitasoft.studio.engine.test.TestUserFilterMatchingEngineVersion;
 import org.bonitasoft.studio.exporter.tests.application.TestHtmlTemplateGenerator;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNDataExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNImportExportTest;
@@ -91,6 +92,7 @@ import org.junit.runners.Suite;
     TestDataRefactor.class,
     TestBonitaAPI.class,
     TestNonInterruptingBoundaryTimerEvent.class,
+    TestUserFilterMatchingEngineVersion.class,
     // keep it at the end because if it fails it might be in an infinite loop
     TestDeployCommand.class,
     MigrationReportPDFExportTest.class,
