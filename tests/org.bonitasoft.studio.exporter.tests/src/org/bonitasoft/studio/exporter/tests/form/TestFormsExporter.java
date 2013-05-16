@@ -186,10 +186,10 @@ public class TestFormsExporter extends TestCase {
         assertTrue("PageFlow for testSkipForms--1.0$entry has "+pageflow.getChildNodes().getLength() +"children but shouldn't",pageflow.getChildNodes().getLength()==5);//1 for permission + 1 for fomr-type + 3 for th return to line
 
         //viewpageflow is present and not empty
-        result = xpathEvaluator.evaluate("//form[@id='testSkipForms--1.0$view']",document,XPathConstants.NODE);
-        Node viewPageFlow = (Node) result;
-        assertNotNull(viewPageFlow);
-        assertTrue(viewPageFlow.getChildNodes().getLength()>5);//1 for permission + 1 for fomr-type + 3 for th return to line
+//        result = xpathEvaluator.evaluate("//form[@id='testSkipForms--1.0$view']",document,XPathConstants.NODE);
+//        Node viewPageFlow = (Node) result;
+//        assertNotNull(viewPageFlow);
+//        assertTrue(viewPageFlow.getChildNodes().getLength()>5);//1 for permission + 1 for fomr-type + 3 for th return to line
 
         //overView pageflow is present and not empty
         result = xpathEvaluator.evaluate("//form[@id='testSkipForms--1.0$recap']",document,XPathConstants.NODE);
@@ -206,10 +206,10 @@ public class TestFormsExporter extends TestCase {
         assertTrue(pageflow.getChildNodes().getLength()==5);//1 for permission + 1 for fomr-type + 3 for th return to line
 
         //viewpageflow of step is present and not empty
-        result = xpathEvaluator.evaluate("//form[@id='testSkipForms--1.0--Step1$view']",document,XPathConstants.NODE);
-        viewPageFlow = (Node) result;
-        assertNotNull(viewPageFlow);
-        assertTrue(viewPageFlow.getChildNodes().getLength()>5);///1 for permission + 1 for fomr-type + 3 for th return to line
+//        result = xpathEvaluator.evaluate("//form[@id='testSkipForms--1.0--Step1$view']",document,XPathConstants.NODE);
+//        viewPageFlow = (Node) result;
+//        assertNotNull(viewPageFlow);
+//        assertTrue(viewPageFlow.getChildNodes().getLength()>5);///1 for permission + 1 for fomr-type + 3 for th return to line
 
 
     }
