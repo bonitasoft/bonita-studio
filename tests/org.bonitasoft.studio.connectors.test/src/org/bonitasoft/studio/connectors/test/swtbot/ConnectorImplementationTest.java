@@ -29,6 +29,7 @@ import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementat
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -68,6 +69,7 @@ public class ConnectorImplementationTest extends SWTBotGefTestCase {
     @Test
     public void createConnectorImplementation() throws Exception {
         // TODO add dependancies test
+    	final int nbEditorsBefore = bot.editors().size();
         final String id = "testImplementation";
         final String definition = "testEdit (1.0.0)";
         final String className = "MyConnectorImpl";
@@ -89,6 +91,24 @@ public class ConnectorImplementationTest extends SWTBotGefTestCase {
                 connectorImpl);
         assertEquals("connectorImplementation id should be " + id,
                 connectorImpl.getImplementationId(), id);
+        
+        
+        bot.waitUntil(new ICondition() {
+
+            public boolean test() throws Exception {
+                return nbEditorsBefore +1 == bot.editors().size();
+            }
+
+            public void init(SWTBot bot) {
+            }
+
+            public String getFailureMessage() {
+                return "Editor for implementation has not been opened.";
+            }
+        }, 30000);
+        int length = bot.activeEditor().toTextEditor().getText().length();
+        StyleRange[] styles = bot.activeEditor().toTextEditor().getStyles(0, 0, length);
+        containsError(styles);
     }
 
     @Test
@@ -270,5 +290,9 @@ public class ConnectorImplementationTest extends SWTBotGefTestCase {
         });
     }
 
-
+    private void containsError(StyleRange[] styles){
+    	for (StyleRange style:styles){
+    		assertFalse("connector impl contains errors",style.underline);
+    	}
+    }
 }
