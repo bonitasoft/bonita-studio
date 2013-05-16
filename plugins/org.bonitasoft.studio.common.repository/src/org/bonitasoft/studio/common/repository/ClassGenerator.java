@@ -135,7 +135,7 @@ public class ClassGenerator {
                 executeMethodContent.append("//[Optional] Close connection to remote server\n\n}\n");
                 classType.createMethod(executeMethodContent.toString(),null, true, monitor);
                 
-                classType.getCompilationUnit().createImport("org.bonitasoft.engine.exception.ConnectorException", null, monitor);
+                classType.getCompilationUnit().createImport("org.bonitasoft.engine.exception.connector.ConnectorException", null, monitor);
             }
             if(hierarchy.contains(abstractFilterType)){
             	StringBuilder executeMethodContent = new StringBuilder("@Override\npublic void validateInputParameters() throws ConnectorValidationException {\n\t");
@@ -155,7 +155,7 @@ public class ClassGenerator {
                 classType.createMethod(executeMethodContent.toString(), null,true,monitor) ;
                 ICompilationUnit compilationUnit = classType.getCompilationUnit();
                 compilationUnit.createImport("java.util.List", null, monitor);
-                compilationUnit.createImport("org.bonitasoft.engine.exception.ConnectorValidationException", null, monitor);
+                compilationUnit.createImport("org.bonitasoft.engine.exception.connector.ConnectorValidationException", null, monitor);
                 compilationUnit.createImport("org.bonitasoft.engine.exception.UserFilterException", null, monitor);
             }
         }
