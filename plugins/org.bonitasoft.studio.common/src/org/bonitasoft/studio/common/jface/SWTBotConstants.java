@@ -44,4 +44,6 @@ public interface SWTBotConstants {
     public static final String VIEWS_PROPERTIES_APPEARANCE = "org.bonitasoft.studio.views.properties.appearance";
     public static final String VIEWS_OVERVIEW = "org.bonitasoft.studio.views.overview";
     public static final String VIEWS_TREE_OVERVIEW = "org.bonitasoft.studio.views.overview.tree";
+    
+    public static final String SQLBUILDER_CRITERIA_TREE_ID = "sqlBuilderCriteriaTreeId";
 }
