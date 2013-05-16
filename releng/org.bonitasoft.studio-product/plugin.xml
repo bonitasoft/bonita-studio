@@ -14,7 +14,7 @@
             </property>
   		<property
                name="appName"
-               value="BonitBPM">
+               value="BonitaBPM">
          </property>
          <property
                name="aboutText"
