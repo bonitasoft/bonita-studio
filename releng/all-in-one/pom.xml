@@ -14,6 +14,9 @@
 	<version>6.0.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 
+	<properties>
+		<product.short.name>BonitaBPM</product.short.name>
+	</properties>
 
 	<build>
 		<plugins>
@@ -163,7 +166,7 @@
 						<configuration>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptor>${basedir}/assembly-descriptor.xml</descriptor>
-							<finalName>BOS-${project.version}</finalName>
+							<finalName>${product.short.name}-${project.version}</finalName>
 						</configuration>
 						<goals>
 							<goal>single</goal>
@@ -175,7 +178,7 @@
 						<configuration>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
-							<finalName>BOS-${project.version}-All-in-one</finalName>
+							<finalName>${product.short.name}-${project.version}-All-in-one</finalName>
 						</configuration>
 						<goals>
 							<goal>single</goal>
@@ -191,7 +194,7 @@
 				<artifactId>tycho-eclipserun-plugin</artifactId>
 				<version>0.16.0</version>
 				<configuration>
-					<appArgLine>${os-jvm-flags} -application org.eclipse.ant.core.antRunner -buildfile p2AllInOne.xml -clean -noSplash -consoleLog -Droot.dir=${project.build.directory}/BOS-${project.version}/</appArgLine>
+					<appArgLine>${os-jvm-flags} -application org.eclipse.ant.core.antRunner -buildfile p2AllInOne.xml -clean -noSplash -consoleLog -Droot.dir=${project.build.directory}/${product.short.name}-${project.version}/</appArgLine>
 					<argLine>-Xmx512m -Xms256m -XX:MaxPermSize=512m</argLine>
 					<dependencies>
 						<dependency>
