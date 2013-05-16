@@ -327,7 +327,7 @@ public class GroovyUtil {
 		exp.setType(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
 		exp.setContent(engineConstant.getEngineConstantName());
 		exp.setName(engineConstant.getEngineConstantName());
-		exp.setReturnType(engineConstant.getReturnType());
+		exp.setReturnType(getEngineExpressionReturnType(engineConstant.getEngineConstantName()));
 		return exp;
 	}
 
@@ -562,10 +562,29 @@ public class GroovyUtil {
 			return createScriptVariable(data);
 		} else if (org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE
 				.equals(e.getType())) {
-			return new ScriptVariable(e.getContent(), e.getType());
+			return new ScriptVariable(e.getContent(),getEngineExpressionReturnType(e.getName()));
 		}else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
 			 return new ScriptVariable(e.getContent(), e.getReturnType());
 		 }
+		return null;
+	}
+
+	private static String getEngineExpressionReturnType(String name) {
+		for(ExpressionConstants exp : ExpressionConstants.values()){
+			if(name.equals(exp.getEngineConstantName())){
+				if("apiAccessor".equals(name)){
+					try{
+						final String apiAccessorExtClassName = "com.bonitasoft.engine.api.APIAccessor";
+						Class.forName(apiAccessorExtClassName);
+						return apiAccessorExtClassName;
+					}catch (Exception e) {
+						return exp.getReturnType();
+					}
+				}else{
+					return exp.getReturnType();
+				}
+			}
+		}
 		return null;
 	}
 }
