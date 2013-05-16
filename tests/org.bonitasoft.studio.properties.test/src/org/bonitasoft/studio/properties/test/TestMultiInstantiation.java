@@ -47,11 +47,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
-import org.eclipse.swtbot.swt.finder.SWTBot;
-import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTabItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -158,13 +154,13 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         gmfEditor = bot.gefEditor("Step1");
 
         // configure the nbTicketsAvailable widget to a Message field
-        setWidgetProperties(gmfEditor,  "nbTicketsAvailable",  null, "Message", null,0,  null);
+        setWidgetProperties(gmfEditor,  "nbTicketsAvailable",  null, "Message", null,0,  null,null);
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
         SWTBotTestUtil.setScriptExpression( bot, "nbTicketsAvailable",  "\"Only \"+nbTicketsAvailable+\" tickets available.\"",  "java.lang.String" );
 
 
         // configure the nbTickets widget to a text field
-        setWidgetProperties(gmfEditor,  "nbTickets",  "Nbr de Tickets à reserver", "Text field", "0",  1, "nbTickets");
+        setWidgetProperties(gmfEditor,  "nbTickets",  "Nbr de Tickets à reserver", "Text field", "0",  1, "nbTickets","java.lang.Integer");
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
         SWTBotTestUtil.setScriptExpression( bot, "nbTickets",  "Integer.valueOf(field_nbTickets)",  "java.lang.Integer" );
 
@@ -263,7 +259,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         bot.button("Add").click();
 
      
-        SWTBotTestUtil.setOutputStorageExpressionByName(bot,"vip",0);
+        SWTBotTestUtil.setOutputStorageExpressionByName(bot,"vip","java.util.List",0);
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
         String expressionScript = "List vipList = new ArrayList(vip)\nvipList.remove(vipName)\nreturn vipList";
         SWTBotTestUtil.setScriptExpression( bot,"removeUser", expressionScript, "java.util.List");
@@ -495,7 +491,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
      * @param outputOperation
      */
     private void setWidgetProperties(SWTBotGefEditor gmfEditor, String widgetName, String widgetLabel, String widgetFieldType,
-            String initValue, int outputViewerIndex,String outputOperation) {
+            String initValue, int outputViewerIndex,String outputOperation,String outputOperationType) {
 
         gmfEditor.getEditPart(widgetName).click();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
@@ -512,7 +508,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
             bot.textWithLabel(Action_InitialValue).setText(initValue);
         }
         if(outputOperation!=null){
-        	SWTBotTestUtil.setOutputStorageExpressionByName(bot, outputOperation, outputViewerIndex);
+        	SWTBotTestUtil.setOutputStorageExpressionByName(bot, outputOperation,outputOperationType, outputViewerIndex);
         }
     }
 

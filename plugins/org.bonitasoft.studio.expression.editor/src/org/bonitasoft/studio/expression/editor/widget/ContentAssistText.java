@@ -18,11 +18,11 @@ package org.bonitasoft.studio.expression.editor.widget;
 
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
+import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -53,7 +53,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	private ToolBar tb;
 	private boolean isReadOnly = false;
 
-	public ContentAssistText(Composite parent, ILabelProvider contentProposalLabelProvider, int style) {
+	public ContentAssistText(Composite parent, IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
 		super(parent, SWT.NONE);
 		Point margins = new Point(3, 3);
 		if ((style & SWT.BORDER) == 0){

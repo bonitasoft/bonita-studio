@@ -3,6 +3,7 @@ package org.bonitasoft.studio.expression.editor.autocompletion;
 import java.util.ArrayList;
 
 import org.bonitasoft.studio.model.expression.Expression;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -13,15 +14,12 @@ public class ExpressionProposalProvider implements IContentProposalProvider {
     private Expression[] proposals;
     private IContentProposal[] contentProposals;
     private boolean filterProposals	= false;
-    private ILabelProvider labelProvider;
+    private IExpressionProposalLabelProvider labelProvider;
 
-    public ExpressionProposalProvider(ILabelProvider proposalLabelProvider) {
+    public ExpressionProposalProvider(IExpressionProposalLabelProvider proposalLabelProvider) {
         super();
-        if(proposalLabelProvider != null){
-            labelProvider = proposalLabelProvider;
-        }else{
-            labelProvider = new LabelProvider();
-        }
+        Assert.isNotNull(proposalLabelProvider);
+        labelProvider = proposalLabelProvider;
     }
 
     @Override

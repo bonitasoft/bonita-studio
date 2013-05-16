@@ -930,11 +930,11 @@ public class SWTBotTestUtil implements SWTBotConstants{
         
 	}
 	
-	public static void setOutputStorageExpressionByName(SWTBot bot,String storageExpressionName, int index) {
+	public static void setOutputStorageExpressionByName(SWTBot bot,String storageExpressionName,String returnType, int index) {
 		bot.toolbarButtonWithId(SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN,index).click();
     	final SWTBot proposalBot = bot.shellWithId(SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_SHELL).bot();
     	final SWTBotTable proposalTAble = proposalBot.tableWithId(SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_TABLE);
-		int row = proposalTAble.indexOf(storageExpressionName, 0);
+    	int row = proposalTAble.indexOf(storageExpressionName+" -- "+returnType, 0);
 		if(row == -1){
 			throw new WidgetNotFoundException(storageExpressionName + " not found in proposals");
 		}

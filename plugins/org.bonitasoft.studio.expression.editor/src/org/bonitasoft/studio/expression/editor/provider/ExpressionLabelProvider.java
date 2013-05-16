@@ -19,6 +19,7 @@ package org.bonitasoft.studio.expression.editor.provider;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
+import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -29,7 +30,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Romain Bioteau
  *
  */
-public class ExpressionLabelProvider extends LabelProvider {
+public class ExpressionLabelProvider extends LabelProvider implements IExpressionProposalLabelProvider {
 
 
 	@Override
@@ -68,6 +69,16 @@ public class ExpressionLabelProvider extends LabelProvider {
 
 		}
 		return super.getText(expression) ;
+	}
+
+	@Override
+	public String getDescription(Expression expression) {
+		return expression.getReturnType();
+	}
+
+	@Override
+	public String getContent(Expression expression) {
+		return expression.getContent();
 	}
 
 }

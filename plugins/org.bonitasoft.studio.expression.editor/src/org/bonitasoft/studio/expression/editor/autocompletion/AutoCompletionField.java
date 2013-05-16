@@ -3,11 +3,11 @@
  */
 package org.bonitasoft.studio.expression.editor.autocompletion;
 
+import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.widgets.Control;
 
 
@@ -18,14 +18,17 @@ public class AutoCompletionField {
     private final BonitaContentProposalAdapter  contentProposalAdapter;
 
 
-    public AutoCompletionField(final Control control,final IControlContentAdapter controlContentAdapter,final ILabelProvider proposalLabelProvider) {
+    public AutoCompletionField(final Control control,final IControlContentAdapter controlContentAdapter,final IExpressionProposalLabelProvider proposalLabelProvider) {
 
         contentProposalProvider = new ExpressionProposalProvider(proposalLabelProvider);
         contentProposalProvider.setFiltering(true);
         contentProposalAdapter = new BonitaContentProposalAdapter(control, controlContentAdapter, contentProposalProvider, null, null);
-        if(proposalLabelProvider != null){
-            contentProposalAdapter.setLabelProvider(proposalLabelProvider) ;
-        }
+        contentProposalAdapter.setLabelProvider(new ExpressionLabelProvider(){
+        	@Override
+        	public String getText(Object expression) {
+        		return ((ExpressionProposal)expression).getLabel();
+        	}
+        }) ;
         contentProposalAdapter.setPropagateKeys(true);
         contentProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 
