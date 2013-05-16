@@ -76,7 +76,7 @@ public class FixedReturnTypeExpressionMigration extends CustomMigration {
 			
 			Instance exp = instance.get("inputExpression");
 			if(exp!=null){
-				exp.set("returnTypeFixed", true);
+				exp.set("returnTypeFixed", false);
 				exp.set("returnType", Boolean.class.getName());
 			}
 		}
