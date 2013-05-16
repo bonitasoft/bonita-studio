@@ -180,7 +180,7 @@
 		<setInstallerVariable>
 			<!-- Set default path to C: on Windows -->
 			<name>installdir</name>
-			<value>${env(SYSTEMDRIVE)}/@file.shortname@-${product_version}</value>
+			<value>${env(SYSTEMDRIVE)}/@product.short.name@-${product_version}</value>
 			<ruleList>
 				<platformTest type="windows" />
 			</ruleList>
@@ -205,7 +205,7 @@
 		<setInstallerVariable>
 			<!-- Set default path to C: on Windows -->
 			<name>installdir</name>
-			<value>${env(SYSTEMDRIVE)}/@file.shortname@-${product_version}</value>
+			<value>${env(SYSTEMDRIVE)}/@product.short.name@-${product_version}</value>
 			<ruleList>
 				<platformTest type="windows" />
 			</ruleList>
@@ -222,7 +222,7 @@
 	<postInstallationActionList>
 		<createSymLink>
 			<explanation>@shortcut.comment@</explanation>
-			<linkName>~/Desktop/@file.shortname@-${product_version}</linkName>
+			<linkName>~/Desktop/@product.short.name@-${product_version}</linkName>
 			<target>${installdir}/@mac.shortcut.name@</target>
 			<ruleList>
 				<platformTest>
@@ -265,7 +265,7 @@
 			</copyFile>
 			<runProgram>
 				<program>genisoimage</program>
-				<programArguments>-D -V @file.shortname@-${product_version} -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
+				<programArguments>-D -V @product.short.name@-${product_version} -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
 				</programArguments>
 			</runProgram>
 			<deleteFile>
@@ -565,7 +565,7 @@
 			<description>Installer.Parameter.installdir.description</description>
 			<explanation>Installer.Parameter.installdir.explanation</explanation>
 			<value></value>
-			<default>${platform_install_prefix}/@file.shortname@-${product_version}</default>
+			<default>${platform_install_prefix}/@product.short.name@-${product_version}</default>
 			<allowEmptyValue>0</allowEmptyValue>
 			<ask>yes</ask>
 			<cliOptionName>prefix</cliOptionName>
