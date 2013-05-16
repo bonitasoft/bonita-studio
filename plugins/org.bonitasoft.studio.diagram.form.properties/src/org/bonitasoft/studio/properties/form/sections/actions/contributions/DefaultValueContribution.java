@@ -73,7 +73,7 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
         }else{
             defaultExpressionViewer.setMessage(Messages.data_tooltip_listonly,IStatus.INFO);
         }
-        defaultExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(200, SWT.DEFAULT).create());
+        defaultExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
 
 

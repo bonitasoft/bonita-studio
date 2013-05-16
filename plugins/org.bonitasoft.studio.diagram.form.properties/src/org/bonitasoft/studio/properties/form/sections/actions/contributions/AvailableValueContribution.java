@@ -36,6 +36,8 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.pics.Pics;
+import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -50,6 +52,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -91,7 +94,10 @@ public class AvailableValueContribution extends InitialValueContribution {
             expressionViewer.setMessage(Messages.data_tooltip_list,IStatus.INFO);
         }
 
-        Button generateButton = widgetFactory.createButton(composite,"Generate expression from a list of option...", SWT.PUSH);
+        new ToolItem(expressionViewer.getToolbar(),SWT.SEPARATOR | SWT.VERTICAL);
+        final ToolItem generateButton = new ToolItem(expressionViewer.getToolbar(),SWT.PUSH);
+        generateButton.setToolTipText(Messages.generateFromEnumTooltip);
+        generateButton.setImage(Pics.getImage("filenew.png"));
         generateButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
