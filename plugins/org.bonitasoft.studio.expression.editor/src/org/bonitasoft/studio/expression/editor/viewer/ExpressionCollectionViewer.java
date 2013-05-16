@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.widgets.MagicComposite;
+import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionColumnLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
@@ -1024,6 +1025,14 @@ public class ExpressionCollectionViewer {
 		}
 		if(index < viewerExprProviders.size()){
 			viewerExprProviders.remove(index);
+		}
+	}
+
+	public void setExpressionProposalLableProvider(int colIndex,IExpressionProposalLabelProvider expressionProposalLabelProvider) {
+		if(editingSupports != null && !editingSupports.isEmpty()){
+			if(colIndex >= 0 && colIndex < editingSupports.size()){
+				editingSupports.get(colIndex).setExpressionProposalLableProvider(expressionProposalLabelProvider);
+			}
 		}
 	}
 

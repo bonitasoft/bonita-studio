@@ -20,6 +20,7 @@ package org.bonitasoft.studio.expression.editor.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -52,6 +53,7 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 	protected EditingDomain editingDomain;
 	private IExpressionNatureProvider expressionNatureProvider;
 	private SelectionListener removeRowListener;
+	private IExpressionProposalLabelProvider expressionProposalLabelProvider;
 
 	/**
 	 * @param viewer
@@ -97,6 +99,9 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 				editingDomain,colIndex,removeRowListener);
 		if (expressionNatureProvider != null) {
 			editor.setExpressionNatureProvider(expressionNatureProvider);
+		}
+		if(expressionProposalLabelProvider != null){
+			editor.setExpressionProposalLableProvider(expressionProposalLabelProvider);
 		}
 		for (ViewerFilter filter : filters) {
 			editor.addFilter(filter);
@@ -185,6 +190,10 @@ public class ExpressionCollectionEditingSupport extends EditingSupport {
 	public void setExpressionNatureProvider(
 			IExpressionNatureProvider expressionNatureProvider) {
 		this.expressionNatureProvider = expressionNatureProvider;
+	}
+
+	public void setExpressionProposalLableProvider(IExpressionProposalLabelProvider expressionProposalLabelProvider) {
+		this.expressionProposalLabelProvider = expressionProposalLabelProvider;
 	}
 
 }

@@ -36,6 +36,7 @@ import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
 import org.bonitasoft.studio.expression.editor.autocompletion.BonitaContentProposalAdapter;
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
+import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
@@ -160,6 +161,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private Map<String,IExpressionValidator> validatorsForType = new HashMap<String,IExpressionValidator>();
 	protected boolean isPassword;
 	private DefaultToolTip textTooltip;
+	private IExpressionProposalLabelProvider expressionProposalLableProvider;
 
 	public ExpressionViewer(Composite composite,int style, EReference expressionReference) {
 		this(composite,style,null,null,expressionReference) ;
@@ -285,8 +287,18 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		return eraseControl;
 	}
 
+	public void setExpressionProposalLableProvider(IExpressionProposalLabelProvider expressionProposalLableProvider) {
+		this.expressionProposalLableProvider = expressionProposalLableProvider;
+		if(autoCompletion != null){
+			autoCompletion.setExpressionProposalLabelProvider(expressionProposalLableProvider);
+		}
+	}
+	
 	protected void createTextControl(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
-		final ContentAssistText contentAssistText = new ContentAssistText(control,new ExpressionLabelProvider(), style);
+		if(expressionProposalLableProvider == null){
+			expressionProposalLableProvider = new ExpressionLabelProvider();
+		}
+		final ContentAssistText contentAssistText = new ContentAssistText(control,expressionProposalLableProvider, style);
 		textControl = contentAssistText.getTextControl();
 		if(widgetFactory != null){
 			widgetFactory.adapt(textControl,false,false) ;

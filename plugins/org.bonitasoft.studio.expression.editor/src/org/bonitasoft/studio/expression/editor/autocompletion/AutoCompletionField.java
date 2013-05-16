@@ -34,6 +34,11 @@ public class AutoCompletionField {
 
     }
 
+    public void setExpressionProposalLabelProvider(IExpressionProposalLabelProvider labelProvider){
+    	contentProposalProvider.setLabelProvider(labelProvider);
+    //	contentProposalAdapter.setContentProposalProvider(contentProposalProvider);
+    }
+    
     public void addExpressionProposalListener(IContentProposalListener listener){
         contentProposalAdapter.addContentProposalListener(listener) ;
     }

@@ -28,6 +28,7 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.expression.editor,
+ org.bonitasoft.studio.expression.editor.autocompletion,
  org.bonitasoft.studio.expression.editor.constant,
  org.bonitasoft.studio.expression.editor.filter,
  org.bonitasoft.studio.expression.editor.i18n;
