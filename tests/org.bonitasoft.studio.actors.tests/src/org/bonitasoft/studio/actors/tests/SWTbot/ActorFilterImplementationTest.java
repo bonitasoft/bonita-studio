@@ -29,6 +29,7 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFacto
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
@@ -69,6 +70,7 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
     @Test
     public void createactorFilterImplementation() throws Exception {
         // TODO add dependancies test
+    	final int nbEditorsBefore = bot.editors().size();
         final String id = "testImplementation";
         final String definition = "testEdit (1.0.0)";
         final String className = "MyactorFilterImpl";
@@ -91,6 +93,22 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
                 actorFilterImpl);
         assertEquals("actorFilterImplementation id should be " + id,
                 actorFilterImpl.getImplementationId(), id);
+        bot.waitUntil(new ICondition() {
+
+            public boolean test() throws Exception {
+                return nbEditorsBefore +1 == bot.editors().size();
+            }
+
+            public void init(SWTBot bot) {
+            }
+
+            public String getFailureMessage() {
+                return "Editor for implementation has not been opened.";
+            }
+        }, 30000);
+        int length = bot.activeEditor().toTextEditor().getText().length();
+        StyleRange[] styles = bot.activeEditor().toTextEditor().getStyles(0, 0, length);
+        containsError(styles);
         removeImplementation(id);
     }
 
@@ -306,6 +324,12 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
 			}
         	
         });
+    }
+    
+    private void containsError(StyleRange[] styles){
+    	for (StyleRange style:styles){
+    		assertFalse("actor filter impl contains errors",style.underline);
+    	}
     }
 
 }
