@@ -35,12 +35,9 @@ import org.bonitasoft.engine.bpm.model.TaskInstance;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
-import org.bonitasoft.engine.exception.identity.UserNotFoundException;
-import org.bonitasoft.engine.exception.platform.InvalidSessionException;
 import org.bonitasoft.engine.exception.platform.LoginException;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
-import org.bonitasoft.engine.search.SearchResult;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
@@ -48,6 +45,7 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.bonitasoft.studio.util.test.EngineAPIUtil;
 import org.bonitasoft.studio.util.test.async.TestAsyncThread;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.FileLocator;
@@ -58,7 +56,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- *@Author Aurélie Zara
+ *@Author Aurï¿½lie Zara
  *
  *
  */
@@ -106,7 +104,7 @@ public class TestDatabaseConnectorResulset {
 	             @Override
 	             public boolean isTestGreen() throws Exception {
 
-	                 newTask = findNewTask(tasks, processDef.getId());
+	                 newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(), session.getUserId());
 
 	                 return newTask != null;
 	             }
@@ -127,34 +125,5 @@ public class TestDatabaseConnectorResulset {
 	         assertEquals("This task does not belong to new process", processDef.getId(), newTask.getProcessDefinitionId());
 	         assertTrue("the current task should not be \"closed\"",!newTask.getName().equals("closed"));
 	    }
-	    
-	    
-	    
-	    
-	    private HumanTaskInstance findNewTask(List<HumanTaskInstance> previousTasks,long processDefinitionUUID) throws InvalidSessionException, UserNotFoundException  {
-	        final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-	        final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-	        SearchResult<HumanTaskInstance> tasks=processApi.searchPendingTasksForUser(session.getUserId(), searchOptions);
 
-
-	        if (tasks.getCount() == previousTasks.size()) {
-	            return null;
-	        } else {
-	            boolean newTaskIsOld = false;
-	            HumanTaskInstance newTask = null;
-	            for (HumanTaskInstance currentTask : tasks.getResult()) {
-	                newTaskIsOld = false;//reinit the value
-	                for (HumanTaskInstance oldTask : previousTasks) {
-	                    if (currentTask.getId()==oldTask.getId()) {
-	                        newTaskIsOld = true;
-	                    }
-	                }
-	                if (!newTaskIsOld && currentTask.getProcessDefinitionId()==processDefinitionUUID) {
-	                    newTask = currentTask;
-	                    break;
-	                }
-	            }
-	            return newTask;
-	        }
-	    }
 }

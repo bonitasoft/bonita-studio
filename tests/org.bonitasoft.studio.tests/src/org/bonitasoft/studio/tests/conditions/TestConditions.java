@@ -33,14 +33,11 @@ import org.bonitasoft.engine.bpm.model.HumanTaskInstance;
 import org.bonitasoft.engine.bpm.model.ProcessDefinition;
 import org.bonitasoft.engine.bpm.model.TaskInstance;
 import org.bonitasoft.engine.exception.BonitaHomeNotSetException;
+import org.bonitasoft.engine.exception.platform.LoginException;
 import org.bonitasoft.engine.exception.ServerAPIException;
 import org.bonitasoft.engine.exception.UnknownAPITypeException;
-import org.bonitasoft.engine.exception.identity.UserNotFoundException;
-import org.bonitasoft.engine.exception.platform.InvalidSessionException;
-import org.bonitasoft.engine.exception.platform.LoginException;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
-import org.bonitasoft.engine.search.SearchResult;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
@@ -48,6 +45,7 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.bonitasoft.studio.util.test.EngineAPIUtil;
 import org.bonitasoft.studio.util.test.async.TestAsyncThread;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.FileLocator;
@@ -67,7 +65,7 @@ public class TestConditions {
 	    private APISession session;
 
 	    @Before
-	    public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+	    public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, LoginException {
 	        session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
 	    }
 
@@ -104,7 +102,7 @@ public class TestConditions {
 	             @Override
 	             public boolean isTestGreen() throws Exception {
 
-	                 newTask = findNewTask(tasks, processDef.getId());
+	                 newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(), session.getUserId());
 
 	                 return newTask != null;
 	             }
@@ -126,33 +124,4 @@ public class TestConditions {
 	         assertEquals("the current task should be Step3","Step3",newTask.getName());
 
 	    }
-	    
-	    
-	    private HumanTaskInstance findNewTask(List<HumanTaskInstance> previousTasks,long processDefinitionUUID) throws InvalidSessionException, UserNotFoundException  {
-	        final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-	        final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-	        SearchResult<HumanTaskInstance> tasks=processApi.searchPendingTasksForUser(session.getUserId(), searchOptions);
-
-
-	        if (tasks.getCount() == previousTasks.size()) {
-	            return null;
-	        } else {
-	            boolean newTaskIsOld = false;
-	            HumanTaskInstance newTask = null;
-	            for (HumanTaskInstance currentTask : tasks.getResult()) {
-	                newTaskIsOld = false;//reinit the value
-	                for (HumanTaskInstance oldTask : previousTasks) {
-	                    if (currentTask.getId()==oldTask.getId()) {
-	                        newTaskIsOld = true;
-	                    }
-	                }
-	                if (!newTaskIsOld && currentTask.getProcessDefinitionId()==processDefinitionUUID) {
-	                    newTask = currentTask;
-	                    break;
-	                }
-	            }
-	            return newTask;
-	        }
-	    }
-
 }
