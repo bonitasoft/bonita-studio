@@ -323,7 +323,7 @@ public class UpdateSizeLaneSelectionEditPolicy extends SelectionEditPolicy imple
 				int y = ((Viewport)p).getVerticalRangeModel().getValue() ;
 
 				IGraphicalEditPart targetEp = laneEditPart;
-				if(type.equals(UpdateSizePoolSelectionEditPolicy.ADD_RIGHT)||type.equals(UpdateSizePoolSelectionEditPolicy.REMOVE_LEFT)){
+				if(type.equals(UpdateSizePoolSelectionEditPolicy.ADD_RIGHT)||type.equals(UpdateSizePoolSelectionEditPolicy.REMOVE_RIGHT)){
 					targetEp = getPoolEditPart();
 				}
 				
