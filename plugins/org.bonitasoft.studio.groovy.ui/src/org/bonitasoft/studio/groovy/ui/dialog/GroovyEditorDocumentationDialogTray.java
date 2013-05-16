@@ -27,10 +27,12 @@ import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.dialogs.DialogTray;
+import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -40,6 +42,10 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -65,10 +71,12 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
 
     private ListViewer categoriesList;
     private FilteredTree functionsList;
-    private Browser documenationText;
+    private StyledText documenationText;
     private final GroovyViewer viewer;
-
-
+	private HTMLTextPresenter fPresenter;
+    private String javadocHtml;
+    private final TextPresentation fPresentation= new TextPresentation();
+    
     public GroovyEditorDocumentationDialogTray(GroovyViewer viewer){
         super();
         this.viewer = viewer ;
@@ -111,7 +119,7 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
     }
 
     private void createFunctionCategories(Composite parent) {
-        Composite catComposite = new Composite(parent, SWT.WRAP);
+        Composite catComposite = new Composite(parent, SWT.NONE);
         catComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         catComposite.setLayout(new GridLayout(1, true));
 
@@ -138,15 +146,15 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
     }
 
     private void createFunctionsList(Composite parent) {
-        Composite funcComposite = new Composite(parent, SWT.WRAP);
-        funcComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        Composite funcComposite = new Composite(parent, SWT.NONE);
+        funcComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         funcComposite.setLayout(new GridLayout(1, true));
 
         Label funcTitle = new Label(funcComposite, SWT.NONE);
         funcTitle.setText(Messages.functionTitle);
 
         functionsList = new FilteredTree(funcComposite,  SWT.BORDER | SWT.V_SCROLL, new PatternFilter(), true) ;
-        functionsList.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(300, SWT.DEFAULT).create());
+        functionsList.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(210, 120).create());
         functionsList.getViewer().setLabelProvider(new FunctionLabeProvider());
         functionsList.getViewer().setContentProvider(new FunctionContentProvider());
         IFunctionCategory cat =(IFunctionCategory) ((IStructuredSelection)categoriesList.getSelection()).getFirstElement();
@@ -154,17 +162,28 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
 
         functionsList.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
-            @Override
+			@Override
             public void selectionChanged(SelectionChangedEvent event) {
                 IFunction f = (IFunction) ((IStructuredSelection)event.getSelection()).getFirstElement();
-                if(documenationText != null && !documenationText.isDisposed() && f != null && f.getDocumentation() != null) {
-                    documenationText.setText(f.getDocumentation());
-                }
-
-
+                refreshDocumentationText(f);
             }
+	
         });
 
+        parent.addControlListener(new ControlListener() {
+			
+			@Override
+			public void controlResized(ControlEvent e) {
+				 IFunction f = (IFunction) ((IStructuredSelection)functionsList.getViewer().getSelection()).getFirstElement();
+				  refreshDocumentationText(f);
+			}
+			
+			@Override
+			public void controlMoved(ControlEvent e) {
+
+			}
+		});
+        
         functionsList.getViewer().addDoubleClickListener(new IDoubleClickListener() {
 
             @Override
@@ -209,19 +228,35 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
         });
 
     }
+    
+	protected void refreshDocumentationText(IFunction f) {
+		if(documenationText != null && !documenationText.isDisposed() && f != null && f.getDocumentation() != null) {
+        	try {
+        		fPresentation.clear();
+        		Rectangle size=  documenationText.getClientArea();
+				javadocHtml= fPresenter.updatePresentation(documenationText, f.getDocumentation(), fPresentation, size.width, size.height);
+			} catch (IllegalArgumentException ex) {
+				// the javadoc might no longer be valid
+				return;
+			}
+        	documenationText.setText(javadocHtml);
+        	TextPresentation.applyTextPresentation(fPresentation, documenationText);
+        }
+	}
 
 
     private void createFunctionDocumentaion(Composite parent) {
-        Composite docComposite = new Composite(parent, SWT.WRAP);
+        Composite docComposite = new Composite(parent, SWT.NONE);
         docComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         docComposite.setLayout(new GridLayout(1, true));
 
         Label docTitle = new Label(docComposite, SWT.NONE);
         docTitle.setText(Messages.functionDocTitle);
         
-        documenationText = new Browser(docComposite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-        documenationText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        documenationText.setBackground(ColorConstants.white);
+        documenationText = new StyledText(docComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+        documenationText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+        documenationText.setEditable(false);
+		fPresenter= new HTMLTextPresenter(false);
     }
 
 }

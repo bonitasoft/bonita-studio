@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.groovy.Messages;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IMethod;
@@ -59,15 +61,16 @@ public class GroovyFunction implements IFunction {
 			if(methodNode.getSource()!= null){
 				IDocument source =  new Document(methodNode.getSource());
 				if(methodNode.getJavadocRange() != null){
-					javadoc =source.get(0,methodNode.getJavadocRange().getLength());
-					javadoc = javadoc.replace('*', ' ');
-					javadoc = javadoc.replace('/', ' ');
-					javadoc = javadoc.replace('\n', ' ');
-					javadoc = javadoc.replace("@", "\n@");  //$NON-NLS-1$//$NON-NLS-2$
-					javadoc = javadoc.replace("  ", " "); //$NON-NLS-1$ //$NON-NLS-2$
-					javadoc = javadoc.replace("   ", " "); //$NON-NLS-1$ //$NON-NLS-2$
+					javadoc = methodNode.getAttachedJavadoc(Repository.NULL_PROGRESS_MONITOR);
+					if(javadoc == null){
+						javadoc = source.get(0,methodNode.getJavadocRange().getLength());
+						javadoc = javadoc.replace("/*", "");
+						javadoc = javadoc.replace("*/", "");
+						javadoc = javadoc.replace("*", "");
+						javadoc = javadoc.replace("@", "<br/>@");
+					}
 				}else{
-					javadoc = "No Documentation" ; //$NON-NLS-1$
+					javadoc = Messages.noDocumentationAvailable ; //$NON-NLS-1$
 				}
 				setDocumentation(javadoc);	
 			}

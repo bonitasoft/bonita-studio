@@ -31,6 +31,8 @@ public final class Messages extends NLS {
 	public static String groovyScriptRepository;
 	public static String groovyProvidedScriptRepository;
 
+	public static String noDocumentationAvailable;
+
 	private Messages() {
 		// Do not instantiate
 	}
