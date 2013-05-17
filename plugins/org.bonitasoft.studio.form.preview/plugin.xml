@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.bonitasoft.studio.application.bonita"
+            class="org.bonitasoft.studio.form.preview.view.FormPreviewPropertiesView"
+            id="org.bonitasoft.studio.views.properties.form.preview"
+            name="preview"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>
