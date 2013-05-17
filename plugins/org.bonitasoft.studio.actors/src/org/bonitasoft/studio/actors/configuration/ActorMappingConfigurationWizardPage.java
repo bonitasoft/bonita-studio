@@ -305,7 +305,7 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
     public void updatePage(AbstractProcess process, Configuration configuration) {
         this.configuration = configuration ;
         this.process = process ;
-        if(this.configuration != null && mappingTree != null && !mappingTree.getTree().isDisposed()){
+        if(this.configuration != null && mappingTree != null && !mappingTree.getTree().isDisposed() && this.configuration.getActorMappings() != null){
             List<ActorMapping> mappings = this.configuration.getActorMappings().getActorMapping() ;
             mappingTree.setInput(mappings) ;
             mappingTree.expandAll() ;
@@ -325,7 +325,7 @@ public class ActorMappingConfigurationWizardPage extends WizardPage implements I
 
     @Override
     public String isConfigurationPageValid(Configuration conf) {
-        if(conf != null){
+        if(conf != null && conf.getActorMappings() != null){
             for(ActorMapping mapping : conf.getActorMappings().getActorMapping()){
                 if(mappingIsEmpty(mapping)){
                     return Messages.bind(Messages.actorHasNoMapping, mapping.getName()) ;

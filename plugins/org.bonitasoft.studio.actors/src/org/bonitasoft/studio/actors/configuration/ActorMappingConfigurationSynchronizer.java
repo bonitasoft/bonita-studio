@@ -49,7 +49,7 @@ public class ActorMappingConfigurationSynchronizer implements IConfigurationSync
     private void addNewActors(Configuration configuration, AbstractProcess process, EditingDomain editingDomain, CompoundCommand cc) {
         ActorMappingsType mappings = configuration.getActorMappings() ;
         boolean newMapping = false ;
-        if(mappings == null){
+        if(mappings == null && !process.getActors().isEmpty()){
             mappings = ActorMappingFactory.eINSTANCE.createActorMappingsType() ;
             newMapping = true ;
         }
@@ -81,7 +81,8 @@ public class ActorMappingConfigurationSynchronizer implements IConfigurationSync
     private void removeDeletedActors(Configuration configuration, AbstractProcess process, EditingDomain editingDomain, CompoundCommand cc) {
         ActorMappingsType mappings = configuration.getActorMappings() ;
         if(mappings != null){
-            for(ActorMapping mapping : mappings.getActorMapping()){
+            int removed = 0;
+        	for(ActorMapping mapping : mappings.getActorMapping()){
                 String actorName = mapping.getName() ;
                 boolean exists = false ;
                 for(Actor actor : process.getActors()){
@@ -91,9 +92,13 @@ public class ActorMappingConfigurationSynchronizer implements IConfigurationSync
                     }
                 }
                 if(!exists){
+                	removed++;
                     cc.append(RemoveCommand.create(editingDomain, mappings, ActorMappingPackage.Literals.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING, mapping)) ;
                 }
             }
+        	if(mappings.getActorMapping().size() == removed){
+        		 cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__ACTOR_MAPPINGS,   null )) ;
+        	}
         }
 
     }
