@@ -36,9 +36,11 @@ import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.model.organization.DocumentRoot;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
+import org.bonitasoft.studio.actors.model.organization.PasswordType;
 import org.bonitasoft.studio.actors.model.organization.util.OrganizationXMLProcessor;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
+import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -62,6 +64,8 @@ import org.eclipse.ui.PlatformUI;
  *
  */
 public class InstallOrganizationHandler extends AbstractHandler {
+
+
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -143,6 +147,7 @@ public class InstallOrganizationHandler extends AbstractHandler {
 		Organization exportedCopy = EcoreUtil.copy(organization)  ;
 		exportedCopy.setName(null) ;
 		exportedCopy.setDescription(null) ;
+		addStudioTechnicalUser(exportedCopy);
 		root.setOrganization(exportedCopy) ;
 		final XMLProcessor processor = new OrganizationXMLProcessor() ;
 		final Resource resource = new XMLResourceImpl() ;
@@ -151,6 +156,19 @@ public class InstallOrganizationHandler extends AbstractHandler {
 		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
 		options.put(XMLResource.OPTION_XML_VERSION, "1.0");
 		return processor.saveToString(resource, options);
+	}
+
+	/**
+	 * @param exportedCopy
+	 */
+	private void addStudioTechnicalUser(Organization exportedCopy) {
+		org.bonitasoft.studio.actors.model.organization.User user = OrganizationFactory.eINSTANCE.createUser();
+		PasswordType passwordType = OrganizationFactory.eINSTANCE.createPasswordType();
+		passwordType.setValue("bpm");
+		passwordType.setEncrypted(false);
+		user.setUserName(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
+		user.setPassword(passwordType);
+		exportedCopy.getUsers().getUser().add(user);
 	}
 
 	protected void applyAllProfileToUsers(IdentityAPI identityAPI, ProfileAPI profileAPI) throws Exception {
@@ -170,5 +188,7 @@ public class InstallOrganizationHandler extends AbstractHandler {
 			}
 		}
 	}
+	
+	
 
 }

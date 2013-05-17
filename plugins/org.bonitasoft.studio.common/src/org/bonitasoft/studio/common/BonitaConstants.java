@@ -92,5 +92,9 @@ public class BonitaConstants {
     public static final String PARENT_PROCESS_INSTANCE_ID = ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineConstantName();
 
     public static final String ROOT_PROCESS_INSTANCE_ID = ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineConstantName();
+    
+    //Organization
+    
+	public static final String STUDIO_TECHNICAL_USER_NAME = "studio";
 
 }
