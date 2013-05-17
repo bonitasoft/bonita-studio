@@ -265,7 +265,7 @@
 			</copyFile>
 			<runProgram>
 				<program>genisoimage</program>
-				<programArguments>-D -V @product.short.name@-${product_version} -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
+				<programArguments>-D -V Installer -no-pad -r -apple -o @bitrock.output@/${dmgName} ${tempDir}/output
 				</programArguments>
 			</runProgram>
 			<deleteFile>
