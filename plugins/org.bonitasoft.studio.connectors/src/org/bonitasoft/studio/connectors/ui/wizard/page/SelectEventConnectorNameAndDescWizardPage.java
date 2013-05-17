@@ -71,36 +71,38 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
 
 
     protected void createLifecycle(Composite composite) {
-        if (container != null && activityHasLifecycle()
-                && !ProcessPackage.Literals.CATCH_MESSAGE_EVENT.isSuperTypeOf(container.eClass())
-                && !ProcessPackage.Literals.CATCH_SIGNAL_EVENT.isSuperTypeOf(container.eClass())
-                && !ProcessPackage.Literals.ERROR_EVENT.isSuperTypeOf(container.eClass())
-                && !ProcessPackage.Literals.TIMER_EVENT.isSuperTypeOf(container.eClass())) {
+    	if( connector.eContainingFeature() != ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS){
+    		if (container != null && activityHasLifecycle()
+    				&& !ProcessPackage.Literals.CATCH_MESSAGE_EVENT.isSuperTypeOf(container.eClass())
+    				&& !ProcessPackage.Literals.CATCH_SIGNAL_EVENT.isSuperTypeOf(container.eClass())
+    				&& !ProcessPackage.Literals.ERROR_EVENT.isSuperTypeOf(container.eClass())
+    				&& !ProcessPackage.Literals.TIMER_EVENT.isSuperTypeOf(container.eClass())) {
 
-            Label eventLabel = new Label(composite, SWT.NONE);
-            eventLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
-            eventLabel.setText(Messages.selectActivityEvent);
+    			Label eventLabel = new Label(composite, SWT.NONE);
+    			eventLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create());
+    			eventLabel.setText(Messages.selectActivityEvent);
 
-            lifeCycle = new LifeCycleWidget(composite, getEvent(),null) ;
+    			lifeCycle = new LifeCycleWidget(composite, getEvent(),null) ;
 
-            GridData gd1 = new GridData(lifeCycle.getWidth(), lifeCycle.getHeight());
-            gd1.horizontalIndent = 0 ;
-            lifeCycle.setLayoutData(gd1);
-            lifeCycle.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    setEvent(lifeCycle.getEvent());
-                }
-            });
+    			GridData gd1 = new GridData(lifeCycle.getWidth(), lifeCycle.getHeight());
+    			gd1.horizontalIndent = 0 ;
+    			lifeCycle.setLayoutData(gd1);
+    			lifeCycle.addSelectionListener(new SelectionAdapter() {
+    				@Override
+    				public void widgetSelected(SelectionEvent e) {
+    					setEvent(lifeCycle.getEvent());
+    				}
+    			});
 
-            if(connector != null && connector.getEvent() != null){
-                setEvent(connector.getEvent());
-            } else {
-                setEvent(ConnectorEvent.ON_FINISH.toString());
-            }
-        } else {
-            setEvent(ConnectorEvent.ON_FINISH.toString());
-        }
+    			if(connector != null && connector.getEvent() != null){
+    				setEvent(connector.getEvent());
+    			} else {
+    				setEvent(ConnectorEvent.ON_FINISH.toString());
+    			}
+    		} else {
+    			setEvent(ConnectorEvent.ON_FINISH.toString());
+    		}
+    	}
     }
 
 
@@ -109,6 +111,18 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
         connectorFailsLabel.setText(Messages.connectorCrashLabel);
         connectorFailsLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
+        if(connector.eContainingFeature() == ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS || container instanceof Form || container instanceof SubmitFormButton ){
+        	
+        	Label connectorFailText = new Label(composite, SWT.NONE);
+        	connectorFailText.setText(Messages.connectorFails_throwException);
+        	connectorFailText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
+        	
+        	connector.setThrowErrorEvent(false);
+        	connector.setIgnoreErrors(false);
+        	connector.setNamedError("");
+        	
+        } else  {
+        
         final Combo connectorFailsCombo = new Combo(composite, SWT.READ_ONLY);
         connectorFailsCombo.add(Messages.connectorFails_crash);
         connectorFailsCombo.add(Messages.connectorFails_ignore);
@@ -117,6 +131,7 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
         if(!(container instanceof Form || container instanceof SubmitFormButton )){
         	connectorFailsCombo.add(Messages.connectorFails_throwEvent);
         }
+        
 
         UpdateValueStrategy ignoreEventStrategyTarget = new UpdateValueStrategy() ;
         ignoreEventStrategyTarget.setConverter(new Converter(String.class,Boolean.class) {
@@ -198,6 +213,7 @@ public class SelectEventConnectorNameAndDescWizardPage extends SelectNameAndDesc
         namedErrorText.setEnabled(connector.isThrowErrorEvent()) ;
         context.bindValue(WidgetProperties.text().observe(connectorFailsCombo),SWTObservables.observeEnabled(namedErrorText),enableNamedErrorStrategyTarget,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER)) ;
 
+        }
     }
 
 
