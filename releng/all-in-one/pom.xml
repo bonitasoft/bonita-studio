@@ -15,7 +15,7 @@
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
-		<product.short.name>BonitaBPM-Community</product.short.name>
+		<product.short.name>BonitaBPMCommunity</product.short.name>
 	</properties>
 
 	<build>
