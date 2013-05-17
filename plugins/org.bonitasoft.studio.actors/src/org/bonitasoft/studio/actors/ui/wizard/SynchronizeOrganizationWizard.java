@@ -109,6 +109,7 @@ public class SynchronizeOrganizationWizard extends Wizard {
                         prefStore.setValue(ActorsPreferenceConstants.DEFAULT_ORGANIZATION, artifact.getDisplayName()) ;
                     } catch (Exception e) {
                         BonitaStudioLog.error(e) ;
+                        return  ;
                     }
                     final String organizationName = artifact.getDisplayName();
                     Display.getDefault().syncExec( new Runnable() {
