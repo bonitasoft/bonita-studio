@@ -29,12 +29,11 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.bpm.model.ProcessDefinition;
 import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
 import org.bonitasoft.engine.bpm.model.ProcessDeploymentInfo;
+import org.bonitasoft.engine.exception.DeletionException;
 import org.bonitasoft.engine.exception.IllegalProcessStateException;
 import org.bonitasoft.engine.exception.PageOutOfRangeException;
 import org.bonitasoft.engine.exception.platform.InvalidSessionException;
 import org.bonitasoft.engine.exception.process.ProcessDefinitionNotFoundException;
-import org.bonitasoft.engine.exception.process.ProcessDefinitionReadException;
-import org.bonitasoft.engine.exception.process.ProcessDeletionException;
 import org.bonitasoft.engine.exception.process.ProcessDisablementException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.FragmentTypes;
@@ -178,7 +177,7 @@ public class TestExpressionOperation implements IRunnableWithProgress {
         this.expression = expression ;
     }
 
-    protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException, ProcessDefinitionReadException, PageOutOfRangeException, ProcessDefinitionNotFoundException, ProcessDeletionException, IllegalProcessStateException {
+    protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException,  PageOutOfRangeException, ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
         long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
         if(nbDeployedProcesses > 0){
             List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;

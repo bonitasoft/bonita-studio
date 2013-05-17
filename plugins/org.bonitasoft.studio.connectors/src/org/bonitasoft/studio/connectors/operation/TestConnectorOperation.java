@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connectors.operation;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,12 +34,11 @@ import org.bonitasoft.engine.bpm.model.ConnectorEvent;
 import org.bonitasoft.engine.bpm.model.ProcessDefinition;
 import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
 import org.bonitasoft.engine.bpm.model.ProcessDeploymentInfo;
+import org.bonitasoft.engine.exception.DeletionException;
 import org.bonitasoft.engine.exception.IllegalProcessStateException;
 import org.bonitasoft.engine.exception.PageOutOfRangeException;
 import org.bonitasoft.engine.exception.platform.InvalidSessionException;
 import org.bonitasoft.engine.exception.process.ProcessDefinitionNotFoundException;
-import org.bonitasoft.engine.exception.process.ProcessDefinitionReadException;
-import org.bonitasoft.engine.exception.process.ProcessDeletionException;
 import org.bonitasoft.engine.exception.process.ProcessDisablementException;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.session.APISession;
@@ -104,272 +104,271 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
  *
  */
 public class TestConnectorOperation implements IRunnableWithProgress {
-	private static final String OUTPUT_NAME = "left_operand";
-    private static final String TEST_CONNECTOR_POOL = "TEST_CONNECTOR_POOL";
-    private final Map<String, org.bonitasoft.engine.expression.Expression> inputParameters = new HashMap<String, org.bonitasoft.engine.expression.Expression>() ;
-    private Map<String, Serializable> result;
-    private ConnectorImplementation implementation;
-    private ConnectorConfiguration connectorConfiguration;
-    private final Map<String, Map<String, Serializable>> inputValues = new HashMap<String, Map<String,Serializable>>() ;
-    private final Map<org.bonitasoft.engine.core.operation.Operation, Map<String, Serializable>> outputValues = new HashMap<org.bonitasoft.engine.core.operation.Operation,Map<String,Serializable>>();
-    private static final ConnectorsConfigurationSynchronizer CONNECTORS_CONFIGURATION_SYNCHRONIZER = new ConnectorsConfigurationSynchronizer();
-    private Set<IRepositoryFileStore> additionalJars;
-    
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        Assert.isNotNull(implementation) ;
-
-        monitor.beginTask(Messages.testConnector, IProgressMonitor.UNKNOWN);
-        checkImplementationDependencies(implementation, monitor);
-
-        APISession session = null;
-        ProcessAPI processApi = null;
-        long procId = -1;
-        ClassLoader cl = Thread.currentThread().getContextClassLoader() ;
-        try {
-            session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
-            processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-            Assert.isNotNull(processApi) ;
-            final AbstractProcess proc = createAbstractProcess(implementation);
-
-            final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
-            configuration.setName("TestConnectorConfiguration");
-            new ConfigurationSynchronizer(proc, configuration).synchronize();
-            configureProcess(configuration,implementation);
-            final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,configuration,Collections.EMPTY_SET);
-
-            undeployProcess(proc, processApi);
-            ProcessDefinition def = processApi.deploy(businessArchive);
-            procId = def.getId();
-            processApi.enableProcess(procId) ;
-           
-            Thread.currentThread().setContextClassLoader(RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader());
-         //  result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(), inputParameters, inputValues, procId);
-            result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(), inputParameters, inputValues, outputValues, procId);
-
-        }catch (Exception e) {
-            BonitaStudioLog.error(e);
-            throw new InvocationTargetException(e);
-        }finally{
-        	if(cl != null){
-        		Thread.currentThread().setContextClassLoader(cl);
-        	}
-            if(processApi != null && procId != -1){
-                try{
-                    processApi.disableProcess(procId) ;
-                    processApi.deleteProcess(procId);
-                }catch (Exception e) {
-                    BonitaStudioLog.error(e);
-                }
-            }
-            if(session != null){
-                BOSEngineManager.getInstance().logoutDefaultTenant(session);
-            }
-        }
-    }
-
-    private void configureProcess(Configuration configuration, ConnectorImplementation implem) {
-    	final DatabaseConnectorPropertiesRepositoryStore dbStore = (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
-        final DatabaseConnectorPropertiesFileStore file = (DatabaseConnectorPropertiesFileStore) dbStore.getChild(implem.getDefinitionId());
-        String driver = null;
-        boolean addDriver = false;
-        if(file != null){
-        	 driver = file.getDefault();
-        	if(driver != null){
-        		  final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
-        		  if(libFolder.getFile(driver).exists()){
-        			  addDriver = true;
-        		  }else{
-        			  throw new IllegalStateException("Database driver jar "+driver+" not found in repository");
-        		  }
-        	}else{
-        		throw new IllegalStateException("No active database driver configured for this connector");
-        	}
-        }
-    	
-    	for(DefinitionMapping association : configuration.getDefinitionMappings()){
-            if(FragmentTypes.CONNECTOR.equals(association.getType())){
-                if(association.getDefinitionId().equals(implem.getDefinitionId())){
-                    association.setImplementationId(implem.getImplementationId());
-                    association.setImplementationVersion(implem.getImplementationVersion());
-                    CompoundCommand cc = new CompoundCommand();
-                    AdapterFactoryEditingDomain domain = createEditingDomain();
-                    CONNECTORS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, implem, cc, domain,addDriver) ;
-                    domain.getCommandStack().execute(cc);
-                    break;
-                }
-            }
-        }
-        //Add jars from managed jars to dependency list of the process used to test the connector
-    	if(additionalJars!=null){
-    		for(FragmentContainer fc : configuration.getProcessDependencies()){
-    			if(FragmentTypes.OTHER.equals(fc.getId())){
-    				final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
-    				if(libFolder.exists()){
-    					try {
-    						for(IResource f : libFolder.members()){
-    							if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar") && isSelectedJar(((IFile)f).getName())){
-    								Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
-    								fragment.setExported(true);
-    								fragment.setKey(f.getName());
-    								fragment.setValue(f.getName());
-    								fragment.setType(FragmentTypes.JAR);
-    								AdapterFactoryEditingDomain domain = createEditingDomain();
-    								domain.getCommandStack().execute(AddCommand.create(domain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, fragment));
-    							}
-    						}
-    					} catch (CoreException e) {
-    						BonitaStudioLog.error(e);
-    					}
-    				}
-    			}
-    		}
-    	}
-    }
-
-    
-    private boolean isSelectedJar(String fileName){
-    	for(IRepositoryFileStore fileStore : additionalJars){
-    		if(fileStore.getName().equals(fileName)){
-    			return true;
-    		}
-    	}
-    	return false;
-    }
-    
-    private AdapterFactoryEditingDomain createEditingDomain() {
-        ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-        adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-        adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory()) ;
-        adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
-
-        // command stack that will notify this editor as commands are executed
-        BasicCommandStack commandStack = new BasicCommandStack();
-
-        // Create the editing domain with our adapterFactory and command stack.
-        AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory,commandStack, new HashMap<Resource, Boolean>());
-        editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl()) ;
-        return editingDomain;
-    }
-
-    private AbstractProcess createAbstractProcess(ConnectorImplementation implemen) {
-        AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
-        proc.setName(TEST_CONNECTOR_POOL);
-        proc.setVersion("1.0");
-        Connector connector = ProcessFactory.eINSTANCE.createConnector();
-        connector.setConfiguration(EcoreUtil.copy(connectorConfiguration));
-        connector.setEvent(ConnectorEvent.ON_ENTER.name());
-        connector.setDefinitionId(implemen.getDefinitionId());
-        connector.setDefinitionVersion(implemen.getDefinitionVersion());
-        connector.setIgnoreErrors(false);
-        addDatasOnProcess(proc);
-        proc.getConnectors().add(connector);
-        return proc;
-    }
-
-    public Map<String, Serializable> getResult(){
-        return result ;
-    }
+	
+	private static final String OUTPUT_NAME = "output";
+	private static final String TEST_CONNECTOR_POOL = "TEST_CONNECTOR_POOL";
+	private final Map<String, org.bonitasoft.engine.expression.Expression> inputParameters = new HashMap<String, org.bonitasoft.engine.expression.Expression>() ;
+	private Map<String, Serializable> result;
+	private ConnectorImplementation implementation;
+	private ConnectorConfiguration connectorConfiguration;
+	private final Map<String, Map<String, Serializable>> inputValues = new HashMap<String, Map<String,Serializable>>() ;
+	private final Map<String, Serializable> outputValues = new HashMap<String,Serializable>();
+	private static final ConnectorsConfigurationSynchronizer CONNECTORS_CONFIGURATION_SYNCHRONIZER = new ConnectorsConfigurationSynchronizer();
+	private Set<IRepositoryFileStore> additionalJars;
+	private List<org.bonitasoft.engine.core.operation.Operation> outputOperations = new ArrayList<org.bonitasoft.engine.core.operation.Operation>();
 
 
-    private void addDatasOnProcess(AbstractProcess process){
-    	Set<org.bonitasoft.engine.core.operation.Operation> ops = outputValues.keySet();
-    	Iterator<org.bonitasoft.engine.core.operation.Operation> it= ops.iterator();
-    	JavaType type = ProcessFactory.eINSTANCE.createJavaType();
-  
-    	while(it.hasNext()){
-    		org.bonitasoft.engine.core.operation.Operation output = it.next();
-    		JavaObjectData data = ProcessFactory.eINSTANCE.createJavaObjectData();
-    		data.setName(output.getLeftOperand().getName());
-    		data.setDataType(type);
-    		data.setClassName(Object.class.getName());
-    		process.getData().add(data);
-    		}
-    		
-    	}
-    	
-    
-    
-    protected void addInputParameters(String inputName,AbstractExpression expression){
-        Expression exp =  EngineExpressionUtil.createExpression(expression) ;
-        if(exp != null){
-            inputParameters.put(inputName,exp) ;
-            inputValues.put(inputName,Collections.EMPTY_MAP);
-        }
-    }
-    
-    protected void addOutput(Operation operation, int cpt){
-    	org.bonitasoft.studio.model.expression.Expression exp = operation.getRightOperand();
-    	operation.getLeftOperand().setType(ExpressionConstants.VARIABLE_TYPE);
-    	operation.getLeftOperand().setReturnType(operation.getRightOperand().getReturnType());
-    	    	operation.getLeftOperand().setContent(OUTPUT_NAME+cpt);
-    	operation.getLeftOperand().setName(OUTPUT_NAME+cpt);
-    	Operator operator = ExpressionFactory.eINSTANCE.createOperator();
-    	operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
-    	operation.setOperator(operator);
-    	org.bonitasoft.engine.core.operation.Operation op=EngineExpressionUtil.createOperation(operation,true);
-    	if (op!=null){
-    		outputValues.put(op, Collections.EMPTY_MAP);
-    	}
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+		Assert.isNotNull(implementation) ;
 
-    public void setImplementation(ConnectorImplementation implementation){
-        this.implementation = implementation ;
-    }
+		monitor.beginTask(Messages.testConnector, IProgressMonitor.UNKNOWN);
+		checkImplementationDependencies(implementation, monitor);
 
-    protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException, ProcessDefinitionReadException, PageOutOfRangeException, ProcessDefinitionNotFoundException, ProcessDeletionException, IllegalProcessStateException {
-        long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
-        if(nbDeployedProcesses > 0){
-            List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
-            for(ProcessDeploymentInfo info : processes){
-                if(info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())){
-                    try{
-                        if (processApi.getProcessDeploymentInfo(info.getProcessId()).getActivationState() == ActivationState.ENABLED){
-                            processApi.disableProcess(info.getProcessId()) ;
-                        }
-                    }catch (ProcessDisablementException e) {
+		APISession session = null;
+		ProcessAPI processApi = null;
+		long procId = -1;
+		ClassLoader cl = Thread.currentThread().getContextClassLoader() ;
+		try {
+			session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+			processApi = BOSEngineManager.getInstance().getProcessAPI(session);
+			Assert.isNotNull(processApi) ;
+			final AbstractProcess proc = createAbstractProcess(implementation);
 
-                    }
-                    processApi.deleteProcess(info.getProcessId()) ;
-                }
-            }
-        }
-    }
+			final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
+			configuration.setName("TestConnectorConfiguration");
+			new ConfigurationSynchronizer(proc, configuration).synchronize();
+			configureProcess(configuration,implementation);
+			final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,configuration,Collections.EMPTY_SET);
 
-    protected void checkImplementationDependencies(final ConnectorImplementation implementation,IProgressMonitor monitor) {
-        if(!implementation.getJarDependencies().getJarDependency().isEmpty()){
-            DependencyRepositoryStore depStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
-            final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class), ConnectorPlugin.getDefault().getBundle()) ;
-            for(String jarName : implementation.getJarDependencies().getJarDependency()){
-                if(depStore.getChild(jarName) == null){
-                    InputStream is = resourceProvider.getDependencyInputStream(jarName) ;
-                    if(is != null){
-                        depStore.importInputStream(jarName, is) ;
-                    }
-                }
-            }
-        }
-    }
+			undeployProcess(proc, processApi);
+			ProcessDefinition def = processApi.deploy(businessArchive);
+			procId = def.getId();
+			processApi.enableProcess(procId) ;
 
-    public void setConnectorOutput(Connector connector){
-    	int i=0;
-    	for (Operation output:connector.getOutputs()){
-    		addOutput(output,i++);
-    	}
-    }
-    
-    public void setConnectorConfiguration(ConnectorConfiguration configuration) {
-        connectorConfiguration = configuration ;
+			Thread.currentThread().setContextClassLoader(RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader());
+			result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(), inputParameters, inputValues, outputOperations,outputValues, procId);
+		}catch (Exception e) {
+			BonitaStudioLog.error(e);
+			throw new InvocationTargetException(e);
+		}finally{
+			if(cl != null){
+				Thread.currentThread().setContextClassLoader(cl);
+			}
+			if(processApi != null && procId != -1){
+				try{
+					processApi.disableProcess(procId) ;
+					processApi.deleteProcess(procId);
+				}catch (Exception e) {
+					BonitaStudioLog.error(e);
+				}
+			}
+			if(session != null){
+				BOSEngineManager.getInstance().logoutDefaultTenant(session);
+			}
+		}
+	}
 
-        for(ConnectorParameter parameter : configuration.getParameters()){
-            addInputParameters(parameter.getKey(), parameter.getExpression()) ;
-        }
-    }
+	private void configureProcess(Configuration configuration, ConnectorImplementation implem) {
+		final DatabaseConnectorPropertiesRepositoryStore dbStore = (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
+		final DatabaseConnectorPropertiesFileStore file = (DatabaseConnectorPropertiesFileStore) dbStore.getChild(implem.getDefinitionId());
+		String driver = null;
+		boolean addDriver = false;
+		if(file != null){
+			driver = file.getDefault();
+			if(driver != null){
+				final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
+				if(libFolder.getFile(driver).exists()){
+					addDriver = true;
+				}else{
+					throw new IllegalStateException("Database driver jar "+driver+" not found in repository");
+				}
+			}else{
+				throw new IllegalStateException("No active database driver configured for this connector");
+			}
+		}
+
+		for(DefinitionMapping association : configuration.getDefinitionMappings()){
+			if(FragmentTypes.CONNECTOR.equals(association.getType())){
+				if(association.getDefinitionId().equals(implem.getDefinitionId())){
+					association.setImplementationId(implem.getImplementationId());
+					association.setImplementationVersion(implem.getImplementationVersion());
+					CompoundCommand cc = new CompoundCommand();
+					AdapterFactoryEditingDomain domain = createEditingDomain();
+					CONNECTORS_CONFIGURATION_SYNCHRONIZER.updateConnectorDependencies(configuration, association, implem, cc, domain,addDriver) ;
+					domain.getCommandStack().execute(cc);
+					break;
+				}
+			}
+		}
+		//Add jars from managed jars to dependency list of the process used to test the connector
+		if(additionalJars!=null){
+			for(FragmentContainer fc : configuration.getProcessDependencies()){
+				if(FragmentTypes.OTHER.equals(fc.getId())){
+					final IFolder libFolder = RepositoryManager.getInstance().getCurrentRepository().getProject().getFolder("lib");
+					if(libFolder.exists()){
+						try {
+							for(IResource f : libFolder.members()){
+								if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar") && isSelectedJar(((IFile)f).getName())){
+									Fragment fragment = ConfigurationFactory.eINSTANCE.createFragment();
+									fragment.setExported(true);
+									fragment.setKey(f.getName());
+									fragment.setValue(f.getName());
+									fragment.setType(FragmentTypes.JAR);
+									AdapterFactoryEditingDomain domain = createEditingDomain();
+									domain.getCommandStack().execute(AddCommand.create(domain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, fragment));
+								}
+							}
+						} catch (CoreException e) {
+							BonitaStudioLog.error(e);
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	private boolean isSelectedJar(String fileName){
+		for(IRepositoryFileStore fileStore : additionalJars){
+			if(fileStore.getName().equals(fileName)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private AdapterFactoryEditingDomain createEditingDomain() {
+		ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+		adapterFactory.addAdapterFactory(new ConfigurationAdapterFactory()) ;
+		adapterFactory.addAdapterFactory(new ProcessAdapterFactory()) ;
+
+		// command stack that will notify this editor as commands are executed
+		BasicCommandStack commandStack = new BasicCommandStack();
+
+		// Create the editing domain with our adapterFactory and command stack.
+		AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(adapterFactory,commandStack, new HashMap<Resource, Boolean>());
+		editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap().put("conf", new ConfigurationResourceFactoryImpl()) ;
+		return editingDomain;
+	}
+
+	private AbstractProcess createAbstractProcess(ConnectorImplementation implemen) {
+		AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
+		proc.setName(TEST_CONNECTOR_POOL);
+		proc.setVersion("1.0");
+		Connector connector = ProcessFactory.eINSTANCE.createConnector();
+		connector.setConfiguration(EcoreUtil.copy(connectorConfiguration));
+		connector.setEvent(ConnectorEvent.ON_ENTER.name());
+		connector.setDefinitionId(implemen.getDefinitionId());
+		connector.setDefinitionVersion(implemen.getDefinitionVersion());
+		connector.setIgnoreErrors(false);
+		addDatasOnProcess(proc);
+		proc.getConnectors().add(connector);
+		return proc;
+	}
+
+	public Map<String, Serializable> getResult(){
+		return result ;
+	}
+
+
+	private void addDatasOnProcess(AbstractProcess process){
+		Iterator<org.bonitasoft.engine.core.operation.Operation> it= outputOperations.iterator();
+		JavaType type = ProcessFactory.eINSTANCE.createJavaType();
+
+		while(it.hasNext()){
+			org.bonitasoft.engine.core.operation.Operation output = it.next();
+			JavaObjectData data = ProcessFactory.eINSTANCE.createJavaObjectData();
+			data.setName(output.getLeftOperand().getName());
+			data.setDataType(type);
+			data.setClassName(Object.class.getName());
+			process.getData().add(data);
+		}
+	}
+
+
+
+	protected void addInputParameters(String inputName,AbstractExpression expression){
+		Expression exp =  EngineExpressionUtil.createExpression(expression) ;
+		if(exp != null){
+			inputParameters.put(inputName,exp) ;
+			inputValues.put(inputName,Collections.EMPTY_MAP);
+		}
+	}
+
+	protected void addOutput(Operation operation, int cpt){
+		org.bonitasoft.studio.model.expression.Expression exp = operation.getRightOperand();
+		Operation operationCopy = EcoreUtil.copy(operation);
+		operationCopy.getLeftOperand().setType(ExpressionConstants.VARIABLE_TYPE);
+		operationCopy.getLeftOperand().setReturnType(operation.getRightOperand().getReturnType());
+		operationCopy.getLeftOperand().setContent(OUTPUT_NAME+cpt);
+		operationCopy.getLeftOperand().setName(OUTPUT_NAME+cpt);
+		Operator operator = ExpressionFactory.eINSTANCE.createOperator();
+		operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+		operationCopy.setOperator(operator);
+		org.bonitasoft.engine.core.operation.Operation op=EngineExpressionUtil.createOperation(operationCopy,true);
+		if (op!=null){
+			outputOperations .add(op);
+		}
+	}
+
+	public void setImplementation(ConnectorImplementation implementation){
+		this.implementation = implementation ;
+	}
+
+	protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException, PageOutOfRangeException, ProcessDefinitionNotFoundException, IllegalProcessStateException, DeletionException {
+		long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
+		if(nbDeployedProcesses > 0){
+			List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
+			for(ProcessDeploymentInfo info : processes){
+				if(info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())){
+					try{
+						if (processApi.getProcessDeploymentInfo(info.getProcessId()).getActivationState() == ActivationState.ENABLED){
+							processApi.disableProcess(info.getProcessId()) ;
+						}
+					}catch (ProcessDisablementException e) {
+
+					}
+					processApi.deleteProcess(info.getProcessId()) ;
+				}
+			}
+		}
+	}
+
+	protected void checkImplementationDependencies(final ConnectorImplementation implementation,IProgressMonitor monitor) {
+		if(!implementation.getJarDependencies().getJarDependency().isEmpty()){
+			DependencyRepositoryStore depStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
+			final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class), ConnectorPlugin.getDefault().getBundle()) ;
+			for(String jarName : implementation.getJarDependencies().getJarDependency()){
+				if(depStore.getChild(jarName) == null){
+					InputStream is = resourceProvider.getDependencyInputStream(jarName) ;
+					if(is != null){
+						depStore.importInputStream(jarName, is) ;
+					}
+				}
+			}
+		}
+	}
+
+	public void setConnectorOutput(Connector connector){
+		int i=0;
+		for (Operation output:connector.getOutputs()){
+			addOutput(output,i++);
+		}
+	}
+
+	public void setConnectorConfiguration(ConnectorConfiguration configuration) {
+		connectorConfiguration = configuration ;
+
+		for(ConnectorParameter parameter : configuration.getParameters()){
+			addInputParameters(parameter.getKey(), parameter.getExpression()) ;
+		}
+	}
 
 	public Set<IRepositoryFileStore> getAdditionalJars() {
 		return additionalJars;
