@@ -536,14 +536,6 @@
             name="Tree Overview"
             restorable="true">
       </view>
-      <view
-            allowMultiple="false"
-            category="org.bonitasoft.studio.application.bonita"
-            class="org.bonitasoft.studio.application.views.form.FormPreviewPropertiesView"
-            id="org.bonitasoft.studio.views.properties.form.preview"
-            name="%Preview"
-            restorable="true">
-      </view>
    </extension>
    <extension
          point="org.eclipse.ui.activities">
