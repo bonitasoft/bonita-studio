@@ -21,7 +21,7 @@
       startupProgressRect="4,345,679,5"
       startupMessageRect="223,190,250,25"
       startupForegroundColor="FFFCFC" />
-   <launcher name="BonitaBPM">
+   <launcher name="BonitaBPMCommunity">
       <macosx icon="icons/bonitasoft-icon-128-128-transparent.icns"/>
       <solaris/>
       <win useIco="true">
