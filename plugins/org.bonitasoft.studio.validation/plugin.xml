@@ -853,6 +853,49 @@
                      class="InclusiveGateway">
                </target>
             </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.OperationNotEmptyConstraint"
+                  id="org.bonitasoft.studio.validation.constraint.non.empty.operation"
+                  isEnabledByDefault="true"
+                  lang="Java"
+                  mode="Batch"
+                  name="Non-empty Operations"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="AbstractCatchMessageEvent">
+                  <event
+                        name="Unset">
+                     <feature
+                           name="event">
+                     </feature>
+                  </event>
+                  <event
+                        name="Set">
+                     <feature
+                           name="event">
+                     </feature>
+                  </event>
+               </target>
+               <target
+                     class="Activity">
+                  <event
+                        name="Unset">
+                     <feature
+                           name="event">
+                     </feature>
+                  </event>
+                  <event
+                        name="Set">
+                     <feature
+                           name="event">
+                     </feature>
+                  </event>
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">

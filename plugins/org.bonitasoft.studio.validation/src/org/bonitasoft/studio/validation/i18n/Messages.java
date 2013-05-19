@@ -73,6 +73,8 @@ public class Messages extends NLS {
 	public static String errorTooltip;
 	public static String infoTooltip;
 	public static String invalidInclusiveMergeConstraints;
+	public static String validation_messageContentWithEmptyFields;
+	public static String validationTaskOperationWithEmptyFields;
 
     
     static {
