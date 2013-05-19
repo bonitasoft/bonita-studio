@@ -508,7 +508,7 @@
                </target>
             </constraint>
             <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.UniqueFlowElementIdConstraint"
+                  class="org.bonitasoft.studio.validation.constraints.process.UniqueFlowElementAndBoundaryIdConstraint"
                   id="org.bonitasoft.studio.validation.constraints.uniqueid"
                   lang="Java"
                   mode="Batch"
@@ -521,18 +521,6 @@
                <target
                      class="FlowElement">
                </target>
-            </constraint>
-            <constraint
-                  class="org.bonitasoft.studio.validation.constraints.process.UniqueBoundaryEventIdConstraint"
-                  id="org.bonitasoft.studio.validation.constraints.uniqueboudaryid"
-                  lang="Java"
-                  mode="Batch"
-                  name="%UniqueBoundaryIdConstraint"
-                  severity="WARNING"
-                  statusCode="1">
-               <message>
-                  {0}
-               </message>
                <target
                      class="BoundaryEvent">
                </target>

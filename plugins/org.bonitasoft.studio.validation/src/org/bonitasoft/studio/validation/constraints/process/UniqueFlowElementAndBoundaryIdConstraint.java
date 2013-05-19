@@ -17,9 +17,15 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
+import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
@@ -32,7 +38,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
  * @author Baptiste Mesta
  * 
  */
-public class UniqueBoundaryEventIdConstraint extends AbstractLiveValidationMarkerConstraint {
+public class UniqueFlowElementAndBoundaryIdConstraint extends AbstractLiveValidationMarkerConstraint {
 
 
 	@Override
@@ -43,12 +49,22 @@ public class UniqueBoundaryEventIdConstraint extends AbstractLiveValidationMarke
 	@Override
 	protected IStatus performBatchValidation(IValidationContext ctx) {
 		EObject eObj = ctx.getTarget();
-		if(eObj instanceof BoundaryEvent){
-			if(eObj.eContainer() instanceof Activity){
-				Activity activity = (Activity)eObj.eContainer();
-				String elementName = ((Element) eObj).getName();
-				for(BoundaryEvent be :activity.getBoundaryIntermediateEvents()){
-					if(!be.equals(eObj) && be.getName().equals(elementName)){
+		if (eObj instanceof FlowElement || eObj instanceof BoundaryEvent) {
+			//check that there is no other elements with the same name
+			Container parentProcess = ModelHelper.getParentProcess(eObj);
+			if (parentProcess != null) {
+				Element el = (Element) eObj;
+				List<Element> elements = new ArrayList<Element>();
+				final List<FlowElement> flowElements = ModelHelper.getFlowElements(parentProcess, true);
+				elements.addAll(flowElements);
+				for (FlowElement flowElement : flowElements) {
+					if(flowElement instanceof Activity){
+						elements.addAll(((Activity) flowElement).getBoundaryIntermediateEvents());
+					}
+				}
+				String elementName = el.getName();
+				for (Element e : elements) {
+					if (!e.equals(el) && e.getName().equals(elementName)) {
 						return ctx.createFailureStatus(new Object[] { Messages.Validation_Element_SameName + ": " + elementName });
 					}
 				}
@@ -57,7 +73,6 @@ public class UniqueBoundaryEventIdConstraint extends AbstractLiveValidationMarke
 		return ctx.createSuccessStatus();
 	}
 
-
 	@Override
 	protected String getMarkerType(DiagramEditor editor) {
 		return ProcessMarkerNavigationProvider.MARKER_TYPE;
@@ -65,7 +80,7 @@ public class UniqueBoundaryEventIdConstraint extends AbstractLiveValidationMarke
 
 	@Override
 	protected String getConstraintId() {
-		return "org.bonitasoft.studio.validation.constraints.uniqueboudaryid";
+		return "org.bonitasoft.studio.validation.constraints.uniqueid";
 	}
 
 }
