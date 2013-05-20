@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.EndErrorEvent;
 import org.bonitasoft.studio.model.process.EndEvent;
 import org.bonitasoft.studio.model.process.EndMessageEvent;
 import org.bonitasoft.studio.model.process.EndSignalEvent;
@@ -58,13 +59,13 @@ public class StartAndEndEventWarningConstraint extends AbstractLiveValidationMar
 			for (Element element : ((Pool) eObj).getElements()) {
 				if (element instanceof StartEvent || element instanceof StartMessageEvent || element instanceof StartSignalEvent || element instanceof StartTimerEvent || element instanceof StartErrorEvent) {
 					containsStart = true;
-				} else if (element instanceof EndEvent || element instanceof EndMessageEvent || element instanceof EndSignalEvent || element instanceof EndErrorEventConstraint || element instanceof EndTerminatedEvent) {
+				} else if (element instanceof EndEvent || element instanceof EndMessageEvent || element instanceof EndSignalEvent || element instanceof EndErrorEvent|| element instanceof EndTerminatedEvent) {
 					containsEnd = true;
 				} else if (element instanceof Lane) {
 					for (Element el : ((Lane) element).getElements()) {
 						if (el instanceof StartEvent || el instanceof StartMessageEvent || el instanceof StartSignalEvent || el instanceof StartTimerEvent || el instanceof StartErrorEvent) {
 							containsStart = true;
-						} else if (el instanceof EndEvent || el instanceof EndMessageEvent || el instanceof EndSignalEvent || el instanceof EndErrorEventConstraint || el instanceof EndTerminatedEvent) {
+						} else if (el instanceof EndEvent || el instanceof EndMessageEvent || el instanceof EndSignalEvent || el instanceof EndErrorEvent || el instanceof EndTerminatedEvent) {
 							containsEnd = true;
 						}
 					}
