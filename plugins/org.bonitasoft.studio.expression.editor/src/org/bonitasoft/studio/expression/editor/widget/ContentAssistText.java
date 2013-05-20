@@ -16,14 +16,19 @@
  */
 package org.bonitasoft.studio.expression.editor.widget;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
+import org.bonitasoft.studio.expression.editor.autocompletion.IBonitaContentProposalListener2;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.fieldassist.TextContentAdapter;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.PaintEvent;
@@ -52,6 +57,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	private boolean drawBorder = true;
 	private ToolBar tb;
 	private boolean isReadOnly = false;
+	private List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<IBonitaContentProposalListener2>();
 
 	public ContentAssistText(Composite parent, IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
 		super(parent, SWT.NONE);
@@ -122,11 +128,16 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
-					autoCompletion.getContentProposalAdapter().closeProposalPopup();
-				}else{
-					autoCompletion.getContentProposalAdapter().showProposalPopup();
-				}
+				BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
+					public void run() {
+						fireOpenProposalEvent();
+						if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
+							autoCompletion.getContentProposalAdapter().closeProposalPopup();
+						}else{
+							autoCompletion.getContentProposalAdapter().showProposalPopup();
+						}
+					}
+				});
 			}
 		});
 
@@ -140,6 +151,13 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 			}
 		});
 		autoCompletion = new AutoCompletionField(textControl, new TextContentAdapter(), contentProposalLabelProvider) ;
+	}
+
+
+	protected void fireOpenProposalEvent() {
+		for(IBonitaContentProposalListener2 listener : contentAssistListerners){
+			listener.proposalPopupOpened(autoCompletion.getContentProposalAdapter());
+		}
 	}
 
 
@@ -172,6 +190,11 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 
 	public ToolBar getToolbar() {
 		return tb;
+	}
+
+
+	public void addContentAssistListener(IBonitaContentProposalListener2 listener) {
+		contentAssistListerners.add(listener);
 	}
 
 }

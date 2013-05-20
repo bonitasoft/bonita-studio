@@ -36,6 +36,7 @@ import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
 import org.bonitasoft.studio.expression.editor.autocompletion.BonitaContentProposalAdapter;
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
+import org.bonitasoft.studio.expression.editor.autocompletion.IBonitaContentProposalListener2;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
@@ -120,8 +121,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * @author Romain Bioteau
  *
  */
-public class ExpressionViewer extends ContentViewer implements ExpressionConstants,SWTBotConstants {
-
+public class ExpressionViewer extends ContentViewer implements ExpressionConstants,SWTBotConstants,IContentProposalListener,IBonitaContentProposalListener2 {
 
 	protected Composite control;
 	private Text textControl;
@@ -293,7 +293,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			autoCompletion.setExpressionProposalLabelProvider(expressionProposalLableProvider);
 		}
 	}
-	
+
 	protected void createTextControl(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
 		if(expressionProposalLableProvider == null){
 			expressionProposalLableProvider = new ExpressionLabelProvider();
@@ -304,7 +304,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			widgetFactory.adapt(textControl,false,false) ;
 		}
 		textControl.addDisposeListener(disposeListener) ;
-
 		textTooltip = new DefaultToolTip(textControl){
 			@Override
 			protected boolean shouldCreateToolTip(Event event) {
@@ -324,37 +323,10 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		messageDecoration.setMarginWidth(1) ;
 		messageDecoration.hide() ;
 
+		
+		contentAssistText.addContentAssistListener(this);
 		autoCompletion = contentAssistText.getAutocompletion();
-		autoCompletion.addExpressionProposalListener(new IContentProposalListener() {
-
-			@Override
-			public void proposalAccepted(IContentProposal proposal) {
-				int proposalAcceptanceStyle = autoCompletion.getContentProposalAdapter().getProposalAcceptanceStyle();
-				if(proposalAcceptanceStyle == ContentProposalAdapter.PROPOSAL_REPLACE){
-					ExpressionProposal prop = (ExpressionProposal) proposal ;
-					final Expression copy = EcoreUtil.copy((Expression) prop.getExpression());
-					if(copy.getType().equals(ExpressionConstants.FORM_FIELD_TYPE)){
-						EObject parent = context;
-						if(parent == null){
-							parent = expressionNatureProvider.getContext();
-						}
-						if(parent instanceof Widget){
-							final Widget w = (Widget) parent;
-							if(w != null){
-								final String returnTypeModifier = w.getReturnTypeModifier();
-								if(returnTypeModifier != null){
-									copy.setReturnType(returnTypeModifier);
-								}
-							}
-						}
-					}
-					copy.setReturnTypeFixed(selectedExpression.isReturnTypeFixed());
-					updateSelection(copy);
-					fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, new StructuredSelection(selectedExpression)));
-					validate();
-				}
-			}
-		}) ;
+		autoCompletion.addExpressionProposalListener(this);
 
 		int indent = 0 ;
 		if ((style & SWT.PASSWORD) != 0){
@@ -1003,7 +975,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	public void updateAutocompletionProposals() {
 		if(expressionNatureProvider != null){
 			Set<Expression> filteredExpressions =  getFilteredExpressions() ;
-			autoCompletion.setProposals(filteredExpressions.toArray(new Expression[]{})) ;
+			autoCompletion.setProposals(filteredExpressions.toArray(new Expression[filteredExpressions.size()])) ;
 		}
 	}
 
@@ -1050,5 +1022,43 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 	public void setExternalDataBindingContext(DataBindingContext ctx){
 		this.externalDataBindingContext = ctx;
+	}
+
+	@Override
+	public void proposalAccepted(IContentProposal proposal) {
+		int proposalAcceptanceStyle = autoCompletion.getContentProposalAdapter().getProposalAcceptanceStyle();
+		if(proposalAcceptanceStyle == ContentProposalAdapter.PROPOSAL_REPLACE){
+			ExpressionProposal prop = (ExpressionProposal) proposal ;
+			final Expression copy = EcoreUtil.copy((Expression) prop.getExpression());
+			if(copy.getType().equals(ExpressionConstants.FORM_FIELD_TYPE)){
+				EObject parent = context;
+				if(parent == null){
+					parent = expressionNatureProvider.getContext();
+				}
+				if(parent instanceof Widget){
+					final Widget w = (Widget) parent;
+					if(w != null){
+						final String returnTypeModifier = w.getReturnTypeModifier();
+						if(returnTypeModifier != null){
+							copy.setReturnType(returnTypeModifier);
+						}
+					}
+				}
+			}
+			copy.setReturnTypeFixed(selectedExpression.isReturnTypeFixed());
+			updateSelection(copy);
+			fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, new StructuredSelection(selectedExpression)));
+			validate();
+		}
+	}
+
+	@Override
+	public void proposalPopupOpened(BonitaContentProposalAdapter adapter) {
+		manageNatureProviderAndAutocompletionProposal(getInput());
+	}
+
+	@Override
+	public void proposalPopupClosed(BonitaContentProposalAdapter adapter) {
+		
 	}
 }
