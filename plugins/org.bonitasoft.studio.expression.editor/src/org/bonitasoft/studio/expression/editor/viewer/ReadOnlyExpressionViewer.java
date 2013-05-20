@@ -42,9 +42,11 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 	@Override
 	protected void createTextControl(int style,
 			TabbedPropertySheetWidgetFactory widgetFactory) {
-		super.createTextControl(style | SWT.READ_ONLY, widgetFactory);
-		getTextControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		super.createTextControl(style | SWT.CURSOR_NO, widgetFactory);
 		getTextControl().setMessage(Messages.selectTarget);
+		getTextControl().setEditable(false);
+		getTextControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+		getTextControl().setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
 	}
 	
 	@Override
