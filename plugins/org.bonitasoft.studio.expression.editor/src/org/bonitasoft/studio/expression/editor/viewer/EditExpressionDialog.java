@@ -264,7 +264,8 @@ public class EditExpressionDialog extends TrayDialog {
 			currentExpressionEditor.createExpressionEditor(contentComposite,isPassword) ;
 			contentComposite.layout(true, true) ;
 			if(helpControl != null){
-				helpControl.setVisible(currentExpressionEditor.provideDialogTray());
+//				helpControl.setVisible(currentExpressionEditor.provideDialogTray());
+				helpControl.setVisible(false);
 				if(currentExpressionEditor.provideDialogTray()){
 					ToolItem item = ((ToolBar)helpControl).getItem(0);
 					item.setSelection(true);
@@ -349,7 +350,8 @@ public class EditExpressionDialog extends TrayDialog {
 		}
 		item.addListener(SWT.Selection, openTrayListener );
 		if(currentExpressionEditor!= null){
-			helpControl.setVisible(currentExpressionEditor.provideDialogTray());
+//			helpControl.setVisible(currentExpressionEditor.provideDialogTray());
+			helpControl.setVisible(false);
 		}
 		return helpControl;
 	}
