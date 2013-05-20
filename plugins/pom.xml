@@ -426,32 +426,6 @@
 	<module>../translations/pt_BR/org.bonitasoft.studio.simulation.libs.nl_pt_BR</module>
 	<module>../translations/pt_BR/org.bonitasoft.studio.validators.nl_pt_BR</module>
 	<module>../translations/pt_BR/org.bonitasoft.studio.xpdl.nl_pt_BR</module>
-	<module>../translations/zh/org.bonitasoft.studio.actors.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.common.diagram.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.condition.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.condition.ui.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.configuration.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.connectors.model.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.connectors.model.edit.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.console.libs.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.data.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.dependencies.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.diagram.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.diagram.form.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.examples.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.expression.editor.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.importer.bar.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.importer.bos.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.migration.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.model.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.model.edit.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio-models.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.pics.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.properties.bos.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.scripting.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.simulation.libs.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.validators.nl_zh</module>
-	<module>../translations/zh/org.bonitasoft.studio.xpdl.nl_zh</module>
 	</modules>
 <properties>
    			<sonar.jacoco.itReportPath>../../target/jacoco.exec</sonar.jacoco.itReportPath>
