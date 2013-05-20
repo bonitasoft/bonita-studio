@@ -183,7 +183,7 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
                     try {
                         ConnectorDefinition definition = ((IDefinitionRepositoryStore) defStore).getDefinition(implWorkingCopy.getDefinitionId(),implWorkingCopy.getDefinitionVersion()) ;
                         ClassGenerator.generateConnectorImplementationAbstractClass(implWorkingCopy,definition,getAbstractClassName(),sourceStore, monitor) ;
-                        fileToOpen = ClassGenerator.generateConnectorImplementationClass(implWorkingCopy,sourceStore, monitor) ;
+                        fileToOpen = ClassGenerator.generateConnectorImplementationClass(implWorkingCopy,definition,sourceStore, monitor) ;
                     } catch (Exception e) {
                         BonitaStudioLog.error(e) ;
                     }

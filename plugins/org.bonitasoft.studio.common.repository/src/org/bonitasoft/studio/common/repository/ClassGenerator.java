@@ -100,7 +100,7 @@ public class ClassGenerator {
         fileStore.getResource().setContents(new ByteArrayInputStream(newSource.getBytes()), IResource.FORCE, monitor);
     }
 
-    public static IFile generateConnectorImplementationClass(ConnectorImplementation implementation,SourceRepositoryStore sourceStore,IProgressMonitor monitor) throws Exception{
+    public static IFile generateConnectorImplementationClass(ConnectorImplementation implementation, ConnectorDefinition definition,SourceRepositoryStore sourceStore,IProgressMonitor monitor) throws Exception{
         String className = implementation.getImplementationClassname() ;
 
         final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
@@ -123,8 +123,9 @@ public class ClassGenerator {
                 StringBuilder executeMethodContent = new StringBuilder("@Override\nprotected void executeBusinessLogic() throws ConnectorException{\n\t") ;
                
                 
-                executeMethodContent.append("//Get access to the connector input parameters \n\t//getHost(); \n\t//getPassword(); \n\t//getUserName(); \n\n \t//TODO execute your business logic here \n\n \t// Set the output of the connector execution \n\t//setHasBeenSent(true); \n\n }\n") ;
-                
+                executeMethodContent.append("//Get access to the connector input parameters") ;
+                generateGetterComment(definition,executeMethodContent);
+                executeMethodContent.append("\n\n }\n");
                 classType.createMethod(executeMethodContent.toString(), null,true,monitor) ;
                 
              executeMethodContent = new StringBuilder("@Override\npublic void connect() throws ConnectorException{\n\t");
@@ -230,7 +231,6 @@ public class ClassGenerator {
 
             final String getterName = "get"+NamingUtils.toJavaIdentifier(input.getName(),true) ;
             IMethod getterMethod = classType.getMethod(getterName,null);
-
             if(getterMethod != null && getterMethod.exists()){ //Regenerate method
                 getterMethod.delete(true, monitor) ;
             }
@@ -285,6 +285,7 @@ public class ClassGenerator {
         validateMethodContent.append("\n\t}") ;
         classType.createMethod(validateMethodContent.toString(), null, true, null);
         
+        
 
     }
 
@@ -301,5 +302,20 @@ public class ClassGenerator {
         }
         return abstarctClassName ;
     }
-
+    
+    private static void generateGetterComment(ConnectorDefinition definition,StringBuilder stringBuilder){
+    	
+        for(Input input : definition.getInput()) {
+        	String getter = "\n\t//get"+NamingUtils.toJavaIdentifier(input.getName(),true)+"();" ;
+        	stringBuilder.append(getter);
+        }
+        stringBuilder.append("\n\n\t//TODO execute your business logic here \n");
+        stringBuilder.append("\n\t//Set the output of the connector execution");
+        for (Output output : definition.getOutput()){
+        	String setter = "\n\t//set"+NamingUtils.toJavaIdentifier(output.getName(), true)+"("+NamingUtils.toJavaIdentifier(output.getName(), false)+");";
+        	stringBuilder.append(setter);
+        	
+        }
+    }
+    	
 }
