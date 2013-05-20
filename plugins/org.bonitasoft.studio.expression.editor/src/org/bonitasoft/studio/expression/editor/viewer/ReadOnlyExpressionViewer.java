@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
@@ -44,22 +44,17 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 	@Override
 	protected void createTextControl(int style,
 			TabbedPropertySheetWidgetFactory widgetFactory) {
-		super.createTextControl(style | SWT.READ_ONLY, widgetFactory);
+		super.createTextControl(style | SWT.READ_ONLY | SWT.NO_FOCUS, widgetFactory);
 		getTextControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		getTextControl().setMessage(Messages.selectTarget);
-		getTextControl().addFocusListener(new FocusListener() {
-			
-			@Override
-			public void focusLost(FocusEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
+		getTextControl().addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				getTextControl().getParent().setFocus();
+				getTextControl().getShell().setFocus();
 			}
+		
 		});
+		
 	}
 	
 	@Override
