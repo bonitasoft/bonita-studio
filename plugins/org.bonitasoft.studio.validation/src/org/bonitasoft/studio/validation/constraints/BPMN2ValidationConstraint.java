@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.validation.constraints;
 
+import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ScriptTask;
@@ -39,7 +41,7 @@ public class BPMN2ValidationConstraint extends AbstractLiveValidationMarkerConst
 	@Override
 	protected IStatus performBatchValidation(IValidationContext context) {
 		final EObject eObj = context.getTarget();
-		if (eObj instanceof ConnectableElement && !(eObj instanceof Pool)) {
+		if (eObj instanceof ConnectableElement && !(eObj instanceof Pool) && !(eObj instanceof Form) && !(eObj instanceof SubmitFormButton)) {
 			final ConnectableElement connectable = (ConnectableElement) eObj;
 			if(!connectable.getConnectors().isEmpty()){
 				if(!(connectable instanceof ServiceTask || connectable instanceof ScriptTask)){
