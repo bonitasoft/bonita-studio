@@ -74,12 +74,6 @@
               id="org.bonitasoft.studio.menu.run"
               label="%serverMenuLabel">
            <command
-                 commandId="org.bonitasoft.studio.application.preview"
-                 disabledIcon="icons/form_disabled.png"
-                 icon="icons/form.png"
-                 style="push">
-           </command>
-           <command
                  commandId="org.bonitasoft.studio.engine.resetEngineCommand"
                  icon="icons/clean_run_history.png"
                  style="push">
