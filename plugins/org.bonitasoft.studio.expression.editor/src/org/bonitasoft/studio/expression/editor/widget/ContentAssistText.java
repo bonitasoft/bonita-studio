@@ -93,6 +93,11 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 						public void run() {
 							if(!ContentAssistText.this.isDisposed()){
 								ContentAssistText.this.redraw();
+								if(!autoCompletion.getContentProposalAdapter().hasProposalPopupFocus()){
+									if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
+										autoCompletion.getContentProposalAdapter().closeProposalPopup();
+									}
+								}
 							}
 						}
 					});
@@ -110,7 +115,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 							if(!ContentAssistText.this.isDisposed()){
 								ContentAssistText.this.redraw();
 							}
-							
+
 						}
 					});
 				}
@@ -128,6 +133,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				setFocus();
 				BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
 					public void run() {
 						fireOpenProposalEvent();
