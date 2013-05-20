@@ -85,8 +85,8 @@ public class ImageWidgetInitialValueContribution extends InitialValueContributio
 							expression.setName(selectImageFileStorWizard.getSelectedFilePath());
 							expression.setReturnType(String.class.getName());
 							expression.setType(ExpressionConstants.CONSTANT_TYPE);
-							expressionViewer.setSelection(new StructuredSelection(expression));
 						}
+						expressionViewer.setSelection(new StructuredSelection(expression));
 					}
 				}
 			}
