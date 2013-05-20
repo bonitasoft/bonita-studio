@@ -100,7 +100,7 @@ public class ExportBosArchiveHandler extends AbstractHandler {
     private String getDefaultName() {
         final MainProcess diagram = getDiagramInEditor() ;
         if(diagram == null){
-            return RepositoryManager.getInstance().getCurrentRepository().getName() + "_" + new SimpleDateFormat("yyMMdd_HHmm").format(new Date()) + ".bos";
+            return RepositoryManager.getInstance().getCurrentRepository().getName() + "_" + new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date()) + ".bos";
         }
         return NamingUtils.toDiagramFilename(diagram).replace(".proc", ".bos");
     }
