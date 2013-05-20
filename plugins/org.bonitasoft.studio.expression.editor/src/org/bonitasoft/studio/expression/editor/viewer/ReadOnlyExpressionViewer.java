@@ -21,6 +21,8 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
@@ -42,11 +44,22 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 	@Override
 	protected void createTextControl(int style,
 			TabbedPropertySheetWidgetFactory widgetFactory) {
-		super.createTextControl(style | SWT.CURSOR_NO, widgetFactory);
-		getTextControl().setMessage(Messages.selectTarget);
-		getTextControl().setEditable(false);
+		super.createTextControl(style | SWT.READ_ONLY, widgetFactory);
 		getTextControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		getTextControl().setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+		getTextControl().setMessage(Messages.selectTarget);
+		getTextControl().addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				getTextControl().getParent().setFocus();
+			}
+		});
 	}
 	
 	@Override
