@@ -47,6 +47,7 @@ public class Messages extends NLS {
     public static String connectorFails_ignore;
     public static String connectorFails_namedError;
     public static String connectorFails_throwEvent;
+    public static String connectorFails_throwException;
     public static String connectorImplRepositoryName;
     public static String connectorDefRepositoryName;
     public static String up;
