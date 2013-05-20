@@ -257,7 +257,11 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 
 	private void importApplicationResources(File archiveFile,IProgressMonitor progressMonitor) {
 		File tmpBar = new File(ProjectUtil.getBonitaStudioWorkFolder(), "tmpBar");
-		PlatformUtil.unzipZipFiles(archiveFile, tmpBar, progressMonitor);
+		try{
+			PlatformUtil.unzipZipFiles(archiveFile, tmpBar, progressMonitor);
+		}catch(Exception e){
+			BonitaStudioLog.error(e);
+		}
 		File resourceFile = FileUtil.findDirectory(tmpBar, "studio-templates");
 		if (resourceFile != null) {
 			ApplicationResourceRepositoryStore store = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
