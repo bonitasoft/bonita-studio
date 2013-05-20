@@ -341,7 +341,7 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 10).create()) ;
 
         pageChooserViewer = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION) ;
-        pageChooserViewer.getTable().setLayoutData(GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.FILL).grab(false, true).hint(150, SWT.DEFAULT).create()) ;
+        pageChooserViewer.getTable().setLayoutData(GridDataFactory.swtDefaults().align(SWT.CENTER, SWT.FILL).grab(false, true).create()) ;
         pageChooserViewer.setContentProvider(new WizardPageContentProvider()) ;
         ILabelDecorator decorator = new WizardPageDecorator(this);
         pageChooserViewer.setLabelProvider(new DecoratingLabelProvider(new WizardPageLabelProvider(this),decorator)) ;
