@@ -620,6 +620,18 @@
              </and>
         </activeWhen>
     </handler>
+      <handler
+            class="org.bonitasoft.studio.application.actions.PreviewFormHandler"
+            commandId="org.bonitasoft.studio.application.preview">
+         <activeWhen>
+            <with
+                  variable="activeEditor">
+               <instanceof
+                     value="org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor">
+               </instanceof>
+            </with>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.core.expressions.definitions">

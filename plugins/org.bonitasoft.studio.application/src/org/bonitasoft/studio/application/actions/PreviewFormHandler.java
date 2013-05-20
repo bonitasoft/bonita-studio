@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.form.preview.FormPreviewOperation;
 import org.bonitasoft.studio.model.form.Form;
@@ -89,14 +90,24 @@ public class PreviewFormHandler extends AbstractHandler {
             }
         }
         if(form!=null){
+        	IBrowserDescriptor browser = (IBrowserDescriptor)BrowserManager.getInstance().getCurrentWebBrowser();
+        	FormPreviewOperation operation = new FormPreviewOperation(form,getCurrentLookNFeel(),browser);
+        	try {
+				operation.run(Repository.NULL_PROGRESS_MONITOR);
+			} catch (InvocationTargetException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
             IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
                 @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                 	
-                	IBrowserDescriptor browser = (IBrowserDescriptor)BrowserManager.getInstance().getCurrentWebBrowser();
-                	FormPreviewOperation operation = new FormPreviewOperation(form,getCurrentLookNFeel(),browser);
-                	operation.run(monitor);
+                
+                	
                     //					try {
                     //						monitor.beginTask(Messages.generatePreview, 2);
                     //				//		final File preview = ((PreviewForm) ExporterService.getInstance().getExporterService(SERVICE_TYPE.FormPreview)).previewForm(form,null);
@@ -127,7 +138,7 @@ public class PreviewFormHandler extends AbstractHandler {
 
     @Override
     public boolean isEnabled() {
-        return false;
+       return true;
         //		form = null ;
         //		if(PlatformUI.isWorkbenchRunning())
         //		{
