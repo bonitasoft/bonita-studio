@@ -19,6 +19,9 @@ package org.bonitasoft.studio.expression.editor.provider;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.expression.editor.ExpressionEditorPlugin;
+import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.swt.widgets.Composite;
@@ -75,4 +78,21 @@ public abstract class SelectionAwareExpressionEditor implements IExpressionEdito
     		boolean isPassword) {
     	return createExpressionEditor(contentComposite);
     }
+    
+    protected boolean compatibleReturnType(Expression inputExpression,Expression e) {
+		final String currentReturnType = inputExpression.getReturnType();
+		final String expressionReturnType = e.getReturnType();
+		if(currentReturnType.equals(expressionReturnType)){
+			return true;
+		}
+		try{
+			Class<?> currentReturnTypeClass = Class.forName(currentReturnType);
+			Class<?> expressionReturnTypeClass = Class.forName(expressionReturnType);
+			return currentReturnTypeClass.isAssignableFrom(expressionReturnTypeClass);
+		}catch (Exception ex) {
+			BonitaStudioLog.warning("Failed to determine the compatbility between "+expressionReturnType+" and "+currentReturnType, ExpressionEditorPlugin.PLUGIN_ID);
+		}
+		return true;
+	}
+
 }

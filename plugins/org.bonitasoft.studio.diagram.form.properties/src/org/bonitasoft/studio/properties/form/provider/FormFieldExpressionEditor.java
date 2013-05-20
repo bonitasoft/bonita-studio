@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.properties.form.provider;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -162,7 +161,7 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
 		for(Expression e :filteredExpressions){
 			Widget widget = (Widget) e.getReferencedElements().get(0);
 			if(inputExpression.isReturnTypeFixed()){
-				if(!widgetName.contains(widget.getName()) && e.getReturnType().equals(inputExpression.getReturnType())){
+				if(!widgetName.contains(widget.getName()) && compatibleReturnType(inputExpression, e)){
 					input.add(widget) ;
 					widgetName.add(widget.getName());
 				}

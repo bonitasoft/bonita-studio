@@ -35,8 +35,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.bonitasoft.studio.model.process.XMLData;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
@@ -50,7 +48,6 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -172,7 +169,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor impleme
         
         for(Expression e : filteredExpressions){
             if(inputExpression.isReturnTypeFixed()){
-                if(e.getReturnType().equals(inputExpression.getReturnType())){
+                if(compatibleReturnType(inputExpression, e)){
                     input.add((Data) e.getReferencedElements().get(0)) ;
                 }
             }else{
@@ -302,8 +299,6 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor impleme
         }
     
     }
-
-
 
 
     @Override
