@@ -31,6 +31,7 @@ import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.FileUtil;
@@ -44,7 +45,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -368,8 +372,9 @@ public class PlatformUtil {
 	/**
 	 * Unzip the file with path filename and return the output folder File
 	 * @param monitor
+	 * @throws Exception 
 	 */
-	public static void unzipZipFiles(final File zipFile,final File destDir, IProgressMonitor monitor){
+	public static void unzipZipFiles(final File zipFile,final File destDir, IProgressMonitor monitor) throws Exception{
 		if(monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
@@ -398,15 +403,10 @@ public class PlatformUtil {
 				is.close();
 			}
 			monitor.worked(1);
-		} catch (final Exception e) {
-			BonitaStudioLog.error(e);
-		} finally {
+
+		}  finally {
 			if(zip != null){
-				try {
-					zip.close();
-				} catch (final IOException e) {
-					BonitaStudioLog.error(e);
-				}
+				zip.close();
 			}
 		}
 	}

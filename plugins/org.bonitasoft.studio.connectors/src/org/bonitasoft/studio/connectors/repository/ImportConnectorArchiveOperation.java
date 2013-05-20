@@ -95,7 +95,11 @@ public class ImportConnectorArchiveOperation {
         File tmp = new File(ProjectUtil.getBonitaStudioWorkFolder(),"tmpImportConnectorDir") ;
         tmp.delete();
         tmp.mkdir() ;
-        PlatformUtil.unzipZipFiles(zipFile,tmp, monitor) ;
+        try{
+        	PlatformUtil.unzipZipFiles(zipFile,tmp, monitor) ;
+        }catch(Exception e){
+        	BonitaStudioLog.error(e);
+        }
 
         IStatus status = readManifest(tmp) ;
         if(status.getSeverity() != IStatus.OK){

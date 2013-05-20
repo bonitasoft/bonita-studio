@@ -53,6 +53,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
+import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
 
 /**
  * @author Romain Bioteau This class represents a preference page that is
@@ -114,7 +115,7 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         final PasswordFieldEditor password = new PasswordFieldEditor(BonitaPreferenceConstants.USER_PASSWORD, Messages.userPasswordLabel, loginGroup);
         addField(password);
 
-        defaultTheme = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, Messages.defaultUserXPThemeLabel,getAvailableThemes(), getFieldEditorParent()) ;
+        defaultTheme = new ComboFieldEditor(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, Messages.bind(Messages.defaultUserXPThemeLabel, new Object[]{bonitaPortalModuleName}),getAvailableThemes(), getFieldEditorParent()) ;
         addField(defaultTheme);
 
 
@@ -153,8 +154,14 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
             zipFile.delete() ;
             artifact.export(zipFile.getAbsolutePath()) ;
             //	store.exportRepositoryFileStore(target, artifact, new NullProgressMonitor()) ;
-            PlatformUtil.unzipZipFiles(zipFile, target, new NullProgressMonitor()) ;
-            zipFile.delete() ;
+            try{
+            	PlatformUtil.unzipZipFiles(zipFile, target, new NullProgressMonitor()) ;
+            }catch(Exception e){
+            	BonitaStudioLog.error(e);
+            }
+            if(zipFile!=null){
+            	zipFile.delete() ;
+            }
 //            try {
 //                PropertiesFactory.getPlatformProperties().setProperty("currentTheme",artifact.getName()) ;
 //            } catch (IOException e) {

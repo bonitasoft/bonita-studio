@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.zip.ZipException;
 
 import org.bonitasoft.studio.actors.repository.ExportActorFilterArchiveOperation;
 import org.bonitasoft.studio.actors.tests.SWTbot.SWTBotActorFilterUtil;
@@ -110,7 +111,16 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         String dirName = fileName.substring(0, fileName.lastIndexOf("."));
         File destDir = new File(dirName);
         IProgressMonitor monitor = new NullProgressMonitor();
-        PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);
+        try{
+        	PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);
+        }catch(Exception e){
+        	if(e instanceof IOException){
+        		assertTrue("IO error while unzip file "+zipFile.getName(), false);
+        	}
+        	if(e instanceof ZipException){
+        		assertTrue("ZIP error while unzip file "+zipFile.getName(), false);
+        	}
+        }
         assertTrue("actor filter zip file was not unzipped correctly",
                 destDir.exists());
         testDescriptorFileExistence(destDir);

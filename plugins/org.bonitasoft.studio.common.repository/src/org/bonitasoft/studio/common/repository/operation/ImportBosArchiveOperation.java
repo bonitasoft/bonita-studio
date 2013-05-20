@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -206,8 +207,12 @@ public class ImportBosArchiveOperation {
         }
         container.create(Repository.NULL_PROGRESS_MONITOR) ;
         container.open(Repository.NULL_PROGRESS_MONITOR) ;
-
-        PlatformUtil.unzipZipFiles(archive, container.getLocation().toFile(), monitor) ;
+		try{
+			PlatformUtil.unzipZipFiles(archive, container.getLocation().toFile(), monitor) ;
+		}catch(Exception e){
+			BonitaStudioLog.error(e);
+			MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.importBonita6xTitle, Messages.bind(Messages.importBonita6xError, new Object[]{archive.getName()}));
+		}
         container.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR) ;
         return container;
     }

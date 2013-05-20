@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.zip.ZipException;
 
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -201,7 +202,16 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 		String dirName = fileName.substring(0, fileName.lastIndexOf("."));
 		File destDir = new File(dirName);
 		IProgressMonitor monitor = new NullProgressMonitor();
-		PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);
+		try{
+			PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);
+		}catch(Exception e){
+        	if(e instanceof IOException){
+        		assertTrue("IO error while unzip file "+zipFile.getName(), false);
+        	}
+        	if(e instanceof ZipException){
+        		assertTrue("ZIP error while unzip file "+zipFile.getName(), false);
+        	}
+        }
 		testDescriptorFileExistence(destDir);
 		testSourcesDirExistence(destDir, hasSources);
 		testClasspathDirExistence(destDir, hasDependencies);

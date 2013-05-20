@@ -150,7 +150,11 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
         tmpZipFile.createNewFile();
         final FileOutputStream out = new FileOutputStream(tmpZipFile);
         FileUtil.copy(is, out);
-        PlatformUtil.unzipZipFiles(tmpZipFile, parentFolder.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
+        try {
+			PlatformUtil.unzipZipFiles(tmpZipFile, parentFolder.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
+		} catch (Exception e) {
+			BonitaStudioLog.error(e);
+		}
         out.close() ;
         parentFolder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
         tmpZipFile.delete();

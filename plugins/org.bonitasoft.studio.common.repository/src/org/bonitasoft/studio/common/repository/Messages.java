@@ -53,7 +53,8 @@ public final class Messages extends NLS {
 	public static String migrationFailedMessage;
 
 	public static String exporting;
-
+	public static String importBonita6xTitle;
+	public static String importBonita6xError;
 
     private Messages() {
         // Do not instantiate
