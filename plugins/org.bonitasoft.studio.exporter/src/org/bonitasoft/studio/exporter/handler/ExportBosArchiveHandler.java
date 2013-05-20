@@ -25,7 +25,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -53,7 +52,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 
@@ -102,7 +100,7 @@ public class ExportBosArchiveHandler extends AbstractHandler {
     private String getDefaultName() {
         final MainProcess diagram = getDiagramInEditor() ;
         if(diagram == null){
-            return RepositoryManager.getInstance().getCurrentRepository().getName() + "_" + new SimpleDateFormat("ddMMyy_HHmm").format(new Date()) + ".bos";
+            return RepositoryManager.getInstance().getCurrentRepository().getName() + "_" + new SimpleDateFormat("yyMMdd_HHmm").format(new Date()) + ".bos";
         }
         return NamingUtils.toDiagramFilename(diagram).replace(".proc", ".bos");
     }
