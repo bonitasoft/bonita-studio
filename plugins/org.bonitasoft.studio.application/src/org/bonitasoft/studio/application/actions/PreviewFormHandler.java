@@ -19,11 +19,17 @@ package org.bonitasoft.studio.application.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.form.preview.FormPreviewOperation;
 import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
+import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -35,6 +41,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.browser.BrowserManager;
+import org.eclipse.ui.internal.browser.IBrowserDescriptor;
 import org.eclipse.ui.progress.IProgressService;
 
 public class PreviewFormHandler extends AbstractHandler {
@@ -85,6 +93,10 @@ public class PreviewFormHandler extends AbstractHandler {
 
                 @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                	
+                	IBrowserDescriptor browser = (IBrowserDescriptor)BrowserManager.getInstance().getCurrentWebBrowser();
+                	FormPreviewOperation operation = new FormPreviewOperation(form,getCurrentLookNFeel(),browser);
+                	operation.run(monitor);
                     //					try {
                     //						monitor.beginTask(Messages.generatePreview, 2);
                     //				//		final File preview = ((PreviewForm) ExporterService.getInstance().getExporterService(SERVICE_TYPE.FormPreview)).previewForm(form,null);
@@ -144,5 +156,15 @@ public class PreviewFormHandler extends AbstractHandler {
         //		}
         //		return false;
     }
+    
+    private ApplicationLookNFeelFileStore getCurrentLookNFeel(){
+    	if (form!=null){
+			AbstractProcess process = ModelHelper.getParentProcess(form);
+			LookNFeelRepositoryStore repositoryStore = (LookNFeelRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);	
+			return (ApplicationLookNFeelFileStore) repositoryStore.getChild(process.getBasedOnLookAndFeel());
+    	}
+		return null;
+	}
+
 
 }

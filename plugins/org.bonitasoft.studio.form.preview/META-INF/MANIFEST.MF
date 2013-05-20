@@ -34,3 +34,4 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.exception.process,
  org.bonitasoft.engine.identity,
  org.bonitasoft.engine.session
+Export-Package: org.bonitasoft.studio.form.preview
