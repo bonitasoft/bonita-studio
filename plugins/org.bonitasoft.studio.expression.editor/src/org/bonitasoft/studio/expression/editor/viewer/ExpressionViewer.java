@@ -526,7 +526,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 					}
 					if(selectedExpression != null && !ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())){
 						if(selectedExpression != null && selectedExpression.isReturnTypeFixed() && selectedExpression.getReturnType() != null){
-							if(!selectedExpression.getReturnType().equals(exp.getReturnType())){
+							if(!compatibleReturnTypes(exp)){
 								toRemove.add(exp) ;
 							}
 						}
@@ -536,6 +536,22 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			filteredExpressions.removeAll(toRemove);
 		}
 		return filteredExpressions ;
+	}
+
+	protected boolean compatibleReturnTypes(Expression exp) {
+		final String currentReturnType = selectedExpression.getReturnType();
+		final String expressionReturnType = exp.getReturnType();
+		if(currentReturnType.equals(expressionReturnType)){
+			return true;
+		}
+		try{
+			Class<?> currentReturnTypeClass = Class.forName(currentReturnType);
+			Class<?> expressionReturnTypeClass = Class.forName(expressionReturnType);
+			return currentReturnTypeClass.isAssignableFrom(expressionReturnTypeClass);
+		}catch (Exception e) {
+			BonitaStudioLog.warning("Failed to determine the compatbility between "+expressionReturnType+" and "+currentReturnType, ExpressionEditorPlugin.PLUGIN_ID);
+		}
+		return true;
 	}
 
 	protected Set<ViewerFilter> getFilters() {
