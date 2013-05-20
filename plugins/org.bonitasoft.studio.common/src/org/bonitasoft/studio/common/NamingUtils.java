@@ -34,7 +34,6 @@ import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
-import org.bonitasoft.studio.model.process.BoundaryEvent;
 import org.bonitasoft.studio.model.process.BoundaryMessageEvent;
 import org.bonitasoft.studio.model.process.BoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.CatchLinkEvent;
@@ -148,8 +147,6 @@ public class NamingUtils {
 					mainContainer = mainContainer.eContainer();
 				}
 			}
-		} else if (newItem instanceof BoundaryEvent) {
-			mainContainer = newItem.eContainer();
 		} else {
 			mainContainer = process;
 		}
