@@ -351,7 +351,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 			zipEntry = zin.getNextEntry();
 		}
 		if (zipEntry == null) {
-			throw new FileNotFoundException("can't find a .proc file in bar "+ archiveFile.getName());
+			throw new FileNotFoundException(Messages.bind(Messages.invalidArchiveStructure, archiveFile.getName()));
 		}
 		String entryName = zipEntry.getName();
 		if(entryName.indexOf("/") != -1){
