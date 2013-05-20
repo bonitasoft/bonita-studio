@@ -73,11 +73,15 @@ public class NamingUtils {
 
 	private static final String VERSION_SEPARATOR = "-";
 	private static final String UTF8 = "UTF-8";
-	private final MainProcess process;
+	private MainProcess process;
 	private static Map<MainProcess, NamingUtils> instances = new HashMap<MainProcess, NamingUtils>();
 
 	private NamingUtils(MainProcess process) {
 		this.process = process;
+	}
+
+	private NamingUtils() {
+
 	}
 
 	public static NamingUtils getInstance(Element element) {
@@ -89,8 +93,10 @@ public class NamingUtils {
 		//        } else {
 		//            instance = instances.get(process);
 		//        }
-
-		return new NamingUtils(process);
+		if(process != null){
+			return new NamingUtils(process);
+		}
+		return new NamingUtils();
 	}
 
 	public static Expression generateConstantExpression(String name){
@@ -123,27 +129,27 @@ public class NamingUtils {
 		if (label == null) {
 			label = itemProvider.getText(newItem);
 		}
-        if (newItem instanceof Widget) {
-            if (existingItem instanceof PageFlow || existingItem instanceof ViewPageFlow) {
-                mainContainer = existingItem;
-            } else {
-                mainContainer = ModelHelper.getForm((Widget) newItem);
-                if (mainContainer.eContainer() != null) {
-                    mainContainer = mainContainer.eContainer();
-                }
-            }
-//        } else if (newItem instanceof BoundaryEvent) {
-//            mainContainer = newItem.eContainer();
-        } else {
-            mainContainer = process;
-        }
+		if (newItem instanceof Widget) {
+			if (existingItem instanceof PageFlow || existingItem instanceof ViewPageFlow) {
+				mainContainer = existingItem;
+			} else {
+				mainContainer = ModelHelper.getForm((Widget) newItem);
+				if (mainContainer != null && mainContainer.eContainer() != null) {
+					mainContainer = mainContainer.eContainer();
+				}
+			}
+			//        } else if (newItem instanceof BoundaryEvent) {
+			//            mainContainer = newItem.eContainer();
+		} else {
+			mainContainer = process;
+		}
 
 		if (newItem instanceof Widget) {
 			if (existingItem instanceof PageFlow || existingItem instanceof ViewPageFlow) {
 				mainContainer = existingItem;
 			} else {
 				mainContainer = ModelHelper.getForm((Widget) newItem);
-				if (mainContainer.eContainer() != null) {
+				if (mainContainer != null && mainContainer.eContainer() != null) {
 					mainContainer = mainContainer.eContainer();
 				}
 			}
@@ -151,12 +157,13 @@ public class NamingUtils {
 			mainContainer = process;
 		}
 
-
-		int number = getMaxElements((Element) mainContainer, label);
-		number++;
-		label += number;
-
+		if(mainContainer != null){
+			int number = getMaxElements((Element) mainContainer, label);
+			number++;
+			label += number;
+		}
 		newItem.setName(label);
+
 		return label;
 	}
 

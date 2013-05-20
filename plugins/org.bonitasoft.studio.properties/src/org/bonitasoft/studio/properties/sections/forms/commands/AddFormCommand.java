@@ -32,13 +32,22 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
+import org.bonitasoft.studio.model.form.CheckBoxMultipleFormField;
 import org.bonitasoft.studio.model.form.CheckBoxSingleFormField;
+import org.bonitasoft.studio.model.form.ComboFormField;
+import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FileWidgetInputType;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormField;
+import org.bonitasoft.studio.model.form.ListFormField;
 import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
+import org.bonitasoft.studio.model.form.PasswordFormField;
+import org.bonitasoft.studio.model.form.RadioFormField;
+import org.bonitasoft.studio.model.form.SelectFormField;
+import org.bonitasoft.studio.model.form.TextAreaFormField;
+import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.form.WidgetLayoutInfo;
 import org.bonitasoft.studio.model.process.Data;
@@ -48,6 +57,7 @@ import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.form.part.ValidateAction;
+import org.bonitasoft.studio.model.process.diagram.form.providers.ElementInitializers;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils.WidgetEnum;
@@ -154,37 +164,47 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             switch (entry.getValue()) {
                 case TEXT_AREA:
                     tempWidget = FormFactory.eINSTANCE.createTextAreaFormField();
+                    ElementInitializers.getInstance().init_TextAreaFormField_3113((TextAreaFormField) tempWidget);
                     break;
                 case TEXT:
                     tempWidget = FormFactory.eINSTANCE.createTextFormField();
+                    ElementInitializers.getInstance().init_TextFormField_3112((TextFormField) tempWidget);
                     break;
                 case COMBO:
                     tempWidget = FormFactory.eINSTANCE.createComboFormField();
+                    ElementInitializers.getInstance().init_ComboFormField_3103((ComboFormField) tempWidget);
                     break;
                 case CHECKBOX:
                     tempWidget = FormFactory.eINSTANCE.createCheckBoxSingleFormField();
+                    ElementInitializers.getInstance().init_CheckBoxSingleFormField_3118((CheckBoxSingleFormField) tempWidget);
                     break;
                 case CHECKBOX_LIST:
                     tempWidget = FormFactory.eINSTANCE.createCheckBoxMultipleFormField();
+                    ElementInitializers.getInstance().init_CheckBoxMultipleFormField_3120((CheckBoxMultipleFormField) tempWidget);
                     break;
                 case RADIO:
                     tempWidget = FormFactory.eINSTANCE.createRadioFormField();
+                    ElementInitializers.getInstance().init_RadioFormField_3110((RadioFormField) tempWidget);
                     break;
                 case DATE:
-
                     tempWidget = FormFactory.eINSTANCE.createDateFormField();
+                    ElementInitializers.getInstance().init_DateFormField_3105((DateFormField) tempWidget);
                     break;
                 case LIST:
                     tempWidget = FormFactory.eINSTANCE.createListFormField();
+                    ElementInitializers.getInstance().init_ListFormField_3107((ListFormField) tempWidget);
                     break;
                 case PASSWORD:
                     tempWidget = FormFactory.eINSTANCE.createPasswordFormField();
+                    ElementInitializers.getInstance().init_PasswordFormField_3109((PasswordFormField) tempWidget);
                     break;
                 case SELECT:
                     tempWidget = FormFactory.eINSTANCE.createSelectFormField();
+                    ElementInitializers.getInstance().init_SelectFormField_3111((SelectFormField) tempWidget);
                     break;
                 case FILE:
                     tempWidget = FormFactory.eINSTANCE.createFileWidget();
+                    ElementInitializers.getInstance().init_FileWidget_3119((FileWidget) tempWidget);
                     if(key instanceof Document){
                         ((FileWidget) tempWidget).setInputType(FileWidgetInputType.DOCUMENT);
                         ((FileWidget) tempWidget).setDocument((Document) key);
