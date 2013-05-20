@@ -125,12 +125,27 @@ public class EditExpressionDialog extends TrayDialog {
 	@Override
 	public void create() {
 		super.create();
-		IExpressionProvider currentProvider =  ExpressionEditorService.getInstance().getExpressionProvider(inputExpression.getType()) ;
+		String expressionType = inputExpression.getType();
+		if(ExpressionConstants.CONSTANT_TYPE.equals(expressionType)){
+			if(!isSupportedConstantType(inputExpression.getReturnType())){
+				expressionType = ExpressionConstants.SCRIPT_TYPE;
+			}
+		}
+		IExpressionProvider currentProvider =  ExpressionEditorService.getInstance().getExpressionProvider(expressionType) ;
 		if(currentProvider != null && expressionTypeViewer != null){
 			expressionTypeViewer.setSelection(new StructuredSelection(currentProvider)) ;
 		}
 		
 		getShell().layout(true,true);
+	}
+
+	private boolean isSupportedConstantType(String returnType) {
+		return returnType.equals(String.class.getName()) ||
+				returnType.equals(Boolean.class.getName()) ||
+				returnType.equals(Double.class.getName()) ||
+				returnType.equals(Float.class.getName()) ||
+				returnType.equals(Long.class.getName()) ||
+				returnType.equals(Integer.class.getName());
 	}
 
 	@Override
