@@ -36,6 +36,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -45,97 +46,103 @@ import org.eclipse.ui.progress.IProgressService;
 
 public class AddJarsHandler extends AbstractHandler {
 
-    @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 
-        final FileDialog fd = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN | SWT.MULTI);
-        fd.setFilterExtensions(new String[] { "*.jar;*.zip" });
+		final FileDialog fd = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN | SWT.MULTI);
+		fd.setFilterExtensions(new String[] { "*.jar;*.zip" });
 
-        if (fd.open() != null) {
-            final DependencyRepositoryStore libStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
-            final String[] jars = fd.getFileNames();
-            IProgressService progressManager = PlatformUI.getWorkbench().getProgressService() ;
-            IRunnableWithProgress runnable = new IRunnableWithProgress(){
-                @Override
-                public void run(IProgressMonitor monitor)
-                        throws InvocationTargetException, InterruptedException {
-                    monitor.beginTask(Messages.beginToAddJars, jars.length);
-                    Map<String, InputStream> jarsToImportMap = new HashMap<String, InputStream>();
-                    for (String jar : jars) {
-                        try {
-                            if (monitor.isCanceled()) {
-                                return;
-                            }
-                            File file = null ;
-                            if(jar.contains(fd.getFilterPath())){
-                                file = new File(jar);
-                            }else{
-                                file = new File(fd.getFilterPath() + File.separator + jar);
-                            }
+		if (fd.open() != null) {
+			final DependencyRepositoryStore libStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
+			final String[] jars = fd.getFileNames();
+			IProgressService progressManager = PlatformUI.getWorkbench().getProgressService() ;
+			IRunnableWithProgress runnable = new IRunnableWithProgress(){
+				@Override
+				public void run(IProgressMonitor monitor)
+						throws InvocationTargetException, InterruptedException {
+					monitor.beginTask(Messages.beginToAddJars, jars.length);
+					Map<String, InputStream> jarsToImportMap = new HashMap<String, InputStream>();
+					for (String jar : jars) {
+						try {
+							if (monitor.isCanceled()) {
+								return;
+							}
+							File file = null ;
+							if(jar.contains(fd.getFilterPath())){
+								file = new File(jar);
+							}else{
+								file = new File(fd.getFilterPath() + File.separator + jar);
+							}
 
-                            FileInputStream fis = new FileInputStream(file);
-                            if (file.getName().endsWith(".jar")) { //$NON-NLS-1$
-                                monitor.setTaskName(Messages.addingJar + " " + file.getName());
-                                jarsToImportMap.put(file.getName(), fis);
-                            } else if (file.getName().endsWith(".zip")) { //$NON-NLS-1$
-                                ZipInputStreamIFileFriendly zip = new ZipInputStreamIFileFriendly(fis);
-                                ZipEntry entry = zip.getNextEntry();
-                                while (entry != null) {
-                                    if (entry.getName().endsWith(".jar")) { //$NON-NLS-1$
-                                        monitor.setTaskName(Messages.addingJar + " " + entry.getName()); //$NON-NLS-1$
-                                        libStore.importInputStream(entry.getName(), zip);
-                                    }
-                                    entry = zip.getNextEntry();
-                                }
-                                zip.forceClose();
-                                fis.close();
-                            }
+							FileInputStream fis = new FileInputStream(file);
+							if (file.getName().endsWith(".jar")) { //$NON-NLS-1$
+								monitor.setTaskName(Messages.addingJar + " " + file.getName());
+							jarsToImportMap.put(file.getName(), fis);
+							} else if (file.getName().endsWith(".zip")) { //$NON-NLS-1$
+								ZipInputStreamIFileFriendly zip = new ZipInputStreamIFileFriendly(fis);
+							ZipEntry entry = zip.getNextEntry();
+							if(entry == null){
+								throw new InvocationTargetException(new Exception(org.bonitasoft.studio.dependencies.i18n.Messages.zipFileIsCorrupted),org.bonitasoft.studio.dependencies.i18n.Messages.zipFileIsCorrupted);
+							}
+							while (entry != null) {
+								if (entry.getName().endsWith(".jar")) { //$NON-NLS-1$
+									monitor.setTaskName(Messages.addingJar + " " + entry.getName()); //$NON-NLS-1$
+									libStore.importInputStream(entry.getName(), zip);
+								}
+								entry = zip.getNextEntry();
+							}
+							zip.forceClose();
+							fis.close();
+							}
 
-                        } catch (Exception ex) {
-                            BonitaStudioLog.error(ex);
-                            throw new InvocationTargetException(ex);
-                        }
-                    }
+						} catch (Exception ex) {
+							BonitaStudioLog.error(ex);
+							throw new InvocationTargetException(ex);
+						}
+					}
 
-                    for(final Entry<String, InputStream> entry : jarsToImportMap.entrySet()){
-                        Display.getDefault().syncExec(new Runnable() {
+					for(final Entry<String, InputStream> entry : jarsToImportMap.entrySet()){
+						Display.getDefault().syncExec(new Runnable() {
 
-                            @Override
-                            public void run() {
-                                InputStream is = null ;
-                                try{
-                                    is = entry.getValue()  ;
-                                    libStore.importInputStream(entry.getKey(), is) ;
-                                    is.close() ;
-                                }catch (Exception e) {
-                                    BonitaStudioLog.error(e) ;
-                                }
-                            }
-                        }) ;
-                    }
-                }
+							@Override
+							public void run() {
+								InputStream is = null ;
+								try{
+									is = entry.getValue()  ;
+									libStore.importInputStream(entry.getKey(), is) ;
+									is.close() ;
+								}catch (Exception e) {
+									BonitaStudioLog.error(e) ;
+								}
+							}
+						}) ;
+					}
+				}
 
-            };
+			};
 
-            try {
+			try {
 
-                progressManager.run(true,false,runnable);
-                progressManager.run(true, false, new IRunnableWithProgress() {
+				progressManager.run(true,false,runnable);
+				progressManager.run(true, false, new IRunnableWithProgress() {
 
-                    @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException,
-                    InterruptedException {
-                        RepositoryManager.getInstance().getCurrentRepository().refresh(monitor) ;
-                    }
-                }) ;
-            } catch (InvocationTargetException e1) {
-                BonitaStudioLog.error(e1);
-            } catch (InterruptedException e2) {
-                BonitaStudioLog.error(e2);
-            }
+					@Override
+					public void run(IProgressMonitor monitor) throws InvocationTargetException,
+					InterruptedException {
+						RepositoryManager.getInstance().getCurrentRepository().refresh(monitor) ;
+					}
+				}) ;
+			} catch (InvocationTargetException e1) {
+				BonitaStudioLog.error(e1);
+				if(e1.getCause() != null && e1.getCause().getMessage() != null){
+					MessageDialog.openError(Display.getDefault().getActiveShell(), org.bonitasoft.studio.dependencies.i18n.Messages.importJar,e1.getCause().getMessage());
+				}
+			} catch (InterruptedException e2) {
+				BonitaStudioLog.error(e2);
+			}
 
-        }
-        return fd.getFileNames();
-    }
+		}
+		return fd.getFileNames();
+	}
 
 }

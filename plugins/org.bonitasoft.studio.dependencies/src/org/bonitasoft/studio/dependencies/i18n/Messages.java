@@ -42,6 +42,7 @@ public class Messages extends NLS {
     public static String search;
 	public static String popUpMessage;
 	public static String selectMissingJarTitle;
+	public static String zipFileIsCorrupted;
 
 
 }
