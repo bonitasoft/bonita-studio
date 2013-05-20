@@ -35,12 +35,11 @@ import org.bonitasoft.engine.bpm.model.ProcessDefinition;
 import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
 import org.bonitasoft.engine.bpm.model.ProcessDeploymentInfo;
 import org.bonitasoft.engine.bpm.model.ProcessInstance;
+import org.bonitasoft.engine.exception.DeletionException;
 import org.bonitasoft.engine.exception.IllegalProcessStateException;
 import org.bonitasoft.engine.exception.PageOutOfRangeException;
 import org.bonitasoft.engine.exception.platform.InvalidSessionException;
 import org.bonitasoft.engine.exception.process.ProcessDefinitionNotFoundException;
-import org.bonitasoft.engine.exception.process.ProcessDefinitionReadException;
-import org.bonitasoft.engine.exception.process.ProcessDeletionException;
 import org.bonitasoft.engine.exception.process.ProcessDisablementException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.BonitaConstants;
@@ -79,7 +78,6 @@ import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
-
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -402,7 +400,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
 
 	
-	protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException, ProcessDefinitionReadException, PageOutOfRangeException, ProcessDefinitionNotFoundException, ProcessDeletionException, IllegalProcessStateException {
+	protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException,  PageOutOfRangeException, ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
 		long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
 		if(nbDeployedProcesses > 0){
 			List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
