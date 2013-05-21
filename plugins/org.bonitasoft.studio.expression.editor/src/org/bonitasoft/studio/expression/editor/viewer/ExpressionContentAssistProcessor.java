@@ -76,13 +76,13 @@ public class ExpressionContentAssistProcessor implements IContentAssistProcessor
         Collections.sort(sortedExpressions,new ExpressionComparator());
         String content = textViewer.getDocument().get();
         boolean showAllProposals = false;
-        if(offset == 0 || Character.isWhitespace(content.charAt(offset-1))){
+        if(offset == 0 || !Character.isLetterOrDigit(content.charAt(offset-1))){
             showAllProposals = true ;
         }
         final StringBuilder previousString = new StringBuilder();
         if(!showAllProposals){
             int index = offset-1;
-            while(index > 0 && !Character.isWhitespace(content.charAt(index-1))){
+            while(index > 0 && Character.isLetterOrDigit(content.charAt(index-1))){
                 index--;
             }
             for(int i = index ; i<offset;i++){
