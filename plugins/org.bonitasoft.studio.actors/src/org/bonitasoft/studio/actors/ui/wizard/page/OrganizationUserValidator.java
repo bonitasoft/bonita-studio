@@ -84,7 +84,7 @@ public class OrganizationUserValidator implements IValidator {
                         }else{
                             groupPath = parentPath + GroupContentProvider.GROUP_SEPARATOR + groupName ;
                         }
-                        IStatus groupStatus = validateGroupExists(organization,groupPath) ;
+                        IStatus groupStatus = validateGroupExists(organization,groupPath,membership) ;
                         if(groupStatus.getSeverity() != IStatus.OK){
                             return groupStatus ;
                         }
@@ -93,7 +93,7 @@ public class OrganizationUserValidator implements IValidator {
                         if(roleName == null){
                             return ValidationStatus.error(Messages.bind(Messages.missingRole,u.getUserName()));
                         }
-                        IStatus roleStatus = validateRoleExists(organization,roleName) ;
+                        IStatus roleStatus = validateRoleExists(organization,roleName,membership) ;
                         if(roleStatus.getSeverity() != IStatus.OK){
                             return roleStatus ;
                         }
@@ -136,22 +136,22 @@ public class OrganizationUserValidator implements IValidator {
         return null;
     }
 
-    private IStatus validateRoleExists(Organization organization,String roleName) {
+    private IStatus validateRoleExists(Organization organization,String roleName, Membership membership) {
         for(Role role : organization.getRoles().getRole()){
             if(role.getName().equals(roleName)){
                 return ValidationStatus.ok() ;
             }
         }
-        return ValidationStatus.error(Messages.bind(Messages.missingRoleInMembership,roleName));
+        return ValidationStatus.error(Messages.bind(Messages.missingRoleInMembership,roleName,membership.getUserName()));
     }
 
-    private IStatus validateGroupExists(Organization organization,String groupPath) {
+    private IStatus validateGroupExists(Organization organization,String groupPath, Membership membership) {
         for(Group group : organization.getGroups().getGroup()){
             if(GroupContentProvider.getGroupPath(group).equals(groupPath)){
                 return ValidationStatus.ok() ;
             }
         }
-        return ValidationStatus.error(Messages.bind(Messages.missingGroupInMembership,groupPath));
+        return ValidationStatus.error(Messages.bind(Messages.missingGroupInMembership,groupPath,membership.getUserName()));
     }
 
 }
