@@ -178,7 +178,7 @@
 						<configuration>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
-							<finalName>${product.short.name}-${project.version}-All-in-one</finalName>
+							<finalName>${product.short.name}-${project.version}</finalName>
 						</configuration>
 						<goals>
 							<goal>single</goal>
