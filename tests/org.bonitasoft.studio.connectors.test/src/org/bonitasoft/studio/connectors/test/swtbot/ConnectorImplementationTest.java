@@ -107,8 +107,10 @@ public class ConnectorImplementationTest extends SWTBotGefTestCase {
             }
         }, 30000);
         int length = bot.activeEditor().toTextEditor().getText().length();
+        bot.sleep(1000);
         StyleRange[] styles = bot.activeEditor().toTextEditor().getStyles(0, 0, length);
         containsError(styles);
+        removeImplementation(id);
     }
 
     @Test
@@ -183,7 +185,7 @@ public class ConnectorImplementationTest extends SWTBotGefTestCase {
                 connectorImpl);
         assertEquals("connector id should be " + id2,
                 connectorImpl.getImplementationId(), id2);
-
+        removeImplementation(id2);
     }
 
     @Test
