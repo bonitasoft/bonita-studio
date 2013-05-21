@@ -375,8 +375,11 @@ public class DataWizardPage extends WizardPage {
 					final IObservableValue contentObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__CONTENT);
 					final IObservableValue typeObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__TYPE);
 					final IObservableValue multipleObservable = EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__MULTIPLE);
-
+					
 					final String expressionType = (String) typeObservable.getValue();
+					if(contentObservable.getValue() != null && contentObservable.getValue().toString().isEmpty()){//ERASE BUTTON
+						returnTypeObservable.setValue(getSelectedReturnType());
+					}
 					final String returnType = (String) returnTypeObservable.getValue();
 					boolean isMultiple =  (Boolean) multipleObservable.getValue();
 					if(isMultiple){
