@@ -21,8 +21,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.bonitasoft.studio.validation.ui.view.ValidationViewPart;
@@ -39,6 +41,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -136,12 +139,30 @@ public class BatchValidationHandler extends AbstractHandler {
 			int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,errorMessage, ValidationDialog.OK_SEEDETAILS).open();
 
 			if(result == ValidationDialog.SEE_DETAILS){
-				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				try {
-					activePage.showView("org.bonitasoft.studio.validation.view");
-				} catch (PartInitException e) {
-					BonitaStudioLog.error(e);
+				final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				IEditorPart part = activePage.getActiveEditor();
+				if(part != null && part instanceof DiagramEditor){
+					MainProcess proc = ModelHelper.getMainProcess(((DiagramEditor)part).getDiagramEditPart().resolveSemanticElement());
+					String partName = proc.getName() +" ("+proc.getVersion()+")";
+					for(IEditorReference ref : activePage.getEditorReferences()){
+						if(partName.equals(ref.getPartName())){
+							activePage.activate(ref.getPart(true));
+							break;
+						}
+					}
+
 				}
+				Display.getDefault().asyncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						try{
+							activePage.showView("org.bonitasoft.studio.validation.view");
+						} catch (PartInitException e) {
+							BonitaStudioLog.error(e);
+						}
+					}
+				});
 			}
 		}
 

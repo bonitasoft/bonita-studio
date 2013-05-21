@@ -65,6 +65,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -149,12 +150,30 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 						if(result == ValidationDialog.NO){
 							return null;
 						}else if(result == ValidationDialog.SEE_DETAILS){
-							IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-							try {
-								activePage.showView("org.bonitasoft.studio.validation.view");
-							} catch (PartInitException e) {
-								BonitaStudioLog.error(e);
+							final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+							IEditorPart part = activePage.getActiveEditor();
+							if(part != null && part instanceof DiagramEditor){
+								MainProcess proc = ModelHelper.getMainProcess(((DiagramEditor)part).getDiagramEditPart().resolveSemanticElement());
+								String partName = proc.getName() +" ("+proc.getVersion()+")";
+								for(IEditorReference ref : activePage.getEditorReferences()){
+									if(partName.equals(ref.getPartName())){
+										activePage.activate(ref.getPart(true));
+										break;
+									}
+								}
+
 							}
+							Display.getDefault().asyncExec(new Runnable() {
+
+								@Override
+								public void run() {
+									try{
+										activePage.showView("org.bonitasoft.studio.validation.view");
+									} catch (PartInitException e) {
+										BonitaStudioLog.error(e);
+									}
+								}
+							});
 							return null;
 						}
 
