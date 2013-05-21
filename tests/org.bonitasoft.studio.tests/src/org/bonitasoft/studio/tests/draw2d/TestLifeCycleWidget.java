@@ -157,7 +157,7 @@ public class TestLifeCycleWidget extends SWTBotEclipseTestCase {
 			}
 		}
 		
-		bot.waitUntil(Conditions.shellIsActive("BonitaBPM"));
+		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
 		
 	}
 }
