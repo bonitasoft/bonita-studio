@@ -55,7 +55,6 @@ import org.bonitasoft.studio.common.TimerUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
-import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -589,13 +588,8 @@ public class FlowElementSwitch extends AbstractSwitch {
 
 	@Override
 	public FlowElement caseInclusiveGateway(final org.bonitasoft.studio.model.process.InclusiveGateway gateway) {
-		if(gateway.getIncoming().size() > 1) {
-			throw new RuntimeException(Messages.errorTooManyIncomingInInclusiveGateway);
-		}else{
-			builder.addGateway(gateway.getName(), GatewayType.INCLUSIVE);
-			//   addDescription(gatewayBuilder, gateway.getDocumentation()) ;
-			return gateway;
-		}
+		builder.addGateway(gateway.getName(), GatewayType.INCLUSIVE);
+		return gateway;
 	}
 
 	@Override

@@ -26,7 +26,6 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 
     public static String initializingProcessEngine;
-    public static String errorTooManyIncomingInInclusiveGateway;
     public static String linkGoToIsNull;
     public static String undeploying;
     public static String deploymentFailedMessage;
