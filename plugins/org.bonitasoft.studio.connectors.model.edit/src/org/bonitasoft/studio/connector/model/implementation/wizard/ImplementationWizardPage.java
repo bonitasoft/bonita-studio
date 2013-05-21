@@ -438,8 +438,8 @@ public class ImplementationWizardPage extends NewTypeWizardPage implements ISele
                 if(value == null || value.toString().isEmpty()){
                     return ValidationStatus.error(Messages.missingImplemenationClass) ;
                 }
-                return JavaConventions.validateJavaTypeName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
-            }
+                return JavaConventions.validateClassFileName(value.toString()+".class", JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
+           }
         }) ;
         classTargetToModel.setBeforeSetValidator(new IValidator() {
 
