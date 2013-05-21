@@ -135,7 +135,7 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 
     }
 
-    private String buildUrl(IProgressMonitor monitor) throws UnsupportedEncodingException {
+    protected String buildUrl(IProgressMonitor monitor) throws UnsupportedEncodingException {
         final IPreferenceStore store = getPreferenceStore();
         final String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
         final String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST);
@@ -143,11 +143,15 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
         final String password = store.getString(BonitaPreferenceConstants.USER_PASSWORD);
         final String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
         final String loginUrl = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-        final String consoleURl = "http://"+host+":"+ port + getURLRelativePath() +"locale="+locale;
+        final String consoleURl = "http://"+host+":"+ port + getURLRelativePath() + getLocaleParameter(locale);
         return loginUrl+"&redirectUrl="+URLEncoder.encode(consoleURl, "UTF-8");
     }
 
-    /**
+    protected String getLocaleParameter(String locale) {
+		return "locale="+locale;
+	}
+
+	/**
      * @param store
      * @return
      * @throws MalformedURLException

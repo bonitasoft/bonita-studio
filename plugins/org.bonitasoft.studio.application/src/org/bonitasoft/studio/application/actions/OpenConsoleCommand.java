@@ -35,6 +35,11 @@ public class OpenConsoleCommand extends AbstractOpenConsoleCommand {
     }
 
     @Override
+    protected String getLocaleParameter(String locale) {
+		return "_l="+locale;
+	}
+    
+    @Override
     protected String getURLRelativePath() {
         return CONSOLE_PATH ;
     }
