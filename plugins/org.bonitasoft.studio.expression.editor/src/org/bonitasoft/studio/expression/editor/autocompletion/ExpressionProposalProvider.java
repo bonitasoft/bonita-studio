@@ -1,13 +1,12 @@
 package org.bonitasoft.studio.expression.editor.autocompletion;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 
 public class ExpressionProposalProvider implements IContentProposalProvider {
 
@@ -35,7 +34,7 @@ public class ExpressionProposalProvider implements IContentProposalProvider {
 		}
 
 		if (filterProposals) {
-			ArrayList list = new ArrayList();
+			List<IContentProposal> list = new ArrayList<IContentProposal>();
 
 			for (int i = 0; i < proposals.length; i++) {
 
