@@ -144,13 +144,13 @@ public class FormFieldMigration extends ReportCustomMigration {
 	private void setDefaultValueAfterEvent(Model model, Instance widget) {
 		Instance expression = null;
 		if(defaultValueAfterEventScripts.containsKey(widget.getUuid())){
-			expression = getConverter(model,getScope(widget)).parse(defaultValueAfterEventScripts.get(widget.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(defaultValueAfterEventScripts.get(widget.getUuid()), Object.class.getName(), true);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "updateSelectedValueScript");
 			}
 			addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.updateSelectedValueMigrationDescription, Messages.contingencyProperty, StringToExpressionConverter.getStatusForExpression(expression));
 		}else{
-			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
+			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", Object.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
 		}
 		widget.set("defaultExpressionAfterEvent", expression);
 	}

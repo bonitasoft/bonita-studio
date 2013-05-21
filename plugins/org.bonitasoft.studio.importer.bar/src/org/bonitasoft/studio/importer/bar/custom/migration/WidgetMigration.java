@@ -197,7 +197,7 @@ public class WidgetMigration extends ReportCustomMigration {
 	private void setScriptAfterEvents(Instance widget, Model model) {
 		Instance expression = null ;
 		if(scriptAfterEvents.containsKey(widget.getUuid())){
-			expression = getConverter(model,getScope(widget)).parse(scriptAfterEvents.get(widget.getUuid()), String.class.getName(), false);
+			expression = getConverter(model,getScope(widget)).parse(scriptAfterEvents.get(widget.getUuid()), Object.class.getName(), false);
 			String description = Messages.updateValueMigrationDescription;
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				if(widget.instanceOf("form.MultipleValuatedFormField")){
@@ -209,7 +209,7 @@ public class WidgetMigration extends ReportCustomMigration {
 			}
 			addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), description, Messages.contingencyProperty, StringToExpressionConverter.getStatusForExpression(expression));
 		}else{
-			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
+			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", Object.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
 		}
 		widget.set("afterEventExpression", expression);
 	}
