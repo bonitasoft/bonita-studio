@@ -6,28 +6,20 @@ public class BonitaUsers {
 
 	/**
 	*@param apiAccessor, the current APIAccessor
-	*@param loggedUserId, the user id represented by a long.
-	*@return the logged User
+	*@param taskAssigneeId, a user id represented by a long.
+	*@return the User identified by its id
 	**/
-	public static User getUser(APIAccessor apiAccessor,long loggedUserId){
-		return apiAccessor.getIdentityAPI().getUser(loggedUserId);
+	public static User getUser(APIAccessor apiAccessor,long taskAssigneeId){
+		return apiAccessor.getIdentityAPI().getUser(taskAssigneeId);
 	}
 	
-	/**
-	*@param apiAccessor, the current APIAccessor
-	*@param taskAssigneeId, the task assignee id represented by a long.
-	*@return the task assignee User
-	**/
-	public static User getTaskAssignee(APIAccessor apiAccessor,long taskAssigneeId){
-		return apiAccessor.getIdentityAPI().getUser(taskAssigneeId);
-	}	
 	
 	/**
 	*@param apiAccessor, the current APIAccessor
-	*@param taskAssigneeId, the task assignee id represented by a long.
-	*@return the task assignee ContactData
+	*@param taskAssigneeId, a user id represented by a long.
+	*@return the user professional ContactData
 	**/
-	public static ContactData getTaskAssigneeContactInfo(APIAccessor apiAccessor,long taskAssigneeId){
+	public static ContactData getUserProfessionalContactInfo(APIAccessor apiAccessor,long taskAssigneeId){
 		return apiAccessor.getIdentityAPI().getUserContactData(taskAssigneeId, false);
 	}
 	
