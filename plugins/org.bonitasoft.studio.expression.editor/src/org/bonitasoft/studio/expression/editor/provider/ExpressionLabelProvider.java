@@ -17,12 +17,22 @@
 package org.bonitasoft.studio.expression.editor.provider;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.autocompletion.ExpressionProposal;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.TableExpression;
+import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.CatchMessageEvent;
+import org.bonitasoft.studio.model.process.FlowElement;
+import org.bonitasoft.studio.model.process.Message;
+import org.bonitasoft.studio.model.process.MessageFlow;
+import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -73,6 +83,32 @@ public class ExpressionLabelProvider extends LabelProvider implements IExpressio
 
 	@Override
 	public String getDescription(Expression expression) {
+		if(ExpressionConstants.MESSAGE_ID_TYPE.equals(expression.getType())){
+			//			final FlowElement parentFlowElement = ModelHelper.getParentFlowElement(expression);
+			//			final AbstractProcess parentProcess = ModelHelper.getParentProcess(expression);
+			//			if(parentFlowElement instanceof AbstractCatchMessageEvent){
+			//				MessageFlow incomingMessag = ((AbstractCatchMessageEvent) parentFlowElement).getIncomingMessag();
+			//				if(incomingMessag != null){
+			//					final ThrowMessageEvent source = incomingMessag.getSource();
+			//					EList<Message> events = source.getEvents();
+			//					for (Message message : events) {
+			//						Expression targetProcessExpression = message.getTargetProcessExpression();						
+			//						if(ExpressionConstants.CONSTANT_TYPE.equals(targetProcessExpression.getType())){
+			//							if(parentProcess.getName().equals(targetProcessExpression.getContent())){
+			//								Expression targetElementExpression = message.getTargetElementExpression();
+			//								if(ExpressionConstants.CONSTANT_TYPE.equals(targetElementExpression.getType())){
+			//									if(parentFlowElement.getName().equals(targetElementExpression.getContent())){
+			//										//TableExpression messageContent = message.getMessageContent();
+			//										//TODO: implement return type for message content
+			//									}
+			//								}
+			//							}
+			//						}
+			//					}
+			//				}
+			//			}
+			return "";
+		}
 		return expression.getReturnType();
 	}
 

@@ -113,8 +113,9 @@ public class EngineExpressionUtil {
 		}
 		final org.bonitasoft.studio.model.expression.Expression rightOperand = EcoreUtil.copy(operation.getRightOperand());
 		rightOperand.setType(ExpressionConstants.VARIABLE_TYPE);
-
-		builder.setRightOperand(createExpression(rightOperand));
+		rightOperand.setReturnType(operation.getLeftOperand().getReturnType());//use return type of the left operand
+		
+		builder.setRightOperand(createExpression(rightOperand));	
 		builder.setLeftOperand(createLeftOperand(operation.getLeftOperand()));
 		return builder.done();
 	}
