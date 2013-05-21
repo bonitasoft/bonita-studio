@@ -55,6 +55,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
@@ -146,7 +147,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
         client.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
         conditionViewer = new ExpressionViewer(client,SWT.BORDER, widgetFactory,editingDomain, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION);
-        conditionViewer.getTextControl().setMessage(Messages.conditionExpresssionHelpMessage);
+        conditionViewer.setMessage(Messages.conditionExpresssionHelpMessage,IStatus.INFO);
         conditionViewer.addExpressionValidator(ExpressionConstants.CONDITION_TYPE,new ComparisonExpressionValidator());
         conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.CONDITION_TYPE}));
         if(transition.getCondition() == null){
@@ -158,7 +159,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
         }
         conditionViewer.setContext(transition);
         conditionViewer.setInput(transition) ;
-        conditionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL,SWT.CENTER).grab(true, false).create());
+        conditionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL,SWT.CENTER).grab(false, false).hint(350, SWT.DEFAULT).create());
 
         return client ;
     }
