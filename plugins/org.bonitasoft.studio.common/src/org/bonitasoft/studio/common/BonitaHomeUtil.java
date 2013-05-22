@@ -177,7 +177,8 @@ public class BonitaHomeUtil {
 	}
 
 	public static File getDefaultTenantSecurityConfigFile(long tenantId) {
-		return new File(WebBonitaConstantsUtils.getInstance(tenantId).getConfFolder(),"security-config.properties");
+		File bonitaFolder =  new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "tomcat"+File.separator+"bonita");
+		return new File(bonitaFolder,"client"+File.separator+"tenants"+File.separator+String.valueOf(tenantId)+File.separator+"conf"+File.separator+"security-config.properties");
 	}
 
 	public static File getDefaultPlatformTenantConfigFile() {

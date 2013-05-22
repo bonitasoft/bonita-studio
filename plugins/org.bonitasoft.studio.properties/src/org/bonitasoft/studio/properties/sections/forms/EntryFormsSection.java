@@ -17,28 +17,30 @@
  */
 package org.bonitasoft.studio.properties.sections.forms;
 
+
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 
@@ -49,12 +51,10 @@ public class EntryFormsSection extends AbstractFormsSection {
 
     protected Button pageFlowRadio;
     protected Button skipRadio;
-    protected CLabel loginAsLabel;
     protected Button autoLoginCheckbox;
-    protected Text autoLoginLogin;
-    protected CLabel autoLoginLabel;
     protected DataBindingContext thisContext;
 	private EObject lastEObject;
+	private ControlDecoration checkBoxWarning;
 
     @Override
     public void setInput(IWorkbenchPart part, ISelection selection) {
@@ -83,16 +83,22 @@ public class EntryFormsSection extends AbstractFormsSection {
 
         IObservableValue isAutoLogin = EMFEditObservables.observeValue(getEditingDomain(), getPageFlow(),
                 ProcessPackage.Literals.PROCESS_APPLICATION__AUTO_LOGIN);
+        
         context.bindValue(SWTObservables.observeSelection(autoLoginCheckbox), isAutoLogin);
-        thisContext.bindValue(SWTObservables.observeDelayedValue(400, SWTObservables.observeText(autoLoginLogin, SWT.Modify)),
-                EMFEditObservables.observeValue(getEditingDomain(), getPageFlow(), ProcessPackage.Literals.PROCESS_APPLICATION__AUTO_LOGIN_ID));
+        activateAutoLoginWarning();
         boolean visible = getPageFlow() instanceof AbstractProcess;
         autoLoginCheckbox.setVisible(visible);
-        autoLoginLogin.setVisible(visible);
-        loginAsLabel.setVisible(visible);
-        autoLoginLabel.setVisible(visible);
-        context.bindValue(SWTObservables.observeVisible(autoLoginLogin), isAutoLogin,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
-        context.bindValue(SWTObservables.observeVisible(loginAsLabel), isAutoLogin,new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER),null);
+    }
+    
+    /** Show a warning icon when the auto-login check box is selected
+     * 
+     */
+    private void activateAutoLoginWarning(){
+		if(autoLoginCheckbox.getSelection()){
+    		checkBoxWarning.show();
+    	}else{
+    		checkBoxWarning.hide();
+    	}
     }
 
     /* (non-Javadoc)
@@ -153,13 +159,37 @@ public class EntryFormsSection extends AbstractFormsSection {
         Composite autologinComposite = getWidgetFactory().createComposite(parent);
         autologinComposite.setLayout(new GridLayout(4, false));
         autologinComposite.setLayoutData(GridDataFactory.fillDefaults().span(4, 1).create());
-        autoLoginLabel = getWidgetFactory().createCLabel(autologinComposite, Messages.ResourceSection_AutoLogin, SWT.CENTER);
-        autoLoginLabel.setToolTipText(Messages.ResourceSection_AutoLoginTooltip);
+        
         autoLoginCheckbox = getWidgetFactory().createButton(autologinComposite, "", SWT.CHECK);
-        loginAsLabel = getWidgetFactory().createCLabel(autologinComposite, Messages.ResourceSection_loginAs, SWT.CENTER);
-        loginAsLabel.setToolTipText(Messages.ResourceSection_loginAsTooltip);
-        autoLoginLogin = getWidgetFactory().createText(autologinComposite, "",SWT.BORDER);
-        autoLoginLogin.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+        autoLoginCheckbox.setLayoutData(GridDataFactory.fillDefaults().indent(20, 0).create());
+        autoLoginCheckbox.setText(Messages.ResourceSection_AutoLogin);
+        
+        //Auto-login checkBox tooltip 
+        ControlDecoration checkBoxToolTip =  new ControlDecoration(autoLoginCheckbox, SWT.LEFT);
+        checkBoxToolTip.setDescriptionText(Messages.ResourceSection_AutoLoginTooltip);
+        checkBoxToolTip.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK));
+        checkBoxToolTip.show();
+        
+        // Auto-login warning when checkBox selected
+        checkBoxWarning = new ControlDecoration(autoLoginCheckbox, SWT.RIGHT);
+        checkBoxWarning.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
+        checkBoxWarning.setDescriptionText("An anonymous username and password must be defined in the authentification configuration") ;
+        checkBoxWarning.setShowOnlyOnFocus(false) ;
+        
+        autoLoginCheckbox.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				activateAutoLoginWarning();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+
     }
 
     @Override

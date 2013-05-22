@@ -20,6 +20,7 @@ package org.bonitasoft.studio.exporter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -89,7 +90,7 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		addApplicationResources(res, process);
 		addFormsXML(res, process);
 		addApplicationDependencies(res, process,configuration);
-		addAutologin(res, process) ;
+		addAutologin(res, process, configuration) ;
 		for(BarResource barResource : res){
 			builder.addExternalResource(barResource) ;
 		}
@@ -319,7 +320,7 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		}
 	}
 
-	protected void addAutologin(List<BarResource> res, AbstractProcess process) throws Exception {
+	protected void addAutologin(List<BarResource> res, AbstractProcess process, Configuration conf) throws Exception {
 		if(process.isAutoLogin()){
 			File securityConfig = BonitaHomeUtil.getDefaultTenantSecurityConfigFile(TENANT_ID);
 			if (securityConfig.exists()) {
@@ -327,15 +328,20 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 				FileInputStream is = new FileInputStream(securityConfig);
 				properties.load(is) ;
 				properties.setProperty(SecurityProperties.AUTO_LOGIN_PROPERTY, Boolean.TRUE.toString());
-				String autoLoginId =process.getAutoLoginId() ;
-				if (autoLoginId != null && !autoLoginId.isEmpty()) {
-					properties.setProperty(SecurityProperties.AUTO_LOGIN_USERNAME_PROPERTY, autoLoginId);
+				String autoLoginUserName = conf.getAnonymousUserName();
+				String autoLoginPassword = conf.getAnonymousPassword();
+				if (autoLoginUserName != null && !autoLoginUserName.isEmpty()) {
+					properties.setProperty(SecurityProperties.AUTO_LOGIN_USERNAME_PROPERTY, autoLoginUserName);
+					properties.setProperty(SecurityProperties.AUTO_LOGIN_PASSWORD_PROPERTY, (autoLoginPassword!=null && !autoLoginPassword.isEmpty())? autoLoginPassword : "");
 				}
+				
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
 				properties.store(os, null);
 				res.add(new BarResource(FORMS_FOLDER_IN_BAR + securityConfig.getName(), os.toByteArray()));
 				is.close() ;
 				os.close() ;
+			}else{
+				throw new FileNotFoundException(securityConfig.getAbsolutePath());
 			}
 		}
 	}

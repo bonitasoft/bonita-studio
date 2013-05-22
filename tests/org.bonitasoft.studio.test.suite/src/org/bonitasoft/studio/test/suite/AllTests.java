@@ -33,6 +33,7 @@ import org.bonitasoft.studio.engine.test.TestCheckTenantAfterStartup;
 import org.bonitasoft.studio.engine.test.TestJavaDoc;
 import org.bonitasoft.studio.engine.test.TestSubprocessEventExport;
 import org.bonitasoft.studio.exporter.tests.api.TestBonitaExportModel;
+import org.bonitasoft.studio.exporter.tests.autologin.TestAutoLogin;
 import org.bonitasoft.studio.groovy.tests.TestFunctionRepository;
 import org.bonitasoft.studio.importer.jpdl.tests.TestBug1618;
 import org.bonitasoft.studio.importer.jpdl.tests.TestJBPMImport;
@@ -112,7 +113,8 @@ import org.junit.runners.Suite;
     TestBonitaExportModel.class,
     TestRepositoryLocation.class,
     TestShowEngineLog.class,
-    CloseAllEditors.class
+    CloseAllEditors.class,
+    TestAutoLogin.class
 })
 public class AllTests {
 

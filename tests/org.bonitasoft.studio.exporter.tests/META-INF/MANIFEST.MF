@@ -38,6 +38,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bonitasoft.studio.exporter.tests,
  org.bonitasoft.studio.exporter.tests.api,
  org.bonitasoft.studio.exporter.tests.application,
+ org.bonitasoft.studio.exporter.tests.autologin,
  org.bonitasoft.studio.exporter.tests.bpmn,
  org.bonitasoft.studio.exporter.tests.form,
  org.bonitasoft.studio.exporter.tests.preview

@@ -73,5 +73,9 @@ public class Messages extends NLS {
     public static String applicationDependenciesConfigurationDescription;
     public static String displayAdvancedConfiguration;
     public static String configurationTitle;
+	public static String authenticatedUser;
+	public static String anonymousUser;
+	public static String anonymousUserMessage;
+	public static String anonymousUserNameMissingMessage;
 
 }

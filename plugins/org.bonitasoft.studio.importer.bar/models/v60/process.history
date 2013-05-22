@@ -11806,6 +11806,7 @@
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.ParallelGatewayMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.FormLabelVisualIDMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.UpdateModelVersion"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.AutoLoginMigration"/>
   </releases>
   <releases/>
 </history:History>

@@ -65,6 +65,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/password"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference configuration.ecore#//Configuration/applicationDependencies"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/anonymousUserName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Configuration/anonymousPassword"/>
     </genClasses>
     <genClasses ecoreClass="configuration.ecore#//Fragment">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute configuration.ecore#//Fragment/key"/>
