@@ -98,7 +98,7 @@
       <activityPatternBinding
             activityId="org.bonitasoft.studio.profiles.connector.menu"
             isEqualityPattern="true"
-            pattern="org.bonitasoft.studio.dependencies/org.bonitasoft.studio.development">
+            pattern="org.bonitasoft.studio.connectors/org.bonitasoft.studio.menu.connector">
       </activityPatternBinding>
       <activity
             id="org.bonitasoft.studio.profiles.simulation.menu"
@@ -116,7 +116,7 @@
       <activityPatternBinding
             activityId="org.bonitasoft.studio.profiles.run.menu"
             isEqualityPattern="true"
-            pattern="org.bonitasoft.studio.application/org.bonitasoft.studio.menu.run">
+            pattern="org.bonitasoft.studio.engine/org.bonitasoft.studio.menu.run">
       </activityPatternBinding>
       <activity
             id="org.bonitasoft.studio.profiles.dependencies.menu"
@@ -175,6 +175,20 @@
             isEqualityPattern="true"
             pattern="org.bonitasoft.studio.themes/org.bonitasoft.studio.menu.themes">
       </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.connector.menu"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.actors/org.bonitasoft.studio.menu.filter">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.validators.menu"
+            name="Validators Menu">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.validators.menu"
+            isEqualityPattern="true"
+            pattern="org.bonitasoft.studio.validators/org.bonitasoft.studio.validator.menu">
+      </activityPatternBinding>
    </extension>
    <extension
          name="Activities Binding"
@@ -216,10 +230,6 @@
             categoryId="org.bonitasoft.studio.profiles.execution">
       </categoryActivityBinding>
       <categoryActivityBinding
-            activityId="org.bonitasoft.studio.profiles.context.menu"
-            categoryId="org.bonitasoft.studio.profiles.contexts">
-      </categoryActivityBinding>
-      <categoryActivityBinding
             activityId="org.bonitasoft.studio.profiles.kpi.menu"
             categoryId="org.bonitasoft.studio.profiles.kpi">
       </categoryActivityBinding>
@@ -246,6 +256,10 @@
       <categoryActivityBinding
             activityId="org.bonitasoft.studio.profiles.data.tab"
             categoryId="org.bonitasoft.studio.profiles.datamanagement">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.validators.menu"
+            categoryId="org.bonitasoft.studio.profiles.validators">
       </categoryActivityBinding>
    </extension>
      <extension

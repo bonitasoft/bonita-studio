@@ -90,7 +90,7 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
                     categoryId.equals(CONNECTORS) ||
                     categoryId.equals(DATA_MANAGEMENT) ||
                     categoryId.equals(DEPENDENCIES_MANAGEMENT) ||
-                    categoryId.equals(CONTEXTS) ||
+//                    categoryId.equals(CONTEXTS) ||
                     categoryId.equals(KPI)){
                 extensionFeatures.add(categoryId) ;
             }
@@ -98,8 +98,9 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
             if(categoryId.equals(LOOK_N_FEELS) ||
                     categoryId.equals(FORMS_MODELING) ||
                     categoryId.equals(FORMS_TEMPLATES) ||
-                    categoryId.equals(VALIDATORS) ||
-                    categoryId.equals(LANGUAGES_SUPPORT)){
+                    categoryId.equals(VALIDATORS) 
+             //       categoryId.equals(LANGUAGES_SUPPORT)
+                    ){
                 applicationFeatures.add(categoryId) ;
             }
 

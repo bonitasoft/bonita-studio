@@ -33,11 +33,11 @@ public interface IBonitaActivitiesCategory {
 	public static final String CONNECTORS = "org.bonitasoft.studio.profiles.connectors";
 	public static final String VALIDATORS = "org.bonitasoft.studio.profiles.validators";
 	public static final String DATA_MANAGEMENT = "org.bonitasoft.studio.profiles.datamanagement";
-	public static final String CONTEXTS = "org.bonitasoft.studio.profiles.contexts";
+	//public static final String CONTEXTS = "org.bonitasoft.studio.profiles.contexts";
 	public static final String KPI = "org.bonitasoft.studio.profiles.kpi";
 	public static final String LOOK_N_FEELS = "org.bonitasoft.studio.profiles.looknfeels";
 	public static final String FORMS_TEMPLATES = "org.bonitasoft.studio.profiles.formstemplates";
-	public static final String LANGUAGES_SUPPORT = "org.bonitasoft.studio.profiles.language";
+	//public static final String LANGUAGES_SUPPORT = "org.bonitasoft.studio.profiles.language";
 	
 	public static final String MODELING_FAMILY = "modelingFamily";
 	public static final String APPLICATION_FAMILY = "applicationFamily";
