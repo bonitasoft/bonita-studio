@@ -83,7 +83,7 @@ public class OpenBrowserCommand extends AbstractHandler {
     }
 
     protected boolean browserIsSet() {
-    	if(WebBrowserUtil.canUseSystemBrowser() && WebBrowserUtil.getExternalBrowserPaths().isEmpty()){
+    	if(!WebBrowserUtil.canUseSystemBrowser() && WebBrowserUtil.getExternalBrowserPaths().isEmpty()){
     		if(MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.noBrowserFoundTitle,Messages.noBrowserFoundMsg)){
     			final BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(Display.getDefault().getActiveShell());
     			dialog.create();
