@@ -67,24 +67,22 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
         Locale defaultLocal = Locale.getDefault();
         boolean defaultLocalExists=false;
-        //Uncomment when other language will be available
-        //        for (Locale locale : BonitaPreferenceConstants.AVAILABLE_LOCALES) {
-        //            if(locale.getLanguage().equals(defaultLocal.getLanguage())){
-        //                defaultLocal = locale;
-        //                defaultLocalExists = true;
-        //                break;
-        //            }
-        //        }
+        for (Locale locale : BonitaPreferenceConstants.AVAILABLE_LOCALES) {
+        	if(locale.getLanguage().equals(defaultLocal.getLanguage())){
+        		defaultLocal = locale;
+        		defaultLocalExists = true;
+        		break;
+        	}
+        }
 
         boolean defaultUseXPLocalExists=false;
-        //Uncomment when other language will be available
-        //        for (Locale locale : BonitaPreferenceConstants.AVAILABLE_LOCALES_USER_XP) {
-        //            if(locale.getLanguage().equals(defaultLocal.getLanguage())){
-        //                defaultLocal = locale;
-        //                defaultUseXPLocalExists = true;
-        //                break;
-        //            }
-        //        }
+        for (Locale locale : BonitaPreferenceConstants.AVAILABLE_LOCALES_USER_XP) {
+        	if(locale.getLanguage().equals(defaultLocal.getLanguage())){
+        		defaultLocal = locale;
+        		defaultUseXPLocalExists = true;
+        		break;
+        	}
+        }
 
         if(store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) == null || store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE).isEmpty() ){
             store.setDefault(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, defaultUseXPLocalExists? defaultLocal.getLanguage():Locale.ENGLISH.getLanguage());
