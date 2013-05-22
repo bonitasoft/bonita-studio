@@ -17,16 +17,16 @@
  */
 package org.bonitasoft.studio.preferences.pages;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Properties;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pics.Pics;
@@ -43,7 +43,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
-import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
 /**
  * @author Romain Bioteau
  *
@@ -136,88 +135,23 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
         if (configArea == null) {
             return;
         }
-        ArrayList<URL> locations = new ArrayList<URL>();
-
         try {
-            locations.add(new URL(configArea.getURL().toExternalForm() + "BonitaStudio" + ".ini"));
-            locations.add(new URL(configArea.getURL().toExternalForm() + "BonitaStudio-x86_64" + ".ini"));
-            locations.add(new URL(configArea.getURL().toExternalForm() + "BonitaStudio-linux" + ".ini"));
-            locations.add(new URL(configArea.getURL().toExternalForm() + "BonitaStudio-linux64" + ".ini"));
-            locations.add(new URL(configArea.getURL().toExternalForm() + "BonitaStudio-mac.app/Contents/MacOS/BonitaStudio" + ".ini"));
-
-        } catch (MalformedURLException e) {
-            // This should never happen
-        }
-
-        for (URL location : locations) {
-
-            try {
-                String fileName = location.getFile();
-                File file = new File(fileName);
-                fileName += ".bak";
-                file.renameTo(new File(fileName));
-                BufferedReader in = new BufferedReader(new FileReader(fileName));
-                BufferedWriter out = new BufferedWriter(new FileWriter(location.getFile()));
-                try {
-                    boolean isNl = false;
-                    boolean isNlWiritten = false;
-                    String line = in.readLine();
-                    while (line != null) {
-                        if (!isNl) {
-                            out.write(line);
-                        } else {
-                            out.write(locale);
-                            isNl = false;
-                            isNlWiritten = true;
-                        }
-                        out.newLine();
-                        if (line.equals("-nl")) {
-                            isNl = true;
-                        }
-                        line = in.readLine();
-                    }
-                    out.flush();
-                    out.close();
-                    in.close();
-                    if (!isNlWiritten) {
-                        // add -nl at the start of the file
-                        out = new BufferedWriter(new FileWriter(location.getFile()));
-                        in = new BufferedReader(new FileReader(fileName));
-                        out.write("-nl");
-                        out.newLine();
-                        out.write(locale);
-                        out.newLine();
-                        line = in.readLine();
-                        while (line != null) {
-                            out.write(line);
-                            out.newLine();
-                            line = in.readLine();
-                        }
-                        out.flush();
-                    }
-                } finally {
-                    if (in != null) {
-                        try {
-                            in.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (out != null) {
-                        try {
-                            out.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
+			File configIniFile = new File(new URL(configArea.getURL().toExternalForm() + File.separatorChar+"configuration"+File.separatorChar+"config.ini").getFile());
+			Properties configIniProperties = new Properties();
+			final FileInputStream inStream = new FileInputStream(configIniFile);
+			configIniProperties.load(inStream);
+			configIniProperties.setProperty("osgi.nl", locale);
+			final FileOutputStream out = new FileOutputStream(configIniFile);
+			configIniProperties.store(out, "");
+			inStream.close();
+			out.close();
+		} catch (MalformedURLException e1) {
+			BonitaStudioLog.error(e1);
+		} catch (FileNotFoundException e) {
+			BonitaStudioLog.error(e);
+		} catch (IOException e) {
+			BonitaStudioLog.error(e);
+		}
     }
 
 }
