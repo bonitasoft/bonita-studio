@@ -31,10 +31,10 @@ import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -42,13 +42,11 @@ import org.eclipse.core.filesystem.IFileSystem;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -157,7 +155,18 @@ public class PlatformUtil {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
 				if(model != null) {
-					model.setCurrentPageId("intro");
+					String modelPageId = "intro";
+					IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.introModelPageId"); //$NON-NLS-1$
+			        IModelIntroPageIDProvider contrib = null;
+			        for (IConfigurationElement elem : elements){
+			            try {
+			                contrib = (IModelIntroPageIDProvider) elem.createExecutableExtension("provider"); //$NON-NLS-1$
+			            } catch (CoreException e) {
+			                BonitaStudioLog.error(e);
+			            }
+			            modelPageId = contrib.getModelIntroPageID();
+			        }
+					model.setCurrentPageId(modelPageId);
 					PlatformUI.getWorkbench().getIntroManager().showIntro(
 							window,
 							false);
@@ -169,6 +178,8 @@ public class PlatformUtil {
 			}
 		});
 	}
+	
+
 
 	/**
 	 * Copy all the resources matching the pattern in the folder to the destination path

@@ -30,7 +30,7 @@ function showNextSlide(previousSlideIndex) {
 	}
 	var slideIndex = random();
 	setClass("slide_" + slideIndex, "Show");
-	setTimeout("showNextSlide(" + slideIndex + ")", 10000);
+	setTimeout("showNextSlide(" + slideIndex + ")", 4000);
 }
 
 function initCarrousel() {
@@ -96,7 +96,7 @@ function initCarrousel() {
 </div>
 
 
-<div class="logo"><a href="http://www.bonitasoft.com/products/product-comparison">
+<div class="logo"><a href="http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=99&bos_redirect_product=bos&bos_redirect_major_version=6.0">
 <img src="images/logo-community.png" /></a>
 </div>
 
@@ -104,7 +104,7 @@ function initCarrousel() {
 <br />
 
 
-<div class="second"><img id="resources-left" src="images/resources-left.png" style="margin-top: 6px; margin-right: 3px" /></div>
+<div class="second"><img id="learn-left" src="images/learn-left.png" style="margin-top: 46px; margin-right: 3px" /></div>
 <div class="second-inner">
 <div class="top-left"><br /></div>
 <div class="top"><br /></div>
@@ -113,42 +113,110 @@ function initCarrousel() {
 <div class="left"><br /></div>
 
 <div class="block-second">
+
+<div class="carrousel">
+<div id="slide_1" class="Hide">
+<div class="feature" id="feature1">
+<div class="play" onclick="location.href='http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=107&bos_redirect_product=bos&bos_redirect_major_version=6.0'" ><br/></div>
+<div class="caption">
+<p>Bonita Studio Tour</p></div></div>
+</div>
+<div id="slide_2" class="Hide">
+<div class="feature" id="feature2">
+<div class="play" onclick="location.href='http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=108&bos_redirect_product=bos&bos_redirect_major_version=6.0'"><br/></div>
+<div class="caption">
+<p>Create a Process Diagram</p>
+</div>
+</div>
+</div>
+<div id="slide_3" class="Hide">
+<div class="feature" id="feature3">
+<div class="play" onclick="location.href='http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=109&bos_redirect_product=bos&bos_redirect_major_version=6.0'"><br/></div>
+<div class="caption">
+<p>Migrate a Process from 5.9/5.10</p>
+</div>
+</div>
+</div>
+<div id="slide_4" class="Hide">
+<div class="feature" id="feature4">
+<div class="play" onclick="location.href='http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=110&bos_redirect_product=bos&bos_redirect_major_version=6.0'"><br/></div>
+<div class="caption">
+<p>Define Organization and Set Actors</p>
+</div>
+</div>
+</div>
+<div id="slide_5" class="Hide">
+<div class="feature" id="feature5">
+<div class="play" onclick="location.href='http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=111&bos_redirect_product=bos&bos_redirect_major_version=6.0'"><br/></div>
+<div class="caption">
+<p>Define Process Data</p>
+</div>
+</div>
+</div>
+<div id="slide_6" class="Hide">
+<div class="feature" id="feature6">
+<div class="play" onclick="location.href='http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=112&bos_redirect_product=bos&bos_redirect_major_version=6.0'"><br/></div>
+<div class="caption">
+<p>Design Forms</p>
+</div>
+</div>
+</div>
+<div id="slide_7" class="Hide">
+<div class="feature" id="feature7">
+<div class="play" onclick="location.href='http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=113&bos_redirect_product=bos&bos_redirect_major_version=6.0'"><br/></div>
+<div class="caption">
+<p>Connect to your Information Systems</p>
+</div>
+</div>
+</div>
+<div id="slide_8" class="Hide">
+<div class="feature" id="feature8">
+<div class="play" onclick="location.href='http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=114&bos_redirect_product=bos&bos_redirect_major_version=6.0'"><br/></div>
+<div class="caption">
+<p>Configure and Execute a Process</p>
+</div>
+</div>
+</div>
+<div id="slide_9" class="Hide">
+<div class="feature" id="feature9">
+<div class="play" onclick="location.href='http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=115&bos_redirect_product=bos&bos_redirect_major_version=6.0'"><br/></div>
+<div class="caption">
+<p>Bonita Portal Tour</p>
+</div>
+</div>
+</div>
+<div id="slide_10" class="Hide">
+<div class="feature" id="feature10">
+<div class="play" onclick="location.href='http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=116&bos_redirect_product=bos&bos_redirect_major_version=6.0'"><br/></div>
+<div class="caption">
+<p>Manage a Process in Portal</p>
+</div>
+</div>
+</div>
+</div>
+
   <div id="documentation">
-<h2><a href="http://www.bonitasoft.com/resources/documentation?src=bos6">Documentation</a></h2>
+<h2><a href="http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=74&bos_redirect_product=bos&bos_redirect_major_version=6.0">Documentation</a></h2>
 <div class="search">
-<form action="http://www.bonitasoft.com/resources/documentation/search/site" method="get" accept-charset="UTF-8" ><input id="edit-keys" title="Enter the terms you wish to search for." onclick="this.value='';" type="text" name="keys" value="Search Documentation" size="50" maxlength="128"  style="width: 215px; margin-left: 10px; border: 0px; background-color:transparent; margin-top: 2px; float:left; color: #1B465F" /><a href="http://www.bonitasoft.com/resources/documentation/search/advanced"><img src="images/adv-search.png" border="0" style="float:left"/></a><input type="image" value="submit" name="search" border="0" src="images/magn.png" style="vertical-align: bottom; padding-left: 5px; float:left" /></form>
+<form action="http://www.bonitasoft.com/resources/documentation/search/doc" method="post" accept-charset="UTF-8" ><input id="edit-keys" title="Enter the terms you wish to search for." onclick="this.value='';" type="text" name="keys" value="Search Documentation" size="50" maxlength="128"  style="width: 215px; margin-left: 10px; border: 0px; background-color:transparent; margin-top: 2px; float:left; color: #1B465F" /><input type="image" value="submit" name="search" border="0" src="images/magn.png" style="vertical-align: bottom; padding-left: 20px; float:left" />
+<input type="hidden" name="form_build_id" value="form-lUGJzSPA2fNmvimmPL_DSGIhD-HMtSiQwRLiH564-Kg" />
+<input type="hidden" name="form_token" value="xHvVTtC7ET3HCVItpztW3NTyvqcYG85vnlUNhn6asEw" />
+<input type="hidden" name="form_id" value="apachesolr_search_custom_page_search_form" />
+</form>
 <div class="clear"><img src="images/pix.png" width="0" height="0" /></div>
 </div>
 <ul class="tuto">
-<li><a href="http://www.bonitasoft.com/products/download/intro-tutorial-process-design" onclick="return false" title="Currently not available with 6.0">Tutorial - Process Design</a></li>
-<li><a href="http://www.bonitasoft.com/products/download/intro-tutorial-process-definition" onclick="return false" title="Currently not available with 6.0">Tutorial - Process Definition</a></li>
-<li><a href="http://www.bonitasoft.com/products/download/intro-tutorial-application-development" onclick="return false" title="Currently not available with 6.0">Tutorial - Application Development</a></li>
+<li><a href="http://bonitasoft.com/bos_redirect.php?bos_redirect_id=88&bos_redirect_product=bos&bos_redirect_major_version=6.0">Getting Started</a></li>
+<li><a href="http://bonitasoft.com/bos_redirect.php?bos_redirect_id=89&bos_redirect_product=bos&bos_redirect_major_version=6.0">Bonita BPM Overview</a></li>
+<li><a href="http://bonitasoft.com/bos_redirect.php?bos_redirect_id=90&bos_redirect_product=bos&bos_redirect_major_version=6.0">Technical Changes in 6.0</a></li>
 </ul>
 </div>
 
-<div id="example">
-<h2><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenExampleProcess">Examples
-</a></h2>
-<ul>
-	<li><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenSpecificExampleAction&amp;artifact=Web_Purchase--1.3.bar" onclick="return false" title="Currently not available with 6.0">Web Purchase</a></li>
-	<li><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenSpecificExampleAction&amp;artifact=Buy_a_MINI--3.1.bar" onclick="return false" title="Currently not available with 6.0">Buy a Mini</a></li>	
-	<li><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenSpecificExampleAction&amp;artifact=Arrival_of_a_New_Employee--4.1.bar" onclick="return false" title="Currently not available with 6.0">Arrival of a New Employee</a></li>
-	<li><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenSpecificExampleAction&amp;artifact=Credit_Request_Example--1.0.bar" onclick="return false" title="Currently not available with 6.0">Credit Request</a></li>
-	<li><a href="http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&amp;class=org.bonitasoft.studio.intro.actions.OpenSpecificExampleAction&amp;artifact=Delivery-Simulation.zip" onclick="return false" title="Currently not available with 6.0">Delivery Simulation</a></li>
-</ul>
-</div>
 
-<div id="forums">
-<h2><a href="http://www.bonitasoft.org/forum/index.php?src=bos6">Forums</a></h2>
-<ul>
-<li><a href="http://www.bonitasoft.org/forum/viewforum.php?src=bos6&amp;id=2">Installation</a></li>
-<li><a href="http://www.bonitasoft.org/forum/viewforum.php?src=bos6&amp;id=3">Usage, operations</a></li>
-<li><a href="http://www.bonitasoft.org/forum/viewforum.php?id=4&amp;src=bos6">Contribution's development </a></li>
-<li><a href="http://www.bonitasoft.org/forum/viewforum.php?id=5&amp;src=bos6">Suggestions</a></li>
-<li><a href="http://www.bonitasoft.org/forum/viewforum.php?id=9&amp;src=bos6">Non technical discussions</a></li>
-</ul>
+<div id="training">
+<h2><a href="http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=75&bos_redirect_product=bos&bos_redirect_major_version=6.0">Training</a></h2>
+  <contentProvider id="4,training,http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=62&bos_redirect_product=bos&bos_redirect_major_version=6.0" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
 </div>
-
 
 </div>
 
@@ -161,7 +229,7 @@ function initCarrousel() {
 </div>
 <div class="clear"><img src="images/pix.png" width="0" height="0" /></div>
 <br />
-<div class="third"><img id="learn-left" src="images/learn-left.png" style="margin-top: 46px; margin-right: 3px" /></div>
+<div class="third"><img id="resources-left" src="images/resources-left.png" style="margin-top: 6px; margin-right: 3px" /></div>
 <div class="third-inner">
 
 <div class="top-left"><br /></div>
@@ -173,94 +241,33 @@ function initCarrousel() {
 
 <div class="block-third">
 
-<div class="carrousel">
-<div id="slide_1" class="Hide">
-<div class="feature" id="feature1">
-<div class="play" onclick="location.href='http://www.bonitasoft.com/products/features?src=bos6.0'" ><br/></div>
-<div class="caption">
-<p>Multiple design palette options</p></div></div>
-</div>
-<div id="slide_2" class="Hide">
-<div class="feature" id="feature2">
-<div class="play" onclick="location.href='http://www.bonitasoft.com/products/features?src=bos6.0'"><br/></div>
-<div class="caption">
-<p>Simulate processes</p>
-</div>
-</div>
-</div>
-<div id="slide_3" class="Hide">
-<div class="feature" id="feature3">
-<div class="play" onclick="location.href='http://www.bonitasoft.com/products/features?src=bos6.0'"><br/></div>
-<div class="caption">
-<p>Connect with external systems</p>
-</div>
-</div>
-</div>
-<div id="slide_4" class="Hide">
-<div class="feature" id="feature4">
-<div class="play" onclick="location.href='http://www.bonitasoft.com/products/features?src=bos6.0'"><br/></div>
-<div class="caption">
-<p>Human tasks management</p>
-</div>
-</div>
-</div>
-<div id="slide_5" class="Hide">
-<div class="feature" id="feature5">
-<div class="play" onclick="location.href='http://www.bonitasoft.com/products/features?src=bos6.0'"><br/></div>
-<div class="caption">
-<p>Process diagram validation</p>
-</div>
-</div>
-</div>
-<div id="slide_6" class="Hide">
-<div class="feature" id="feature6">
-<div class="play" onclick="location.href='http://www.bonitasoft.com/products/features?src=bos6.0'"><br/></div>
-<div class="caption">
-<p>Import contributed extensions</p>
-</div>
-</div>
-</div>
-<div id="slide_7" class="Hide">
-<div class="feature" id="feature7">
-<div class="play" onclick="location.href='http://www.bonitasoft.com/products/features?src=bos6.0'"><br/></div>
-<div class="caption">
-<p>Easy application templating</p>
-</div>
-</div>
-</div>
-<div id="slide_8" class="Hide">
-<div class="feature" id="feature8">
-<div class="play" onclick="location.href='http://www.bonitasoft.com/products/features?src=bos6.0'"><br/></div>
-<div class="caption">
-<p>Drag-n-drop form editing</p>
-</div>
-</div>
-</div>
-<div id="slide_9" class="Hide">
-<div class="feature" id="feature9">
-<div class="play" onclick="location.href='http://www.bonitasoft.com/products/features?src=bos6.0'"><br/></div>
-<div class="caption">
-<p>One click multi-environment deployment</p>
-</div>
-</div>
-</div>
-<div id="slide_10" class="Hide">
-<div class="feature" id="feature10">
-<div class="play" onclick="location.href='http://www.bonitasoft.com/products/features?src=bos6'"><br/></div>
-<div class="caption">
-<p>Standalone BPM application generation</p>
-</div>
-</div>
-</div>
+<div id="example">
+<h2><a href="http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=97&bos_redirect_product=bos&bos_redirect_major_version=6.0">Examples
+</a></h2>
+<ul>
+	<li><a href="http://bonitasoft.com/bos_redirect.php?bos_redirect_id=93&bos_redirect_product=bos&bos_redirect_major_version=6.0">Help Desk</a></li>
+	<li><a href="http://bonitasoft.com/bos_redirect.php?bos_redirect_id=94&bos_redirect_product=bos&bos_redirect_major_version=6.0">Procurement</a></li>	
+	<li><a href="http://bonitasoft.com/bos_redirect.php?bos_redirect_id=95&bos_redirect_product=bos&bos_redirect_major_version=6.0">Employee Onboarding</a></li>
+	<li><a href="http://bonitasoft.com/bos_redirect.php?bos_redirect_id=96&bos_redirect_product=bos&bos_redirect_major_version=6.0">Travel Request</a></li>
+</ul>
 </div>
 
-<div id="training">
-<h2><a href="http://www.bonitasoft.com/services/formation_registration.php?src=bos6.0">Training</a></h2>
-  <contentProvider id="4,training,http://www.bonitasoft.com/feeds/training.xml" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
-</div>
+
+<div id="forums">
+<h2><a href="http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=76&bos_redirect_product=bos&bos_redirect_major_version=6.0">Forums</a></h2>
+<ul>
+<li><a href="http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=117&bos_redirect_product=bos&bos_redirect_major_version=6.0">Installation</a></li>
+<li><a href="http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=118&bos_redirect_product=bos&bos_redirect_major_version=6.0">Usage, Operations</a></li>
+<li><a href="http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=119&bos_redirect_product=bos&bos_redirect_major_version=6.0">Contribution's development </a></li>
+<li><a href="http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=120&bos_redirect_product=bos&bos_redirect_major_version=6.0">Suggestions</a></li>
+
+
+</ul>
+
+
 <div id="news">
-<h2><a href="http://www.bonitasoft.com/company/blog">News</a></h2>
-  <contentProvider id="4,news,http://www.bonitasoft.com/feeds/news.xml" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
+<h2><a href="http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=106&bos_redirect_product=bos&bos_redirect_major_version=6.0">News</a></h2>
+  <contentProvider id="4,news,http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=61&bos_redirect_product=bos&bos_redirect_major_version=6.0" class="org.bonitasoft.studio.intro.content.RssContentProvider"  pluginId="org.bonitasoft.studio.intro"/>
 </div>
 </div>
 <div class="right"><br /></div>

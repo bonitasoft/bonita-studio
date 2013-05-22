@@ -39,8 +39,6 @@ import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -61,10 +59,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.INullSelectionListener;
-import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISaveablePart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -352,11 +348,13 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor i
     public void openIntro() {
         PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
         PrefUtil.saveAPIPrefs();
+        
         if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective() != null) {
-            super.openIntro();
+        	super.openIntro();
+            PlatformUtil.openIntro();
         }
     }
-
+    
     @Override
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         refreshCoolBarButtons();
