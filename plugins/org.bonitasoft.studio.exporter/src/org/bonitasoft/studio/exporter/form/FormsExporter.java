@@ -1816,7 +1816,7 @@ public class FormsExporter {
 
 	public static Map<String, String> parseToExtractHtmlAttributes(final String s) {
 		final String spaces = "[ ]*";
-		final String keyPattern = spaces + "(" + "[a-zA-Z]+" + ")" + spaces;
+		final String keyPattern = spaces + "(" + "[a-zA-Z_:][-a-zA-Z0-9_:.]+" + ")" + spaces;
 		/*
 		 * the quote can be double or simple and it need to be different quote
 		 * inside the value examples : "alert('test')" -> OK 'alert("test")' ->
