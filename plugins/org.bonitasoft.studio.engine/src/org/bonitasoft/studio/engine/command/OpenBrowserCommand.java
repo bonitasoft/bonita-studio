@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.eclipse.ui.internal.browser.ExternalBrowserInstance;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
 
 /**
@@ -42,45 +43,51 @@ import org.eclipse.ui.internal.browser.WebBrowserUtil;
  */
 public class OpenBrowserCommand extends AbstractHandler {
 
-    public static final String APPLI_PATH = "/application/BonitaApplication.html?"; //$NON-NLS-1$
-    private URL url ;
-    private String typeId ;
-    private String title;
-    public OpenBrowserCommand(){
-        super();
-    }
+	public static final String APPLI_PATH = "/application/BonitaApplication.html?"; //$NON-NLS-1$
+	private URL url ;
+	private String typeId ;
+	private String title;
+	private ExternalBrowserInstance externalBrowser;
+	public OpenBrowserCommand(){
+		super();
+	}
 
-    public OpenBrowserCommand(URL url,String typeId,String title){
-        this.url = url ;
-        this.typeId = typeId ;
-        this.title = title ;
-    }
+	public OpenBrowserCommand(URL url,String typeId,String title){
+		this.url = url ;
+		this.typeId = typeId ;
+		this.title = title ;
+	}
 
-    @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        Display.getDefault().syncExec(new Runnable() {
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		Display.getDefault().syncExec(new Runnable() {
 
-            @Override
-            public void run() {
-                try{
-                	if(browserIsSet()){
-                		IWebBrowser browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(IWorkbenchBrowserSupport.AS_EDITOR,typeId,title,""); //$NON-NLS-1$
-                		browser.openURL(url);
-                	}
-                }catch (Exception e) {
-                    BonitaStudioLog.error(e);
-                    ErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                            "error", //$NON-NLS-1$
-                            "error starting server", //$NON-NLS-1$
-                            Status.OK_STATUS);
-                }
+			@Override
+			public void run() {
+				try{
+					if(browserIsSet()){
+						IWebBrowser browser = null;
+						if (externalBrowser!=null){
+							browser = externalBrowser;
+						} else {
+							browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(IWorkbenchBrowserSupport.AS_EDITOR,typeId,title,""); //$NON-NLS-1$
+						}
+						browser.openURL(url);
+					} 
+				}catch (Exception e) {
+					BonitaStudioLog.error(e);
+					ErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+							"error", //$NON-NLS-1$
+							"error starting server", //$NON-NLS-1$
+							Status.OK_STATUS);
+				}
 
-            }
+			}
 
-			
-        });
-        return null;
-    }
+		});
+		return null;
+	}
+
 
     protected boolean browserIsSet() {
     	if(!WebBrowserUtil.canUseSystemBrowser() && WebBrowserUtil.getExternalBrowserPaths().isEmpty()){
@@ -95,11 +102,17 @@ public class OpenBrowserCommand extends AbstractHandler {
     	}
 		return true;
 	}
-    
-    /**
-     * @param url2
-     */
-    public void setURL(URL url) {
-        this.url = url;
-    }
+
+
+
+	public void setExternalBrowser(ExternalBrowserInstance externalBrowser){
+		this.externalBrowser = externalBrowser;
+	}
+
+	/**
+	 * @param url2
+	 */
+	public void setURL(URL url) {
+		this.url = url;
+	}
 }

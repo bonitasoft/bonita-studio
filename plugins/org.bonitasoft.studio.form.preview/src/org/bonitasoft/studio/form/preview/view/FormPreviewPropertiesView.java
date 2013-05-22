@@ -49,6 +49,7 @@ public class FormPreviewPropertiesView extends ViewPart{
 	public FormPreviewPropertiesView(){
 		super();
 		context = new DataBindingContext();
+		repositoryStore = (LookNFeelRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);	
 	}
 
 	@Override
@@ -57,7 +58,7 @@ public class FormPreviewPropertiesView extends ViewPart{
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(5, 0, 3, 1).create());
 		
 		createButtonsLine(mainComposite);
-		createLookNFeelSelection(mainComposite);
+//		createLookNFeelSelection(mainComposite);
 		createBrowserSelection(mainComposite);
 		
 	}
@@ -80,9 +81,9 @@ public class FormPreviewPropertiesView extends ViewPart{
 				
 				Form form = (Form) ((FormDiagramEditor)getSite().getPage().getActiveEditor()).getDiagramEditPart().resolveSemanticElement();
 				
-				StructuredSelection lookNFeelSelection = (StructuredSelection) lnfCombo.getSelection();
-				ApplicationLookNFeelFileStore lookNFeel = (ApplicationLookNFeelFileStore)lookNFeelSelection.getFirstElement();
-				
+			//	StructuredSelection lookNFeelSelection = (StructuredSelection) lnfCombo.getSelection();
+			//	ApplicationLookNFeelFileStore lookNFeel = (ApplicationLookNFeelFileStore)lookNFeelSelection.getFirstElement();
+				ApplicationLookNFeelFileStore lookNFeel = getCurrentLookNFeel();
 				StructuredSelection webBrowserSelection =(StructuredSelection) webBrowserCombo.getSelection();
 				IBrowserDescriptor browser = (IBrowserDescriptor)webBrowserSelection.getFirstElement();
 				FormPreviewOperation operation = new FormPreviewOperation(form,lookNFeel,browser);
@@ -158,9 +159,9 @@ public class FormPreviewPropertiesView extends ViewPart{
 	
 	@Override
 	public void setFocus() {
-		repositoryStore = (LookNFeelRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);		
-		lnfCombo.setInput(repositoryStore.getApplicationLookNFeels());
-		lnfCombo.setSelection(new StructuredSelection(getCurrentLookNFeel()));
+		//repositoryStore = (LookNFeelRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);		
+//		lnfCombo.setInput(repositoryStore.getApplicationLookNFeels());
+//		lnfCombo.setSelection(new StructuredSelection(getCurrentLookNFeel()));
 		//webBrowserCombo.setSelection(new StructuredSelection(BrowserManager.getInstance().getCurrentWebBrowser()));
 	}
 	
@@ -168,7 +169,7 @@ public class FormPreviewPropertiesView extends ViewPart{
 		if ((getSite().getPage().getActiveEditor() instanceof FormDiagramEditor)){
 			Form form = (Form) ((FormDiagramEditor)getSite().getPage().getActiveEditor()).getDiagramEditPart().resolveSemanticElement();
 			AbstractProcess process = ModelHelper.getParentProcess(form);
-			return (ApplicationLookNFeelFileStore) repositoryStore.getChild(process.getBasedOnLookAndFeel());
+				return (ApplicationLookNFeelFileStore) repositoryStore.getChild(process.getBasedOnLookAndFeel());
 		}
 		return null;
 	}

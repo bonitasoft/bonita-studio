@@ -54,6 +54,7 @@ import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepos
 import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.BOSWebServerManager;
+import org.bonitasoft.studio.engine.command.OpenBrowserCommand;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
 import org.bonitasoft.studio.form.preview.i18n.Messages;
@@ -152,13 +153,17 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 				ProcessDefinition def = processApi.deploy(businessArchive);
 				procId = def.getId();
 				processApi.enableProcess(procId) ;
-				Thread.currentThread().setContextClassLoader(RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader());
+			
+
 				ExternalBrowserInstance browserInstance = new ExternalBrowserInstance(null, browser);
 				if (!isOnTask){
 					ApplicationURLBuilder builder = new ApplicationURLBuilder(proc,procId,configuration.getName());
 					URL url = builder.toURL(monitor);
-
-					browserInstance.openURL(url);
+					OpenBrowserCommand openCmd = new OpenBrowserCommand(url, browserInstance.getId(), "");
+					if(browser.getLocation() != null){
+						openCmd.setExternalBrowser(browserInstance);
+					}
+					openCmd.execute(null);
 				} else {
 					IdentityAPI identityApi = BOSEngineManager.getInstance().getIdentityAPI(session);
 					long userId = identityApi.getUserByUserName(BonitaConstants.STUDIO_TECHNICAL_USER_NAME).getId();
@@ -173,7 +178,11 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 					if (it<MAX_IT && !processApi.getPendingHumanTaskInstances(userId, 0, 20, null).isEmpty() ){
 						HumanTaskInstance task = processApi.getPendingHumanTaskInstances(userId,0, 20, null).get(0);
 						URL taskURL = toTaskURL(configuration,proc,procId,task,monitor);
-						browserInstance.openURL(taskURL);
+						OpenBrowserCommand openCmd = new OpenBrowserCommand(taskURL, browserInstance.getId(), "");
+						if(browser.getLocation() != null){
+							openCmd.setExternalBrowser(browserInstance);
+						}
+						openCmd.execute(null);
 					} 
 				}
 			} catch (Exception e) {
@@ -399,7 +408,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 	}
 
 
-	
+
 	protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException,  PageOutOfRangeException, ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
 		long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
 		if(nbDeployedProcesses > 0){
