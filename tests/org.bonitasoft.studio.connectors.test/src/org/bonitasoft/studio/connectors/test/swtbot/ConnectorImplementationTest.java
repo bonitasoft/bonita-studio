@@ -131,6 +131,23 @@ public class ConnectorImplementationTest extends SWTBotGefTestCase {
     }
 
     @Test
+    public void testClassNameSyntax() throws Exception {
+        final String id = "testImplementation";
+        final String definition = "testEdit (1.0.0)";
+        final String className = "MyConnector.Impl";
+        final String packageName = "org.bonita.connector";
+        SWTBotConnectorTestUtil.activateConnectorImplementationShell(bot);
+        bot.textWithLabel(Messages.implementationId+" *").setText(id);
+        bot.comboBoxWithLabel("Definition *").setSelection(definition);
+        bot.textWithLabel("Package *").setText(packageName);
+        bot.textWithLabel(Messages.classNameLabel+" *").setText("MyConnector.Implsfgsdf");
+        bot.sleep(5000);
+        assertFalse("finish button should be disabled", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        bot.button(IDialogConstants.CANCEL_LABEL).click();
+
+    }
+    
+    @Test
     public void testConnectorImplementationEdition() {
         final int nbEditorsBefore = bot.editors().size();
         SWTBotConnectorTestUtil.activateConnectorImplementationShell(bot);
