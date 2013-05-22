@@ -234,7 +234,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 
 
 	protected void disableInternalWebBrowser() {
-		if(Platform.inDevelopmentMode()){//TODO Use a env variable instead
+		String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
+		if (noRegister == null || !noRegister.equals("1")) {
 			WebBrowserUtil.isInternalBrowserOperational = false;
 		}
 	}
@@ -245,7 +246,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 			return ;
 		}
 		StartEngineJob job = new StartEngineJob("Starting BOS Engine");
-		job.setPriority(Job.LONG);
+		job.setPriority(Job.DECORATE);
 		job.setUser(false);
 		job.schedule();
 	}
