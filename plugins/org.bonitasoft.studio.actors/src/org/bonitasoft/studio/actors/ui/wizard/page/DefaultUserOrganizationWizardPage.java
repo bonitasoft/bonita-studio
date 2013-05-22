@@ -87,7 +87,10 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
         strategy.setBeforeSetValidator(new EmptyInputValidator(Messages.userName)) ;
 
         context.bindValue(SWTObservables.observeText(usernameText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "user").observe(this),strategy,null) ;
-        context.bindValue(SWTObservables.observeText(passwordText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "password").observe(this)) ;
+      
+        UpdateValueStrategy strategy2 = new UpdateValueStrategy() ;
+        strategy2.setBeforeSetValidator(new EmptyInputValidator(Messages.password)) ;
+        context.bindValue(SWTObservables.observeText(passwordText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "password").observe(this),strategy2,null) ;
 
         pageSupport = WizardPageSupport.create(this,context) ;
         setControl(mainComposite) ;
