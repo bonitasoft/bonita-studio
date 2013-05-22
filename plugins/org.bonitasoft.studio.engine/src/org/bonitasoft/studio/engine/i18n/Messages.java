@@ -79,6 +79,8 @@ public class Messages extends NLS {
 	public static String restartingWebServer;
 	public static String resetingEngine;
 	public static String undeploymentFailedMessage;
+	public static String noBrowserFoundMsg;
+	public static String noBrowserFoundTitle;
     
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$

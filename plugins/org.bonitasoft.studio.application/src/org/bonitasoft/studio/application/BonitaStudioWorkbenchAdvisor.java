@@ -70,6 +70,7 @@ import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.internal.browser.WebBrowserUtil;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
 
 public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
@@ -128,10 +129,11 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
         }
         monitor.beginTask(BOSSplashHandler.BONITA_TASK, workload+30) ;
         monitor.subTask(Messages.initializingCurrentRepository);
+    
 
-
+    	disableInternalWebBrowser();
+        
         String current = CommonRepositoryPlugin.getDefault().getPreferenceStore().getString(RepositoryPreferenceConstant.CURRENT_REPOSITORY) ;
-
         IRepository repository = RepositoryManager.getInstance().getCurrentRepository() ;
         if(repository.getProject().exists() && !RepositoryPreferenceConstant.DEFAULT_REPOSITORY_NAME.equals(repository.getName())){
             if(!repository.getProject().isOpen()){
@@ -230,6 +232,11 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
             contrib.execute();
         }
     }
+
+
+	protected void disableInternalWebBrowser() {
+		WebBrowserUtil.isInternalBrowserOperational = false;
+	}
 
 
     private void createServerSocket() {

@@ -21,15 +21,20 @@ package org.bonitasoft.studio.engine.command;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.engine.i18n.Messages;
+import org.bonitasoft.studio.preferences.dialog.BonitaPreferenceDialog;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.gmf.runtime.common.ui.util.WindowUtil;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.eclipse.ui.internal.browser.WebBrowserUtil;
 
 /**
  * @author Romain Bioteau
@@ -58,9 +63,10 @@ public class OpenBrowserCommand extends AbstractHandler {
             @Override
             public void run() {
                 try{
-                    IWebBrowser browser;
-                    browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(IWorkbenchBrowserSupport.AS_EDITOR,typeId,title,""); //$NON-NLS-1$
-                    browser.openURL(url);
+                	if(browserIsSet()){
+                		IWebBrowser browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(IWorkbenchBrowserSupport.AS_EDITOR,typeId,title,""); //$NON-NLS-1$
+                		browser.openURL(url);
+                	}
                 }catch (Exception e) {
                     BonitaStudioLog.error(e);
                     ErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -70,11 +76,26 @@ public class OpenBrowserCommand extends AbstractHandler {
                 }
 
             }
+
+			
         });
         return null;
     }
 
-
+    protected boolean browserIsSet() {
+    	if(WebBrowserUtil.canUseSystemBrowser() && WebBrowserUtil.getExternalBrowserPaths().isEmpty()){
+    		if(MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.noBrowserFoundTitle,Messages.noBrowserFoundMsg)){
+    			final BonitaPreferenceDialog dialog = new BonitaPreferenceDialog(Display.getDefault().getActiveShell());
+    			dialog.create();
+    			dialog.setSelectedPreferencePage(BonitaPreferenceDialog.WEB_BROWSER_PAGE_ID);
+    			WindowUtil.centerDialog(dialog.getShell(),Display.getDefault().getActiveShell()) ;
+    			dialog.open();
+    		}
+    		return false;
+    	}
+		return true;
+	}
+    
     /**
      * @param url2
      */

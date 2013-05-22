@@ -74,19 +74,19 @@ public class BonitaPreferenceDialog extends Dialog {
     private static final Color LIGHT_BACKGROUND = new Color(Display.getDefault(), new RGB(250, 250, 250)) ;
 
     private static final int SECTION_TITLE_MARGIN = -20;
-    protected static final String DATABASE_PAGE_ID = "org.bonitasoft.studio.preferences.database"; //$NON-NLS-1$
-    protected static final String APPEARANCE_PAGE_ID = "org.bonitasoft.studio.preferences.appearance"; //$NON-NLS-1$
-    protected static final String LANGUAGE_PAGE_ID = "org.bonitasoft.studio.preferences.language"; //$NON-NLS-1$
-    protected static final String JAVA_PAGE_ID = "org.eclipse.jdt.debug.ui.preferences.VMPreferencePage"; //$NON-NLS-1$
-    protected static final String RUN_DEPLOY_MODE_PAGE_ID = "org.bonitasoft.studio.preferences.run"; //$NON-NLS-1$
-    protected static final String USERXP_SETTINGS_PAGE_ID = "org.bonitasoft.studio.preferences.userXp"; //$NON-NLS-1$
-    protected static final String DB_CONNECTORS_PAGE_ID = "org.bonitasoft.studio.preferences.dbconnectors";//$NON-NLS-1$
-    protected static final String REMOTE_ENGINE_PAGE_ID = "org.bonitasoft.studio.preferences.remoteEngine"; //$NON-NLS-1$
-    protected static final String WEB_BROWSER_PAGE_ID = "org.eclipse.ui.browser.preferencePage"; //$NON-NLS-1$
-    protected static final String PROXY_PAGE_ID = "org.eclipse.ui.net.NetPreferences"; //$NON-NLS-1$
-    protected static final String ADVANCED_PAGE_ID = "org.bonitasoft.studio.preferences.advanced"; //$NON-NLS-1$
-    protected static final String USER_PROFILE_PAGE_ID = "org.bonitasoft.studio.preferences.profiles"; //$NON-NLS-1$;
-    protected static final String ECLIPSE_PAGE_ID = "eclipse.page"; //$NON-NLS-1$;
+    public static final String DATABASE_PAGE_ID = "org.bonitasoft.studio.preferences.database"; //$NON-NLS-1$
+    public static final String APPEARANCE_PAGE_ID = "org.bonitasoft.studio.preferences.appearance"; //$NON-NLS-1$
+    public static final String LANGUAGE_PAGE_ID = "org.bonitasoft.studio.preferences.language"; //$NON-NLS-1$
+    public static final String JAVA_PAGE_ID = "org.eclipse.jdt.debug.ui.preferences.VMPreferencePage"; //$NON-NLS-1$
+    public static final String RUN_DEPLOY_MODE_PAGE_ID = "org.bonitasoft.studio.preferences.run"; //$NON-NLS-1$
+    public static final String USERXP_SETTINGS_PAGE_ID = "org.bonitasoft.studio.preferences.userXp"; //$NON-NLS-1$
+    public static final String DB_CONNECTORS_PAGE_ID = "org.bonitasoft.studio.preferences.dbconnectors";//$NON-NLS-1$
+    public static final String REMOTE_ENGINE_PAGE_ID = "org.bonitasoft.studio.preferences.remoteEngine"; //$NON-NLS-1$
+    public static final String WEB_BROWSER_PAGE_ID = "org.eclipse.ui.browser.preferencePage"; //$NON-NLS-1$
+    public static final String PROXY_PAGE_ID = "org.eclipse.ui.net.NetPreferences"; //$NON-NLS-1$
+    public static final String ADVANCED_PAGE_ID = "org.bonitasoft.studio.preferences.advanced"; //$NON-NLS-1$
+    public static final String USER_PROFILE_PAGE_ID = "org.bonitasoft.studio.preferences.profiles"; //$NON-NLS-1$;
+    public static final String ECLIPSE_PAGE_ID = "eclipse.page"; //$NON-NLS-1$;
 
     private final Map keywordCache = new HashMap();
     private final Map<String, ToolItem> itemPerPreferenceNode = new HashMap<String, ToolItem>() ;
@@ -730,5 +730,9 @@ public class BonitaPreferenceDialog extends Dialog {
         }
         return (String[]) keywordList.toArray(new String[keywordList.size()]);
     }
+
+	public void setSelectedPreferencePage(String pageId) {
+		openPreferencePage(pageId);
+	}
 
 }
