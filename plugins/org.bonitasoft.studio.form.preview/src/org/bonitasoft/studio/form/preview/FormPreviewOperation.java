@@ -333,6 +333,14 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 			for (Expression expr:exprs){
 				expr = initializeExpression(form,expr);
 			}
+			if (!widget.getDependOn().isEmpty()){
+				Expression exprDisplayDependentWidgetOnly = widget.getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition();
+				exprDisplayDependentWidgetOnly.setContent("true");
+				exprDisplayDependentWidgetOnly.setReturnType(Boolean.class.getName());
+				Expression exprDisplayAfterEventDependsOnCondiditionScript = widget.getDisplayAfterEventDependsOnConditionScript();
+				exprDisplayAfterEventDependsOnCondiditionScript.setContent("true");
+				exprDisplayAfterEventDependsOnCondiditionScript.setReturnType(Boolean.class.getName());
+			}
 			widget = (Widget)widgetSwitch.doSwitch(widget);
 		}
 	}
