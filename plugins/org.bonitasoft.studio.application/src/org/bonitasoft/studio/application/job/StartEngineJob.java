@@ -31,6 +31,8 @@ import org.eclipse.core.runtime.jobs.Job;
  */
 public class StartEngineJob extends Job {
 
+	public static final Object FAMILY = StartEngineJob.class.getName();
+
 	public StartEngineJob(String name) {
 		super(name);
 	}
@@ -49,4 +51,8 @@ public class StartEngineJob extends Job {
 		return Status.OK_STATUS;
 	}
 
+	public static Object getFamily() {
+		return FAMILY;
+	}
+	
 }

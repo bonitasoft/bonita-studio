@@ -42,6 +42,7 @@ import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.perspectives.PerspectiveIDRegistry;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobContribution;
 import org.bonitasoft.studio.common.repository.model.IRepository;
@@ -50,14 +51,18 @@ import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.diagram.providers.ElementInitializers;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -70,6 +75,9 @@ import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.browser.WebBrowserUtil;
+import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
+import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
+import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
 
 public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
@@ -88,7 +96,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 	@Override
 	public void initialize(IWorkbenchConfigurer configurer) {
 		super.initialize(configurer);
-		configurer.setSaveAndRestore(false);
+		configurer.setSaveAndRestore(true);
 	}
 
 	@Override
@@ -115,7 +123,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 		}
 		if(monitor == null){
 			BonitaStudioLog.log("Progress Monitor is null") ;
-			monitor = new NullProgressMonitor() ;
+			monitor = Repository.NULL_PROGRESS_MONITOR ;
 		}
 
 		workload = 20 ;
@@ -190,7 +198,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 
 		}
 
-		createServerSocket();
+		doStartEngine();
 		ElementInitializers.getInstance().init_Pool_2007(ProcessFactory.eINSTANCE.createPool());
 		BonitaPerspectivesUtils.initializePerspectives();
 
@@ -207,6 +215,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 					repository.create() ;
 				}
 				repository.open() ;
+				repository.getAllStores();
 				monitor.worked(5) ;
 			}
 		};
@@ -232,6 +241,54 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 		 }
 	}
 
+	
+	/**
+	 * Disconnect from the core workspace.
+	 */
+	private void disconnectFromWorkspace(IProgressMonitor monitor) {
+		// save the workspace
+		final MultiStatus status = new MultiStatus(
+				IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
+				IDEWorkbenchMessages.ProblemSavingWorkbench, null);
+		try {
+			final ProgressMonitorJobsDialog p = new ProgressMonitorJobsDialog(
+					null);
+
+			final boolean applyPolicy = ResourcesPlugin.getWorkspace()
+					.getDescription().isApplyFileStatePolicy();
+
+			IRunnableWithProgress runnable = new IRunnableWithProgress() {
+				public void run(IProgressMonitor monitor) {
+					try {
+						if (applyPolicy)
+						status.merge(((Workspace) ResourcesPlugin
+								.getWorkspace()).save(true, true, monitor));
+					} catch (CoreException e) {
+						status.merge(e.getStatus());
+					}
+				}
+			};
+
+			p.run(true, false, runnable);
+		} catch (InvocationTargetException e) {
+			status
+					.merge(new Status(IStatus.ERROR,
+							IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
+							IDEWorkbenchMessages.InternalError, e
+									.getTargetException()));
+		} catch (InterruptedException e) {
+			status.merge(new Status(IStatus.ERROR,
+					IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
+					IDEWorkbenchMessages.InternalError, e));
+		}
+		ErrorDialog.openError(null,
+				IDEWorkbenchMessages.ProblemsSavingWorkspace, null, status,
+				IStatus.ERROR | IStatus.WARNING);
+		if (!status.isOK()) {
+			IDEWorkbenchPlugin.log(
+					IDEWorkbenchMessages.ProblemsSavingWorkspace, status);
+		}
+	}
 
 	protected void disableInternalWebBrowser() {
 		String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
@@ -241,7 +298,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 	}
 
 
-	private void createServerSocket() {
+	protected void doStartEngine() {
 		if(PlatformUtil.isHeadless()){
 			return ;
 		}
@@ -306,9 +363,15 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 
 	}
 
-
+	@Override
+	public void postShutdown() {
+		super.postShutdown();
+		disconnectFromWorkspace(Repository.NULL_PROGRESS_MONITOR);
+	}
+	
 	@Override
 	public boolean preShutdown() {
+		Job.getJobManager().cancel(StartEngineJob.FAMILY);
 		boolean returnValue =  super.preShutdown();
 		if(returnValue){
 			try {

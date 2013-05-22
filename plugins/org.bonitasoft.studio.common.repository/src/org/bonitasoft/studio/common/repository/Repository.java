@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -40,6 +39,7 @@ import org.bonitasoft.engine.bpm.bar.BusinessArchive;
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.forms.client.model.FormFieldValue;
 import org.bonitasoft.forms.server.validator.IFormFieldValidator;
+import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -73,6 +73,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -85,11 +86,9 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.framework.adaptor.BundleClassLoader;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.wizards.datatransfer.ArchiveFileExportOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.xml.sax.InputSource;
 
@@ -118,7 +117,10 @@ public class Repository implements IRepository {
 	@Override
 	public void create() {
 		try {
-			BonitaStudioLog.debug("Creating repository "+project.getName(),CommonRepositoryPlugin.PLUGIN_ID);
+			long init = System.currentTimeMillis();
+			if(BonitaStudioLog.isLoggable(IStatus.OK)){
+				BonitaStudioLog.debug("Creating repository "+project.getName()+"...",CommonRepositoryPlugin.PLUGIN_ID);
+			}
 			if(!project.exists()){
 				project.create(NULL_PROGRESS_MONITOR);
 			}
@@ -128,6 +130,15 @@ public class Repository implements IRepository {
 			initRepositoryStores() ;
 			initClasspath(project) ;
 			enableBuild();
+			try {
+				getProject().build(IncrementalProjectBuilder.FULL_BUILD,NULL_PROGRESS_MONITOR);
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+			}
+			if(BonitaStudioLog.isLoggable(IStatus.OK)){
+				long duration = System.currentTimeMillis() - init;
+				BonitaStudioLog.debug("Repository "+project.getName()+" created in "+DateUtil.getDisplayDuration(duration),CommonRepositoryPlugin.PLUGIN_ID);
+			}
 		}catch(Exception e){
 			BonitaStudioLog.error(e);
 		}
@@ -191,7 +202,7 @@ public class Repository implements IRepository {
 	}
 
 
-	protected void initRepositoryStores() {
+	protected synchronized void initRepositoryStores() {
 		if(stores == null || stores.isEmpty()){
 			disableBuild();
 			stores = new TreeMap<Class<?>,IRepositoryStore<? extends IRepositoryFileStore>>(new Comparator<Class<?>>() {
@@ -224,30 +235,29 @@ public class Repository implements IRepository {
 	public void enableBuild() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceDescription desc = workspace.getDescription();
-		desc.setAutoBuilding(true);
-		try {
-			workspace.setDescription(desc);
-		} catch (CoreException e) {
-			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
-		}
-		RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,true);
-		try {
-			getProject().build(IncrementalProjectBuilder.FULL_BUILD,NULL_PROGRESS_MONITOR);
-		} catch (CoreException e) {
-			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+		if(!desc.isAutoBuilding()){
+			desc.setAutoBuilding(true);
+			try {
+				workspace.setDescription(desc);
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+			}
+			RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,true);
 		}
 	}
 
 	public void disableBuild() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceDescription desc = workspace.getDescription();
-		desc.setAutoBuilding(false);
-		try {
-			workspace.setDescription(desc);
-		} catch (CoreException e) {
-			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+		if(desc.isAutoBuilding()){
+			desc.setAutoBuilding(false);
+			try {
+				workspace.setDescription(desc);
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+			}
+			RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,false);
 		}
-		RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,false);
 	}
 
 	protected void initializeProject(IProject project) throws CoreException,JavaModelException {
