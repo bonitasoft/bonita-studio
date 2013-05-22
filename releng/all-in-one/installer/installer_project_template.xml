@@ -327,7 +327,7 @@
 		</runProgram>
 		<launchBrowser>
 			<show>0</show>
-            <url>http://www.bonitasoft.org</url>
+            <url>http://www.bonitasoft.com/bos_redirect.php?bos_redirect_id=126&bos_redirect_product=bos&os=${platform_name}&arch=@os_arch@&edition=community</url>
         </launchBrowser>
 	</finalPageActionList>
 
