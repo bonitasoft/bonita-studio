@@ -25,6 +25,8 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
@@ -497,6 +499,16 @@ public class AddMessageEventWizardPage extends WizardPage implements IWizardPage
             Expression procName = (Expression) ((StructuredSelection) processExpressionViewer.getSelection()).getFirstElement() ;
             if(procName.getType().equals(ExpressionConstants.CONSTANT_TYPE)){
                 AbstractProcess proc = getProcessOnDiagram(ModelHelper.getMainProcess(element),procName.getContent())  ;
+                if(proc == null){
+                	DiagramRepositoryStore store = 	(DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+                	List<AbstractProcess> otherProcesses = store.findProcesses(procName.getContent());
+                	if(!otherProcesses.isEmpty()){
+                		proc = otherProcesses.get(0);
+                	}else{
+                		return;
+                	}
+                	
+                }
                 catchEventNatureProvider.setContext(proc);
                 elementExpressionViewer.updateAutocompletionProposals();
             }

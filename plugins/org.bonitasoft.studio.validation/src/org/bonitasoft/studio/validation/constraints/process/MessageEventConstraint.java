@@ -19,9 +19,12 @@ package org.bonitasoft.studio.validation.constraints.process;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -39,44 +42,57 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
  */
 public class MessageEventConstraint extends AbstractLiveValidationMarkerConstraint {
 
-    /* (non-Javadoc)
-     * @see org.eclipse.emf.validation.AbstractModelConstraint#validate(org.eclipse.emf.validation.IValidationContext)
-     */
-    @Override
-    protected IStatus performLiveValidation(IValidationContext ctx) {
-        final EStructuralFeature featureTriggered = ctx.getFeature();
-        if(featureTriggered.equals(ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION)){
-            final Expression targetProcess = (Expression) ctx.getFeatureNewValue();
-            if(targetProcess == null || targetProcess.getContent() == null || targetProcess.getContent().isEmpty()){
-                return ctx.createFailureStatus(Messages.targetProcessNotSet);
-            }
-        }
-        return ctx.createSuccessStatus();
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.emf.validation.AbstractModelConstraint#validate(org.eclipse.emf.validation.IValidationContext)
+	 */
+	@Override
+	protected IStatus performLiveValidation(IValidationContext ctx) {
+		final EStructuralFeature featureTriggered = ctx.getFeature();
+		if(featureTriggered.equals(ProcessPackage.Literals.MESSAGE__TARGET_PROCESS_EXPRESSION)){
+			final Expression targetProcess = (Expression) ctx.getFeatureNewValue();
+			if(targetProcess == null || targetProcess.getContent() == null || targetProcess.getContent().isEmpty()){
+				return ctx.createFailureStatus(Messages.targetProcessNotSet);
+			}
+		}
+		return ctx.createSuccessStatus();
+	}
 
-    @Override
-    protected String getMarkerType(DiagramEditor editor) {
-        return ProcessMarkerNavigationProvider.MARKER_TYPE;
-    }
+	@Override
+	protected String getMarkerType(DiagramEditor editor) {
+		return ProcessMarkerNavigationProvider.MARKER_TYPE;
+	}
 
-    @Override
-    protected String getConstraintId() {
-        return "org.bonitasoft.studio.validation.messageEventConstraint";
-    }
+	@Override
+	protected String getConstraintId() {
+		return "org.bonitasoft.studio.validation.messageEventConstraint";
+	}
 
-    @Override
-    protected IStatus performBatchValidation(IValidationContext ctx) {
-        final Message event = (Message) ctx.getTarget();
-        if(event.getTargetProcessExpression() == null || event.getTargetProcessExpression().getContent() == null || event.getTargetProcessExpression().getContent().isEmpty()){
-            return ctx.createFailureStatus(Messages.targetProcessNotSet);
-        }else{
-            final DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-            List<AbstractProcess> processes = store.findProcesses(event.getTargetProcessExpression().getContent());
-            if(processes.isEmpty()){
-                return ctx.createFailureStatus(Messages.bind(Messages.processDoesNotExist, event.getTargetProcessExpression().getContent(), event.getName()));
-            }
-        }
-        return ctx.createSuccessStatus();
-    }
+	@Override
+	protected IStatus performBatchValidation(IValidationContext ctx) {
+		final Message event = (Message) ctx.getTarget();
+		if(event.getTargetProcessExpression() == null || event.getTargetProcessExpression().getContent() == null || event.getTargetProcessExpression().getContent().isEmpty()){
+			return ctx.createFailureStatus(Messages.targetProcessNotSet);
+		}else{
+			final DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+			List<AbstractProcess> processes = store.findProcesses(event.getTargetProcessExpression().getContent());
+			if(processes.isEmpty()){
+				return ctx.createFailureStatus(Messages.bind(Messages.processDoesNotExist, event.getTargetProcessExpression().getContent(), event.getName()));
+			}
+			Expression targetElem = event.getTargetElementExpression();
+			if(targetElem != null && targetElem.getContent() != null && !targetElem.getContent().isEmpty() && targetElem.getType().equals(ExpressionConstants.CONSTANT_TYPE)){
+				String targetElemName = targetElem.getContent() ;
+				for(AbstractProcess p : processes){
+					List<AbstractCatchMessageEvent> events = ModelHelper.getAllItemsOfType(p, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT);
+					for(AbstractCatchMessageEvent ev : events){
+						if(targetElemName.equals(ev.getName())){
+							return ctx.createSuccessStatus();
+						}
+					}
+				}
+				return ctx.createFailureStatus(Messages.bind(Messages.targetCatchMessageNotExists,targetElemName,event.getTargetProcessExpression().getContent()));  
+			}
+		}
+		return ctx.createSuccessStatus();
+	}
 
 }
