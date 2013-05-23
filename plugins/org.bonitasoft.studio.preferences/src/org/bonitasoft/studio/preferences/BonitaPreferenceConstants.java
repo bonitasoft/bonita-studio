@@ -38,7 +38,7 @@ public class BonitaPreferenceConstants {
     public static final String HELP_BROWSER_ID = "org.bonitasoft.studio.help.browser"; //$NON-NLS-1$
     public static final String USER_NAME = "bonitaUserName"; //$NON-NLS-1$
     public static final String USER_PASSWORD = "bonitaUserPassword"; //$NON-NLS-1$
-    public static final String USER_NAME_DEFAULT = "william.jobs"; //$NON-NLS-1$
+    public static final String USER_NAME_DEFAULT = "walter.bates"; //$NON-NLS-1$
     public static String USER_PASSWORD_DEFAULT = "bpm"; //$NON-NLS-1$
     public static final String DELETE_TENANT_ON_EXIT = "dropDataBase"; //$NON-NLS-1$
     public static final String LOAD_ORGANIZATION = "retrieveUsers"; //$NON-NLS-1$

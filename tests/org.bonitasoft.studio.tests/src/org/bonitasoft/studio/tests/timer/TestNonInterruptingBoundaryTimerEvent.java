@@ -96,7 +96,7 @@ public class TestNonInterruptingBoundaryTimerEvent {
 			@Override
 			public boolean isTestGreen() throws Exception {
 				IdentityAPI identityApi = BOSEngineManager.getInstance().getIdentityAPI(session);
-				SearchResult<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(identityApi.getUserByUserName("william.jobs").getId(), searchOptions);
+				SearchResult<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(identityApi.getUserByUserName("walter.bates").getId(), searchOptions);
 				int cpt = 0;
 				for(HumanTaskInstance instance : tasks.getResult()){
 					if(instance.getProcessDefinitionId() == processDef.getId()){
