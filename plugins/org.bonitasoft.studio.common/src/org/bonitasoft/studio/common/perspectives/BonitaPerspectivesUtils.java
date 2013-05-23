@@ -132,7 +132,9 @@ public class BonitaPerspectivesUtils {
 							public IStatus runInUIThread(IProgressMonitor monitor) {
 								Display.getDefault().syncExec(new Runnable() {
 									public void run() {
-										activePage.resetPerspective();
+										
+								//		activePage.resetPerspective();
+										
 										if(activePage.getEditorReferences().length == 0){
 											PlatformUtil.openIntro();
 										}else{
