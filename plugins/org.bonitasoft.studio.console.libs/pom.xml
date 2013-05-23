@@ -375,6 +375,7 @@
 							org.bonitasoft.engine.connector;version = "0.0.0",
 							org.bonitasoft.engine.core.operation;version = "0.0.0",
 							org.bonitasoft.engine.exception;version = "0.0.0",
+							org.bonitasoft.engine.exception.connector;version = "0.0.0",
 							org.bonitasoft.engine.exception.platform;version = "0.0.0",
 							org.bonitasoft.engine.exception.process;version = "0.0.0",
 							org.bonitasoft.engine.exception.expression;version = "0.0.0",
