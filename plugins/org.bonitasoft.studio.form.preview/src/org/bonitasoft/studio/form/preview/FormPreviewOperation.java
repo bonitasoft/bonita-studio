@@ -64,6 +64,7 @@ import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -87,6 +88,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -332,6 +334,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		WidgetSwitch widgetSwitch = new WidgetSwitch();
 		for (Widget widget:widgets){
 			List<Expression> exprs = ModelHelper.getAllItemsOfType(widget, ExpressionPackage.Literals.EXPRESSION);
+			deleteAllOperations(widget);
 			for (Expression expr:exprs){
 				expr = initializeExpression(form,expr);
 			}
@@ -344,6 +347,13 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 				exprDisplayAfterEventDependsOnCondiditionScript.setReturnType(Boolean.class.getName());
 			}
 			widget = (Widget)widgetSwitch.doSwitch(widget);
+		}
+	}
+	
+	private void deleteAllOperations(Widget widget){
+		List<Operation> operations = ModelHelper.getAllItemsOfType(widget, ExpressionPackage.Literals.OPERATION);
+		for (Operation operation:operations){
+			EcoreUtil.delete(operation);
 		}
 	}
 
