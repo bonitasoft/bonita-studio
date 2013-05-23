@@ -31,13 +31,18 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.Array;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.connector.model.definition.Page;
+import org.bonitasoft.studio.connector.model.definition.ScriptEditor;
+import org.bonitasoft.studio.connector.model.definition.TextArea;
+import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
@@ -365,11 +370,46 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 			if(getConnectorParameter(configuration, input.getName()) == null){
 				final ConnectorParameter param = ConnectorConfigurationFactory.eINSTANCE.createConnectorParameter() ;
 				param.setKey(input.getName()) ;
+				param.setExpression(createExpression(definition, input));
 				configuration.getParameters().add(param);
 			}
 		}
 	}
 
+	protected AbstractExpression createExpression(ConnectorDefinition definition,Input input) {
+		String inputClassName = input.getType() ;
+		WidgetComponent widget = null;
+		List<WidgetComponent> widgets = ModelHelper.getAllItemsOfType(definition,ConnectorDefinitionPackage.Literals.WIDGET_COMPONENT);
+		for(WidgetComponent w : widgets){
+			if(w.getInputName().equals(input.getName())){
+				widget = w;
+				break;
+			}
+		}
+		if( widget instanceof Array){
+			final TableExpression expression = ExpressionFactory.eINSTANCE.createTableExpression() ;
+			return expression ;
+		}else if( widget instanceof org.bonitasoft.studio.connector.model.definition.List){
+			final ListExpression expression = ExpressionFactory.eINSTANCE.createListExpression() ;
+			return expression ;
+		}else if (widget != null){
+			final Expression expression = ExpressionFactory.eINSTANCE.createExpression() ;
+			expression.setReturnType(inputClassName) ;
+			expression.setReturnTypeFixed(true) ;
+			expression.setType(ExpressionConstants.CONSTANT_TYPE) ;
+			expression.setName(input.getDefaultValue()) ;
+			expression.setContent(input.getDefaultValue()) ;
+			if(widget instanceof ScriptEditor){
+				expression.setType(ExpressionConstants.SCRIPT_TYPE);
+				expression.setInterpreter(((ScriptEditor) widget).getInterpreter());
+			}else if(widget instanceof TextArea){
+				expression.setType(ExpressionConstants.PATTERN_TYPE);
+			}
+			return expression ;
+		}
+		return null;
+	}
+	
 	private ConnectorParameter getConnectorParameter(ConnectorConfiguration configuration, String inputName) {
 		for(ConnectorParameter param : configuration.getParameters()){
 			if(param.getKey().equals(inputName)){
