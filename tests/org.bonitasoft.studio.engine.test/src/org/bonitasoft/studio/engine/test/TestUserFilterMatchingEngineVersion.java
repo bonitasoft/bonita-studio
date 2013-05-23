@@ -29,6 +29,7 @@ import java.util.Map;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.model.HumanTaskInstance;
 import org.bonitasoft.engine.bpm.model.ProcessDefinition;
+import org.bonitasoft.engine.bpm.model.ProcessInstance;
 import org.bonitasoft.engine.identity.User;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
@@ -88,16 +89,17 @@ public class TestUserFilterMatchingEngineVersion {
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();
         assertFalse("The url contains null:"+urlGivenToBrowser, urlGivenToBrowser.contains("null"));
 		
-		long processId=processApi.getProcessDefinitionId("PoolToTestUserFilter", "1.0");
+		final long processId=processApi.getProcessDefinitionId("PoolToTestUserFilter", "1.0");
 		final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
 		assertNotNull("processDef should not be null",processDef);
-		processApi.startProcess(processId);
+		final ProcessInstance processInstance = processApi.startProcess(processId);
+		System.out.println("Proces Instance started in state: "+processInstance.getState());
 		
-        boolean evaluateAsync = new TestAsyncThread(30, 1000) {
+        boolean evaluateAsync = new TestAsyncThread(1200, 1000) {
             @Override
             public boolean isTestGreen() throws Exception {
-
-                newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(), williamJobsID);
+            	System.out.println("Proces Instance started in state: "+processInstance.getId()+processInstance.getState());
+                newTask = EngineAPIUtil.findNewAssignedTaskForSpecifiedProcessDefAndUser(session, tasks, processId, williamJobsID);
 
                 return newTask != null;
             }

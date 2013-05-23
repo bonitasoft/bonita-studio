@@ -57,4 +57,29 @@ public class EngineAPIUtil {
         }
     }
 	
+	public static HumanTaskInstance findNewAssignedTaskForSpecifiedProcessDefAndUser(APISession session, List<HumanTaskInstance> previousTasks,long processDefinitionUUID, long userID) throws InvalidSessionException, UserNotFoundException  {
+        final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
+        final List<HumanTaskInstance> tasks = processApi.getAssignedHumanTaskInstances(userID, 0, 10, null);
+
+        if (tasks.size() == previousTasks.size()) {
+            return null;
+        } else {
+            boolean newTaskIsOld = false;
+            HumanTaskInstance newTask = null;
+            for (HumanTaskInstance currentTask : tasks) {
+                newTaskIsOld = false;//reinit the value
+                for (HumanTaskInstance oldTask : previousTasks) {
+                    if (currentTask.getId()==oldTask.getId()) {
+                        newTaskIsOld = true;
+                    }
+                }
+                if (!newTaskIsOld && currentTask.getProcessDefinitionId()==processDefinitionUUID) {
+                    newTask = currentTask;
+                    break;
+                }
+            }
+            return newTask;
+        }
+    }
+	
 }
