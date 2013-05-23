@@ -48,7 +48,7 @@ public class CheckboxRepositoryTreeViewer extends ContainerCheckedTreeViewer {
 				if(!cache.containsKey(parentElement)){
 					List<IRepositoryFileStore> result = new ArrayList<IRepositoryFileStore>() ;
 					for(IRepositoryFileStore child : ((IRepositoryStore<IRepositoryFileStore>) parentElement).getChildren()){
-						if(child.canBeExported()){
+						if(child!= null && child.canBeExported()){
 							result.add(child) ;
 						}
 					}
