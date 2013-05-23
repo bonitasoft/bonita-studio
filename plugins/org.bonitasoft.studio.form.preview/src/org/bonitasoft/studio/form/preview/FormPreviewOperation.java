@@ -230,11 +230,14 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		Element parent =ModelHelper.getParentFlowElement(form);
 		if (parent ==null){
 			proc.getForm().add(formCopy);
+			
 		} else {
 			if (parent instanceof Task){
 				initializeTask(parent,proc,configuration);
 			}
 		}
+		configuration.setUsername(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
+		configuration.setPassword("bpm");
 		return proc;
 	}
 
@@ -292,8 +295,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 				mapping.getUsers().getUser().add(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
 			}
 			previewConfiguration.setActorMappings(actorMapping);
-			previewConfiguration.setUsername(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
-			previewConfiguration.setPassword("bpm");
+
 		}
 
 	}
