@@ -38,7 +38,6 @@ import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
 import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.bonitasoft.studio.groovy.ui.Messages;
-import org.bonitasoft.studio.groovy.ui.contentassist.BonitaSyntaxHighlighting;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -72,8 +71,6 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PlatformUI;
@@ -100,6 +97,7 @@ public class GroovyViewer {
 	private boolean isComputing = false;
 	private GroovyFileStore tmpGroovyFileStore;
 	private boolean contextInitialized = false;
+	private HashSet<String> knowVariables;
 
 	public GroovyViewer(final Composite mainComposite) {
 		this(mainComposite, null);
@@ -173,7 +171,7 @@ public class GroovyViewer {
 		});
 		enableContextAssitShortcut();
 
-		getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, GroovyUtil.getBonitaKeyWords(null));
+		getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, GroovyUtil.getBonitaKeyWords(null,null));
 		getSourceViewer().getDocument().addDocumentListener(new IDocumentListener() {
 
 			private Object previousContent;
@@ -188,13 +186,7 @@ public class GroovyViewer {
 						final IAnnotationModel model = getSourceViewer().getAnnotationModel();
 						final List<ScriptVariable> emptyList = Collections.emptyList();
 						final Map<String, Serializable> result = TestGroovyScriptUtil.createVariablesMap(getGroovyCompilationUnit(), emptyList);
-						final Set<String> knowVariables = new HashSet<String>();
-						if (nodes != null) {
-							for (final ScriptVariable n : nodes) {
-								knowVariables.add(n.getName());
-							}
-						}
-						knowVariables.addAll(BonitaSyntaxHighlighting.BONITA_KEYWORDS);
+						
 						final Iterator<?> it = model.getAnnotationIterator();
 						while (it.hasNext()) {
 							final Object annotation = it.next();
@@ -298,8 +290,18 @@ public class GroovyViewer {
 
 		// Add context in TextWidget to access it in content assist
 		getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, nodes);
-		getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, GroovyUtil.getBonitaKeyWords(context));
+		final List<String> bonitaKeyWords = GroovyUtil.getBonitaKeyWords(context,filters);
+		getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, bonitaKeyWords);
 		getSourceViewer().getTextWidget().setData(CONTEXT_DATA_KEY, context);
+		
+		knowVariables = new HashSet<String>();
+		if (nodes != null) {
+			for (final ScriptVariable n : nodes) {
+				knowVariables.add(n.getName());
+			}
+		}
+		knowVariables.addAll(bonitaKeyWords);
+		
 		contextInitialized  = true;
 	}
 

@@ -25,12 +25,17 @@ import java.util.Map;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
 import org.bonitasoft.forms.server.validator.AbstractFormValidator;
+import org.bonitasoft.studio.common.BonitaHomeUtil;
+import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.exporter.ExporterTools;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.data.util.DataUtil;
+import org.bonitasoft.studio.expression.editor.filter.DisplayEngineExpressionWithName;
+import org.bonitasoft.studio.expression.editor.filter.HideExpressionWithName;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Duplicable;
@@ -65,6 +70,7 @@ import org.bonitasoft.studio.model.simulation.SimulationLiteralData;
 import org.bonitasoft.studio.model.simulation.SimulationNumberData;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.FieldNode;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -72,6 +78,7 @@ import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
  * @author Romain Bioteau
@@ -81,7 +88,7 @@ public class GroovyUtil {
 	public static final String GROOVY_PREFIX = "${"; //$NON-NLS-1$
 	public static final String GROOVY_SUFFIX = "}"; //$NON-NLS-1$
 	public static final String GROOVY_CONSTANT_SEPARATOR = "\'";
-	
+
 	private static Map<String, Expression> expressions;
 
 	public static ScriptVariable createScriptVariable(final SimulationData d) {
@@ -113,7 +120,7 @@ public class GroovyUtil {
 		return Object.class;
 	}
 
-	
+
 	public static List<ScriptVariable> createScriptVariablesFromSimulationElement(
 			final Element elem) {
 		if (elem == null) {
@@ -171,18 +178,18 @@ public class GroovyUtil {
 		while (currentObject != null) {
 			if (isInEntryPageFlow && currentObject instanceof PageFlow) {
 				pageFlowTransientData
-						.addAll((List<Data>) currentObject
-								.eGet(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA));
+				.addAll((List<Data>) currentObject
+						.eGet(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA));
 			}
 			if (isInViewPageFlow && currentObject instanceof ViewPageFlow) {
 				pageFlowTransientData
-						.addAll((List<Data>) currentObject
-								.eGet(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA));
+				.addAll((List<Data>) currentObject
+						.eGet(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA));
 			}
 			if (isInOverviewPageFlow && currentObject instanceof RecapFlow) {
 				pageFlowTransientData
-						.addAll((List<Data>) currentObject
-								.eGet(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA));
+				.addAll((List<Data>) currentObject
+						.eGet(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA));
 			}
 			currentObject = (Element) currentObject.eContainer();
 		}
@@ -250,8 +257,17 @@ public class GroovyUtil {
 	}
 
 	private static List<ExpressionConstants> getBonitaConstantsFor(
-			final EObject context) {
+			final EObject context, ViewerFilter[] filters) {
 		final List<ExpressionConstants> result = new ArrayList<ExpressionConstants>();
+		DisplayEngineExpressionWithName engineFilter = null;
+		if(filters != null){
+			for(ViewerFilter f : filters){
+				if( f instanceof DisplayEngineExpressionWithName){
+					engineFilter = (DisplayEngineExpressionWithName) f;
+				}
+			}
+		}
+
 		result.add(ExpressionConstants.API_ACCESSOR);
 		result.add(ExpressionConstants.PROCESS_DEFINITION_ID);
 		result.add(ExpressionConstants.ROOT_PROCESS_INSTANCE_ID);
@@ -260,12 +276,24 @@ public class GroovyUtil {
 
 		if (context instanceof Activity) {
 			if (((Activity) context).isIsMultiInstance()) {
-				result.add(ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES);
-				result.add(ExpressionConstants.NUMBER_OF_TERMINATED_INSTANCES);
-				result.add(ExpressionConstants.NUMBER_OF_COMPLETED_INSTANCES);
-				result.add(ExpressionConstants.NUMBER_OF_INSTANCES);
+				if(engineFilter != null){
+					if(engineFilter.select(null, null, ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES.getEngineConstantName())){
+						result.add(ExpressionConstants.NUMBER_OF_ACTIVE_INSTANCES);
+					}
+					if(engineFilter.select(null, null, ExpressionConstants.NUMBER_OF_TERMINATED_INSTANCES.getEngineConstantName())){
+						result.add(ExpressionConstants.NUMBER_OF_TERMINATED_INSTANCES);
+					}
+					if(engineFilter.select(null, null, ExpressionConstants.NUMBER_OF_COMPLETED_INSTANCES.getEngineConstantName())){
+						result.add(ExpressionConstants.NUMBER_OF_COMPLETED_INSTANCES);
+					}
+					if(engineFilter.select(null, null, ExpressionConstants.NUMBER_OF_INSTANCES.getEngineConstantName())){
+						result.add(ExpressionConstants.NUMBER_OF_INSTANCES);
+					}
+				}
 			} else if (((Activity) context).getIsLoop()) {
-				result.add(ExpressionConstants.LOOP_COUNTER);
+				if(engineFilter != null && engineFilter.select(null, null, ExpressionConstants.LOOP_COUNTER.getEngineConstantName())){
+					result.add(ExpressionConstants.LOOP_COUNTER);
+				}
 			}
 		}
 
@@ -283,8 +311,8 @@ public class GroovyUtil {
 		return result;
 	}
 
-	public static List<String> getBonitaKeyWords(final EObject context) {
-		final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(context);
+	public static List<String> getBonitaKeyWords(final EObject context, final ViewerFilter[] filters) {
+		final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(context,filters);
 		final ArrayList<String> result = new ArrayList<String>(
 				bonitaConstantsFor.size());
 		for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
@@ -297,11 +325,10 @@ public class GroovyUtil {
 	}
 
 	private static void addBonitaVariables(final List<ScriptVariable> result,
-			final EObject element) {
-		final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(element);
+			final EObject element, ViewerFilter[] filters) {
+		final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(element,filters);
 		for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
-			result.add(new ScriptVariable(expressionConstants.getEngineConstantName(),
-					expressionConstants.getReturnType()));
+			result.add(new ScriptVariable(expressionConstants.getEngineConstantName(),getEngineExpressionReturnType(expressionConstants.getEngineConstantName())));
 		}
 		if (element!=null && element instanceof Validator){
 			result.add(new ScriptVariable(AbstractFormValidator.CLICKED_BUTTON_VARNAME,
@@ -356,9 +383,9 @@ public class GroovyUtil {
 		}
 	}
 
-	public static List<ScriptVariable> getBonitaVariables(final EObject element) {
+	public static List<ScriptVariable> getBonitaVariables(final EObject element, ViewerFilter[] filters) {
 		final List<ScriptVariable> result = new ArrayList<ScriptVariable>();
-		addBonitaVariables(result, element);
+		addBonitaVariables(result, element,filters);
 		return result;
 	}
 
@@ -564,8 +591,8 @@ public class GroovyUtil {
 				.equals(e.getType())) {
 			return new ScriptVariable(e.getContent(),getEngineExpressionReturnType(e.getName()));
 		}else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
-			 return new ScriptVariable(e.getContent(), e.getReturnType());
-		 }
+			return new ScriptVariable(e.getContent(), e.getReturnType());
+		}
 		return null;
 	}
 
@@ -575,7 +602,7 @@ public class GroovyUtil {
 				if("apiAccessor".equals(name)){
 					try{
 						final String apiAccessorExtClassName = "com.bonitasoft.engine.api.APIAccessor";
-						Class.forName(apiAccessorExtClassName);
+						ProjectUtil.getConsoleLibsBundle().loadClass(apiAccessorExtClassName);
 						return apiAccessorExtClassName;
 					}catch (Exception e) {
 						return exp.getReturnType();

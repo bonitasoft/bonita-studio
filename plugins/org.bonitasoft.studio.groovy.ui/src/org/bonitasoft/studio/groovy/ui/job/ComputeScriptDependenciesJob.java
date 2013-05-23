@@ -197,7 +197,6 @@ public class ComputeScriptDependenciesJob extends Job {
 
 	public void setNodes(final List<ScriptVariable> nodes) {
 		this.nodes = new ArrayList<ScriptVariable>(nodes);
-		this.nodes.addAll(GroovyUtil.getBonitaVariables(context));
 	}
 
 	public EObject getContext() {

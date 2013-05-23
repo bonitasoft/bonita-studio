@@ -371,7 +371,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         groovyViewer.setContext(context,filters) ;
         nodes = groovyViewer.getFieldNodes() ;
-
+      
 
         if (context == null && nodes == null) {
             dataCombo.getCombo().add(Messages.noProcessVariableAvailable);
@@ -391,7 +391,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             }
         }
 
-        bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context));
+        bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context,filters));
         bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 
         dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable) ;
@@ -413,6 +413,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
         dependencyJob = new ComputeScriptDependenciesJob(sourceViewer.getDocument()) ;
         dependencyJob.setContext(context) ;
+        this.nodes.addAll(GroovyUtil.getBonitaVariables(context,filters));
         dependencyJob.setNodes(nodes) ;
        
         final InputLengthValidator lenghtValidator = new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH);
