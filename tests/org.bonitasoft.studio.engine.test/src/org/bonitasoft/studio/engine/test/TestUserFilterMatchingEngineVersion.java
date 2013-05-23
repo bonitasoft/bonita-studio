@@ -95,7 +95,7 @@ public class TestUserFilterMatchingEngineVersion {
 		final ProcessInstance processInstance = processApi.startProcess(processId);
 		System.out.println("Proces Instance started in state: "+processInstance.getState());
 		
-        boolean evaluateAsync = new TestAsyncThread(1200, 1000) {
+        boolean evaluateAsync = new TestAsyncThread(30, 1000) {
             @Override
             public boolean isTestGreen() throws Exception {
             	System.out.println("Proces Instance started in state: "+processInstance.getId()+processInstance.getState());
