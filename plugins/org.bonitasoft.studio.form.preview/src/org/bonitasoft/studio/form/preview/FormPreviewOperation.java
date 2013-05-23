@@ -422,6 +422,9 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 	protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException,  PageOutOfRangeException, ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
 		long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
 		if(nbDeployedProcesses > 0){
+			if(lastProcessDeployed == null){
+				lastProcessDeployed = process.getName();
+			}
 			List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
 			for(ProcessDeploymentInfo info : processes){
 				if(info.getName().equals(lastProcessDeployed) && info.getVersion().equals(VERSION)){
