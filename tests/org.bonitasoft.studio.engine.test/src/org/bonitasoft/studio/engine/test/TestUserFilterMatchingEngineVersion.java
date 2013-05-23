@@ -63,7 +63,7 @@ public class TestUserFilterMatchingEngineVersion {
 	
 	@Test
 	public void testUserFilterRun() throws Exception{
-		session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+		session = BOSEngineManager.getInstance().loginTenant("william.jobs","bpm",Repository.NULL_PROGRESS_MONITOR);
 		final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
 		final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
 		final User williamJobsUser = BOSEngineManager.getInstance().getIdentityAPI(session).getUserByUserName("william.jobs");
