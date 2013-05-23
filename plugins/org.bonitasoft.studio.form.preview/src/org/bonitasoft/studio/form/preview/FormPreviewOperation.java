@@ -148,7 +148,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
 				undeployProcess(proc, processApi);
 
-				BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,configuration,Collections.EMPTY_SET);
+				BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,configuration,Collections.EMPTY_SET,false);
 
 				ProcessDefinition def = processApi.deploy(businessArchive);
 				procId = def.getId();

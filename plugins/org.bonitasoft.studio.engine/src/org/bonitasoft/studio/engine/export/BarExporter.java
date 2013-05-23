@@ -84,284 +84,292 @@ import org.eclipse.ui.PlatformUI;
  */
 public class BarExporter {
 
-    private static final String PROCESS_DEFINITION_EXPORTER_ID = "org.bonitasoft.studio.engine.processDefinitionExporter";
-    private static final String BAR_RESOURCE_PROVIDERS_EXTENSION_POINT = "org.bonitasoft.studio.common.barResourcesProvider";
-    private static final String BAR_APPLICATION_RESOURCE_PROVIDERS_EXTENSION_POINT = "org.bonitasoft.studio.exporter.barApplicationResourceProvider";
+	private static final String PROCESS_DEFINITION_EXPORTER_ID = "org.bonitasoft.studio.engine.processDefinitionExporter";
+	private static final String BAR_RESOURCE_PROVIDERS_EXTENSION_POINT = "org.bonitasoft.studio.common.barResourcesProvider";
+	private static final String BAR_APPLICATION_RESOURCE_PROVIDERS_EXTENSION_POINT = "org.bonitasoft.studio.exporter.barApplicationResourceProvider";
 
 
-    private static BarExporter INSTANCE;
+	private static BarExporter INSTANCE;
 
 
-    private BarExporter(){
+	private BarExporter(){
 
-    }
+	}
 
-    public static BarExporter getInstance(){
-        if(INSTANCE == null){
-            INSTANCE = new BarExporter() ;
-        }
-        return INSTANCE ;
-    }
+	public static BarExporter getInstance(){
+		if(INSTANCE == null){
+			INSTANCE = new BarExporter() ;
+		}
+		return INSTANCE ;
+	}
 
-    public BusinessArchive createBusinessArchive(final AbstractProcess process,final Configuration configuration,final Set<EObject> excludedObject) throws Exception {
-        BonitaStudioLog.info("Building bar for process " + process.getName() +" ("+process.getVersion()+" )...",EnginePlugin.PLUGIN_ID);
+	public BusinessArchive createBusinessArchive(final AbstractProcess process,final Configuration configuration,final Set<EObject> excludedObject) throws Exception {
+		return createBusinessArchive(process,configuration, excludedObject,true);
+	}
 
-        final DesignProcessDefinitionBuilder procBuilder = getProcessDefinitionBuilder();
-        procBuilder.seteObjectNotExported(excludedObject);
-        final DesignProcessDefinition def = procBuilder.createDefinition(process);
 
-        if(def == null){
-            throw new Exception(Messages.cantDeployEmptyPool);
-        }
+	public  BusinessArchive createBusinessArchive(final AbstractProcess process,final Configuration configuration,final Set<EObject> excludedObject, boolean addProcessImage) throws Exception {
+		BonitaStudioLog.info("Building bar for process " + process.getName() +" ("+process.getVersion()+" )...",EnginePlugin.PLUGIN_ID);
 
-        final BusinessArchiveBuilder builder = new BusinessArchiveBuilder().createNewBusinessArchive() ;
-        builder.setProcessDefinition(def) ;
+		final DesignProcessDefinitionBuilder procBuilder = getProcessDefinitionBuilder();
+		procBuilder.seteObjectNotExported(excludedObject);
+		final DesignProcessDefinition def = procBuilder.createDefinition(process);
 
-        if(configuration != null){
-            builder.setParameters(getParameterMapFromConfiguration(configuration)) ;
-            final byte[] content = getActorMappingContent(configuration) ;
-            if(content != null){
-                builder.setActorMapping(content) ;
-            }
-        }
+		if(def == null){
+			throw new Exception(Messages.cantDeployEmptyPool);
+		}
 
-        for (BARResourcesProvider resourceProvider : getBARResourcesProvider()) {
-            resourceProvider.addResourcesForConfiguration(builder,process,configuration);
-        }
+		final BusinessArchiveBuilder builder = new BusinessArchiveBuilder().createNewBusinessArchive() ;
+		builder.setProcessDefinition(def) ;
 
-        //Add forms resources
-        BARResourcesProvider provider = getBARApplicationResourcesProvider();
-        if(provider != null){
-            provider.addResourcesForConfiguration(builder,process,configuration);
+		if(configuration != null){
+			builder.setParameters(getParameterMapFromConfiguration(configuration)) ;
+			final byte[] content = getActorMappingContent(configuration) ;
+			if(content != null){
+				builder.setActorMapping(content) ;
+			}
+		}
 
-        }
+		for (BARResourcesProvider resourceProvider : getBARResourcesProvider()) {
+			resourceProvider.addResourcesForConfiguration(builder,process,configuration);
+		}
 
-        if(!(process instanceof SubProcessEvent)){
-            Display.getDefault().syncExec(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        addProcessImage(builder,process);
-                    } catch (CoreException e) {
-                        BonitaStudioLog.error(e);
-                    }
-                }
-            });
-        }
+		//Add forms resources
+		BARResourcesProvider provider = getBARApplicationResourcesProvider();
+		if(provider != null){
+			provider.addResourcesForConfiguration(builder,process,configuration);
 
-        final BusinessArchive archive = builder.done();
-        BonitaStudioLog.info("Build complete for process " + process.getName() +" ("+process.getVersion()+" ).",EnginePlugin.PLUGIN_ID);
-        return archive;
-    }
+		}
 
-    public DesignProcessDefinitionBuilder getProcessDefinitionBuilder() {
-        for(IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(PROCESS_DEFINITION_EXPORTER_ID)){
-            try {
-                return (DesignProcessDefinitionBuilder) element.createExecutableExtension("class");
-            } catch (CoreException e) {
-                BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
-            }
-        }
-        return new DesignProcessDefinitionBuilder();
-    }
+		if(!(process instanceof SubProcessEvent)){
+			if (addProcessImage){
+				Display.getDefault().syncExec(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							addProcessImage(builder,process);
+						} catch (CoreException e) {
+							BonitaStudioLog.error(e);
+						}
+					}
+				});
+			}
+		}
 
-    /**
-     * @param process The pool to export
-     * @param configurationId
-     * @param excludedObject elements of the process not exported in process definition
-     */
-    public BusinessArchive createBusinessArchive(final AbstractProcess process,final String configurationId,final Set<EObject> excludedObject) throws Exception {
-        Configuration configuration = null ;
-        if(configurationId != null){
-            configuration = getConfiguration(process, configurationId);
-        }
-        return createBusinessArchive(process, configuration, excludedObject);
-    }
+		final BusinessArchive archive = builder.done();
+		BonitaStudioLog.info("Build complete for process " + process.getName() +" ("+process.getVersion()+" ).",EnginePlugin.PLUGIN_ID);
+				return archive;
+	}
 
-    public byte[] getActorMappingContent(Configuration configuration) throws Exception {
-        if(configuration.getActorMappings() != null && configuration.getActorMappings().getActorMapping() != null && !configuration.getActorMappings().getActorMapping().isEmpty()){
-    		
-        	StringBuffer result = new StringBuffer("");
-        	for(ActorMapping mapping : configuration.getActorMappings().getActorMapping()){
-        		if(!checkActorMappingGroup(mapping)){
-        			result.append("- "+mapping.getName()+"\n");
-        		}
-        	}
-        	if(result.length()>0){
-        		throw new Exception(Messages.errorActorMappingGroup+" : \n"+ result.toString());
-        	}
-        	
-            org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI.createFileURI(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath()+File.separatorChar+EcoreUtil.generateUUID()+".xml") ;
-            Resource resource = new ActorMappingResourceFactoryImpl().createResource(uri) ;
-            DocumentRoot root = ActorMappingFactory.eINSTANCE.createDocumentRoot() ;
-            ActorMappingsType mapping = EcoreUtil.copy(configuration.getActorMappings()) ;
-            cleanMapping(mapping) ;
-            root.setActorMappings(mapping);
-            resource.getContents().add(root) ;
-            Map<String, String> options = new HashMap<String, String>() ;
-            options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-            options.put(XMLResource.OPTION_XML_VERSION, "1.0");
-            try {
-                resource.save(options) ;
-                String content = new XMLProcessor().saveToString(resource, options) ;
-                resource.delete(Collections.EMPTY_MAP) ;
-                return content.getBytes();
-            } catch (IOException e) {
-                new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Export error", "An error occured during export", e).open() ;
-            }
-        }
-        return null ;
-    }
 
-    private void cleanMapping(ActorMappingsType mapping) {
-        for(ActorMapping m : mapping.getActorMapping()){
-            final Groups groups = m.getGroups();
+	public DesignProcessDefinitionBuilder getProcessDefinitionBuilder() {
+		for(IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(PROCESS_DEFINITION_EXPORTER_ID)){
+			try {
+				return (DesignProcessDefinitionBuilder) element.createExecutableExtension("class");
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e, EnginePlugin.PLUGIN_ID);
+			}
+		}
+		return new DesignProcessDefinitionBuilder();
+	}
+
+	/**
+	 * @param process The pool to export
+	 * @param configurationId
+	 * @param excludedObject elements of the process not exported in process definition
+	 */
+	public BusinessArchive createBusinessArchive(final AbstractProcess process,final String configurationId,final Set<EObject> excludedObject) throws Exception {
+		Configuration configuration = null ;
+		if(configurationId != null){
+			configuration = getConfiguration(process, configurationId);
+		}
+		return createBusinessArchive(process, configuration, excludedObject);
+	}
+
+	public byte[] getActorMappingContent(Configuration configuration) throws Exception {
+		if(configuration.getActorMappings() != null && configuration.getActorMappings().getActorMapping() != null && !configuration.getActorMappings().getActorMapping().isEmpty()){
+
+			StringBuffer result = new StringBuffer("");
+			for(ActorMapping mapping : configuration.getActorMappings().getActorMapping()){
+				if(!checkActorMappingGroup(mapping)){
+					result.append("- "+mapping.getName()+"\n");
+				}
+			}
+			if(result.length()>0){
+				throw new Exception(Messages.errorActorMappingGroup+" : \n"+ result.toString());
+			}
+
+			org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI.createFileURI(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath()+File.separatorChar+EcoreUtil.generateUUID()+".xml") ;
+			Resource resource = new ActorMappingResourceFactoryImpl().createResource(uri) ;
+			DocumentRoot root = ActorMappingFactory.eINSTANCE.createDocumentRoot() ;
+			ActorMappingsType mapping = EcoreUtil.copy(configuration.getActorMappings()) ;
+			cleanMapping(mapping) ;
+			root.setActorMappings(mapping);
+			resource.getContents().add(root) ;
+			Map<String, String> options = new HashMap<String, String>() ;
+			options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+			options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+			try {
+				resource.save(options) ;
+				String content = new XMLProcessor().saveToString(resource, options) ;
+				resource.delete(Collections.EMPTY_MAP) ;
+				return content.getBytes();
+			} catch (IOException e) {
+				new BonitaErrorDialog(Display.getDefault().getActiveShell(), "Export error", "An error occured during export", e).open() ;
+			}
+		}
+		return null ;
+	}
+
+	private void cleanMapping(ActorMappingsType mapping) {
+		for(ActorMapping m : mapping.getActorMapping()){
+			final Groups groups = m.getGroups();
 			if(groups != null && groups.getGroup().isEmpty()){
-                m.setGroups(null) ;
-            }
-            final Membership memberships = m.getMemberships();
+				m.setGroups(null) ;
+			}
+			final Membership memberships = m.getMemberships();
 			if(memberships != null && memberships.getMembership().isEmpty()){
-                m.setMemberships(null) ;
-            }
-            final Roles roles = m.getRoles();
+				m.setMemberships(null) ;
+			}
+			final Roles roles = m.getRoles();
 			if(roles != null && roles.getRole().isEmpty()){
-                m.setRoles(null) ;
-            }
-            final Users users = m.getUsers();
+				m.setRoles(null) ;
+			}
+			final Users users = m.getUsers();
 			if(users != null && users.getUser().isEmpty()){
-                m.setUsers(null) ;
-            }
-        }
-    }
+				m.setUsers(null) ;
+			}
+		}
+	}
 
-    public Configuration getConfiguration(final AbstractProcess process,String configurationId) {
-        Configuration configuration = null ;
-        final ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
-        if(configurationId == null){
-            configurationId = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION) ;
-        }
-        if(configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)){
-            String id = ModelHelper.getEObjectID(process) ;
-            IRepositoryFileStore file = processConfStore.getChild(id+".conf") ;
-            if(file == null){
-            	file = processConfStore.createRepositoryFileStore(id+".conf");
-            	 configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
-                 configuration.setName(configurationId) ;
-                 configuration.setVersion(ModelVersion.CURRENT_VERSION);
-                 file.save(configuration);
-            }
-            configuration = (Configuration) file.getContent();
-        }else{
-            for(Configuration conf : process.getConfigurations()){
-                if(configurationId.equals(conf.getName())){
-                    configuration = conf ;
-                }
-            }
-        }
-        if(configuration == null){
-            configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
-            configuration.setName(configurationId) ;
-            configuration.setVersion(ModelVersion.CURRENT_VERSION);
-        }
-        //Synchronize configuration with definition
-        new ConfigurationSynchronizer(process, configuration).synchronize() ;
-        return configuration ;
-    }
-
-
-
-    public Map<String, String> getParameterMapFromConfiguration(final Configuration configuration) {
-        Map<String, String> result = new HashMap<String, String>() ;
-        for(Parameter p : configuration.getParameters()){
-            if(p.getValue() != null){
-                result.put(p.getName(),p.getValue()) ;
-            }
-        }
-        return result;
-    }
-
-    private BARResourcesProvider getBARApplicationResourcesProvider() {
-        BARResourcesProvider result = null ;
-        int maxPriority = -1 ;
-        IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(BAR_APPLICATION_RESOURCE_PROVIDERS_EXTENSION_POINT);
-        for (IConfigurationElement extension : extensions) {
-
-            try {
-                int p = Integer.parseInt(extension.getAttribute("priority"));
-                if(p >= maxPriority){
-                    result = (BARResourcesProvider)extension.createExecutableExtension("providerClass");
-                    maxPriority = p ;
-                }
-            } catch (Exception ex) {
-                BonitaStudioLog.error(ex);
-            }
-        }
-        return result;
-    }
+	public Configuration getConfiguration(final AbstractProcess process,String configurationId) {
+		Configuration configuration = null ;
+		final ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
+		if(configurationId == null){
+			configurationId = ConfigurationPlugin.getDefault().getPreferenceStore().getString(ConfigurationPreferenceConstants.DEFAULT_CONFIGURATION) ;
+		}
+		if(configurationId.equals(ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON)){
+			String id = ModelHelper.getEObjectID(process) ;
+			IRepositoryFileStore file = processConfStore.getChild(id+".conf") ;
+			if(file == null){
+				file = processConfStore.createRepositoryFileStore(id+".conf");
+				configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
+				configuration.setName(configurationId) ;
+				configuration.setVersion(ModelVersion.CURRENT_VERSION);
+				file.save(configuration);
+			}
+			configuration = (Configuration) file.getContent();
+		}else{
+			for(Configuration conf : process.getConfigurations()){
+				if(configurationId.equals(conf.getName())){
+					configuration = conf ;
+				}
+			}
+		}
+		if(configuration == null){
+			configuration = ConfigurationFactory.eINSTANCE.createConfiguration() ;
+			configuration.setName(configurationId) ;
+			configuration.setVersion(ModelVersion.CURRENT_VERSION);
+		}
+		//Synchronize configuration with definition
+		new ConfigurationSynchronizer(process, configuration).synchronize() ;
+		return configuration ;
+	}
 
 
-    public List<BARResourcesProvider> getBARResourcesProvider() {
-        List<BARResourcesProvider> res = new ArrayList<BARResourcesProvider>();
-        IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(BAR_RESOURCE_PROVIDERS_EXTENSION_POINT);
-        for (IConfigurationElement extension : extensions) {
-            try {
-                res.add((BARResourcesProvider)extension.createExecutableExtension("providerClass"));
-            } catch (Exception ex) {
-                BonitaStudioLog.error(ex);
-            }
-        }
-        return res;
-    }
 
-    private void addProcessImage(BusinessArchiveBuilder builder, final AbstractProcess process) throws CoreException {
-        if(PlatformUI.isWorkbenchRunning()){
-            final String processName = process.getName()+"_"+process.getVersion();
-            final String path = processName +".png" ; //$NON-NLS-1$
+	public Map<String, String> getParameterMapFromConfiguration(final Configuration configuration) {
+		Map<String, String> result = new HashMap<String, String>() ;
+		for(Parameter p : configuration.getParameters()){
+			if(p.getValue() != null){
+				result.put(p.getName(),p.getValue()) ;
+			}
+		}
+		return result;
+	}
 
-            try {
-                Diagram diagram = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process),null);
-                if(diagram == null){
-                    return;//DON'T ADD IMAGE, DON'T THROW EXCEPTION FOR TESTS PURPUSES
-                }
-                ResourceSet resourceSet = new ResourceSetImpl();
-                TransactionalEditingDomain editingDomain  = GMFEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
-                Resource resource = resourceSet.createResource(diagram.eResource().getURI());
-                try {
-                    resource.load(resourceSet.getLoadOptions());
-                } catch (IOException e1) {
-                    BonitaStudioLog.error(e1);
-                }
-                diagram = (Diagram) resource.getEObject(diagram.eResource().getURIFragment(diagram));
-                CopyToImageUtilEx copyToImageUtil = new CopyToImageUtilEx();
-                byte[] imageBytes = null;
-                try {
-                    imageBytes = copyToImageUtil.copyToImageByteArray(diagram, process, ImageFileFormat.PNG, Repository.NULL_PROGRESS_MONITOR, new PreferencesHint("exportToImage"), true) ;
-                } catch (Exception e) {
-                    BonitaStudioLog.error(e);
-                    return ;
-                } finally {
-                    editingDomain.dispose() ;
-                }
-                if(imageBytes != null){
-                    try {
-                        builder.addExternalResource(new BarResource(path,imageBytes));
-                    } catch (Exception e) {
-                        BonitaStudioLog.log("Process image file generation has failed"); //$NON-NLS-1$
-                    }
-                }
-            }catch (Exception e) {
-                BonitaStudioLog.error(e);
-            }
-        }
-    }
+	private BARResourcesProvider getBARApplicationResourcesProvider() {
+		BARResourcesProvider result = null ;
+		int maxPriority = -1 ;
+		IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(BAR_APPLICATION_RESOURCE_PROVIDERS_EXTENSION_POINT);
+		for (IConfigurationElement extension : extensions) {
 
-    
-    private boolean checkActorMappingGroup(ActorMapping mapping){
-    	
-    	List<String> list1 = mapping.getGroups().getGroup();
-    	List<String> list2 = mapping.getGroups().getGroup();
-    	
-    	for(String s1 : list1){
+			try {
+				int p = Integer.parseInt(extension.getAttribute("priority"));
+				if(p >= maxPriority){
+					result = (BARResourcesProvider)extension.createExecutableExtension("providerClass");
+					maxPriority = p ;
+				}
+			} catch (Exception ex) {
+				BonitaStudioLog.error(ex);
+			}
+		}
+		return result;
+	}
+
+
+	public List<BARResourcesProvider> getBARResourcesProvider() {
+		List<BARResourcesProvider> res = new ArrayList<BARResourcesProvider>();
+		IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(BAR_RESOURCE_PROVIDERS_EXTENSION_POINT);
+		for (IConfigurationElement extension : extensions) {
+			try {
+				res.add((BARResourcesProvider)extension.createExecutableExtension("providerClass"));
+			} catch (Exception ex) {
+				BonitaStudioLog.error(ex);
+			}
+		}
+		return res;
+	}
+
+	private void addProcessImage(BusinessArchiveBuilder builder, final AbstractProcess process) throws CoreException {
+		if(PlatformUI.isWorkbenchRunning()){
+			final String processName = process.getName()+"_"+process.getVersion();
+			final String path = processName +".png" ; //$NON-NLS-1$
+
+			try {
+				Diagram diagram = ModelHelper.getDiagramFor(ModelHelper.getMainProcess(process),null);
+				if(diagram == null){
+					return;//DON'T ADD IMAGE, DON'T THROW EXCEPTION FOR TESTS PURPUSES
+				}
+				ResourceSet resourceSet = new ResourceSetImpl();
+				TransactionalEditingDomain editingDomain  = GMFEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
+				Resource resource = resourceSet.createResource(diagram.eResource().getURI());
+				try {
+					resource.load(resourceSet.getLoadOptions());
+				} catch (IOException e1) {
+					BonitaStudioLog.error(e1);
+				}
+				diagram = (Diagram) resource.getEObject(diagram.eResource().getURIFragment(diagram));
+				CopyToImageUtilEx copyToImageUtil = new CopyToImageUtilEx();
+				byte[] imageBytes = null;
+				try {
+					imageBytes = copyToImageUtil.copyToImageByteArray(diagram, process, ImageFileFormat.PNG, Repository.NULL_PROGRESS_MONITOR, new PreferencesHint("exportToImage"), true) ;
+				} catch (Exception e) {
+					BonitaStudioLog.error(e);
+					return ;
+				} finally {
+					editingDomain.dispose() ;
+				}
+				if(imageBytes != null){
+					try {
+						builder.addExternalResource(new BarResource(path,imageBytes));
+					} catch (Exception e) {
+						BonitaStudioLog.log("Process image file generation has failed"); //$NON-NLS-1$
+					}
+				}
+			}catch (Exception e) {
+				BonitaStudioLog.error(e);
+			}
+		}
+	}
+
+
+	private boolean checkActorMappingGroup(ActorMapping mapping){
+
+		List<String> list1 = mapping.getGroups().getGroup();
+		List<String> list2 = mapping.getGroups().getGroup();
+
+		for(String s1 : list1){
 			for(String s2 : list2){
 				if(!s1.equals(s2) && (s2.startsWith(s1) || s1.startsWith(s2)) ){
 					return false;
@@ -369,5 +377,5 @@ public class BarExporter {
 			}
 		}
 		return true;
-    }
+	}
 }
