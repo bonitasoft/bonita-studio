@@ -81,7 +81,6 @@ import org.junit.runners.Suite;
     TestInitialWorkspace.class,
     TestMenus.class,
     TestExtensionProject.class,
-    TestExtensionProject.class,
     TestFunctionRepository.class,
     TestFullScenario.class, // Must be the first to manipulate processes of the suite
     TestSubprocess.class,
