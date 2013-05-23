@@ -301,9 +301,27 @@
             xsi:type="gmfmap:FeatureValueSpec">
           <feature
               xsi:type="ecore:EReference"
+              href="process.ecore#//PageFlow/entryRedirectionURL"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
+              href="process.ecore#//PageFlow/confirmationMessage"/>
+          <value
+              body="org.bonitasoft.studio.model.expression.Expression exp = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;exp.setReturnType(String.class.getName());&#xD;&#xA;exp.setReturnTypeFixed(true);&#xD;&#xA;return exp ;"
+              language="java"/>
+        </initializers>
+        <initializers
+            xsi:type="gmfmap:FeatureValueSpec">
+          <feature
+              xsi:type="ecore:EReference"
               href="process.ecore#//Activity/multiInstantiation"/>
           <value
-              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xA;&#xA;   final org.bonitasoft.studio.model.expression.Expression completionCondition = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xA;completionCondition.setReturnTypeFixed(true);&#xA;res.setCompletionCondition(completionCondition);&#xD;&#xA;return res;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -591,7 +609,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//Activity/multiInstantiation"/>
           <value
-              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xA;&#xA;   final org.bonitasoft.studio.model.expression.Expression completionCondition = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xA;completionCondition.setReturnTypeFixed(true);&#xA;res.setCompletionCondition(completionCondition);&#xD;&#xA;return res;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1056,7 +1074,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//Activity/multiInstantiation"/>
           <value
-              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xA;&#xA;   final org.bonitasoft.studio.model.expression.Expression completionCondition = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xA;completionCondition.setReturnTypeFixed(true);&#xA;res.setCompletionCondition(completionCondition);&#xD;&#xA;return res;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1188,7 +1206,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//Activity/multiInstantiation"/>
           <value
-              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xA;&#xA;   final org.bonitasoft.studio.model.expression.Expression completionCondition = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xA;completionCondition.setReturnTypeFixed(true);&#xA;res.setCompletionCondition(completionCondition);&#xD;&#xA;return res;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1285,7 +1303,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//Activity/multiInstantiation"/>
           <value
-              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xA;&#xA;   final org.bonitasoft.studio.model.expression.Expression completionCondition = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xA;completionCondition.setReturnTypeFixed(true);&#xA;res.setCompletionCondition(completionCondition);&#xD;&#xA;return res;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1417,7 +1435,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//Activity/multiInstantiation"/>
           <value
-              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xA;&#xA;   final org.bonitasoft.studio.model.expression.Expression completionCondition = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xA;completionCondition.setReturnTypeFixed(true);&#xA;res.setCompletionCondition(completionCondition);&#xD;&#xA;return res;"
               language="java"/>
         </initializers>
       </domainInitializer>
@@ -1698,7 +1716,7 @@
               xsi:type="ecore:EReference"
               href="process.ecore#//Activity/multiInstantiation"/>
           <value
-              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.model.expression.ExpressionFactory.eINSTANCE.createExpression();&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xD;&#xA;return res;"
+              body="org.bonitasoft.studio.model.process.MultiInstantiation res = org.bonitasoft.studio.model.process.ProcessFactory.eINSTANCE.createMultiInstantiation();&#xD;&#xA;            final org.bonitasoft.studio.model.expression.Expression cardinality = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xD;&#xA;            cardinality.setReturnType(Integer.class.getName());&#xD;&#xA;            cardinality.setReturnTypeFixed(true);&#xD;&#xA;            res.setCardinality(cardinality);&#xD;&#xA;            res.setUseCardinality(true);&#xA;&#xA;   final org.bonitasoft.studio.model.expression.Expression completionCondition = org.bonitasoft.studio.common.NamingUtils.generateConstantExpression(&quot;&quot;);&#xA;completionCondition.setReturnTypeFixed(true);&#xA;res.setCompletionCondition(completionCondition);&#xD;&#xA;return res;"
               language="java"/>
         </initializers>
       </domainInitializer>
