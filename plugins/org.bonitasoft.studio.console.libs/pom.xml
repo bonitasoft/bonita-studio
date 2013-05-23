@@ -386,6 +386,7 @@
 							org.bonitasoft.engine.filter;version = "0.0.0",
 							org.bonitasoft.engine.identity;version = "0.0.0",
 							org.bonitasoft.engine.platform;version = "0.0.0",
+							org.bonitasoft.engine.profile.model = "0.0.0",
 							org.bonitasoft.engine.search;version = "0.0.0",
 							org.bonitasoft.engine.util;version = "0.0.0",
 							org.bonitasoft.console.common.client.model.exception;version =
