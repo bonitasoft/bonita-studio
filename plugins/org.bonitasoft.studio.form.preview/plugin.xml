@@ -7,7 +7,7 @@
             category="org.bonitasoft.studio.application.bonita"
             class="org.bonitasoft.studio.form.preview.view.FormPreviewPropertiesView"
             id="org.bonitasoft.studio.views.properties.form.preview"
-            name="preview"
+            name="Preview"
             restorable="true">
       </view>
    </extension>
