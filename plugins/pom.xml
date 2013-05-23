@@ -117,7 +117,6 @@
 	<module>../translations/de/org.bonitasoft.studio.validators.nl_de</module>
 	<module>../translations/de/org.bonitasoft.studio.xml.nl_de</module>
 	<module>../translations/de/org.bonitasoft.studio.xpdl.nl_de</module>
-	<module>../translations/de/org.bonitasoft.studio.xml.nl_de</module>
 	<module>../translations/de/org.omg.schema.spec.bpmn.nl_de</module>
    	<module>../translations/es/org.bonitasoft.studio.actors.nl_es</module>
 	<module>../translations/es/org.bonitasoft.studio.application.nl_es</module>
@@ -162,7 +161,6 @@
 	<module>../translations/es/org.bonitasoft.studio.validators.nl_es</module>
 	<module>../translations/es/org.bonitasoft.studio.xml.nl_es</module>
 	<module>../translations/es/org.bonitasoft.studio.xpdl.nl_es</module>
-	<module>../translations/es/org.bonitasoft.studio.xml.nl_es</module>
 	<module>../translations/es/org.omg.schema.spec.bpmn.nl_es</module>
 	<module>../translations/fr/org.bonitasoft.studio.actors.nl_fr</module>
 	<module>../translations/fr/org.bonitasoft.studio.application.nl_fr</module>
@@ -207,7 +205,6 @@
 	<module>../translations/fr/org.bonitasoft.studio.validators.nl_fr</module>
 	<module>../translations/fr/org.bonitasoft.studio.xml.nl_fr</module>
 	<module>../translations/fr/org.bonitasoft.studio.xpdl.nl_fr</module>
-	<module>../translations/fr/org.bonitasoft.studio.xml.nl_fr</module>
 	<module>../translations/fr/org.omg.schema.spec.bpmn.nl_fr</module>
 	<module>../translations/it/org.bonitasoft.studio.actors.nl_it</module>
 	<module>../translations/it/org.bonitasoft.studio.application.nl_it</module>
@@ -252,7 +249,6 @@
 	<module>../translations/it/org.bonitasoft.studio.validators.nl_it</module>
 	<module>../translations/it/org.bonitasoft.studio.xml.nl_it</module>
 	<module>../translations/it/org.bonitasoft.studio.xpdl.nl_it</module>
-	<module>../translations/it/org.bonitasoft.studio.xml.nl_it</module>
 	<module>../translations/it/org.omg.schema.spec.bpmn.nl_it</module>
 	<module>../translations/pt/org.bonitasoft.studio.actors.nl_pt</module>
 	<module>../translations/pt/org.bonitasoft.studio.application.nl_pt</module>
@@ -297,7 +293,6 @@
 	<module>../translations/pt/org.bonitasoft.studio.validators.nl_pt</module>
 	<module>../translations/pt/org.bonitasoft.studio.xml.nl_pt</module>
 	<module>../translations/pt/org.bonitasoft.studio.xpdl.nl_pt</module>
-	<module>../translations/pt/org.bonitasoft.studio.xml.nl_pt</module>
 	<module>../translations/pt/org.omg.schema.spec.bpmn.nl_pt</module>
 	<module>../translations/pt_BR/org.bonitasoft.studio.actors.nl_pt_BR</module>
 	<module>../translations/pt_BR/org.bonitasoft.studio.application.nl_pt_BR</module>
@@ -342,7 +337,6 @@
 	<module>../translations/pt_BR/org.bonitasoft.studio.validators.nl_pt_BR</module>
 	<module>../translations/pt_BR/org.bonitasoft.studio.xml.nl_pt_BR</module>
 	<module>../translations/pt_BR/org.bonitasoft.studio.xpdl.nl_pt_BR</module>
-	<module>../translations/pt_BR/org.bonitasoft.studio.xml.nl_pt_BR</module>
 	<module>../translations/pt_BR/org.omg.schema.spec.bpmn.nl_pt_BR</module>
 	</modules>
 <properties>
