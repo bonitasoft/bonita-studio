@@ -24,7 +24,7 @@ import org.bonitasoft.studio.engine.command.AbstractOpenConsoleCommand;
 
 public class OpenConsoleCommand extends AbstractOpenConsoleCommand {
 
-    public static final String CONSOLE_PATH = "/bonita/console/homepage?"; //$NON-NLS-1$
+    public static final String CONSOLE_PATH = "/bonita/console/homepage#?_p=tasklistinguser&_pf=1&_f=available&"; //$NON-NLS-1$
 
     public OpenConsoleCommand(){
         this(false);

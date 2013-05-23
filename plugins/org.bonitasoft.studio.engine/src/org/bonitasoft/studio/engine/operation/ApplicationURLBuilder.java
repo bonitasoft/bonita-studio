@@ -73,7 +73,7 @@ public class ApplicationURLBuilder {
         }
 
         final String loginURL = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-        final String runUrl = "http://"+ host+":"+ port + APPLI_PATH + token +"ui=form#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion(), "UTF-8")+"$entry&process="+processId+"&mode=app";
+        final String runUrl = "http://"+ host+":"+ port + APPLI_PATH + token +"ui=form#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion(), "UTF-8")+"$entry&process="+processId+"&mode=app&locale="+locale;
         return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(runUrl, "UTF-8"));
     }
 

@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.actors.ui.handler;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +26,7 @@ import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProfileAPI;
 import org.bonitasoft.engine.identity.User;
 import org.bonitasoft.engine.identity.UserCriterion;
+import org.bonitasoft.engine.profile.model.Profile;
 import org.bonitasoft.engine.search.Order;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
@@ -174,9 +174,9 @@ public class InstallOrganizationHandler extends AbstractHandler {
 	protected void applyAllProfileToUsers(IdentityAPI identityAPI, ProfileAPI profileAPI) throws Exception {
 		final List<Long> profiles = new ArrayList<Long>() ;
 		final SearchOptions options = new SearchOptionsBuilder(0, Integer.MAX_VALUE).sort("name", Order.DESC).done();
-		final SearchResult<HashMap<String, Serializable>> searchedProfiles = profileAPI.searchProfiles(options);
-		for(Map<String, Serializable> profile : searchedProfiles.getResult()){
-			long profileId =  (Long) profile.get("id") ;
+		final SearchResult<Profile> searchedProfiles = profileAPI.searchProfiles(options);
+		for(Profile profile : searchedProfiles.getResult()){
+			long profileId = profile.getId();
 			profiles.add(profileId) ;
 		}
 

@@ -387,9 +387,13 @@ public class BOSWebServerManager {
 			args.append("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8500");
 		}
 		addSystemProperty(args, "catalina.home", "\""+tomcatInstanceLocation+"\"");
+		addSystemProperty(args, "CATALINA_HOME", "\""+tomcatInstanceLocation+"\"");
+		addSystemProperty(args, "btm.root", "\""+tomcatInstanceLocation+"\"");
 		addSystemProperty(args, "wtp.deploy", "\""+tomcatInstanceLocation+File.separatorChar+"webapps\"");
 		addSystemProperty(args, "java.endorsed.dirs", "\""+tomcatInstanceLocation+File.separatorChar+"endorsed\"");
 		addSystemProperty(args, "bonita.home", "\""+tomcatInstanceLocation+File.separatorChar+"bonita\"");
+		addSystemProperty(args, "sysprop.bonita.db.vendor", "h2");
+		addSystemProperty(args, "bitronix.tm.configuration", "\""+tomcatInstanceLocation+File.separatorChar+"conf"+File.separatorChar+"bitronix-config.properties\"");
 		addSystemProperty(args, "java.util.logging.manager", "org.apache.juli.ClassLoaderLogManager");
 		addSystemProperty(args, "java.util.logging.config.file", "\""+tomcatInstanceLocation+File.separatorChar+"conf"+File.separatorChar+"logging.properties\"");
 		addSystemProperty(args, "file.encoding", "UTF-8");
@@ -401,6 +405,7 @@ public class BOSWebServerManager {
 		addSystemProperty(args, WATCHDOG_PORT_PROPERTY,String.valueOf(WATCHDOG_PORT));
 		addSystemProperty(args, WATCHDOG_TIMER, "20000");
 		addSystemProperty(args, "eclipse.product", Platform.getProduct().getApplication());
+		args.append(" -Xshare:auto");
 		return args.toString();
 	}
 
@@ -501,7 +506,7 @@ public class BOSWebServerManager {
 		String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) ;
 		String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
 		String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST) ;
-		return "http://"+host+":"+ port+ LOGINSERVICE_PATH + "username="+username+"&password="+password+"&locale="+locale;
+		return "http://"+host+":"+ port+ LOGINSERVICE_PATH + "username="+username+"&password="+password;
 	}
 
 
