@@ -30,7 +30,6 @@ import org.bonitasoft.studio.properties.form.sections.general.contributions.Name
 import org.bonitasoft.studio.properties.form.sections.general.contributions.ShowLabelGridPropertySectionContribution;
 import org.bonitasoft.studio.properties.form.sections.general.contributions.ShowPageLabelContribution;
 import org.bonitasoft.studio.properties.form.sections.general.contributions.TemplateGridPropertySectionContribution;
-import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.viewers.StructuredSelection;
