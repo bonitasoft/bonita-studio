@@ -25,6 +25,8 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -92,7 +94,15 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
     			eResource.delete(Collections.EMPTY_MAP) ;
     		} catch (IOException e) {
     			BonitaStudioLog.error(e) ;
+    			
     		}
+    	} else {
+    		try {
+				getResource().delete(true, new NullProgressMonitor());
+			} catch (CoreException e) {
+			
+				BonitaStudioLog.error(e);
+			}
     	}
     }
 
