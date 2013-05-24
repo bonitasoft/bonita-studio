@@ -538,12 +538,18 @@ public class FlowElementSwitch extends AbstractSwitch {
 		if(TimerUtil.isDuration(timer)){
 			return TimerType.DURATION;
 		}else{
-			if(Long.class.getName().equals(timer.getCondition().getReturnType())){
-				return TimerType.DURATION;
-			}else if(Date.class.getName().equals(timer.getCondition().getReturnType())){
-				return TimerType.DATE;
+			final String timerConditionReturnType = timer.getCondition().getReturnType();
+			try {
+				if(Number.class.isAssignableFrom(Class.forName(timerConditionReturnType))){
+					return TimerType.DURATION;
+				}else if(Date.class.getName().equals(timerConditionReturnType)){
+					return TimerType.DATE;
+				}
+			} catch (ClassNotFoundException e) {
+				BonitaStudioLog.error(e);
 			}
 		}
+		BonitaStudioLog.error("Timer type can't be defined for timer "+timer.getName()+". You might use a wrong return type. ", "org.bonitasoft.studio.engine");
 		return null;
 	}
 
