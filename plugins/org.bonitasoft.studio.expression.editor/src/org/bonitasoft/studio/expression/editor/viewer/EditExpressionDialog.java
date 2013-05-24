@@ -214,8 +214,10 @@ public class EditExpressionDialog extends TrayDialog {
 					oldSelection = event.getSelection() ;
 					expressionTypeChanged(event.getSelection()) ;
 					Button okButton = getButton(OK) ;
-					if(okButton != null && !okButton.isDisposed()){
+					if(okButton != null && !okButton.isDisposed() && currentExpressionEditor != null){
 						okButton.setEnabled(currentExpressionEditor.canFinish()) ;
+					}else if(currentExpressionEditor == null){
+						okButton.setEnabled(false);
 					}
 				}
 			}
