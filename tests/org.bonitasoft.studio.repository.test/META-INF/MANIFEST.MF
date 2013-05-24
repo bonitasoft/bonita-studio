@@ -35,5 +35,4 @@ Require-Bundle: org.bonitasoft.studio.engine,
  org.bonitasoft.studio.exporter;bundle-version="1.0.0"
 Export-Package: org.bonitasoft.studio.repository.test,
  org.bonitasoft.studio.repository.test.swtbot
-Import-Package: org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model
+Import-Package: org.bonitasoft.engine.bpm.bar

@@ -28,5 +28,4 @@ Export-Package: org.bonitasoft.studio.importer.test.api,
  org.bonitasoft.studio.importer.test.bos,
  org.bonitasoft.studio.importer.test.bpmn2,
  org.bonitasoft.studio.importer.test.extensions
-Import-Package: org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model
+Import-Package: org.bonitasoft.engine.bpm.bar

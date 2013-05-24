@@ -28,7 +28,7 @@ Require-Bundle: org.junit,
 Eclipse-RegisterBuddy: org.bonitasoft.studio.engine
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model,
+ org.bonitasoft.engine.bpm.flownode,
  org.bonitasoft.engine.exception,
  org.bonitasoft.engine.identity,
  org.bonitasoft.engine.search,

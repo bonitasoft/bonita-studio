@@ -37,7 +37,6 @@ Export-Package: org.bonitasoft.studio.commands.test,
  org.bonitasoft.studio.data.test,
  org.bonitasoft.studio.diagram.test
 Import-Package: org.bonitasoft.engine.api,
- org.bonitasoft.engine.bpm.model,
  org.bonitasoft.engine.session,
  org.bonitasoft.studio.data.i18n,
  org.bonitasoft.studio.form.properties.i18n,

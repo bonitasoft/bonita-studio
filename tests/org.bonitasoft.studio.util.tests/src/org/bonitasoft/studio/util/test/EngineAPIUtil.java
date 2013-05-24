@@ -19,19 +19,20 @@ package org.bonitasoft.studio.util.test;
 import java.util.List;
 
 import org.bonitasoft.engine.api.ProcessAPI;
-import org.bonitasoft.engine.bpm.model.HumanTaskInstance;
-import org.bonitasoft.engine.exception.identity.UserNotFoundException;
-import org.bonitasoft.engine.exception.platform.InvalidSessionException;
+import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
+import org.bonitasoft.engine.exception.SearchException;
+import org.bonitasoft.engine.identity.UserNotFoundException;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.search.SearchResult;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 
 
 public class EngineAPIUtil {
 	
-	public static HumanTaskInstance findNewPendingTaskForSpecifiedProcessDefAndUser(APISession session, List<HumanTaskInstance> previousTasks,long processDefinitionUUID, long userID) throws InvalidSessionException, UserNotFoundException  {
+	public static HumanTaskInstance findNewPendingTaskForSpecifiedProcessDefAndUser(APISession session, List<HumanTaskInstance> previousTasks,long processDefinitionUUID, long userID) throws InvalidSessionException, UserNotFoundException, SearchException  {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
         SearchResult<HumanTaskInstance> tasks = processApi.searchPendingTasksForUser(userID, searchOptions);

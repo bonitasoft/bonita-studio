@@ -82,13 +82,13 @@ Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.timer
 Bundle-Activator: org.bonitasoft.studio.tests.Activator
 Import-Package: org.bonitasoft.engine.api,
- org.bonitasoft.engine.bpm.model,
- org.bonitasoft.engine.bpm.model.data,
+ org.bonitasoft.engine.bpm,
+ org.bonitasoft.engine.bpm.connector,
+ org.bonitasoft.engine.bpm.flownode,
+ org.bonitasoft.engine.bpm.process,
  org.bonitasoft.engine.exception,
- org.bonitasoft.engine.exception.identity,
- org.bonitasoft.engine.exception.platform,
- org.bonitasoft.engine.exception.process,
  org.bonitasoft.engine.identity,
+ org.bonitasoft.engine.platform,
  org.bonitasoft.engine.search,
  org.bonitasoft.engine.session,
  org.bonitasoft.studio.expression.editor.viewer

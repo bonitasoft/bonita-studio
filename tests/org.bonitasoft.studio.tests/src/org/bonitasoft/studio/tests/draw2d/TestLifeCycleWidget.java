@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.tests.draw2d;
 
-import org.bonitasoft.engine.bpm.model.ConnectorEvent;
+import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.widgets.EventCircle;
 import org.bonitasoft.studio.common.widgets.LifeCycleWidget;
 import org.eclipse.jface.dialogs.Dialog;

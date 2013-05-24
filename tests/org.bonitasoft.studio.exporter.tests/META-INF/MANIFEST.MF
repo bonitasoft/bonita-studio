@@ -44,5 +44,4 @@ Export-Package: org.bonitasoft.studio.exporter.tests,
  org.bonitasoft.studio.exporter.tests.preview
 Import-Package: net.htmlparser.jericho,
  org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model,
  org.bonitasoft.engine.exception

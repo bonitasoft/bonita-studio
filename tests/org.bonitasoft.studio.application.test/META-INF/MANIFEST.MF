@@ -32,5 +32,6 @@ Export-Package: org.bonitasoft.studio.application.test,
  org.bonitasoft.studio.application.test.deploycommand,
  org.bonitasoft.studio.application.test.duplicatecommand
 Import-Package: org.bonitasoft.engine.api,
- org.bonitasoft.engine.bpm.model,
+ org.bonitasoft.engine.bpm,
+ org.bonitasoft.engine.bpm.process,
  org.bonitasoft.engine.session
