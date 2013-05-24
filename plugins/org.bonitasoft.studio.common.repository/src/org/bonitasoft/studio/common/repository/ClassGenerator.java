@@ -22,7 +22,10 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.bonitasoft.engine.connector.AbstractConnector;
+import org.bonitasoft.engine.connector.ConnectorException;
+import org.bonitasoft.engine.connector.ConnectorValidationException;
 import org.bonitasoft.engine.filter.AbstractUserFilter;
+import org.bonitasoft.engine.filter.UserFilterException;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
@@ -59,8 +62,11 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ClassGenerator {
 
-	private static final String CONNECTOR_VALIDATION_EXCEPTION_QUALIFIED_NAME = "org.bonitasoft.engine.exception.connector.ConnectorValidationException";
-
+	
+	private static final String CONNECTOR_VALIDATION_EXCEPTION_QUALIFIED_NAME = ConnectorValidationException.class.getName();
+	private static final String CONNECTOR_EXCEPTION_QUALIFIED_NAME = ConnectorException.class.getName();
+	private static final String USER_FILTER_EXCEPTION_QUALIFIED_NAME = UserFilterException.class.getName();
+	
 	public static IFile generateConnectorImplementationAbstractClass(ConnectorImplementation implementation,ConnectorDefinition definition,String superClassName,SourceRepositoryStore sourceStore,IProgressMonitor monitor) throws Exception{
 		String className = implementation.getImplementationClassname() ;
 		String packageName = "" ;
@@ -142,7 +148,7 @@ public class ClassGenerator {
 				executeMethodContent.append("//[Optional] Close connection to remote server\n\n}\n");
 				classType.createMethod(executeMethodContent.toString(),null, true, monitor);
 
-				classType.getCompilationUnit().createImport("org.bonitasoft.engine.exception.connector.ConnectorException", null, monitor);
+				classType.getCompilationUnit().createImport(CONNECTOR_EXCEPTION_QUALIFIED_NAME, null, monitor);
 			}
 			if(hierarchy.contains(abstractFilterType)){
 				StringBuilder executeMethodContent = new StringBuilder("@Override\npublic void validateInputParameters() throws ConnectorValidationException {\n\t");
@@ -163,7 +169,7 @@ public class ClassGenerator {
 				ICompilationUnit compilationUnit = classType.getCompilationUnit();
 				compilationUnit.createImport("java.util.List", null, monitor);
 				compilationUnit.createImport(CONNECTOR_VALIDATION_EXCEPTION_QUALIFIED_NAME, null, monitor);
-				compilationUnit.createImport("org.bonitasoft.engine.exception.identity.UserFilterException", null, monitor);
+				compilationUnit.createImport(USER_FILTER_EXCEPTION_QUALIFIED_NAME, null, monitor);
 			}
 		}
 
