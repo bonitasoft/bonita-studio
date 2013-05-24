@@ -183,7 +183,7 @@
 						<artifact>
 							<groupId>org.bonitasoft.studio</groupId>
 							<artifactId>platform</artifactId>
-							<version>6.0.0-SNAPSHOT</version>
+							<version>${project.version}</version>
 						</artifact>
 					</target>
 					<filters>
@@ -192,11 +192,7 @@
 							<id>org.bonitasoft.studioEx.console.libs</id>
 							<removeAll />
 						</filter>
-						<filter>
-							<type>eclipse-plugin</type>
-							<id>org.eclipse.datatools.modelbase.sql.query</id>
-							<removeAll />
-						</filter>
+						
 					</filters>
 				</configuration>
 			</plugin>
