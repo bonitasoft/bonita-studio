@@ -660,22 +660,23 @@ public class DefinitionResourceProvider {
         if (definition == null) {
             return Pics.getImage(PicsConstants.error);
         }
-        String definitionId = definition.getId() + "_"
-                + definition.getVersion();
+        String definitionId = definition.getId() + "_" + definition.getVersion();
         Image icon = definitionImageRegistry.get(definitionId);
         if (icon == null || icon.isDisposed()) {
+        	
             Resource resource = definition.eResource();
             File f = null;
             if (resource != null) {
                 URI uri = resource.getURI();
-                f = new File(uri.toFileString());
+                f = new File(URI.decode(uri.toFileString()));
                 f = f.getParentFile();
             } else {
                 f = store.getResource().getLocation().toFile();
             }
-
+            BonitaStudioLog.debug("Loading definition icon for "+definitionId+" located here : "+ f, "org.bonitasoft.studio.connectors.model.edit");
             if (f != null && f.exists() && definition.getIcon() != null) {
                 File iconFile = new File(f, definition.getIcon());
+                BonitaStudioLog.debug("Icon loaded : "+ iconFile, "org.bonitasoft.studio.connectors.model.edit");
                 if (iconFile.exists()) {
                     try {
                         final URL iconURL = iconFile.toURI().toURL();
