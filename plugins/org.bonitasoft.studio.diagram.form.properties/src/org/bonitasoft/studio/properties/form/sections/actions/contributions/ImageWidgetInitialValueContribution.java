@@ -121,7 +121,9 @@ public class ImageWidgetInitialValueContribution extends InitialValueContributio
 	@Override
 	protected AvailableExpressionTypeFilter getExpressionViewerFilter() {
 		AvailableExpressionTypeFilter filter = super.getExpressionViewerFilter();
-		filter.getContentTypes().add(ExpressionConstants.DOCUMENT_REF_TYPE);
+		if(!ModelHelper.isInEntryPageFlowOnAPool(widget)){
+			filter.getContentTypes().add(ExpressionConstants.DOCUMENT_REF_TYPE);
+		}
 		return filter;
 	}
 

@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
@@ -70,13 +71,19 @@ public class ImageKindContribution implements IExtensibleGridPropertySectionCont
 				return super.convert(value);
 			}
 		};
-
+				
 		context.bindValue(
 				WidgetProperties.selection().observe(isUrlButton),
 				EMFEditObservables.observeValue(editingDomain,img, FormPackage.Literals.IMAGE_WIDGET__IS_ADOCUMENT),updateValue,updateValue);
 		context.bindValue(
 				WidgetProperties.selection().observe(isADocumentButton),
 				EMFEditObservables.observeValue(editingDomain,img, FormPackage.Literals.IMAGE_WIDGET__IS_ADOCUMENT));
+		
+		if(ModelHelper.isInEntryPageFlowOnAPool(img)){
+			isUrlButton.setSelection(true);
+			isUrlButton.setEnabled(false);
+			isADocumentButton.setEnabled(false);
+		}
 	}
 
 	public void dispose() {
