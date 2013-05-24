@@ -194,7 +194,7 @@
 						</filter>
 						<filter>
 							<type>eclipse-plugin</type>
-							<id>org.bonitasoft.studio.simulationEx.libs</id>
+							<id>org.eclipse.datatools.modelbase.sql.query</id>
 							<removeAll />
 						</filter>
 					</filters>
