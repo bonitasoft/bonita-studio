@@ -350,7 +350,7 @@ public class ClassGenerator {
 			stringBuilder.append(getter);
 		}
 		stringBuilder.append("\n\n\t//TODO execute your business logic here \n");
-		stringBuilder.append("\n\t//Set the output of the connector execution");
+		stringBuilder.append("\n\t//WARNING : Set the output of the connector execution. If outputs are not set, connector fails");
 		for (Output output : definition.getOutput()){
 			String setter = "\n\t//set"+NamingUtils.toJavaIdentifier(output.getName(), true)+"("+NamingUtils.toJavaIdentifier(output.getName(), false)+");";
 			stringBuilder.append(setter);
