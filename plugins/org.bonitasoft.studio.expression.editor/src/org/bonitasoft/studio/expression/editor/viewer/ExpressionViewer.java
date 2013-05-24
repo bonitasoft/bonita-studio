@@ -49,6 +49,7 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -1053,7 +1054,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				}
 				if(parent instanceof Widget){
 					final Widget w = (Widget) parent;
-					if(w != null){
+					if(w != null && w instanceof TextFormField){
 						final String returnTypeModifier = w.getReturnTypeModifier();
 						if(returnTypeModifier != null){
 							copy.setReturnType(returnTypeModifier);
