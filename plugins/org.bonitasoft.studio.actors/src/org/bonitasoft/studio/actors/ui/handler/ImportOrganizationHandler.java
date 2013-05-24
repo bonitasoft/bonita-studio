@@ -68,8 +68,14 @@ public class ImportOrganizationHandler extends AbstractHandler {
 							fis = new FileInputStream(filePath);
 							String id =	new File(filePath).getName() ;
 							OrganizationFileStore file = organizationStore.importInputStream(id, fis) ;
-							if(file != null){
+							if(file != null && file.isCorrectlySyntaxed()){
 								MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.importOrganizationSuccessfullTitle, Messages.importOrganizationSuccessfullMessage);
+							} else {
+								if( file != null){
+									fis.close();
+									file.delete();
+									MessageDialog.openError(Display.getDefault().getActiveShell(),  Messages.importOrganizationFailedTitle, Messages.importOrganizationFailedMessage);
+								}
 							}
 						} catch (Exception e) {
 							BonitaStudioLog.error(e) ; 
