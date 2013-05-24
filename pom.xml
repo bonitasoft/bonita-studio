@@ -13,9 +13,9 @@
 		<tychoVersion>0.17.0</tychoVersion>
 		<tychoExtrasVersion>0.17.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
-		<bundle.version>6.0.0-beta-018</bundle.version>
-		<engine.version>6.0.0-beta-027</engine.version>
-		<connector.version>6.0.0-beta-018</connector.version>
+		<bundle.version>6.0.0-beta-019</bundle.version>
+		<engine.version>6.0.0-beta-029</engine.version>
+		<connector.version>6.0.0-beta-020</connector.version>
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
 		<filters.version>6.0.0-beta-017</filters.version>
 		<p2MirrorUrl>ftp://192.168.1.215/home/ic/p2_repository/</p2MirrorUrl>
