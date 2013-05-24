@@ -76,7 +76,6 @@ public class BOSEngineManager {
 	private static BOSEngineManager INSTANCE ;
 	private boolean isRunning = false;
 	private IProgressMonitor monitor;
-	private int retry = 0;
 
 
 	protected BOSEngineManager(IProgressMonitor monitor) {

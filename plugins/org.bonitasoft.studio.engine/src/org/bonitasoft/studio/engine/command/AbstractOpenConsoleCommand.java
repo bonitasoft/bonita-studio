@@ -143,7 +143,7 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
         final String password = store.getString(BonitaPreferenceConstants.USER_PASSWORD);
         final String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
         final String loginUrl = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-        final String consoleURl = "http://"+host+":"+ port + getURLRelativePath() + getLocaleParameter(locale);
+        final String consoleURl = "http://"+host+":"+ port + getURLRelativePath(locale);
         return loginUrl+"&redirectUrl="+URLEncoder.encode(consoleURl, "UTF-8");
     }
 
@@ -177,8 +177,9 @@ public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
     }
 
     /**
+     * @param locale 
      * @return
      */
-    protected abstract String getURLRelativePath();
+    protected abstract String getURLRelativePath(String locale);
 
 }
