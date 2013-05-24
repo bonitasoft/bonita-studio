@@ -84,6 +84,7 @@ Bundle-Activator: org.bonitasoft.studio.tests.Activator
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.connector,
+ org.bonitasoft.engine.bpm.data,
  org.bonitasoft.engine.bpm.flownode,
  org.bonitasoft.engine.bpm.process,
  org.bonitasoft.engine.exception,
