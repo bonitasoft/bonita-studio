@@ -153,4 +153,12 @@ public class OrganizationFileStore extends EMFFileStore {
 	public IFile getResource() {
 		return getParentStore().getResource().getFile(getName());
 	}
+	
+	public boolean isCorrectlySyntaxed(){
+		if (getContent()==null){
+			return false;
+		} else {
+			return true;
+		}
+	}
 }
