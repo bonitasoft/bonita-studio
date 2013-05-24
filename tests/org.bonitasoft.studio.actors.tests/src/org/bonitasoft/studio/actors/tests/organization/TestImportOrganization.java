@@ -19,6 +19,7 @@ package org.bonitasoft.studio.actors.tests.organization;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -100,6 +101,26 @@ public class TestImportOrganization extends  TestCase{
 		assertNotNull(orgaNameWithBosExtansion+" was not imported",organizationTest);
 	}
 
+	public void testImportCorruptedOrganization() throws IOException{
+		final OrganizationRepositoryStore organizationStore = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
+		String organizationName = "toto.xml";
+		URL archiveURL = TestImportOrganization.class.getResource(organizationName);
+		assertNotNull("filePath should not be null",archiveURL.getPath());
+		FileInputStream fis = null ;
+		String id =	null;
+		final File toImport = new File(FileLocator.toFileURL(archiveURL).getFile());
+		assertTrue("organization to import does not exist",toImport.exists());
+		fis = new FileInputStream(toImport);
+		id  = toImport.getName() ;
+		organizationStore.importInputStream(id, fis) ;
+		if(fis != null){
+			fis.close() ;	
+		}
+		String orgaNameWithBosExtansion = organizationName.substring(0,organizationName.indexOf("."))+"."+OrganizationRepositoryStore.ORGANIZATION_EXT;
+		Organization organizationTest = (Organization) organizationStore.getChild(orgaNameWithBosExtansion).getContent();
+		assertNull(orgaNameWithBosExtansion+" was imported",organizationTest);
+	}
+	
 	protected void tearDown(){}
 
 }
