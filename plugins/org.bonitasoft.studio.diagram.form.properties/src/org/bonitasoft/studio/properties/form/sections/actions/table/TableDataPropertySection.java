@@ -52,7 +52,6 @@ public class TableDataPropertySection extends AbstractTableDataPropertySection {
 	private ExpressionViewer initialFromColumn;
 	private Button allowSingleSelection;
 	private ExpressionViewer paginationMaxNumber;
-	private Table lastEObject;
 
 
 	@Override
