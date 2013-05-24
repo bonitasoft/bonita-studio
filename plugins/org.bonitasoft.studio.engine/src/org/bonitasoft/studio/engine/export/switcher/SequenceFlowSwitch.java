@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.engine.export.switcher;
 
-import org.bonitasoft.engine.bpm.model.FlowElementBuilder;
+import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.studio.decision.core.DecisionTableUtil;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.engine.i18n.Messages;

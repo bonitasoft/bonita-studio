@@ -83,7 +83,7 @@ public class DocumentObjectExpressionProvider implements IExpressionProvider {
 		exp.setType(getExpressionType()) ;
 		exp.setContent(d.getName()) ;
 		exp.setName(d.getName()) ;
-		exp.setReturnType(org.bonitasoft.engine.bpm.model.document.Document.class.getName()) ;
+		exp.setReturnType(org.bonitasoft.engine.bpm.document.Document.class.getName()) ;
 		exp.getReferencedElements().add(EcoreUtil.copy(d)) ;
 		return exp;
 	}

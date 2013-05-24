@@ -35,7 +35,7 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model,
+ org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.connector,
  org.bonitasoft.engine.expression,
  org.bonitasoft.forms.server.validator,

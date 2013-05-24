@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bonitasoft.engine.bpm.model.ConnectorEvent;
+import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;

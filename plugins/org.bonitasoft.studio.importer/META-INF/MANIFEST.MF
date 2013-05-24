@@ -31,4 +31,4 @@ Export-Package: org.bonitasoft.studio.importer,
  org.bonitasoft.studio.importer.builder
 Bundle-ClassPath: .
 Bundle-Localization: plugin
-Import-Package: org.bonitasoft.engine.bpm.model
+Import-Package: org.bonitasoft.engine.bpm.connector

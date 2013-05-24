@@ -16,7 +16,7 @@
  */
 package org.bonitasoft.studio.expression.editor.operation;
 
-import org.bonitasoft.engine.bpm.model.document.DocumentValue;
+import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;

@@ -20,7 +20,7 @@ package org.bonitasoft.studio.importer.builder;
 import java.io.File;
 import java.util.Set;
 
-import org.bonitasoft.engine.bpm.model.ConnectorEvent;
+import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;

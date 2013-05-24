@@ -26,7 +26,7 @@ import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProfileAPI;
 import org.bonitasoft.engine.identity.User;
 import org.bonitasoft.engine.identity.UserCriterion;
-import org.bonitasoft.engine.profile.model.Profile;
+import org.bonitasoft.engine.profile.Profile;
 import org.bonitasoft.engine.search.Order;
 import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;

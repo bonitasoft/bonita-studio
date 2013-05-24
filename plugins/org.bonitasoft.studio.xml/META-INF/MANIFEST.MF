@@ -24,5 +24,4 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.xml.api,
  org.bonitasoft.studio.xml.repository,
  org.bonitasoft.studio.xml.ui
-Import-Package: org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model
+Import-Package: org.bonitasoft.engine.bpm.bar

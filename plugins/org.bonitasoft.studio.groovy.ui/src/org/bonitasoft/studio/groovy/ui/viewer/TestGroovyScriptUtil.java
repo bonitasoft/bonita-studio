@@ -32,11 +32,11 @@ import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
-import org.bonitasoft.engine.bpm.model.ActivityInstance;
-import org.bonitasoft.engine.bpm.model.ProcessDefinition;
-import org.bonitasoft.engine.bpm.model.ProcessInstance;
-import org.bonitasoft.engine.exception.ExpressionEvaluationException;
+import org.bonitasoft.engine.bpm.flownode.ActivityInstance;
+import org.bonitasoft.engine.bpm.process.ProcessDefinition;
+import org.bonitasoft.engine.bpm.process.ProcessInstance;
 import org.bonitasoft.engine.expression.ExpressionConstants;
+import org.bonitasoft.engine.expression.ExpressionEvaluationException;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;

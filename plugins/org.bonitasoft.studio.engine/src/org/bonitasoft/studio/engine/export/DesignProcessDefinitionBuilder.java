@@ -19,10 +19,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.engine.bpm.model.DesignProcessDefinition;
-import org.bonitasoft.engine.bpm.model.DocumentDefinitionBuilder;
-import org.bonitasoft.engine.bpm.model.ProcessDefinitionBuilder;
-import org.bonitasoft.engine.exception.process.InvalidProcessDefinitionException;
+import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
+import org.bonitasoft.engine.bpm.process.InvalidProcessDefinitionException;
+import org.bonitasoft.engine.bpm.process.impl.DocumentDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.engine.export.switcher.AbstractProcessSwitch;
 import org.bonitasoft.studio.engine.export.switcher.FlowElementSwitch;

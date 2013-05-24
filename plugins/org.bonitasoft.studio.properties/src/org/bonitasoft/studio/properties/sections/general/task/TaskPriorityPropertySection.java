@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.properties.sections.general.task;
 
-import org.bonitasoft.engine.bpm.model.TaskPriority;
+import org.bonitasoft.engine.bpm.flownode.TaskPriority;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.ProcessPackage;

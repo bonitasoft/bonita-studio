@@ -57,6 +57,5 @@ Export-Package: org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.views.process
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model,
  org.bonitasoft.engine.exception
 

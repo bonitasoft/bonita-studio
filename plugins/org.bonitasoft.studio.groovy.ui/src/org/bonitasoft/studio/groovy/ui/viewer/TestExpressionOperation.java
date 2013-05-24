@@ -26,16 +26,15 @@ import java.util.Set;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.engine.bpm.model.ProcessDefinition;
-import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
-import org.bonitasoft.engine.bpm.model.ProcessDeploymentInfo;
+import org.bonitasoft.engine.bpm.process.IllegalProcessStateException;
+import org.bonitasoft.engine.bpm.process.ProcessActivationException;
+import org.bonitasoft.engine.bpm.process.ProcessDefinition;
+import org.bonitasoft.engine.bpm.process.ProcessDefinitionCriterion;
+import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
+import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
 import org.bonitasoft.engine.exception.DeletionException;
-import org.bonitasoft.engine.exception.IllegalProcessStateException;
-import org.bonitasoft.engine.exception.PageOutOfRangeException;
-import org.bonitasoft.engine.exception.platform.InvalidSessionException;
-import org.bonitasoft.engine.exception.process.ProcessDefinitionNotFoundException;
-import org.bonitasoft.engine.exception.process.ProcessDisablementException;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -177,7 +176,7 @@ public class TestExpressionOperation implements IRunnableWithProgress {
         this.expression = expression ;
     }
 
-    protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException,  PageOutOfRangeException, ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
+    protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException,  ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
         long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
         if(nbDeployedProcesses > 0){
             List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
@@ -185,7 +184,7 @@ public class TestExpressionOperation implements IRunnableWithProgress {
                 if(info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())){
                     try{
                         processApi.disableProcess(info.getProcessId()) ;
-                    }catch (ProcessDisablementException e) {
+                    }catch (ProcessActivationException e) {
 
                     }
                     processApi.deleteProcess(info.getProcessId()) ;

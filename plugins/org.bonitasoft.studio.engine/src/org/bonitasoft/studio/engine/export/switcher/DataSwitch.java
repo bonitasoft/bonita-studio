@@ -16,8 +16,8 @@
  */
 package org.bonitasoft.studio.engine.export.switcher;
 
-import org.bonitasoft.engine.bpm.model.DataDefinitionBuilder;
-import org.bonitasoft.engine.bpm.model.FlowElementBuilder;
+import org.bonitasoft.engine.bpm.process.impl.DataDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.FlowElementBuilder;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.Data;

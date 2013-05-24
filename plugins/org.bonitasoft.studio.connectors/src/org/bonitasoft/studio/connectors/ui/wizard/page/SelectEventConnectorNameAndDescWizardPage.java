@@ -19,7 +19,7 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import java.util.Set;
 
-import org.bonitasoft.engine.bpm.model.ConnectorEvent;
+import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.widgets.LifeCycleWidget;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connectors.i18n.Messages;

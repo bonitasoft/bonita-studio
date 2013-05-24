@@ -25,5 +25,4 @@ Export-Package: org.bonitasoft.studio.dependencies,
  org.bonitasoft.studio.dependencies.repository,
  org.bonitasoft.studio.dependencies.ui,
  org.bonitasoft.studio.dependencies.ui.dialog
-Import-Package: org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model
+Import-Package: org.bonitasoft.engine.bpm.bar

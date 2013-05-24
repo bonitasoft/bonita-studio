@@ -29,19 +29,18 @@ import java.util.Set;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.engine.bpm.model.ActivationState;
-import org.bonitasoft.engine.bpm.model.ConnectorEvent;
-import org.bonitasoft.engine.bpm.model.ProcessDefinition;
-import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
-import org.bonitasoft.engine.bpm.model.ProcessDeploymentInfo;
+import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
+import org.bonitasoft.engine.bpm.process.ActivationState;
+import org.bonitasoft.engine.bpm.process.IllegalProcessStateException;
+import org.bonitasoft.engine.bpm.process.ProcessActivationException;
+import org.bonitasoft.engine.bpm.process.ProcessDefinition;
+import org.bonitasoft.engine.bpm.process.ProcessDefinitionCriterion;
+import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
+import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
 import org.bonitasoft.engine.exception.DeletionException;
-import org.bonitasoft.engine.exception.IllegalProcessStateException;
-import org.bonitasoft.engine.exception.PageOutOfRangeException;
-import org.bonitasoft.engine.exception.platform.InvalidSessionException;
-import org.bonitasoft.engine.exception.process.ProcessDefinitionNotFoundException;
-import org.bonitasoft.engine.exception.process.ProcessDisablementException;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -115,7 +114,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 	private final Map<String, Serializable> outputValues = new HashMap<String,Serializable>();
 	private static final ConnectorsConfigurationSynchronizer CONNECTORS_CONFIGURATION_SYNCHRONIZER = new ConnectorsConfigurationSynchronizer();
 	private Set<IRepositoryFileStore> additionalJars;
-	private List<org.bonitasoft.engine.core.operation.Operation> outputOperations = new ArrayList<org.bonitasoft.engine.core.operation.Operation>();
+	private List<org.bonitasoft.engine.operation.Operation> outputOperations = new ArrayList<org.bonitasoft.engine.operation.Operation>();
 
 
 	/* (non-Javadoc)
@@ -278,11 +277,11 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 
 
 	private void addDatasOnProcess(AbstractProcess process){
-		Iterator<org.bonitasoft.engine.core.operation.Operation> it= outputOperations.iterator();
+		Iterator<org.bonitasoft.engine.operation.Operation> it= outputOperations.iterator();
 		JavaType type = ProcessFactory.eINSTANCE.createJavaType();
 
 		while(it.hasNext()){
-			org.bonitasoft.engine.core.operation.Operation output = it.next();
+			org.bonitasoft.engine.operation.Operation output = it.next();
 			JavaObjectData data = ProcessFactory.eINSTANCE.createJavaObjectData();
 			data.setName(output.getLeftOperand().getName());
 			data.setDataType(type);
@@ -311,7 +310,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 		Operator operator = ExpressionFactory.eINSTANCE.createOperator();
 		operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
 		operationCopy.setOperator(operator);
-		org.bonitasoft.engine.core.operation.Operation op=EngineExpressionUtil.createOperation(operationCopy,true);
+		org.bonitasoft.engine.operation.Operation op=EngineExpressionUtil.createOperation(operationCopy,true);
 		if (op!=null){
 			outputOperations .add(op);
 		}
@@ -321,7 +320,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 		this.implementation = implementation ;
 	}
 
-	protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException, PageOutOfRangeException, ProcessDefinitionNotFoundException, IllegalProcessStateException, DeletionException {
+	protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException, ProcessDefinitionNotFoundException, IllegalProcessStateException, DeletionException {
 		long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
 		if(nbDeployedProcesses > 0){
 			List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
@@ -331,7 +330,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 						if (processApi.getProcessDeploymentInfo(info.getProcessId()).getActivationState() == ActivationState.ENABLED){
 							processApi.disableProcess(info.getProcessId()) ;
 						}
-					}catch (ProcessDisablementException e) {
+					}catch (ProcessActivationException e) {
 
 					}
 					processApi.deleteProcess(info.getProcessId()) ;

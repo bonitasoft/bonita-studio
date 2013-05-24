@@ -30,13 +30,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bonitasoft.engine.api.ProcessAPI;
+import org.bonitasoft.engine.bpm.process.*;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.engine.bpm.model.ProcessDefinition;
-import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
-import org.bonitasoft.engine.bpm.model.ProcessDeploymentInfo;
-import org.bonitasoft.engine.exception.process.ProcessDeployException;
-import org.bonitasoft.engine.exception.process.ProcessDisablementException;
-import org.bonitasoft.engine.exception.process.ProcessEnablementException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
@@ -262,7 +257,7 @@ public class DeployProcessOperation  {
 						monitor.subTask(Messages.bind(Messages.undeploying,getProcessLabel(process)));
 						try{
 							processApi.disableProcess(info.getProcessId());
-						}catch (ProcessDisablementException e) {
+						}catch (ProcessActivationException e) {
 
 						}
 						processApi.deleteProcess(info.getProcessId()) ;

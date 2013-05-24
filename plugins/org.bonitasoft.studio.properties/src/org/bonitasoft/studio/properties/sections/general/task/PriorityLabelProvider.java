@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.properties.sections.general.task;
 
-import org.bonitasoft.engine.bpm.model.TaskPriority;
+import org.bonitasoft.engine.bpm.flownode.TaskPriority;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;

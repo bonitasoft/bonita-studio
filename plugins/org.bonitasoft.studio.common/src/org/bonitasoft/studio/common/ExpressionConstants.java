@@ -17,10 +17,10 @@
  */
 package org.bonitasoft.studio.common;
 
-import org.bonitasoft.engine.bpm.model.document.DocumentValue;
-import org.bonitasoft.engine.core.operation.OperatorType;
+import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.engine.expression.ExpressionInterpreter;
 import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.forms.client.model.ActionType;
 
 /**

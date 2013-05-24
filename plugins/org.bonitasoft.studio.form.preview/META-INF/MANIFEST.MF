@@ -27,11 +27,11 @@ Require-Bundle: org.bonitasoft.studio.common;bundle-version="6.0.0",
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
  org.bonitasoft.studio.configuration;bundle-version="6.0.0"
 Import-Package: org.bonitasoft.engine.api,
+ org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model,
+ org.bonitasoft.engine.bpm.flownode,
+ org.bonitasoft.engine.bpm.process,
  org.bonitasoft.engine.exception,
- org.bonitasoft.engine.exception.platform,
- org.bonitasoft.engine.exception.process,
  org.bonitasoft.engine.identity,
  org.bonitasoft.engine.session
 Export-Package: org.bonitasoft.studio.form.preview

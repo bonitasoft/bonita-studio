@@ -21,14 +21,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.bonitasoft.engine.core.operation.LeftOperand;
-import org.bonitasoft.engine.core.operation.LeftOperandBuilder;
-import org.bonitasoft.engine.core.operation.OperationBuilder;
-import org.bonitasoft.engine.core.operation.OperatorType;
-import org.bonitasoft.engine.exception.expression.InvalidExpressionException;
 import org.bonitasoft.engine.expression.Expression;
 import org.bonitasoft.engine.expression.ExpressionBuilder;
 import org.bonitasoft.engine.expression.ExpressionType;
+import org.bonitasoft.engine.expression.InvalidExpressionException;
+import org.bonitasoft.engine.operation.LeftOperand;
+import org.bonitasoft.engine.operation.LeftOperandBuilder;
+import org.bonitasoft.engine.operation.OperationBuilder;
+import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -68,7 +68,7 @@ import com.google.inject.Injector;
  */
 public class EngineExpressionUtil {
 
-	public static org.bonitasoft.engine.core.operation.Operation createOperation(final Operation operation) {
+	public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation) {
 		final OperationBuilder builder = new OperationBuilder();
 		builder.createNewInstance();
 		builder.setType(OperatorType.valueOf(operation.getOperator().getType()));
@@ -82,7 +82,7 @@ public class EngineExpressionUtil {
 		return builder.done();
 	}
 
-	public static org.bonitasoft.engine.core.operation.Operation createOperation(final Operation operation,boolean isExternal) {
+	public static org.bonitasoft.engine.operation.Operation createOperation(final Operation operation,boolean isExternal) {
 		final OperationBuilder builder = new OperationBuilder();
 		builder.createNewInstance();
 		builder.setType(OperatorType.valueOf(operation.getOperator().getType()));
@@ -102,7 +102,7 @@ public class EngineExpressionUtil {
 	 * @return
 	 */
 	@Deprecated
-	public static org.bonitasoft.engine.core.operation.Operation createOperationForMessageContent(final Operation operation) {
+	public static org.bonitasoft.engine.operation.Operation createOperationForMessageContent(final Operation operation) {
 		final OperationBuilder builder = new OperationBuilder();
 		builder.createNewInstance();
 		builder.setType(OperatorType.valueOf(operation.getOperator().getType()));

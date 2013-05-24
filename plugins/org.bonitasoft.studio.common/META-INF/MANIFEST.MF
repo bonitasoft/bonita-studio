@@ -37,10 +37,10 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.console.common.server.preferences.constants,
  org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model,
- org.bonitasoft.engine.bpm.model.document,
- org.bonitasoft.engine.core.operation,
+ org.bonitasoft.engine.bpm.connector,
+ org.bonitasoft.engine.bpm.document,
  org.bonitasoft.engine.expression,
+ org.bonitasoft.engine.operation,
  org.bonitasoft.engine.util,
  org.bonitasoft.forms.client.model
 Export-Package: org.bonitasoft.studio.common,

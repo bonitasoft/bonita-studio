@@ -29,19 +29,18 @@ import java.util.List;
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.engine.bpm.model.ActivationState;
-import org.bonitasoft.engine.bpm.model.HumanTaskInstance;
-import org.bonitasoft.engine.bpm.model.ProcessDefinition;
-import org.bonitasoft.engine.bpm.model.ProcessDefinitionCriterion;
-import org.bonitasoft.engine.bpm.model.ProcessDeploymentInfo;
-import org.bonitasoft.engine.bpm.model.ProcessInstance;
+import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
+import org.bonitasoft.engine.bpm.process.ActivationState;
+import org.bonitasoft.engine.bpm.process.IllegalProcessStateException;
+import org.bonitasoft.engine.bpm.process.ProcessActivationException;
+import org.bonitasoft.engine.bpm.process.ProcessDefinition;
+import org.bonitasoft.engine.bpm.process.ProcessDefinitionCriterion;
+import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
+import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
+import org.bonitasoft.engine.bpm.process.ProcessInstance;
 import org.bonitasoft.engine.exception.DeletionException;
-import org.bonitasoft.engine.exception.IllegalProcessStateException;
-import org.bonitasoft.engine.exception.PageOutOfRangeException;
-import org.bonitasoft.engine.exception.platform.InvalidSessionException;
-import org.bonitasoft.engine.exception.process.ProcessDefinitionNotFoundException;
-import org.bonitasoft.engine.exception.process.ProcessDisablementException;
 import org.bonitasoft.engine.session.APISession;
+import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -88,7 +87,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -99,7 +97,7 @@ import org.eclipse.ui.internal.browser.ExternalBrowserInstance;
 import org.eclipse.ui.internal.browser.IBrowserDescriptor;
 
 /**
- *@Author AurÈlie Zara
+ *@Author Aurèlie Zara
  *
  *
  */
@@ -173,7 +171,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 					boolean isAvailable = false;
 					int it = 0;
 					while(!isAvailable && it<MAX_IT){
-						isAvailable = !processApi.getOpenedActivityInstances(procInstance.getId(), 0, 1, null).isEmpty();
+						isAvailable = !processApi.getOpenActivityInstances(procInstance.getId(), 0, 1, null).isEmpty();
 						it++;
 						Thread.sleep(100);
 					}
@@ -429,7 +427,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
 
 
-	protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException,  PageOutOfRangeException, ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
+	protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException,   ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
 		long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
 		if(nbDeployedProcesses > 0){
 			if(lastProcessDeployed == null){
@@ -442,7 +440,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 						if (processApi.getProcessDeploymentInfo(info.getProcessId()).getActivationState() == ActivationState.ENABLED){
 							processApi.disableProcess(info.getProcessId()) ;
 						}
-					}catch (ProcessDisablementException e) {
+					}catch (ProcessActivationException e) {
 						BonitaStudioLog.error(e);
 					}
 					processApi.deleteProcess(info.getProcessId()) ;

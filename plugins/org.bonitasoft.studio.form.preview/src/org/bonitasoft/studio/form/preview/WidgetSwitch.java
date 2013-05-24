@@ -17,8 +17,6 @@
 
 package org.bonitasoft.studio.form.preview;
 
-import java.awt.List;
-
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.form.AbstractTable;
@@ -42,7 +40,6 @@ import org.bonitasoft.studio.model.form.util.FormSwitch;
  *
  *
  */
-@SuppressWarnings("unused")
 public class WidgetSwitch extends FormSwitch<Object> {
 
 	/* (non-Javadoc)

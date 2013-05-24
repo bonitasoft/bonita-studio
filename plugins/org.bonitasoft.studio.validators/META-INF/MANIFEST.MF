@@ -36,6 +36,5 @@ Export-Package: org.bonitasoft.studio.validators.descriptor.validator,
  org.bonitasoft.studio.validators.i18n,
  org.bonitasoft.studio.validators.repository
 Import-Package: org.bonitasoft.engine.bpm.bar,
- org.bonitasoft.engine.bpm.model,
  org.bonitasoft.forms.server.validator,
  org.codehaus.groovy.ast

@@ -18,7 +18,7 @@ package org.bonitasoft.studio.engine.export.switcher;
 
 import java.util.Set;
 
-import org.bonitasoft.engine.bpm.model.ProcessDefinitionBuilder;
+import org.bonitasoft.engine.bpm.process.impl.ProcessDefinitionBuilder;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.eclipse.emf.ecore.EObject;

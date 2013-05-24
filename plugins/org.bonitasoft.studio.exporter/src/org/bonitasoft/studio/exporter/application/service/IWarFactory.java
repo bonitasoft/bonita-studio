@@ -19,7 +19,7 @@ package org.bonitasoft.studio.exporter.application.service;
 
 import java.io.File;
 
-import org.bonitasoft.engine.bpm.model.DesignProcessDefinition;
+import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
 

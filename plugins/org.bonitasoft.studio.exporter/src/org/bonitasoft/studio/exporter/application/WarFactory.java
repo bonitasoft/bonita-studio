@@ -31,7 +31,7 @@ import java.util.Properties;
 import java.util.zip.ZipOutputStream;
 
 import org.bonitasoft.console.common.server.preferences.properties.SecurityProperties;
-import org.bonitasoft.engine.bpm.model.DesignProcessDefinition;
+import org.bonitasoft.engine.bpm.process.DesignProcessDefinition;
 import org.bonitasoft.forms.server.exception.InvalidFormDefinitionException;
 import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.common.FileUtil;

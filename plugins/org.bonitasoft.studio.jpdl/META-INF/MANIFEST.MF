@@ -23,7 +23,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
  org.bonitasoft.studio.common.repository
 Bundle-ActivationPolicy: lazy
-Import-Package: org.bonitasoft.engine.bpm.model,
+Import-Package: org.bonitasoft.engine.bpm.connector,
  org.eclipse.emf.transaction,
  org.eclipse.emf.workspace,
  org.eclipse.emf.workspace.util
