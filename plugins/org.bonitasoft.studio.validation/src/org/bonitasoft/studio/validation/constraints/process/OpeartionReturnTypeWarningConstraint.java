@@ -103,9 +103,7 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 			if(op.eContainingFeature().equals(FormPackage.Literals.WIDGET__ACTION)){
 				Widget parentWidget = ModelHelper.getParentWidget(op);
 				if(parentWidget instanceof FormButton 
-						|| parentWidget instanceof Info 
-						|| parentWidget instanceof ImageWidget
-						|| parentWidget instanceof FileWidget){
+						|| parentWidget instanceof Info){
 					return ctx.createSuccessStatus();
 				}
 			}
