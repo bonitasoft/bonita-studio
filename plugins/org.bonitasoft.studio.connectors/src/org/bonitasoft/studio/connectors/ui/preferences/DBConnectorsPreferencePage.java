@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2009-2012 BonitaSoft S.A.
+/**
+ * Copyright (C) 2009-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -71,9 +71,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-
-
-
 /**
  * @author aurelie zara 
  *
@@ -89,7 +86,6 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 	private DataBindingContext context;
 	private DatabaseDriversLabelProvider driversLabelProvider;
 	private Button automaticallyAddDriver;
-
 
 	@Override
 	protected Control createContents(Composite parent) {
@@ -121,7 +117,6 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		createDBConnectorsList(composite);
 		createDriverManager(composite);
 		return composite;
-
 	}
 
 	private void createDBConnectorsList(Composite parent){
@@ -153,15 +148,15 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				final ConnectorDefinition def = getSelectedConnector();
-				automaticallyAddDriver.setSelection(getAutoAddDriverProperty(def.getId()));
-				driversLabelProvider.setDefaultDriver(getDefaultDriver(def.getId()));
-				driverManagerViewer.setInput(def.getId());
+				if(def != null){
+					final String defId = def.getId();
+					automaticallyAddDriver.setSelection(getAutoAddDriverProperty(defId));
+					driversLabelProvider.setDefaultDriver(getDefaultDriver(defId));
+					driverManagerViewer.setInput(defId);
+				}
 			}
 		});
 	}
-
-
-
 
 	private void createDriverManager(Composite parent){
 
@@ -180,11 +175,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		column.setLabelProvider(driversLabelProvider);
 		createButtonsPart(driverManagerComposite);
 		createAutomaticallyAddDriverButton(driverManagerComposite);
-
-		
-		
 	}
-
 
 	private void createButtonsPart(Composite parent){
 		final Composite buttonsComposite = new Composite(parent,SWT.NONE);
@@ -195,7 +186,6 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		createRemoveButton(buttonsComposite);
 		createActivateButton(buttonsComposite);
 	}
-
 
 	private void createAddbutton(Composite parent){
 		final Button add = new Button(parent,SWT.FLAT);
@@ -236,8 +226,6 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		bindButtonWithViewer(add, viewer);
 	}
 
-
-
 	private void createRemoveButton(Composite parent){
 		final Button remove = new Button(parent,SWT.FLAT);
 		remove.setText(Messages.remove);
@@ -251,7 +239,6 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		});
 		bindButtonWithViewer(remove, driverManagerViewer);
 	}
-
 
 	private void createActivateButton(Composite parent){
 		final Button activate = new Button(parent,SWT.FLAT);
@@ -267,7 +254,6 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 			}
 		});
 		bindButtonWithViewer(activate, driverManagerViewer);
-
 	}
 
 	private void createAutomaticallyAddDriverButton(Composite parent){
@@ -283,7 +269,6 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		});
 		bindButtonWithViewer(automaticallyAddDriver,viewer);
 	}
-
 	
 	private void bindButtonWithViewer(Button button,TableViewer viewer){
 		UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
@@ -311,7 +296,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		}
 		List<String> jars = getJars();
 		jars.remove(driver);
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore)store.createRepositoryFileStore(getDBPrefFilename(connectorId));
+		DatabaseConnectorPropertiesFileStore fileStore =store.createRepositoryFileStore(getDBPrefFilename(connectorId));
 		fileStore.setJarList(jars);
 	}
 
@@ -332,8 +317,6 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		store = (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class) ;
 		context = new DataBindingContext();
 	}
-
-
 
 	@Override
 	protected void createFieldEditors() {
@@ -363,15 +346,15 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 	}
 	
 	private void setJars(String connectorId, List<String> jars){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
+		DatabaseConnectorPropertiesFileStore fileStore = store.getChild(getDBPrefFilename(connectorId));
 		if (fileStore ==null){
-			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(getDBPrefFilename(connectorId));
+			fileStore =  store.createRepositoryFileStore(getDBPrefFilename(connectorId));
 		}
 		fileStore.setJarList(jars);
 	}
 
 	private String getDefaultDriver(String connectorId){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
+		DatabaseConnectorPropertiesFileStore fileStore = store.getChild(getDBPrefFilename(connectorId));
 		if (fileStore !=null){
 			return fileStore.getDefault();
 		}
@@ -383,28 +366,26 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 	}
 	
 	private boolean getAutoAddDriverProperty(String connectorId){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(connectorId+"."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT);
-		if (fileStore !=null){
-			return fileStore.getAutoAddDriver();
-		} 
-			return true;
-		
+		DatabaseConnectorPropertiesFileStore fileStore = store.getChild(connectorId+"."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT);
+		return fileStore !=null && fileStore.getAutoAddDriver();
 	}
 	
 	private void setDefaultDriver(String connectorId, String defaultDriver){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
+		final String dbPrefFilename = getDBPrefFilename(connectorId);
+		DatabaseConnectorPropertiesFileStore fileStore = store.getChild(dbPrefFilename);
 		if (fileStore ==null){
-			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(getDBPrefFilename(connectorId));
+			fileStore =  store.createRepositoryFileStore(dbPrefFilename);
 		}
 		fileStore.setDefault(defaultDriver);
 	}
 	
 	private void setAutoAddDriverProperty(String connectorId){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
+		final String dbPrefFilename = getDBPrefFilename(connectorId);
+		DatabaseConnectorPropertiesFileStore fileStore = store.getChild(dbPrefFilename);
 		if (fileStore!=null){
-			fileStore.setAutoAddDriver(new Boolean(automaticallyAddDriver.getSelection()));
+			fileStore.setAutoAddDriver(Boolean.valueOf(automaticallyAddDriver.getSelection()));
 		} else {
-			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(getDBPrefFilename(connectorId));
+			fileStore =  store.createRepositoryFileStore(dbPrefFilename);
 		}
 	}
 }

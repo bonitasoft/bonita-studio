@@ -20,7 +20,6 @@ package org.bonitasoft.studio.connectors.repository;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
@@ -31,7 +30,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Aurelie Zara
  *
  */
-public class DatabaseConnectorPropertiesRepositoryStore extends AbstractRepositoryStore {
+public class DatabaseConnectorPropertiesRepositoryStore extends AbstractRepositoryStore<DatabaseConnectorPropertiesFileStore> {
 	private static final String STORE_NAME = "database_connectors_properties" ;
     public static final String CONF_EXT = "properties" ;
     private static final Set<String> extensions = new HashSet<String>() ;
@@ -79,7 +78,7 @@ public class DatabaseConnectorPropertiesRepositoryStore extends AbstractReposito
 	 * @see org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore#createRepositoryFileStore(java.lang.String)
 	 */
 	@Override
-	public IRepositoryFileStore createRepositoryFileStore(String fileName) {
+	public DatabaseConnectorPropertiesFileStore createRepositoryFileStore(String fileName) {
 		if(fileName != null && !fileName.endsWith("."+CONF_EXT)){
 			fileName = fileName + "." + CONF_EXT;
 		}
