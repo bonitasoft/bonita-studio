@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.validation.constraints.process;
+
+import java.util.Date;
 
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
@@ -41,22 +43,22 @@ public class TimerConstraint extends AbstractLiveValidationMarkerConstraint {
     @Override
     protected IStatus performLiveValidation(IValidationContext ctx) {
         EStructuralFeature feature = ctx.getFeature();
-        if(feature.equals(ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION)){
+		if(feature.equals(ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION)){
             AbstractTimerEvent timerEvent = (AbstractTimerEvent) ctx.getTarget();
             Expression condition = (Expression) ctx.getFeatureNewValue();
-            if(!(timerEvent instanceof StartTimerEvent && !((StartTimerEvent) timerEvent).getScriptType().equals(StartTimerScriptType.GROOVY))){
-                if(condition==null ||condition.getContent() == null || condition.getContent().isEmpty()){
-                    return ctx.createFailureStatus(new Object[] { Messages.Validation_TimerEvent_MissingCondition});
-                }
+            if(isMissingCondition(timerEvent, condition)){
+            	return ctx.createFailureStatus(new Object[] {Messages.Validation_TimerEvent_MissingCondition});
+            } else if(!isSupportedReturnType(condition)){
+            	return ctx.createFailureStatus(new Object[] {"Return type of timer condition requires to be a Date or a Long."});
             }
         }else if(feature.equals(NotationPackage.Literals.VIEW__ELEMENT)){
             Object object = ctx.getFeatureNewValue();
             if(object instanceof AbstractTimerEvent){
                 final Expression condition = ((AbstractTimerEvent) object).getCondition();
-                if(!(object instanceof StartTimerEvent && !((StartTimerEvent) object).getScriptType().equals(StartTimerScriptType.GROOVY))){
-                    if (condition == null || condition.getContent() == null || condition.getContent().trim().isEmpty()) {
-                        return ctx.createFailureStatus(new Object[] { Messages.Validation_TimerEvent_MissingCondition });
-                    }
+                if(isMissingCondition((AbstractTimerEvent) object,condition)){
+                	return ctx.createFailureStatus(new Object[] {Messages.Validation_TimerEvent_MissingCondition});
+                } else if(!isSupportedReturnType(condition)){
+                	return ctx.createFailureStatus(new Object[] {"Return type of timer condition requires to be a Date or a Long."});
                 }
             }
         }
@@ -64,14 +66,25 @@ public class TimerConstraint extends AbstractLiveValidationMarkerConstraint {
         return ctx.createSuccessStatus();
     }
 
+	private boolean isSupportedReturnType(Expression condition) {
+		final String returnType = condition.getReturnType();
+		return Long.class.getName().equals(returnType)
+				|| Date.class.getName().equals(returnType);
+	}
+
+	private boolean isMissingCondition(AbstractTimerEvent timerEvent, Expression condition) {
+		if(!(timerEvent instanceof StartTimerEvent && !((StartTimerEvent) timerEvent).getScriptType().equals(StartTimerScriptType.GROOVY))){
+		    return condition==null ||condition.getContent() == null || condition.getContent().isEmpty();
+		}
+		return false;
+	}
+
     @Override
     protected IStatus performBatchValidation(IValidationContext ctx) {
         AbstractTimerEvent timerEvent = (AbstractTimerEvent) ctx.getTarget();
         final Expression condition = timerEvent.getCondition();
-        if(timerEvent instanceof StartTimerEvent && !((StartTimerEvent) timerEvent).getScriptType().equals(StartTimerScriptType.GROOVY)){
-            return ctx.createSuccessStatus();
-        }else if(condition == null || condition.getContent() == null || condition.getContent().trim().isEmpty()){
-            return ctx.createFailureStatus(new Object[] { Messages.Validation_TimerEvent_MissingCondition});
+        if(isMissingCondition(timerEvent,condition)){
+        	return ctx.createFailureStatus(new Object[] {Messages.Validation_TimerEvent_MissingCondition});
         }
         return ctx.createSuccessStatus();
     }
