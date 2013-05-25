@@ -24,6 +24,8 @@ import java.util.Properties;
 
 import org.bonitasoft.studio.common.repository.filestore.PropertiesFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.connectors.ConnectorPlugin;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -52,7 +54,7 @@ public class DatabaseConnectorPropertiesFileStore extends PropertiesFileStore {
 	 */
 	@Override
 	public Image getIcon() {
-		return null;
+		return Pics.getImage("databases_driver.png",ConnectorPlugin.getDefault());
 	}
 	
 	public void setAutoAddDriver(Boolean b){

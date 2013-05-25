@@ -24,7 +24,6 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesFileStore;
 import org.bonitasoft.studio.connectors.repository.DatabaseConnectorPropertiesRepositoryStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ViewerCell;
 
 /**
  * @author Aurelie Zara
@@ -44,7 +43,7 @@ public class DatabaseDriversContentProvider extends ArrayContentProvider {
 		List<String> jars = new ArrayList<String>();
 		if (element instanceof String){
 			String currentConnector = (String)element;
-			DatabaseConnectorPropertiesFileStore properties=(DatabaseConnectorPropertiesFileStore)store.getChild(currentConnector);
+			DatabaseConnectorPropertiesFileStore properties=(DatabaseConnectorPropertiesFileStore)store.getChild(getDBPrefFilename(currentConnector));
 			if (properties!=null){
 				jars.addAll(properties.getJarList());
 			}
@@ -53,6 +52,8 @@ public class DatabaseDriversContentProvider extends ArrayContentProvider {
 	}
 	
 	 
-
+	protected String getDBPrefFilename(String connectorId) {
+		return connectorId+"."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT;
+	}
 
 }

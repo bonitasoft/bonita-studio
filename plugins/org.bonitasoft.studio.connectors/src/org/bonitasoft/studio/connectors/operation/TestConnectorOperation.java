@@ -173,7 +173,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 
 	private void configureProcess(Configuration configuration, ConnectorImplementation implem) {
 		final DatabaseConnectorPropertiesRepositoryStore dbStore = (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class);
-		final DatabaseConnectorPropertiesFileStore file = (DatabaseConnectorPropertiesFileStore) dbStore.getChild(implem.getDefinitionId());
+		final DatabaseConnectorPropertiesFileStore file = (DatabaseConnectorPropertiesFileStore) dbStore.getChild(implem.getDefinitionId()+"."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT);
 		String driver = null;
 		boolean addDriver = false;
 		if(file != null){

@@ -311,7 +311,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		}
 		List<String> jars = getJars();
 		jars.remove(driver);
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore)store.createRepositoryFileStore(connectorId);
+		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore)store.createRepositoryFileStore(getDBPrefFilename(connectorId));
 		fileStore.setJarList(jars);
 	}
 
@@ -363,23 +363,27 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 	}
 	
 	private void setJars(String connectorId, List<String> jars){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(connectorId);
+		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
 		if (fileStore ==null){
-			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(connectorId);
+			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(getDBPrefFilename(connectorId));
 		}
 		fileStore.setJarList(jars);
 	}
 
 	private String getDefaultDriver(String connectorId){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(connectorId);
+		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
 		if (fileStore !=null){
 			return fileStore.getDefault();
 		}
 		return null;
 	}
+
+	protected String getDBPrefFilename(String connectorId) {
+		return connectorId+"."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT;
+	}
 	
 	private boolean getAutoAddDriverProperty(String connectorId){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(connectorId);
+		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(connectorId+"."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT);
 		if (fileStore !=null){
 			return fileStore.getAutoAddDriver();
 		} 
@@ -388,19 +392,19 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 	}
 	
 	private void setDefaultDriver(String connectorId, String defaultDriver){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(connectorId);
+		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
 		if (fileStore ==null){
-			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(connectorId);
+			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(getDBPrefFilename(connectorId));
 		}
 		fileStore.setDefault(defaultDriver);
 	}
 	
 	private void setAutoAddDriverProperty(String connectorId){
-		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(connectorId);
+		DatabaseConnectorPropertiesFileStore fileStore =(DatabaseConnectorPropertiesFileStore) store.getChild(getDBPrefFilename(connectorId));
 		if (fileStore!=null){
 			fileStore.setAutoAddDriver(new Boolean(automaticallyAddDriver.getSelection()));
 		} else {
-			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(connectorId);
+			fileStore = (DatabaseConnectorPropertiesFileStore) store.createRepositoryFileStore(getDBPrefFilename(connectorId));
 		}
 	}
 }

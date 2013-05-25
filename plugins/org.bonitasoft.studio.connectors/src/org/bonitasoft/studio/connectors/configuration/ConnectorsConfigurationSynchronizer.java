@@ -137,7 +137,7 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 			EditingDomain editingDomain, CompoundCommand cc,boolean forceDriver) {
 		super.updateJarDependencies(connectorContainer, implementation, editingDomain,	cc,forceDriver);
 		store = (DatabaseConnectorPropertiesRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DatabaseConnectorPropertiesRepositoryStore.class) ;
-		DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store.getChild(implementation.getDefinitionId());
+		DatabaseConnectorPropertiesFileStore fileStore = (DatabaseConnectorPropertiesFileStore) store.getChild(implementation.getDefinitionId() + "."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT);
 		if (fileStore !=null){
 			String defaultDriver = fileStore.getDefault();
 			List<String> jars = fileStore.getJarList();

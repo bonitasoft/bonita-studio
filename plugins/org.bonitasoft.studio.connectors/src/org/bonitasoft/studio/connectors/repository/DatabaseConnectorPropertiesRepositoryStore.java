@@ -22,7 +22,9 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
+import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -43,6 +45,11 @@ public class DatabaseConnectorPropertiesRepositoryStore extends AbstractReposito
 	public String getName() {
 		return STORE_NAME;
 	}
+	
+	@Override
+	public boolean canBeExported() {
+		return super.canBeExported();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getDisplayName()
@@ -57,14 +64,14 @@ public class DatabaseConnectorPropertiesRepositoryStore extends AbstractReposito
 	 */
 	@Override
 	public Image getIcon() {
-		return null;
+		return Pics.getImage("databases_driver.png",ConnectorPlugin.getDefault());
 	}
 
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getCompatibleExtensions()
 	 */
 	@Override
-	public Set getCompatibleExtensions() {
+	public Set<String> getCompatibleExtensions() {
 		return extensions;
 	}
 
@@ -73,6 +80,9 @@ public class DatabaseConnectorPropertiesRepositoryStore extends AbstractReposito
 	 */
 	@Override
 	public IRepositoryFileStore createRepositoryFileStore(String fileName) {
+		if(fileName != null && !fileName.endsWith("."+CONF_EXT)){
+			fileName = fileName + "." + CONF_EXT;
+		}
 		return new DatabaseConnectorPropertiesFileStore(fileName, this);
 	}
 	
