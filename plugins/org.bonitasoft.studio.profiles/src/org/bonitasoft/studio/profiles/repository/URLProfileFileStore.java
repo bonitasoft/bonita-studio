@@ -33,7 +33,7 @@ public class URLProfileFileStore extends ProfileFileStore {
 
     private final URL url;
 
-    public URLProfileFileStore(URL url, IRepositoryStore store) {
+    public URLProfileFileStore(URL url, IRepositoryStore<?> store) {
         super(url.toString(), store);
         this.url = url ;
     }
