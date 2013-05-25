@@ -95,7 +95,7 @@ public class TransitionOrderingPropertySection extends AbstractBonitaDescription
 		listViewer.setLabelProvider(new LabelProvider(){
 			@Override
 			public String getText(Object element) {
-				if(element instanceof Connection){
+				if(element != null && element instanceof Connection){
 					final String transitionName = ((Connection) element).getName();
 					return transitionName +" -- "+((Connection) element).getTarget().getName();
 				}
