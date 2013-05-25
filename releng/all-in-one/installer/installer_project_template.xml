@@ -40,141 +40,25 @@
             <file>i18n/messages_fr.properties</file>
         </language>
         <language>
-            <code>ar</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>bg</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>ca</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>da</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>nl</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>cs</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>cy</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>va</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>zh_CN</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>zh_TW</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>et</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>fi</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
             <code>de</code>
-            <file>i18n/messages.properties</file>
-        </language>
-     	 <language>
-            <code>el</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>de</code>
-            <file>i18n/messages.properties</file>
+            <file>i18n/messages_de.properties</file>
         </language>
          <language>
             <code>es</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>es_AR</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>he</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>hr</code>
-            <file>i18n/messages.properties</file>
+            <file>i18n/messages_es.properties</file>
         </language>
          <language>
             <code>it</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>ja</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>ko</code>
-            <file>i18n/messages.properties</file>
-        </language>
-	    <language>
-            <code>pl</code>
-            <file>i18n/messages.properties</file>
+            <file>i18n/messages_it.properties</file>
         </language>
          <language>
             <code>pt_BR</code>
-            <file>i18n/messages.properties</file>
+            <file>i18n/messages_pt.properties</file>
         </language>
          <language>
             <code>pt</code>
-            <file>i18n/messages.properties</file>
+            <file>i18n/messages_pt.properties</file>
         </language>
-         <language>
-            <code>ro</code>
-            <file>i18n/messages.properties</file>
-        </language>
-		<language>
-            <code>ru</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>no</code>
-            <file>i18n/messages.properties</file>
-        </language>
-	    <language>
-            <code>sl</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>sk</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>sq</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>sq</code>
-            <file>i18n/messages.properties</file>
-        </language>
-        <language>
-            <code>sv</code>
-            <file>i18n/messages.properties</file>
-        </language>
-         <language>
-            <code>tr</code>
-            <file>i18n/messages.properties</file>
-        </language> 
     </customLanguageFileList>
 	<preShowHelpActionList>
 		<setInstallerVariable>
