@@ -20,8 +20,11 @@ package org.bonitasoft.studio.connectors.ui.preferences;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IFileStoreContribution;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -42,6 +45,8 @@ import org.bonitasoft.studio.preferences.pages.AbstractBonitaPreferencePage;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -86,7 +91,8 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 	private DataBindingContext context;
 	private DatabaseDriversLabelProvider driversLabelProvider;
 	private Button automaticallyAddDriver;
-
+	private static final String CLASS = "class";
+	
 	@Override
 	protected Control createContents(Composite parent) {
 		final Composite titleComposite = new Composite(parent, SWT.NONE) ;
@@ -386,6 +392,28 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 			fileStore.setAutoAddDriver(Boolean.valueOf(automaticallyAddDriver.getSelection()));
 		} else {
 			fileStore =  store.createRepositoryFileStore(dbPrefFilename);
+		}
+	}
+	
+	@Override
+	protected void performDefaults() {
+		super.performDefaults();
+		reinitDriverAssociation();
+		driverManagerViewer.refresh();
+	}
+
+	private void reinitDriverAssociation() {
+		IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.repository.fileContribution") ;
+		for(IConfigurationElement element : elements){
+			IFileStoreContribution contribution;
+			try {
+				contribution = (IFileStoreContribution) element.createExecutableExtension(CLASS);
+				if(contribution.appliesTo(store)){
+					contribution.execute(store) ;
+				}
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e) ;
+			}
 		}
 	}
 }
