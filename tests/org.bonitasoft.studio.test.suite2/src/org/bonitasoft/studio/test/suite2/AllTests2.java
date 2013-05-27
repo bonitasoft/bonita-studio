@@ -83,8 +83,7 @@ import org.junit.runners.Suite;
     TestDirtyState.class,
     TestCSSModel.class,
     TestURLs.class,
-    TestDuplicateCommand.class,
-    /*
+    /*  TestDuplicateCommand.class,
     BPMNImportExportTest.class,
     BPMNDataExportImportTest.class,
     */
