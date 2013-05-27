@@ -72,7 +72,7 @@ public class EditConnectorConfigurationWizard extends ConnectorWizard {
 
 				connectorWorkingCopy.setConfiguration(conf);
 				extension = findCustomWizardExtension(definition) ;
-				recreateConnectorConfigurationPages(definition,true);
+				recreateConnectorConfigurationPages(definition,false);
 			}
 		}
 		return super.getNextPage(page);
