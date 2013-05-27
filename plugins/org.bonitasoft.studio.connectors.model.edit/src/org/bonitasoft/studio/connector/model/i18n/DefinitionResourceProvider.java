@@ -124,7 +124,6 @@ public class DefinitionResourceProvider {
         categoryImageRegistry = createImageRegistry();
         definitionImageRegistry = createImageRegistry();
         try {
-            URL url = bundle.getResource(store.getName());
             pluginControl = new DefinitionControl(bundle,store.getName());
             storeControl = new StoreControl(store.getResource().getLocation().toFile().getAbsolutePath());
         } catch (Exception e) {
@@ -589,16 +588,6 @@ public class DefinitionResourceProvider {
 		return Collections.emptyList();
 	}
 
-	private List<Category> getAllCategoriesWithId(String id) {
-        List<Category> result = new ArrayList<Category>();
-        for (Category cat : categories) {
-            if (cat.getId().equals(id)) {
-                result.add(cat);
-            }
-        }
-
-        return result;
-    }
 
     public void loadDefinitionsCategories(IProgressMonitor monitor){
         categories = new ArrayList<Category>();
@@ -662,8 +651,13 @@ public class DefinitionResourceProvider {
         }
         String definitionId = definition.getId() + "_" + definition.getVersion();
         Image icon = definitionImageRegistry.get(definitionId);
+        //Load icons
+        try {
+            FileLocator.toFileURL(bundle.getResource(store.getName()));
+        } catch (IOException e1) {
+            BonitaStudioLog.error(e1);
+        }
         if (icon == null || icon.isDisposed()) {
-        	
             Resource resource = definition.eResource();
             File f = null;
             if (resource != null) {
@@ -673,15 +667,12 @@ public class DefinitionResourceProvider {
             } else {
                 f = store.getResource().getLocation().toFile();
             }
-            BonitaStudioLog.debug("Loading definition icon for "+definitionId+" located here : "+ f, "org.bonitasoft.studio.connectors.model.edit");
             if (f != null && f.exists() && definition.getIcon() != null) {
                 File iconFile = new File(f, definition.getIcon());
-                BonitaStudioLog.debug("Icon loaded : "+ iconFile, "org.bonitasoft.studio.connectors.model.edit");
                 if (iconFile.exists()) {
                     try {
                         final URL iconURL = iconFile.toURI().toURL();
-                        icon = ImageDescriptor.createFromURL(iconURL)
-                                .createImage();
+                        icon = ImageDescriptor.createFromURL(iconURL).createImage();
                         if (definitionImageRegistry.get(definitionId) != null) {
                             definitionImageRegistry.remove(definitionId);
                         }
