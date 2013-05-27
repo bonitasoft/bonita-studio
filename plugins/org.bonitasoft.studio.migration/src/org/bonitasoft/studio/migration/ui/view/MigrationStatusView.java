@@ -72,6 +72,8 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -109,6 +111,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 	private String searchQuery;
 	private ToggleLinkingAction linkAction;
 	private Text descripitonText;
+	private CheckboxLabelProvider checkBoxLabelProvider;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -264,6 +267,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 
 		tableViewer = new TableViewer(tableComposite,SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION) ;
+		checkBoxLabelProvider  = new CheckboxLabelProvider(tableViewer.getControl());
 		tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
 		tableViewer.getTable().setHeaderVisible(true);
 		tableViewer.getTable().setLinesVisible(true);
@@ -289,7 +293,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		layout.addColumnData(new ColumnWeightData(15));
 
 		tableViewer.getTable().setLayout(layout);
-
+		tableViewer.getTable().setLayoutDeferred(true);
 		tableViewer.setContentProvider(new ReportContentProvider());
 		IEditorPart activeEditor = getSite().getPage().getActiveEditor();
 		tableViewer.setInput(activeEditor);
@@ -299,6 +303,31 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 				event.height = 25;
 			}
 		});
+
+		tableViewer.getTable().addControlListener(new ControlListener() {
+
+			@Override
+			public void controlResized(ControlEvent e) {
+				if(tableViewer != null && !tableViewer.getTable().isDisposed() && tableViewer.getTable().getParent().getBounds().width > 300){
+					Display.getDefault().asyncExec(new Runnable() {
+
+						@Override
+						public void run() {
+							if(!tableViewer.getTable().isDisposed()){
+								tableViewer.getTable().setLayoutDeferred(false);
+								tableViewer.getTable().layout();
+							}
+						}
+					});
+				}
+			}
+
+			@Override
+			public void controlMoved(ControlEvent e) {
+
+			}
+		});
+
 
 		ColumnViewerToolTipSupport.enableFor(tableViewer,ToolTip.NO_RECREATE);  
 
@@ -440,7 +469,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.FILL);
 		column.getColumn().setText(Messages.reviewed);
 		column.getColumn().setAlignment(SWT.CENTER);
-		column.setLabelProvider(new CheckboxLabelProvider(tableViewer.getControl()));
+		column.setLabelProvider(checkBoxLabelProvider);
 
 		column.setEditingSupport(new EditingSupport(tableViewer) {
 
@@ -518,7 +547,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 
 	@Override
 	public void setFocus() {
-	
+
 	}
 
 	@Override
