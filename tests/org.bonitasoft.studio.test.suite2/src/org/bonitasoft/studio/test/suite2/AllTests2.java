@@ -80,6 +80,7 @@ import org.junit.runners.Suite;
     TestAutomaticSwitchPerspective.class,
     TestBOSArchiveImport.class,
     TestSimulationResourceRepository.class,
+   /*
     TestExportProcessBar.class,
     BPMNImportExportTest.class,
     TestThemeRepository.class,
@@ -88,6 +89,7 @@ import org.junit.runners.Suite;
     TestURLs.class,
     TestDuplicateCommand.class,
     BPMNDataExportImportTest.class,
+    */
     BPMNSequenceFlowConditionExportImportTest.class,
     TestDataRefactor.class,
     TestBonitaAPI.class,
