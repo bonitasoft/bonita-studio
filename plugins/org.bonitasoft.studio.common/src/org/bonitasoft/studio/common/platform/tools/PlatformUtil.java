@@ -166,10 +166,17 @@ public class PlatformUtil {
 			            }
 			            modelPageId = contrib.getModelIntroPageID();
 			        }
+					final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
 					model.setCurrentPageId(modelPageId);
-					PlatformUI.getWorkbench().getIntroManager().showIntro(
+					introManager.showIntro(
 							window,
 							false);
+					if(!modelPageId.equals(model.getCurrentPageId())){
+						IntroPlugin.getDefault().getIntroModelRoot().setCurrentPageId(modelPageId);
+						introManager.showIntro(
+								window,
+								false);
+					}
 					window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 					if(window != null){
 						PlatformUtil.maximizeWindow(window.getActivePage());
