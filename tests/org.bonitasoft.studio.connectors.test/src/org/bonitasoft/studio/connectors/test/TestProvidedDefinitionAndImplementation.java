@@ -192,8 +192,11 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 			}
 			final String fieldLabel = connectorResourceProvider.getFieldLabel(def, component.getId());
 			if(!(fieldLabel != null && !fieldLabel.isEmpty())){
-				testReport.append("\n");
-				testReport.append("The widget "+component.getId()+" has no label in "+resourceName);
+				if(!("sap-jco2-callfunction.def".equals(resourceName)
+						&& ("inputParameters".equals(component.getId()) || !"outputParameters".equals(component.getId())))){
+					testReport.append("\n");
+					testReport.append("The widget "+component.getId()+" has no label in "+resourceName);
+				}
 			}
 			bindInputs.add(((WidgetComponent) component).getInputName());
 		}
