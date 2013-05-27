@@ -129,8 +129,14 @@ public abstract class AbstractSwitch extends ProcessSwitch<Element> {
                 connectorBuilder.addInput(DB_DRIVER, EngineExpressionUtil.createExpression(dbKPI.getDriverclassName())) ;
                 connectorBuilder.addInput(DB_URL, EngineExpressionUtil.createExpression(dbKPI.getJdbcUrl())) ;
                 connectorBuilder.addInput(DB_QUERY, EngineExpressionUtil.createExpression(dbKPI.getRequest())) ;
-                connectorBuilder.addInput(DB_USER, EngineExpressionUtil.createExpression(dbKPI.getUser())) ;
-                connectorBuilder.addInput(DB_PASSWORD, EngineExpressionUtil.createExpression(dbKPI.getPassword())) ;
+                final Expression dbUserExpression = EngineExpressionUtil.createExpression(dbKPI.getUser());
+                if(dbUserExpression != null){
+                	connectorBuilder.addInput(DB_USER, dbUserExpression) ;
+                }
+                final Expression dbPasswordExpression = EngineExpressionUtil.createExpression(dbKPI.getPassword());
+                if(dbPasswordExpression != null){
+                	connectorBuilder.addInput(DB_PASSWORD, dbPasswordExpression) ;
+                }
             }
         }
     }
