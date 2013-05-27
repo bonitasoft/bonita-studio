@@ -30,6 +30,8 @@ import org.bonitasoft.studio.connectors.test.TestProvidedDefinitionAndImplementa
 import org.bonitasoft.studio.diagram.form.custom.tests.TestCommands;
 import org.bonitasoft.studio.engine.test.TestUserFilterMatchingEngineVersion;
 import org.bonitasoft.studio.exporter.tests.application.TestHtmlTemplateGenerator;
+import org.bonitasoft.studio.exporter.tests.bpmn.BPMNDataExportImportTest;
+import org.bonitasoft.studio.exporter.tests.bpmn.BPMNImportExportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowConditionExportImportTest;
 import org.bonitasoft.studio.exporter.tests.form.TestFormsExporter;
 import org.bonitasoft.studio.exporter.tests.preview.TestPreviewForm;
@@ -40,7 +42,6 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.simulation.tests.TestSimulationResourceRepository;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
-import org.bonitasoft.studio.tests.TestURLs;
 import org.bonitasoft.studio.tests.api.TestBonitaAPI;
 import org.bonitasoft.studio.tests.bug.TestBugs;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
@@ -78,15 +79,17 @@ import org.junit.runners.Suite;
     TestAutomaticSwitchPerspective.class,
     TestBOSArchiveImport.class,
     TestSimulationResourceRepository.class,
+    
     TestExportProcessBar.class,
     TestThemeRepository.class,
     TestDirtyState.class,
     TestCSSModel.class,
+    /*
     TestURLs.class,
-    /*  TestDuplicateCommand.class,
+  */
+    TestDuplicateCommand.class,
     BPMNImportExportTest.class,
     BPMNDataExportImportTest.class,
-    */
     BPMNSequenceFlowConditionExportImportTest.class,
     TestDataRefactor.class,
     TestBonitaAPI.class,
