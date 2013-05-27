@@ -179,7 +179,7 @@ public class ConnectorDefinitionWizardPageTest extends SWTBotGefTestCase {
     
     @Test
     public void testConnectorDefinitionWizardPageValidityName() {
-        final String connectorDefId = "testWizardPage";
+        final String connectorDefId = "testWizardPage1";
         final String pageId = "pageTest";
         final String pageIdLabelStar = Messages.pageId+" *";
         final String widgetIdStar = Messages.widgetId+"*";
