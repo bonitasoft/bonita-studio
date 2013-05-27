@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -154,6 +155,7 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
                 organization.setMemberships(OrganizationFactory.eINSTANCE.createMemberships()) ;
                 organizations.add(organization) ;
                 viewer.setInput(organizations) ;
+                viewer.setSelection(new StructuredSelection(organization));
             }
         }) ;
 	}
