@@ -40,82 +40,84 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 public class ActorMappingConfigurationSynchronizer implements IConfigurationSynchronizer {
 
 
-    private int added;
+	private int added;
 
 	@Override
-    public void synchronize(Configuration configuration, AbstractProcess process, CompoundCommand cc, EditingDomain editingDomain) {
-        addNewActors(configuration,process,editingDomain,cc);
-        removeDeletedActors(configuration,process,editingDomain,cc) ;
-    }
+	public void synchronize(Configuration configuration, AbstractProcess process, CompoundCommand cc, EditingDomain editingDomain) {
+		addNewActors(configuration,process,editingDomain,cc);
+		removeDeletedActors(configuration,process,editingDomain,cc) ;
+	}
 
-    private void addNewActors(Configuration configuration, AbstractProcess process, EditingDomain editingDomain, CompoundCommand cc) {
-    	added = 0;
-    	ActorMappingsType mappings = configuration.getActorMappings() ;
-        boolean newMapping = false ;
-        if(mappings == null && !process.getActors().isEmpty()){
-            mappings = ActorMappingFactory.eINSTANCE.createActorMappingsType() ;
-            newMapping = true ;
-        }
-        for(Actor actor : process.getActors()){
-            String actorName = actor.getName() ;
+	private void addNewActors(Configuration configuration, AbstractProcess process, EditingDomain editingDomain, CompoundCommand cc) {
+		added = 0;
+		ActorMappingsType mappings = configuration.getActorMappings() ;
+		boolean newMapping = false ;
+		if(mappings == null && !process.getActors().isEmpty()){
+			mappings = ActorMappingFactory.eINSTANCE.createActorMappingsType() ;
+			newMapping = true ;
+		}
+		for(Actor actor : process.getActors()){
+			String actorName = actor.getName() ;
 
-            boolean exists = false ;
-            for(ActorMapping mapping : mappings.getActorMapping()){
-                if(mapping.getName().equals(actorName)){
-                    exists = true ;
-                    break ;
-                }
-            }
-            if(!exists){
-                ActorMapping mapping = ActorMappingFactory.eINSTANCE.createActorMapping() ;
-                mapping.setName(actorName) ;
-                mapping.setGroups( ActorMappingFactory.eINSTANCE.createGroups()) ;
-                mapping.setRoles( ActorMappingFactory.eINSTANCE.createRoles()) ;
-                mapping.setMemberships( ActorMappingFactory.eINSTANCE.createMembership()) ;
-                mapping.setUsers( ActorMappingFactory.eINSTANCE.createUsers()) ;
-                cc.append(AddCommand.create(editingDomain, mappings, ActorMappingPackage.Literals.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING, mapping)) ;
-                added++;
-            }
-        }
-        if(newMapping){
-            cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__ACTOR_MAPPINGS, mappings)) ;
-        }
-    }
+			boolean exists = false ;
+			for(ActorMapping mapping : mappings.getActorMapping()){
+				if(mapping.getName().equals(actorName)){
+					exists = true ;
+					break ;
+				}
+			}
+			if(!exists){
+				ActorMapping mapping = ActorMappingFactory.eINSTANCE.createActorMapping() ;
+				mapping.setName(actorName) ;
+				mapping.setGroups( ActorMappingFactory.eINSTANCE.createGroups()) ;
+				mapping.setRoles( ActorMappingFactory.eINSTANCE.createRoles()) ;
+				mapping.setMemberships( ActorMappingFactory.eINSTANCE.createMembership()) ;
+				mapping.setUsers( ActorMappingFactory.eINSTANCE.createUsers()) ;
+				cc.append(AddCommand.create(editingDomain, mappings, ActorMappingPackage.Literals.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING, mapping)) ;
+				added++;
+			}
+		}
+		if(newMapping){
+			cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__ACTOR_MAPPINGS, mappings)) ;
+		}
+	}
 
-    private void removeDeletedActors(Configuration configuration, AbstractProcess process, EditingDomain editingDomain, CompoundCommand cc) {
-        ActorMappingsType mappings = configuration.getActorMappings() ;
-        if(mappings != null){
-            int removed = 0;
-        	for(ActorMapping mapping : mappings.getActorMapping()){
-                String actorName = mapping.getName() ;
-                boolean exists = false ;
-                for(Actor actor : process.getActors()){
-                    if(actor.getName().equals(actorName)){
-                        exists = true ;
-                        break ;
-                    }
-                }
-                if(!exists){
-                	removed++;
-                    cc.append(RemoveCommand.create(editingDomain, mappings, ActorMappingPackage.Literals.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING, mapping)) ;
-                }
-            }
-        	if(mappings.getActorMapping().size() == removed + added){
-        		 cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__ACTOR_MAPPINGS,   null )) ;
-        	}
-        }
+	private void removeDeletedActors(Configuration configuration, AbstractProcess process, EditingDomain editingDomain, CompoundCommand cc) {
+		ActorMappingsType mappings = configuration.getActorMappings() ;
+		if(mappings != null){
+			int removed = 0;
+			for(ActorMapping mapping : mappings.getActorMapping()){
+				String actorName = mapping.getName() ;
+				boolean exists = false ;
+				for(Actor actor : process.getActors()){
+					if(actor.getName().equals(actorName)){
+						exists = true ;
+						break ;
+					}
+				}
+				if(!exists){
+					removed++;
+					cc.append(RemoveCommand.create(editingDomain, mappings, ActorMappingPackage.Literals.ACTOR_MAPPINGS_TYPE__ACTOR_MAPPING, mapping)) ;
+				}
+			}
+			if(removed > 0 ){
+				if(mappings.getActorMapping().size() == removed + added){
+					cc.append(SetCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__ACTOR_MAPPINGS,   null )) ;
+				}
+			}
+		}
 
-    }
+	}
 
-    @Override
-    public String getFragmentContainerId() {
-        return null;
-    }
+	@Override
+	public String getFragmentContainerId() {
+		return null;
+	}
 
-    @Override
-    public EStructuralFeature getDependencyKind() {
-        return null;
-    }
+	@Override
+	public EStructuralFeature getDependencyKind() {
+		return null;
+	}
 
 
 }
