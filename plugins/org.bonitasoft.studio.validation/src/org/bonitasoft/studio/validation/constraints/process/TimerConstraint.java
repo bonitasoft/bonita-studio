@@ -67,6 +67,9 @@ public class TimerConstraint extends AbstractLiveValidationMarkerConstraint {
     }
 
 	private boolean isSupportedReturnType(Expression condition) {
+		if(condition == null){
+			return false;
+		}
 		final String returnType = condition.getReturnType();
 		return Long.class.getName().equals(returnType)
 				|| Date.class.getName().equals(returnType);
