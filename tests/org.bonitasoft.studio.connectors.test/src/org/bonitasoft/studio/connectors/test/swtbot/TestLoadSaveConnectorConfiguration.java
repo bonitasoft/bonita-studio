@@ -108,7 +108,6 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 		bot.textWithLabel("Name *").setText(name2);
 		bot.button(IDialogConstants.NEXT_LABEL).click();
 		bot.toolbarButton("Load").click();
-		assertFalse("finish button should be disabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
 		final SWTBotTree wizardTree = bot.treeWithId(SWTBotConstants.SELECTION_CONNECTOR_CONFIGURATION_TREE_ID);
 		wizardTree.setFocus();
 		bot.waitUntil(new ICondition() {
