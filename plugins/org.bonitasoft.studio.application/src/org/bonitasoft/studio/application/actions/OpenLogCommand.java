@@ -47,6 +47,12 @@ public class OpenLogCommand extends AbstractHandler {
 			IDE.openEditorOnFileStore(page, fileStore);
 		} catch (PartInitException e) {
 			BonitaStudioLog.error(e);
+			try {
+				IDE.openInternalEditorOnFileStore(page, fileStore);
+			} catch (PartInitException e1) {
+				BonitaStudioLog.error(e1);
+				BonitaStudioLog.log("Can't open .log file in editor. You should associate .log to a program at OS level.");
+			}
 		}		
 		return null;
 	}
