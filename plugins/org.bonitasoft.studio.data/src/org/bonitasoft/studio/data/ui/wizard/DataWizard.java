@@ -104,6 +104,7 @@ public class DataWizard extends Wizard {
 
 	protected DataWizardPage getWizardPage() {
 		if(!dataContainmentFeature.equals(ProcessPackage.Literals.DATA_AWARE__DATA)){
+			dataWorkingCopy.setTransient(true);
 			return new DataWizardPage(dataWorkingCopy,container,false,false,false, showAutogenerateForm,featureToCheckForUniqueID) ;
 		}else{
 			boolean isOnActivity = container instanceof Activity;
