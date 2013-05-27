@@ -171,31 +171,32 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 	}
 
 	private void parsePageWidget(Component component, List<String> bindInputs,String resourceName,ConnectorDefinition def, StringBuilder testReport) {
+		final String componentId = component.getId();
 		if(component instanceof Group){
-			if(!(component.getId() != null && !component.getId().isEmpty())){
+			if(!(componentId != null && !componentId.isEmpty())){
 				testReport.append("\n");
 				testReport.append("Invalid widget id in "+resourceName);
 			}
 
-			final String fieldLabel = connectorResourceProvider.getFieldLabel(def, component.getId());
+			final String fieldLabel = connectorResourceProvider.getFieldLabel(def, componentId);
 			if(!(fieldLabel != null && !fieldLabel.isEmpty())){
 				testReport.append("\n");
-				testReport.append("The widget "+component.getId()+" has no label in "+resourceName);
+				testReport.append("The widget "+componentId+" has no label in "+resourceName);
 			}
 			for(Component widget : ((Group)component).getWidget()){
 				parsePageWidget(widget, bindInputs,resourceName,def,testReport);
 			}
 		}else if(component instanceof WidgetComponent){
-			if(!(component.getId() != null && !component.getId().isEmpty())){
+			if(!(componentId != null && !componentId.isEmpty())){
 				testReport.append("\n");
 				testReport.append("Invalid widget id in "+resourceName);
 			}
-			final String fieldLabel = connectorResourceProvider.getFieldLabel(def, component.getId());
+			final String fieldLabel = connectorResourceProvider.getFieldLabel(def, componentId);
 			if(!(fieldLabel != null && !fieldLabel.isEmpty())){
 				if(!("sap-jco2-callfunction.def".equals(resourceName)
-						&& ("inputParameters".equals(component.getId()) || !"outputParameters".equals(component.getId())))){
+						&& ("inputParameters".equals(componentId) || "outputParameters".equals(componentId)))){
 					testReport.append("\n");
-					testReport.append("The widget "+component.getId()+" has no label in "+resourceName);
+					testReport.append("The widget "+componentId+" has no label in "+resourceName);
 				}
 			}
 			bindInputs.add(((WidgetComponent) component).getInputName());
