@@ -20,17 +20,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.OrganizationFactory;
-import org.bonitasoft.studio.actors.preference.ActorsPreferenceConstants;
 import org.bonitasoft.studio.actors.ui.editingsupport.OrganizationDescriptionEditingSupport;
 import org.bonitasoft.studio.actors.ui.editingsupport.OrganizationNameEditingSupport;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
-import org.bonitasoft.studio.pics.Pics;
-import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -46,7 +42,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
@@ -107,7 +102,7 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
         viewer.addSelectionChangedListener(this) ;
 
         createButtons(mainComposite) ;
-
+        
         setControl(mainComposite) ;
     }
 
@@ -116,7 +111,36 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
         buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create()) ;
         buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create()) ;
 
-        final Button addButton = new Button(buttonComposite, SWT.FLAT) ;
+        createAddButton(buttonComposite);
+        createRemoveButton(buttonComposite);
+        
+        updateButtons();
+    }
+
+	private void createRemoveButton(final Composite buttonComposite) {
+		removeButton = new Button(buttonComposite, SWT.FLAT) ;
+        removeButton.setText(Messages.remove) ;
+        removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
+        removeButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                List<?> list = ((IStructuredSelection) viewer.getSelection()).toList();
+                if(list.size() > 1){
+                    FileActionDialog.activateYesNoToAll() ;
+                }
+                for(Object sel : list){
+                    if(FileActionDialog.confirmDeletionQuestion(((Organization)sel).getName())){
+                        organizations.remove(sel) ;
+                    }
+                }
+                FileActionDialog.deactivateYesNoToAll() ;
+                viewer.setInput(organizations) ;
+            }
+        }) ;
+	}
+
+	private void createAddButton(final Composite buttonComposite) {
+		final Button addButton = new Button(buttonComposite, SWT.FLAT) ;
         addButton.setText(Messages.add) ;
         addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         addButton.addSelectionListener(new SelectionAdapter() {
@@ -132,27 +156,7 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
                 viewer.setInput(organizations) ;
             }
         }) ;
-
-        removeButton = new Button(buttonComposite, SWT.FLAT) ;
-        removeButton.setText(Messages.remove) ;
-        removeButton.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-        removeButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                List list = ((IStructuredSelection) viewer.getSelection()).toList();
-                if(list.size() > 1){
-                    FileActionDialog.activateYesNoToAll() ;
-                }
-                for(Object sel : list){
-                    if(FileActionDialog.confirmDeletionQuestion(((Organization)sel).getName())){
-                        organizations.remove(sel) ;
-                    }
-                }
-                FileActionDialog.deactivateYesNoToAll() ;
-                viewer.setInput(organizations) ;
-            }
-        }) ;
-    }
+	}
 
     private String generateOrganizationName() {
         Set<String> names = new HashSet<String>() ;
@@ -164,7 +168,7 @@ public class ManageOrganizationWizardPage extends WizardPage implements ISelecti
 
     private void updateButtons() {
         if(removeButton != null && !removeButton.isDisposed()){
-            removeButton.setEnabled(!viewer.getSelection().isEmpty()) ;
+            removeButton.setEnabled(viewer != null && !viewer.getSelection().isEmpty()) ;
         }
     }
 
