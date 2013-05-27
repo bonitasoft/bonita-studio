@@ -325,13 +325,6 @@
                   label="%help_label"
                   style="push">
             </command>
-            <command
-                  commandId="org.bonitasoft.studio.application.openContributions"
-                  icon="icons/browse_contributions.png"
-                  id="org.bonitasoft.studio.application.openContributions"
-                  label="%downloadContrib_label"
-                  style="push">
-            </command>
             <separator
                   name="org.bonitasoft.studio.application.help.separator4"
                   visible="true">
