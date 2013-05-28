@@ -31,7 +31,7 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 
 /**
- * @author AurŽlie Zara
+ * @author Aurï¿½lie Zara
  * 
  */
 public class SWTBotConnectorTestUtil {
@@ -253,7 +253,7 @@ public class SWTBotConnectorTestUtil {
 
 		String cNode = null;
 		for(String node : nodes){
-			if(node.contains(connectorDefinitionLabel) && node.contains(version)){
+			if(node.startsWith(connectorDefinitionLabel) && node.contains(version)){
 				cNode =  node ;
 				break;
 			}
