@@ -49,7 +49,7 @@ public class TimerConstraint extends AbstractLiveValidationMarkerConstraint {
             if(isMissingCondition(timerEvent, condition)){
             	return ctx.createFailureStatus(new Object[] {Messages.Validation_TimerEvent_MissingCondition});
             } else if(!isSupportedReturnType(condition)){
-            	return ctx.createFailureStatus(new Object[] {"Return type of timer condition requires to be a Date or a Long."});
+            	return ctx.createFailureStatus(new Object[] {Messages.vaidation_TimerEvent_WrongReturnType});
             }
         }else if(feature.equals(NotationPackage.Literals.VIEW__ELEMENT)){
             Object object = ctx.getFeatureNewValue();
@@ -58,7 +58,7 @@ public class TimerConstraint extends AbstractLiveValidationMarkerConstraint {
                 if(isMissingCondition((AbstractTimerEvent) object,condition)){
                 	return ctx.createFailureStatus(new Object[] {Messages.Validation_TimerEvent_MissingCondition});
                 } else if(!isSupportedReturnType(condition)){
-                	return ctx.createFailureStatus(new Object[] {"Return type of timer condition requires to be a Date or a Long."});
+                	return ctx.createFailureStatus(new Object[] {Messages.vaidation_TimerEvent_WrongReturnType});
                 }
             }
         }

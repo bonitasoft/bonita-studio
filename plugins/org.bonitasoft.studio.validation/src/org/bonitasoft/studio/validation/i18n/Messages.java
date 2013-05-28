@@ -76,6 +76,7 @@ public class Messages extends NLS {
 	public static String validation_messageContentWithEmptyFields;
 	public static String validationTaskOperationWithEmptyFields;
 	public static String targetCatchMessageNotExists;
+	public static String vaidation_TimerEvent_WrongReturnType;
 
     
     static {
