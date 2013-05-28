@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2012 BonitaSoft S.A.
+ * Copyright (C) 2009-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -63,10 +63,9 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ManageJarDialog extends Dialog {
 
-    private static final int BUTTON_DEFAULT_WIDTH = 85;
     protected TableViewer tableViewer;
     private Button removeButton;
-    private final IRepositoryStore libStore;
+    private final IRepositoryStore<?> libStore;
 
     protected DataBindingContext context;
     private ViewerFilter searchFilter;
@@ -94,8 +93,9 @@ public class ManageJarDialog extends Dialog {
 
     protected void createRightButtonPanel(Composite composite) {
         Composite rightPanel = new Composite(composite, composite.getStyle());
-        rightPanel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-        rightPanel.setLayout(new GridLayout(1,true));
+        final RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
+        rowLayout.fill =true;
+		rightPanel.setLayout(rowLayout);
         addImportJarButton(rightPanel);
         addRemoveJarButton(rightPanel);
     }
@@ -103,7 +103,6 @@ public class ManageJarDialog extends Dialog {
     protected void addRemoveJarButton(Composite rightPanel) {
         removeButton = new Button(rightPanel, SWT.FLAT);
         removeButton.setText(Messages.removeJar);
-        removeButton.setLayoutData(GridDataFactory.fillDefaults().hint(BUTTON_DEFAULT_WIDTH, SWT.DEFAULT).create());
         removeButton.setEnabled(false);
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -168,7 +167,6 @@ public class ManageJarDialog extends Dialog {
     protected void addImportJarButton(Composite rightPanel) {
         Button addButton = new Button(rightPanel, SWT.FLAT);
         addButton.setText(Messages.importJar);
-        addButton.setLayoutData(GridDataFactory.fillDefaults().hint(BUTTON_DEFAULT_WIDTH, SWT.DEFAULT).create());
         addButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
