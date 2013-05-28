@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.migration.utils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,31 +92,72 @@ public class StringToExpressionConverter {
 		Instance operation = model.newInstance("expression.Operation");
 		final Instance actionExpression = parse(expressionScript, returnType, fixedReturnType);
 		operation.set("rightOperand", actionExpression);
-		final Instance operator = model.newInstance("expression.Operator");
-		operator.set("type", ExpressionConstants.ASSIGNMENT_OPERATOR);
-		operation.set("operator", operator);
 
 		Instance leftOperand = null;
+		boolean isJavaSetter = false;
+		String methodCalled = null;
 		if(setVarScript != null){
+			String varName = setVarScript;
 			Instance dataInstance= null;
 			for(String dataName : data.keySet()){
-				if(setVarScript.equals(dataName)){
+				if(varName.equals(dataName)){
 					dataInstance = data.get(dataName);
+					break;
+				}
+			}
+			if(dataInstance == null && varName.contains("#") ){
+				varName = varName.substring(0, varName.indexOf("#"));
+			}
+			for(String dataName : data.keySet()){
+				if(varName.equals(dataName)){
+					dataInstance = data.get(dataName);
+					isJavaSetter = true;
+					break;
 				}
 			}
 			if(dataInstance != null){
 				String dataReturnType = getDataReturnType(dataInstance);
-				leftOperand = parse("${"+setVarScript+"}", dataReturnType, true);
-				actionExpression.set("returnType", dataReturnType);
+				leftOperand = parse("${"+varName+"}", dataReturnType, true);
+				if(!isJavaSetter){
+					actionExpression.set("returnType", dataReturnType);
+				}
+			}
+
+			if(isJavaSetter){
+				final int lastIndexOf = setVarScript.lastIndexOf("#");
+				if(lastIndexOf != -1 && lastIndexOf+1 < setVarScript.length()){
+					methodCalled =	setVarScript.substring(lastIndexOf+1,setVarScript.length());
+				}
 			}
 		}
+
 		if(leftOperand == null){
 			leftOperand = createExpressionInstance(model, "", "", String.class.getName(), String.class.getName(), false);
 		}
 		operation.set("leftOperand", leftOperand);
+
+		final Instance operator = model.newInstance("expression.Operator");
+		if(methodCalled != null){
+			operator.set("type", ExpressionConstants.JAVA_METHOD_OPERATOR);
+			operator.set("expression", methodCalled);
+			operator.set("inputTypes", getInputTypes((String) actionExpression.get("returnType")));
+		}else{
+			operator.set("type", ExpressionConstants.ASSIGNMENT_OPERATOR);
+		}
+		operation.set("operator", operator);
+
 		return operation;
 	}
+
 	
+	
+	private List<String> getInputTypes(String returnType) {
+		List<String> result = new ArrayList<String>();
+		result.add(returnType);
+		return result ;
+	}
+
+
 	public static Instance createOperation(Model model,Instance leftOperand,Instance operator,Instance rightOperand){
 		final Instance op = model.newInstance("expression.Operation");
 		op.set("rightOperand", rightOperand);

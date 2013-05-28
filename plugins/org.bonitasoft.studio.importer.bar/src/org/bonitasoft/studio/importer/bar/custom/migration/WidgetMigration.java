@@ -22,9 +22,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
+import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.form.FormPackage;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
@@ -374,13 +377,16 @@ public class WidgetMigration extends ReportCustomMigration {
 				if(!elements.isEmpty()){
 					final Instance dataInstance = elements.get(0);
 					if(dataInstance.instanceOf("process.Data")){
+
 						String returnType = StringToExpressionConverter.getDataReturnType(dataInstance);
-						widget.set("returnTypeModifier", returnType);
-						if(rightOperand != null){
-							rightOperand.set("returnType", returnType);
+						if(new WidgetModifiersSwitch().doSwitch(FormFactory.eINSTANCE.createTextFormField()).contains(returnType)){
+							widget.set("returnTypeModifier", returnType);
+							if(rightOperand != null){
+								rightOperand.set("returnType", returnType);
+							}
+							added = true ;
+							addReportChange((String) widget.get("name"),widget.getType().getEClass().getName(), widget.getUuid(), Messages.widgetModifierMigrationDescription, Messages.dataProperty, IStatus.OK);
 						}
-						added = true ;
-						addReportChange((String) widget.get("name"),widget.getType().getEClass().getName(), widget.getUuid(), Messages.widgetModifierMigrationDescription, Messages.dataProperty, IStatus.OK);
 					}
 				}
 			}
