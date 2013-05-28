@@ -13,11 +13,11 @@
 		<tychoVersion>0.17.0</tychoVersion>
 		<tychoExtrasVersion>0.17.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
-		<bundle.version>6.0.0-beta-020</bundle.version>
-		<engine.version>6.0.0-beta-030</engine.version>
-		<connector.version>6.0.0-beta-020</connector.version>
+		<bundle.version>6.0.0-rc1</bundle.version>
+		<engine.version>6.0.0-rc1</engine.version>
+		<connector.version>6.0.0-rc1</connector.version>
 		<simulation.version>6.0-Beta-4-SNAPSHOT</simulation.version>
-		<filters.version>6.0.0-beta-022</filters.version>
+		<filters.version>6.0.0-rc1</filters.version>
 		<p2MirrorUrl>ftp://192.168.1.215/home/ic/p2_repository/</p2MirrorUrl>
 		<tycho.testArgLine></tycho.testArgLine>
 	</properties>
