@@ -16,11 +16,17 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
@@ -45,6 +51,15 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 		super.createTextControl(style | SWT.READ_ONLY , widgetFactory);
 		getTextControl().setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		getTextControl().setMessage(Messages.selectTarget);
+		IConfigurationElement[] configurationElements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.expression.editor.caretDestroyer");
+		if(configurationElements.length == 1){
+			try {
+				FocusListener caretDestroyerFocusListener = (FocusListener) configurationElements[0].createExecutableExtension("class");
+				getTextControl().addFocusListener(caretDestroyerFocusListener);
+			} catch (CoreException e1) {
+				BonitaStudioLog.error(e1);
+			}
+		}	
 	}
 	
 	@Override
