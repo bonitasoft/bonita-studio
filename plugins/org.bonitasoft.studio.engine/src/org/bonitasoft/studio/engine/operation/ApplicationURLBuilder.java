@@ -76,6 +76,25 @@ public class ApplicationURLBuilder {
         final String runUrl = "http://"+ host+":"+ port + APPLI_PATH + token +"ui=form#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion(), "UTF-8")+"$entry&process="+processId+"&mode=app&locale="+locale;
         return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(runUrl, "UTF-8"));
     }
+    
+    public URL toFormURL(IProgressMonitor monitor) throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
+        Configuration conf = getConfiguration(process, configurationId) ;
+        IPreferenceStore store =  BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
+        String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) ;
+        String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
+        String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST) ;
+        String token = "" ;
+        String userName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME) ;
+        String password = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD) ;
+        if(conf != null && conf.getUsername() != null){
+            userName = conf.getUsername() ;
+            password = conf.getPassword() ;
+        }
+
+        final String loginURL = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
+        final String runUrl = "http://"+ host+":"+ port + APPLI_PATH + token +"ui=form#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion(), "UTF-8")+"$entry&process="+processId+"&mode=form&locale="+locale;
+        return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(runUrl, "UTF-8"));
+    }
 
     private Configuration getConfiguration(final AbstractProcess process,String configurationId) {
         Configuration configuration = null ;

@@ -170,6 +170,9 @@ public class WidgetSwitch extends FormSwitch<Object> {
 		return object;
 	}
 	
+	
+
+	
 
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.model.form.util.FormSwitch#caseDurationFormField(org.bonitasoft.studio.model.form.DurationFormField)

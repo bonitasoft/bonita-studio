@@ -97,7 +97,7 @@ import org.eclipse.ui.internal.browser.ExternalBrowserInstance;
 import org.eclipse.ui.internal.browser.IBrowserDescriptor;
 
 /**
- *@Author Aurèlie Zara
+ *@Author AurÈlie Zara
  *
  *
  */
@@ -158,7 +158,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 				ExternalBrowserInstance browserInstance = new ExternalBrowserInstance(null, browser);
 				if (!isOnTask){
 					ApplicationURLBuilder builder = new ApplicationURLBuilder(proc,procId,configuration.getName());
-					URL url = builder.toURL(monitor);
+					URL url = builder.toFormURL(monitor);
 					OpenBrowserCommand openCmd = new OpenBrowserCommand(url, browserInstance.getId(), "");
 					if(browser.getLocation() != null){
 						openCmd.setExternalBrowser(browserInstance);
@@ -213,7 +213,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		}
 		final String taskName=((Task)process.getElements().get(0)).getName();
 		final String loginURL = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-		final String runUrl = "http://"+ host+":"+ port + ApplicationURLBuilder.APPLI_PATH + token +"ui=form&theme="+procId+"&locale="+locale+"#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion()+"--"+taskName, "UTF-8")+"$entry&task="+task.getId()+"&mode=app";
+		final String runUrl = "http://"+ host+":"+ port + ApplicationURLBuilder.APPLI_PATH + token +"ui=form&theme="+procId+"&locale="+locale+"#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion()+"--"+taskName, "UTF-8")+"$entry&task="+task.getId()+"&mode=form";
 		return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(runUrl, "UTF-8"));
 
 	}
@@ -245,7 +245,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 	private void initializeTask(Element parent,AbstractProcess proc, Configuration configuration){
 		AbstractProcess parentProc = ModelHelper.getParentProcess(parent);
 		Task task= ProcessFactory.eINSTANCE.createTask();
-		task.setName(((Task)parent).getName()+" preview");
+		task.setName(((Task)parent).getName());
 		task.getForm().add(formCopy);
 		copyActors(parentProc, proc);
 		if (((Task)parent).getActor()!=null){
@@ -404,7 +404,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 								expr.setType(ExpressionConstants.CONSTANT_TYPE);
 								expr.setContent("");
 								expr.getReferencedElements().clear();
-							}
+							} 
 						} else {
 							expr.setType(ExpressionConstants.CONSTANT_TYPE);
 						}
