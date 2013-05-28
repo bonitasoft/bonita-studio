@@ -67,7 +67,7 @@ public class OpenScriptWizardPage extends WizardPage implements IWizardPage {
 	private Button removeScriptButton;
 	private boolean withCreationButton;
 	private Button createScriptButton;
-	private IRepositoryStore groovyStore;
+	private IRepositoryStore<?> groovyStore;
 
 	/**
 	 * @param openScriptWizard 

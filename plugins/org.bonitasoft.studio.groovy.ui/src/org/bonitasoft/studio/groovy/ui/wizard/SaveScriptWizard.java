@@ -44,7 +44,7 @@ public class SaveScriptWizard extends Wizard implements IWizard {
 	private boolean overwrite = true ;
 	private String defaultName;
 	private List<IFunction> selectedMethods;
-	private IRepositoryStore groovyStore;
+	private IRepositoryStore<?> groovyStore;
 	private IDocument document;
 	private IRepositoryFileStore fragment;
 
