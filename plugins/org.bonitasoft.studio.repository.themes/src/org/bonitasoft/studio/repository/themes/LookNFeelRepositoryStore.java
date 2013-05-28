@@ -140,6 +140,14 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
         }catch (Exception e) {
             BonitaStudioLog.error(e) ;
             return null ;
+        }finally{
+        	if(inputStream != null){
+        		try {
+					inputStream.close();
+				} catch (IOException e) {
+					BonitaStudioLog.error(e);
+				}
+        	}
         }
         return createRepositoryFileStore(looknfeelName);
     }

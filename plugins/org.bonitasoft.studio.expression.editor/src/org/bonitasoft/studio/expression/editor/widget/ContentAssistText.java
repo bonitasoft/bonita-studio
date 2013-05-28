@@ -175,7 +175,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 			GC parentGC  = gc;
 			parentGC.setAdvanced(true);
 			Rectangle r = ContentAssistText.this.getBounds();
-			if(focused == null || !focused.getParent().equals(ContentAssistText.this)){
+			if(focused == null || (focused.getParent() != null && !focused.getParent().equals(ContentAssistText.this))){
 				parentGC.setForeground(display.getSystemColor(SWT.COLOR_GRAY));
 			}else{
 				parentGC.setForeground(display.getSystemColor(SWT.COLOR_WIDGET_BORDER));

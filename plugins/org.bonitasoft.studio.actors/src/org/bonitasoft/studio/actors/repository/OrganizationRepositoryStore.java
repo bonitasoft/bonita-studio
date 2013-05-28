@@ -123,6 +123,8 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
 			if(file.exists()){
 				if(FileActionDialog.overwriteQuestion(newFileName)){
 					file.setContents(inputStream, true, false, Repository.NULL_PROGRESS_MONITOR);
+				}else{
+					inputStream.close();
 				}
 			} else {
 				file.create(inputStream, true, Repository.NULL_PROGRESS_MONITOR);
