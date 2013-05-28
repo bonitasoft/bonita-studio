@@ -5,6 +5,7 @@
    <extension-point id="org.bonitasoft.studio.expression.expressionFilter" name="org.bonitasoft.studio.expression.expressionFilter" schema="schema/org.bonitasoft.studio.expression.expressionFilter.exsd"/>
    <extension-point id="org.bonitasoft.studio.expression.operatorEditor" name="org.bonitasoft.studio.expression.operatorEditor" schema="schema/org.bonitasoft.studio.expression.operatorEditor.exsd"/>
    <extension-point id="org.bonitasoft.studio.expression.editor.expressionViewerToolbar" name="org.bonitasoft.studio.expression.editor.expressionViewerToolbar" schema="schema/org.bonitasoft.studio.expression.editor.expressionViewerToolbar.exsd"/>
+   <extension-point id="org.bonitasoft.studio.expression.editor.caretDestroyer" name="org.bonitasoft.studio.expression.editor.caretDestroyer" schema="schema/org.bonitasoft.studio.expression.editor.caretDestroyer.exsd"/>
    <extension
          point="org.bonitasoft.studio.expression.expressionProvider">
       <expressionProvider
