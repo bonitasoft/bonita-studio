@@ -25,6 +25,9 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -54,7 +57,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
+import org.eclipse.ui.internal.intro.impl.model.AbstractIntroContainer;
 import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
 import org.eclipse.ui.intro.IIntroManager;
 import org.osgi.framework.Bundle;
@@ -67,7 +72,6 @@ import org.osgi.framework.Bundle;
 public class PlatformUtil {
 
 	private static IFileSystem fileSystem; //SINGLETON
-
 
 	public static void maximizeWindow(final IWorkbenchPage page){
 		if(!page.isPageZoomed()){
@@ -153,39 +157,19 @@ public class PlatformUtil {
 			@Override
 			public void run() {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
-				if(model != null) {
-					String modelPageId = "intro";
-					IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.introModelPageId"); //$NON-NLS-1$
-			        IModelIntroPageIDProvider contrib = null;
-			        for (IConfigurationElement elem : elements){
-			            try {
-			                contrib = (IModelIntroPageIDProvider) elem.createExecutableExtension("provider"); //$NON-NLS-1$
-			            } catch (CoreException e) {
-			                BonitaStudioLog.error(e);
-			            }
-			            modelPageId = contrib.getModelIntroPageID();
-			        }
-					final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
-					model.setCurrentPageId(modelPageId);
-					introManager.showIntro(
-							window,
-							false);
-					if(!modelPageId.equals(model.getCurrentPageId())){
-						IntroPlugin.getDefault().getIntroModelRoot().setCurrentPageId(modelPageId);
-						introManager.showIntro(
-								window,
-								false);
-					}
-					window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					if(window != null){
-						PlatformUtil.maximizeWindow(window.getActivePage());
-					}
+				final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
+				introManager.showIntro(
+						window,
+						false);
+				window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if(window != null){
+					PlatformUtil.maximizeWindow(window.getActivePage());
 				}
 			}
+
 		});
 	}
-	
+
 
 
 	/**
@@ -513,7 +497,7 @@ public class PlatformUtil {
 					}
 				}
 			}
-			
+
 		}
 		return false;
 	}
