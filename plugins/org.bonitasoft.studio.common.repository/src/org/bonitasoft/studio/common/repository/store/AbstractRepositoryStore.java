@@ -179,6 +179,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 				 if(FileActionDialog.overwriteQuestion(fileName)){
 					 file.setContents(inputStream, true, false, Repository.NULL_PROGRESS_MONITOR);
 				 }else{
+					 inputStream.close();
 					 return createRepositoryFileStore(fileName);
 				 }
 			 } else {
