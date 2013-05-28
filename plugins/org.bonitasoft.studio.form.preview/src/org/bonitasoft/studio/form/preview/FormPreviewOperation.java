@@ -153,7 +153,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 				ProcessDefinition def = processApi.deploy(businessArchive);
 				procId = def.getId();
 				processApi.enableProcess(procId) ;
-			
+
 
 				ExternalBrowserInstance browserInstance = new ExternalBrowserInstance(null, browser);
 				if (!isOnTask){
@@ -230,7 +230,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		Element parent =ModelHelper.getParentFlowElement(form);
 		if (parent ==null){
 			proc.getForm().add(formCopy);
-			
+
 		} else {
 			if (parent instanceof Task){
 				initializeTask(parent,proc,configuration);
@@ -347,7 +347,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 			widget = (Widget)widgetSwitch.doSwitch(widget);
 		}
 	}
-	
+
 	private void deleteAllOperations(Widget widget){
 		List<Operation> operations = ModelHelper.getAllItemsOfType(widget, ExpressionPackage.Literals.OPERATION);
 		for (Operation operation:operations){
@@ -406,12 +406,17 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 								expr.getReferencedElements().clear();
 							} 
 						} else {
-							expr.setType(ExpressionConstants.CONSTANT_TYPE);
+							if (ExpressionConstants.DOCUMENT_TYPE.equals(expr.getType()) || ExpressionConstants.DOCUMENT_REF_TYPE.equals(expr.getType())){
+								expr.setContent("");
+								expr.getReferencedElements().clear();
+							} else {
+								expr.setType(ExpressionConstants.CONSTANT_TYPE);
+							}
 						}
 					}
 				}
-			}
-		}	
+			}	
+		}
 		return expr;
 	}
 
