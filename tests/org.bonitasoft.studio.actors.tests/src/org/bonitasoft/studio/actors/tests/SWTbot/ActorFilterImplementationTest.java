@@ -21,6 +21,7 @@ import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -28,6 +29,8 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
@@ -106,6 +109,9 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
                 return "Editor for implementation has not been opened.";
             }
         }, 30000);
+        Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, Repository.NULL_PROGRESS_MONITOR); 
+        Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, Repository.NULL_PROGRESS_MONITOR);
+        bot.sleep(1000);
         int length = bot.activeEditor().toTextEditor().getText().length();
         StyleRange[] styles = bot.activeEditor().toTextEditor().getStyles(0, 0, length);
         containsError(styles);
