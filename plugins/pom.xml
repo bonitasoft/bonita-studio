@@ -46,7 +46,7 @@
 		<module>org.bonitasoft.studio.examples</module>
 		<module>org.bonitasoft.studio.exporter</module>
 		<module>org.bonitasoft.studio.expression.editor</module>
-		<!--module>org.bonitasoft.studio.expression.editor.win32</module-->
+		<module>org.bonitasoft.studio.expression.editor.win32</module>
 		<module>org.bonitasoft.studio.form.preview</module>
 		<module>org.bonitasoft.studio.groovy</module>
 		<module>org.bonitasoft.studio.groovy.ui</module>
