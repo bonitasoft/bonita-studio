@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Point;
@@ -52,7 +53,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 
 
 	@Test
-	public void testConditionExpressions(){
+	public void testConditionExpressions() throws Exception{
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
         bot.button(Messages.Add).click();
 		SWTBotTestUtil.addNewData(bot, "myData","Text" , false, null);
@@ -83,7 +84,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 	}
 
 
-	private void testUnvalidConditionExpression(String condition, String expressionType,boolean leftError,boolean rightError){
+	private void testUnvalidConditionExpression(String condition, String expressionType,boolean leftError,boolean rightError) throws OperationCanceledException, InterruptedException{
 		SWTBotTestUtil.initializeComparisonExpression(bot, condition);
 		Point p1 = getLeftExpressionColumnLength(condition);
 		StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p1.x);
@@ -103,7 +104,7 @@ public class TestConditionExpression extends SWTBotGefTestCase implements SWTBot
 		bot.button(IDialogConstants.CANCEL_LABEL).click(); 
 	}
 
-	private void testValidConditionExpression(String condition, String expressionType){
+	private void testValidConditionExpression(String condition, String expressionType) throws OperationCanceledException, InterruptedException{
 		SWTBotTestUtil.initializeComparisonExpression(bot, condition);
 		Point p1 = getLeftExpressionColumnLength(condition);
 		StyleRange styles = SWTBotTestUtil.getTextStyleInEditExpressionDialog(bot, ExpressionConstants.CONDITION_TYPE, 0, p1.x);
