@@ -390,110 +390,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.application.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.common.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.common.repository.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.decision.core.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.decision.ui.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.diagram.custom.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.diagram.form.custom.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.diagram.form.properties.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.engine.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.exporter.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.groovy.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.groovy.ui.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.importer.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.intro.nl_pt_BR"
          download-size="0"
          install-size="0"
@@ -503,62 +399,6 @@
 
    <plugin
          id="org.bonitasoft.studio.jpdl.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.model.edit.custom.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.preferences.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.presentation.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.properties.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.simulation.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.validation.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.xml.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -3142,14 +2982,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.compare.core.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.compare.nl_de"
          download-size="0"
          install-size="0"
@@ -3167,14 +2999,6 @@
 
    <plugin
          id="org.eclipse.compare.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.compare.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -3206,14 +3030,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.core.commands.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.databinding.beans.nl_de"
          download-size="0"
          install-size="0"
@@ -3238,14 +3054,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.core.databinding.beans.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.databinding.nl_de"
          download-size="0"
          install-size="0"
@@ -3263,14 +3071,6 @@
 
    <plugin
          id="org.eclipse.core.databinding.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.core.databinding.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -3334,14 +3134,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.core.databinding.property.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.jobs.nl_de"
          download-size="0"
          install-size="0"
@@ -3398,14 +3190,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.core.filebuffers.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.filesystem.nl_de"
          download-size="0"
          install-size="0"
@@ -3423,14 +3207,6 @@
 
    <plugin
          id="org.eclipse.core.filesystem.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.core.filesystem.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -3670,14 +3446,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.actors.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.common.diagram.nl_de"
          download-size="0"
          install-size="0"
@@ -3711,14 +3479,6 @@
 
    <plugin
          id="org.bonitasoft.studio.common.diagram.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.common.diagram.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -3862,14 +3622,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.configuration.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.connectors.model.edit.nl_de"
          download-size="0"
          install-size="0"
@@ -3903,14 +3655,6 @@
 
    <plugin
          id="org.bonitasoft.studio.connectors.model.edit.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.connectors.model.edit.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -3958,14 +3702,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.connectors.model.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.connectors.nl_de"
          download-size="0"
          install-size="0"
@@ -3999,14 +3735,6 @@
 
    <plugin
          id="org.bonitasoft.studio.connectors.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.connectors.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -4054,14 +3782,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.data.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.debug.nl_de"
          download-size="0"
          install-size="0"
@@ -4095,14 +3815,6 @@
 
    <plugin
          id="org.bonitasoft.studio.debug.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.debug.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -4150,14 +3862,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.dependencies.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.expression.editor.nl_de"
          download-size="0"
          install-size="0"
@@ -4191,14 +3895,6 @@
 
    <plugin
          id="org.bonitasoft.studio.expression.editor.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.expression.editor.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -4246,14 +3942,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.importer.bar.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.importer.bos.nl_de"
          download-size="0"
          install-size="0"
@@ -4287,14 +3975,6 @@
 
    <plugin
          id="org.bonitasoft.studio.importer.bos.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.importer.bos.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -4390,14 +4070,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.repository.themes.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.scripting.nl_de"
          download-size="0"
          install-size="0"
@@ -4431,14 +4103,6 @@
 
    <plugin
          id="org.bonitasoft.studio.scripting.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.scripting.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -4486,14 +4150,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.validators.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.xpdl.nl_de"
          download-size="0"
          install-size="0"
@@ -4527,14 +4183,6 @@
 
    <plugin
          id="org.bonitasoft.studio.xpdl.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.xpdl.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
