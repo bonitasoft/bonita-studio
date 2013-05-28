@@ -38,202 +38,206 @@ public class SWTBotConnectorTestUtil {
 
 	private static SWTBotTreeItem categoryItem;
 	private static List<String> nodes;
-	
-    /**
-     * use it to access to the wizard "New definition..." (menu
-     * DEvelopement>Connectors>New definition...)
-     * 
-     * @param bot
-     */
-    public static void activateConnectorDefinitionShell(SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
-        bot.menu("Development").menu("Connectors").menu("New definition...")
-        .click();
-        bot.waitUntil(Conditions.shellIsActive("New connector definition"),10000);
-    }
 
-    /**
-     * use it to access to the wizard "New implementation..." (menu
-     * DEvelopement>Connectors>Edit definition)
-     * 
-     * @param bot
-     */
-    public static void activateConnectorImplementationShell(SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
-        bot.menu("Development").menu("Connectors")
-        .menu("New implementation...").click();
-        bot.waitUntil(Conditions.shellIsActive("New connector implementation"),10000);
-    }
+	/**
+	 * use it to access to the wizard "New definition..." (menu
+	 * DEvelopement>Connectors>New definition...)
+	 * 
+	 * @param bot
+	 */
+	public static void activateConnectorDefinitionShell(SWTBot bot) {
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
+		bot.menu("Development").menu("Connectors").menu("New definition...")
+		.click();
+		bot.waitUntil(Conditions.shellIsActive("New connector definition"),10000);
+	}
 
-    /**
-     * use it to access to the wizard "Edit definition" (menu
-     * DEvelopement>Connectors>Edit definition)
-     * 
-     * @param bot
-     */
-    public static void activateConnectorDefEditionShell(SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
-        bot.menu("Development").menu("Connectors").menu("Edit definition...")
-        .click();
-        bot.waitUntil(Conditions.shellIsActive("Select a connector definition"),10000);
-    }
-    
-    /**
-     * use it to access to the wizard "Test connector" (menu
-     * DEvelopement>Connectors>Test connector...)
-     * 
-     * @param bot
-     */
-    public static void activateConnectorTestWizard(SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
-        bot.menu("Development").menu("Connectors").menu("Test connector...")
-        .click();
-        bot.waitUntil(Conditions.shellIsActive("Test connector"),10000);
-    }
+	/**
+	 * use it to access to the wizard "New implementation..." (menu
+	 * DEvelopement>Connectors>Edit definition)
+	 * 
+	 * @param bot
+	 */
+	public static void activateConnectorImplementationShell(SWTBot bot) {
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
+		bot.menu("Development").menu("Connectors")
+		.menu("New implementation...").click();
+		bot.waitUntil(Conditions.shellIsActive("New connector implementation"),10000);
+	}
 
-    /**
-     * use it when the wizard "New  definition" is active. (menu
-     * development>connectors>New definition...)
-     * 
-     * @param bot
-     * @param id
-     * @param version
-     */
-    public static void createConnectorDefinition(final SWTBot bot, final String id,
-            final String version) {
-        bot.textWithLabel("Definition id *").setText(id);
+	/**
+	 * use it to access to the wizard "Edit definition" (menu
+	 * DEvelopement>Connectors>Edit definition)
+	 * 
+	 * @param bot
+	 */
+	public static void activateConnectorDefEditionShell(SWTBot bot) {
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
+		bot.menu("Development").menu("Connectors").menu("Edit definition...")
+		.click();
+		bot.waitUntil(Conditions.shellIsActive("Select a connector definition"),10000);
+	}
+
+	/**
+	 * use it to access to the wizard "Test connector" (menu
+	 * DEvelopement>Connectors>Test connector...)
+	 * 
+	 * @param bot
+	 */
+	public static void activateConnectorTestWizard(SWTBot bot) {
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
+		bot.menu("Development").menu("Connectors").menu("Test connector...")
+		.click();
+		bot.waitUntil(Conditions.shellIsActive("Test connector"),10000);
+	}
+
+	/**
+	 * use it when the wizard "New  definition" is active. (menu
+	 * development>connectors>New definition...)
+	 * 
+	 * @param bot
+	 * @param id
+	 * @param version
+	 */
+	public static void createConnectorDefinition(final SWTBot bot, final String id,
+			final String version) {
+		bot.textWithLabel("Definition id *").setText(id);
 		bot.waitUntil(new ICondition() {
-			
+
 			public boolean test() throws Exception {
 				return id.equals(bot.textWithLabel("Definition id *").getText());
 			}
-			
+
 			public void init(SWTBot bot) {
-				
+
 			}
-			
+
 			public String getFailureMessage() {
 				return null;
 			}
 		},10000);
-        bot.textWithLabel("Version *").setText(version);
-	bot.waitUntil(new ICondition() {
-			
+		bot.textWithLabel("Version *").setText(version);
+		bot.waitUntil(new ICondition() {
+
 			public boolean test() throws Exception {
 				return version.equals(bot.textWithLabel("Version *").getText());
 			}
-			
+
 			public void init(SWTBot bot) {
-				
+
 			}
-			
+
 			public String getFailureMessage() {
 				return null;
 			}
 		},10000);
-    }
+	}
 
-    /**
-     * use it when the wizard "New  definition" is active. (menu
-     * development>connectors>New definition...)
-     * 
-     * @param bot
-     * @param categoryId
-     * @throws Exception
-     */
-    public static void createNewCategory(SWTBot bot, String categoryId) {
-        bot.waitUntil(Conditions.widgetIsEnabled((bot.button("New..."))),10000);
-        bot.button("New...").click();
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.activeShell()));
-        Assert.assertFalse("ok button should be desabled",
-                bot.button(IDialogConstants.OK_LABEL).isEnabled());
-        bot.textWithLabel("Id").setText(categoryId);
-        bot.textWithLabel("Display name").setText(categoryId);
-        bot.button(IDialogConstants.OK_LABEL).click();
-    }
+	/**
+	 * use it when the wizard "New  definition" is active. (menu
+	 * development>connectors>New definition...)
+	 * 
+	 * @param bot
+	 * @param categoryId
+	 * @throws Exception
+	 */
+	public static void createNewCategory(SWTBot bot, String categoryId) {
+		bot.waitUntil(Conditions.widgetIsEnabled((bot.button("New..."))),10000);
+		bot.button("New...").click();
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.activeShell()));
+		Assert.assertFalse("ok button should be desabled",
+				bot.button(IDialogConstants.OK_LABEL).isEnabled());
+		bot.textWithLabel("Id").setText(categoryId);
+		bot.textWithLabel("Display name").setText(categoryId);
+		bot.button(IDialogConstants.OK_LABEL).click();
+	}
 
-    /**
-     * use it to access to the wizard "Import connector" (menu
-     * Developement>Connectors>Import)
-     * 
-     * @param bot
-     */
-    public static void activateConnectorImportShell(SWTBot bot) {
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
-        bot.menu("Development").menu("Connectors").menu("Import connector...").click();
-        bot.waitUntil(Conditions.shellIsActive("Import connector archive"),10000);
-    }
-    
-    
-    /**
-     * use it to access to the wizard "Export connector" (menu Development<Connector>Export)
-     */
-    public static void activateExportConnectorShell(SWTBot bot){
-    	bot.menu("Development").menu("Connectors").menu("Export connector...").click();
-    	bot.waitUntil(Conditions.shellIsActive("Export connector"),10000);
-    	bot.activeShell().setFocus();
-    }
-    
-    
-    /**
-     * use it to create a connector def and impl (no window should be opened)
-     * @param bot
-     * @param id
-     * @param version
-     * @param className
-     * @param packageName
-     */
-    public static void createConnectorDefAndImpl(final SWTWorkbenchBot bot, String id,String version,String className,String packageName){
-    	final int nbEditorsBefore = bot.editors().size();
-    	activateConnectorDefinitionShell(bot);
-    	createConnectorDefinition(bot, id, version);
-    	bot.button(IDialogConstants.FINISH_LABEL).click();
-    	activateConnectorImplementationShell(bot);
-    	 bot.textWithLabel("Implementation id *").setText(id);
-         bot.comboBoxWithLabel("Definition *").setSelection(id+" ("+version+")");
-         bot.textWithLabel("Class name *").setText(className);
-         bot.textWithLabel("Package *").setText(packageName);
-         bot.button(IDialogConstants.FINISH_LABEL).click();
-         bot.waitUntil(new ICondition() {
+	/**
+	 * use it to access to the wizard "Import connector" (menu
+	 * Developement>Connectors>Import)
+	 * 
+	 * @param bot
+	 */
+	public static void activateConnectorImportShell(SWTBot bot) {
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")),10000);
+		bot.menu("Development").menu("Connectors").menu("Import connector...").click();
+		bot.waitUntil(Conditions.shellIsActive("Import connector archive"),10000);
+	}
 
-             public boolean test() throws Exception {
-                 return nbEditorsBefore +1 == bot.editors().size();
-             }
 
-             public void init(SWTBot bot) {
-             }
+	/**
+	 * use it to access to the wizard "Export connector" (menu Development<Connector>Export)
+	 */
+	public static void activateExportConnectorShell(SWTBot bot){
+		bot.menu("Development").menu("Connectors").menu("Export connector...").click();
+		bot.waitUntil(Conditions.shellIsActive("Export connector"),10000);
+		bot.activeShell().setFocus();
+	}
 
-             public String getFailureMessage() {
-                 return "Editor for implementation has not been opened.";
-             }
-         }, 30000);
-    }
-    
-    /**
-     * connector configuration input widget should be a text field or a text area
-     * 
-     * @param bot
-     * @param connectorDefinitionId
-     * @param name
-     * @param dataName
-     * @param version
-     */
-    public static void addConnectorToPool(final SWTBot bot,final String connectorDefinitionLabel,final String version,final String categoryLabel,final String connectorName) {
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
-        bot.button("Add...").click();
-        Assert.assertFalse(IDialogConstants.NEXT_LABEL + " should be disabled", bot
-                .button(IDialogConstants.NEXT_LABEL).isEnabled());
-        Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
-                .button(IDialogConstants.FINISH_LABEL).isEnabled());
-        categoryItem = null;
-        nodes = null;
-        bot.waitUntil(new ICondition() {
 
-		
+	/**
+	 * use it to create a connector def and impl (no window should be opened)
+	 * @param bot
+	 * @param id
+	 * @param version
+	 * @param className
+	 * @param packageName
+	 */
+	public static void createConnectorDefAndImpl(final SWTWorkbenchBot bot, String id,String version,String className,String packageName){
+		final int nbEditorsBefore = bot.editors().size();
+		activateConnectorDefinitionShell(bot);
+		createConnectorDefinition(bot, id, version);
+		bot.button(IDialogConstants.FINISH_LABEL).click();
+		activateConnectorImplementationShell(bot);
+		bot.textWithLabel("Implementation id *").setText(id);
+		bot.comboBoxWithLabel("Definition *").setSelection(id+" ("+version+")");
+		bot.textWithLabel("Class name *").setText(className);
+		bot.textWithLabel("Package *").setText(packageName);
+		bot.button(IDialogConstants.FINISH_LABEL).click();
+		bot.waitUntil(new ICondition() {
 
 			public boolean test() throws Exception {
-				categoryItem = bot.tree().expandNode(categoryLabel);
+				return nbEditorsBefore +1 == bot.editors().size();
+			}
+
+			public void init(SWTBot bot) {
+			}
+
+			public String getFailureMessage() {
+				return "Editor for implementation has not been opened.";
+			}
+		}, 30000);
+	}
+
+	/**
+	 * connector configuration input widget should be a text field or a text area
+	 * 
+	 * @param bot
+	 * @param connectorDefinitionId
+	 * @param name
+	 * @param dataName
+	 * @param version
+	 */
+	public static void addConnectorToPool(final SWTBot bot,final String connectorDefinitionLabel,final String version,final String categoryLabel,final String connectorName) {
+		SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
+		bot.button("Add...").click();
+		Assert.assertFalse(IDialogConstants.NEXT_LABEL + " should be disabled", bot
+				.button(IDialogConstants.NEXT_LABEL).isEnabled());
+		Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
+				.button(IDialogConstants.FINISH_LABEL).isEnabled());
+		categoryItem = null;
+		nodes = null;
+		bot.waitUntil(new ICondition() {
+
+
+
+			public boolean test() throws Exception {
+				bot.tree().collapseNode(categoryLabel);
+				categoryItem = bot.tree().expandNode(categoryLabel,true);
 				nodes = categoryItem.getNodes();
+				if(!nodes.isEmpty() && nodes.get(0).isEmpty()){
+					return false;
+				}
 				return !nodes.isEmpty();
 			}
 
@@ -245,18 +249,18 @@ public class SWTBotConnectorTestUtil {
 				return "Category "+categoryLabel +" has no children" ;
 			}
 		},10000,1000);
-        
 
-       String cNode = null;
-       for(String node : nodes){
-    	   if(node.contains(connectorDefinitionLabel) && node.contains(version)){
-    		 cNode =  node ;
-    		 break;
-    	   }
-       }
-       Assert.assertNotNull("Connector "+connectorDefinitionLabel + " (" + version + ") not found in category "+categoryLabel +" containing children:\n"+nodes ,cNode);
-       final String nodeToSelect = cNode;
-       bot.waitUntil(new ICondition() {
+
+		String cNode = null;
+		for(String node : nodes){
+			if(node.contains(connectorDefinitionLabel) && node.contains(version)){
+				cNode =  node ;
+				break;
+			}
+		}
+		Assert.assertNotNull("Connector "+connectorDefinitionLabel + " (" + version + ") not found in category "+categoryLabel +" containing children:\n"+nodes ,cNode);
+		final String nodeToSelect = cNode;
+		bot.waitUntil(new ICondition() {
 
 			public boolean test() throws Exception {
 				categoryItem.select(nodeToSelect);
@@ -272,15 +276,15 @@ public class SWTBotConnectorTestUtil {
 				return "Cannot select tree item";
 			}
 		},10000,1000);
-        Assert.assertTrue(IDialogConstants.NEXT_LABEL + " should be enabled", bot
-                .button(IDialogConstants.NEXT_LABEL).isEnabled());
-        Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
-                .button(IDialogConstants.FINISH_LABEL).isEnabled());
-        bot.button(IDialogConstants.NEXT_LABEL).click();
-        Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
-                .button(IDialogConstants.FINISH_LABEL).isEnabled());
-        bot.textWithLabel("Name *").setText(connectorName);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)),5000);
-    }
-    
+		Assert.assertTrue(IDialogConstants.NEXT_LABEL + " should be enabled", bot
+				.button(IDialogConstants.NEXT_LABEL).isEnabled());
+		Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
+				.button(IDialogConstants.FINISH_LABEL).isEnabled());
+		bot.button(IDialogConstants.NEXT_LABEL).click();
+		Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
+				.button(IDialogConstants.FINISH_LABEL).isEnabled());
+		bot.textWithLabel("Name *").setText(connectorName);
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)),5000);
+	}
+
 }
