@@ -116,7 +116,7 @@ public class BonitaPerspectivesUtils {
 	 * Switch to the perspective with id given as parameter
 	 * @param perspectiveID
 	 */
-	public static synchronized void switchToPerspective(String perspectiveID){
+	public static synchronized void switchToPerspective(final String perspectiveID){
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 		if (window != null) {
@@ -132,15 +132,12 @@ public class BonitaPerspectivesUtils {
 							public IStatus runInUIThread(IProgressMonitor monitor) {
 								Display.getDefault().syncExec(new Runnable() {
 									public void run() {
-										
-								//		activePage.resetPerspective();
-										
 										if(activePage.getEditorReferences().length == 0){
 											PlatformUtil.openIntro();
 										}else{
 											PlatformUtil.closeIntro();
 										}
-										
+
 									}
 								});
 								return Status.OK_STATUS;
@@ -148,7 +145,7 @@ public class BonitaPerspectivesUtils {
 						};
 						job.setSystem(true);
 						job.schedule();
-						
+
 					} catch (WorkbenchException e) {
 						BonitaStudioLog.error(e);
 					}
