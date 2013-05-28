@@ -249,9 +249,9 @@ public class DeployProcessOperation  {
 		final APISession session = createSession(process,monitor);
 		try{
 			final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-			long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
+			long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos() ;
 			if(nbDeployedProcesses > 0){
-				List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
+				List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0, (int) nbDeployedProcesses, ProcessDeploymentInfoCriterion.DEFAULT) ;
 				for(ProcessDeploymentInfo info : processes){
 					if(info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())){
 						monitor.subTask(Messages.bind(Messages.undeploying,getProcessLabel(process)));

@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.engine.api.ProcessManagementAPI;
-import org.bonitasoft.engine.bpm.process.ProcessDefinitionCriterion;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
+import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -66,9 +66,9 @@ public class ResetEngineCommand extends AbstractHandler {
 				}
 				try {
 					ProcessManagementAPI processManagementAPI = BOSEngineManager.getInstance().getProcessAPI(session);
-					int nbProcess = (int) processManagementAPI.getNumberOfProcesses() ;
+					int nbProcess = (int) processManagementAPI.getNumberOfProcessDeploymentInfos() ;
 					if(nbProcess > 0){
-						List<ProcessDeploymentInfo> processes = processManagementAPI.getProcesses(0,nbProcess , ProcessDefinitionCriterion.DEFAULT) ;
+						List<ProcessDeploymentInfo> processes = processManagementAPI.getProcessDeploymentInfos(0,nbProcess , ProcessDeploymentInfoCriterion.DEFAULT) ;
 						List<Long> processIds = new ArrayList<Long>() ;
 						for(ProcessDeploymentInfo info : processes){
 							processIds.add(info.getProcessId()) ;

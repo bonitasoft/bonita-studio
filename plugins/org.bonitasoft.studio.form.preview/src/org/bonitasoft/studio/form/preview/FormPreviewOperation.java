@@ -34,9 +34,9 @@ import org.bonitasoft.engine.bpm.process.ActivationState;
 import org.bonitasoft.engine.bpm.process.IllegalProcessStateException;
 import org.bonitasoft.engine.bpm.process.ProcessActivationException;
 import org.bonitasoft.engine.bpm.process.ProcessDefinition;
-import org.bonitasoft.engine.bpm.process.ProcessDefinitionCriterion;
 import org.bonitasoft.engine.bpm.process.ProcessDefinitionNotFoundException;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
+import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
 import org.bonitasoft.engine.bpm.process.ProcessInstance;
 import org.bonitasoft.engine.exception.DeletionException;
 import org.bonitasoft.engine.session.APISession;
@@ -97,8 +97,7 @@ import org.eclipse.ui.internal.browser.ExternalBrowserInstance;
 import org.eclipse.ui.internal.browser.IBrowserDescriptor;
 
 /**
- *@Author Aurélie Zara
- *
+ *@Author Aurelie Zara
  *
  */
 public class FormPreviewOperation implements IRunnableWithProgress {
@@ -433,12 +432,12 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
 
 	protected void undeployProcess(AbstractProcess process, ProcessAPI processApi) throws InvalidSessionException,   ProcessDefinitionNotFoundException,  IllegalProcessStateException, DeletionException {
-		long nbDeployedProcesses = processApi.getNumberOfProcesses() ;
+		long nbDeployedProcesses = processApi.getNumberOfProcessDeploymentInfos() ;
 		if(nbDeployedProcesses > 0){
 			if(lastProcessDeployed == null){
 				lastProcessDeployed = process.getName();
 			}
-			List<ProcessDeploymentInfo> processes = processApi.getProcesses(0, (int) nbDeployedProcesses, ProcessDefinitionCriterion.DEFAULT) ;
+			List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0, (int) nbDeployedProcesses, ProcessDeploymentInfoCriterion.DEFAULT) ;
 			for(ProcessDeploymentInfo info : processes){
 				if(info.getName().equals(lastProcessDeployed) && info.getVersion().equals(VERSION)){
 					try{

@@ -129,16 +129,16 @@ public class BonitaHomeUtil {
 	public static void configureBonitaClient(String apiType,String host,int serverPort) {
 		BonitaStudioLog.debug("Configuring bonita client on host "+host+":"+serverPort+" with API_TYPE="+apiType, Activator.PLUGIN_ID);
 		final File clientFolder = new File(BonitaHomeUtil.getBonitaHome(),"client"+File.separatorChar+"conf");
-		final File bonitaClientFile = new File(clientFolder,"bonita-client.xml");
+		final File bonitaClientFile = new File(clientFolder,"bonita-client.properties");
 		if(!bonitaClientFile.exists()){
-			throw new RuntimeException("bonita-client.xml not found in the bonita home");
+			throw new RuntimeException("bonita-client.properties not found in the bonita home");
 		}
 		Properties p = new Properties();
 		FileInputStream inStream = null;
 		FileOutputStream out = null;
 		try{
 			inStream = new FileInputStream(bonitaClientFile);
-			p.loadFromXML(inStream);
+			p.load(inStream);
 			p.setProperty(API_TYPE, apiType);
 			if(HTTP.equals(apiType)){
 				p.setProperty(API_TYPE_PARAMETERS, HTTP_PARAMETERS);
@@ -146,7 +146,7 @@ public class BonitaHomeUtil {
 				p.setProperty(APPLICATION_NAME, BONITA_APPLICATION);
 			}
 			out = new FileOutputStream(bonitaClientFile);
-			p.storeToXML(out, null, "UTF-8");
+			p.store(out, null);
 			APITypeManager.refresh();
 		}catch (Exception e) {
 			BonitaStudioLog.error(e);
@@ -166,11 +166,7 @@ public class BonitaHomeUtil {
 				}
 			}
 		}
-
-
 	}
-
-
 
 	public static File getStudioLoggingFile() {
 		return new File(STUDIO_ENGINE_LOGGING_PROPERTIES);

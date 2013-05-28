@@ -63,7 +63,7 @@ public class TestCheckTenantAfterStartup extends TestCase {
     public void testCheckTenantIsEmptyAfterStartup() throws Exception {
         final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
 
-        assertEquals("No process definition should exists",0, processApi.getNumberOfProcesses());
+        assertEquals("No process definition should exists",0, processApi.getNumberOfProcessDeploymentInfos());
         assertEquals("No process instance should exists",0, processApi.getNumberOfProcessInstances());
     }
 

@@ -25,8 +25,8 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.bonitasoft.engine.api.ProcessManagementAPI;
-import org.bonitasoft.engine.bpm.process.ProcessDefinitionCriterion;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
+import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
@@ -144,8 +144,8 @@ public class TestDeployCommand extends TestCase {
         try{
             session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
             ProcessManagementAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session) ;
-            int nbProcess = (int) processAPI.getNumberOfProcesses() ;
-            List<ProcessDeploymentInfo> infos = processAPI.getProcesses(0, nbProcess, ProcessDefinitionCriterion.DEFAULT) ;
+            int nbProcess = (int) processAPI.getNumberOfProcessDeploymentInfos() ;
+            List<ProcessDeploymentInfo> infos = processAPI.getProcessDeploymentInfos(0, nbProcess, ProcessDeploymentInfoCriterion.DEFAULT) ;
             boolean found = false;
             for(ProcessDeploymentInfo info : infos){
                 if(info.getName().equals(parentProcess.getName()) && info.getVersion().equals(parentProcess.getVersion())){

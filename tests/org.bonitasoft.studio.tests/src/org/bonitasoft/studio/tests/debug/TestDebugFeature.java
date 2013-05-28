@@ -60,7 +60,7 @@ public class TestDebugFeature extends SWTBotGefTestCase {
         try{
             session = BOSEngineManager.getInstance().loginDefaultTenant(new NullProgressMonitor()) ;
             final ProcessManagementAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session) ;
-            nbProc = processAPI.getNumberOfProcesses();
+            nbProc = processAPI.getNumberOfProcessDeploymentInfos();
         }finally{
             if(session != null){
                 BOSEngineManager.getInstance().logoutDefaultTenant(session);
