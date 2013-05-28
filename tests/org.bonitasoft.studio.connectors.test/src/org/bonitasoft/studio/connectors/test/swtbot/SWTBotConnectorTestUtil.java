@@ -18,6 +18,8 @@
 
 package org.bonitasoft.studio.connectors.test.swtbot;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
@@ -35,6 +37,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 public class SWTBotConnectorTestUtil {
 
 	private static SWTBotTreeItem categoryItem;
+	private static List<String> nodes;
 	
     /**
      * use it to access to the wizard "New definition..." (menu
@@ -223,13 +226,15 @@ public class SWTBotConnectorTestUtil {
         Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
                 .button(IDialogConstants.FINISH_LABEL).isEnabled());
         categoryItem = null;
+        nodes = null;
         bot.waitUntil(new ICondition() {
 
 		
 
 			public boolean test() throws Exception {
 				categoryItem = bot.tree().expandNode(categoryLabel);
-				return !categoryItem.getNodes().isEmpty();
+				nodes = categoryItem.getNodes();
+				return !nodes.isEmpty();
 			}
 
 			public void init(SWTBot bot) {
@@ -243,13 +248,13 @@ public class SWTBotConnectorTestUtil {
         
 
        String cNode = null;
-       for(String node : categoryItem.getNodes()){
-    	   if(node.startsWith(connectorDefinitionLabel + " (" + version + ")")){
+       for(String node : nodes){
+    	   if(node.contains(connectorDefinitionLabel) && node.contains(version)){
     		 cNode =  node ;
     		 break;
     	   }
        }
-       Assert.assertNotNull("Connector "+connectorDefinitionLabel + " (" + version + ") not found in category "+categoryLabel ,cNode);
+       Assert.assertNotNull("Connector "+connectorDefinitionLabel + " (" + version + ") not found in category "+categoryLabel +" containing children:\n"+nodes ,cNode);
        final String nodeToSelect = cNode;
        bot.waitUntil(new ICondition() {
 
