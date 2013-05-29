@@ -154,7 +154,7 @@ public class FlowElementSwitch extends AbstractSwitch {
 		org.bonitasoft.engine.expression.Expression targetProcess = null;
 		String messageName = null;
 		Message message = null;
-		if(senTask.getEvents().isEmpty()){
+		if(!senTask.getEvents().isEmpty()){
 			message = senTask.getEvents().get(0);
 			targetProcess =	EngineExpressionUtil.createExpression((AbstractExpression)  message.getTargetProcessExpression());
 		}
