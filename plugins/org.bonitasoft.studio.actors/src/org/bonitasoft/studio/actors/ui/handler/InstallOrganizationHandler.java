@@ -167,6 +167,8 @@ public class InstallOrganizationHandler extends AbstractHandler {
 		passwordType.setValue("bpm");
 		passwordType.setEncrypted(false);
 		user.setUserName(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
+		user.setFirstName(BonitaConstants.STUDIO_TECHNICAL_USER_FIRST_NAME);
+		user.setJobTitle(BonitaConstants.STUDIO_TECHNICAL_USER_JOB_TITLE);
 		user.setPassword(passwordType);
 		exportedCopy.getUsers().getUser().add(user);
 	}

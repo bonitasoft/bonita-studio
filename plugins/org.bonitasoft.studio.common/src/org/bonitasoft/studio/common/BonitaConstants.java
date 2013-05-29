@@ -96,5 +96,9 @@ public class BonitaConstants {
     //Organization
     
 	public static final String STUDIO_TECHNICAL_USER_NAME = "studio";
+	
+	public static final String STUDIO_TECHNICAL_USER_FIRST_NAME = "Studio";
+
+	public static final String STUDIO_TECHNICAL_USER_JOB_TITLE="Studio technical user for preview";
 
 }
