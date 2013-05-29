@@ -113,6 +113,7 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
         Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, Repository.NULL_PROGRESS_MONITOR);
         bot.sleep(1000);
         int length = bot.activeEditor().toTextEditor().getText().length();
+        assertTrue("Invalid file length", length > 0);
         StyleRange[] styles = bot.activeEditor().toTextEditor().getStyles(0, 0, length);
         containsError(styles);
         removeImplementation(id);
@@ -334,7 +335,7 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
     
     private void containsError(StyleRange[] styles){
     	for (StyleRange style:styles){
-    		assertFalse("actor filter impl contains errors",style.underline);
+    		assertFalse("actor filter impl contains errors at offset:"+style.start,style.underline);
     	}
     }
 
