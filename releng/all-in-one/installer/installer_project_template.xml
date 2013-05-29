@@ -5,6 +5,7 @@
 	<outputDirectory>@bitrock.output@</outputDirectory>
 	<installerFilename>@installer.name@</installerFilename>
 	<licenseFile>@license@</licenseFile>
+	<licenseFileEncoding>utf-8</licenseFileEncoding>
 	<logoImage>@logo@</logoImage>
 	<leftImage>@leftImage@</leftImage>
 	<splashImage>@splash@</splashImage>
