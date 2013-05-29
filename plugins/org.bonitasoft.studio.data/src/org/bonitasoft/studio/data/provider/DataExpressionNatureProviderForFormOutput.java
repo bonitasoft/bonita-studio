@@ -61,14 +61,15 @@ public class DataExpressionNatureProviderForFormOutput extends ExpressionContent
 		while(iter.hasNext()){
 			Expression expr = iter.next();
 			
-			if (ExpressionConstants.VARIABLE_TYPE.equals(expr.getType())){
-				Data data = getReferencedData(accessibleDatas, expr);
-				if (data !=null && !data.isTransient()){
-					expressionsToReturn.add(expr);
-				}
-			} else {
-				expressionsToReturn.add(expr);
-			}
+//			if (ExpressionConstants.VARIABLE_TYPE.equals(expr.getType())){
+//				Data data = getReferencedData(accessibleDatas, expr);
+//				if (data !=null && !data.isTransient()){
+//					expressionsToReturn.add(expr);
+//				}
+//			} else {
+//				expressionsToReturn.add(expr);
+//			}
+			expressionsToReturn.add(expr);
 		}
 		expressionsToReturn.addAll(ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_REF_TYPE).getExpressions(context));
 		return expressionsToReturn.toArray(new Expression[expressionsToReturn.size()]);
