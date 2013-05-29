@@ -9,7 +9,7 @@
     <relativePath>../../releng/pom.xml</relativePath>
   </parent>
   <groupId>org.bonitasoft.studio.translations</groupId>
-  <artifactId>translations-feature</artifactId>
+  <artifactId>org.bonitasoft.studio.translations</artifactId>
   <version>6.0.0-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>
