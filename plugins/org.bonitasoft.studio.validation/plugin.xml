@@ -1098,6 +1098,7 @@
                allowMultiple="false"
                category="org.bonitasoft.studio.application.bonita"
                class="org.bonitasoft.studio.validation.ui.view.ValidationViewPart"
+               icon="icons/Accept-icon.png"
                id="org.bonitasoft.studio.validation.view"
                name="%ValidationView"
                restorable="true">
