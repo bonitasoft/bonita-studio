@@ -156,8 +156,8 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
 				ExternalBrowserInstance browserInstance = new ExternalBrowserInstance(null, browser);
 				if (!isOnTask){
-					ApplicationURLBuilder builder = new ApplicationURLBuilder(proc,procId,configuration.getName());
-					URL url = builder.toFormURL(monitor);
+					ApplicationURLBuilder builder = new ApplicationURLBuilder(proc,procId,configuration.getName(),ApplicationURLBuilder.MODE_FORM);
+					URL url = builder.toURL(monitor);
 					OpenBrowserCommand openCmd = new OpenBrowserCommand(url, browserInstance.getId(), "");
 					if(browser.getLocation() != null){
 						openCmd.setExternalBrowser(browserInstance);
