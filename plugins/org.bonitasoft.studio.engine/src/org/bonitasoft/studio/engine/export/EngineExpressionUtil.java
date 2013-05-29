@@ -176,9 +176,9 @@ public class EngineExpressionUtil {
 
 		try {
 			return exp.done();
-		} catch (final InvalidExpressionException e) {// TODO should throw the exception and show it in UI?
+		} catch (final InvalidExpressionException e) {
 			BonitaStudioLog.error(e);
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -192,7 +192,7 @@ public class EngineExpressionUtil {
 			return exp.done();
 		} catch (final InvalidExpressionException e) {
 			BonitaStudioLog.error(e);
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -254,7 +254,7 @@ public class EngineExpressionUtil {
 			return exp.createListOfListExpression(expressionNames.toString(), expressions);
 		} catch (final InvalidExpressionException e) {
 			BonitaStudioLog.error(e);
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -275,7 +275,7 @@ public class EngineExpressionUtil {
 			return exp.createListExpression(expressionNames.toString(), expressions);
 		} catch (final InvalidExpressionException e) {
 			BonitaStudioLog.error(e);
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -312,7 +312,7 @@ public class EngineExpressionUtil {
 					return exp.done();
 				} catch (final InvalidExpressionException e) {
 					BonitaStudioLog.error(e);
-					return null;
+					throw new RuntimeException(e);
 				}
 			}
 		} else {
@@ -327,6 +327,7 @@ public class EngineExpressionUtil {
 			expression = exp.createDocumentReferenceExpression(simpleExpression.getName());
 		} catch (InvalidExpressionException e) {
 			BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
+			throw new RuntimeException(e);
 		}
 		return expression;
 	}
@@ -356,7 +357,7 @@ public class EngineExpressionUtil {
 			return exp.done();
 		} catch (final InvalidExpressionException e) {
 			BonitaStudioLog.error(e);
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -397,7 +398,7 @@ public class EngineExpressionUtil {
 
 		} catch (final InvalidExpressionException e) {
 			BonitaStudioLog.error(e);
-			return null;
+			throw new RuntimeException(e);
 		}
 		return null;
 	}
@@ -445,7 +446,7 @@ public class EngineExpressionUtil {
 			return exp.done();
 		} catch (final InvalidExpressionException e) {
 			BonitaStudioLog.error(e);
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -457,29 +458,9 @@ public class EngineExpressionUtil {
 			return exp.done();
 		} catch (InvalidExpressionException e) {
 			BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
+			throw new RuntimeException(e);
 		}
-		return null;
 	}
-
-//	private static XPathReturnType getXPathReturnType(String returnType){
-//		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_BOOLEAN)){
-//			return XPathReturnType.BOOLEAN;
-//		} 
-//		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_DOUBLE)){
-//			return XPathReturnType.DOUBLE;
-//		}
-//		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_STRING)){
-//			return XPathReturnType.STRING;
-//		}
-//		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_NODE)){
-//			return XPathReturnType.NODE;
-//		}
-//		if (returnType.equals(org.bonitasoft.studio.xml.api.XPathReturnType.XPATH_LIST_OF_NODES)){
-//			return XPathReturnType.NODE_LIST;
-//		}
-//		return XPathReturnType.STRING;
-//	}
-
 
 	public static Expression createVariableExpression(final Data element) {
 		final String datasourceId = element.getDatasourceId();
@@ -496,7 +477,7 @@ public class EngineExpressionUtil {
 			return exp.done();
 		} catch (final InvalidExpressionException e) {
 			BonitaStudioLog.error(e);
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -512,7 +493,7 @@ public class EngineExpressionUtil {
 			return exp.done();
 		} catch (final InvalidExpressionException e) {
 			BonitaStudioLog.error(e);
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -527,7 +508,7 @@ public class EngineExpressionUtil {
 			return exp.done();
 		} catch (final InvalidExpressionException e) {
 			BonitaStudioLog.error(e);
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 
