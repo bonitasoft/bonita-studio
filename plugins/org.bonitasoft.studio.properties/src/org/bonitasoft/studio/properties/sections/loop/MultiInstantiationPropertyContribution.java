@@ -26,7 +26,6 @@ import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionCon
 import org.bonitasoft.studio.data.ui.property.section.DataLabelProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.filter.DisplayEngineExpressionWithName;
-import org.bonitasoft.studio.expression.editor.filter.HideExpressionWithName;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -62,6 +61,8 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.ModifyEvent;
@@ -87,6 +88,29 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  *
  */
 public class MultiInstantiationPropertyContribution implements IExtensibleGridPropertySectionContribution {
+
+	/**
+	 * @author Aurelien
+	 * Display only Process data, it filters out step data. The step requires to be the context of the expressionviewer
+	 */
+	private final class StepDataViewerFilter extends ViewerFilter {
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if(element instanceof Expression){
+				if(ExpressionConstants.VARIABLE_TYPE.equals(((Expression) element).getType())){
+					if(parentElement instanceof Activity){
+						final String expressionName = ((Expression) element).getName();
+						for (Data activityData : ((Activity) parentElement).getData()) {
+							if(expressionName.equals(activityData.getName())){
+								return false;
+							}
+						}
+					}
+				}
+			}
+			return true;
+		}
+	}
 
 	protected static final String NONE = "none"; //$NON-NLS-1$
 	protected static final String MULTI = "multi"; //$NON-NLS-1$
@@ -406,6 +430,7 @@ public class MultiInstantiationPropertyContribution implements IExtensibleGridPr
 				ExpressionConstants.PARAMETER_TYPE,
 				ExpressionConstants.SCRIPT_TYPE}));
 		loopConditionViewer.addFilter(new DisplayEngineExpressionWithName(new String[]{org.bonitasoft.engine.expression.ExpressionConstants.LOOP_COUNTER.getEngineConstantName()}));
+		loopConditionViewer.addFilter(new StepDataViewerFilter());
 
 		widgetFactory.createLabel(loopParametersComposite, Messages.maximumLoopLabel).setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 		maximumViewer = new ExpressionViewer(loopParametersComposite,SWT.BORDER,widgetFactory,editingDomain, ProcessPackage.Literals.ACTIVITY__LOOP_MAXIMUM);
@@ -415,6 +440,7 @@ public class MultiInstantiationPropertyContribution implements IExtensibleGridPr
 				ExpressionConstants.PARAMETER_TYPE,
 				ExpressionConstants.SCRIPT_TYPE}));
 		maximumViewer.setMessage(Messages.optionalLabel,IStatus.INFO) ;
+		maximumViewer.addFilter(new StepDataViewerFilter());
 	}
 
 
