@@ -65,6 +65,15 @@ public class JavaSetterOperatorEditor implements IOperatorEditor {
     public boolean appliesTo(String operatorType) {
         return ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operatorType);
     }
+    
+  
+    @Override
+    public boolean appliesTo(Expression expression) {
+        return expression != null 
+        		&& expression.getContent() != null
+        		&& !expression.getContent().isEmpty() 
+        		&& ExpressionConstants.JAVA_METHOD_OPERATOR.equals(expression.getType());
+    }
 
     /* (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IOperatorEditor#canFinish()

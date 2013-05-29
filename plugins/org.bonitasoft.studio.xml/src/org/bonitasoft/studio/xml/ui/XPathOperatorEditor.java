@@ -67,6 +67,14 @@ public class XPathOperatorEditor implements IOperatorEditor {
         return ExpressionConstants.XPATH_UPDATE_OPERATOR.equals(operatorType);
     }
 
+    @Override
+    public boolean appliesTo(Expression expression) {
+        return expression != null 
+        		&& expression.getContent() != null
+        		&& !expression.getContent().isEmpty() 
+        		&& ExpressionConstants.JAVA_METHOD_OPERATOR.equals(expression.getType());
+    }
+    
     /* (non-Javadoc)
      * @see org.bonitasoft.studio.expression.editor.provider.IOpeartorEditor#canFinish()
      */

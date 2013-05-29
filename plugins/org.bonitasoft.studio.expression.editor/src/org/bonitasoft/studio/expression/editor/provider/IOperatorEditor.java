@@ -34,4 +34,6 @@ public interface IOperatorEditor extends ISelectionProvider{
 
     Composite createOpeartorEditor(Composite parent,final Operator operator,final Expression sourceExpression) ;
 
+	boolean appliesTo(Expression expression);
+
 }
