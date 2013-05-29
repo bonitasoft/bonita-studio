@@ -156,7 +156,7 @@ public class ClassGenerator {
 				classType.createMethod(executeMethodContent.toString(), null,true,monitor) ;
 
 				executeMethodContent = new StringBuilder("@Override\npublic List<Long> filter(final String actorName) throws UserFilterException {\n\t") ;
-				executeMethodContent.append("//TODO execute the user filter here\n\t//The method must return a list of actor ids\n\t");
+				executeMethodContent.append("//TODO execute the user filter here\n\t//The method must return a list of actor id's\n\t");
 				executeMethodContent.append("//you can use getApiAccessor() and getExecutionContext()");
 				executeMethodContent.append("\n\treturn null;\n\n}\n") ;
 				classType.createMethod(executeMethodContent.toString(), null,true,monitor) ;
