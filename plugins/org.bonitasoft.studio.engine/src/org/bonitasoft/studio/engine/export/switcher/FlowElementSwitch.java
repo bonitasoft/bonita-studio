@@ -152,13 +152,12 @@ public class FlowElementSwitch extends AbstractSwitch {
 	@Override
 	public Element caseSendTask(SendTask senTask) {
 		org.bonitasoft.engine.expression.Expression targetProcess = null;
-		String messageName = null;
 		Message message = null;
 		if(!senTask.getEvents().isEmpty()){
 			message = senTask.getEvents().get(0);
 			targetProcess =	EngineExpressionUtil.createExpression((AbstractExpression)  message.getTargetProcessExpression());
 		}
-		final SendTaskDefinitionBuilder taskBuilder = ((ProcessDefinitionBuilder)builder).addSendTask(senTask.getName(), messageName, targetProcess);
+		final SendTaskDefinitionBuilder taskBuilder = ((ProcessDefinitionBuilder)builder).addSendTask(senTask.getName(), message.getName(), targetProcess);
 		if(message != null){
 			taskBuilder.setTargetFlowNode(EngineExpressionUtil.createExpression((AbstractExpression)  message.getTargetElementExpression()));
 			if(message.getMessageContent() != null){
