@@ -8,7 +8,7 @@
             class="org.bonitasoft.studio.form.preview.view.FormPreviewPropertiesView"
             icon="icons/Preview-icon.png"
             id="org.bonitasoft.studio.views.properties.form.preview"
-            name="Preview"
+            name="%Preview"
             restorable="true">
       </view>
    </extension>
