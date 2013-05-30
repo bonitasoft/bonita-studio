@@ -257,7 +257,7 @@ public class ParallelGatewayMigration extends ReportCustomMigration {
 
 		// Add the Includsive gateway
 		Instance newInclusiveGateway = model.newInstance("process.InclusiveGateway");
-
+		newInclusiveGateway.set("name", andGatewayName+"_add_migration_INC");
 
 		Instance newIncGatewayShape = CustomMigrationUtil.createShape(model, newInclusiveGateway, CustomMigrationUtil.ACTUAL_INCLUSIVE_GATEWAY_VISUAL_ID);
 		gatewayContainerShape.add(NotationPackage.Literals.VIEW__PERSISTED_CHILDREN,newIncGatewayShape);
