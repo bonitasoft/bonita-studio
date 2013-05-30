@@ -471,6 +471,8 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
             dataBindingContext.bindValue(SWTObservables.observeEnabled(useExpressionCondition),
                     EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
             
+            dataBindingContext.bindValue(SWTObservables.observeSelection(useExpressionCondition),SWTObservables.observeEnabled(conditionViewer.getControl()));
+            
             dataBindingContext.bindValue(SWTObservables.observeEnabled(useDecisionTable),
                     EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
             
