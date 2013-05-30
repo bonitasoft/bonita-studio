@@ -176,6 +176,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 					}
 					if (it<MAX_IT && !processApi.getPendingHumanTaskInstances(userId, 0, 20, null).isEmpty() ){
 						HumanTaskInstance task = processApi.getPendingHumanTaskInstances(userId,0, 20, null).get(0);
+						processApi.assignUserTask(task.getId(), userId);
 						URL taskURL = toTaskURL(configuration,proc,procId,task,monitor);
 						OpenBrowserCommand openCmd = new OpenBrowserCommand(taskURL, browserInstance.getId(), "");
 						if(browser.getLocation() != null){
