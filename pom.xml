@@ -18,6 +18,7 @@
 		<connector.version>6.0.0-rc2</connector.version>
 		<simulation.version>6.0.0</simulation.version>
 		<filters.version>6.0.0-rc-02</filters.version>
+		<theme.builder.version>6.0.0</theme.builder.version>
 		<p2MirrorUrl>ftp://192.168.1.215/home/ic/p2_repository/</p2MirrorUrl>
 		<tycho.testArgLine></tycho.testArgLine>
 	</properties>
