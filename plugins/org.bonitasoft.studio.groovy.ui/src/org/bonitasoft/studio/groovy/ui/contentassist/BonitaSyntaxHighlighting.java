@@ -41,7 +41,7 @@ public class BonitaSyntaxHighlighting implements IHighlightingExtender {
         BONITA_KEYWORDS.add(ExpressionConstants.NUMBER_OF_INSTANCES.getEngineConstantName());
         BONITA_KEYWORDS.add(ExpressionConstants.PROCESS_DEFINITION_ID.getEngineConstantName());
         BONITA_KEYWORDS.add(ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineConstantName());
-        BONITA_KEYWORDS.add(ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineConstantName());
+        BONITA_KEYWORDS.add(ExpressionConstants.PROCESS_INSTANCE_ID.getEngineConstantName());
         BONITA_KEYWORDS.add(ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineConstantName());
         BONITA_KEYWORDS.add(ExpressionConstants.LOOP_COUNTER.getEngineConstantName());
         BONITA_KEYWORDS.add(ExpressionConstants.LOGGED_USER_ID.getEngineConstantName());

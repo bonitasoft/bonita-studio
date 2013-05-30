@@ -267,7 +267,7 @@ public class GroovyUtil {
 		result.add(ExpressionConstants.API_ACCESSOR);
 		result.add(ExpressionConstants.PROCESS_DEFINITION_ID);
 		result.add(ExpressionConstants.ROOT_PROCESS_INSTANCE_ID);
-		result.add(ExpressionConstants.PARENT_PROCESS_INSTANCE_ID);
+		result.add(ExpressionConstants.PROCESS_INSTANCE_ID);
 		result.add(ExpressionConstants.ACTIVITY_INSTANCE_ID);
 
 		if (context instanceof Activity) {

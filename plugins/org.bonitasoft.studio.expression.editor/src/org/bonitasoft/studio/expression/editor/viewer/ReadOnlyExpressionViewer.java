@@ -26,10 +26,15 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.Operation;
+import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.swt.SWT;
@@ -82,14 +87,18 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 	protected Set<Expression> getFilteredExpressions() {
 		Set<Expression> result = super.getFilteredExpressions();
 		Set<Expression> toRemove = new HashSet<Expression>();
-		for(Expression e : result){
-			if(ExpressionConstants.VARIABLE_TYPE.equals(e.getType())){
-				if(!e.getReferencedElements().isEmpty() && e.getReferencedElements().get(0) instanceof Data){
-					Data d = (Data) e.getReferencedElements().get(0);
-					final String dsId = d.getDatasourceId();
-					if(dsId != null){
-						if(DatasourceConstants.PAGEFLOW_DATASOURCE.equals(dsId)){
-							toRemove.add(e);
+		EObject context = expressionNatureProvider.getContext();
+		boolean isATransientDataInitialization = isTransientDataInitialization(context);
+		if(!isATransientDataInitialization){
+			for(Expression e : result){
+				if(ExpressionConstants.VARIABLE_TYPE.equals(e.getType())){
+					if(!e.getReferencedElements().isEmpty() && e.getReferencedElements().get(0) instanceof Data){
+						Data d = (Data) e.getReferencedElements().get(0);
+						final String dsId = d.getDatasourceId();
+						if(dsId != null){
+							if(DatasourceConstants.PAGEFLOW_DATASOURCE.equals(dsId)){
+								toRemove.add(e);
+							}
 						}
 					}
 				}
@@ -97,6 +106,15 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 		}
 		result.removeAll(toRemove);
 		return result;
+	}
+
+	private boolean isTransientDataInitialization(EObject context) {
+		if(context != null){
+			if(context instanceof Operation && context.eContainer() instanceof Connector){
+				return  context.eContainer().eContainmentFeature().equals(ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS);
+			}
+		}
+		return false;
 	}
 
 	@Override

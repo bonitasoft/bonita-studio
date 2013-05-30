@@ -105,7 +105,7 @@ public class TestGroovyScriptUtil {
         PROVIDED_VARIABLES.add(ExpressionConstants.ENGINE_EXECUTION_CONTEXT.getEngineConstantName());
         PROVIDED_VARIABLES.add(ExpressionConstants.ACTIVITY_INSTANCE_ID.getEngineConstantName());
         PROVIDED_VARIABLES.add(ExpressionConstants.PROCESS_DEFINITION_ID.getEngineConstantName());
-        PROVIDED_VARIABLES.add(ExpressionConstants.PARENT_PROCESS_INSTANCE_ID.getEngineConstantName());
+        PROVIDED_VARIABLES.add(ExpressionConstants.PROCESS_INSTANCE_ID.getEngineConstantName());
         PROVIDED_VARIABLES.add(ExpressionConstants.ROOT_PROCESS_INSTANCE_ID.getEngineConstantName());
         PROVIDED_VARIABLES.add(ExpressionConstants.LOGGED_USER_ID.getEngineConstantName());
     }
