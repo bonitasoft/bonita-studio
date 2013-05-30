@@ -366,6 +366,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 	@Override
 	public void postShutdown() {
 		super.postShutdown();
+		PlatformUtil.closeIntro();
 		disconnectFromWorkspace(Repository.NULL_PROGRESS_MONITOR);
 	}
 	
