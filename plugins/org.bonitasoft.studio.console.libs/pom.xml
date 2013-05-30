@@ -213,7 +213,7 @@
 								<artifactItem>
 									<groupId>org.bonitasoft.web.tooling</groupId>
 									<artifactId>studio-watchdog</artifactId>
-									<version>6.0.0-SNAPSHOT</version>
+									<version>${watchdog.version}</version>
 									<type>war</type>
 								</artifactItem>
 							</artifactItems>
