@@ -21,7 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.form.preview.FormPreviewOperation;
 import org.bonitasoft.studio.model.form.Form;
@@ -34,11 +33,9 @@ import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -48,132 +45,88 @@ import org.eclipse.ui.progress.IProgressService;
 
 public class PreviewFormHandler extends AbstractHandler {
 
-    private Form form = null;
+	private Form form = null;
 
-    public PreviewFormHandler(Form form) {
-        this.form = form;
-    }
-
-
-    /**
-     * Default constructor used in the menu bar
-     */
-    public PreviewFormHandler() {
-    }
+	public PreviewFormHandler(Form form) {
+		this.form = form;
+	}
 
 
-    @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
-        if(form == null){//if the constructor doesn't initialize it.
-            if (PlatformUI.isWorkbenchRunning()) {
-                IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-                if (editor instanceof FormDiagramEditor) {
-                    FormDiagramEditor formEditor = (FormDiagramEditor) editor;
-                    if (formEditor.getDiagram().getElement() instanceof Form) {
-                        form = (Form) formEditor.getDiagram().getElement();
-                    }
-                } else if (editor instanceof ProcessDiagramEditor) {
-                    // cal it on the first form if a task is selected
-                    ProcessDiagramEditor processEditor = (ProcessDiagramEditor) editor;
-                    Object selection = ((IStructuredSelection) processEditor.getSite().getSelectionProvider().getSelection()).getFirstElement();
-                    if (selection instanceof IGraphicalEditPart) {
-                        EObject semanticObject = ((IGraphicalEditPart) selection).resolveSemanticElement();
-                        if (semanticObject instanceof PageFlow) {
-                            EList<Form> forms = ((PageFlow) semanticObject).getForm();
-                            if (forms.size() > 0) {
-                                form = forms.get(0);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if(form!=null){
-        	IBrowserDescriptor browser = (IBrowserDescriptor)BrowserManager.getInstance().getCurrentWebBrowser();
-        	FormPreviewOperation operation = new FormPreviewOperation(form,getCurrentLookNFeel(),browser);
-        	try {
-				operation.run(Repository.NULL_PROGRESS_MONITOR);
-			} catch (InvocationTargetException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+	/**
+	 * Default constructor used in the menu bar
+	 */
+	public PreviewFormHandler() {
+	}
+
+
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
+		if(form == null){//if the constructor doesn't initialize it.
+			if (PlatformUI.isWorkbenchRunning()) {
+				IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+				if (editor instanceof FormDiagramEditor) {
+					FormDiagramEditor formEditor = (FormDiagramEditor) editor;
+					if (formEditor.getDiagram().getElement() instanceof Form) {
+						form = (Form) formEditor.getDiagram().getElement();
+					}
+				} else if (editor instanceof ProcessDiagramEditor) {
+					// cal it on the first form if a task is selected
+					ProcessDiagramEditor processEditor = (ProcessDiagramEditor) editor;
+					Object selection = ((IStructuredSelection) processEditor.getSite().getSelectionProvider().getSelection()).getFirstElement();
+					if (selection instanceof IGraphicalEditPart) {
+						EObject semanticObject = ((IGraphicalEditPart) selection).resolveSemanticElement();
+						if (semanticObject instanceof PageFlow) {
+							EList<Form> forms = ((PageFlow) semanticObject).getForm();
+							if (forms.size() > 0) {
+								form = forms.get(0);
+							}
+						}
+					}
+				}
 			}
-            IRunnableWithProgress runnable = new IRunnableWithProgress() {
+		}
+		if(form!=null){
+			IBrowserDescriptor browser = (IBrowserDescriptor)BrowserManager.getInstance().getCurrentWebBrowser();
+			final FormPreviewOperation operation = new FormPreviewOperation(form,getCurrentLookNFeel(),browser);
+			try {
+				progressManager.run(true, false, operation);
+			} catch (InvocationTargetException e) {
+				BonitaStudioLog.error(e);
+			} catch (InterruptedException e) {
+				BonitaStudioLog.error(e);
+			} finally {
+				form = null;//reset to null in order to be used with the constructor
+			}
+		}
 
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                	
-                
-                	
-                    //					try {
-                    //						monitor.beginTask(Messages.generatePreview, 2);
-                    //				//		final File preview = ((PreviewForm) ExporterService.getInstance().getExporterService(SERVICE_TYPE.FormPreview)).previewForm(form,null);
-                    //						monitor.setTaskName(Messages.openBrowser);
-                    //					//	new OpenBrowserCommand(preview.toURL(), BonitaPreferenceConstants.APPLICATION_BROWSER_ID, Messages.formPreview).execute(null);
-                    //					} catch (ExecutionException e) {
-                    //						BonitaStudioLog.log(e);
-                    //					} catch (MalformedURLException e) {
-                    //						BonitaStudioLog.log(e);
-                    //					}
-                }
-            };
+		return null;
 
-            try {
-                progressManager.busyCursorWhile(runnable);
-            } catch (InvocationTargetException e) {
-                BonitaStudioLog.error(e);
-            } catch (InterruptedException e) {
-                BonitaStudioLog.error(e);
-            } finally {
-                form = null;//reset to null in order to be used with the constructor
-            }
-        }
+	}
 
-        return null;
+	@Override
+	public boolean isEnabled() {
+		if(PlatformUI.isWorkbenchRunning()){
+			//does not refresh properly just checking editor for now
+			IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+			if(editor instanceof FormDiagramEditor ){
+				FormDiagramEditor formEditor = (FormDiagramEditor) editor;
+				if (formEditor.getDiagram().getElement() instanceof Form) {
+					this.form = (Form) formEditor.getDiagram().getElement();
+				}
+				return this.form != null;
+			}
+		
+		}
+		return false;
+	}
 
-    }
-
-    @Override
-    public boolean isEnabled() {
-       return true;
-        //		form = null ;
-        //		if(PlatformUI.isWorkbenchRunning())
-        //		{
-        //			//does not refresh properly just checking editor for now
-        //			IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        //			if(editor instanceof ProcessDiagramEditor){
-        //				ProcessDiagramEditor processEditor = (ProcessDiagramEditor) editor;
-        //				Object selection = ((IStructuredSelection) processEditor.getSite().getSelectionProvider().getSelection()).getFirstElement();
-        //				if (selection instanceof IGraphicalEditPart) {
-        //					EObject semanticObject = ((IGraphicalEditPart) selection).resolveSemanticElement();
-        //					if (semanticObject instanceof PageFlow) {
-        //						EList<Form> forms = ((PageFlow) semanticObject).getForm();
-        //						if (forms.size() > 0) {
-        //							this.form = forms.get(0);
-        //						}
-        //					}
-        //				}
-        //
-        //			}else if(editor instanceof FormDiagramEditor ){
-        //				FormDiagramEditor formEditor = (FormDiagramEditor) editor;
-        //				if (formEditor.getDiagram().getElement() instanceof Form) {
-        //					this.form = (Form) formEditor.getDiagram().getElement();
-        //				}
-        //			}
-        //			return  form != null ;
-        //		}
-        //		return false;
-    }
-    
-    private ApplicationLookNFeelFileStore getCurrentLookNFeel(){
-    	if (form!=null){
+	private ApplicationLookNFeelFileStore getCurrentLookNFeel(){
+		if (form!=null){
 			AbstractProcess process = ModelHelper.getParentProcess(form);
 			LookNFeelRepositoryStore repositoryStore = (LookNFeelRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);	
 			return (ApplicationLookNFeelFileStore) repositoryStore.getChild(process.getBasedOnLookAndFeel());
-    	}
+		}
 		return null;
 	}
 
