@@ -496,7 +496,7 @@ public class FlowElementSwitch extends AbstractSwitch {
 				if(TimerUtil.isScript(startTimer)){
 					expressionBuilder.setExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name());
 					expressionBuilder.setInterpreter(ExpressionInterpreter.GROOVY.name());
-					expressionBuilder.setReturnType(Date.class.getName());
+					expressionBuilder.setReturnType(String.class.getName());
 				}else{
 					expressionBuilder.setExpressionType(ExpressionType.TYPE_CONSTANT.name());
 					expressionBuilder.setReturnType(String.class.getName());
