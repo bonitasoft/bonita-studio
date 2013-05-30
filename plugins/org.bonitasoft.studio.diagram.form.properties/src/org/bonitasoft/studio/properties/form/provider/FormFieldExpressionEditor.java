@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
@@ -32,6 +33,7 @@ import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Duplicable;
+import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -210,6 +212,9 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
 					return List.class.getName();
 				}else if(widget instanceof TextFormField && ((Widget) widget).getReturnTypeModifier() != null){
 					return ((Widget) widget).getReturnTypeModifier();
+				}
+				if(widget instanceof FileWidget){
+					return DocumentValue.class.getName();
 				}
 				return ((Widget) widget).getAssociatedReturnType()  ;
 			}
