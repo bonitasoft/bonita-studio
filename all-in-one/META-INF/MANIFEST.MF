@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: All in one
+Bundle-SymbolicName: all-in-one;singleton:=true
+Bundle-Version: 6.0.0.qualifier
+Bundle-Vendor: BonitaSoft S.A.
