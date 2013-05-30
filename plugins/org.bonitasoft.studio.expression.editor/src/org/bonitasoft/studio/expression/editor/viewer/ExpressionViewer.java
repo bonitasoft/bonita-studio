@@ -153,7 +153,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		}
 	};
 	private final EReference expressionReference;
-	private IExpressionNatureProvider expressionNatureProvider = new ExpressionContentProvider();
+	protected IExpressionNatureProvider expressionNatureProvider = new ExpressionContentProvider();
 	protected DataBindingContext externalDataBindingContext;
 	protected Binding expressionBinding;
 	private final Map<Integer, String> messages = new HashMap<Integer, String>();
