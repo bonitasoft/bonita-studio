@@ -18,6 +18,8 @@
 package org.bonitasoft.studio.application;
 
 
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -49,6 +51,13 @@ public class ApplicationPlugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		init(context);
+		
+		for(IConfigurationElement el :	BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.eclipse.ui.handlers")){
+			String attribute = el.getAttribute("commandId");
+			if(attribute.equals("org.bonitasoft.studio.application.preview")){
+				el.createExecutableExtension("class");
+			}
+		}
 
 	}
 
