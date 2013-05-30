@@ -23,6 +23,7 @@ import java.util.Date;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.TimerUtil;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -33,7 +34,6 @@ import org.bonitasoft.studio.model.process.StartTimerScriptType;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -127,9 +127,6 @@ public class StartTimerConditionWizardPage extends WizardPage {
     private Combo dayMonthlyDayOfWeek;
     private Combo dayWeekly;
     private Text hours;
-    private Button useFrom;
-    private DateTime fromDate;
-    private DateTime fromTime;
     private DateTime dayAtDaily;
     private DateTime yearlyDayAt;
     private ExpressionViewer conditionViewer;
@@ -182,37 +179,7 @@ public class StartTimerConditionWizardPage extends WizardPage {
         Composite conditionComposite = new Composite(parent, SWT.NONE);
         conditionComposite.setLayout(new GridLayout(1, false));
 
-        final Composite fromComposite = new Composite(conditionComposite, SWT.NONE);
-        fromComposite.setLayout(new GridLayout(4, false));
-        useFrom = new Button(fromComposite, SWT.CHECK);
-        Label label = new Label(fromComposite, SWT.NONE);
-        label.setText(Messages.StartTimerCondition_from);
-        fromDate = new DateTime(fromComposite, SWT.BORDER | SWT.DATE);
-        fromTime = new DateTime(fromComposite, SWT.BORDER | SWT.TIME);
-        SelectionAdapter useFromListener = new SelectionAdapter() {
-            /* (non-Javadoc)
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                fromDate.setEnabled(useFrom.getSelection());
-                fromTime.setEnabled(useFrom.getSelection());
-                if(useFrom.getSelection()){
-                    fromDate.setBackground(ColorConstants.white);
-                    fromDate.setForeground(ColorConstants.menuForeground);
-                    fromTime.setBackground(ColorConstants.white);
-                    fromTime.setForeground(ColorConstants.menuForeground);
-                }else{
-
-                    fromDate.setBackground(ColorConstants.titleInactiveBackground);
-                    fromDate.setForeground(ColorConstants.titleInactiveForeground);
-                    fromTime.setBackground(ColorConstants.titleInactiveBackground);
-                    fromTime.setForeground(ColorConstants.titleInactiveForeground);
-
-                }
-            }
-        };
-        useFrom.addSelectionListener(useFromListener);
+       
         final Composite deadlineComposite = new Composite(conditionComposite, SWT.NONE);
         deadlineComposite.setLayout(new GridLayout(3, false));
 
@@ -293,52 +260,40 @@ public class StartTimerConditionWizardPage extends WizardPage {
             public void selectionChanged(SelectionChangedEvent event) {
                 StartTimerScriptType selection = (StartTimerScriptType) ((IStructuredSelection) event.getSelection()).getFirstElement();
                 Composite toShow = null;
-                boolean showFrom;
                 boolean showCustomize = true;
                 switch (selection) {
                     case YEARLY:
                         toShow = yearlyComposite;
-                        showFrom = true;
                         break;
                     case MONTHLY:
                         toShow = monthlyComposite;
-                        showFrom = true;
                         break;
                     case WEEKLY:
                         toShow = weeklyComposite;
-                        showFrom = true;
                         break;
                     case DAILY:
                         toShow = dailyComposite;
-                        showFrom = true;
                         break;
                     case HOURLY:
                         toShow = hourlyComposite;
-                        showFrom = true;
                         break;
                     case MINUTELY:
                         toShow = minutelyComposite;
-                        showFrom = true;
                         break;
                     case GROOVY:
                         toShow = groovyComposite;
-                        showFrom = false;
                         showCustomize = false;
                         break;
                     case CUSTOM:
                         toShow = customComposite;
-                        showFrom = true;
                         break;
                     case CONSTANT:
                         toShow = constantComposite;
-                        showFrom = false;
                         break;
                     default:
                         toShow = yearlyComposite;
-                        showFrom = true;
                         break;
                 }
-                fromComposite.setVisible(showFrom);
                 customizeButton.setVisible(showCustomize);
                 stack.topControl = toShow;
                 parentDeadlineLayer.layout();
@@ -348,8 +303,6 @@ public class StartTimerConditionWizardPage extends WizardPage {
         setControl(conditionComposite);
 
         initControls();
-        useFromListener.widgetSelected(null);
-
     }
 
     private Composite createConstantComposite(Composite parentDeadlineLayer) {
@@ -432,13 +385,7 @@ public class StartTimerConditionWizardPage extends WizardPage {
                 default:
                     break;
             }
-            useFrom.setSelection(event.getFrom()!=null);
-            if(event.getFrom() != null) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(event.getFrom());
-                fromDate.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-                fromTime.setTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-            }
+
             if(event.getAt() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(event.getAt());
@@ -446,7 +393,6 @@ public class StartTimerConditionWizardPage extends WizardPage {
             }
 
         } else{
-            useFrom.setSelection(true);
             typeCombo.setSelection(new StructuredSelection(StartTimerScriptType.YEARLY));
         }
 
@@ -457,11 +403,11 @@ public class StartTimerConditionWizardPage extends WizardPage {
      * @return
      */
     private Composite createGroovyComposite(Composite parentDeadlineLayer) {
-
         final Composite groovyComposite = new Composite(parentDeadlineLayer, SWT.NONE);
         groovyComposite.setLayout(new GridLayout(1, false));
         conditionViewer = new ExpressionViewer(groovyComposite,SWT.BORDER, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION) ;
         conditionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.CONSTANT_TYPE}));
         initialiseConditionViewer();
         return groovyComposite;
     }
@@ -756,17 +702,6 @@ public class StartTimerConditionWizardPage extends WizardPage {
                 break;
         }
         return type;
-    }
-
-    public Date getFromDate() {
-        StartTimerScriptType scriptType = getScriptType();
-        if(!scriptType.equals(StartTimerScriptType.GROOVY) && useFrom.getSelection()){
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(fromDate.getYear(), fromDate.getMonth(), fromDate.getDay(), fromTime.getHours(), fromTime.getMinutes(), fromTime.getSeconds());
-            return calendar.getTime();
-
-        }
-        return null;
     }
 
     public Date getToDate() {
