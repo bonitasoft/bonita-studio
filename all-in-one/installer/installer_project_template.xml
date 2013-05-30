@@ -40,7 +40,7 @@
            <language>
             <code>fr</code>
             <file>i18n/messages_fr.properties</file>
-            <encoding>unicode</encoding>
+            <encoding>utf-8</encoding>
         </language>
         <language>
             <code>de</code>
