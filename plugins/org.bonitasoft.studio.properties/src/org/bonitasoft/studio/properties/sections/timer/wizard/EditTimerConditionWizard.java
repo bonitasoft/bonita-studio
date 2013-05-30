@@ -85,7 +85,6 @@ public class EditTimerConditionWizard extends Wizard {
 			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__MONTH, startTimerPage.getMonth()));
 			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__HOURS, startTimerPage.getHours()));
 			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__MINUTES, startTimerPage.getMinutes()));
-			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__FROM, startTimerPage.getFromDate()));
 			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__AT, startTimerPage.getToDate()));
 			if(page.getErrorMessage() != null){
 				return false;
