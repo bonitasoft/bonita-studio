@@ -26,6 +26,7 @@ import org.bonitasoft.studio.importer.ImporterPriorityDisplayComparator;
 import org.bonitasoft.studio.importer.ImporterRegistry;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -83,15 +84,16 @@ public class ImportFileWizardPage extends WizardPage {
         GridLayout gridLayout = new GridLayout(3, false);
         mainComposite.setLayout(gridLayout);
 
-        Group transfoGroup = new Group(mainComposite, SWT.BORDER);
-        transfoGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
+        final Group transfoGroup = new Group(mainComposite, SWT.BORDER);
+        transfoGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(3, 1).create());
         transfoGroup.setLayout(new GridLayout(2, true));
+     
         Label selectImportLabel = new Label(transfoGroup, SWT.NONE);
         selectImportLabel.setText(Messages.selectImportLabel);
         Label importDescriptionLabel = new Label(transfoGroup, SWT.NONE);
         importDescriptionLabel.setText(Messages.importDescriptionLabel);
         importList = new TableViewer(transfoGroup, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
-        importList.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
+        importList.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         importList.setContentProvider(new ArrayContentProvider());
         importList.setComparator(new ImporterPriorityDisplayComparator());
         importList.setLabelProvider(new LabelProvider() {
@@ -103,13 +105,10 @@ public class ImportFileWizardPage extends WizardPage {
 
 
         importList.setInput(ImporterRegistry.getInstance().getAllAvailableImports());
-        GridData gridData = new GridData(SWT.LEFT, SWT.FILL, false, true);
-        gridData.widthHint = 250;
+
         Composite descComposite = new Composite(transfoGroup, SWT.NONE) ;
-        GridLayout gl = new GridLayout(1,false) ;
-        gl.verticalSpacing = 3 ;
-        descComposite.setLayout(gl) ;
-        descComposite.setLayoutData(gridData) ;
+        descComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).spacing(5, 3).create()) ;
+        descComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create()) ;
 
         final Label descriptionImage = new Label(descComposite, SWT.NONE);
         descriptionImage.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING,SWT.FILL).create()) ;
@@ -118,7 +117,7 @@ public class ImportFileWizardPage extends WizardPage {
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
         final Label descriptionLabel = new Label(descComposite, SWT.WRAP);
-        descriptionLabel.setLayoutData(gridData);
+        descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().hint(230, SWT.DEFAULT).grab(false, true).create());
 
    
         Label fileLabel = new Label(mainComposite, SWT.NONE);
