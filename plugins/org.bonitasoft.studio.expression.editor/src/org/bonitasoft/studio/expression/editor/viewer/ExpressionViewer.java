@@ -492,7 +492,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		this.expressionNatureProvider = expressionNatureProvider;
 	}
 
-	private Set<Expression> getFilteredExpressions() {
+	protected Set<Expression> getFilteredExpressions() {
 		Set<Expression> filteredExpressions = new TreeSet<Expression>(new ExpressionComparator());
 		if (expressionNatureProvider!=null){
 			if(!(expressionNatureProvider instanceof ExpressionContentProvider)){

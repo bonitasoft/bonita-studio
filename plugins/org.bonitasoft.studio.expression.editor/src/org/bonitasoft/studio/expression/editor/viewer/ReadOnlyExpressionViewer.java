@@ -16,16 +16,23 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bonitasoft.studio.common.DatasourceConstants;
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -44,7 +51,7 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 			EditingDomain editingDomain, EReference expressionReference) {
 		super(composite, style, widgetFactory, editingDomain, expressionReference);
 	}
-	
+
 	@Override
 	protected void createTextControl(int style,
 			TabbedPropertySheetWidgetFactory widgetFactory) {
@@ -61,22 +68,46 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 			}
 		}	
 	}
-	
+
 	@Override
 	protected void manageNatureProviderAndAutocompletionProposal(Object input) {
 		super.manageNatureProviderAndAutocompletionProposal(input);
 		setProposalsFiltering(false);
 	}
-	
+
+	/**
+	 * Override to remove Form transient data that cannot be set anywhere
+	 */
+	@Override
+	protected Set<Expression> getFilteredExpressions() {
+		Set<Expression> result = super.getFilteredExpressions();
+		Set<Expression> toRemove = new HashSet<Expression>();
+		for(Expression e : result){
+			if(ExpressionConstants.VARIABLE_TYPE.equals(e.getType())){
+				if(!e.getReferencedElements().isEmpty() && e.getReferencedElements().get(0) instanceof Data){
+					Data d = (Data) e.getReferencedElements().get(0);
+					final String dsId = d.getDatasourceId();
+					if(dsId != null){
+						if(DatasourceConstants.PAGEFLOW_DATASOURCE.equals(dsId)){
+							toRemove.add(e);
+						}
+					}
+				}
+			}
+		}
+		result.removeAll(toRemove);
+		return result;
+	}
+
 	@Override
 	protected void bindEditableText(IObservableValue typeObservable) {
 
 	}
-	
+
 	@Override
 	protected ToolItem createEditToolItem(ToolBar tb) {
 		return null;
 	}
-	
+
 
 }
