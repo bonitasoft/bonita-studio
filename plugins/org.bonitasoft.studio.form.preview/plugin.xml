@@ -12,5 +12,28 @@
             restorable="true">
       </view>
    </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.bonitasoft.studio.application.preview"
+            name="%previewFrom">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.bonitasoft.studio.form.preview.handler.PreviewFormHandler"
+            commandId="org.bonitasoft.studio.application.preview">
+         <activeWhen>
+            <with
+                  variable="activeEditor">
+               <instanceof
+                     value="org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor">
+               </instanceof>
+            </with>
+         </activeWhen>
+      </handler>
+
+   </extension>
 
 </plugin>
