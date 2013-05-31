@@ -126,7 +126,7 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 			}
 		},10000,1000);
 		
-		assertTrue("Finish button should be enable", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 		
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)));
