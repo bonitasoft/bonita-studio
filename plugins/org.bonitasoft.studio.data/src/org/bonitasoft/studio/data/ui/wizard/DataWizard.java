@@ -121,7 +121,6 @@ public class DataWizard extends Wizard {
 		Data workingCopy = page.getWorkingCopy();
 		setDatasourceId(workingCopy,dataContainmentFeature) ;
 		if(editMode){
-
 			AbstractProcess process = ModelHelper.getParentProcess(container) ;
 			final RefactorDataOperation op = new RefactorDataOperation() ;
 			op.setEditingDomain(editingDomain);
