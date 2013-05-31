@@ -27,6 +27,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
 import org.bonitasoft.studio.model.form.Validable;
 import org.bonitasoft.studio.model.form.Validator;
 import org.bonitasoft.studio.model.form.Widget;
@@ -216,8 +217,16 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
         isBelow = getWidgetFactory().createButton(positionComposite, Messages.Validator_Below, SWT.RADIO);
         isAbove = getWidgetFactory().createButton(positionComposite, Messages.Validator_Above, SWT.RADIO);
 
+        
+        createDefaultValidatorPanel(mainComposite);
 
-        Composite defaultValidatorComposite = getWidgetFactory().createComposite(mainComposite);
+
+        enableFields(false);
+
+    }
+
+	private void createDefaultValidatorPanel(Composite mainComposite) {
+		Composite defaultValidatorComposite = getWidgetFactory().createComposite(mainComposite);
         defaultValidatorComposite.setLayout(new GridLayout(1,false));
         defaultValidatorComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false,4,1));
 
@@ -237,11 +246,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
                 positionComp.setVisible(defaultValidator.getSelection()) ;
             }
         });
-
-
-        enableFields(false);
-
-    }
+	}
 
     private void createButtons(Composite mainComposite) {
         Composite buttonsComposite = getWidgetFactory().createPlainComposite(mainComposite, SWT.NONE);
@@ -461,7 +466,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
                     context = new EMFDataBindingContext();
 
                     updateFieldDependingOnValidatorClass();
-
+                    
                     if(defaultValidatorContext != null){
                         defaultValidatorContext.dispose();
                     }
@@ -475,7 +480,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
                             new UpdateValueStrategy().setConverter(converter)
                             );
 
-                    defaultValidator.setVisible(lastEObject instanceof Widget);
+                    defaultValidator.setVisible(lastEObject instanceof Widget && !(lastEObject instanceof MultipleValuatedFormField));
                     positionComp.setVisible(lastEObject instanceof Widget && defaultValidator.getSelection()) ;
 
                     /*

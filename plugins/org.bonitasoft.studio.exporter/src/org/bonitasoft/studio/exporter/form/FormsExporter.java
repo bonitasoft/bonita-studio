@@ -1610,7 +1610,9 @@ public class FormsExporter {
 	}
 
 	protected void addFormFieldDefaultValidators(final FormField formField, final IFormBuilder builder) throws InvalidFormDefinitionException {
-		if (formField.getUseDefaultValidator() && !formField.isDuplicate()) {
+		if (formField.getUseDefaultValidator()
+				&& !formField.isDuplicate()
+				&& !(formField instanceof MultipleValuatedFormField)) {
 			if (formField instanceof DateFormField) {
 				builder.addValidator(formField.getName() + "_default_validator",
 						DefaultValidatorsProperties.getInstance().getDefaultValidator(Date.class.getName()), null, ValidatorPosition.BOTTOM);
