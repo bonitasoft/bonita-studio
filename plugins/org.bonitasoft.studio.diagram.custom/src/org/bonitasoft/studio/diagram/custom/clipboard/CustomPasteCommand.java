@@ -430,7 +430,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 		if(alreadyExists){
 			updateLabelandId(COPY_LABEL +" "+name, sourceCopy, elems);
 		}else{
-			sourceCopy.setName(NamingUtils.convertToId(name)) ;
+			sourceCopy.setName(name) ;
 		}
 	}
 
@@ -508,6 +508,11 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 	protected View copyView(IGraphicalEditPart srcPart, Element semanticCopy, List<IGraphicalEditPart> toCopy) {
 		View view = EcoreUtil.copy(srcPart.getNotationView());
 		view.setElement(semanticCopy);
+		for(Object child : view.getPersistedChildren()){
+			if(child instanceof View){
+				((View) child).setElement(semanticCopy);
+			}
+		}
 		if (view instanceof Node) {
 			Node node = (Node) view;
 			ShapeCompartmentEditPart targetCompartement = null;
