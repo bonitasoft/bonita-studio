@@ -49,137 +49,139 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public abstract class AbstractOpenConsoleCommand extends AbstractHandler {
 
-    public static final String REFRESH_THEME_PARAMETER = "refreshTheme";
-    public static final String CONSOLE_LOCALE = "locale=";
-    private URL url;
-    protected boolean runSynchronously;
-    protected boolean refreshTheme = true ;
+	public static final String REFRESH_THEME_PARAMETER = "refreshTheme";
+	public static final String CONSOLE_LOCALE = "locale=";
+	private URL url;
+	protected boolean runSynchronously;
+	protected boolean refreshTheme = true ;
 
-    /**
-     * @return
-     */
-    private static IPreferenceStore getPreferenceStore() {
-        return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
-    }
+	/**
+	 * @return
+	 */
+	private static IPreferenceStore getPreferenceStore() {
+		return BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+	}
 
-    @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        try{
-            refreshTheme = (Boolean) (event != null &&  event.getParameters() != null &&  event.getParameters().get(REFRESH_THEME_PARAMETER) != null  ? event.getParameters().get(REFRESH_THEME_PARAMETER) : true) ;
-            //close intro
-            executeJob();
-
-
-        }catch (Exception e) {
-            BonitaStudioLog.error(e);
-            ErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    "error",
-                    "error starting server",
-                    Status.OK_STATUS);
-        }
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		try{
+			refreshTheme = (Boolean) (event != null &&  event.getParameters() != null &&  event.getParameters().get(REFRESH_THEME_PARAMETER) != null  ? event.getParameters().get(REFRESH_THEME_PARAMETER) : true) ;
+			//close intro
+			executeJob();
 
 
-        return null;
-    }
+		}catch (Exception e) {
+			BonitaStudioLog.error(e);
+			ErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+					"error",
+					"error starting server",
+					Status.OK_STATUS);
+		}
 
-    private void executeJob() {
-        try {
 
-            final IRunnableWithProgress runnable = new IRunnableWithProgress(){
-                @Override
-                public void run(IProgressMonitor monitor)
-                        throws InvocationTargetException, InterruptedException {
-                    try{
-                        monitor.beginTask(Messages.initializingUserXP, IProgressMonitor.UNKNOWN);
-                        BOSEngineManager.getInstance().start();
-                        setURL(buildUrl(monitor));
-                        if(refreshTheme){
-                            String currentTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME) ;
-                            String installedTheme = BonitaUserXpPreferencePage.getInstalledThemeId()  ;
-                            if(installedTheme != null && !installedTheme.equals(currentTheme)){
-                                BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, currentTheme) ;
-                                BonitaUserXpPreferencePage.updateBonitaHome() ;
-                            }
-                        }
-                        new OpenBrowserCommand(url,BonitaPreferenceConstants.CONSOLE_BROWSER_ID,"Bonita User Experience").execute(null); //$NON-NLS-1$
-                    }catch(Exception e){
-                        BonitaStudioLog.error(e);
-                    }finally{
-                        monitor.done();
-                    }
-                }
-            };
+		return null;
+	}
 
-            if (runSynchronously) {
-                runnable.run(new NullProgressMonitor());
-            } else {
-                final IProgressService progressManager = PlatformUI.getWorkbench().getProgressService() ;
-                Display.getDefault().syncExec(new Runnable() {
+	private void executeJob() {
+		try {
 
-                    @Override
-                    public void run() {
-                        try{
-                            progressManager.run(true, false, runnable) ;
-                        }  catch (Exception e) {
-                            BonitaStudioLog.error(e);
-                        }
+			final IRunnableWithProgress runnable = new IRunnableWithProgress(){
+				@Override
+				public void run(IProgressMonitor monitor)
+						throws InvocationTargetException, InterruptedException {
+					try{
+						monitor.beginTask(Messages.initializingUserXP, IProgressMonitor.UNKNOWN);
+						BOSEngineManager.getInstance().start();
+						setURL(buildUrl(monitor));
+						if(refreshTheme){
+							String currentTheme = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_USERXP_THEME) ;
+							String installedTheme = BonitaUserXpPreferencePage.getInstalledThemeId()  ;
+							if(installedTheme != null && !installedTheme.equals(currentTheme)){
+								BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.DEFAULT_USERXP_THEME, currentTheme) ;
+								BonitaUserXpPreferencePage.updateBonitaHome() ;
+							}
+						}
+						if (!runSynchronously) {
+							new OpenBrowserCommand(url,BonitaPreferenceConstants.CONSOLE_BROWSER_ID,"Bonita User Experience").execute(null); //$NON-NLS-1$
+						}
+					}catch(Exception e){
+						BonitaStudioLog.error(e);
+					}finally{
+						monitor.done();
+					}
+				}
+			};
 
-                    }
-                });
+			if (runSynchronously) {
+				runnable.run(new NullProgressMonitor());
+			} else {
+				final IProgressService progressManager = PlatformUI.getWorkbench().getProgressService() ;
+				Display.getDefault().syncExec(new Runnable() {
 
-            }
+					@Override
+					public void run() {
+						try{
+							progressManager.run(true, false, runnable) ;
+						}  catch (Exception e) {
+							BonitaStudioLog.error(e);
+						}
 
-        } catch (Exception e) {
-            BonitaStudioLog.error(e);
-        }
+					}
+				});
 
-    }
+			}
 
-    protected String buildUrl(IProgressMonitor monitor) throws UnsupportedEncodingException {
-        final IPreferenceStore store = getPreferenceStore();
-        final String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
-        final String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST);
-        final String userName =  store.getString(BonitaPreferenceConstants.USER_NAME);
-        final String password = store.getString(BonitaPreferenceConstants.USER_PASSWORD);
-        final String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
-        final String loginUrl = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-        final String consoleURl = "http://"+host+":"+ port + getURLRelativePath(locale);
-        return loginUrl+"&redirectUrl="+URLEncoder.encode(consoleURl, "UTF-8");
-    }
+		} catch (Exception e) {
+			BonitaStudioLog.error(e);
+		}
 
-    protected String getLocaleParameter(String locale) {
+	}
+
+	protected String buildUrl(IProgressMonitor monitor) throws UnsupportedEncodingException {
+		final IPreferenceStore store = getPreferenceStore();
+		final String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
+		final String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST);
+		final String userName =  store.getString(BonitaPreferenceConstants.USER_NAME);
+		final String password = store.getString(BonitaPreferenceConstants.USER_PASSWORD);
+		final String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE);
+		final String loginUrl = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
+		final String consoleURl = "http://"+host+":"+ port + getURLRelativePath(locale);
+		return loginUrl+"&redirectUrl="+URLEncoder.encode(consoleURl, "UTF-8");
+	}
+
+	protected String getLocaleParameter(String locale) {
 		return "locale="+locale;
 	}
 
 	/**
-     * @param store
-     * @return
-     * @throws MalformedURLException
-     */
-    public URL getURL() throws MalformedURLException {
-        return url;
-    }
+	 * @param store
+	 * @return
+	 * @throws MalformedURLException
+	 */
+	public URL getURL() throws MalformedURLException {
+		return url;
+	}
 
-    /**
-     * @param store
-     * @return
-     * @throws MalformedURLException
-     */
-    public void setURL(String path) throws MalformedURLException {
-        url = new URL(path);
-    }
+	/**
+	 * @param store
+	 * @return
+	 * @throws MalformedURLException
+	 */
+	public void setURL(String path) throws MalformedURLException {
+		url = new URL(path);
+	}
 
-    /**
-     * 
-     */
-    public AbstractOpenConsoleCommand() {
-        super();
-    }
+	/**
+	 * 
+	 */
+	public AbstractOpenConsoleCommand() {
+		super();
+	}
 
-    /**
-     * @param locale 
-     * @return
-     */
-    protected abstract String getURLRelativePath(String locale);
+	/**
+	 * @param locale 
+	 * @return
+	 */
+	protected abstract String getURLRelativePath(String locale);
 
 }
