@@ -89,9 +89,8 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
                 }
                 if(!fromObject.toString().equals(element.getName()) && element instanceof Widget){
                     IProgressService service = PlatformUI.getWorkbench().getProgressService();
-
                     try {
-                        service.run(true, false,new RefactorWidgetOperation((Widget)element,fromObject.toString()));
+                        service.busyCursorWhile(new RefactorWidgetOperation((Widget)element,fromObject.toString()));
                     } catch (InvocationTargetException e) {
                         BonitaStudioLog.error(e);
                     } catch (InterruptedException e) {
