@@ -17,13 +17,11 @@
  */
 package org.bonitasoft.studio.tests.timer;
 
-import static org.bonitasoft.studio.diagram.custom.Messages.localConfigurationFor;
 import static org.bonitasoft.studio.common.Messages.daysLabel;
 import static org.bonitasoft.studio.properties.i18n.Messages.deadlineVarNameLabel;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -49,7 +47,6 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotList;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
-import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -163,7 +160,7 @@ public class TestTimer extends SWTBotGefTestCase {
         changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_everyYear);
 
         // in the shell editor for 'Every year'
-        bot.checkBox().select();
+       // bot.checkBox().select();
         // "Every"
         bot.textWithLabel(Messages.StartTimerCondition_every).setText("3");
         bot.button(IDialogConstants.FINISH_LABEL).click();
@@ -213,9 +210,6 @@ public class TestTimer extends SWTBotGefTestCase {
         // "Timer1", "Every month"
         changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_everyMonth);
 
-        // in the shell editor for 'Every month'
-        bot.checkBox().select();
-
         // "Day of month in week"
         bot.comboBox(0).setSelection(Messages.StartTimerCondition_dayOfMonthInWeek);
         // "Every"
@@ -245,8 +239,8 @@ public class TestTimer extends SWTBotGefTestCase {
         // Timer 1, Every week
         changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_everyWeek);
 
-        // in the shell editor for 'Every minute'
-        bot.checkBox().select();
+//        // in the shell editor for 'Every minute'
+//        bot.checkBox().select();
 
         bot.comboBox().setSelection(Messages.wednesday);
         // "at"
@@ -275,8 +269,8 @@ public class TestTimer extends SWTBotGefTestCase {
 
         changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_everyDay);
 
-        // in the shell editor for 'Every day'
-        bot.checkBox().select();
+//        // in the shell editor for 'Every day'
+//        bot.checkBox().select();
 
 
         Calendar calendar = Calendar.getInstance();
@@ -312,8 +306,8 @@ public class TestTimer extends SWTBotGefTestCase {
         // "Timer1", "Every hour"
         changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_everyHour);
 
-        // in the shell editor for 'Every hour'
-        bot.checkBox().select();
+//        // in the shell editor for 'Every hour'
+//        bot.checkBox().select();
 
         // text with label "Every"
         bot.textWithLabel(Messages.StartTimerCondition_every).setText("4");
