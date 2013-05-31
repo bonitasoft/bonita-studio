@@ -870,6 +870,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 
 		// 3th page
 		bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON).click();
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name *")));
 		bot.textWithLabel("Name *").setText(scriptName);
 		bot.styledText().setText(scriptText);
 		bot.button(IDialogConstants.OK_LABEL).click();
