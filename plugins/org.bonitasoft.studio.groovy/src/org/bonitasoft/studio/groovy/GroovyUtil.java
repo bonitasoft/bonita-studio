@@ -397,7 +397,6 @@ public class GroovyUtil {
 		try {
 			final IType t = getType(className);
 			if(t == null){
-				BonitaStudioLog.warning("Can't retrieve type "+className+" in classpath", GroovyPlugin.PLUGIN_ID);
 				return result;
 			}
 			for (final IField f : t.getFields()) {
