@@ -429,7 +429,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		bot.textWithLabel(org.bonitasoft.studio.data.i18n.Messages.name).setText(name);
 		bot.comboBoxWithLabel(org.bonitasoft.studio.data.i18n.Messages.datatypeLabel).setSelection(type);
 		if (multiplicity){
-			bot.checkBox("Is multiple").select();
+			bot.checkBox(org.bonitasoft.studio.data.i18n.Messages.isMultiple).select();
 		}
 		if (defaultValue!=null){
 			bot.textWithLabel(org.bonitasoft.studio.data.i18n.Messages.defaultValueLabel).setText(defaultValue);
