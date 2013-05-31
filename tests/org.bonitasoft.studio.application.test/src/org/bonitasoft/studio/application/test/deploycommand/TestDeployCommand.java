@@ -37,6 +37,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -57,132 +58,129 @@ import org.junit.Test;
  */
 public class TestDeployCommand {
 
-    /**
-     * Used to check bug 1965
-     * @throws Exception
-     */
+	/**
+	 * Used to check bug 1965
+	 * @throws Exception
+	 */
 	@Test
-    public void testDeployCommandWithSubProcessLoop() throws Exception{
-        /*import the two process for the test*/
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource("ProcessForSubProcessLoopTest-1-1.0.bos")); //$NON-NLS-1$
-        op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
-        op.run(new NullProgressMonitor());
-        ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        MainProcess mainProcess=(MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
+	public void testDeployCommandWithSubProcessLoop() throws Exception{
+		/*import the two process for the test*/
+		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+		URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource("ProcessForSubProcessLoopTest-1-1.0.bos")); //$NON-NLS-1$
+		op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
+		op.run(new NullProgressMonitor());
+		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		MainProcess mainProcess=(MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
 
-        URL fileURL2 = FileLocator.toFileURL(TestDeployCommand.class.getResource("ProcessForSubProcessLoopTest-2-1.0.bos")); //$NON-NLS-1$
-        op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
-        op.run(new NullProgressMonitor());
+		URL fileURL2 = FileLocator.toFileURL(TestDeployCommand.class.getResource("ProcessForSubProcessLoopTest-2-1.0.bos")); //$NON-NLS-1$
+		op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
+		op.run(new NullProgressMonitor());
 
-        /*And deploy it twice*/
-        final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        Map<String,Object> param = new HashMap<String, Object>();
-        param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-        ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
-        runProcessCommand.execute(ee);
-        runProcessCommand.execute(ee);
-    }
+		/*And deploy it twice*/
+		final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
+		Map<String,Object> param = new HashMap<String, Object>();
+		param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
+		ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
+		runProcessCommand.execute(ee);
+		runProcessCommand.execute(ee);
+	}
 
-    /**
-     * used to check fix 2204
-     * @throws Exception
-     * 
-     */
+	/**
+	 * used to check fix 2204
+	 * @throws Exception
+	 * 
+	 */
 	@Test
-    public void testDeployAfterRenamedOfParentProcess() throws Exception {
-		 /*Import a base process for the test*/
-        ProcessDiagramEditor processEditor = importBos("ProcessForTestBug2204.bos");
-        MainProcess mainProcess=(MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
+	public void testDeployAfterRenamedOfParentProcess() throws Exception {
+		/*Import a base process for the test*/
+		ProcessDiagramEditor processEditor = importBos("ProcessForTestBug2204.bos");
+		MainProcess mainProcess=(MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
 
-        /*Run a first time*/
-        final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        Map<String,Object> param = new HashMap<String, Object>();
-        param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-        ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
-        runProcessCommand.execute(ee);
+		/*Run a first time*/
+		final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
+		Map<String,Object> param = new HashMap<String, Object>();
+		param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
+		ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
+		runProcessCommand.execute(ee);
 
-        /*Rename the parent*/
-        final Pool parentProcess = (Pool) mainProcess.getElements().get(0);
-        TransactionalEditingDomain domain = GMFEditingDomainFactory.getInstance().getEditingDomain(parentProcess.eResource().getResourceSet());
-        if(domain == null){
-            domain = TransactionUtil.getEditingDomain(parentProcess);
-        }
-        if(domain == null){
-            domain = GMFEditingDomainFactory.getInstance().createEditingDomain();
-        }
-        CompoundCommand cc = new CompoundCommand() ;
-        cc.append(SetCommand.create(domain, parentProcess, ProcessPackage.eINSTANCE.getElement_Name(), "ParentRenamed")) ;
-        domain.getCommandStack().execute(cc) ;
-        processEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
-        /*Retry to deploy*/
-        runProcessCommand.execute(ee);
+		/*Rename the parent*/
+		final Pool parentProcess = (Pool) mainProcess.getElements().get(0);
+		TransactionalEditingDomain domain = GMFEditingDomainFactory.getInstance().getEditingDomain(parentProcess.eResource().getResourceSet());
+		if(domain == null){
+			domain = TransactionUtil.getEditingDomain(parentProcess);
+		}
+		if(domain == null){
+			domain = GMFEditingDomainFactory.getInstance().createEditingDomain();
+		}
+		CompoundCommand cc = new CompoundCommand() ;
+		cc.append(SetCommand.create(domain, parentProcess, ProcessPackage.eINSTANCE.getElement_Name(), "ParentRenamed")) ;
+		domain.getCommandStack().execute(cc) ;
+		processEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
+		/*Retry to deploy*/
+		runProcessCommand.execute(ee);
 
-        APISession session = null ;
-        try{
-            session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
-            ProcessManagementAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session) ;
-            int nbProcess = (int) processAPI.getNumberOfProcessDeploymentInfos() ;
-            List<ProcessDeploymentInfo> infos = processAPI.getProcessDeploymentInfos(0, nbProcess, ProcessDeploymentInfoCriterion.DEFAULT) ;
-            boolean found = false;
-            for(ProcessDeploymentInfo info : infos){
-                if(info.getName().equals(parentProcess.getName()) && info.getVersion().equals(parentProcess.getVersion())){
-                    found = true ;
-                }
-            }
-            assertTrue("Process not found", found) ;
-        }catch (Exception e) {
-            fail() ;
-        }finally{
-            if(session != null){
-                BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
-            }
-        }
-    }
+		APISession session = null ;
+		try{
+			session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
+			ProcessManagementAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session) ;
+			int nbProcess = (int) processAPI.getNumberOfProcessDeploymentInfos() ;
+			List<ProcessDeploymentInfo> infos = processAPI.getProcessDeploymentInfos(0, nbProcess, ProcessDeploymentInfoCriterion.DEFAULT) ;
+			boolean found = false;
+			for(ProcessDeploymentInfo info : infos){
+				if(info.getName().equals(parentProcess.getName()) && info.getVersion().equals(parentProcess.getVersion())){
+					found = true ;
+				}
+			}
+			assertTrue("Process not found", found) ;
+		}catch (Exception e) {
+			fail() ;
+		}finally{
+			if(session != null){
+				BOSEngineManager.getInstance().logoutDefaultTenant(session) ;
+			}
+		}
+	}
 
 	private ProcessDiagramEditor importBos(final String processResourceName)
 			throws IOException {
 		ImportBosArchiveOperation op = new ImportBosArchiveOperation();     
 		URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource(processResourceName)); //$NON-NLS-1$
-        op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
-        op.run(new NullProgressMonitor());
-        ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
+		op.run(new NullProgressMonitor());
+		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		return processEditor;
 	}
-	
 
-    public void testTwiceDeploymentWithCallActiviesInstances() throws Exception{
-    	ProcessDiagramEditor processEditor = importBos("TestTwiceDeployWithSubProc-1.0.bos");
-    	MainProcess mainProcess=(MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
-    	
-        final RunProcessCommand runProcessCommand1 = new RunProcessCommand(true);
-        Map<String,Object> param1 = new HashMap<String, Object>();
-        param1.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-        ExecutionEvent ee1 = new ExecutionEvent(null,param1,null,null);
-        runProcessCommand1.execute(ee1);
-    	//run it
-        final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        Map<String,Object> param = new HashMap<String, Object>();
-        param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(1));
-        ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
-        runProcessCommand.execute(ee);
 
-        //TODO: start first process
-        APISession session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
-        final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-        long processId=processApi.getProcessDefinitionId("ParentTestTwiceDeployWithSubProc", "1.0");
+	@Test
+	public void testTwiceDeploymentWithCallActiviesInstances() throws Exception{
+		ProcessDiagramEditor processEditor = importBos("TestTwiceDeployWithSubProc-1.0.bos");
+		final MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
+		runAndStartProcess(mainProcess,"ParentTestTwiceDeployWithSubProc","1.0");
+		runAndStartProcess(mainProcess,"ChildTestTwiceDeployWithSubProc","1.0");
+		runAndStartProcess(mainProcess,"ParentTestTwiceDeployWithSubProc","1.0");
+		runAndStartProcess(mainProcess,"ChildTestTwiceDeployWithSubProc","1.0");
+	}
+
+	protected void runAndStartProcess(MainProcess mainProcess,String processName,String processVersion) throws  Exception {
+		final RunProcessCommand runProcessCommand1 = new RunProcessCommand(true);
+		Map<String,Object> param1 = new HashMap<String, Object>();
+		Pool toDeploy = null;
+		for(Element e : mainProcess.getElements()){
+			if(e instanceof Pool && e.getName().equals(processName) && ((Pool) e).getVersion().equals(processVersion)){
+				toDeploy = (Pool) e;
+			}
+		}
+		param1.put(RunProcessCommand.PROCESS, toDeploy);
+		ExecutionEvent ee1 = new ExecutionEvent(null,param1,null,null);
+		runProcessCommand1.execute(ee1);
+		
+		APISession session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+		final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
+		long processId=processApi.getProcessDefinitionId(processName, processVersion);
 		final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
 		assertNotNull(processDef);
 		processApi.startProcess(processId);
-        
-    	//ensure that there is an instance that is waiting
-    	Thread.sleep(1000);
-    	//run again
-        final RunProcessCommand runProcessCommand2 = new RunProcessCommand(true);
-        Map<String,Object> param2 = new HashMap<String, Object>();
-        param2.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-        ExecutionEvent ee2 = new ExecutionEvent(null,param2,null,null);
-        runProcessCommand2.execute(ee2);
-    }
+	}
 
 }

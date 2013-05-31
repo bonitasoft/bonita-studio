@@ -30,8 +30,15 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bonitasoft.engine.api.ProcessAPI;
-import org.bonitasoft.engine.bpm.process.*;
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
+import org.bonitasoft.engine.bpm.process.ProcessActivationException;
+import org.bonitasoft.engine.bpm.process.ProcessDefinition;
+import org.bonitasoft.engine.bpm.process.ProcessDeployException;
+import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
+import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
+import org.bonitasoft.engine.bpm.process.ProcessEnablementException;
+import org.bonitasoft.engine.exception.DeletionException;
+import org.bonitasoft.engine.exception.ProcessInstanceHierarchicalDeletionException;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
@@ -255,12 +262,26 @@ public class DeployProcessOperation  {
 				for(ProcessDeploymentInfo info : processes){
 					if(info.getName().equals(process.getName()) && info.getVersion().equals(process.getVersion())){
 						monitor.subTask(Messages.bind(Messages.undeploying,getProcessLabel(process)));
+						final long processId = info.getProcessId();
 						try{
-							processApi.disableProcess(info.getProcessId());
+							processApi.disableProcess(processId);
 						}catch (ProcessActivationException e) {
 
 						}
-						processApi.deleteProcess(info.getProcessId()) ;
+						boolean succesfullDelete = false;
+						while(!succesfullDelete){
+							try{
+								processApi.deleteProcess(processId) ;
+								succesfullDelete = true;
+							} catch(DeletionException e){
+								if(e instanceof ProcessInstanceHierarchicalDeletionException){
+									long blockingProcessId = ((ProcessInstanceHierarchicalDeletionException) e).getProcessInstanceId();
+									processApi.deleteProcessInstance(blockingProcessId);
+								}else {
+									throw e;
+								}
+							}
+						}
 					}
 				}
 			}

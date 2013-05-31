@@ -76,6 +76,7 @@ public class BOSEngineManager {
 	private static BOSEngineManager INSTANCE ;
 	private boolean isRunning = false;
 	private IProgressMonitor monitor;
+	private boolean organizationLoaded = false;
 
 
 	protected BOSEngineManager(IProgressMonitor monitor) {
@@ -183,15 +184,24 @@ public class BOSEngineManager {
 	}
 
 	public APISession loginDefaultTenant(IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
-		return loginTenant(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD, monitor);
+		return loginTenant(BONITA_TECHNICAL_USER, BONITA_TECHNICAL_USER_PASSWORD,false, monitor);
 	}
 
 	public APISession loginTenant(String login, String password, IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
+		return loginTenant(login, password, true, monitor);
+	}
+	
+	protected APISession loginTenant(String login, String password,boolean waitForOrganization, IProgressMonitor monitor) throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
 		if(!isRunning()){
 			monitor.subTask(Messages.waitingForEngineToStart) ;
 			start() ;
-			monitor.done() ;
+			
 		}
+		if(waitForOrganization && !isOrganizationLoaded()){
+			monitor.subTask(Messages.waitingForOrganizationPublish) ;
+			loadOrganization();
+		}
+		monitor.done() ;
 		if(BonitaStudioLog.isLoggable(IStatus.OK)){
 			BonitaStudioLog.debug("Attempt to login as "+login, EnginePlugin.PLUGIN_ID);
 		}
@@ -218,21 +228,27 @@ public class BOSEngineManager {
 		return false;
 	}
 
-	private void loadOrganization()  {
-		if(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.LOAD_ORGANIZATION)) {
-			ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
-			Command cmd = service.getCommand(INSTALL_ORGANIZATION_CMD_ID) ;
-			Map<String, String> parameters = new HashMap<String, String>() ;
-			String artifactId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_ORGANIZATION) ;
-			parameters.put("artifact", artifactId+".organization") ;
-			ExecutionEvent ee = new ExecutionEvent(cmd,parameters,null,null);
-			try {
-				cmd.executeWithChecks(ee) ;
-			} catch (Exception e) {
-				BonitaStudioLog.error(e) ;
+	private synchronized void loadOrganization()  {
+		if(!isOrganizationLoaded()){
+			if(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.LOAD_ORGANIZATION)) {
+				ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
+				Command cmd = service.getCommand(INSTALL_ORGANIZATION_CMD_ID) ;
+				Map<String, String> parameters = new HashMap<String, String>() ;
+				String artifactId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_ORGANIZATION) ;
+				parameters.put("artifact", artifactId+".organization") ;
+				ExecutionEvent ee = new ExecutionEvent(cmd,parameters,null,null);
+				try {
+					cmd.executeWithChecks(ee) ;
+				} catch (Exception e) {
+					BonitaStudioLog.error(e) ;
+				}
 			}
-
+			organizationLoaded = true;
 		}
+	}
+
+	public boolean isOrganizationLoaded() {
+		return organizationLoaded;
 	}
 
 	protected ClassLoader createEngineClassloader(){
