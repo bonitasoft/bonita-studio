@@ -31,7 +31,8 @@
     </slideShowImageList>
 	<requestedExecutionLevel>asInvoker</requestedExecutionLevel>
 	<singleInstanceCheck>1</singleInstanceCheck>
-	 <customLanguageFileList>
+	 <allowedLanguages>en de es fr it pt_BR</allowedLanguages>
+	<customLanguageFileList>
         <language>
             <code>en</code>
             <file>i18n/messages.properties</file>
