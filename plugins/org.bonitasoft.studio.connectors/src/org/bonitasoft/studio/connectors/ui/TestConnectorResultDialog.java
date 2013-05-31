@@ -59,7 +59,6 @@ import org.w3c.dom.Document;
 public class TestConnectorResultDialog extends Dialog {
 
     private static final String RESULTS_TITLE = Messages.resultTitleLabel ;
-    private static final String BACK_LABEL = IDialogConstants.BACK_LABEL;
     
     private Map<String, Object> testResultAsMap ;
     private Set<String> testResultAsSet;
@@ -231,21 +230,6 @@ public class TestConnectorResultDialog extends Dialog {
         return parent;
     }
 
-//    // This will create the columns for the table
-//    private void createColumns(TableViewer viewer, List<String> captions) {
-//
-//
-//        for (int i = 0; i < captions.size(); i++) {
-//            TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
-//            column.getColumn().setText(captions.get(i));
-//            column.getColumn().setWidth(100);
-//            column.getColumn().setResizable(true);
-//            column.getColumn().setMoveable(true);
-//        }
-//        Table table = viewer.getTable();
-//        table.setHeaderVisible(true);
-//        table.setLinesVisible(true);
-//    }
 
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
