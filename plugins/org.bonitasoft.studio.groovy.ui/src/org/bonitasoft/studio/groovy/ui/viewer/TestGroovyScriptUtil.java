@@ -227,8 +227,9 @@ public class TestGroovyScriptUtil {
                     } else if (TYPES.contains(typeName)) {
                         variableMap.put(var.getName(), typeName);
                     } else {
-                        if (org.bonitasoft.studio.groovy.GroovyUtil.getTypeValues(typeName) != null
-                                && !org.bonitasoft.studio.groovy.GroovyUtil.getTypeValues(typeName).isEmpty()) {
+                        final List<String> typeValues = org.bonitasoft.studio.groovy.GroovyUtil.getTypeValues(typeName);
+						if (typeValues != null
+                                && !typeValues.isEmpty()) {
                             variableMap.put(var.getName(), LIST);
                         } else {
                             variableMap.put(var.getName(), OBJECT);
