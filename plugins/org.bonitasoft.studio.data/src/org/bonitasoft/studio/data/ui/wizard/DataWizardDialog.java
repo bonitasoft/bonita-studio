@@ -17,16 +17,14 @@
  */
 package org.bonitasoft.studio.data.ui.wizard;
 
-import org.eclipse.jface.dialogs.Dialog;
+import org.bonitasoft.studio.data.i18n.Messages;
+import org.bonitasoft.studio.data.ui.property.section.AbstractDataSection;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.data.ui.property.section.AbstractDataSection;
 
 /**
  * @author aurelie zara
@@ -37,17 +35,17 @@ public class DataWizardDialog extends WizardDialog {
 	private static final int CREATE_AND_NEW_ID=1245;
 	private final AbstractDataSection dataSection;
 	private Button createAndNewButton ;
-	
-	
+
+
 	public DataWizardDialog(Shell parentShell, IWizard newWizard,AbstractDataSection dataSection) {
 		super(parentShell, newWizard);
 		this.dataSection = dataSection;
 	}
-	
+
 	@Override
 	protected void createButtonsForButtonBar(Composite parent){
 		super.createButtonsForButtonBar(parent);
-		 createAndNewButton = super.createButton(parent, CREATE_AND_NEW_ID, Messages.createAndNewButton, true);
+		createAndNewButton = super.createButton(parent, CREATE_AND_NEW_ID, Messages.createAndNewButton, true);
 		setButtonLayoutData(createAndNewButton);
 		Button cancelButton = getButton(IDialogConstants.CANCEL_ID);
 		cancelButton.setText(IDialogConstants.CANCEL_LABEL);
@@ -57,7 +55,7 @@ public class DataWizardDialog extends WizardDialog {
 		createAndNewButton.moveAbove(cancelButton);
 		finishButton.moveAbove(createAndNewButton );
 	}
-	
+
 	@Override
 	protected void buttonPressed(int buttonId){
 		super.buttonPressed(buttonId);
@@ -67,11 +65,11 @@ public class DataWizardDialog extends WizardDialog {
 			dataSection.setWizardDialog();
 		}
 	}
-	
+
 	@Override
 	public void updateButtons(){
 		super.updateButtons();
-		 boolean canFinish = getWizard().canFinish();
-	     createAndNewButton.setEnabled(canFinish);
+		boolean canFinish = getWizard().canFinish();
+		createAndNewButton.setEnabled(canFinish);
 	}
 }

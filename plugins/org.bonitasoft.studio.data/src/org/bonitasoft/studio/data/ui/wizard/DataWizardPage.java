@@ -127,7 +127,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -215,12 +214,12 @@ public class DataWizardPage extends WizardPage {
 
 			updateMoreSection(newType);
 			updateBrowseXMLButton(newType);
-			final Shell s = getShell();
-			if(s != null){
-				final Point defaultSize = s.getSize();
-				final Point size = s.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-				s.setSize(defaultSize.x, size.y);
-				s.layout(true, true);
+			//final Shell s = getShell();
+			if(mainComposite != null){
+				final Point defaultSize = mainComposite.getSize();
+				final Point size = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+				mainComposite.setSize(defaultSize.x, size.y);
+				mainComposite.layout(true, true);
 			}
 			updateDatabinding();
 		}
@@ -231,6 +230,8 @@ public class DataWizardPage extends WizardPage {
 	private Composite defaultValueComposite;
 
 	private ToolBar xmlToolbar;
+
+	private Composite mainComposite;
 
 
 
@@ -313,7 +314,7 @@ public class DataWizardPage extends WizardPage {
 
 	@Override
 	public void createControl(final Composite parent) {
-		final Composite mainComposite = new Composite(parent, SWT.NONE);
+		mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(15, 10).create());
 
@@ -729,10 +730,10 @@ public class DataWizardPage extends WizardPage {
 
 			@Override
 			public void expansionStateChanged(final ExpansionEvent event) {
-				final Point defaultSize = getShell().getSize();
-				final Point size = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-				getShell().setSize(defaultSize.x, size.y);
-				getShell().layout(true, true);
+				final Point defaultSize = mainComposite.getSize();
+				final Point size = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+				mainComposite.setSize(defaultSize.x, size.y);
+				mainComposite.layout(true, true);
 			}
 		});
 
