@@ -58,7 +58,15 @@
 
 «AROUND getParserElement FOR gmfgen::LabelModelFacet-»
 		final org.eclipse.emf.ecore.EObject element = resolveSemanticElement();
-		return element instanceof org.bonitasoft.studio.model.form.Widget ? ((org.bonitasoft.studio.model.form.Widget)element).getDisplayLabel(): element;
+		if(element instanceof org.bonitasoft.studio.model.form.Widget 
+		&& !(element instanceof org.bonitasoft.studio.model.form.MessageInfo)
+		&& !(element instanceof org.bonitasoft.studio.model.form.HiddenWidget)
+		&& !(element instanceof org.bonitasoft.studio.model.form.HtmlWidget)
+		&& !(element instanceof org.bonitasoft.studio.model.form.IFrameWidget)){
+			return ((org.bonitasoft.studio.model.form.Widget)element).getDisplayLabel();
+		}else{
+			return element;
+		}
 «ENDAROUND»
 
 

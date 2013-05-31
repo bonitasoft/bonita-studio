@@ -65,7 +65,11 @@
 	public void activate() {
 		super.activate();
 		final org.eclipse.emf.ecore.EObject resolveSemanticElement = resolveSemanticElement();
-		if(resolveSemanticElement instanceof org.bonitasoft.studio.model.form.Widget){
+		if(resolveSemanticElement instanceof org.bonitasoft.studio.model.form.Widget 
+		&& !(resolveSemanticElement instanceof org.bonitasoft.studio.model.form.MessageInfo)
+		&& !(resolveSemanticElement instanceof org.bonitasoft.studio.model.form.HiddenWidget)
+		&& !(resolveSemanticElement instanceof org.bonitasoft.studio.model.form.HtmlWidget)
+		&& !(resolveSemanticElement instanceof org.bonitasoft.studio.model.form.IFrameWidget)){
 			org.bonitasoft.studio.model.form.Widget widget = (org.bonitasoft.studio.model.form.Widget) resolveSemanticElement;
         	org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker.getInstance(getEditingDomain()).addNotificationListener(widget,org.bonitasoft.studio.model.form.FormPackage.Literals.WIDGET__DISPLAY_LABEL,expressionListener);
     		expressionListener.notifyChanged(new org.eclipse.emf.ecore.impl.ENotificationImpl((org.eclipse.emf.ecore.InternalEObject) widget,  org.eclipse.emf.ecore.util.FeatureMapUtil.FeatureENotificationImpl.SET, org.bonitasoft.studio.model.form.FormPackage.Literals.WIDGET__DISPLAY_LABEL, null, widget.getDisplayLabel()));
@@ -78,7 +82,11 @@
      @Override
     public void deactivate() {
     	org.eclipse.emf.ecore.EObject widget = resolveSemanticElement();
-        if(widget instanceof org.bonitasoft.studio.model.form.Widget){
+        if(widget instanceof org.bonitasoft.studio.model.form.Widget
+        && !(widget instanceof org.bonitasoft.studio.model.form.MessageInfo)
+		&& !(widget instanceof org.bonitasoft.studio.model.form.HiddenWidget)
+		&& !(widget instanceof org.bonitasoft.studio.model.form.HtmlWidget)
+		&& !(widget instanceof org.bonitasoft.studio.model.form.IFrameWidget)){
             DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(((org.bonitasoft.studio.model.form.Widget) widget).getDisplayLabel(), listener);
             DiagramEventBroker.getInstance(getEditingDomain()).removeNotificationListener(((org.bonitasoft.studio.model.form.Widget) widget), expressionListener);
         }

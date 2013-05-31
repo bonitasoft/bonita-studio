@@ -66,17 +66,28 @@ org.eclipse.gmf.runtime.common.ui.services.parser.ParserService.getInstance().ge
 
 «DEFINE provider_getParserMethod FOR gmfgen::GenParsers-»
 	«EXPAND xpt::Common::generatedMemberComment»
-	
-	private org.eclipse.gmf.runtime.common.ui.services.parser.IParser parser;
-	
 	public org.eclipse.gmf.runtime.common.ui.services.parser.IParser getParser(
 			org.eclipse.core.runtime.IAdaptable hint) {
-		if(parser == null){
+		final org.eclipse.emf.ecore.EObject element = (org.eclipse.emf.ecore.EObject) hint.getAdapter(org.eclipse.emf.ecore.EObject.class);
+		if(!(element instanceof org.bonitasoft.studio.model.form.MessageInfo)
+		&& !(element instanceof org.bonitasoft.studio.model.form.HiddenWidget)
+		&& !(element instanceof org.bonitasoft.studio.model.form.HtmlWidget)
+		&& !(element instanceof org.bonitasoft.studio.model.form.IFrameWidget)){
 			org.eclipse.emf.ecore.EAttribute[] features = new org.eclipse.emf.ecore.EAttribute[] { org.bonitasoft.studio.model.expression.ExpressionPackage.eINSTANCE.getExpression_Content() };
         	org.eclipse.emf.ecore.EAttribute[] editableFeatures = new org.eclipse.emf.ecore.EAttribute[] { org.bonitasoft.studio.model.expression.ExpressionPackage.eINSTANCE.getExpression_Content()};
-        	parser = new org.bonitasoft.studio.model.process.diagram.form.parsers.MessageFormatParser(features, editableFeatures);
+        	return  new org.bonitasoft.studio.model.process.diagram.form.parsers.MessageFormatParser(features, editableFeatures);
+        }else{
+	        String vid = (String) hint.getAdapter(String.class);
+			if (vid != null) {
+				return getParser(«EXPAND xpt::editor::VisualIDRegistry::getVisualIDMethodCall FOR editorGen.diagram»(vid));
+			}
+			org.eclipse.gmf.runtime.notation.View view =
+					(org.eclipse.gmf.runtime.notation.View) hint.getAdapter(org.eclipse.gmf.runtime.notation.View.class);
+			if (view != null) {
+				return getParser(«EXPAND xpt::editor::VisualIDRegistry::getVisualIDMethodCall FOR editorGen.diagram»(view));
+			}
         }
-		return parser;
+		return null;
 	}
 «ENDDEFINE»
 

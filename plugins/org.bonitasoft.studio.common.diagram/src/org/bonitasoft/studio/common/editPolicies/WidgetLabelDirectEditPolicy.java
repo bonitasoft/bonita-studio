@@ -16,6 +16,10 @@
  */
 package org.bonitasoft.studio.common.editPolicies;
 
+import org.bonitasoft.studio.model.form.HiddenWidget;
+import org.bonitasoft.studio.model.form.HtmlWidget;
+import org.bonitasoft.studio.model.form.IFrameWidget;
+import org.bonitasoft.studio.model.form.MessageInfo;
 import org.bonitasoft.studio.model.form.Widget;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
@@ -90,11 +94,28 @@ public class WidgetLabelDirectEditPolicy extends LabelDirectEditPolicy {
         if (model instanceof View) {
             View view = (View)model;
             Widget resolveSemanticElement = (Widget) ViewUtil.resolveSemanticElement(view);
-            elementAdapter = new EObjectAdapterEx(resolveSemanticElement.getDisplayLabel(),
-                    view);
+           if(!(resolveSemanticElement instanceof MessageInfo)
+        		   && !(resolveSemanticElement instanceof IFrameWidget)
+        		   && !(resolveSemanticElement instanceof HiddenWidget)
+        		   && !(resolveSemanticElement instanceof HtmlWidget)){
+        	   elementAdapter = new EObjectAdapterEx(resolveSemanticElement.getDisplayLabel(),
+                       view);
+           }else{
+        	   elementAdapter = new EObjectAdapterEx(resolveSemanticElement,
+                       view);
+           }
+         
         }
         else{
-            elementAdapter = new EObjectAdapterEx(((Widget)model).getDisplayLabel(), null);
+        	 if(!(model instanceof MessageInfo)
+          		   && !(model instanceof IFrameWidget)
+          		   && !(model instanceof HiddenWidget)
+          		   && !(model instanceof HtmlWidget)){
+        		  elementAdapter = new EObjectAdapterEx(((Widget)model).getDisplayLabel(), null);
+        	 }else{
+        		  elementAdapter = new EObjectAdapterEx(((Widget)model), null);
+        	 }
+          
         }
         // check to make sure an edit has occurred before returning a command.
         String prevText = compartment.getParser().getEditString(elementAdapter,
