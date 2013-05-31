@@ -35,5 +35,13 @@
       </handler>
 
    </extension>
+   <extension
+         point="org.bonitasoft.studio.coolbarContributionItem">
+      <coolbarItem
+            class="org.bonitasoft.studio.form.preview.coolbar.FormPreviewCoolbarItem"
+            priority="0"
+            toolbarPosition="13">
+      </coolbarItem>
+   </extension>
 
 </plugin>

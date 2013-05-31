@@ -889,11 +889,6 @@
             toolbarPosition="19">
       </coolbarItem>
       <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.FormPreviewCoolbarItem"
-            priority="0"
-            toolbarPosition="13">
-      </coolbarItem>
-      <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.SeparatorCoolbarItem"
             priority="0"
             toolbarPosition="14">

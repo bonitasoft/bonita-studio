@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.coolbar;
+package org.bonitasoft.studio.form.preview.coolbar;
 
-import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.form.preview.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
@@ -187,9 +187,9 @@ public class FormPreviewCoolbarItem implements IBonitaContributionItem {
 	@Override
 	public void fill(ToolBar toolbar, int index, int iconSize) {
 		ToolItem item = new ToolItem(toolbar,  SWT.PUSH) ;
-		item.setToolTipText(Messages.PreviewFormLabel) ;
+		item.setToolTipText(Messages.previewButton) ;
 		if(iconSize < 0 ){
-			item.setText(Messages.PreviewFormLabel) ;
+			item.setText(Messages.previewButton) ;
 			item.setImage(Pics.getImage(PicsConstants.coolbar_preview_48)) ;
 			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_preview_disabled_48));
 		}else{
