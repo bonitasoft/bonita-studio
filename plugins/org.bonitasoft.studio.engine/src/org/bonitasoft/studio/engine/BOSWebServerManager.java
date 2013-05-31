@@ -207,7 +207,6 @@ public class BOSWebServerManager {
 	private void waitServerRunning(IProgressMonitor monitor) {
 		int totalTime = 0 ;
 		while (totalTime < MAX_SERVER_START_TIME && tomcat != null && tomcat.getServerState() != IServer.STATE_STARTED) {
-			System.out.println(tomcat.getServerState());
 			try {
 				Thread.sleep(1000);
 				totalTime = totalTime + 1000;
