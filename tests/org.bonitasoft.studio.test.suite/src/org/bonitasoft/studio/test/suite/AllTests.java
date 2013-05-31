@@ -127,8 +127,7 @@ import org.junit.runners.Suite;
     TestShowEngineLog.class,
     TestAutoLogin.class,
     TestURLs.class,
-    CloseAllEditors.class,
-    ShowLeakReport.class
+    CloseAllEditors.class
 })
 public class AllTests {
 
