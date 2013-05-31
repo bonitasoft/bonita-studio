@@ -340,116 +340,115 @@ public class DataWizardPage extends WizardPage {
 	}
 
 	protected void updateDatabinding() {
-		if(pageSupport != null){
-			pageSupport.dispose();
-		}
-		if (emfDatabindingContext != null) {
-			emfDatabindingContext.dispose();
-		}
-		emfDatabindingContext = new EMFDataBindingContext();
+		if(nameText != null && !nameText.isDisposed()){
+			if(pageSupport != null){
+				pageSupport.dispose();
+			}
+			if (emfDatabindingContext != null) {
+				emfDatabindingContext.dispose();
+			}
+			emfDatabindingContext = new EMFDataBindingContext();
 
-		bindNameAndDescription();
-		bindGenerateDataCheckbox();
-		bindDataTypeCombo();
-		bindJavaClassText();
-		bindXSDCombo();
-		bindTransientButton();
-		bindDefaultValueViewer();
-		bindIsMultipleData();
+			bindNameAndDescription();
+			bindGenerateDataCheckbox();
+			bindDataTypeCombo();
+			bindJavaClassText();
+			bindXSDCombo();
+			bindTransientButton();
+			bindDefaultValueViewer();
+			bindIsMultipleData();
 
-		typeDescriptionDecorator.setDescriptionText(getHintFor(data.getDataType()));
+			typeDescriptionDecorator.setDescriptionText(getHintFor(data.getDataType()));
 
-		MultiValidator returnTypeValidator = new MultiValidator() {
+			MultiValidator returnTypeValidator = new MultiValidator() {
 
-			@Override
-			protected IStatus validate() {
-				final IViewerObservableValue selectedType = ViewersObservables.observeSingleSelection(typeCombo);
-				DataType type = (DataType) selectedType.getValue();
-				String technicalTypeFor = DataUtil.getTechnicalTypeFor(ModelHelper.getMainProcess(container), type.getName()).replace(Messages.dataTechnicalTypeLabel+" ", "");
-				if(data instanceof JavaObjectData){
-					technicalTypeFor = ((JavaObjectData) data).getClassName();
-				}
-				final Expression defaultValueExp = (Expression) observeSingleSelectionDefaultValueExpression.getValue() ;
-				if(defaultValueExp != null){
-					final IObservableValue returnTypeObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
-					final IObservableValue contentObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__CONTENT);
-					final IObservableValue typeObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__TYPE);
-					final IObservableValue multipleObservable = EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__MULTIPLE);
-					
-					final String expressionType = (String) typeObservable.getValue();
-					if(contentObservable.getValue() != null && contentObservable.getValue().toString().isEmpty()){//ERASE BUTTON
-						returnTypeObservable.setValue(getSelectedReturnType());
+				@Override
+				protected IStatus validate() {
+					final IViewerObservableValue selectedType = ViewersObservables.observeSingleSelection(typeCombo);
+					DataType type = (DataType) selectedType.getValue();
+					String technicalTypeFor = DataUtil.getTechnicalTypeFor(ModelHelper.getMainProcess(container), type.getName()).replace(Messages.dataTechnicalTypeLabel+" ", "");
+					if(data instanceof JavaObjectData){
+						technicalTypeFor = ((JavaObjectData) data).getClassName();
 					}
-					final String returnType = (String) returnTypeObservable.getValue();
-					boolean isMultiple =  (Boolean) multipleObservable.getValue();
-					if(isMultiple){
-						if(returnType != null && !returnType.isEmpty() && !isReturnTypeCompatible(multipleReturnType, returnType)){
-							return ValidationStatus.error(Messages.dataWizardPageReturnTypeNotCorresponding);
-						}
-						return ValidationStatus.ok();
-					}
+					final Expression defaultValueExp = (Expression) observeSingleSelectionDefaultValueExpression.getValue() ;
+					if(defaultValueExp != null){
+						final IObservableValue returnTypeObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+						final IObservableValue contentObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+						final IObservableValue typeObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__TYPE);
+						final IObservableValue multipleObservable = EMFObservables.observeValue(data, ProcessPackage.Literals.DATA__MULTIPLE);
 
-					if(returnType != null && !returnType.isEmpty() && !isReturnTypeCompatible(technicalTypeFor, returnType)){
-						if(Date.class.getName().equals(technicalTypeFor)){
-							if(!isReturnTypeCompatible(technicalTypeFor, returnType)){
+						final String expressionType = (String) typeObservable.getValue();
+						final String returnType = (String) returnTypeObservable.getValue();
+						boolean isMultiple =  (Boolean) multipleObservable.getValue();
+						if(isMultiple){
+							if(returnType != null && !returnType.isEmpty() && !isReturnTypeCompatible(multipleReturnType, returnType)){
 								return ValidationStatus.error(Messages.dataWizardPageReturnTypeNotCorresponding);
 							}
-						}else{
-							return ValidationStatus.error(Messages.dataWizardPageReturnTypeNotCorresponding);
+							return ValidationStatus.ok();
 						}
-					}
-					final String content = (String) contentObservable.getValue();
-					if(content != null && !content.isEmpty() && ExpressionConstants.CONSTANT_TYPE.equals(expressionType)){
-						if(Integer.class.getName().equals(returnType)){
-							try{
-								Integer.valueOf(content);
-							}catch (NumberFormatException e) {
-								return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
-							}
-						}else if(Double.class.getName().equals(returnType)){
-							try{
-								Double.valueOf(content);
-							}catch (NumberFormatException e) {
-								return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
-							}
-						}else if(Float.class.getName().equals(returnType)){
-							try{
-								Float.valueOf(content);
-							}catch (NumberFormatException e) {
-								return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
-							}
-						}else if(Long.class.getName().equals(returnType)){
-							try{
-								Long.valueOf(content);
-							}catch (NumberFormatException e) {
-								return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
-							}
-						}else if(Date.class.getName().equals(returnType)){
-							try{
-								new Date(content);
-							}catch (IllegalArgumentException e) {
-								return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+
+						if(returnType != null && !returnType.isEmpty() && !isReturnTypeCompatible(technicalTypeFor, returnType)){
+							if(Date.class.getName().equals(technicalTypeFor)){
+								if(!isReturnTypeCompatible(technicalTypeFor, returnType)){
+									return ValidationStatus.error(Messages.dataWizardPageReturnTypeNotCorresponding);
+								}
+							}else{
+								return ValidationStatus.error(Messages.dataWizardPageReturnTypeNotCorresponding);
 							}
 						}
+						final String content = (String) contentObservable.getValue();
+						if(content != null && !content.isEmpty() && ExpressionConstants.CONSTANT_TYPE.equals(expressionType)){
+							if(Integer.class.getName().equals(returnType)){
+								try{
+									Integer.valueOf(content);
+								}catch (NumberFormatException e) {
+									return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+								}
+							}else if(Double.class.getName().equals(returnType)){
+								try{
+									Double.valueOf(content);
+								}catch (NumberFormatException e) {
+									return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+								}
+							}else if(Float.class.getName().equals(returnType)){
+								try{
+									Float.valueOf(content);
+								}catch (NumberFormatException e) {
+									return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+								}
+							}else if(Long.class.getName().equals(returnType)){
+								try{
+									Long.valueOf(content);
+								}catch (NumberFormatException e) {
+									return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+								}
+							}else if(Date.class.getName().equals(returnType)){
+								try{
+									new Date(content);
+								}catch (IllegalArgumentException e) {
+									return ValidationStatus.warning(Messages.dataDefaultValueNotCompatibleWithReturnType);
+								}
+							}
+						}
 					}
-				}
-				return ValidationStatus.ok();
+					return ValidationStatus.ok();
 
-			}
-
-			protected boolean isReturnTypeCompatible(String technicalTypeFor, final String returnType) {
-				try{
-					Class typeClass = Class.forName(technicalTypeFor);
-					Class returnTypeClass = Class.forName(returnType);
-					return typeClass.isAssignableFrom(returnTypeClass);
-				}catch (Exception e) {
-					return returnType.equals(technicalTypeFor);
 				}
 
-			}
-		};
-		emfDatabindingContext.addValidationStatusProvider(returnTypeValidator);
-		pageSupport = WizardPageSupport.create(this, emfDatabindingContext);
+				protected boolean isReturnTypeCompatible(String technicalTypeFor, final String returnType) {
+					try{
+						Class typeClass = Class.forName(technicalTypeFor);
+						Class returnTypeClass = Class.forName(returnType);
+						return typeClass.isAssignableFrom(returnTypeClass);
+					}catch (Exception e) {
+						return returnType.equals(technicalTypeFor);
+					}
+
+				}
+			};
+			emfDatabindingContext.addValidationStatusProvider(returnTypeValidator);
+			pageSupport = WizardPageSupport.create(this, emfDatabindingContext);
+		}
 	}
 
 	protected void bindIsMultipleData() {
@@ -754,6 +753,20 @@ public class DataWizardPage extends WizardPage {
 		defaultValueViewer.getControl().setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 		defaultValueViewer.setContext(container);
 
+		ToolItem eraseItem = defaultValueViewer.getEraseControl();
+		eraseItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final Expression defaultValueExp = (Expression) observeSingleSelectionDefaultValueExpression.getValue() ;
+				if(defaultValueExp != null){
+					final IObservableValue returnTypeObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE);
+					final IObservableValue contentObservable = EMFObservables.observeValue(defaultValueExp, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+					if(contentObservable.getValue() != null && contentObservable.getValue().toString().isEmpty()){//ERASE BUTTON
+						returnTypeObservable.setValue(getSelectedReturnType());
+					}
+				}
+			}
+		});
 
 		final Set<String> availableDataNames = new HashSet<String>();
 		if(!(container instanceof AbstractProcess)){
