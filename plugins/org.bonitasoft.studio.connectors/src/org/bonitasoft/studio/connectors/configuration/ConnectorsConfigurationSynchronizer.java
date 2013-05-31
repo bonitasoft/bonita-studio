@@ -59,15 +59,6 @@ public class ConnectorsConfigurationSynchronizer extends AbstractConnectorConfig
 
 
 	private DatabaseConnectorPropertiesRepositoryStore store;
-	private Set<String> addedJars = new HashSet<String>();
-	
-	@Override
-	public void synchronize(Configuration configuration,
-			AbstractProcess process, CompoundCommand cc,
-			EditingDomain editingDomain) {
-		addedJars.clear();
-		super.synchronize(configuration, process, cc, editingDomain);
-	}
 	
 	
 	@Override
