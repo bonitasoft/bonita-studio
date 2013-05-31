@@ -20,12 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -94,7 +96,21 @@ public class DataDefaultValueMigration extends ReportCustomMigration {
 					expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
 				}
 				data.set("defaultValue", expression);
+				data.set("datasourceId", getDatasource(data));
 			}
+		}
+	}
+
+	private String getDatasource(Instance data) {
+		EReference feature = data.getContainerReference();
+		if(feature.equals(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA)
+				|| feature.equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA)
+				|| feature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA)){
+			return DatasourceConstants.PAGEFLOW_DATASOURCE ;
+		}else if(data.get("transient")){
+			return DatasourceConstants.IN_MEMORY_DATASOURCE;
+		}else{
+			return DatasourceConstants.BOS_DATASOURCE ;
 		}
 	}
 }
