@@ -60,8 +60,11 @@ import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.server.tomcat.core.internal.ITomcatServer;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
@@ -139,6 +142,7 @@ public class BOSWebServerManager {
 			}
 		} catch (IOException e) {
 			BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
+			
 		}
 
 	}
@@ -176,6 +180,7 @@ public class BOSWebServerManager {
 				waitServerRunning(monitor);
 			} catch (CoreException e) {
 				BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
+				MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "", "Tomcat cannot be launched:\nthe port might be already used by another application.\nPossible causes are that another Studio or another Tomcat is already running.");
 			}
 
 		}
@@ -202,6 +207,7 @@ public class BOSWebServerManager {
 	private void waitServerRunning(IProgressMonitor monitor) {
 		int totalTime = 0 ;
 		while (totalTime < MAX_SERVER_START_TIME && tomcat != null && tomcat.getServerState() != IServer.STATE_STARTED) {
+			System.out.println(tomcat.getServerState());
 			try {
 				Thread.sleep(1000);
 				totalTime = totalTime + 1000;
@@ -213,7 +219,17 @@ public class BOSWebServerManager {
 			if(tomcat.getServerState() == IServer.STATE_STARTED){
 				BonitaStudioLog.debug("Tomcat server started.", EnginePlugin.PLUGIN_ID);
 			}else{
-				BonitaStudioLog.debug("Tomcat failed to start.", EnginePlugin.PLUGIN_ID);	
+				BonitaStudioLog.debug("Tomcat failed to start.", EnginePlugin.PLUGIN_ID);
+				Display.getDefault().syncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+								Messages.cannotStartTomcatTitle,
+								Messages.cannotStartTomcatMessage);
+					}
+				});
+				return;
 			}
 		}
 
@@ -242,6 +258,8 @@ public class BOSWebServerManager {
 			}
 		}	
 		BonitaStudioLog.error("Failed to login to engine after "+MAX_LOGGING_TRY+" tries", EnginePlugin.PLUGIN_ID);
+		
+	
 	}
 
 	protected void createLaunchConfiguration(IServer server,IProgressMonitor monitor) throws CoreException {

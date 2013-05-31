@@ -82,6 +82,8 @@ public class Messages extends NLS {
 	public static String noBrowserFoundMsg;
 	public static String noBrowserFoundTitle;
 	public static String waitingForOrganizationPublish;
+	public static String cannotStartTomcatTitle;
+	public static String cannotStartTomcatMessage;
     
     static {
         NLS.initializeMessages("messages", Messages.class); //$NON-NLS-1$
