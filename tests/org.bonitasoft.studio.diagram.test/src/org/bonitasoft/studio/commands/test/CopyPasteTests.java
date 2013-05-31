@@ -220,7 +220,7 @@ public class CopyPasteTests extends SWTBotGefTestCase {
         editor1.select(poolPart);
         editor1.clickContextMenu("Paste");
 
-        SWTBotGefEditPart copyStepPart = editor1.getEditPart("Copy_of_Step1").parent();
+        SWTBotGefEditPart copyStepPart = editor1.getEditPart("Copy of Step1").parent();
         editor1.select(copyStepPart);
 
 
