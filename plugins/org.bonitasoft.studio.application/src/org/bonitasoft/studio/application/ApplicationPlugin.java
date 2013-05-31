@@ -51,14 +51,6 @@ public class ApplicationPlugin extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		init(context);
-		
-		for(IConfigurationElement el :	BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.eclipse.ui.handlers")){
-			String attribute = el.getAttribute("commandId");
-			if(attribute.equals("org.bonitasoft.studio.application.preview")){
-				el.createExecutableExtension("class");
-			}
-		}
-
 	}
 
 	private void init(BundleContext context) {
