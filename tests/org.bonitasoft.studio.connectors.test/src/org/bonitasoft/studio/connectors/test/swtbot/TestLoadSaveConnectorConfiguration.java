@@ -114,7 +114,7 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 			
 			public boolean test() throws Exception {
 				wizardTree.getTreeItem(saveName).select();
-				return wizardTree.selectionCount() > 0;
+				return wizardTree.selectionCount() > 0 ;
 			}
 			
 			public void init(SWTBot bot) {
@@ -126,7 +126,10 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 			}
 		},10000,1000);
 		
+		assertTrue("Finish button should be enable", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
 		bot.button(IDialogConstants.FINISH_LABEL).click();
+		
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)));
 		bot.button(IDialogConstants.NEXT_LABEL).click();
 		assertEquals("text field should be completed with hello world",bot.textWithLabel("text").getText(),"hello world");
 		//remove configuration
