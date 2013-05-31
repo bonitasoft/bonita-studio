@@ -262,7 +262,11 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 			MainProcess diagram = ModelHelper.getMainProcess(element);
 			final OpenNameAndVersionDialog dialog1 = new OpenNameAndVersionDialog(Display.getDefault().getActiveShell(),diagram,element.getName(), ((Pool) element).getVersion(),diagramStore) ;
 			if(dialog1.open() == Dialog.OK ) {
-				proceedForPools(dialog1);
+				String oldPoolName = element.getName() ;
+				final String newPoolName = dialog1.getDiagramName() ;
+				final String oldVersion = ((Pool) element).getVersion() ;
+				final String newVersion = dialog1.getDiagramVersion() ;
+				proceedForPools(element,newPoolName,oldPoolName,oldVersion,newVersion);
 			}
 
 		}else{
@@ -302,12 +306,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 	}
 
 
-	private void proceedForPools(final OpenNameAndVersionDialog dialog1) {
-		String oldPoolName = element.getName() ;
-		final String newPoolName = dialog1.getDiagramName() ;
-		final String oldVersion = ((Pool) element).getVersion() ;
-		final String newVersion = dialog1.getDiagramVersion() ;
-
+	private void proceedForPools(final Element pool,final String newPoolName,final String oldPoolName,final String oldVersion,final String newVersion) {
 		List<AbstractProcess> processes = diagramStore.getAllProcesses() ;
 		StringBuilder activitiesToUpdateMsg = new StringBuilder() ;
 		final Set<CallActivity> toUpdate = new HashSet<CallActivity>();
@@ -335,8 +334,8 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 		}
 
 		CompoundCommand cc = new CompoundCommand("Rename pool") ;
-		cc.append(SetCommand.create(editingDomain,element, ProcessPackage.eINSTANCE.getElement_Name(), newPoolName)) ;
-		cc.append(SetCommand.create(editingDomain, element, ProcessPackage.eINSTANCE.getAbstractProcess_Version(), newVersion)) ;
+		cc.append(SetCommand.create(editingDomain,pool, ProcessPackage.eINSTANCE.getElement_Name(), newPoolName)) ;
+		cc.append(SetCommand.create(editingDomain, pool, ProcessPackage.eINSTANCE.getAbstractProcess_Version(), newVersion)) ;
 		editingDomain.getCommandStack().execute(cc) ;
 
 		if(!toUpdate.isEmpty() && MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.updateReferencesTitle, Messages.bind(Messages.updateReferencesMsg,activitiesToUpdateMsg.toString()))){
@@ -427,10 +426,11 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 
 
 	private void changeProcessNameAndVersion(final AbstractProcess process,final String name, final String version) {
-		CompoundCommand cc = new CompoundCommand() ;
-		cc.append(SetCommand.create(editingDomain, process, ProcessPackage.eINSTANCE.getElement_Name(), name)) ;
-		cc.append(SetCommand.create(editingDomain, process, ProcessPackage.eINSTANCE.getAbstractProcess_Version(), version)) ;
-		editingDomain.getCommandStack().execute(cc) ;
+//		CompoundCommand cc = new CompoundCommand() ;
+//		cc.append(SetCommand.create(editingDomain, process, ProcessPackage.eINSTANCE.getElement_Name(), name)) ;
+//		cc.append(SetCommand.create(editingDomain, process, ProcessPackage.eINSTANCE.getAbstractProcess_Version(), version)) ;
+//		editingDomain.getCommandStack().execute(cc) ;
+		proceedForPools(process, name, process.getName(), ((AbstractProcess) process).getVersion(), version);
 		if(process instanceof MainProcess){
 			editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID, ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId((MainProcess) process)));
 		}
