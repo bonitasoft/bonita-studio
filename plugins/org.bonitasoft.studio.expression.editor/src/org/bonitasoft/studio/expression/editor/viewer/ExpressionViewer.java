@@ -163,6 +163,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	protected boolean isPassword;
 	private DefaultToolTip textTooltip;
 	private IExpressionProposalLabelProvider expressionProposalLableProvider;
+	private ContentAssistText contentAssistText;
 
 	public ExpressionViewer(Composite composite,int style, EReference expressionReference) {
 		this(composite,style,null,null,expressionReference) ;
@@ -294,12 +295,16 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			autoCompletion.setExpressionProposalLabelProvider(expressionProposalLableProvider);
 		}
 	}
+	
+	public ContentAssistText getContentAssistText() {
+		return contentAssistText;
+	}
 
 	protected void createTextControl(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
 		if(expressionProposalLableProvider == null){
 			expressionProposalLableProvider = new ExpressionLabelProvider();
 		}
-		final ContentAssistText contentAssistText = new ContentAssistText(control,expressionProposalLableProvider, style);
+		contentAssistText = new ContentAssistText(control,expressionProposalLableProvider, style);
 		textControl = contentAssistText.getTextControl();
 		if(widgetFactory != null){
 			widgetFactory.adapt(textControl,false,false) ;

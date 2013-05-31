@@ -31,6 +31,8 @@ public class GroovyOnlyExpressionViewer extends ExpressionViewer {
 
 	public GroovyOnlyExpressionViewer(Composite composite, int style,EReference expressionReference) {
 		super(composite, style, expressionReference);
+		getContentAssistText().getToolbar().getItem(0).setEnabled(false);
+		
 	}
 
 	@Override
