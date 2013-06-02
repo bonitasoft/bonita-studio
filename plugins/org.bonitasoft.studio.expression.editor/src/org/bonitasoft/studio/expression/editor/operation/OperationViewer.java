@@ -201,12 +201,39 @@ public class OperationViewer extends Composite {
 							operatorTooltip.setText(action.getOperator().getExpression());
 						}
 						operationReturnTypeValidator.setDataExpression(action.getLeftOperand());
+						updateRightOperandReturnType(action);
 						actionExpression.validate();
 						operatorLink.getParent().layout(true,true) ;
 					}
 				}
 			}) ;
 		}
+	}
+
+	protected void updateRightOperandReturnType(Operation action) {
+		Operator operator = action.getOperator();
+		Expression right = action.getRightOperand();
+		Expression left = action.getLeftOperand();
+		if(operator.getType().equals(ExpressionConstants.ASSIGNMENT_OPERATOR) 
+				&& ExpressionConstants.CONSTANT_TYPE.equals(right.getType())
+				&& !left.getReturnType().equals(right.getReturnType())
+				&& isPrimitiveType(left.getReturnType())){
+			if(editingDomain == null){
+				right.setReturnType(right.getReturnType()) ;
+			}else{
+				editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, right, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, left.getReturnType())) ;
+			}
+		}
+		
+	}
+
+	private boolean isPrimitiveType(String returnType) {
+		return returnType.equals(String.class.getName()) 
+				|| returnType.equals(Integer.class.getName()) 
+				|| returnType.equals(Long.class.getName()) 
+				|| returnType.equals(Boolean.class.getName()) 
+				|| returnType.equals(Double.class.getName())
+				|| returnType.equals(Float.class.getName()) ;
 	}
 
 	protected void doCreateControls() {

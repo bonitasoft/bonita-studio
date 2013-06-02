@@ -82,6 +82,7 @@ public class Messages extends NLS {
 	public static String handleShellCloseEventMessage;
 	public static String editXpathExpressionTooltip;
 	public static String editJavaExpressionTooltip;
+	public static String expressionValueNotCompatibleWithReturnType;
 
 
     private Messages() {

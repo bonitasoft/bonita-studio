@@ -119,7 +119,39 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 								expressionName));
 					}
 				}
+				
+				if(ExpressionConstants.CONSTANT_TYPE.equals(expression.getType())){
+					String returnType = expression.getReturnType();
+					if(expressionContent != null && !expressionContent.isEmpty()){
+						if(Integer.class.getName().equals(returnType)){
+							try{
+								Integer.valueOf(expressionContent);
+							}catch (NumberFormatException e) {
+								return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType,expressionContent,returnType));
+							}
+						}else if(Double.class.getName().equals(returnType)){
+							try{
+								Double.valueOf(expressionContent);
+							}catch (NumberFormatException e) {
+								return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType,expressionContent,returnType));
+							}
+						}else if(Float.class.getName().equals(returnType)){
+							try{
+								Float.valueOf(expressionContent);
+							}catch (NumberFormatException e) {
+								return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType,expressionContent,returnType));
+							}
+						}else if(Long.class.getName().equals(returnType)){
+							try{
+								Long.valueOf(expressionContent);
+							}catch (NumberFormatException e) {
+								return ValidationStatus.warning(Messages.bind(Messages.expressionValueNotCompatibleWithReturnType,expressionContent,returnType));
+							}
+						}
+					}
 
+				}
+				
 			}
 		}
 		return ValidationStatus.ok();
