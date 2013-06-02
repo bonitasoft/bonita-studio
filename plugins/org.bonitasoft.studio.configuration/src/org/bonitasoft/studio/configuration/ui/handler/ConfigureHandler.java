@@ -16,9 +16,12 @@
  */
 package org.bonitasoft.studio.configuration.ui.handler;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.configuration.ConfigurationPlugin;
+import org.bonitasoft.studio.configuration.i18n.Messages;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
 import org.bonitasoft.studio.configuration.ui.wizard.ConfigurationWizard;
 import org.bonitasoft.studio.configuration.ui.wizard.ConfigurationWizardDialog;
@@ -28,15 +31,18 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
@@ -44,87 +50,95 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ConfigureHandler extends AbstractHandler {
 
-    private IStatus status;
+	private IStatus status;
 
-    public ConfigureHandler(){
+	public ConfigureHandler(){
 
-    }
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
-    @Override
-    public Object execute(final ExecutionEvent event) throws ExecutionException {
-        status = Status.OK_STATUS ;
-        Display.getDefault().syncExec(new Runnable() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 */
+	@Override
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
+		status = Status.OK_STATUS ;
+		IProgressService service = PlatformUI.getWorkbench().getProgressService();
+		try {
+			service.run(false, false, new IRunnableWithProgress() {
 
-            @Override
-            public void run() {
-                String configuration = null ;
-                AbstractProcess process = null ;
-                if(event != null){
-                    configuration = event.getParameter("configuration") ;
-                    process = (AbstractProcess) event.getParameters().get("process") ;
-                }
-                if(configuration == null || configuration.isEmpty()){
-                    configuration = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON ;
-                }
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException,
+				InterruptedException {
+					monitor.beginTask(Messages.synchronizingConfiguration, 0);
+					String configuration = null ;
+					AbstractProcess process = null ;
+					if(event != null){
+						configuration = event.getParameter("configuration") ;
+						process = (AbstractProcess) event.getParameters().get("process") ;
+					}
+					if(configuration == null || configuration.isEmpty()){
+						configuration = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON ;
+					}
 
-                MainProcess diagram = null ;
+					MainProcess diagram = null ;
 
-                if( process == null ){
-                    process = getSelectedProcess() ;
-                    diagram = getCurrentDiagram() ;
-                }else{
-                    diagram = (MainProcess) process.eContainer();
-                }
+					if( process == null ){
+						process = getSelectedProcess() ;
+						diagram = getCurrentDiagram();
+					}else{
+						diagram = (MainProcess) process.eContainer();
+					}
 
-                ConfigurationWizard wizard = new ConfigurationWizard(diagram,process,configuration) ;
-                ConfigurationWizardDialog dialog = new ConfigurationWizardDialog(Display.getDefault().getActiveShell(), wizard) ;
+					ConfigurationWizard wizard = new ConfigurationWizard(diagram,process,configuration) ;
+					ConfigurationWizardDialog dialog = new ConfigurationWizardDialog(Display.getDefault().getActiveShell(), wizard) ;
+					if(dialog.open() != Dialog.OK){
+						status = Status.CANCEL_STATUS ;
+					}else{
+						status = Status.OK_STATUS ;
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			status = new Status(IStatus.ERROR, ConfigurationPlugin.PLUGIN_ID, e.getMessage(),e);
+		} catch (InterruptedException e) {
+			status = new Status(IStatus.ERROR, ConfigurationPlugin.PLUGIN_ID, e.getMessage(),e);
+		}
+		return status ;
+	}
 
-                if(dialog.open() != Dialog.OK){
-                    status = Status.CANCEL_STATUS ;
-                }else{
-                    status = Status.OK_STATUS ;
-                }
-            }
-        }) ;
-        return status ;
-    }
+	private MainProcess getCurrentDiagram() {
+		IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+		if(part != null && part instanceof DiagramEditor){
+			EObject root = ((DiagramEditor)part).getDiagramEditPart().resolveSemanticElement() ;
+			return ModelHelper.getMainProcess(root) ;
+		}
+		return null;
+	}
 
-    private MainProcess getCurrentDiagram() {
-        IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-        if(part != null && part instanceof DiagramEditor){
-            EObject root = ((DiagramEditor)part).getDiagramEditPart().resolveSemanticElement() ;
-            return ModelHelper.getMainProcess(root) ;
-        }
-        return null;
-    }
+	@SuppressWarnings("rawtypes")
+	private AbstractProcess getSelectedProcess() {
+		if( PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
+			IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+			if(part != null && part instanceof DiagramEditor){
+				EObject rootElement = ((DiagramEditor)part).getDiagramEditPart().resolveSemanticElement();
+				if(rootElement instanceof Form){
+					return ModelHelper.getParentProcess(rootElement) ;
+				}
+				List selection = ((DiagramEditor)part).getDiagramGraphicalViewer().getSelectedEditParts() ;
+				if(!selection.isEmpty()){
+					if(selection.get(0) instanceof IGraphicalEditPart){
+						IGraphicalEditPart selectedPart = (IGraphicalEditPart) selection.get(0) ;
+						return ModelHelper.getParentProcess(selectedPart.resolveSemanticElement());
+					}
+				}
+			}
+		}
+		return null;
+	}
 
-    @SuppressWarnings("rawtypes")
-    private AbstractProcess getSelectedProcess() {
-        if( PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
-            IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-            if(part != null && part instanceof DiagramEditor){
-                EObject rootElement = ((DiagramEditor)part).getDiagramEditPart().resolveSemanticElement();
-                if(rootElement instanceof Form){
-                    return ModelHelper.getParentProcess(rootElement) ;
-                }
-                List selection = ((DiagramEditor)part).getDiagramGraphicalViewer().getSelectedEditParts() ;
-                if(!selection.isEmpty()){
-                    if(selection.get(0) instanceof IGraphicalEditPart){
-                        IGraphicalEditPart selectedPart = (IGraphicalEditPart) selection.get(0) ;
-                        return ModelHelper.getParentProcess(selectedPart.resolveSemanticElement());
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return getSelectedProcess() != null ;
-    }
+	@Override
+	public boolean isEnabled() {
+		return getSelectedProcess() != null ;
+	}
 
 }
