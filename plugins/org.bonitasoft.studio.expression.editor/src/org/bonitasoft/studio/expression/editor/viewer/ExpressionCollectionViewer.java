@@ -616,12 +616,10 @@ public class ExpressionCollectionViewer {
 
 	protected void updateTableOrExpressionMode(boolean isTableMode) {
 		initializeTableOrExpression(isTableMode);
-
-		Shell shell = mainComposite.getShell();
-		Point defaultSize = shell.getSize();
-		Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		shell.setSize(defaultSize.x, size.y);
-		shell.layout(true, true);
+		Point defaultSize = mainComposite.getSize();
+		Point size = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+		mainComposite.setSize(defaultSize.x, size.y);
+		mainComposite.layout(true, true);
 
 		for (Listener listener : listeners) {
 			listener.handleEvent(null);
