@@ -18,6 +18,10 @@
 
 package org.bonitasoft.studio.connectors.ui.wizard.command;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.model.process.ConnectableElement;
 import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.core.commands.ExecutionException;
@@ -34,33 +38,38 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCo
  */
 public class ChangeConnectorContainerCommand extends AbstractTransactionalCommand {
 
-    private final Connector connector;
-    private final ConnectableElement source;
-    private final ConnectableElement target;
-    private final boolean copy;
-    private Connector connectorCopy;
+	private final Connector connector;
+	private final ConnectableElement source;
+	private final ConnectableElement target;
+	private final boolean copy;
+	private Connector connectorCopy;
 
-    public ChangeConnectorContainerCommand(TransactionalEditingDomain editingDomain, Connector  connector , ConnectableElement target, boolean copy){
-        super(editingDomain,ChangeConnectorContainerCommand.class.getName(),getWorkspaceFiles(connector));
-        this.connector = connector ;
-        this.target = target ;
-        source = (ConnectableElement) connector.eContainer() ;
-        this.copy = copy ;
-    }
+	public ChangeConnectorContainerCommand(TransactionalEditingDomain editingDomain, Connector  connector , ConnectableElement target, boolean copy){
+		super(editingDomain,ChangeConnectorContainerCommand.class.getName(),getWorkspaceFiles(connector));
+		this.connector = connector ;
+		this.target = target ;
+		source = (ConnectableElement) connector.eContainer() ;
+		this.copy = copy ;
+	}
 
 
-    @Override
-    protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
-            IAdaptable info) throws ExecutionException {
-        if(!copy){
-            source.getConnectors().remove(connector);
-            target.getConnectors().add(connector);
-        }else{
-            connectorCopy = EcoreUtil.copy(connector) ;
-            connectorCopy.setName(connectorCopy.getName()+" copy") ;
-            target.getConnectors().add(connectorCopy);
-        }
-        return CommandResult.newOKCommandResult();
-    }
+	@Override
+	protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
+			IAdaptable info) throws ExecutionException {
+		if(!copy){
+			source.getConnectors().remove(connector);
+			target.getConnectors().add(connector);
+		}else{
+			connectorCopy = EcoreUtil.copy(connector) ;
+			Set<String> existingNames = new HashSet<String>();
+			for(Connector c : target.getConnectors()){
+				existingNames.add(c.getName());
+			}
+			String name = NamingUtils.generateNewName(existingNames, connectorCopy.getName());
+			connectorCopy.setName(name) ;
+			target.getConnectors().add(connectorCopy);
+		}
+		return CommandResult.newOKCommandResult();
+	}
 
 }
