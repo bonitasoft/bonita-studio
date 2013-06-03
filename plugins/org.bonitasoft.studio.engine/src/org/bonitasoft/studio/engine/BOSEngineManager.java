@@ -195,13 +195,11 @@ public class BOSEngineManager {
 		if(!isRunning()){
 			monitor.subTask(Messages.waitingForEngineToStart) ;
 			start() ;
-			
 		}
 		if(waitForOrganization && !isOrganizationLoaded()){
 			monitor.subTask(Messages.waitingForOrganizationPublish) ;
 			loadOrganization();
 		}
-		monitor.done() ;
 		if(BonitaStudioLog.isLoggable(IStatus.OK)){
 			BonitaStudioLog.debug("Attempt to login as "+login, EnginePlugin.PLUGIN_ID);
 		}
