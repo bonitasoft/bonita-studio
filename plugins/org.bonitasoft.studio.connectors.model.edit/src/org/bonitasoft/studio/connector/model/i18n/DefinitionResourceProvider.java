@@ -168,11 +168,10 @@ public class DefinitionResourceProvider {
 
         ResourceBundle bundle = null;
         try {
-            ResourceBundle.clearCache();
             bundle = ResourceBundle.getBundle(baseName, locale, pluginControl);
         } catch (MissingResourceException e) {
             try {
-                ResourceBundle.clearCache();
+                ResourceBundle.clearCache(); //Clear the cache to always have updated i18n for custom connectors
                 bundle = ResourceBundle.getBundle(baseName, locale,
                         storeControl);
             } catch (MissingResourceException e1) {
