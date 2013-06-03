@@ -22,6 +22,7 @@ import org.bonitasoft.studio.data.ui.property.section.AbstractDataSection;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
@@ -36,12 +37,26 @@ public class DataWizardDialog extends WizardDialog {
 	private final AbstractDataSection dataSection;
 	private Button createAndNewButton ;
 
+	// Minimum dialog width (in dialog units)
+	private static final int MIN_DIALOG_WIDTH = 350;
+
+	// Minimum dialog height (in dialog units)
+	private static final int MIN_DIALOG_HEIGHT = 250;
 
 	public DataWizardDialog(Shell parentShell, IWizard newWizard,AbstractDataSection dataSection) {
 		super(parentShell, newWizard);
 		this.dataSection = dataSection;
 	}
 
+	@Override
+	protected Point getInitialSize() {
+		Point shellSize = super.getInitialSize();
+		return new Point(Math.max(
+				convertHorizontalDLUsToPixels(MIN_DIALOG_WIDTH), shellSize.x),
+				Math.max(convertVerticalDLUsToPixels(MIN_DIALOG_HEIGHT),
+						shellSize.y));
+	}
+	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent){
 		super.createButtonsForButtonBar(parent);

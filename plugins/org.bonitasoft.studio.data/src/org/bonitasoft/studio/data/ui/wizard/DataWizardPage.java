@@ -721,7 +721,7 @@ public class DataWizardPage extends WizardPage {
 	protected void createMoreSection(final Composite parent) {
 		new Label(parent, SWT.NONE);
 		moreSection = new Section(parent, ExpandableComposite.NO_TITLE_FOCUS_BOX | ExpandableComposite.TWISTIE);
-		moreSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+		moreSection.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 		moreSection.setText(Messages.additionalInformation);
 		moreSection.addExpansionListener(new IExpansionListener() {
 
