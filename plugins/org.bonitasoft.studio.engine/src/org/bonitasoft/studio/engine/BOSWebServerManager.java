@@ -487,6 +487,7 @@ public class BOSWebServerManager {
 
 					}
 				}
+				connected = true;
 			} catch (IOException e1) {
 				connected = false;
 				try {
@@ -495,7 +496,7 @@ public class BOSWebServerManager {
 
 				}
 			}
-			connected = true;
+
 		}
 	}
 
