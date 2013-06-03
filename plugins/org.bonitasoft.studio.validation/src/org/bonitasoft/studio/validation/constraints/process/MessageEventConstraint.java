@@ -73,23 +73,25 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
 		if(event.getTargetProcessExpression() == null || event.getTargetProcessExpression().getContent() == null || event.getTargetProcessExpression().getContent().isEmpty()){
 			return ctx.createFailureStatus(Messages.targetProcessNotSet);
 		}else{
-			final DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-			List<AbstractProcess> processes = store.findProcesses(event.getTargetProcessExpression().getContent());
-			if(processes.isEmpty()){
-				return ctx.createFailureStatus(Messages.bind(Messages.processDoesNotExist, event.getTargetProcessExpression().getContent(), event.getName()));
-			}
-			Expression targetElem = event.getTargetElementExpression();
-			if(targetElem != null && targetElem.getContent() != null && !targetElem.getContent().isEmpty() && targetElem.getType().equals(ExpressionConstants.CONSTANT_TYPE)){
-				String targetElemName = targetElem.getContent() ;
-				for(AbstractProcess p : processes){
-					List<AbstractCatchMessageEvent> events = ModelHelper.getAllItemsOfType(p, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT);
-					for(AbstractCatchMessageEvent ev : events){
-						if(targetElemName.equals(ev.getName())){
-							return ctx.createSuccessStatus();
+			if(ExpressionConstants.CONSTANT_TYPE.equals(event.getTargetProcessExpression().getType())){
+				final DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+				List<AbstractProcess> processes = store.findProcesses(event.getTargetProcessExpression().getContent());
+				if(processes.isEmpty()){
+					return ctx.createFailureStatus(Messages.bind(Messages.processDoesNotExist, event.getTargetProcessExpression().getContent(), event.getName()));
+				}
+				Expression targetElem = event.getTargetElementExpression();
+				if(targetElem != null && targetElem.getContent() != null && !targetElem.getContent().isEmpty() && targetElem.getType().equals(ExpressionConstants.CONSTANT_TYPE)){
+					String targetElemName = targetElem.getContent() ;
+					for(AbstractProcess p : processes){
+						List<AbstractCatchMessageEvent> events = ModelHelper.getAllItemsOfType(p, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT);
+						for(AbstractCatchMessageEvent ev : events){
+							if(targetElemName.equals(ev.getName())){
+								return ctx.createSuccessStatus();
+							}
 						}
 					}
+					return ctx.createFailureStatus(Messages.bind(Messages.targetCatchMessageNotExists,targetElemName,event.getTargetProcessExpression().getContent()));  
 				}
-				return ctx.createFailureStatus(Messages.bind(Messages.targetCatchMessageNotExists,targetElemName,event.getTargetProcessExpression().getContent()));  
 			}
 		}
 		return ctx.createSuccessStatus();
