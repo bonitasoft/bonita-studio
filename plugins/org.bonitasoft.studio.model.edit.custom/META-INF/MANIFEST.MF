@@ -10,7 +10,10 @@ Require-Bundle: org.eclipse.emf.edit,
  org.eclipse.core.runtime,
  org.bonitasoft.studio.common.repository,
  org.eclipse.ui,
- org.bonitasoft.studio.pics
+ org.bonitasoft.studio.pics,
+ org.eclipse.jdt.core,
+ org.eclipse.emf.edit.ui
 Export-Package: org.bonitasoft.studio.model.edit.custom.decision,
  org.bonitasoft.studio.model.edit.custom.process
 Bundle-Activator: org.bonitasoft.studio.model.edit.custom.EMFEditCustomPlugin
+Bundle-ActivationPolicy: lazy

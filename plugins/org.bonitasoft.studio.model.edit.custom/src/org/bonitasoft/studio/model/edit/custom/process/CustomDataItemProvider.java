@@ -17,9 +17,22 @@
  */
 package org.bonitasoft.studio.model.edit.custom.process;
 
+import java.net.URL;
+
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.model.edit.custom.EMFEditCustomPlugin;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.provider.DataItemProvider;
+import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Romain Bioteau
@@ -30,11 +43,36 @@ public class CustomDataItemProvider extends DataItemProvider {
 	public CustomDataItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
-	
+
 	@Override
 	public String getText(Object object) {
 		Data d = (Data) object ;
 		return "Data "+d.getName();
+	}
+
+	@Override
+	public Object getImage(Object object) {
+		Object icon = super.getImage(object);
+		if(object instanceof Data){
+			Image iconImage =  null;
+			if(icon instanceof URL){
+				iconImage = ExtendedImageRegistry.getInstance().getImage(icon);
+			}else if( icon instanceof Image){
+				iconImage = (Image) icon;
+			}
+			if(iconImage != null){
+				boolean formTransient = ((Data) object).getDatasourceId() != null && ((Data) object).getDatasourceId().equals("PAGEFLOW");
+				if(formTransient){
+					Image img = EMFEditCustomPlugin.getDefault().getImageRegistry().get("decoratedImageFor"+((EObject) object).eClass().getName());
+					if(img == null){
+						img = new DecorationOverlayIcon(iconImage,Pics.getImageDescriptor("form_decorator.png",EMFEditCustomPlugin.getDefault()),IDecoration.BOTTOM_LEFT).createImage();
+						EMFEditCustomPlugin.getDefault().getImageRegistry().put("decoratedImageFor"+((EObject) object).eClass().getName(),img);
+					}
+					return img;
+				}
+			}
+		}
+		return icon;
 	}
 
 }
