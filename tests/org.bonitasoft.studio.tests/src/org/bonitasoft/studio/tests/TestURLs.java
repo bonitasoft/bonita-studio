@@ -48,17 +48,7 @@ public class TestURLs extends TestCase {
         parameters.put(RunProcessCommand.PROCESS, diagram.getElements().get(0));
         ExecutionEvent ee = new ExecutionEvent(null,parameters,null,null);
         runProcessCommand.execute(ee);
-
         URL url = runProcessCommand.getUrl();
-        long max_timeout = System.currentTimeMillis() + 150000 ;
-        while( System.currentTimeMillis() < max_timeout && url == null){
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-
-            }
-            url =  runProcessCommand.getUrl();
-        }
         assertNotNull("Timeout exceeded while retrieveing run url",url);
         final String stringURL = url.toString();
         assertTrue("wrong Run url, it doesn't contains bonita/console/homepage; current: " +stringURL, stringURL.contains(URLEncoder.encode("bonita/console/homepage","UTF-8")));
@@ -71,16 +61,6 @@ public class TestURLs extends TestCase {
         final OpenConsoleCommand cmd = new OpenConsoleCommand(true);
         cmd.execute(null);
         URL url = cmd.getURL();
-        long max_timeout = System.currentTimeMillis() + 150000 ;
-        while(System.currentTimeMillis() < max_timeout && url == null){
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-
-            }
-            url =  cmd.getURL();
-
-        }
         assertNotNull("Timeout exceeded while retrieveing console url",url);
         final String stringURL = url.toString();
         assertTrue("wrong user User XP url, current:" +stringURL, stringURL.contains(URLEncoder.encode("bonita/console/homepage","UTF-8")));
