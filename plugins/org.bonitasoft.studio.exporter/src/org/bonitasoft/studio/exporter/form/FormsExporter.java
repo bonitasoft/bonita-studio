@@ -557,7 +557,7 @@ public class FormsExporter {
 				if (!referencedElements.isEmpty()) {
 					final EObject referencedElement = referencedElements.get(0);
 					if (referencedElement instanceof Data) {
-						return ((Data) referencedElement).isTransient();
+						return DatasourceConstants.PAGEFLOW_DATASOURCE.equals(((Data) referencedElement).getDatasourceId());
 					}
 				}
 			}
