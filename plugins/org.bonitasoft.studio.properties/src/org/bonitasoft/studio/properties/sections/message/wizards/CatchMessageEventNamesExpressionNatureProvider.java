@@ -39,7 +39,7 @@ public class CatchMessageEventNamesExpressionNatureProvider implements IExpressi
         if(process != null){
             List<String> names = new ArrayList<String>();
             for(AbstractCatchMessageEvent catchMessage :  ModelHelper.getAllCatchEvent(process)){
-                if(!names.contains(catchMessage.getName())){
+                if(!names.contains(catchMessage.getName()) && catchMessage.getIncomingMessag() == null){
                     names.add(catchMessage.getName());
                 }
             }
