@@ -34,8 +34,6 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.ReceiveTask;
-import org.bonitasoft.studio.model.process.SendTask;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -541,9 +539,7 @@ public class MultiInstantiationPropertyContribution implements IExtensibleGridPr
 	 */
 	@Override
 	public boolean isRelevantFor(EObject eObject) {
-		return eObject instanceof Activity
-				&& !(eObject instanceof ReceiveTask)
-				&& !(eObject instanceof SendTask);
+		return eObject instanceof Activity;
 	}
 
 	/* (non-Javadoc)
