@@ -62,47 +62,54 @@ public class ConfigureHandler extends AbstractHandler {
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		status = Status.OK_STATUS ;
-		IProgressService service = PlatformUI.getWorkbench().getProgressService();
-		try {
-			service.run(false, false, new IRunnableWithProgress() {
+		Display.getDefault().syncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				IProgressService service = PlatformUI.getWorkbench().getProgressService();
+				try {
+					service.run(false, false, new IRunnableWithProgress() {
 
-				@Override
-				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-				InterruptedException {
-					monitor.beginTask(Messages.synchronizingConfiguration, 0);
-					String configuration = null ;
-					AbstractProcess process = null ;
-					if(event != null){
-						configuration = event.getParameter("configuration") ;
-						process = (AbstractProcess) event.getParameters().get("process") ;
-					}
-					if(configuration == null || configuration.isEmpty()){
-						configuration = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON ;
-					}
+						@Override
+						public void run(IProgressMonitor monitor) throws InvocationTargetException,
+						InterruptedException {
+							monitor.beginTask(Messages.synchronizingConfiguration, 0);
+							String configuration = null ;
+							AbstractProcess process = null ;
+							if(event != null){
+								configuration = event.getParameter("configuration") ;
+								process = (AbstractProcess) event.getParameters().get("process") ;
+							}
+							if(configuration == null || configuration.isEmpty()){
+								configuration = ConfigurationPreferenceConstants.LOCAL_CONFIGURAITON ;
+							}
 
-					MainProcess diagram = null ;
+							MainProcess diagram = null ;
 
-					if( process == null ){
-						process = getSelectedProcess() ;
-						diagram = getCurrentDiagram();
-					}else{
-						diagram = (MainProcess) process.eContainer();
-					}
+							if( process == null ){
+								process = getSelectedProcess() ;
+								diagram = getCurrentDiagram();
+							}else{
+								diagram = (MainProcess) process.eContainer();
+							}
 
-					ConfigurationWizard wizard = new ConfigurationWizard(diagram,process,configuration) ;
-					ConfigurationWizardDialog dialog = new ConfigurationWizardDialog(Display.getDefault().getActiveShell(), wizard) ;
-					if(dialog.open() != Dialog.OK){
-						status = Status.CANCEL_STATUS ;
-					}else{
-						status = Status.OK_STATUS ;
-					}
+							ConfigurationWizard wizard = new ConfigurationWizard(diagram,process,configuration) ;
+							ConfigurationWizardDialog dialog = new ConfigurationWizardDialog(Display.getDefault().getActiveShell(), wizard) ;
+							if(dialog.open() != Dialog.OK){
+								status = Status.CANCEL_STATUS ;
+							}else{
+								status = Status.OK_STATUS ;
+							}
+						}
+					});
+				} catch (InvocationTargetException e) {
+					status = new Status(IStatus.ERROR, ConfigurationPlugin.PLUGIN_ID, e.getMessage(),e);
+				} catch (InterruptedException e) {
+					status = new Status(IStatus.ERROR, ConfigurationPlugin.PLUGIN_ID, e.getMessage(),e);
 				}
-			});
-		} catch (InvocationTargetException e) {
-			status = new Status(IStatus.ERROR, ConfigurationPlugin.PLUGIN_ID, e.getMessage(),e);
-		} catch (InterruptedException e) {
-			status = new Status(IStatus.ERROR, ConfigurationPlugin.PLUGIN_ID, e.getMessage(),e);
-		}
+			}
+		});
+		
 		return status ;
 	}
 
