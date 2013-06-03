@@ -68,11 +68,13 @@ public class UpdateMessageCommand extends AbstractTransactionalCommand {
 
         Expression targetProcessName = workingCopymessage.getTargetProcessExpression();
         if(targetProcessName  != null && targetProcessName.getContent() != null && !targetProcessName.getContent().isEmpty()){
-            for(AbstractCatchMessageEvent ev : ModelHelper.getAllCatchEvent(ModelHelper.getMainProcess(element))){
-                if(ev.getName().equals(originalMessage.getTargetElementExpression().getContent())){
-                    ev.setEvent(originalMessage.getName()) ;
-                }
-            }
+        	for(AbstractCatchMessageEvent ev : ModelHelper.getAllCatchEvent(ModelHelper.getMainProcess(element))){
+        		if(workingCopymessage.getTargetProcessExpression() != null && ModelHelper.getParentProcess(ev).getName().equals(workingCopymessage.getTargetProcessExpression().getContent())){
+        			if(ev.getName().equals(originalMessage.getTargetElementExpression().getContent())){
+        				ev.setEvent(originalMessage.getName()) ;
+        			}
+        		}
+        	}
         }
         originalMessage.setTargetProcessExpression(EcoreUtil.copy(targetProcessName));
         originalMessage.setCorrelation(workingCopymessage.getCorrelation());
