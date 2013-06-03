@@ -138,8 +138,8 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
 				}
 			}
 		}
-		cc.append(SetCommand.create(editingDomain, association, ConfigurationPackage.Literals.DEFINITION_MAPPING__IMPLEMENTATION_ID, implID)) ;
-		cc.append(SetCommand.create(editingDomain, association, ConfigurationPackage.Literals.DEFINITION_MAPPING__IMPLEMENTATION_VERSION, implVersion)) ;
+		editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, association, ConfigurationPackage.Literals.DEFINITION_MAPPING__IMPLEMENTATION_ID, implID)) ;
+		editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, association, ConfigurationPackage.Literals.DEFINITION_MAPPING__IMPLEMENTATION_VERSION, implVersion)) ;
 		if(implementation != null){
 			updateConnectorDependencies(configuration,association,implementation,cc,editingDomain,false) ;
 			importImplementationDependencies(implementation) ;
