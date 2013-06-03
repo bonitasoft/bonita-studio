@@ -21,12 +21,11 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
-import java.nio.channels.SocketChannel;
 import java.util.Date;
 import java.util.NoSuchElementException;
 
@@ -158,10 +157,10 @@ public class BOSWebServerManager {
 			BonitaHomeUtil.initBonitaHome();
 			copyTomcatBundleInWorkspace(monitor);
 			monitor.subTask(Messages.startingWebServer);
-			startWatchdog();
 			if(BonitaStudioLog.isLoggable(IStatus.OK)){
 				BonitaStudioLog.debug("Starting tomcat...", EnginePlugin.PLUGIN_ID);
 			}
+			startWatchdog();
 			if(tomcat != null){
 				try {
 					tomcat.delete();
@@ -177,6 +176,7 @@ public class BOSWebServerManager {
 				final IRuntime runtime = createServerRuntime(type);
 				tomcat = createServer(monitor, confProject, runtime);
 				createLaunchConfiguration(tomcat,monitor);
+			
 				final String mode = EnginePlugin.getDefault().getPreferenceStore().getString(EnginePreferenceConstants.TOMCAT_START_MODE);
 				tomcat.start(mode,monitor);
 				waitServerRunning(monitor);
@@ -417,7 +417,7 @@ public class BOSWebServerManager {
 		addSystemProperty(args, "java.util.logging.config.file", "\""+tomcatInstanceLocation+File.separatorChar+"conf"+File.separatorChar+"logging.properties\"");
 		addSystemProperty(args, "file.encoding", "UTF-8");
 		addSystemProperty(args, WATCHDOG_PORT_PROPERTY,String.valueOf(WATCHDOG_PORT));
-		addSystemProperty(args, WATCHDOG_TIMER,System.getProperty(WATCHDOG_TIMER, "20000"));
+		addSystemProperty(args, WATCHDOG_TIMER, System.getProperty(WATCHDOG_TIMER, "20000"));
 		addSystemProperty(args, "eclipse.product", Platform.getProduct().getApplication());
 		return args.toString();
 	}
@@ -435,8 +435,12 @@ public class BOSWebServerManager {
 				@Override
 				public void run() {
 					try {
-						watchdogServer = new ServerSocket(0);
-						WATCHDOG_PORT = watchdogServer.getLocalPort();
+						if(!isPortAvailable(WATCHDOG_PORT)){    
+							int oldPort = WATCHDOG_PORT;
+							WATCHDOG_PORT = getNextAvailable(WATCHDOG_PORT);
+							BonitaStudioLog.debug("Port "+oldPort+" is not availble for server watchdog, studio will use next available port : "+WATCHDOG_PORT,EnginePlugin.PLUGIN_ID);
+						}
+						watchdogServer = new ServerSocket(WATCHDOG_PORT,0,InetAddress.getLocalHost());
 						if(BonitaStudioLog.isLoggable(IStatus.OK)){
 							BonitaStudioLog.debug("Starting studio watchdog on "+WATCHDOG_PORT, EnginePlugin.PLUGIN_ID);
 						}
@@ -455,48 +459,9 @@ public class BOSWebServerManager {
 
 				}
 			});
-			server.setName("Bonita BPM Studio watchdog server");
-			server.setPriority(Thread.MAX_PRIORITY);
 			server.setDaemon(true);
+			server.setName("BonitaBPM Studio server watchdog");
 			server.start();
-
-			waitForWatchdogServer();
-
-		}
-	}
-
-	protected void waitForWatchdogServer() {
-		boolean connected = false;
-		while (!connected) {
-			try{
-				final SocketChannel sChannel = SocketChannel.open();
-				final Socket socket = sChannel.socket();
-				socket.connect(new InetSocketAddress(WATCHDOG_PORT));
-				while (!sChannel.finishConnect()) {
-					try {
-						Thread.sleep(100);
-					} catch (final InterruptedException e) {
-
-					}
-				}
-				socket.close();
-				while (socket.isConnected()) {
-					try {
-						Thread.sleep(100);
-					} catch (final InterruptedException e) {
-
-					}
-				}
-				connected = true;
-			} catch (IOException e1) {
-				connected = false;
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-
-				}
-			}
-
 		}
 	}
 
