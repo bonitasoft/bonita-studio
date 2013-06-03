@@ -139,11 +139,6 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         } catch (Exception e) {
             BonitaStudioLog.error(e) ;
         }
-
-        //        // Insert a progress monitor
-        //        progressMonitorPart= createProgressMonitorPart(composite, new GridLayout());
-        //        progressMonitorPart.setLayoutData(GridDataFactory.fillDefaults().span(2,1).create());
-        //        progressMonitorPart.setVisible(false);
         // Build the separator line
         Label separator = new Label(composite, SWT.HORIZONTAL | SWT.SEPARATOR);
         separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
@@ -417,8 +412,6 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         super.showPage(page);
         page.setPreviousPage(null) ;
         setControlEnabled(page.getControl(),((ConfigurationWizard) getWizard()).getProcess() != null) ;
-        ConfigurationWizard confWizard = (ConfigurationWizard) getWizard() ;
-        confWizard.updatePages() ;
         pageChooserViewer.setSelection(new StructuredSelection(getCurrentPage())) ;
         group.setText(page.getTitle());
         String processName = getProcess().getName() +" ("+getProcess().getVersion()+")";

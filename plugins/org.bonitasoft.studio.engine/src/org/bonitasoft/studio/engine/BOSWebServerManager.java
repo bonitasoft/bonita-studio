@@ -92,7 +92,7 @@ public class BOSWebServerManager {
 	protected final String tomcatInstanceLocation = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),"tomcat").getAbsolutePath();
 
 	protected static final String WATCHDOG_PORT_PROPERTY = "org.bonitasoft.studio.watchdog.port";
-    private static final String WATCHDOG_TIMER = "org.bonitasoft.studio.watchdog.timer";
+	private static final String WATCHDOG_TIMER = "org.bonitasoft.studio.watchdog.timer";
 	private static final int MIN_PORT_NUMBER = 1024;
 	private static final int MAX_PORT_NUMBER = 65535;
 	private static final int MAX_SERVER_START_TIME = 300000;
@@ -142,7 +142,7 @@ public class BOSWebServerManager {
 			}
 		} catch (IOException e) {
 			BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
-			
+
 		}
 
 	}
@@ -220,7 +220,7 @@ public class BOSWebServerManager {
 			}else{
 				BonitaStudioLog.debug("Tomcat failed to start.", EnginePlugin.PLUGIN_ID);
 				Display.getDefault().syncExec(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -244,7 +244,7 @@ public class BOSWebServerManager {
 					try {
 						BOSEngineManager.getInstance().getLoginAPI().logout(session);
 					} catch (Exception e) {
-						
+
 					} 
 					return ;
 				}
@@ -257,8 +257,8 @@ public class BOSWebServerManager {
 			}
 		}	
 		BonitaStudioLog.error("Failed to login to engine after "+MAX_LOGGING_TRY+" tries", EnginePlugin.PLUGIN_ID);
-		
-	
+
+
 	}
 
 	protected void createLaunchConfiguration(IServer server,IProgressMonitor monitor) throws CoreException {
@@ -434,13 +434,13 @@ public class BOSWebServerManager {
 
 	protected void startWatchdog() {
 		if(watchdogServer == null){
-			new Thread(new Runnable() {
+			final Thread server = new Thread(new Runnable() {
 
 				@Override
 				public void run() {
 					try {
 						if(BonitaStudioLog.isLoggable(IStatus.OK)){
-							BonitaStudioLog.debug("Starting studio watchdog", EnginePlugin.PLUGIN_ID);
+							BonitaStudioLog.debug("Starting studio watchdog on "+WATCHDOG_PORT, EnginePlugin.PLUGIN_ID);
 						}
 						watchdogServer = new ServerSocket(WATCHDOG_PORT);
 						while (watchdogServer != null) {
@@ -451,13 +451,15 @@ public class BOSWebServerManager {
 							BonitaStudioLog.debug("Studio watchdog shutdown", EnginePlugin.PLUGIN_ID);
 						}
 					}catch (SocketException e1) {
-
+						BonitaStudioLog.error(e1,EnginePlugin.PLUGIN_ID);
 					} catch (IOException e) {
 						BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
 					}
 
 				}
-			}).start();
+			});
+			server.setDaemon(true);
+			server.start();
 		}
 	}
 

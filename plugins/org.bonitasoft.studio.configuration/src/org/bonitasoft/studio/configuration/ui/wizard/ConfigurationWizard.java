@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.configuration.ui.wizard;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ModelVersion;
-import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -50,6 +50,7 @@ import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -62,8 +63,11 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.transaction.util.TransactionUtil;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
@@ -227,11 +231,26 @@ public class ConfigurationWizard extends Wizard {
         return process;
     }
 
-    public void setProcess(AbstractProcess process) {
+    public void setProcess(final AbstractProcess process) {
         this.process = process ;
-        Configuration configuration = getConfigurationFromProcess(process,configurationName) ;
+        final Configuration configuration = getConfigurationFromProcess(process,configurationName) ;
         if(configuration != null){
-            new ConfigurationSynchronizer(process, configuration).synchronize() ;
+        	IProgressService service = PlatformUI.getWorkbench().getProgressService();
+        	try {
+				service.run(true, false, new IRunnableWithProgress() {
+					
+					@Override
+					public void run(IProgressMonitor monitor) throws InvocationTargetException,
+							InterruptedException {
+						new ConfigurationSynchronizer(process, configuration).synchronize(monitor) ;
+					}
+				});
+			} catch (InvocationTargetException e) {
+				BonitaStudioLog.error(e);
+			} catch (InterruptedException e) {
+				BonitaStudioLog.error(e);
+			}
+        	
             configurationWorkingCopy = EcoreUtil.copy(configuration) ;
         }
     }
