@@ -22,10 +22,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
@@ -42,8 +40,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.viewers.DecorationOverlayIcon;
-import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -113,20 +109,7 @@ public class DataExpressionProvider implements IExpressionProvider {
 		}
 
 		EObject reference = expression.getReferencedElements().get(0);
-		boolean formTransient = false;
-		if(reference instanceof Data){
-			formTransient = ((Data) reference).getDatasourceId() != null && DatasourceConstants.PAGEFLOW_DATASOURCE.equals(((Data) reference).getDatasourceId());
-		}
-		final Image icon = adapterLabelProvider.getImage(reference) ;
-		if(formTransient){
-			Image img = DataPlugin.getDefault().getImageRegistry().get("decoratedImageFor"+reference.eClass().getName());
-			if(img == null){
-				img = new DecorationOverlayIcon(icon,Pics.getImageDescriptor("form_decorator.png", DataPlugin.getDefault()),IDecoration.BOTTOM_LEFT).createImage();
-				DataPlugin.getDefault().getImageRegistry().put("decoratedImageFor"+reference.eClass().getName(), img);
-			}
-			return img;
-		}
-		return icon;
+		return adapterLabelProvider.getImage(reference) ;
 	}
 
 	@Override
