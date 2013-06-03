@@ -216,10 +216,11 @@ public class DataWizardPage extends WizardPage {
 			updateBrowseXMLButton(newType);
 			//final Shell s = getShell();
 			if(mainComposite != null){
-				final Point defaultSize = mainComposite.getSize();
-				final Point size = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-				mainComposite.setSize(defaultSize.x, size.y);
-				mainComposite.layout(true, true);
+				final Composite parent = mainComposite.getParent();
+				final Point defaultSize = parent.getSize();
+				final Point size = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+				parent.setSize(defaultSize.x, size.y);
+				parent.layout(true, true);
 			}
 			updateDatabinding();
 		}
@@ -730,10 +731,11 @@ public class DataWizardPage extends WizardPage {
 
 			@Override
 			public void expansionStateChanged(final ExpansionEvent event) {
-				final Point defaultSize = mainComposite.getSize();
-				final Point size = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-				mainComposite.setSize(defaultSize.x, size.y);
-				mainComposite.layout(true, true);
+				final Composite parent2 = mainComposite.getParent();
+				final Point defaultSize = parent2.getSize();
+				final Point size = parent2.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+				parent2.setSize(defaultSize.x, size.y);
+				parent2.layout(true, true);
 			}
 		});
 
