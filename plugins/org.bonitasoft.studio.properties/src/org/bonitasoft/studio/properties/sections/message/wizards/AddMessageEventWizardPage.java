@@ -403,7 +403,10 @@ public class AddMessageEventWizardPage extends WizardPage implements IWizardPage
         catchEventNatureProvider = new CatchMessageEventNamesExpressionNatureProvider();
         elementExpressionViewer.setExpressionNatureProvider(catchEventNatureProvider);
         if(workingCopyMessage.getTargetElementExpression() == null){
-            workingCopyMessage.setTargetElementExpression(ExpressionFactory.eINSTANCE.createExpression());
+        	 final Expression createExpression = ExpressionFactory.eINSTANCE.createExpression();
+             createExpression.setReturnTypeFixed(true);
+             createExpression.setReturnType(String.class.getName());
+            workingCopyMessage.setTargetElementExpression(createExpression);
         }
         elementExpressionViewer.setInput(workingCopyMessage);
 
@@ -429,7 +432,10 @@ public class AddMessageEventWizardPage extends WizardPage implements IWizardPage
         processExpressionViewer.setExpressionNatureProvider(provider);
         processExpressionViewer.setContext(element);
         if(workingCopyMessage.getTargetProcessExpression() == null){
-            workingCopyMessage.setTargetProcessExpression(ExpressionFactory.eINSTANCE.createExpression());
+            final Expression createExpression = ExpressionFactory.eINSTANCE.createExpression();
+            createExpression.setReturnTypeFixed(true);
+            createExpression.setReturnType(String.class.getName());
+			workingCopyMessage.setTargetProcessExpression(createExpression);
         }
         processExpressionViewer.setInput(workingCopyMessage);
 
