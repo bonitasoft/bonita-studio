@@ -248,7 +248,7 @@ public class TokenDispatcher {
 		for(Connection c : sourceElement.getOutgoing()){
 			if(c instanceof SequenceFlow){
 				EObject target = c.getTarget();
-				if(!isOnSequenceFlowPath(c, target)){
+				//if(!isOnSequenceFlowPath(c, target)){
 					if(target instanceof ThrowLinkEvent){
 						visit((SourceElement) ((ThrowLinkEvent)target).getTo());
 					}else{
@@ -261,21 +261,21 @@ public class TokenDispatcher {
 							visit((SourceElement) target);
 						}
 					}
-				}
+				//}
 
 			}
 		}
 	}
 
-	private boolean isOnSequenceFlowPath(Connection c, EObject target) {
-		if(c instanceof SequenceFlow){
-			String pathToken = ((SequenceFlow) c).getPathToken();
-			if(pathToken != null && !pathToken.isEmpty()){
-				return pathToken.equals(getToken());
-			}
-		}	
-		return false;
-	}
+//	private boolean isOnSequenceFlowPath(Connection c, EObject target) {
+//		if(c instanceof SequenceFlow){
+//			String pathToken = ((SequenceFlow) c).getPathToken();
+//			if(pathToken != null && !pathToken.isEmpty()){
+//				return pathToken.equals(getToken());
+//			}
+//		}	
+//		return false;
+//	}
 
 
 }
