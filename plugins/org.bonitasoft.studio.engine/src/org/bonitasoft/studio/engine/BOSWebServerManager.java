@@ -452,7 +452,7 @@ public class BOSWebServerManager {
 							BonitaStudioLog.debug("Studio watchdog shutdown", EnginePlugin.PLUGIN_ID);
 						}
 					}catch (SocketException e1) {
-						BonitaStudioLog.error(e1,EnginePlugin.PLUGIN_ID);
+
 					} catch (IOException e) {
 						BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
 					}
