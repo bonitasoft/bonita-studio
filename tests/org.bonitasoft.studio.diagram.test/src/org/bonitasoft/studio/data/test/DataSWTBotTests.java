@@ -17,6 +17,9 @@
  */
 package org.bonitasoft.studio.data.test;
 
+import static org.bonitasoft.studio.expression.editor.i18n.Messages.editExpression;
+import static org.bonitasoft.studio.expression.editor.i18n.Messages.expressionTypeLabel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +40,6 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotWorkbenchPart;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
@@ -50,9 +52,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.bonitasoft.studio.expression.editor.i18n.Messages.editExpression;
-import static org.bonitasoft.studio.expression.editor.i18n.Messages.expressionTypeLabel;
 
 /**
  * @author Baptiste Mesta
@@ -105,7 +104,8 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
 
         SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        
         IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
         MainProcess model = (MainProcess)part.resolveSemanticElement();
         Pool pool = (Pool)model.getElements().get(0);
