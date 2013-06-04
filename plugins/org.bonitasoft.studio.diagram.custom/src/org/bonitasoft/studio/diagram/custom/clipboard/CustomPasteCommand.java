@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
@@ -48,7 +47,6 @@ import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EnumType;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.TargetElement;
@@ -176,27 +174,28 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 		for (IGraphicalEditPart part : getNodes(toCopy)) {
 			copyOnePart(progressMonitor, part, toCopy);
 		}
-		for (IGraphicalEditPart part : getBoundaries(toCopy)) {
-			BoundaryEvent semanticBoundary = (BoundaryEvent)part.resolveSemanticElement();
-			EObject semanticParent = semanticBoundary.eContainer();
-			View parentView = mapping.get(semanticParent);
-			Activity newParent = (Activity)parentView.getElement();
-			BoundaryEvent newSemantic = null;
-			for (BoundaryEvent event : newParent.getBoundaryIntermediateEvents()) {
-				if (event.getName().equals(semanticBoundary.getName())) {
-					newSemantic = event;
-				}
-			}
-			for (Object child : parentView.getChildren()) {
-				if (child instanceof Shape) {
-					Shape shape = (Shape)child;
-					if (shape.getElement().equals(semanticBoundary)) {
-						shape.setElement(newSemantic);
-						mapping.put(semanticBoundary, shape);
-					}
-				}
-			}
-		}
+//		for (IGraphicalEditPart part : getBoundaries(toCopy)) {
+//			BoundaryEvent semanticBoundary = (BoundaryEvent)part.resolveSemanticElement();
+//			EObject semanticParent = semanticBoundary.eContainer();
+//			View parentView = mapping.get(semanticParent);
+//			Activity newParent = (Activity)parentView.getElement();
+//			BoundaryEvent newSemantic = null;
+//			for (BoundaryEvent event : newParent.getBoundaryIntermediateEvents()) {
+//				if (event.getName().equals(semanticBoundary.getName())) {
+//					newSemantic = event;
+//				}
+//			}
+//			mapping.put(semanticBoundary, copyView(, newSemantic, toCopy));
+////			for (Object child : parentView.getChildren()) {
+////				if (child instanceof Shape) {
+////					Shape shape = (Shape)child;
+////					if (shape.getElement().equals(semanticBoundary)) {
+////						shape.setElement(newSemantic);
+////						mapping.put(semanticBoundary, shape);
+////					}
+////				}
+////			}
+//		}
 		for (IGraphicalEditPart part : getConnections(toCopy)) {
 			ConnectionEditPart connectionPart = (ConnectionEditPart) part;
 			if (toCopy.contains(connectionPart.getSource()) && toCopy.contains(connectionPart.getTarget())) {
@@ -279,88 +278,49 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 					updateLabelandId(toCopyElement.getName(), res, elems);
 				}
 
-				// remove connections
-				if (res instanceof Activity) {
-					Activity activity = (Activity) res;
-					activity.getIncoming().clear();
-					activity.getOutgoing().clear();
-					activity.getTextAnnotationAttachment().clear();
-				}
-				// Copy referenced data types
-				if (res instanceof DataAware && !inSamePool(toCopyElement, targetElement)) {
-					List<Data> datas = ModelHelper.getAllItemsOfType(res, ProcessPackage.Literals.DATA);
-					for (Data d : datas) {
-						if (!mainProc.getDatatypes().contains(d.getDataType()) && d.getDataType() instanceof EnumType) {
-							EnumType newDt = (EnumType) EcoreUtil.copy(d.getDataType());
-							mainProc.getDatatypes().add(newDt);
-							d.setDataType(newDt);
-						}
-					}
-					for (Data d : datas) {
-						for(DataType type : mainProc.getDatatypes()) {
-							if(d.getDataType().getName().equals(type.getName())){
-								d.setDataType(type) ;
-							}
-						}
-					}
-				}
-				// Copy referenced groups
-				if (toCopyElement instanceof Task && !inSamePool(toCopyElement, targetElement)) {
-					Set<Actor> newActorMappingTypes = getNewGroups(toCopyElement,mainProc) ;
-					Set<Actor> existingActorMappingTypes = getExistingGroups(toCopyElement,mainProc) ;
-					for (Actor g : newActorMappingTypes) {
-						Actor copiedActorMappingType = EcoreUtil.copy(g);
-						Actor existingActor = getExistingActor(pool.getActors(), copiedActorMappingType);
-						if (existingActor==null){
-							pool.getActors().add(copiedActorMappingType);
-							existingActor = copiedActorMappingType;
-						}
-						((Task) res).setActor(existingActor);
-					}
-					if (ModelHelper.getParentLane(toCopyElement)!=null && !((Task)toCopyElement).isOverrideActorsOfTheLane()){
-						Actor actor = ModelHelper.getParentLane(toCopyElement).getActor();
-						Actor copiedActorMappingType = EcoreUtil.copy(actor);
-						Actor existingActor = getExistingActor(pool.getActors(), copiedActorMappingType);
-						if (existingActor==null && copiedActorMappingType!=null){
-							pool.getActors().add(copiedActorMappingType);
-							existingActor = copiedActorMappingType;
-						}
-						((Task) res).setActor(existingActor);
-						((Task)res).setOverrideActorsOfTheLane(true);
-					}
-					for(Actor existingActorMappingType : existingActorMappingTypes){
-						for(Actor procGroup : mainProc.getActors()){
-							if(procGroup.getName().equals(existingActorMappingType.getName())){
-								((Task) res).setActor(procGroup);
-							}
-						}
-					}
-				}
- 
+				removeConnections(res);
+				copyReferencedDataTypes(toCopyElement, res, mainProc);
+				copyActorsAndActorsMapping(toCopyElement, res, mainProc, pool);
+				resetConnections(toCopyElement, res, container);
 
-				// reset connections
-				if (toCopyElement instanceof Connection) {
-					Connection targetConnection = (Connection) res;
-					Connection srcConnection = (Connection) toCopyElement;
-					targetConnection.setSource((SourceElement) mapping.get(srcConnection.getSource()).getElement());
-					targetConnection.setTarget((TargetElement) mapping.get(srcConnection.getTarget()).getElement());
-					AbstractProcess process = ModelHelper.getParentProcess(container) ;
-					process.getConnections().add((Connection) res);
-
-				} else {
-					container.getElements().add(res);
-				}
-
-				View resView = copyView(part, res,toCopy);
+				View resView = copyView(retrieveTargetCompartment(selectedTargetEditPart).getNotationView(), part, res,toCopy);
 				mapping.put(part.resolveSemanticElement(), resView);
-				/* Create form diagram related to form element */
-				Set<Form> formsToCreateDiagram = ModelHelper.getAllFormsContainedIn(res);
-				for (final Form form : formsToCreateDiagram) {
-					ModelHelper.removedReferencedEObjects(form);
-					final Diagram diagram = ViewService.createDiagram(form, FormEditPart.MODEL_ID, FormDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
-					targetElement.eResource().getContents().add(diagram);
-				}
+				
+				copyFormsDiagram(res);
+				//Copy Boundary view
+				if(res instanceof Activity){
+					if(!((Activity) res).getBoundaryIntermediateEvents().isEmpty()){
+						//remove bad boundary copies
+						List<View> boundaryViewsToRemove = new ArrayList<View>();
+						for(Object childView : resView.getChildren()){
+							if(childView instanceof Shape){
 
+								if(res.equals(((Shape) childView).getElement())){
+									boundaryViewsToRemove.add((View) childView);
+								}
+							}
+						}
+						resView.getPersistedChildren().removeAll(boundaryViewsToRemove);
+
+						for (IGraphicalEditPart boundaryPart : getBoundaries(toCopy)) {
+							BoundaryEvent semanticBoundary = (BoundaryEvent)boundaryPart.resolveSemanticElement();
+							EObject semanticParent = semanticBoundary.eContainer();
+							View parentView = mapping.get(semanticParent);
+							if(parentView != null){
+								Activity newParent = (Activity)parentView.getElement();
+								if(newParent.equals(res)){
+									BoundaryEvent newBoundarySemantic = null;
+									for (BoundaryEvent event : newParent.getBoundaryIntermediateEvents()) {
+										if (event.getName().equals(semanticBoundary.getName())) {
+											newBoundarySemantic = event;
+										}
+									}
+									mapping.put(semanticBoundary, copyView(resView, boundaryPart, newBoundarySemantic, toCopy));
+								}
+							}
+						}					
+					}
+				}
 				ModelHelper.removedInvalidReferencedEObjects(res); //REMOVE DANDLING REFS !
 			}
 
@@ -375,6 +335,100 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 					}
 				}
 
+			}
+		}
+	}
+
+	private void copyFormsDiagram(Element res) {
+		/* Create form diagram related to form element */
+		Set<Form> formsToCreateDiagram = ModelHelper.getAllFormsContainedIn(res);
+		for (final Form form : formsToCreateDiagram) {
+			ModelHelper.removedReferencedEObjects(form);
+			final Diagram diagram = ViewService.createDiagram(form, FormEditPart.MODEL_ID, FormDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
+			targetElement.eResource().getContents().add(diagram);
+		}
+	}
+
+	private void resetConnections(final Element toCopyElement, Element res,
+			final Container container) {
+		// reset connections
+		if (toCopyElement instanceof Connection) {
+			Connection targetConnection = (Connection) res;
+			Connection srcConnection = (Connection) toCopyElement;
+			targetConnection.setSource((SourceElement) mapping.get(srcConnection.getSource()).getElement());
+			targetConnection.setTarget((TargetElement) mapping.get(srcConnection.getTarget()).getElement());
+			AbstractProcess process = ModelHelper.getParentProcess(container) ;
+			process.getConnections().add((Connection) res);
+
+		} else {
+			container.getElements().add(res);
+		}
+	}
+
+	private void copyActorsAndActorsMapping(final Element toCopyElement,
+			Element res, AbstractProcess mainProc, AbstractProcess pool) {
+		// Copy referenced groups
+		if (toCopyElement instanceof Task && !inSamePool(toCopyElement, targetElement)) {
+			Set<Actor> newActorMappingTypes = getNewGroups(toCopyElement,mainProc) ;
+			Set<Actor> existingActorMappingTypes = getExistingGroups(toCopyElement,mainProc) ;
+			for (Actor g : newActorMappingTypes) {
+				Actor copiedActorMappingType = EcoreUtil.copy(g);
+				Actor existingActor = getExistingActor(pool.getActors(), copiedActorMappingType);
+				if (existingActor==null){
+					pool.getActors().add(copiedActorMappingType);
+					existingActor = copiedActorMappingType;
+				}
+				((Task) res).setActor(existingActor);
+			}
+			if (ModelHelper.getParentLane(toCopyElement)!=null && !((Task)toCopyElement).isOverrideActorsOfTheLane()){
+				Actor actor = ModelHelper.getParentLane(toCopyElement).getActor();
+				Actor copiedActorMappingType = EcoreUtil.copy(actor);
+				Actor existingActor = getExistingActor(pool.getActors(), copiedActorMappingType);
+				if (existingActor==null && copiedActorMappingType!=null){
+					pool.getActors().add(copiedActorMappingType);
+					existingActor = copiedActorMappingType;
+				}
+				((Task) res).setActor(existingActor);
+				((Task)res).setOverrideActorsOfTheLane(true);
+			}
+			for(Actor existingActorMappingType : existingActorMappingTypes){
+				for(Actor procGroup : mainProc.getActors()){
+					if(procGroup.getName().equals(existingActorMappingType.getName())){
+						((Task) res).setActor(procGroup);
+					}
+				}
+			}
+		}
+	}
+
+	private void removeConnections(Element res) {
+		// remove connections
+		if (res instanceof Activity) {
+			Activity activity = (Activity) res;
+			activity.getIncoming().clear();
+			activity.getOutgoing().clear();
+			activity.getTextAnnotationAttachment().clear();
+		}
+	}
+
+	private void copyReferencedDataTypes(final Element toCopyElement,
+			Element res, AbstractProcess mainProc) {
+		// Copy referenced data types
+		if (res instanceof DataAware && !inSamePool(toCopyElement, targetElement)) {
+			List<Data> datas = ModelHelper.getAllItemsOfType(res, ProcessPackage.Literals.DATA);
+			for (Data d : datas) {
+				if (!mainProc.getDatatypes().contains(d.getDataType()) && d.getDataType() instanceof EnumType) {
+					EnumType newDt = (EnumType) EcoreUtil.copy(d.getDataType());
+					mainProc.getDatatypes().add(newDt);
+					d.setDataType(newDt);
+				}
+			}
+			for (Data d : datas) {
+				for(DataType type : mainProc.getDatatypes()) {
+					if(d.getDataType().getName().equals(type.getName())){
+						d.setDataType(type) ;
+					}
+				}
 			}
 		}
 	}
@@ -505,7 +559,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 	 * @param toCopy
 	 * @param locationStrategy2
 	 */
-	protected View copyView(IGraphicalEditPart srcPart, Element semanticCopy, List<IGraphicalEditPart> toCopy) {
+	protected View copyView(View targetContainerView, IGraphicalEditPart srcPart, Element semanticCopy, List<IGraphicalEditPart> toCopy) {
 		View view = EcoreUtil.copy(srcPart.getNotationView());
 		view.setElement(semanticCopy);
 		for(Object child : view.getPersistedChildren()){
@@ -515,19 +569,8 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 		}
 		if (view instanceof Node) {
 			Node node = (Node) view;
-			ShapeCompartmentEditPart targetCompartement = null;
-			if (selectedTargetEditPart instanceof ShapeCompartmentEditPart) {
-				targetCompartement = (ShapeCompartmentEditPart) selectedTargetEditPart;
-				selectedTargetEditPart = (IGraphicalEditPart)selectedTargetEditPart.getParent();
-			} else {
-				for (Object childPart : selectedTargetEditPart.getChildren()) {
-					if (childPart instanceof ShapeCompartmentEditPart) {
-						targetCompartement = (ShapeCompartmentEditPart) childPart;
-					}
-				}
-			}
-			if (targetCompartement != null) {
-				targetCompartement.getNotationView().getPersistedChildren().add(view);
+			if (targetContainerView != null) {
+				targetContainerView.getPersistedChildren().add(view);
 			}
 			Point p = getPartAbsoluteCursorLocation();
 
@@ -567,6 +610,21 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 		}
 		
 		return view;
+	}
+
+	private ShapeCompartmentEditPart retrieveTargetCompartment(IGraphicalEditPart targetEditPart) {
+		ShapeCompartmentEditPart targetCompartement = null;
+		if (targetEditPart instanceof ShapeCompartmentEditPart) {
+			targetCompartement = (ShapeCompartmentEditPart) targetEditPart;
+			//selectedTargetEditPart = (IGraphicalEditPart)targetEditPart.getParent();
+		} else {
+			for (Object childPart : targetEditPart.getChildren()) {
+				if (childPart instanceof ShapeCompartmentEditPart) {
+					targetCompartement = (ShapeCompartmentEditPart) childPart;
+				}
+			}
+		}
+		return targetCompartement;
 	}
 
 	/**
