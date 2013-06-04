@@ -293,14 +293,25 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
 		}
 		GraphicalEditPart editPart = (GraphicalEditPart)getTargetEditPart();
 		if(editPart != null){
-			CompoundCommand cmd = (CompoundCommand) getCommand() ;
-			editPart.getDiagramEditDomain().getDiagramCommandStack().execute(cmd);
+			Command command = getCommand() ;
 			IAdaptable targetAdapter = null;
-			if(cmd != null){
-				for(Object c : cmd.getCommands()){
-					if(c instanceof ICommandProxy){
-						if(((ICommandProxy)c).getICommand().getCommandResult() != null && ((ICommandProxy)c).getICommand().getCommandResult().getReturnValue() != null && !((List)((ICommandProxy)c).getICommand().getCommandResult().getReturnValue()).isEmpty())
-							targetAdapter = (IAdaptable) ((List)((ICommandProxy)c).getICommand().getCommandResult().getReturnValue()).get(0) ;
+			if(command instanceof ICommandProxy){
+				editPart.getDiagramEditDomain().getDiagramCommandStack().execute(command);
+				if(((ICommandProxy)command).getICommand().getCommandResult() != null
+						&& ((ICommandProxy)command).getICommand().getCommandResult().getReturnValue() != null 
+						&& !((List)((ICommandProxy)command).getICommand().getCommandResult().getReturnValue()).isEmpty())
+					targetAdapter = (IAdaptable) ((List)((ICommandProxy)command).getICommand().getCommandResult().getReturnValue()).get(0) ;
+			}else if(command instanceof CompoundCommand){
+				CompoundCommand cmd = (CompoundCommand) command ;
+				editPart.getDiagramEditDomain().getDiagramCommandStack().execute(cmd);
+				if(cmd != null){
+					for(Object c : cmd.getCommands()){
+						if(c instanceof ICommandProxy){
+							if(((ICommandProxy)c).getICommand().getCommandResult() != null 
+									&& ((ICommandProxy)c).getICommand().getCommandResult().getReturnValue() != null 
+									&& !((List)((ICommandProxy)c).getICommand().getCommandResult().getReturnValue()).isEmpty())
+								targetAdapter = (IAdaptable) ((List)((ICommandProxy)c).getICommand().getCommandResult().getReturnValue()).get(0) ;
+						}
 					}
 				}
 			}
@@ -352,7 +363,7 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
 					ConnectionViewAndElementDescriptor connectionDescriptor = (ConnectionViewAndElementDescriptor) connectionRequest.getNewObject() ;
 					Connector edge = (Connector) connectionDescriptor.getAdapter(Edge.class) ;
 					ConnectionEditPart connectionEP =  (ConnectionEditPart) editPart.getViewer().getEditPartRegistry().get(edge);
-				
+
 					if(connectionEP != null){
 						SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(connectionEP.getEditingDomain());
 						setConnectionBendPointsCommand.setEdgeAdapter(connectionDescriptor);	
@@ -361,7 +372,7 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
 						bendpoints.addPoint(0, 0) ;
 						setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(), bendpoints.getLastPoint());
 						connectionEP.getDiagramEditDomain().getDiagramCommandStack().execute(new ICommandProxy(setConnectionBendPointsCommand));
-						
+
 					}
 				}
 
