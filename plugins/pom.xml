@@ -109,6 +109,7 @@
 	<module>../translations/de/org.bonitasoft.studio.model.edit.custom.nl_de</module>
 	<module>../translations/de/org.bonitasoft.studio.preferences.nl_de</module>
 	<module>../translations/de/org.bonitasoft.studio.presentation.nl_de</module>
+	<module>../translations/pt/org.bonitasoft.studio.profiles.nl_de</module>
 	<module>../translations/de/org.bonitasoft.studio.properties.bos.nl_de</module>
 	<module>../translations/de/org.bonitasoft.studio.properties.nl_de</module>
 	<module>../translations/de/org.bonitasoft.studio.registration.nl_de</module>
@@ -152,6 +153,7 @@
 	<module>../translations/es/org.bonitasoft.studio.jpdl.nl_es</module>
 	<module>../translations/es/org.bonitasoft.studio.migration.nl_es</module>
 	<module>../translations/es/org.bonitasoft.studio.model.edit.custom.nl_es</module>
+	<module>../translations/pt/org.bonitasoft.studio.profiles.nl_es</module>
 	<module>../translations/es/org.bonitasoft.studio.preferences.nl_es</module>
 	<module>../translations/es/org.bonitasoft.studio.presentation.nl_es</module>
 	<module>../translations/es/org.bonitasoft.studio.properties.bos.nl_es</module>
@@ -199,6 +201,7 @@
 	<module>../translations/fr/org.bonitasoft.studio.model.edit.custom.nl_fr</module>
 	<module>../translations/fr/org.bonitasoft.studio.preferences.nl_fr</module>
 	<module>../translations/fr/org.bonitasoft.studio.presentation.nl_fr</module>
+	<module>../translations/pt/org.bonitasoft.studio.profiles.nl_fr</module>
 	<module>../translations/fr/org.bonitasoft.studio.properties.bos.nl_fr</module>
 	<module>../translations/fr/org.bonitasoft.studio.properties.nl_fr</module>
 	<module>../translations/fr/org.bonitasoft.studio.registration.nl_fr</module>
@@ -244,6 +247,7 @@
 	<module>../translations/it/org.bonitasoft.studio.model.edit.custom.nl_it</module>
 	<module>../translations/it/org.bonitasoft.studio.preferences.nl_it</module>
 	<module>../translations/it/org.bonitasoft.studio.presentation.nl_it</module>
+	<module>../translations/pt/org.bonitasoft.studio.profiles.nl_it</module>
 	<module>../translations/it/org.bonitasoft.studio.properties.bos.nl_it</module>
 	<module>../translations/it/org.bonitasoft.studio.properties.nl_it</module>
 	<module>../translations/it/org.bonitasoft.studio.registration.nl_it</module>
@@ -287,6 +291,7 @@
 	<module>../translations/pt/org.bonitasoft.studio.jpdl.nl_pt</module>
 	<module>../translations/pt/org.bonitasoft.studio.migration.nl_pt</module>
 	<module>../translations/pt/org.bonitasoft.studio.model.edit.custom.nl_pt</module>
+	<module>../translations/pt/org.bonitasoft.studio.profiles.nl_pt</module>
 	<module>../translations/pt/org.bonitasoft.studio.preferences.nl_pt</module>
 	<module>../translations/pt/org.bonitasoft.studio.presentation.nl_pt</module>
 	<module>../translations/pt/org.bonitasoft.studio.properties.bos.nl_pt</module>
