@@ -42,7 +42,7 @@
 			model="process.ecore"
 			modelprojectfragmentpath="src"
 			generatejavacode="true"
-			reconcilegenmodel="overwrite"
+			reconcilegenmodel="reload"
 			generatemodelproject="true"
 			generateeditproject="true"
 			generateeditorproject="false"
