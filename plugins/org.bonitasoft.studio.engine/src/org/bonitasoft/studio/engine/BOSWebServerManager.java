@@ -177,7 +177,7 @@ public class BOSWebServerManager {
 				tomcat = createServer(monitor, confProject, runtime);
 				createLaunchConfiguration(tomcat,monitor);
 			
-				final String mode = System.getProperty(EnginePreferenceConstants.TOMCAT_START_MODE,EnginePreferenceConstants.RUN_MODE);
+				final String mode = EnginePlugin.getDefault().getPreferenceStore().getString(EnginePreferenceConstants.TOMCAT_START_MODE);
 				tomcat.start(mode,monitor);
 				waitServerRunning(monitor);
 			} catch (CoreException e) {
@@ -402,8 +402,8 @@ public class BOSWebServerManager {
 		args.append("-Xmx512m");
 		args.append(" ");
 		args.append("-XX:MaxPermSize=256m");
-		if(System.getProperty("tomcat.extras.param") != null && !System.getProperty("tomcat.extras.param") .isEmpty()){
-			args.append(" "+System.getProperty("tomcat.extras.param")+" ");
+		if("true".equals(System.getProperty("bonita.tomcat.debug.mode"))){
+			args.append("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8500");
 		}
 		addSystemProperty(args, "catalina.home", "\""+tomcatInstanceLocation+"\"");
 		addSystemProperty(args, "CATALINA_HOME", "\""+tomcatInstanceLocation+"\"");
