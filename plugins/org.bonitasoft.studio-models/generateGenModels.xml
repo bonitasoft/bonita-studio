@@ -21,16 +21,12 @@
 
 	<target name="generate">
 	
-	<delete dir="../org.bonitasoft.studio.model/META-INF"/>
-	<delete dir="../org.bonitasoft.studio.model/src" />
-	<delete dir="../org.bonitasoft.studio.model.edit/src" />
-	<delete dir="../org.bonitasoft.studio.model.edit/META-INF" />
+	<delete dir="../org.bonitasoft.studio.model"/>
+	<delete dir="../org.bonitasoft.studio.model.edit" />
 	<delete dir="../org.bonitasoft.studio.diagram/META-INF" />
 	<delete dir="../org.bonitasoft.studio.diagram/src" />
 	<delete dir="../org.bonitasoft.studio.diagram.form/META-INF" />
 	<delete dir="../org.bonitasoft.studio.diagram.form/src" />
-	<refreshWorkspace project="org.bonitasoft.studio.model"/>
-	<refreshWorkspace project="org.bonitasoft.studio.model.edit"/>
 	<refreshWorkspace project="org.bonitasoft.studio.diagram"/>
 	<refreshWorkspace  project="org.bonitasoft.studio.diagram.form"/>
 	<emf.Ecore2Java
