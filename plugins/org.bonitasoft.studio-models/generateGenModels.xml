@@ -39,7 +39,6 @@
 			model="process.ecore"
 			genmodel="process.genmodel"
 			modelprojectfragmentpath="src"
-			reconcilegenmodel="reload"
 			generatejavacode="true"
 			generatemodelproject="true"
 			generateeditproject="true"
