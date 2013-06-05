@@ -42,8 +42,8 @@
 			generatetestsproject="false"
 			templatepath="EMFTemplates/"
 			jdklevel="6.0" >
-		<arg line="-modelProject project src"/>
-		<arg line="-editProject project.edit src"/>
+		<arg line="-modelProject org.bonitasoft.studio.model src"/>
+		<arg line="-editProject org.bonitasoft.studio.model.edit src"/>
 		</emf.Ecore2Java>
 		
 	
