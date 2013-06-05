@@ -36,9 +36,8 @@
 	<emf.Ecore2Java
 			modelpluginid="org.bonitasoft.studio.model"
 			modelproject="org.bonitasoft.studio.model"
-			model="process.ecore"
-			genmodel="process.genmodel"
-			modelprojectfragmentpath="src"
+			model="${basedir}/process.ecore"
+			genmodel="${basedir}/process.genmodel"
 			reconcilegenmodel="overwrite"
 			generatejavacode="true"
 			generatemodelproject="true"
