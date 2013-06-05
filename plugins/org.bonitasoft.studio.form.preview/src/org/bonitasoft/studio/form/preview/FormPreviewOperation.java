@@ -58,7 +58,9 @@ import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.engine.operation.ApplicationURLBuilder;
 import org.bonitasoft.studio.form.preview.i18n.Messages;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
+import org.bonitasoft.studio.model.actormapping.ActorMappingFactory;
 import org.bonitasoft.studio.model.actormapping.ActorMappingsType;
+import org.bonitasoft.studio.model.actormapping.Users;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -283,10 +285,19 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		Configuration configuration = configurationFileStore.getContent();
 		ActorMappingsType actorMapping = EcoreUtil.copy(configuration.getActorMappings());
 		if (actorMapping==null){
-			MessageDialog.openError(Display.getCurrent().getActiveShell(),Messages.noActorMappingDefinedTitle ,  Messages.noActorMappingDefined);
-			canPreview = false;
+			//MessageDialog.openError(Display.getCurrent().getActiveShell(),Messages.noActorMappingDefinedTitle ,  Messages.noActorMappingDefined);
+			//canPreview = false;
+			actorMapping = ActorMappingFactory.eINSTANCE.createActorMappingsType();
+			ActorMapping newMapping = ActorMappingFactory.eINSTANCE.createActorMapping();
+			newMapping.setName(proc.getActors().get(0).getName());
+			Users users = ActorMappingFactory.eINSTANCE.createUsers();
+			users.getUser().add(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
+			newMapping.setUsers(users);
+			newMapping.setGroups(ActorMappingFactory.eINSTANCE.createGroups());
+			newMapping.setMemberships(ActorMappingFactory.eINSTANCE.createMembership());
+			newMapping.setRoles(ActorMappingFactory.eINSTANCE.createRoles());
+			actorMapping.getActorMapping().add(newMapping);
 		} else {
-
 			for(ActorMapping mapping : actorMapping.getActorMapping()){
 				mapping.getMemberships().getMembership().clear();
 				mapping.getGroups().getGroup().clear();
@@ -294,11 +305,12 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 				mapping.getRoles().getRole().clear();
 				mapping.getUsers().getUser().add(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
 			}
-			previewConfiguration.setActorMappings(actorMapping);
-
 		}
+		previewConfiguration.setActorMappings(actorMapping);
 
 	}
+
+
 
 
 	private void initializeLookNFeel(AbstractProcess proc){
