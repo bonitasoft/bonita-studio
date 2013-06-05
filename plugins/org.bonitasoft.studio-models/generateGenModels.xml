@@ -21,8 +21,6 @@
 
 	<target name="generate">
 	
-	<delete dir="../org.bonitasoft.studio.model"/>
-	<delete dir="../org.bonitasoft.studio.model.edit" />
 	<delete dir="../org.bonitasoft.studio.diagram/META-INF" />
 	<delete dir="../org.bonitasoft.studio.diagram/src" />
 	<delete dir="../org.bonitasoft.studio.diagram.form/META-INF" />
@@ -35,6 +33,7 @@
 			model="process.ecore"
 			genmodel="process.genmodel"
 			modelprojectfragmentpath="src"
+			reconcilegenmodel="keep"
 			generatejavacode="true"
 			generatemodelproject="true"
 			generateeditproject="true"
@@ -42,8 +41,6 @@
 			generatetestsproject="false"
 			templatepath="EMFTemplates/"
 			jdklevel="6.0" >
-		<arg line="-modelProject org.bonitasoft.studio.model src"/>
-		<arg line="-editProject org.bonitasoft.studio.model.edit src"/>
 		</emf.Ecore2Java>
 		
 	
