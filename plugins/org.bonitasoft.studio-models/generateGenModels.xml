@@ -21,12 +21,9 @@
 
 	<target name="generate">
 	
-	<delete dir="../org.bonitasoft.studio.model/META-INF" quiet="true"/>
-	<delete dir="../org.bonitasoft.studio.model/src" quiet="true" />
+	<delete file="../org.bonitasoft.studio.model/META-INF/MANIFEST.MF" quiet="true"/>
 	<delete file="../org.bonitasoft.studio.model/plugin.xml" quiet="true" />
-	<delete dir="../org.bonitasoft.studio.model.edit/src" quiet="true"/>
-	<delete dir="../org.bonitasoft.studio.model.edit/META-INF" quiet="true" />
-	<delete file="../org.bonitasoft.studio.model.edit/plugin.xml" quiet="true" />
+	<delete file="../org.bonitasoft.studio.model.edit/META-INF/MANIFEST.MF" quiet="true" />
 	<delete dir="../org.bonitasoft.studio.diagram/META-INF" quiet="true" />
 	<delete dir="../org.bonitasoft.studio.diagram/src" quiet="true" />
 	<delete dir="../org.bonitasoft.studio.diagram.form/META-INF" quiet="true" />
