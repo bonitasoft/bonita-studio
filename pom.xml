@@ -20,7 +20,7 @@
 		<filters.version>6.0.0</filters.version>
 		<theme.builder.version>6.0.0</theme.builder.version>
 		<watchdog.version>6.0.0</watchdog.version>
-		<p2MirrorUrl>ftp://192.168.1.215/home/ic/p2_repository/</p2MirrorUrl>
+		<p2MirrorUrl>file://home/ic/p2_repository/</p2MirrorUrl>
 		<tycho.testArgLine></tycho.testArgLine>
 	</properties>
 
