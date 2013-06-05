@@ -21,33 +21,31 @@
 
 	<target name="generate">
 	
-	<delete file="../org.bonitasoft.studio.model/META-INF/MANIFEST.MF" quiet="true"/>
-	<delete file="../org.bonitasoft.studio.model/plugin.xml" quiet="true" />
-	<delete file="../org.bonitasoft.studio.model.edit/META-INF/MANIFEST.MF" quiet="true" />
-	<delete dir="../org.bonitasoft.studio.diagram/META-INF" quiet="true" />
-	<delete dir="../org.bonitasoft.studio.diagram/src" quiet="true" />
-	<delete dir="../org.bonitasoft.studio.diagram.form/META-INF" quiet="true" />
-	<delete dir="../org.bonitasoft.studio.diagram.form/src" quiet="true" />
-	<delete file="../org.bonitasoft.studio.diagram.form/plugin.xml" quiet="true" />
-	<delete file="../org.bonitasoft.studio.diagram/plugin.xml" quiet="true"  />
-	<refreshWorkspace project="org.bonitasoft.studio.model" />
-	<refreshWorkspace project="org.bonitasoft.studio.model.edit" />
-	<refreshWorkspace project="org.bonitasoft.studio.diagram" />
-	<refreshWorkspace  project="org.bonitasoft.studio.diagram.form" />
-	
-		<emf.Ecore2Java
+	<delete dir="../org.bonitasoft.studio.model/META-INF"/>
+	<delete dir="../org.bonitasoft.studio.model/src" />
+	<delete dir="../org.bonitasoft.studio.model.edit/src" />
+	<delete dir="../org.bonitasoft.studio.model.edit/META-INF" />
+	<delete dir="../org.bonitasoft.studio.diagram/META-INF" />
+	<delete dir="../org.bonitasoft.studio.diagram/src" />
+	<delete dir="../org.bonitasoft.studio.diagram.form/META-INF" />
+	<delete dir="../org.bonitasoft.studio.diagram.form/src" />
+	<refreshWorkspace project="org.bonitasoft.studio.model"/>
+	<refreshWorkspace project="org.bonitasoft.studio.model.edit"/>
+	<refreshWorkspace project="org.bonitasoft.studio.diagram"/>
+	<refreshWorkspace  project="org.bonitasoft.studio.diagram.form"/>
+	<emf.Ecore2Java
 			modelpluginid="org.bonitasoft.studio.model"
 			modelproject="org.bonitasoft.studio.model"
-			genmodel="process.genmodel"
 			model="process.ecore"
+			genmodel="process.genmodel"
 			modelprojectfragmentpath="src"
-			generatejavacode="true"
 			reconcilegenmodel="reload"
+			generatejavacode="true"
 			generatemodelproject="true"
 			generateeditproject="true"
 			generateeditorproject="false"
 			generatetestsproject="false"
-		    templatepath="EMFTemplates/"
+			templatepath="EMFTemplates/"
 			jdklevel="6.0"
 		/>
 		
