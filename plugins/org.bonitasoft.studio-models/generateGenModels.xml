@@ -36,7 +36,7 @@
 	
 		<emf.Ecore2Java
 			modelpluginid="org.bonitasoft.studio.model"
-			modelproject="org.bonitasoft.studio.model"
+			modelproject="${basedir}/../org.bonitasoft.studio.model"
 			genmodel="process.genmodel"
 			model="process.ecore"
 			modelprojectfragmentpath="src"
