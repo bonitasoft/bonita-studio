@@ -4228,5 +4228,45 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
+         
+      <plugin
+         id="org.bonitasoft.studio.profiles.nl_pt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+       <plugin
+         id="org.bonitasoft.studio.profiles.nl_fr"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+       <plugin
+         id="org.bonitasoft.studio.profiles.nl_es"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+        <plugin
+         id="org.bonitasoft.studio.profiles.nl_de"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+         
+       <plugin
+         id="org.bonitasoft.studio.profiles.nl_it"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
 
 </feature>
