@@ -38,6 +38,7 @@
 			modelpluginid="org.bonitasoft.studio.model"
 			modelproject="org.bonitasoft.studio.model"
 			genmodel="process.genmodel"
+			model="process.ecore"
 			reconcilegenmodel="overwrite"
 			generatejavacode="true"
 			generatemodelproject="true"
