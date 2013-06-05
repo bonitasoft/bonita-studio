@@ -23,12 +23,16 @@
 	
 	<delete dir="../org.bonitasoft.studio.model/META-INF"/>
 	<delete dir="../org.bonitasoft.studio.model/src" />
+	<delete file="../org.bonitasoft.studio.model/plugin.xml" />
 	<delete dir="../org.bonitasoft.studio.model.edit/src" />
 	<delete dir="../org.bonitasoft.studio.model.edit/META-INF" />
+	<delete file="../org.bonitasoft.studio.model.edit/plugin.xml" />
 	<delete dir="../org.bonitasoft.studio.diagram/META-INF" />
 	<delete dir="../org.bonitasoft.studio.diagram/src" />
 	<delete dir="../org.bonitasoft.studio.diagram.form/META-INF" />
 	<delete dir="../org.bonitasoft.studio.diagram.form/src" />
+	<delete file="../org.bonitasoft.studio.diagram.form/plugin.xml" />
+	<delete file="../org.bonitasoft.studio.diagram/plugin.xml" />
 	<refreshWorkspace project="org.bonitasoft.studio.model"/>
 	<refreshWorkspace project="org.bonitasoft.studio.model.edit"/>
 	<refreshWorkspace project="org.bonitasoft.studio.diagram"/>
