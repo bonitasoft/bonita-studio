@@ -59,7 +59,11 @@
 									<type>eclipse-plugin</type>
 								</dependency>
 								<dependency>
-								<artifactId>org.eclipse.equinox.ds</artifactId>
+									<artifactId>org.bonitasoft.studio-models</artifactId>
+									<type>eclipse-plugin</type>
+								</dependency>
+								<dependency>
+									<artifactId>org.eclipse.equinox.ds</artifactId>
 									<type>eclipse-plugin</type>
 								</dependency>
 							</dependencies>
