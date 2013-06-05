@@ -33,18 +33,18 @@
 	<refreshWorkspace project="org.bonitasoft.studio.model.edit"/>
 	<refreshWorkspace project="org.bonitasoft.studio.diagram"/>
 	<refreshWorkspace  project="org.bonitasoft.studio.diagram.form"/>
-	<emf.Ecore2Java
+	
+		<emf.Ecore2Java
 			modelpluginid="org.bonitasoft.studio.model"
 			modelproject="org.bonitasoft.studio.model"
-			model="${basedir}/process.ecore"
-			genmodel="${basedir}/process.genmodel"
+			genmodel="process.genmodel"
 			reconcilegenmodel="overwrite"
 			generatejavacode="true"
 			generatemodelproject="true"
 			generateeditproject="true"
 			generateeditorproject="false"
 			generatetestsproject="false"
-		    templatepath="${basedir}/EMFTemplates/"
+		    templatepath="org.bonitasoft.studio-models/EMFTemplates/"
 			jdklevel="6.0"
 		/>
 		
