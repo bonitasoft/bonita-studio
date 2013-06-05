@@ -33,10 +33,10 @@
 	<delete dir="../org.bonitasoft.studio.diagram.form/src" quiet="true" />
 	<delete file="../org.bonitasoft.studio.diagram.form/plugin.xml" quiet="true" />
 	<delete file="../org.bonitasoft.studio.diagram/plugin.xml" quiet="true"  />
-	<refreshWorkspace project="org.bonitasoft.studio.model" quiet="true"/>
-	<refreshWorkspace project="org.bonitasoft.studio.model.edit" quiet="true" />
-	<refreshWorkspace project="org.bonitasoft.studio.diagram" quiet="true"/>
-	<refreshWorkspace  project="org.bonitasoft.studio.diagram.form" quiet="true"/>
+	<refreshWorkspace project="org.bonitasoft.studio.model" />
+	<refreshWorkspace project="org.bonitasoft.studio.model.edit" />
+	<refreshWorkspace project="org.bonitasoft.studio.diagram" />
+	<refreshWorkspace  project="org.bonitasoft.studio.diagram.form" />
 	
 		<emf.Ecore2Java
 			modelpluginid="org.bonitasoft.studio.model"
