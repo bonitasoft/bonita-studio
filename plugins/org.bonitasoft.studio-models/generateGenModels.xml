@@ -21,22 +21,22 @@
 
 	<target name="generate">
 	
-	<delete dir="../org.bonitasoft.studio.model/META-INF"/>
-	<delete dir="../org.bonitasoft.studio.model/src" />
-	<delete file="../org.bonitasoft.studio.model/plugin.xml" />
-	<delete dir="../org.bonitasoft.studio.model.edit/src" />
-	<delete dir="../org.bonitasoft.studio.model.edit/META-INF" />
-	<delete file="../org.bonitasoft.studio.model.edit/plugin.xml" />
-	<delete dir="../org.bonitasoft.studio.diagram/META-INF" />
-	<delete dir="../org.bonitasoft.studio.diagram/src" />
-	<delete dir="../org.bonitasoft.studio.diagram.form/META-INF" />
-	<delete dir="../org.bonitasoft.studio.diagram.form/src" />
-	<delete file="../org.bonitasoft.studio.diagram.form/plugin.xml" />
-	<delete file="../org.bonitasoft.studio.diagram/plugin.xml" />
-	<refreshWorkspace project="org.bonitasoft.studio.model"/>
-	<refreshWorkspace project="org.bonitasoft.studio.model.edit"/>
-	<refreshWorkspace project="org.bonitasoft.studio.diagram"/>
-	<refreshWorkspace  project="org.bonitasoft.studio.diagram.form"/>
+	<delete dir="../org.bonitasoft.studio.model/META-INF" quiet="true"/>
+	<delete dir="../org.bonitasoft.studio.model/src" quiet="true" />
+	<delete file="../org.bonitasoft.studio.model/plugin.xml" quiet="true" />
+	<delete dir="../org.bonitasoft.studio.model.edit/src" quiet="true"/>
+	<delete dir="../org.bonitasoft.studio.model.edit/META-INF" quiet="true" />
+	<delete file="../org.bonitasoft.studio.model.edit/plugin.xml" quiet="true" />
+	<delete dir="../org.bonitasoft.studio.diagram/META-INF" quiet="true" />
+	<delete dir="../org.bonitasoft.studio.diagram/src" quiet="true" />
+	<delete dir="../org.bonitasoft.studio.diagram.form/META-INF" quiet="true" />
+	<delete dir="../org.bonitasoft.studio.diagram.form/src" quiet="true" />
+	<delete file="../org.bonitasoft.studio.diagram.form/plugin.xml" quiet="true" />
+	<delete file="../org.bonitasoft.studio.diagram/plugin.xml" quiet="true"  />
+	<refreshWorkspace project="org.bonitasoft.studio.model" quiet="true"/>
+	<refreshWorkspace project="org.bonitasoft.studio.model.edit" quiet="true" />
+	<refreshWorkspace project="org.bonitasoft.studio.diagram" quiet="true"/>
+	<refreshWorkspace  project="org.bonitasoft.studio.diagram.form" quiet="true"/>
 	
 		<emf.Ecore2Java
 			modelpluginid="org.bonitasoft.studio.model"
