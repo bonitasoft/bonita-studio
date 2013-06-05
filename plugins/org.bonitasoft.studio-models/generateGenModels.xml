@@ -45,6 +45,7 @@
 			generateeditproject="true"
 			generateeditorproject="false"
 			generatetestsproject="false"
+		    templatepath="EMFTemplates"
 			jdklevel="6.0"
 		/>
 		
