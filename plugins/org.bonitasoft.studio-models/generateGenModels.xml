@@ -45,7 +45,7 @@
 			generateeditproject="true"
 			generateeditorproject="false"
 			generatetestsproject="false"
-		    templatepath="org.bonitasoft.studio-models/EMFTemplates/"
+		    templatepath="${basedir}/EMFTemplates/"
 			jdklevel="6.0"
 		/>
 		
