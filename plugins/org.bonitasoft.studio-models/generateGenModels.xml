@@ -39,6 +39,7 @@
 			modelproject="org.bonitasoft.studio.model"
 			genmodel="process.genmodel"
 			model="process.ecore"
+			modelprojectfragmentpath="src"
 			reconcilegenmodel="overwrite"
 			generatejavacode="true"
 			generatemodelproject="true"
