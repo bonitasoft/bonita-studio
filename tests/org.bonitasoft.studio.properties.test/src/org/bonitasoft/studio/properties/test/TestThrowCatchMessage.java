@@ -28,7 +28,9 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -162,4 +164,23 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase implements SWTBotCo
     public void tearDown(){
         bot.saveAllEditors();
     }
+    
+    @Test
+    public void testCathMessageNotAllowed() throws IOException{
+        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestCatchMessageSelectionTest-1.0.bos", "Bonita 6.x", "TestCatchMessageSelectionTest", this.getClass(), false);
+        SWTBotEditor botEditor = bot.activeEditor();
+        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+
+        SWTBotTestUtil.selectEventOnProcess(bot, gmfEditor, "Start1");
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
+        
+        SWTBotCombo combo = bot.comboBoxWithLabel(Messages.selectMessageEventLabel);
+
+        for(String s : combo.items()){
+        	Assert.assertFalse("The message throw from the same pool should not be available in the combo.", s.equals("theMessage"));
+        }
+        
+    }
+    
 }

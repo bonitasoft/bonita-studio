@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.jface.ListContentProvider;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ThrowMessageEvent;
@@ -126,6 +127,17 @@ IExtensibleGridPropertySectionContribution {
 		});
 		List<Message> events = new ArrayList<Message>();
 		ModelHelper.findAllEvents(ModelHelper.getMainProcess(eObject),events);
+		
+		// remove messages that source(throwMessage) are on the same process as eObject(catchMessage)
+		AbstractProcess parentProcess = ModelHelper.getParentProcess(eObject);
+		List<Message> eventsToRemove = new ArrayList<Message>();
+		for(Message message : events){
+			if(ModelHelper.getParentProcess(message).equals(parentProcess)){
+				eventsToRemove.add(message);
+			}
+		}
+		events.removeAll(eventsToRemove);
+		
 		combo.setInput(events);
 		if(eObject.getEvent() != null){
 			combo.getCombo().setText(eObject.getEvent());
