@@ -19,7 +19,7 @@
 		<simulation.version>6.0.0</simulation.version>
 		<filters.version>6.0.0</filters.version>
 		<theme.builder.version>6.0.0</theme.builder.version>
-		<watchdog.version>6.0.0</watchdog.version>
+		<watchdog.version>6.0.1</watchdog.version>
 		<p2MirrorUrl>file://home/ci-lin-6/p2_repository/</p2MirrorUrl>
 		<tycho.testArgLine></tycho.testArgLine>
 	</properties>
