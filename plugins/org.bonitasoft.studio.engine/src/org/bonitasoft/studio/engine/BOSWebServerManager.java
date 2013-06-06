@@ -440,7 +440,7 @@ public class BOSWebServerManager {
 							WATCHDOG_PORT = getNextAvailable(WATCHDOG_PORT);
 							BonitaStudioLog.debug("Port "+oldPort+" is not availble for server watchdog, studio will use next available port : "+WATCHDOG_PORT,EnginePlugin.PLUGIN_ID);
 						}
-						watchdogServer = new ServerSocket(WATCHDOG_PORT,0,InetAddress.getLocalHost());
+						watchdogServer = new ServerSocket(WATCHDOG_PORT,0,InetAddress.getByName("localhost"));
 						if(BonitaStudioLog.isLoggable(IStatus.OK)){
 							BonitaStudioLog.debug("Starting studio watchdog on "+WATCHDOG_PORT, EnginePlugin.PLUGIN_ID);
 						}
