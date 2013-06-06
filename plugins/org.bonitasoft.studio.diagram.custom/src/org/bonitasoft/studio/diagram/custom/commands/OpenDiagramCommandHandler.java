@@ -18,7 +18,9 @@
 package org.bonitasoft.studio.diagram.custom.commands;
 
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.Messages;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.wizard.OpenDiagramWizard;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -34,6 +36,16 @@ public class OpenDiagramCommandHandler extends AbstractHandler implements IHandl
 				wizard,false, Messages.OpenProcessButtonLabel).open();
 
 		return null;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
+	 */
+	@Override
+	public boolean isEnabled() {
+		final DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
+		return !diagramSotre.getChildren().isEmpty();
 	}
 
 }
