@@ -401,8 +401,9 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 								monitor.done() ;
 							}
 						}) ;
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllPerspectives(false, true);
 					}
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllPerspectives(false, true);
+					
 					return closeEditor ;
 				}
 			} catch (Exception e){
