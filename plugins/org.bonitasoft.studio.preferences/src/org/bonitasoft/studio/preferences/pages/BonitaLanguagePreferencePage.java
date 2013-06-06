@@ -50,101 +50,103 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage implements IWorkbenchPreferencePage {
 
-    private String newLocale;
-    private ComboFieldEditor studioLocale;
-    private ComboFieldEditor webLocale;
+	private String newLocale;
+	private ComboFieldEditor studioLocale;
+	private ComboFieldEditor webLocale;
 
-    public BonitaLanguagePreferencePage() {
-        super(GRID);
-        setPreferenceStore(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
-    }
+	public BonitaLanguagePreferencePage() {
+		super(GRID);
+		setPreferenceStore(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
+	}
 
-    /**
-     * Creates the field editors. Field editors are abstractions of the common
-     * GUI blocks needed to manipulate various types of preferences. Each field
-     * editor knows how to save and restore itself.
-     */
-    @Override
-    public void createFieldEditors() {
+	/**
+	 * Creates the field editors. Field editors are abstractions of the common
+	 * GUI blocks needed to manipulate various types of preferences. Each field
+	 * editor knows how to save and restore itself.
+	 */
+	@Override
+	public void createFieldEditors() {
 
-        createTitleBar(Messages.BonitaPreferenceDialog_language, Pics.getImage(PicsConstants.preferenceLanguage),false) ;
+		createTitleBar(Messages.BonitaPreferenceDialog_language, Pics.getImage(PicsConstants.preferenceLanguage),false) ;
 
-        studioLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, Messages.bind(Messages.studioLocalLabel, new Object[]{bonitaStudioModuleName}), BonitaPreferenceConstants.getAvailableLocales(BonitaPreferenceConstants.AVAILABLE_LOCALES), getFieldEditorParent()) ;
-        webLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, Messages.consoleLocaleLabel, BonitaPreferenceConstants.getAvailableLocales(BonitaPreferenceConstants.AVAILABLE_LOCALES_USER_XP), getFieldEditorParent());
+		studioLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, Messages.bind(Messages.studioLocalLabel, new Object[]{bonitaStudioModuleName}), BonitaPreferenceConstants.getAvailableLocales(BonitaPreferenceConstants.AVAILABLE_LOCALES), getFieldEditorParent()) ;
+		webLocale = new ComboFieldEditor(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, Messages.consoleLocaleLabel, BonitaPreferenceConstants.getAvailableLocales(BonitaPreferenceConstants.AVAILABLE_LOCALES_USER_XP), getFieldEditorParent());
 
-        addField(studioLocale);
-        addField(webLocale) ;
-
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.preference.FieldEditorPreferencePage#propertyChange
-     * (org.eclipse.jface.util.PropertyChangeEvent)
-     */
-    @Override
-    public void propertyChange(PropertyChangeEvent event) {
-        if (event.getSource() == studioLocale) {
-            newLocale = (String) event.getNewValue();
-            String v = getPreferenceStore().getString(webLocale.getPreferenceName()) ;
-            String defaultValue = getPreferenceStore().getDefaultString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) ;
-            getPreferenceStore().setDefault(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, "") ;
-            getPreferenceStore().setValue(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, v) ;
-            getPreferenceStore().setDefault(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, defaultValue) ;
-        }
-        super.propertyChange(event);
-    }
+		addField(studioLocale);
+		addField(webLocale) ;
 
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.preference.FieldEditorPreferencePage#performOk()
-     */
-    @Override
-    public boolean performOk() {
-        boolean ok =  super.performOk() ;
-        try {
-            ((ScopedPreferenceStore)getPreferenceStore()).save() ;
-        } catch (IOException e) {
-            BonitaStudioLog.error(e) ;
-        }
-        if (newLocale != null && newLocale.length() != 0) {
-            changeLocale(newLocale);
-            if (MessageDialog.openQuestion(getShell(), Messages.restartQuestion_title, Messages.bind(Messages.restartQuestion_msg, new Object[]{bonitaStudioModuleName}))){
-                PlatformUI.getWorkbench().restart();
-            }
-        }
-        return ok ;
-    }
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-     */
-    public void init(IWorkbench workbench) {
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.preference.FieldEditorPreferencePage#propertyChange
+	 * (org.eclipse.jface.util.PropertyChangeEvent)
+	 */
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		if (event.getSource() == studioLocale) {
+			newLocale = (String) event.getNewValue();
+			String v = getPreferenceStore().getString(webLocale.getPreferenceName()) ;
+			String defaultValue = getPreferenceStore().getDefaultString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) ;
+			getPreferenceStore().setDefault(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, "") ;
+			getPreferenceStore().setValue(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, v) ;
+			getPreferenceStore().setDefault(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, defaultValue) ;
+		}
+		super.propertyChange(event);
+	}
 
-    private static void changeLocale(String locale) {
-        Location configArea = Platform.getInstallLocation();
-        if (configArea == null) {
-            return;
-        }
-        try {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#performOk()
+	 */
+	@Override
+	public boolean performOk() {
+		boolean ok =  super.performOk() ;
+		try {
+			((ScopedPreferenceStore)getPreferenceStore()).save() ;
+		} catch (IOException e) {
+			BonitaStudioLog.error(e) ;
+		}
+		if (newLocale != null && newLocale.length() != 0) {
+			changeLocale(newLocale);
+			if (MessageDialog.openQuestion(getShell(), Messages.restartQuestion_title, Messages.bind(Messages.restartQuestion_msg, new Object[]{bonitaStudioModuleName}))){
+				PlatformUI.getWorkbench().restart();
+			}
+		}
+		return ok ;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	 */
+	public void init(IWorkbench workbench) {
+	}
+
+	private static void changeLocale(String locale) {
+		Location configArea = Platform.getInstallLocation();
+		if (configArea == null) {
+			return;
+		}
+		try {
 			File configIniFile = new File(new URL(configArea.getURL().toExternalForm() + File.separatorChar+"configuration"+File.separatorChar+"config.ini").getFile());
-			Properties configIniProperties = new Properties();
-			final FileInputStream inStream = new FileInputStream(configIniFile);
-			configIniProperties.load(inStream);
-			configIniProperties.setProperty("osgi.nl", locale);
-			final FileOutputStream out = new FileOutputStream(configIniFile);
-			configIniProperties.store(out, "");
-			inStream.close();
-			out.close();
+			if(configIniFile.exists()){
+				Properties configIniProperties = new Properties();
+				final FileInputStream inStream = new FileInputStream(configIniFile);
+				configIniProperties.load(inStream);
+				configIniProperties.setProperty("osgi.nl", locale);
+				final FileOutputStream out = new FileOutputStream(configIniFile);
+				configIniProperties.store(out, "");
+				inStream.close();
+				out.close();
+			}
 		} catch (MalformedURLException e1) {
 			BonitaStudioLog.error(e1);
 		} catch (FileNotFoundException e) {
@@ -152,6 +154,6 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
 		} catch (IOException e) {
 			BonitaStudioLog.error(e);
 		}
-    }
+	}
 
 }
