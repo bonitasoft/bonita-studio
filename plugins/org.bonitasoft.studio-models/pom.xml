@@ -59,7 +59,7 @@
 									<type>eclipse-plugin</type>
 								</dependency>
 								<dependency>
-									<artifactId>org.bonitasoft.studio-models</artifactId>
+									<artifactId>org.bonitasoft.studio.model.templates</artifactId>
 									<type>eclipse-plugin</type>
 								</dependency>
 								<dependency>
