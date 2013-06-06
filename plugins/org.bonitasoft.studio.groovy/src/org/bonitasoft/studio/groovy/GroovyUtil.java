@@ -253,7 +253,7 @@ public class GroovyUtil {
 	}
 
 	private static List<ExpressionConstants> getBonitaConstantsFor(
-			final EObject context, ViewerFilter[] filters) {
+			EObject context, ViewerFilter[] filters) {
 		final List<ExpressionConstants> result = new ArrayList<ExpressionConstants>();
 		DisplayEngineExpressionWithName engineFilter = null;
 		if(filters != null){
@@ -270,6 +270,10 @@ public class GroovyUtil {
 		result.add(ExpressionConstants.PROCESS_INSTANCE_ID);
 		result.add(ExpressionConstants.ACTIVITY_INSTANCE_ID);
 
+		if(context instanceof Expression){
+			context = context.eContainer();
+		}
+		
 		if (context instanceof Activity) {
 			if (((Activity) context).isIsMultiInstance()) {
 				if(engineFilter != null){
@@ -298,10 +302,14 @@ public class GroovyUtil {
 		} else if (context instanceof Widget
 				&& ModelHelper.getPageFlow((Widget) context) != null) {
 			result.add(ExpressionConstants.LOGGED_USER_ID);
-			result.add(ExpressionConstants.TASK_ASSIGNEE_ID);
+			if(!(ModelHelper.getPageFlow((Widget) context) instanceof AbstractProcess)){
+				result.add(ExpressionConstants.TASK_ASSIGNEE_ID);
+			}
 		} else if (context instanceof Form) {
 			result.add(ExpressionConstants.LOGGED_USER_ID);
-			result.add(ExpressionConstants.TASK_ASSIGNEE_ID);
+			if(!(ModelHelper.getPageFlow((Widget) context) instanceof AbstractProcess)){
+				result.add(ExpressionConstants.TASK_ASSIGNEE_ID);
+			}
 		}
 
 		return result;
