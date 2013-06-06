@@ -41,7 +41,6 @@ import org.bonitasoft.forms.server.provider.impl.util.FormServiceProviderUtil;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.exporter.ExporterTools;
 import org.bonitasoft.studio.common.exporter.ExporterTools.TemplateType;
@@ -50,10 +49,8 @@ import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.diagram.custom.resources.ResourceTreeContentProvider;
 import org.bonitasoft.studio.engine.export.EngineExpressionUtil;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.model.form.AbstractTable;
 import org.bonitasoft.studio.model.form.CheckBoxMultipleFormField;
@@ -98,27 +95,17 @@ import org.bonitasoft.studio.model.process.AbstractPageFlow;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.AssociatedFile;
-import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.ConsultationPageFlowType;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataType;
-import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.Event;
-import org.bonitasoft.studio.model.process.FloatType;
-import org.bonitasoft.studio.model.process.IntegerType;
-import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.RecapFlow;
 import org.bonitasoft.studio.model.process.ResourceFile;
 import org.bonitasoft.studio.model.process.ResourceFolder;
-import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
-import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.validators.descriptor.validator.ValidatorDescriptor;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
 import org.eclipse.emf.common.util.EList;
@@ -480,10 +467,11 @@ public class FormsExporter {
 	}
 
 	protected void addWidgetAction(final Widget w, final PageFlow pageflow, final IFormBuilder builder) throws InvalidFormDefinitionException {
-		//		if (w instanceof FileWidget) {
-		//			addDocumentAction(w, builder);
-		//		} else 
 		if (w instanceof FormField) {
+			if(w instanceof FileWidget && ((FileWidget) w).isDownloadOnly()){
+				return;
+			}
+				
 			final Operation action = ((FormField) w).getAction();
 			if (action != null) {
 				if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty()
@@ -495,29 +483,6 @@ public class FormsExporter {
 		}
 	}
 
-	protected void addDocumentAction(final Widget w, final IFormBuilder builder) throws InvalidFormDefinitionException {
-		if (((FileWidget) w).isUpdateDocument()) {
-			final String targetDocName = ((FileWidget) w).getOutputDocumentName();
-			if (targetDocName != null) {
-				if (!((FileWidget) w).isDownloadOnly()) {
-					addAction(builder, ExpressionHelper.createDocumentOperation(targetDocName, w));
-				}
-			}
-		} else {
-			if (!((FileWidget) w).isDownloadOnly()) {
-				final Operation action = EcoreUtil.copy(w.getAction());
-				Operator op = ExpressionFactory.eINSTANCE.createOperator() ;
-				op.setType(ExpressionConstants.SET_DOCUMENT_OPERATOR) ;
-				op.setExpression("=") ;
-				action.setOperator(op) ;
-				final Expression rightOperand = action.getRightOperand();
-				rightOperand.setContent(FormsExporter.FIELD_IDENTIFIER + w.getName());
-				rightOperand.setType(ExpressionConstants.FORM_FIELD_TYPE);
-				rightOperand.setReturnType(ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE);
-				addAction(builder, action);
-			}
-		}
-	}
 
 	/**
 	 * @param pageflow
