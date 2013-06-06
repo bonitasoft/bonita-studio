@@ -41,7 +41,7 @@ public class DataWizardDialog extends WizardDialog {
 	private static final int MIN_DIALOG_WIDTH = 350;
 
 	// Minimum dialog height (in dialog units)
-	private static final int MIN_DIALOG_HEIGHT = 250;
+	private static final int MIN_DIALOG_HEIGHT = 270;
 
 	public DataWizardDialog(Shell parentShell, IWizard newWizard,AbstractDataSection dataSection) {
 		super(parentShell, newWizard);
