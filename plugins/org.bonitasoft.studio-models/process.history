@@ -7709,6 +7709,7 @@
         </operation>
       </changes>
     </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
   </releases>
   <releases date="2013-04-30T18:37:32.795+0200" label="6.0.0-ga-004">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetActionMigration"/>
@@ -7743,9 +7744,11 @@
         </parameters>
       </operation>
     </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
   </releases>
   <releases date="2013-05-17T10:17:14.066+0200" label="6.0.0-ga-005">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.FormConnectorEventMigration"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
   </releases>
   <releases/>
 </history:History>
