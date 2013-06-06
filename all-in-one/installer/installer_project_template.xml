@@ -389,6 +389,7 @@
 			<validationActionList>
 				<findFile>
 					<baseDirectory>${Oldworkspace}</baseDirectory>
+					<showMessageOnError>1</showMessageOnError>
 					<customErrorMessage>${msg(workspace.location.validation.error)}</customErrorMessage>
 					<pattern>workspace</pattern>
 					<variable>workspaceFound</variable>
