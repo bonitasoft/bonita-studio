@@ -81,6 +81,45 @@
 									 <directory>${workspacePath}</directory>
 									<followSymlinks>false</followSymlinks>
 								</fileset>
+								<fileset>
+									 <directory>${workspacePath}/../org.bonitasoft.studio.model</directory>
+									 <includes>
+										<include>META-INF/MANIFEST.MF</include>
+										<include>src</include>
+										<include>plugin.xml</include>
+										<include>plugin.properties</include>
+									</includes>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+								<fileset>
+									 <directory>${workspacePath}/../org.bonitasoft.studio.model.edit</directory>
+									 <includes>
+										<include>META-INF/MANIFEST.MF</include>
+										<include>src</include>
+										<include>plugin.properties</include>
+									</includes>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+								<fileset>
+									 <directory>${workspacePath}/../org.bonitasoft.studio.diagram</directory>
+									 <includes>
+										<include>META-INF/MANIFEST.MF</include>
+										<include>src</include>
+										<include>plugin.properties</include>
+										<include>plugin.xml</include>
+									</includes>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+								<fileset>
+									 <directory>${workspacePath}/../org.bonitasoft.studio.diagram.form</directory>
+									 <includes>
+										<include>META-INF/MANIFEST.MF</include>
+										<include>src</include>
+										<include>plugin.properties</include>
+										<include>plugin.xml</include>
+									</includes>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
 							</filesets>
 						</configuration>
 					</plugin>
