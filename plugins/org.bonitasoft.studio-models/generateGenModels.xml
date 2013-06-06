@@ -41,6 +41,8 @@
 		<gmfAnt:GenerateDiagramCode gmfgenPath="org.bonitasoft.studio-models/process.gmfgen" />
 		<gmfAnt:GenerateDiagramCode gmfgenPath="org.bonitasoft.studio-models/form/form.gmfgen" />
 		<delete dir="${workspacePath}/org.bonitasoft.studio.model.edit/icons/full/obj16"></delete>
+		<delete dir="${workspacePath}/org.bonitasoft.studio.diagram/icons/obj16"></delete>
+		<delete dir="${workspacePath}/org.bonitasoft.studio.diagram.form/icons/obj16"></delete>
 		<delete file="${workspacePath}/org.bonitasoft.studio.model.edit/plugin.xml"></delete>
 		<copydir dest="${workspacePath}/../org.bonitasoft.studio.model" src="${workspacePath}/org.bonitasoft.studio.model" forceoverwrite="false" />
 		<copydir dest="${workspacePath}/../org.bonitasoft.studio.model.edit" src="${workspacePath}/org.bonitasoft.studio.model.edit" forceoverwrite="false" />
