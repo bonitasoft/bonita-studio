@@ -168,6 +168,9 @@ public class DefinitionResourceProvider {
 
         ResourceBundle bundle = null;
         try {
+        	if(fileStore.canBeShared()){
+        		  ResourceBundle.clearCache();
+        	}
             bundle = ResourceBundle.getBundle(baseName, locale, pluginControl);
         } catch (MissingResourceException e) {
             try {
