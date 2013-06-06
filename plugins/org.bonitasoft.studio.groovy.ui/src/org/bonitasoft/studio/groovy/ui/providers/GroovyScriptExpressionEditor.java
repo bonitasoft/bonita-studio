@@ -28,6 +28,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.observables.DocumentObservable;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
@@ -90,7 +91,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.Section;
-import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 /**
  * @author Romain Bioteau
  *
@@ -129,6 +129,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
             return super.compare(viewer, e1, e2);
         }
     };
+	private Button testButton;
 
     public GroovyScriptExpressionEditor(){
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -323,7 +324,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         buttonBarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         buttonBarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create()) ;
 
-        final Button testButton = new Button(buttonBarComposite,SWT.PUSH) ;
+        testButton = new Button(buttonBarComposite,SWT.PUSH) ;
         testButton.setText(Messages.testButtonLabel) ;
         testButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END,SWT.FILL).create());
         testButton.addSelectionListener(new SelectionAdapter() {
@@ -369,6 +370,20 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
         inputExpression.setType(ExpressionConstants.SCRIPT_TYPE);
         inputExpression.setInterpreter(ExpressionConstants.GROOVY);
 
+        UpdateValueStrategy evaluateStrategy = new UpdateValueStrategy();
+        evaluateStrategy.setConverter(new Converter(String.class,Boolean.class){
+
+			@Override
+			public Object convert(Object fromObject) {
+				if(fromObject == null || fromObject.toString().isEmpty()){
+					return false;
+				}
+				return true;
+			}
+        	
+        });
+        
+        dataBindingContext.bindValue(SWTObservables.observeEnabled(testButton),SWTObservables.observeText(groovyViewer.getSourceViewer().getTextWidget(),SWT.Modify),null,evaluateStrategy);
         groovyViewer.setContext(context,filters) ;
         nodes = groovyViewer.getFieldNodes() ;
       
