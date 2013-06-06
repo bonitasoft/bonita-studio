@@ -20,9 +20,6 @@
 	<taskdef classpath="antTasks/bonita_antTasks.jar" name="refreshWorkspace" classname="org.bonitasoft.studio.antTasks.RefreshWorkspaceTask"/>
 
 	<target name="generate">
-	<delete>
-		<fileset dir="${workspacePath}" />
-	</delete>
 	<copydir dest="${workspacePath}/org.bonitasoft.studio-models" src="${basedir}"></copydir>
 	<refreshWorkspace project="org.bonitasoft.studio-models"/>
 	<emf.Ecore2Java
