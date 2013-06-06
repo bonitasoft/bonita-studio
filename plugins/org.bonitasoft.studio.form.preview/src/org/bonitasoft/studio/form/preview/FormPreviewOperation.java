@@ -227,7 +227,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
 		proc.setName(form.getName()+" preview");
 		proc.setVersion(VERSION);
-		proc.setBasedOnLookAndFeel(lookNFeel.getName());
+		//proc.setBasedOnLookAndFeel(lookNFeel.getName());
 		//initializeLookNFeel(proc);
 		Element parent =ModelHelper.getParentFlowElement(form);
 		if (parent ==null){
