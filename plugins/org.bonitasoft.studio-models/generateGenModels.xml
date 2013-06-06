@@ -28,7 +28,7 @@
 	<delete dir="../org.bonitasoft.studio.diagram/src" />
 	<delete dir="../org.bonitasoft.studio.diagram.form/src" />
 	<refreshWorkspace project="org.bonitasoft.studio.diagram"/>
-	<refreshWorkspace  project="org.bonitasoft.studio.diagram.form"/>
+	<refreshWorkspace project="org.bonitasoft.studio.diagram.form"/>
 	<emf.Ecore2Java
 			modelpluginid="org.bonitasoft.studio.model"
 			modelproject="org.bonitasoft.studio.model"
