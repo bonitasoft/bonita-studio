@@ -296,9 +296,9 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 	@Override
 	protected InputStream handlePreImport(final String fileName,
 			InputStream inputStream) throws MigrationException {
-		final InputStream is = super.handlePreImport(fileName, inputStream);
 		CopyInputStream copyIs = null;
 		try{
+			final InputStream is = super.handlePreImport(fileName, inputStream);
 			copyIs = new CopyInputStream(is);
 			Resource r = getTmpEMFResource("beforeImport", copyIs.getCopy());
 			try {
@@ -343,6 +343,9 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 				}
 			}
 			return copyIs.getCopy();
+		}catch(IOException e){
+			BonitaStudioLog.error(e);
+			return null;
 		}finally{
 			copyIs.close();
 		}

@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.common.repository.store;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,7 +109,21 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 				});
 			}
 			return null;
+		} catch (final IOException e) {
+			if(!FileActionDialog.getDisablePopup()){
+				Display.getDefault().syncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.importedFileIsInvalidTitle, Messages.bind(Messages.importedFileIsInvalid, e.getMessage()),e).open();
+					}
+				});
+			}
+			return null;
 		}
+		
+		
+		
 		if(newIs == null){
 			return null;
 		}
@@ -162,7 +177,7 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 	  * @param inputStream
 	  * @return A new InputStream with a migrated content
 	  */
-	 protected InputStream handlePreImport(String fileName, InputStream inputStream) throws MigrationException{
+	 protected InputStream handlePreImport(String fileName, InputStream inputStream) throws MigrationException, IOException{
 		 return inputStream ;
 	 }
 
@@ -286,11 +301,17 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 				 if(r instanceof IFile && r.exists()){
 					 final IFile iFile = (IFile) r;
 					 final InputStream is = iFile.getContents();
-					 final InputStream newIs = handlePreImport(r.getName(), is);
-					 if(!is.equals(newIs)){
-						 iFile.setContents(newIs, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
-						 iFile.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
-					 }
+					 InputStream newIs;
+					try {
+						newIs = handlePreImport(r.getName(), is);
+						 if(!is.equals(newIs)){
+							 iFile.setContents(newIs, IResource.FORCE, Repository.NULL_PROGRESS_MONITOR);
+							 iFile.refreshLocal(IResource.DEPTH_ONE, Repository.NULL_PROGRESS_MONITOR);
+						 }
+					} catch (IOException e) {
+						throw new MigrationException("Cannot migrate resource "+r.getName() +" (not a valid file)", new Exception());
+					}
+					
 				 }else{
 					 throw new MigrationException("Cannot migrate resource "+r.getName() +" (not a file)", new Exception());
 				 }

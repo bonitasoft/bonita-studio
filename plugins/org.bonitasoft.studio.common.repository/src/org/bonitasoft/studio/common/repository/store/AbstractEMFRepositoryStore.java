@@ -91,7 +91,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
 	}
 
 	@Override
-	protected InputStream handlePreImport(String fileName, InputStream inputStream) throws MigrationException{
+	protected InputStream handlePreImport(String fileName, InputStream inputStream) throws MigrationException, IOException{
 		final InputStream is = super.handlePreImport(fileName, inputStream);
 		if(fileName.endsWith(".properties") 
 				|| fileName.toLowerCase().endsWith(".png") 
@@ -112,6 +112,13 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
 		final URI resourceURI = resource.getURI();
 		final File tmpFile = new File(resource.getURI().toFileString());
 		String nsURI = ReleaseUtils.getNamespaceURI(resourceURI);
+		
+		if(nsURI==null){
+			tmpFile.delete();
+			copyIs.close();
+			throw new IOException(fileName);
+		}
+		
 		Migrator targetMigrator = getMigrator(nsURI);
 		if (targetMigrator != null) {
 			Release release =  getRelease(targetMigrator,resource);

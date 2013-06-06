@@ -55,6 +55,9 @@ public final class Messages extends NLS {
 	public static String importBonita6xTitle;
 	public static String importBonita6xError;
 
+	public static String importedFileIsInvalidTitle;
+	public static String importedFileIsInvalid;
+
     private Messages() {
         // Do not instantiate
     }
