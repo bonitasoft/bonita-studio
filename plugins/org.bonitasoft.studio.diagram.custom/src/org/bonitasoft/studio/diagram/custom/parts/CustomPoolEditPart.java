@@ -17,6 +17,8 @@
 package org.bonitasoft.studio.diagram.custom.parts;
 
 import org.bonitasoft.studio.diagram.custom.editPolicies.CustomDragDropEditPolicy;
+import org.bonitasoft.studio.diagram.custom.editPolicies.CustomLaneItemSemanticEditPolicy;
+import org.bonitasoft.studio.diagram.custom.editPolicies.CustomPoolItemSemanticEditPolicy;
 import org.bonitasoft.studio.diagram.custom.figures.VerticalLabel;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
@@ -96,6 +98,9 @@ public class CustomPoolEditPart extends PoolEditPart {
 	@Override
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
+		removeEditPolicy(EditPolicyRoles.SEMANTIC_ROLE);
+		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
+				new CustomPoolItemSemanticEditPolicy());
 		removeEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE);
 		installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE,
 				new CustomDragDropEditPolicy());
