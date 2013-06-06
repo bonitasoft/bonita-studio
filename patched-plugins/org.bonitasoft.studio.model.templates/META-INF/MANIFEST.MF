@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Studio Generation Templates
-Bundle-SymbolicName: org.bonitasoft.studio.model.templates
-Bundle-Version: 6.0.1.qualifier
-Bundle-Vendor: BonitaSoft S.A.
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
