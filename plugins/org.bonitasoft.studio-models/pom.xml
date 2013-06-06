@@ -18,7 +18,7 @@
 		<profile>
 			<id>generate</id>
 				<properties>
-		      	  <workspacePath>${project.parent.basedir}</workspacePath>
+		      	  <workspacePath>${project.parent.basedir}/generationWorkspace</workspacePath>
 		     	 </properties>
 				<build>
 					<plugins>
@@ -56,10 +56,6 @@
 								</dependency>
 								<dependency>
 									<artifactId>org.eclipse.emf.importer.ecore</artifactId>
-									<type>eclipse-plugin</type>
-								</dependency>
-								<dependency>
-									<artifactId>org.bonitasoft.studio.model.templates</artifactId>
 									<type>eclipse-plugin</type>
 								</dependency>
 								<dependency>

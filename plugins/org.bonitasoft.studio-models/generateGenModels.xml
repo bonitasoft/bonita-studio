@@ -20,15 +20,11 @@
 	<taskdef classpath="antTasks/bonita_antTasks.jar" name="refreshWorkspace" classname="org.bonitasoft.studio.antTasks.RefreshWorkspaceTask"/>
 
 	<target name="generate">
-	
-	<delete file="../org.bonitasoft.studio.model/META-INF/MANIFEST.MF" quiet="true" />
-	<delete file="../org.bonitasoft.studio.model.edit/META-INF/MANIFEST.MF" quiet="true" />
-	<delete file="../org.bonitasoft.studio.diagram/META-INF/MANIFEST.MF" quiet="true" />
-	<delete file="../org.bonitasoft.studio.diagram.form/META-INF/MANIFEST.MF" quiet="true" />
-	<delete dir="../org.bonitasoft.studio.diagram/src" />
-	<delete dir="../org.bonitasoft.studio.diagram.form/src" />
-	<refreshWorkspace project="org.bonitasoft.studio.diagram"/>
-	<refreshWorkspace project="org.bonitasoft.studio.diagram.form"/>
+	<delete>
+		<fileset dir="${workspacePath}" />
+	</delete>
+	<copydir dest="${workspacePath}/org.bonitasoft.studio-models" src="${basedir}"></copydir>
+	<refreshWorkspace project="org.bonitasoft.studio-models"/>
 	<emf.Ecore2Java
 			modelpluginid="org.bonitasoft.studio.model"
 			modelproject="org.bonitasoft.studio.model"
@@ -42,27 +38,10 @@
 			generateeditorproject="false"
 			generatetestsproject="false"
 			templatepath="EMFTemplates/"
+			autobuild="true"
 			jdklevel="6.0" >
 		</emf.Ecore2Java>
-		
-	
-		<refreshWorkspace project="org.bonitasoft.studio-models"/>
-		<refreshWorkspace project="org.bonitasoft.studio.model"/>
-		<refreshWorkspace project="org.bonitasoft.studio.model.edit"/>
-		<refreshWorkspace  project="org.bonitasoft.studio.diagram"/>
-		<refreshWorkspace  project="org.bonitasoft.studio.diagram.form"/>
 		<gmfAnt:GenerateDiagramCode gmfgenPath="org.bonitasoft.studio-models/process.gmfgen" />
-
-		<refreshWorkspace  project="org.bonitasoft.studio.diagram"/>
-		<refreshWorkspace project="org.bonitasoft.studio.diagram.form"/>
 		<gmfAnt:GenerateDiagramCode gmfgenPath="org.bonitasoft.studio-models/form/form.gmfgen" />
-
-		<refreshWorkspace project="org.bonitasoft.studio.diagram.form"/>
-			<replace file="../org.bonitasoft.studio.model/plugin.properties"
-						value="BonitaSoft S.A." token="www.example.org">
-			</replace>
-			<replace file="../org.bonitasoft.studio.model.edit/plugin.properties"
-						value="BonitaSoft S.A." token="www.example.org">
-			</replace> 
     </target>
 </project>
