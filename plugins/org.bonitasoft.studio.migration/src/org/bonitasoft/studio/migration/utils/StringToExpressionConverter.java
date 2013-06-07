@@ -345,6 +345,22 @@ public class StringToExpressionConverter {
 		}
 		return instance;
 	}
+	
+	public static Instance createExpressionInstanceWithDependency(Model model,String name, String content,String returnType,String expresisonType,boolean fixedReturnType,Instance dependency){
+		final Instance instance = model.newInstance("expression.Expression");
+		instance.set("name", name);
+		instance.set("content", content);
+		instance.set("returnType", returnType);
+		instance.set("returnTypeFixed", fixedReturnType);
+		instance.set("type", expresisonType);
+		if(ExpressionConstants.SCRIPT_TYPE.equals(expresisonType)){
+			instance.set("interpreter", ExpressionConstants.GROOVY);
+		}
+		if(dependency!=null){
+			instance.add("referencedElements", dependency.copy());
+		}
+		return instance;
+	}
 
 	public static String getDataReturnType(Instance data) {
 		final Instance dataype = data.get("dataType");

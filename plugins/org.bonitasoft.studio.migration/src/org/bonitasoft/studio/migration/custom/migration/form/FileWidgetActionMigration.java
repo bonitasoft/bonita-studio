@@ -34,6 +34,9 @@ public class FileWidgetActionMigration extends CustomMigration {
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance fileWidget : model.getAllInstances("form.FileWidget")){
+			if(fileWidget.getType()==null){
+				continue;
+			}
 			String documentName = fileWidget.get("outputDocumentName");
 			if(documentName != null){
 				Instance storageExpression = StringToExpressionConverter.createExpressionInstance(model, 
@@ -43,12 +46,13 @@ public class FileWidgetActionMigration extends CustomMigration {
 						ExpressionConstants.DOCUMENT_REF_TYPE,
 						false);
 				String widgetId = "field_"+fileWidget.get("name");
-				Instance actionExpression = StringToExpressionConverter.createExpressionInstance(model, 
+				Instance actionExpression = StringToExpressionConverter.createExpressionInstanceWithDependency(model, 
 						widgetId, 
 						widgetId, 
 						ExpressionConstants.DOCUMENT_VALUE_RETURN_TYPE, 
 						ExpressionConstants.FORM_FIELD_TYPE,
-						false);
+						false,
+						fileWidget);
 				final Instance operator = model.newInstance("expression.Operator");
 				operator.set("type", ExpressionConstants.SET_DOCUMENT_OPERATOR);
 				final Instance oldOperation = fileWidget.get("action");

@@ -357,7 +357,9 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 			BonitaStudioLog.error(e);
 			return null;
 		}finally{
-			copyIs.close();
+			if(copyIs != null){
+				copyIs.close();
+			}
 		}
 	}
 
