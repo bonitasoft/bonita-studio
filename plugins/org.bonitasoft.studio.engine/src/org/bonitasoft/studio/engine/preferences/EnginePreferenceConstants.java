@@ -37,7 +37,5 @@ public class EnginePreferenceConstants {
     public static final String DEFAULT_CONFIG = "defaultConfiguration";
     public static final String REST_MODE = "REST";
     public static final String REST_SERVER_ADDRESS_PROPERTY = BonitaConstants.REST_SERVER_ADDRESS_PROPERTY ;
-    public static final String TOMCAT_START_MODE = "tomcat-start-mode" ;
-    public static final String RUN_MODE = "run";
     public static final String DEBUG_MODE = "debug";
 }

@@ -36,7 +36,6 @@ public class EnginePreferencesInitializer extends AbstractPreferenceInitializer 
         IPreferenceStore store = EnginePlugin.getDefault().getPreferenceStore();
         store.setDefault(EnginePreferenceConstants.CURRENT_CONFIG, EnginePreferenceConstants.DEFAULT_CONFIG);
         store.setDefault(EnginePreferenceConstants.REMOTE_DEPLOYMENT_CHOICE, EnginePreferenceConstants.STANDARD_MODE);
-        store.setDefault(EnginePreferenceConstants.TOMCAT_START_MODE,EnginePreferenceConstants.RUN_MODE);
     }
 
 }
