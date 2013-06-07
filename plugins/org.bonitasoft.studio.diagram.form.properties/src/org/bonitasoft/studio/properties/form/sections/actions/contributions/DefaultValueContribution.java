@@ -129,11 +129,12 @@ public class DefaultValueContribution implements IExtensibleGridPropertySectionC
                 input = ExpressionFactory.eINSTANCE.createExpression() ;
                 editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, widget, FormPackage.Literals.MULTIPLE_VALUATED_FORM_FIELD__DEFAULT_EXPRESSION, input));
             }
+            defaultExpressionViewer.setInput(widget) ;
             dataBindingContext.bindValue(
                     ViewerProperties.singleSelection().observe(defaultExpressionViewer),
                     EMFEditProperties.value(editingDomain, FormPackage.Literals.MULTIPLE_VALUATED_FORM_FIELD__DEFAULT_EXPRESSION).observe(widget));
             defaultExpressionViewer.setEditingDomain(editingDomain) ;
-            defaultExpressionViewer.setInput(widget) ;
+          
         }
     }
 
