@@ -194,7 +194,7 @@ public class BonitaPreferenceDialog extends Dialog {
                 cleanHighlights() ;
                 if(!searchTxt.getText().trim().isEmpty()){
                     filter(searchTxt.getText()) ;
-                    updateShellSize(true) ;
+                    updateShellSize(false) ;
                 }
             }
 
@@ -225,8 +225,9 @@ public class BonitaPreferenceDialog extends Dialog {
 
         stack.topControl = menuComposite ;
         mainComposite.layout() ;
-
         menuComposite.setFocus();
+
+        
         return container;
     }
 
@@ -519,8 +520,6 @@ public class BonitaPreferenceDialog extends Dialog {
         itemPerPreferenceNode.put(ECLIPSE_PAGE_ID, eclipseItem) ;
         labelPerPreferenceNode.put(ECLIPSE_PAGE_ID, eclipseLabel) ;
 
-        updateShellSize(true);
-
         return menuComposite;
     }
 
@@ -701,7 +700,7 @@ public class BonitaPreferenceDialog extends Dialog {
      */
     @Override
     protected Point getInitialSize() {
-        return new Point(600,530);
+        return new Point(745, 469);
     }
 
 
