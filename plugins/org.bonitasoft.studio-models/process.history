@@ -4634,10 +4634,10 @@
             featureName="eType" referenceValue="process.ecore#//Actor"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-          element="#//@releases.2/@changes.2/@changes.1/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"
+          element="#//@releases.2/@changes.1/@changes.1/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.2/@changes.1/@changes.1/@changes.0/@element"
             featureName="name" dataValue="EventSubProcessPool"/>
-        <changes xsi:type="history:Add" element="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"
+        <changes xsi:type="history:Add" element="#//@releases.2/@changes.1/@changes.1/@changes.0/@element"
             featureName="eSuperTypes" referenceValue="process.ecore#//AbstractProcess"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -4828,9 +4828,9 @@
         <changes xsi:type="history:Set" element="#//@releases.2/@changes.0/@changes.1/@element"
             featureName="name" dataValue="subProcessEvent"/>
         <changes xsi:type="history:Set" element="#//@releases.2/@changes.0/@changes.1/@element"
-            featureName="eType" referenceValue="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"/>
+            featureName="eType" referenceValue="#//@releases.2/@changes.1/@changes.1/@changes.0/@element"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"
+      <changes xsi:type="history:Create" target="#//@releases.2/@changes.1/@changes.1/@changes.0/@element"
           referenceName="eStructuralFeatures" element="#//@releases.2/@changes.0/@changes.2/@element">
         <changes xsi:type="history:Set" element="#//@releases.2/@changes.0/@changes.2/@element"
             featureName="name" dataValue="subProcessActivityInParentProcess"/>
@@ -7607,10 +7607,10 @@
           featureName="eOpposite" oldReferenceValue="#//@releases.2/@changes.0/@changes.1/@element"/>
       <changes xsi:type="history:Delete" target="process.ecore#//SubProcessEvent"
           referenceName="eStructuralFeatures">
-        <element xsi:type="ecore:EReference" name="subProcessEvent" eType="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"
+        <element xsi:type="ecore:EReference" name="subProcessEvent" eType="#//@releases.2/@changes.1/@changes.1/@changes.0/@element"
             eOpposite="#//@releases.2/@changes.0/@changes.2/@element"/>
       </changes>
-      <changes xsi:type="history:Delete" target="#//@releases.2/@changes.2/@changes.1/@changes.0/@element"
+      <changes xsi:type="history:Delete" target="#//@releases.2/@changes.1/@changes.1/@changes.0/@element"
           referenceName="eStructuralFeatures">
         <element xsi:type="ecore:EReference" name="subProcessActivityInParentProcess"
             eType="ecore:EClass process.ecore#//SubProcessEvent"/>
@@ -7621,7 +7621,6 @@
         </parameters>
       </operation>
     </changes>
-    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.subprocessevent.SubprocessEventMigration">
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Remove" element="process.ecore#//SubProcessEvent"
@@ -7648,7 +7647,6 @@
   </releases>
   <releases date="2013-04-15T10:10:08.354+0200" label="6.0.0-ga-002">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.expression.PatternExpressionMigration"/>
-    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
   </releases>
   <releases date="2013-04-22T11:30:12.379+0200" label="6.0.0-ga-003">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.UpdateConfigurationId">
@@ -7709,7 +7707,6 @@
         </operation>
       </changes>
     </changes>
-    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
   </releases>
   <releases date="2013-04-30T18:37:32.795+0200" label="6.0.0-ga-004">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.form.FileWidgetActionMigration"/>
@@ -7744,7 +7741,6 @@
         </parameters>
       </operation>
     </changes>
-    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.version.UpdateModelVersion"/>
   </releases>
   <releases date="2013-05-17T10:17:14.066+0200" label="6.0.0-ga-005">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.FormConnectorEventMigration"/>
