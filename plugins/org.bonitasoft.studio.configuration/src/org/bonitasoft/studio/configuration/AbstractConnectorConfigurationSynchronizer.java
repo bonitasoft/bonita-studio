@@ -178,11 +178,13 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
 			if(fc.getId().equals(implementationId)){
 				Set<Fragment> toRemove = new HashSet<Fragment>();
 				for(Fragment depFragment : fc.getFragments()){
-					if(!implementation.getJarDependencies().getJarDependency().contains(depFragment.getValue())){
+					if(!implementation.getJarDependencies().getJarDependency().contains(depFragment.getValue()) && !implementationId.equals(depFragment.getValue())){
 						toRemove.add(depFragment);
 					}
 				}
-				editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, toRemove)) ;
+				if(!toRemove.isEmpty()){
+					editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, fc, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, toRemove)) ;
+				}
 			}
 		}
 
@@ -275,7 +277,9 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
 
 			}
 		}
-		editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__DEFINITION_MAPPINGS, toRemove)) ;
+		if(!toRemove.isEmpty()){
+			editingDomain.getCommandStack().execute(RemoveCommand.create(editingDomain, configuration, ConfigurationPackage.Literals.CONFIGURATION__DEFINITION_MAPPINGS, toRemove)) ;
+		}
 		FragmentContainer container = getContainer(configuration) ;
 		FragmentContainer toRemove2 = null ;
 		for(FragmentContainer fc : container.getChildren()){
