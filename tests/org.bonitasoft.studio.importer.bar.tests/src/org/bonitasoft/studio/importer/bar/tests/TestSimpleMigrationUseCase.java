@@ -446,7 +446,7 @@ public class TestSimpleMigrationUseCase {
 
 	@Test
 	public void testFileAndImageWidgetMigration() throws Exception{
-		final URL url = TestSimpleMigrationUseCase.class.getResource("ValidatorMigrationUseCase--1.0.bar");
+		final URL url = TestSimpleMigrationUseCase.class.getResource("FileAndImageWidgetMigrationUseCase--1.0.bar");
 		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
