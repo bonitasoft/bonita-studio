@@ -33,7 +33,9 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -320,6 +322,14 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 						});
 						return null;
 					}
+					String pVersion = diagram.getBonitaVersion();
+					String mVersion = diagram.getBonitaModelVersion();
+					if(!ProductVersion.CURRENT_VERSION.equals(pVersion)){
+						diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
+					}
+					if(!ModelVersion.CURRENT_VERSION.equals(mVersion)){
+						diagram.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
+					}	
 					diagram.setConfigId(ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
 					try {
 						r.save(Collections.EMPTY_MAP);
