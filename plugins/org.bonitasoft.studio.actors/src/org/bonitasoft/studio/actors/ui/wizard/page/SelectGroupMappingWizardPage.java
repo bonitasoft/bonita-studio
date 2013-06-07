@@ -142,12 +142,10 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
 			for(Object o2 : list2){
 				String s2 = (String) o2;
 				if(!s1.equals(s2) && (s2.startsWith(s1) || s1.startsWith(s2)) ){
-					System.out.println("FALSE");
 					return false;
 				}
 			}
 		}
-		System.out.println("OK");
 		return true;
 	}
 	
