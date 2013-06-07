@@ -426,10 +426,6 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 
 
 	private void changeProcessNameAndVersion(final AbstractProcess process,final String name, final String version) {
-//		CompoundCommand cc = new CompoundCommand() ;
-//		cc.append(SetCommand.create(editingDomain, process, ProcessPackage.eINSTANCE.getElement_Name(), name)) ;
-//		cc.append(SetCommand.create(editingDomain, process, ProcessPackage.eINSTANCE.getAbstractProcess_Version(), version)) ;
-//		editingDomain.getCommandStack().execute(cc) ;
 		proceedForPools(process, name, process.getName(), ((AbstractProcess) process).getVersion(), version);
 		if(process instanceof MainProcess){
 			editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID, ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId((MainProcess) process)));
