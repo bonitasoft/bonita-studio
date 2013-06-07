@@ -97,7 +97,8 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
 				|| fileName.toLowerCase().endsWith(".png") 
 				|| fileName.toLowerCase().endsWith(".jpg")
 				|| fileName.toLowerCase().endsWith(".gif")
-				|| fileName.toLowerCase().endsWith(".jpeg")){//not an emf resource
+				|| fileName.toLowerCase().endsWith(".jpeg")
+				| fileName.toLowerCase().endsWith(".xsd")){//not an emf resource
 			return is;
 		}
 		final CopyInputStream copyIs = new CopyInputStream(is);
