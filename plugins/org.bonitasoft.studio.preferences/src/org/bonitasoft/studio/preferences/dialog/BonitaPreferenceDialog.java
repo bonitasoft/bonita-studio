@@ -32,6 +32,7 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.PreferenceUtil;
 import org.bonitasoft.studio.preferences.i18n.Messages;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceNode;
@@ -690,7 +691,12 @@ public class BonitaPreferenceDialog extends Dialog {
      */
     @Override
     protected Point getInitialSize() {
-        return new Point(745, 469);
+    	if(Platform.getOS().equals(Platform.OS_LINUX)){
+    		return new Point(745, 490);
+    	}else{
+    		return new Point(745, 469);
+    	}
+        
     }
 
 
