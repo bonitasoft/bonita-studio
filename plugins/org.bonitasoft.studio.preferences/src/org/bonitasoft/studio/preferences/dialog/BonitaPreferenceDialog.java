@@ -692,7 +692,7 @@ public class BonitaPreferenceDialog extends Dialog {
     @Override
     protected Point getInitialSize() {
     	if(Platform.getOS().equals(Platform.OS_LINUX)){
-    		return new Point(745, 490);
+    		return new Point(745, 510);
     	}else{
     		return new Point(745, 469);
     	}
