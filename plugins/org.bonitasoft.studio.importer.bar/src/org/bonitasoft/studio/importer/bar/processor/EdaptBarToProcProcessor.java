@@ -35,7 +35,9 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -230,6 +232,9 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 					for(EObject root : resource.getContents()){
 						if(root instanceof MainProcess){
 							diagramName = ((MainProcess) root).getName()+"--"+((MainProcess) root).getVersion();
+							((MainProcess) root).setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
+							((MainProcess) root).setBonitaVersion(ProductVersion.CURRENT_VERSION);
+							((MainProcess) root).setConfigId(ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId((MainProcess) root));
 						}
 					}
 					report.setName(Messages.bind(Messages.migrationReportOf,diagramName));

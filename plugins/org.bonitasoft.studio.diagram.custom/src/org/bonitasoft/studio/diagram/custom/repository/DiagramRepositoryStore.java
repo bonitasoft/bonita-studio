@@ -311,6 +311,8 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 			if(!r.getContents().isEmpty()){
 				final MainProcess diagram  = (MainProcess) r.getContents().get(0);
 				if(diagram != null){
+					String pVersion = diagram.getBonitaVersion();
+					String mVersion = diagram.getBonitaModelVersion();
 					if(!ConfigurationIdProvider.getConfigurationIdProvider().isConfigurationIdValid(diagram)){
 						Display.getDefault().syncExec(new Runnable() {
 
@@ -322,8 +324,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 						});
 						return null;
 					}
-					String pVersion = diagram.getBonitaVersion();
-					String mVersion = diagram.getBonitaModelVersion();
+					
 					if(!ProductVersion.CURRENT_VERSION.equals(pVersion)){
 						diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
 					}
