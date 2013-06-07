@@ -25,9 +25,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -37,7 +34,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.bonitasoft.studio.common.FileUtil;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -45,7 +41,6 @@ import org.eclipse.core.filesystem.IFileSystem;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -57,10 +52,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.internal.intro.impl.IntroPlugin;
-import org.eclipse.ui.internal.intro.impl.model.AbstractIntroContainer;
-import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
+import org.eclipse.ui.internal.intro.IIntroConstants;
 import org.eclipse.ui.intro.IIntroManager;
 import org.osgi.framework.Bundle;
 
@@ -139,7 +131,10 @@ public class PlatformUtil {
 				if (editors.length == 0){//if there is no other editor opened
 					final String productId = Platform.getProduct().getId();
 					if (isABonitaProduct(productId)) {//and that we are in BOS or BOS-SP
-						openIntro();
+						IWorkbenchPartReference activePartReferences = activePage.getActivePartReference();
+						if(!IIntroConstants.INTRO_VIEW_ID.equals(activePartReferences.getId())){
+							openIntro();
+						}	
 					}else{
 						closeIntro();
 					}
