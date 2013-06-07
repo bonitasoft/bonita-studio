@@ -307,7 +307,7 @@ public class GroovyUtil {
 			}
 		} else if (context instanceof Form) {
 			result.add(ExpressionConstants.LOGGED_USER_ID);
-			if(!(ModelHelper.getPageFlow((Widget) context) instanceof AbstractProcess)){
+			if(!(((Form) context).eContainer() instanceof AbstractProcess)){
 				result.add(ExpressionConstants.TASK_ASSIGNEE_ID);
 			}
 		}
