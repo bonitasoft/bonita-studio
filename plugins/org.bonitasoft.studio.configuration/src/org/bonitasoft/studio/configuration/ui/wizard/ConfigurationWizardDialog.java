@@ -412,6 +412,7 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         super.showPage(page);
         page.setPreviousPage(null) ;
         setControlEnabled(page.getControl(),((ConfigurationWizard) getWizard()).getProcess() != null) ;
+        page.setVisible(true);
         pageChooserViewer.setSelection(new StructuredSelection(getCurrentPage())) ;
         group.setText(page.getTitle());
         String processName = getProcess().getName() +" ("+getProcess().getVersion()+")";
