@@ -16,8 +16,11 @@
  */
 package org.bonitasoft.studio.migration.version;
 
+import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
+import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
@@ -36,6 +39,12 @@ public class UpdateModelVersion extends CustomMigration {
 		for(Instance mainProc : model.getAllInstances("process.MainProcess")){
 			mainProc.set("bonitaVersion", ProductVersion.CURRENT_VERSION);
 			mainProc.set("bonitaModelVersion", ModelVersion.CURRENT_VERSION);
+			final MainProcess diagram = ProcessFactory.eINSTANCE.createMainProcess();
+			diagram.setName((String) mainProc.get("name"));
+			diagram.setVersion((String) mainProc.get("version"));
+			diagram.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
+			diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
+			mainProc.set("configId",ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
 		}
 	}
 	
