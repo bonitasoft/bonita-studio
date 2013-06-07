@@ -136,6 +136,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		long procId = -1;
 		final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
 		final AbstractProcess proc = createAbstractProcess(configuration);
+
 		if (canPreview){
 			configuration.setName("formPreviewConfig");
 
@@ -227,7 +228,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
 		proc.setName(form.getName()+" preview");
 		proc.setVersion(VERSION);
-		//proc.setBasedOnLookAndFeel(lookNFeel.getName());
+		proc.setBasedOnLookAndFeel(lookNFeel.getName());
 		//initializeLookNFeel(proc);
 		Element parent =ModelHelper.getParentFlowElement(form);
 		if (parent ==null){

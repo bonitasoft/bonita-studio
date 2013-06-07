@@ -12,6 +12,8 @@ import org.bonitasoft.studio.form.preview.i18n.Messages;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
 import org.bonitasoft.studio.repository.themes.LookNFeelRepositoryStore;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -180,7 +182,12 @@ public class FormPreviewPropertiesView extends ViewPart{
 		if ((getSite().getPage().getActiveEditor() instanceof FormDiagramEditor)){
 			Form form = (Form) ((FormDiagramEditor)getSite().getPage().getActiveEditor()).getDiagramEditPart().resolveSemanticElement();
 			AbstractProcess process = ModelHelper.getParentProcess(form);
-			return (ApplicationLookNFeelFileStore) repositoryStore.getChild(process.getBasedOnLookAndFeel());
+			ApplicationLookNFeelFileStore lnfStore = (ApplicationLookNFeelFileStore) repositoryStore.getChild(process.getBasedOnLookAndFeel());
+			if(lnfStore == null){
+				String themeId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME) ;
+				lnfStore = (ApplicationLookNFeelFileStore) repositoryStore.getChild(themeId);
+			}
+			return lnfStore; 
 		}
 		return null;
 	}
