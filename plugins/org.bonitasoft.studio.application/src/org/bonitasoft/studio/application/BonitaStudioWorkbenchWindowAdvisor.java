@@ -38,11 +38,17 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IProduct;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -73,6 +79,9 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.handlers.DirtyStateTracker;
+import org.eclipse.ui.internal.ide.IDEInternalPreferences;
+import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
+import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.util.PrefUtil;
 
 public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor implements INullSelectionListener,IActivityManagerListener{
@@ -467,4 +476,67 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor i
         refreshCoolbar() ;
     }
 
+    @Override
+    public boolean preWindowShellClose() {
+    	if (PlatformUI.getWorkbench().getWorkbenchWindowCount() > 1) {
+			return true;
+		}
+		// the user has asked to close the last window, while will cause the
+		// workbench to close in due course - prompt the user for confirmation
+		return promptOnExit(getWindowConfigurer().getWindow().getShell());
+    }
+    
+    static boolean promptOnExit(Shell parentShell) {
+		IPreferenceStore store = IDEWorkbenchPlugin.getDefault()
+				.getPreferenceStore();
+		boolean promptOnExit = store
+				.getBoolean(IDEInternalPreferences.EXIT_PROMPT_ON_CLOSE_LAST_WINDOW);
+
+		if (promptOnExit) {
+			if (parentShell == null) {
+				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if (workbenchWindow != null) {
+					parentShell = workbenchWindow.getShell();
+				}
+			}
+			if (parentShell != null) {
+				parentShell.setMinimized(false);
+				parentShell.forceActive();
+			}
+			
+			String message;
+
+			String productName = null;
+			IProduct product = Platform.getProduct();
+			if (product != null) {
+				productName = product.getName();
+			}
+			if (productName == null) {
+				message = IDEWorkbenchMessages.PromptOnExitDialog_message0;
+			} else {
+				message = NLS.bind(
+						IDEWorkbenchMessages.PromptOnExitDialog_message1,
+						productName);
+			}
+
+			MessageDialogWithToggle dlg = MessageDialogWithToggle
+					.openOkCancelConfirm(parentShell,
+							IDEWorkbenchMessages.PromptOnExitDialog_shellTitle,
+							message,
+							IDEWorkbenchMessages.PromptOnExitDialog_choice,
+							false, null, null);
+			if (dlg.getReturnCode() != IDialogConstants.OK_ID) {
+				return false;
+			}
+			if (dlg.getToggleState()) {
+				store
+						.setValue(
+								IDEInternalPreferences.EXIT_PROMPT_ON_CLOSE_LAST_WINDOW,
+								false);
+				IDEWorkbenchPlugin.getDefault().savePluginPreferences();
+			}
+		}
+
+		return true;
+	}
 }
