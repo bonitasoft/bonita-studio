@@ -330,24 +330,23 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
 	private void initializeForm(){
 		formCopy = EcoreUtil.copy(form);
+		List<Expression> exprs = ModelHelper.getAllItemsOfType(formCopy, ExpressionPackage.Literals.EXPRESSION);
+		for (Expression expr:exprs){
+			expr = initializeExpression(form,expr);
+		}
 		initializeAllWidgets(formCopy);
 		formCopy.getData().clear();
 		formCopy.getKpis().clear();
 		formCopy.getValidators().clear();
 		formCopy.getActions().clear();
 		formCopy.getConnectors().clear();
-
 	}
 
 	private void initializeAllWidgets(Form formCopy){
 		List<Widget> widgets = ModelHelper.getAllWidgetInsideForm(formCopy);
 		WidgetSwitch widgetSwitch = new WidgetSwitch();
 		for (Widget widget:widgets){
-			List<Expression> exprs = ModelHelper.getAllItemsOfType(widget, ExpressionPackage.Literals.EXPRESSION);
 			deleteAllOperations(widget);
-			for (Expression expr:exprs){
-				expr = initializeExpression(form,expr);
-			}
 			if (!widget.getDependOn().isEmpty()){
 				Expression exprDisplayDependentWidgetOnly = widget.getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition();
 				exprDisplayDependentWidgetOnly.setContent("true");
@@ -389,6 +388,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 					} else {
 						expr.setType(ExpressionConstants.CONSTANT_TYPE);
 						expr.setContent(data.getDefaultValue().getContent());
+						expr.getReferencedElements().clear();
 					}
 				}
 			} else {
