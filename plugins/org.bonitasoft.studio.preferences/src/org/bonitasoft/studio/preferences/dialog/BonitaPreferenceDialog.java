@@ -524,17 +524,7 @@ public class BonitaPreferenceDialog extends Dialog {
     }
 
     protected void updateShellSize(boolean restore) {
-        Point s = getShell().computeSize(SWT.DEFAULT, SWT.DEFAULT) ;
-        if(initialSize ==null){
-            initialSize = s;
-            initialSize.y += 10;//fix on linux, a margin is added?
-        }
-        if(restore){
-            getShell().setSize(initialSize) ;
-        }else{
-            getShell().setSize(s) ;
-        }
-
+         getShell().setSize(getInitialSize()) ;
     }
 
     private void createSeparator(Composite composite) {
