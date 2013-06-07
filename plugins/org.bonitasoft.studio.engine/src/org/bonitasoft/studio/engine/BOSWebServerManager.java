@@ -38,7 +38,6 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.engine.i18n.Messages;
-import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.resources.IFile;
@@ -176,9 +175,7 @@ public class BOSWebServerManager {
 				final IRuntime runtime = createServerRuntime(type);
 				tomcat = createServer(monitor, confProject, runtime);
 				createLaunchConfiguration(tomcat,monitor);
-			
-				final String mode = EnginePlugin.getDefault().getPreferenceStore().getString(EnginePreferenceConstants.TOMCAT_START_MODE);
-				tomcat.start(mode,monitor);
+				tomcat.start("run",monitor);
 				waitServerRunning(monitor);
 			} catch (CoreException e) {
 				BonitaStudioLog.error(e,EnginePlugin.PLUGIN_ID);
@@ -402,8 +399,8 @@ public class BOSWebServerManager {
 		args.append("-Xmx512m");
 		args.append(" ");
 		args.append("-XX:MaxPermSize=256m");
-		if("true".equals(System.getProperty("bonita.tomcat.debug.mode"))){
-			args.append("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8500");
+		if(System.getProperty("tomcat.extra.params") != null){
+			args.append(" "+System.getProperty("tomcat.extra.params"));
 		}
 		addSystemProperty(args, "catalina.home", "\""+tomcatInstanceLocation+"\"");
 		addSystemProperty(args, "CATALINA_HOME", "\""+tomcatInstanceLocation+"\"");
