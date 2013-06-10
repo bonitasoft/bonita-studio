@@ -132,7 +132,7 @@ public class PlatformUtil {
 					final String productId = Platform.getProduct().getId();
 					if (isABonitaProduct(productId)) {//and that we are in BOS or BOS-SP
 						IWorkbenchPartReference activePartReferences = activePage.getActivePartReference();
-						if(!IIntroConstants.INTRO_VIEW_ID.equals(activePartReferences.getId())){
+						if(activePartReferences == null || !IIntroConstants.INTRO_VIEW_ID.equals(activePartReferences.getId())){
 							openIntro();
 						}	
 					}else{
