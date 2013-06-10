@@ -82,6 +82,8 @@ public class Messages extends NLS {
 	public static String advancedPreviewButton;
 	public static String lnfForPreview;
 	public static String browserForPreview;
+	public static String invalidWorkspaceTitle;
+	public static String invalidWorkspace;
 
 
 
