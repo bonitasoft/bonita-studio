@@ -26,11 +26,22 @@ listOfHprof=$(find -name "*.hprof")
 echo "$listOfHprof"
 for i in $listOfHprof
 do
-${MAT_HOME}/MemoryAnalyzer -consolelog -application org.eclipse.mat.api.parse $i org.eclipse.mat.api:suspects
-#${MAT_HOME}/MemoryAnalyzer -consolelog -clean -application org.eclipse.mat.api.parse $i org.bonitasoft.mat.report:custom_report
-rm ${i%.*}.*.index ${i%.*}.index ${i%.*}.threads
-unzip -o ${i%.*}"_Leak_Suspects.zip" -d ${i%.*}"_html"
-#unzip -o ${i%.*}"__Studio_Report_Histo.zip" -d ${i%.*}"_custom_html"
-rm ${i%.*}"_Leak_Suspects.zip"
-#rm ${i%.*}"__Studio_Report_Histo.zip"
+
+	file=${i%.*}
+
+	${MAT_HOME}/MemoryAnalyzer -consolelog -application org.eclipse.mat.api.parse $i org.eclipse.mat.api:suspects
+	rm ${file}.*.index ${file}.index ${file}.threads
+	unzip -o ${file}"_Leak_Suspects.zip" -d ${file}"_html"
+	rm ${file}"_Leak_Suspects.zip"
+
+	${MAT_HOME}/MemoryAnalyzer -consolelog -clean -application org.eclipse.mat.api.parse $i org.bonitasoft.mat.report:custom_report
+	if [ -f ${file}"__Studio_Report_Histo.zip" ] 
+	then	
+		unzip -o ${file}"__Studio_Report_Histo.zip" -d ${file}"_custom_html"
+	fi
+
+	if [ -f ${file}"__Studio_Report_Histo.zip" ]
+	then
+		rm ${file}"__Studio_Report_Histo.zip"
+	fi
 done
