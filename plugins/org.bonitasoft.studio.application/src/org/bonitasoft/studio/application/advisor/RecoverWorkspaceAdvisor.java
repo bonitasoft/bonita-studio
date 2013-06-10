@@ -7,6 +7,7 @@ import java.io.File;
 
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.eclipse.core.resources.IProject;
@@ -41,8 +42,7 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE,new NullProgressMonitor());
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			BonitaStudioLog.error(e);
 		}
 		IProject defaultDir = ResourcesPlugin.getWorkspace().getRoot().getProject("default");
 		if (defaultDir != null && defaultDir.exists()){
