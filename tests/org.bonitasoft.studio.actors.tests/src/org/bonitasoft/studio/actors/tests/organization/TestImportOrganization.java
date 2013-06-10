@@ -30,6 +30,7 @@ import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.runtime.FileLocator;
 
 /**
@@ -112,13 +113,11 @@ public class TestImportOrganization extends  TestCase{
 		assertTrue("organization to import does not exist",toImport.exists());
 		fis = new FileInputStream(toImport);
 		id  = toImport.getName() ;
-		organizationStore.importInputStream(id, fis) ;
+		IRepositoryFileStore fStore = organizationStore.importInputStream(id, fis) ;
 		if(fis != null){
 			fis.close() ;	
 		}
-		String orgaNameWithBosExtansion = organizationName.substring(0,organizationName.indexOf("."))+"."+OrganizationRepositoryStore.ORGANIZATION_EXT;
-		Organization organizationTest = (Organization) organizationStore.getChild(orgaNameWithBosExtansion).getContent();
-		assertNull(orgaNameWithBosExtansion+" was imported",organizationTest);
+		assertNull(id+" was imported",fStore);
 	}
 	
 	protected void tearDown(){}
