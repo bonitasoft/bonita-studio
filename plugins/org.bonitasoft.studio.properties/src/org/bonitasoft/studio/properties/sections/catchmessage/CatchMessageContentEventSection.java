@@ -46,10 +46,12 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
@@ -88,46 +90,51 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 		autoFillButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				super.widgetSelected(e);
-				MessageFlow incomingMessag = getCatchMessageEvent().getIncomingMessag();
-				TableExpression throwMessageContent=null;
-				if(incomingMessag != null){
-					final Message message = ModelHelper.findEvent(getCatchMessageEvent(), incomingMessag.getName());
-					if(message != null){
-						throwMessageContent = message.getMessageContent();
-						for (ListExpression row : throwMessageContent.getExpressions()) {
-							List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;
-							if (col.size()==2){
-								boolean alreadyExist = false;
-								String throwMessageContentExpressionName = col.get(0).getName();
-								if(throwMessageContentExpressionName != null){
-									/*Check if the item already exists*/
-									EList<Operation> catchMessageContents = getCatchMessageEvent().getMessageContent();
-									for (Operation messageContent : catchMessageContents) {
-										Expression actionExpression = messageContent.getRightOperand();
-										if(actionExpression != null
-												&& throwMessageContentExpressionName.equals(actionExpression.getName())){
-											alreadyExist = true;
-											break;
+				BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+					
+					@Override
+					public void run() {
+						MessageFlow incomingMessag = getCatchMessageEvent().getIncomingMessag();
+						TableExpression throwMessageContent=null;
+						if(incomingMessag != null){
+							final Message message = ModelHelper.findEvent(getCatchMessageEvent(), incomingMessag.getName());
+							if(message != null){
+								throwMessageContent = message.getMessageContent();
+								for (ListExpression row : throwMessageContent.getExpressions()) {
+									List<org.bonitasoft.studio.model.expression.Expression> col =  row.getExpressions() ;
+									if (col.size()==2){
+										boolean alreadyExist = false;
+										String throwMessageContentExpressionName = col.get(0).getName();
+										if(throwMessageContentExpressionName != null){
+											/*Check if the item already exists*/
+											EList<Operation> catchMessageContents = getCatchMessageEvent().getMessageContent();
+											for (Operation messageContent : catchMessageContents) {
+												Expression actionExpression = messageContent.getRightOperand();
+												if(actionExpression != null
+														&& throwMessageContentExpressionName.equals(actionExpression.getName())){
+													alreadyExist = true;
+													break;
+												}
+											}
+
+											if(!alreadyExist){
+												createNewMessageContentLine(throwMessageContentExpressionName);
+											}
 										}
 									}
-
-									if(!alreadyExist){
-										createNewMessageContentLine(throwMessageContentExpressionName);
-									}
 								}
+								/*refresh UI*/
+								validator.setCatchMessageEvent(getCatchMessageEvent());
+								alc.setEObject(getCatchMessageEvent());
+								alc.setContext(new EMFDataBindingContext());
+								alc.removeLinesUI();
+								alc.fillTable();
+								alc.refresh();
 							}
 						}
-						/*refresh UI*/
-						validator.setCatchMessageEvent(getCatchMessageEvent());
-						alc.setEObject(getCatchMessageEvent());
-						alc.setContext(new EMFDataBindingContext());
-						alc.refresh();
-						alc.removeLinesUI();
-						alc.fillTable();
-						alc.refresh();
 					}
-				}
+				});
+				
 
 			}
 

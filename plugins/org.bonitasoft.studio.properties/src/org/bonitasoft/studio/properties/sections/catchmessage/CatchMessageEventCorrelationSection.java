@@ -54,10 +54,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -140,7 +142,14 @@ AbstractBonitaDescriptionSection {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 super.widgetSelected(e);
-                createCorrelationKeyValueLinesIfNeeded();
+                BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+					
+					@Override
+					public void run() {
+						  createCorrelationKeyValueLinesIfNeeded();
+					}
+				});
+              
             }
 
 			protected void createCorrelationKeyValueLinesIfNeeded() {
