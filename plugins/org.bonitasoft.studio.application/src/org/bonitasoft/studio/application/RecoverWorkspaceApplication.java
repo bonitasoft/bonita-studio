@@ -17,15 +17,9 @@
  */
 package org.bonitasoft.studio.application;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.bonitasoft.studio.application.advisor.RecoverWorkspaceAdvisor;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
@@ -54,35 +48,9 @@ public class RecoverWorkspaceApplication implements IApplication {
 			}
 		}
 
-//		final File root = ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile() ;
-//		final Set<String> workspaceNames = new HashSet<String>() ;
-//
-//
-//		File[] allFiles = root.listFiles(new FileFilter() {
-//
-//			@Override
-//			public boolean accept(File file) {
-//				return file.isDirectory() && file.getName().startsWith("local_");
-//			}
-//
-//		}) ;
-//
-//		if(allFiles != null){
-//			for(File folder : RepositoryManager.getInstance().getAllRepositories()){
-//				if(folder.getName().indexOf("_") != -1){
-//					String workspaceName = folder.getName().substring(6) ;
-//					workspaceName = workspaceName.substring(0,workspaceName.indexOf("_")) ;
-//					workspaceNames.add(workspaceName) ;
-//				}
-//			}
-//		}
-	
 		BonitaStudioApplication.preStartupStudio();
 		PlatformUI.createAndRunWorkbench(Display.getDefault(), new RecoverWorkspaceAdvisor(newWorkspaceLocation)) ;
-
 		return IApplication.EXIT_OK;
-
-
 	}
 
 	/* (non-Javadoc)
