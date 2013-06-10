@@ -171,7 +171,7 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase implements SWTBotCo
         SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-        SWTBotTestUtil.selectEventOnProcess(bot, gmfEditor, "Start1");
+        SWTBotTestUtil.selectEventOnProcess(bot, gmfEditor, "Message2");
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
         
