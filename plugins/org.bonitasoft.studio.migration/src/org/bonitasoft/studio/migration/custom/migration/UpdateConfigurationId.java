@@ -42,6 +42,8 @@ public class UpdateConfigurationId extends CustomMigration {
 			diagram.setVersion((String) mainProc.get("version"));
 			diagram.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
 			diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
+			mainProc.set("bonitaVersion", ProductVersion.CURRENT_VERSION);
+			mainProc.set("bonitaModelVersion", ModelVersion.CURRENT_VERSION);
 			mainProc.set("configId",ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
 		}
 	}
