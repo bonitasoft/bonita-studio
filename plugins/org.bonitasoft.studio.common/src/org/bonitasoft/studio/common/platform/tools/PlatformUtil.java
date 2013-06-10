@@ -131,10 +131,7 @@ public class PlatformUtil {
 				if (editors.length == 0){//if there is no other editor opened
 					final String productId = Platform.getProduct().getId();
 					if (isABonitaProduct(productId)) {//and that we are in BOS or BOS-SP
-						IWorkbenchPartReference activePartReferences = activePage.getActivePartReference();
-						if(activePartReferences == null || !IIntroConstants.INTRO_VIEW_ID.equals(activePartReferences.getId())){
-							openIntro();
-						}	
+						openIntro();
 					}else{
 						closeIntro();
 					}
