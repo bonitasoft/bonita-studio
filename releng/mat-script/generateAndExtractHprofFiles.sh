@@ -29,11 +29,13 @@ do
 
 	file=${i%.*}
 
+	echo "\n******* Generate default report for "${file}" ********"
 	${MAT_HOME}/MemoryAnalyzer -consolelog -application org.eclipse.mat.api.parse $i org.eclipse.mat.api:suspects
-	rm ${file}.*.index ${file}.index ${file}.threads
+	rm -v ${file}.*.index ${file}.index ${file}.threads
 	unzip -o ${file}"_Leak_Suspects.zip" -d ${file}"_html"
-	rm ${file}"_Leak_Suspects.zip"
+	rm -v ${file}"_Leak_Suspects.zip"
 
+	echo "\n******* Generate custom report for "${file}" *******"
 	${MAT_HOME}/MemoryAnalyzer -consolelog -clean -application org.eclipse.mat.api.parse $i org.bonitasoft.mat.report:custom_report
 	if [ -f ${file}"__Studio_Report_Histo.zip" ] 
 	then	
@@ -42,6 +44,6 @@ do
 
 	if [ -f ${file}"__Studio_Report_Histo.zip" ]
 	then
-		rm ${file}"__Studio_Report_Histo.zip"
+		rm -v ${file}"__Studio_Report_Histo.zip"
 	fi
 done
