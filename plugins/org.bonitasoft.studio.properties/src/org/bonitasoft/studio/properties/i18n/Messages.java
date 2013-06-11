@@ -446,8 +446,48 @@ public class Messages extends NLS {
 	public static String errorOutputDataMultiInstanceCollection;
 	public static String errorInputDataMultiInstanceCollection;
 	public static String messagesSectionDescription;
-	
-	
+	public static String generateCronExpression;
+	public static String minutes;
+	public static String every;
+	public static String minuteLabel;
+	public static String hourly;
+	public static String daily;
+	public static String weekly;
+	public static String monthly;
+	public static String yearly;
+	public static String generateCronButtonLabel;
+	public static String startCondition;
+	public static String at;
+	public static String hourLabel;
+	public static String startTime;
+	public static String everyWeekDay;
+	public static String dayLabel;
+	public static String day;
+	public static String ofEvery;
+	public static String monthLabel;
+	public static String the;
+	public static String first;
+	public static String second;
+	public static String third;
+	public static String fourth;
+	public static String of;
+	public static String timerConditionDescription;
+	public static String timerConditionHint;
+	public static String invalidCronExpression;
+	public static String mustBeAnValueBetween;
+	public static String notAValidNumber;
+	public static String mustBeGreaterThan;
+	public static String cantBeGreaterThan;
+	public static String cycle;
+	public static String fixedDate;
+	public static String selectDateLabel;
+	public static String basedOn;
+	public static String generateFixedDateLabel;
+	public static String selectDurationLabel;
+	public static String generateDurationLabel;
+	public static String startTimerConditionDescription;
+	public static String startTimerConditionHint;
+	public static String cronShortDescription;
 	
     static {
         // initialize resource bundle

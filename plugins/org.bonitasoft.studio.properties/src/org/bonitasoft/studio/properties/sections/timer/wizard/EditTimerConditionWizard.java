@@ -18,20 +18,15 @@
 
 package org.bonitasoft.studio.properties.sections.timer.wizard;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.StartTimerEvent;
-import org.bonitasoft.studio.model.process.StartTimerScriptType;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardPage;
 
 /**
  * @author Romain Bioteau
@@ -39,7 +34,7 @@ import org.eclipse.jface.wizard.WizardPage;
  */
 public class EditTimerConditionWizard extends Wizard {
 
-	private WizardPage page;
+	private TimerConditionWizardPage page;
 	private Expression condition;
 	private AbstractTimerEvent event;
 	private TransactionalEditingDomain editingDomain;
@@ -58,39 +53,14 @@ public class EditTimerConditionWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		if (event instanceof StartTimerEvent
-				&& !ModelHelper.isInEvenementialSubProcessPool(event)) {
-			page = new StartTimerConditionWizardPage(event, condition);
-		} else {
-			page = new TimerConditionWizardPage(event, condition);
-		}
+		page = new TimerConditionWizardPage(event, condition);
 		this.addPage(page);
 	}
 
 	@Override
 	public boolean performFinish() {
-		page.setErrorMessage(null);
-		if (page instanceof TimerConditionWizardPage) {
-			editingDomain.getCommandStack().execute(
-					new SetCommand(editingDomain, event, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION, ((TimerConditionWizardPage) page)
-							.getCondition()));
-		} else {
-			StartTimerConditionWizardPage startTimerPage = (StartTimerConditionWizardPage) page;
-			StartTimerScriptType scriptType = startTimerPage.getScriptType();
-			CompoundCommand command = new CompoundCommand();
-			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__SCRIPT_TYPE, scriptType));
-			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION, startTimerPage.getCondition()));
-			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__DAY_NUMBER, startTimerPage.getDayNumber()));
-			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__DAY, startTimerPage.getDay()));
-			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__MONTH, startTimerPage.getMonth()));
-			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__HOURS, startTimerPage.getHours()));
-			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__MINUTES, startTimerPage.getMinutes()));
-			command.append(new SetCommand(editingDomain, event, ProcessPackage.Literals.START_TIMER_EVENT__AT, startTimerPage.getToDate()));
-			if(page.getErrorMessage() != null){
-				return false;
-			}
-			editingDomain.getCommandStack().execute(command);
-		}
+		editingDomain.getCommandStack().execute(
+					SetCommand.create(editingDomain, event, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION,  page.getCondition()));
 		section.refresh();
 		return true;
 	}

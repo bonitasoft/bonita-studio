@@ -154,7 +154,7 @@ public class TimerUtil {
     public static boolean isCycle(final StartTimerEvent item) {
         switch (item.getScriptType()) {
             case GROOVY:
-                return true;
+                return false;
             case YEARLY_DAY_OF_MONTH:
                 return true;
             case YEARLY_DAY_OF_YEAR:

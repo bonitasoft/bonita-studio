@@ -18,12 +18,7 @@
  
 package org.bonitasoft.studio.common;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
-import org.bonitasoft.studio.model.process.StartTimerEvent;
 
 /**
  * @author Romain Bioteau
@@ -35,57 +30,21 @@ public class TimerEventLabelProvider  {
 	public static String getText(Object element) {
 		if(element instanceof AbstractTimerEvent){
 			AbstractTimerEvent event = (AbstractTimerEvent) element ;
-			
-			
-			if(event instanceof StartTimerEvent){
-				StartTimerEvent startTimer = (StartTimerEvent) event;
-				if (startTimer.getScriptType() != null) {
-					switch (startTimer.getScriptType()) {
-					case YEARLY_DAY_OF_MONTH:
-						return Messages.StartTimerCondition_every + " " + startTimer.getDayNumber() + " " + Messages.StartTimerCondition_of + " "
-						+ getMonth(startTimer.getMonth());
-					case YEARLY_DAY_OF_YEAR:
-						return Messages.StartTimerCondition_every + " " + startTimer.getDayNumber() + " " + Messages.StartTimerCondition_dayOfTheYear;
-					case MONTHLY_DAY_NUMBER:
-						return Messages.StartTimerCondition_every + " " + startTimer.getDayNumber() + " " + Messages.StartTimerCondition_ofEachMonth;
-					case MONTHLY_DAY_OF_WEEK:
-						return Messages.StartTimerCondition_every + " " + startTimer.getDayNumber() + " " + getDay(startTimer.getDay()) + " "
-						+ Messages.StartTimerCondition_ofEachMonth;
-					case WEEKLY:
-						return Messages.StartTimerCondition_every + " "+  getDay(startTimer.getDay()) + " "
-						+ Messages.StartTimerCondition_ofEachWeek;
-					case DAILY:
-						Date at = startTimer.getAt();
-						Calendar calendar = Calendar.getInstance();
-						calendar.setTime(at);
-						return Messages.StartTimerCondition_everyDayAt + " "+ calendar.get(Calendar.HOUR_OF_DAY)+":"+ calendar.get(Calendar.MINUTE)+":"+ calendar.get(Calendar.SECOND);
-					case HOURLY:
-						return Messages.StartTimerCondition_every + " "+ startTimer.getHours() + " " +Messages.StartTimerCondition_hours;
-					case MINUTELY:
-						return Messages.StartTimerCondition_every + " "+ startTimer.getMinutes() + " " +Messages.StartTimerCondition_minutes;
-					case CONSTANT:
-						return Messages.StartTimerCondition_at + " "+ startTimer.getAt();
-					default:
-						break;
-					}
-				}
-			}
-			
-			Expression condition = event.getCondition();
-			if(condition != null && condition.getContent() != null && !condition.getContent().isEmpty()){
-			    String content = condition.getContent();
-				if(ExpressionConstants.CONSTANT_TYPE.equals(condition.getType())) {
-                    if (DateUtil.isDuration(content)) {
-                    	return DateUtil.getDisplayDuration(content) ;
-                    }else if(DateUtil.isDate(content)){
-                        return DateUtil.getDisplayDate(content) ;
-                    }
-                }
-				
-				if(ExpressionConstants.SCRIPT_TYPE.equals(condition.getType())){
-					return event.getName();
-				}	
-			}
+//			Expression condition = event.getCondition();
+//			if(condition != null && condition.getContent() != null && !condition.getContent().isEmpty()){
+//			    String content = condition.getContent();
+//				if(ExpressionConstants.CONSTANT_TYPE.equals(condition.getType())) {
+//                    if (DateUtil.isDuration(content)) {
+//                    	return DateUtil.getDisplayDuration(content) ;
+//                    }else if(DateUtil.isDate(content)){
+//                        return DateUtil.getDisplayDate(content) ;
+//                    }
+//                }
+//				
+//				if(ExpressionConstants.SCRIPT_TYPE.equals(condition.getType())){
+//					return event.getName();
+//				}	
+//			}
 			return event.getName() ;
 		}
 		return "" ;

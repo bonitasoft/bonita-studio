@@ -111,55 +111,9 @@ public class TimerEventConditionContribution implements IExtensibleGridPropertyS
             condition = ExpressionFactory.eINSTANCE.createExpression();
             editingDomain.getCommandStack().execute(new SetCommand(editingDomain, eObject, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION, condition));
         }
-        String conditionLabel = "";
-        if (eObject instanceof StartTimerEvent) {
-
-            StartTimerEvent startTimer = (StartTimerEvent) eObject;
-            switch (startTimer.getScriptType()) {
-                case YEARLY_DAY_OF_MONTH:
-                    conditionLabel = Messages.StartTimerCondition_every + " " + startTimer.getDayNumber() + " " + Messages.StartTimerCondition_of + " "
-                            + getMonth(startTimer.getMonth());
-                    break;
-                case YEARLY_DAY_OF_YEAR:
-                    conditionLabel = Messages.StartTimerCondition_every + " " + startTimer.getDayNumber() + " " + Messages.StartTimerCondition_dayOfTheYear;
-                    break;
-                case MONTHLY_DAY_NUMBER:
-                    conditionLabel = Messages.StartTimerCondition_every + " " + startTimer.getDayNumber() + " " + Messages.StartTimerCondition_ofEachMonth;
-                    break;
-                case MONTHLY_DAY_OF_WEEK:
-                    conditionLabel = Messages.StartTimerCondition_every + " " + startTimer.getDayNumber() + " " + getDay(startTimer.getDay()) + " "
-                            + Messages.StartTimerCondition_ofEachMonth;
-                    break;
-                case WEEKLY:
-                    conditionLabel = Messages.StartTimerCondition_every + " " + getDay(startTimer.getDay()) + " " + Messages.StartTimerCondition_ofEachWeek;
-
-                    break;
-                case DAILY:
-                    Date at = startTimer.getAt();
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(at);
-                    conditionLabel = Messages.StartTimerCondition_everyDayAt + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE)
-                            + ":" + calendar.get(Calendar.SECOND);
-                    break;
-                case HOURLY:
-                    conditionLabel = Messages.StartTimerCondition_every + " " + startTimer.getHours() + " " + Messages.StartTimerCondition_hours;
-                    break;
-                case MINUTELY:
-                    conditionLabel = Messages.StartTimerCondition_every + " " + startTimer.getMinutes() + " " + Messages.StartTimerCondition_minutes;
-                    break;
-                case CONSTANT:
-                    conditionLabel = Messages.StartTimerCondition_at + " " + startTimer.getAt();
-                    break;
-                case GROOVY:
-                    conditionLabel = groovyToLabel(condition);
-                    break;
-
-                default:
-                    break;
-            }
-        } else {
-            conditionLabel = groovyToLabel(condition);
-        }
+        String conditionLabel = groovyToLabel(condition);
+           
+        
 
         conditionViewer.setText(conditionLabel != null? conditionLabel:"");
 

@@ -1,239 +1,347 @@
 /**
- * Copyright (C) 2009-2013 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009 BonitaSoft S.A.
+ * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
  * (at your option) any later version.
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.bonitasoft.studio.properties.sections.timer.wizard;
 
+import java.util.Date;
+
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.widgets.DurationComposite;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.bonitasoft.studio.properties.sections.timer.cron.CronEditor;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Spinner;
+import org.quartz.CronExpression;
 
 /**
  * @author Romain Bioteau
+ * 
  */
 public class TimerConditionWizardPage extends WizardPage {
 
-    private Expression condition;
+	private final AbstractTimerEvent event;
+	private Expression condition;
+	private ExpressionViewer conditionViewer;
+	private boolean enableCycles = false;
 
-    private Spinner hourSpinner;
+	protected TimerConditionWizardPage(AbstractTimerEvent event, Expression condition) {
+		super(TimerConditionWizardPage.class.getName());
+		setImageDescriptor(Pics.getWizban());
+		setTitle(Messages.timerConditionWizardTitle);
+		this.event = event;
+		if(event instanceof StartTimerEvent && !ModelHelper.isInEvenementialSubProcessPool(event)){
+			enableCycles  = true;
+			setDescription(Messages.startTimerConditionDescription);
+		}else{
+			setDescription(Messages.timerConditionDescription);
+		}
+	}
 
-    private Spinner daySpinner;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
+	 * .Composite)
+	 */
+	public void createControl(Composite parent) {
+		final Composite mainComposite = new Composite(parent, SWT.NONE);
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(10, 10).create());
+		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-    private Spinner minutesSpinner;
+		final Composite radioComposite = new Composite(mainComposite, SWT.NONE);
+		radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		int col = 4;
+		if(!enableCycles){
+			col = 3;
+		}
+		radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(col).create());
 
-    private Spinner secondsSpinner;
+		final Label basedOn = new Label(radioComposite, SWT.NONE);
+		basedOn.setText(Messages.basedOn);
+		
+		Button cycleButton = null;
+		if(enableCycles){
+			cycleButton = new Button(radioComposite, SWT.RADIO);
+			cycleButton.setText(Messages.cycle);
+		}
+		final Button fixedDateButton = new Button(radioComposite, SWT.RADIO);
+		fixedDateButton.setText(Messages.fixedDate);
 
-    private final AbstractTimerEvent event;
+		final Button durationButton = new Button(radioComposite, SWT.RADIO);
+		durationButton.setText(Messages.durationLabel);
 
-    private final SelectionAdapter updateConditionListener = new SelectionAdapter() {
+		final Composite stackedComposite = new Composite(mainComposite, SWT.NONE);
+		final StackLayout stackLayout = new StackLayout();
+		stackedComposite.setLayout(stackLayout);
+		stackedComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        @Override
-        public void widgetSelected(SelectionEvent e) {
-            setCondition(ExpressionHelper.createConstantExpression(DateUtil.getWidgetMillisecond(null, null, daySpinner, hourSpinner, minutesSpinner, secondsSpinner),Long.class.getName()));
-            getContainer().updateButtons();
-        }
+		final CronEditor editor = createCronEditor(stackedComposite);
+		final Control calendarEditor = createCalendarEditor(stackedComposite);
+		final Control durationEditor = createDurationEditor(stackedComposite);
 
-    };
+		if(cycleButton != null){
+			cycleButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if(((Button) e.getSource()).getSelection()){
+						stackLayout.topControl = editor.getParent();
+						stackedComposite.layout();
+					}
+				}
+			});
+		}
 
-	private ExpressionViewer dataChooser;
+		fixedDateButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(fixedDateButton.getSelection()){
+					stackLayout.topControl = calendarEditor;
+					stackedComposite.layout();
+				}
+			}
+		});
 
-    protected TimerConditionWizardPage(AbstractTimerEvent event, Expression condition) {
-        super("timerWizard");//$NON-NLS-1$
-        setImageDescriptor(Pics.getWizban());
-        setTitle(Messages.timerConditionWizardTitle);
-        this.condition = condition;
-        this.event = event;
-    }
+		durationButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(durationButton.getSelection()){
+					stackLayout.topControl = durationEditor;
+					stackedComposite.layout();
+				}
+			}
+		});
 
-    @Override
-    public void createControl(Composite parent) {
+		final Composite conditionComposite = new Composite(mainComposite, SWT.NONE);
+		conditionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		conditionComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
-        parent.setLayout(new GridLayout(2, false));
+		final Label conditionLabel = new Label(conditionComposite, SWT.NONE);
+		conditionLabel.setText(Messages.timerCondition);
 
-        Label deadlineTypeLabel = new Label(parent, SWT.NONE);
-        deadlineTypeLabel.setText(Messages.deadlineTypeLabel);
+		conditionViewer = new ExpressionViewer(conditionComposite,SWT.BORDER, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION) ;
+		conditionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-        Composite radioDeadlineGroup = new Composite(parent, SWT.NONE);
-        radioDeadlineGroup.setLayout(new GridLayout(2, false));
-        final Button durationChoice;
-        durationChoice = new Button(radioDeadlineGroup, SWT.RADIO);
-        durationChoice.setText(Messages.durationLabel);
+		if(enableCycles){
+			conditionViewer.setMessage(Messages.startTimerConditionHint, IStatus.INFO);
+			conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.CONSTANT_TYPE}));
+		}else{
+			conditionViewer.setMessage(Messages.timerConditionHint, IStatus.INFO);
+			conditionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE}));
+		}
+		conditionViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE, new IExpressionValidator() {
 
-        final Button varChoice = new Button(radioDeadlineGroup, SWT.RADIO);
-        varChoice.setText(Messages.varDataType);
+			private Expression inputExpression;
 
-        final Composite deadlineComposite = new Composite(parent, SWT.NONE);
-        deadlineComposite.setLayout(new GridLayout(2, false));
-        GridData gd4 = new GridData();
-        gd4.horizontalSpan = 2;
-        deadlineComposite.setLayoutData(gd4);
+			@Override
+			public IStatus validate(Object value) {
+				if(inputExpression.getReturnType().equals(String.class.getName())){
+					String cron = inputExpression.getContent();
+					if(!cron.isEmpty() && !CronExpression.isValidExpression(cron)){
+						return ValidationStatus.error(Messages.invalidCronExpression);
+					}
+				}
+				return ValidationStatus.ok();
+			}
 
-        final Composite parentDeadlineLayer = new Composite(deadlineComposite, SWT.NONE);
-        final StackLayout stack = new StackLayout();
-        parentDeadlineLayer.setLayout(stack);
-        GridData gd1 = new GridData();
-        gd1.horizontalSpan = 2;
-        gd1.horizontalIndent = -5;
-        parentDeadlineLayer.setLayoutData(gd1);
+			@Override
+			public void setInputExpression(Expression inputExpression) {
+				this.inputExpression = inputExpression;
+			}
 
-        final Composite variableComposite = new Composite(parentDeadlineLayer, SWT.NONE);
-        variableComposite.setLayout(new GridLayout(2, false));
+			@Override
+			public void setDomain(EditingDomain domain) {
 
-        Label varLabel = new Label(variableComposite, SWT.NONE);
-        varLabel.setText(Messages.deadlineVarNameLabel);
-        gd1 = new GridData();
-        gd1.horizontalIndent = 10;
-        varLabel.setLayoutData(gd1);
+			}
 
-        dataChooser = new ExpressionViewer(variableComposite,SWT.BORDER, ProcessPackage.Literals.ABSTRACT_TIMER_EVENT__CONDITION);
-        dataChooser.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(250, SWT.DEFAULT).create());
-        dataChooser.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.VARIABLE_TYPE}));
-        dataChooser.setInput(event);
-        dataChooser.setSelection(new StructuredSelection(condition));
+			@Override
+			public void setContext(EObject context) {
+			}
+		});
+		conditionViewer.setInput(event) ;
+		condition = event.getCondition() ;
+		if(condition == null){
+			condition = ExpressionFactory.eINSTANCE.createExpression() ;
+		}else{
+			condition = EcoreUtil.copy(condition);
+		}
+		conditionViewer.setSelection(new StructuredSelection(condition)) ;
 
-        final Composite durationComposite = new Composite(parentDeadlineLayer, SWT.NONE);
-        durationComposite.setLayout(new GridLayout(8, false));
+		if(condition == null || condition.getContent() == null || condition.getContent().isEmpty()){
+			if(enableCycles){
+				cycleButton.setSelection(true);
+				stackLayout.topControl = editor.getParent();
+			}else{
+				fixedDateButton.setSelection(true);
+				stackLayout.topControl = calendarEditor;
+			}
+		}else if(condition.getReturnType().equals(String.class.getName())){
+			cycleButton.setSelection(true);
+			stackLayout.topControl = editor.getParent();
+		}else if(condition.getReturnType().equals(Long.class.getName())){
+			durationButton.setSelection(true);
+			stackLayout.topControl = durationEditor;
+		}else if(condition.getReturnType().equals(Date.class.getName())){
+			fixedDateButton.setSelection(true);
+			stackLayout.topControl = calendarEditor;
+		}
 
-        Label dayLabel = new Label(durationComposite, SWT.NONE);
-        GridData gd3 = new GridData();
-        gd3.horizontalIndent = 100;
-        dayLabel.setLayoutData(gd3);
-        dayLabel.setText(org.bonitasoft.studio.common.Messages.daysLabel);
+		WizardPageSupport.create(this, editor.getContext());
+		setControl(mainComposite);
+	}
 
-        daySpinner = new Spinner(durationComposite, SWT.BORDER);
-        daySpinner.setMaximum(999);
+	protected Control createCalendarEditor(Composite stackedComposite) {
+		final Composite calendarControl = new Composite(stackedComposite, SWT.NONE);
+		calendarControl.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).margins(15, 15).create());
+		calendarControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        Label hoursLabel = new Label(durationComposite, SWT.NONE);
-        hoursLabel.setText(org.bonitasoft.studio.common.Messages.hoursLabel);
+		final Label selectDateLabel = new Label(calendarControl, SWT.NONE);
+		selectDateLabel.setText(Messages.selectDateLabel);
 
-        hourSpinner = new Spinner(durationComposite, SWT.BORDER);
-        hourSpinner.setMaximum(999);
+		final DateTime dateChooser = new DateTime(calendarControl, SWT.DATE | SWT.BORDER);
 
-        Label minutesLabel = new Label(durationComposite, SWT.NONE);
-        minutesLabel.setText(org.bonitasoft.studio.common.Messages.minutesLabel);
+		final Label atLabel = new Label(calendarControl, SWT.NONE);
+		atLabel.setText(Messages.at);
 
-        minutesSpinner = new Spinner(durationComposite, SWT.BORDER);
-        minutesSpinner.setMaximum(999);
+		final DateTime timeChooser = new DateTime(calendarControl, SWT.TIME | SWT.BORDER);
 
-        Label secondsLabel = new Label(durationComposite, SWT.NONE);
-        secondsLabel.setText(org.bonitasoft.studio.common.Messages.secondsLabel);
+		final Button generateFixedDate = new Button(calendarControl, SWT.PUSH);
+		generateFixedDate.setLayoutData(GridDataFactory.swtDefaults().span(4, 1).create());
+		generateFixedDate.setText(Messages.generateFixedDateLabel);
+		generateFixedDate.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final String displayDate = DateUtil.getWidgetDisplayDate(dateChooser, timeChooser);
+				condition.setName(displayDate);
+				condition.setContent(DateUtil.getDateExpressionContent(dateChooser.getYear(),
+						dateChooser.getMonth(),
+						dateChooser.getDay(),
+						timeChooser.getHours(),
+						timeChooser.getMinutes(),
+						timeChooser.getSeconds()));
+				condition.setType(ExpressionConstants.SCRIPT_TYPE);
+				condition.setInterpreter(ExpressionConstants.GROOVY);
+				condition.setReturnType(Date.class.getName());
+				conditionViewer.setSelection(new StructuredSelection(condition));
+			}
+		});
 
-        secondsSpinner = new Spinner(durationComposite, SWT.BORDER);
-        secondsSpinner.setMaximum(999);
+		return calendarControl;
+	}
 
-        daySpinner.addSelectionListener(updateConditionListener);
-        hourSpinner.addSelectionListener(updateConditionListener);
-        minutesSpinner.addSelectionListener(updateConditionListener);
-        secondsSpinner.addSelectionListener(updateConditionListener);
+	protected Control createDurationEditor(Composite stackedComposite) {
+		final Composite durationControl = new Composite(stackedComposite, SWT.NONE);
+		durationControl.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 15).create());
+		durationControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        durationChoice.addSelectionListener(new SelectionAdapter() {
+		final Label selectDurationLabel = new Label(durationControl, SWT.NONE);
+		selectDurationLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(4,1).create());
+		selectDurationLabel.setText(Messages.selectDurationLabel);
 
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                if (durationChoice.getSelection()) {
-                    setCondition(ExpressionHelper.createConstantExpression(DateUtil.getWidgetMillisecond(null, null, daySpinner, hourSpinner, minutesSpinner, secondsSpinner), Long.class.getName()));
-                    stack.topControl = durationComposite;
-                    parentDeadlineLayer.layout();
-                    getContainer().updateButtons();
-                }
+		final DurationComposite durationWidget = new DurationComposite(durationControl, true, true, true, true, true, true, null);
+		durationWidget.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(15, 0).create());
 
-            }
+		final Button generateDuration = new Button(durationControl, SWT.PUSH);
+		generateDuration.setLayoutData(GridDataFactory.swtDefaults().span(4, 1).create());
+		generateDuration.setText(Messages.generateDurationLabel);
+		generateDuration.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final long duration = durationWidget.getDuration();
+				condition.setName(DateUtil.getDisplayDuration(duration));
+				condition.setContent(String.valueOf(duration)+"L");
+				condition.setType(ExpressionConstants.SCRIPT_TYPE);
+				condition.setInterpreter(ExpressionConstants.GROOVY);
+				condition.setReturnType(Long.class.getName());
+				conditionViewer.setSelection(new StructuredSelection(condition));
+			}
+		});
 
-        });
+		return durationControl;
+	}
 
-        varChoice.addSelectionListener(new SelectionAdapter() {
 
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                if (varChoice.getSelection()) {
-                    stack.topControl = variableComposite;
-                    parentDeadlineLayer.layout();
-                    getContainer().updateButtons();
-                }
+	protected CronEditor createCronEditor(final Composite stackedComposite) {
+		final Composite cronGroup = new Composite(stackedComposite, SWT.NONE);
+		cronGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+		cronGroup.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-            }
+		final CronEditor editor = new CronEditor(cronGroup, SWT.NONE);
+		editor.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
-        });
+		final Button generateExpression = new Button(cronGroup, SWT.PUSH);
+		generateExpression.setText(Messages.generateCronButtonLabel);
+		generateExpression.setLayoutData(GridDataFactory.swtDefaults().create());
+		generateExpression.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String cronExpression = editor.getExpression();
+				if(cronExpression != null && !cronExpression.isEmpty()){
+					condition = ExpressionFactory.eINSTANCE.createExpression();
+					condition.setName(cronExpression);
+					condition.setContent(cronExpression);
+					condition.setType(ExpressionConstants.CONSTANT_TYPE);
+					condition.setReturnType(String.class.getName());
+					conditionViewer.setSelection(new StructuredSelection(condition));
+				}
+			}
+		});
+		return editor;
+	}
 
-        if (condition == null) {
-            hourSpinner.setSelection(0);
-            daySpinner.setSelection(0);
-            minutesSpinner.setSelection(0);
-            secondsSpinner.setSelection(0);
-        }
 
-        String conditionContent = null;
-        if (getCondition() != null) {
-            conditionContent = getCondition().getContent();
-        }
-        if (conditionContent != null && !conditionContent.isEmpty()) {
-            if (DateUtil.isDuration(conditionContent) && !ExpressionConstants.SCRIPT_TYPE.equals(getCondition().getType())) {
-                durationChoice.setSelection(true);
-                stack.topControl = durationComposite;
-                DateUtil.setWidgetDisplayDuration(null, null, daySpinner, hourSpinner, minutesSpinner, secondsSpinner, Long.parseLong(conditionContent));
-            } else {
-                varChoice.setSelection(true);
-                stack.topControl = variableComposite;
-            }
-        } else {
-            stack.topControl = durationComposite;
-            durationChoice.setSelection(true);
-            setCondition(ExpressionHelper.createConstantExpression("0",Long.class.getName())); //$NON-NLS-1$
+	@Override
+	public boolean isPageComplete() {
+		return true;
+	}
 
-        }
+	public Expression getCondition() {
+		return condition;
+	}
 
-        parentDeadlineLayer.layout();
 
-        setControl(parent);
-
-    }
-
-    @Override
-    public boolean isPageComplete() {
-        return condition != null;
-    }
-
-    public void setCondition(Expression expressionCondition) {
-        condition = expressionCondition;
-        if(dataChooser != null && !dataChooser.getControl().isDisposed()){
-        	dataChooser.setSelection(new StructuredSelection(condition));
-        }
-
-    }
-
-    public Expression getCondition() {
-        return condition;
-    }
 
 }

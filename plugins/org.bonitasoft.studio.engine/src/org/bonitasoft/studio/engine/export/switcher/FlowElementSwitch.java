@@ -43,10 +43,6 @@ import org.bonitasoft.engine.bpm.process.impl.SubProcessDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.ThrowMessageEventTriggerBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserFilterDefinitionBuilder;
 import org.bonitasoft.engine.bpm.process.impl.UserTaskDefinitionBuilder;
-import org.bonitasoft.engine.expression.ExpressionBuilder;
-import org.bonitasoft.engine.expression.ExpressionInterpreter;
-import org.bonitasoft.engine.expression.ExpressionType;
-import org.bonitasoft.engine.expression.InvalidExpressionException;
 import org.bonitasoft.engine.operation.LeftOperandBuilder;
 import org.bonitasoft.engine.operation.OperationBuilder;
 import org.bonitasoft.engine.operation.OperatorType;
@@ -483,38 +479,24 @@ public class FlowElementSwitch extends AbstractSwitch {
 	@Override
 	public FlowElement caseStartTimerEvent(final StartTimerEvent startTimer) {
 		StartEventDefinitionBuilder startTimerBuilder = builder.addStartEvent(startTimer.getName());
+		final org.bonitasoft.engine.expression.Expression startConditionExpression = EngineExpressionUtil.createExpression(startTimer.getCondition());
 		if(ModelHelper.isInEvenementialSubProcessPool(startTimer)){
 			TimerType timerType = getTimerType(startTimer);
 			if(timerType != null){
-				startTimerBuilder.addTimerEventTriggerDefinition(timerType, EngineExpressionUtil.createExpression(startTimer.getCondition()));
+				startTimerBuilder.addTimerEventTriggerDefinition(timerType, startConditionExpression);
 			}
 		}else{
-			ExpressionBuilder expressionBuilder = new ExpressionBuilder().createNewInstance(startTimer.getName()+"_startCondition");
-			expressionBuilder.setContent(TimerUtil.getTimerExpressionContent(startTimer));
-			if(TimerUtil.isCycle(startTimer)){
-				if(TimerUtil.isScript(startTimer)){
-					expressionBuilder.setExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name());
-					expressionBuilder.setInterpreter(ExpressionInterpreter.GROOVY.name());
-					expressionBuilder.setReturnType(String.class.getName());
-				}else{
-					expressionBuilder.setExpressionType(ExpressionType.TYPE_CONSTANT.name());
-					expressionBuilder.setReturnType(String.class.getName());
-				}
-				try {
-					startTimerBuilder.addTimerEventTriggerDefinition(TimerType.CYCLE, expressionBuilder.done());
-				} catch (InvalidExpressionException e) {
-					throw new RuntimeException(e);
-				}
+			TimerType type = TimerType.CYCLE;
+			if(startConditionExpression.getReturnType().equals(String.class.getName())){
+				 type = TimerType.CYCLE;
+			}else if(startConditionExpression.getReturnType().equals(Date.class.getName())){
+				 type = TimerType.DATE;
+			}else if(startConditionExpression.getReturnType().equals(Long.class.getName())){
+				 type = TimerType.DURATION;
 			}else{
-				expressionBuilder.setExpressionType(ExpressionType.TYPE_READ_ONLY_SCRIPT.name());
-				expressionBuilder.setInterpreter(ExpressionInterpreter.GROOVY.name());
-				expressionBuilder.setReturnType(Date.class.getName());
-				try {
-					startTimerBuilder.addTimerEventTriggerDefinition(TimerType.DATE, expressionBuilder.done());
-				} catch (InvalidExpressionException e) {
-					throw new RuntimeException(e);
-				}
+				throw new RuntimeException("Unsupported return type "+startConditionExpression.getReturnType()+" for Start timer condition "+startTimer.getName());
 			}
+			startTimerBuilder.addTimerEventTriggerDefinition(type, startConditionExpression);
 		}
 		addDescription(startTimerBuilder, startTimer.getDocumentation()) ;
 		return startTimer;

@@ -7744,5 +7744,8 @@
   <releases date="2013-05-17T10:17:14.066+0200" label="6.0.0-ga-005">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.FormConnectorEventMigration"/>
   </releases>
+  <releases date="2013-06-11T11:45:39.611+0200" label="6.0.1-001">
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.timer.StartTimerConditionCustomMigration"/>
+  </releases>
   <releases/>
 </history:History>
