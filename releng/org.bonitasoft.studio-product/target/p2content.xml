@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<units size='1'>
+  <unit id='org.bonitasoft.studio' version='6.0.0.201305020755'>
+    <update id='org.bonitasoft.studio' range='[0.0.0,6.0.0.201305020755)' severity='0'/>
+    <properties size='5'>
+      <property name='org.eclipse.equinox.p2.name' value='Bonita Studio'/>
+      <property name='org.eclipse.equinox.p2.provider' value='BonitaSoft S.A.'/>
+      <property name='maven-groupId' value='org.bonitasoft.studio.releng'/>
+      <property name='maven-artifactId' value='org.bonitasoft.studio'/>
+      <property name='maven-version' value='6.0.0-SNAPSHOT'/>
+    </properties>
+    <provides size='3'>
+      <provided namespace='org.eclipse.equinox.p2.iu' name='org.bonitasoft.studio' version='6.0.0.201305020755'/>
+      <provided namespace='osgi.bundle' name='org.bonitasoft.studio' version='6.0.0.201305020755'/>
+      <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+    </provides>
+    <requires size='5'>
+      <required namespace='osgi.bundle' name='org.eclipse.ui' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.core.runtime' range='0.0.0'/>
+      <required namespace='osgi.bundle' name='org.eclipse.ui.ide.application' range='1.0.0'/>
+      <required namespace='osgi.bundle' name='org.bonitasoft.studio.pics' range='1.0.0'/>
+      <required namespace='osgi.bundle' name='org.bonitasoft.studio.presentation' range='1.0.0'/>
+    </requires>
+    <artifacts size='1'>
+      <artifact classifier='osgi.bundle' id='org.bonitasoft.studio' version='6.0.0.201305020755'/>
+    </artifacts>
+    <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+    <touchpointData size='1'>
+      <instructions size='1'>
+        <instruction key='manifest'>
+          Bundle-SymbolicName: org.bonitasoft.studio;singleton:=true&#xA;Bundle-Version: 6.0.0.201305020755&#xA;
+        </instruction>
+      </instructions>
+    </touchpointData>
+  </unit>
+</units>
