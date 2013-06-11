@@ -64,6 +64,7 @@ public class InputTypeEditingSupport extends ObservableValueEditingSupport {
         Double.class.getName(),
         Float.class.getName(),
         Integer.class.getName(),
+        Long.class.getName(),
         List.class.getName(),
         Map.class.getName(),
         Messages.browse
