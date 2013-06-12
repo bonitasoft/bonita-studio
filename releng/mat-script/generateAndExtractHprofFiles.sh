@@ -40,10 +40,9 @@ do
 	if [ -f ${file}"__Studio_Report_Histo.zip" ] 
 	then	
 		unzip -o ${file}"__Studio_Report_Histo.zip" -d ${file}"_custom_html"
+		rm -v ${file}"__Studio_Report_Histo.zip"
+	else
+		echo "No file ${file}__Studio_Report_Histo.zip found"
 	fi
 
-	if [ -f ${file}"__Studio_Report_Histo.zip" ]
-	then
-		rm -v ${file}"__Studio_Report_Histo.zip"
-	fi
 done
