@@ -31,7 +31,6 @@ do
 
 	echo "\n******* Generate default report for "${file}" ********"
 	${MAT_HOME}/MemoryAnalyzer -consolelog -application org.eclipse.mat.api.parse $i org.eclipse.mat.api:suspects
-	rm -v ${file}.*.index ${file}.index ${file}.threads
 	unzip -o ${file}"_Leak_Suspects.zip" -d ${file}"_html"
 	rm -v ${file}"_Leak_Suspects.zip"
 
@@ -44,5 +43,9 @@ do
 	else
 		echo "No file ${file}__Studio_Report_Histo.zip found"
 	fi
+
+	# remove useless generated files
+	rm -v ${file}.*.index ${file}.index ${file}.threads
+	
 
 done
