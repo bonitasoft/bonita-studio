@@ -50,9 +50,6 @@ import org.eclipse.ui.IEditorReference;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.omg.spec.bpmn.model.DocumentRoot;
 import org.omg.spec.bpmn.model.TDefinitions;
 import org.omg.spec.bpmn.model.TFlowElement;
@@ -73,13 +70,10 @@ public class BPMNExportTests extends SWTBotGefTestCase {
     private DiagramEditPart dep;
 
     @Override
-    @Before
     public void setUp() {
         new File(resFileLocation).delete();
     }
 
-    @Test
-    @Ignore
     public void testExportToBPMN() throws Exception {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestExportToBPMNDiagram_1_0.bos", "Bonita 6.x", "TestExportToBPMN", this.getClass(), false);
 
@@ -150,7 +144,6 @@ public class BPMNExportTests extends SWTBotGefTestCase {
 
     private boolean menuBPMN2found = false;
 
-    @Ignore
     public void testBPMN2MenuPresent(){
         final SWTBotMenu processMenu = bot.menu("Diagram");
         final SWTBotMenu exportAsMenu = processMenu.menu("Export as").click();
