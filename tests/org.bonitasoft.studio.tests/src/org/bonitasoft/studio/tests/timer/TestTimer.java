@@ -18,7 +18,6 @@
 package org.bonitasoft.studio.tests.timer;
 
 import static org.bonitasoft.studio.common.Messages.daysLabel;
-import static org.bonitasoft.studio.properties.i18n.Messages.deadlineVarNameLabel;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -26,7 +25,6 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
@@ -44,7 +42,6 @@ import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTabItem;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.AfterClass;
