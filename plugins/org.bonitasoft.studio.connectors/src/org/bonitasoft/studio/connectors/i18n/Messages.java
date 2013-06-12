@@ -132,6 +132,8 @@ public class Messages extends NLS {
 	public static String connectorItemToolTip;
 	public static String unserializableOutputWarning;
 
+	public static String selectConnectorConfigurationWizardPageDescription;
+
     /**
      * @param event
      * @return

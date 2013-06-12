@@ -33,7 +33,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -47,13 +46,11 @@ import org.eclipse.ui.dialogs.PatternFilter;
 public class SelectConnectorConfigurationWizardPage extends WizardPage implements ISelectionChangedListener,IDoubleClickListener{
 
 	private FilteredTree filterTree;
-	/**
-	 * @param pageName
-	 */
+
 	public SelectConnectorConfigurationWizardPage() {
 		super(SelectConnectorConfigurationWizardPage.class.getName());
-		super.setTitle(Messages.selectConnectorConfigurationWizardPageTitle);
-		
+		setTitle(Messages.selectConnectorConfigurationWizardPageTitle);
+		setDescription(Messages.selectConnectorConfigurationWizardPageDescription);
 	}
 
 	/* (non-Javadoc)
@@ -75,14 +72,22 @@ public class SelectConnectorConfigurationWizardPage extends WizardPage implement
             @Override
             public boolean select(Viewer arg0, Object arg1, Object element) {
             	if (element instanceof Category){
-            		 return ((ITreeContentProvider)filterTree.getViewer().getContentProvider()).getChildren(element).length > 0 ;
+            		if(((ITreeContentProvider)filterTree.getViewer().getContentProvider()).getChildren(element).length == 0){
+            			return false;
+            		}
+            		
+            		for(Object c : ((ITreeContentProvider)filterTree.getViewer().getContentProvider()).getChildren(element)){
+            			if(c instanceof ConnectorDefinition){
+            				if(((ITreeContentProvider)filterTree.getViewer().getContentProvider()).getChildren(c).length == 0){
+            					return false;
+            				}
+            			}
+            		}
             	}
-                if(element instanceof ConnectorDefinition){
-                    return ((ITreeContentProvider)filterTree.getViewer().getContentProvider()).getChildren(element).length > 0 ;
-                }
                 return true;
             }
         }) ;
+        filterTree.getViewer().expandAll();
         filterTree.setFocus();
         setControl(composite);
 	}
@@ -105,15 +110,11 @@ public class SelectConnectorConfigurationWizardPage extends WizardPage implement
 	  @Override
 	  public void doubleClick(DoubleClickEvent event) {
 	        Object selection =  ((IStructuredSelection) event.getSelection()).getFirstElement() ;
-	        if(selection instanceof Category){
+	        if(selection instanceof Category || selection instanceof ConnectorDefinition){
 	            filterTree.getViewer().expandToLevel(selection, 1) ;
-	        }else if(selection instanceof ConnectorDefinition){
+	        }else if(selection instanceof ConnectorConfiguration){
 	            if(getNextPage() != null){
 	                getContainer().showPage(getNextPage());
-	            }else{
-	                if(getWizard().performFinish()){
-	                    ((WizardDialog) getContainer()).close() ;
-	                }
 	            }
 	        }
 	    }
