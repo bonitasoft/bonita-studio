@@ -22,19 +22,6 @@ public class Messages extends NLS {
     private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
 
-
-
-
-	
-
-
-
-
-
-//IndexSection
-	
-
-	
 	//GeneralSection
     public static String GeneralSection_Name;
     public static String GeneralSection_Description;
@@ -446,7 +433,6 @@ public class Messages extends NLS {
 	public static String errorOutputDataMultiInstanceCollection;
 	public static String errorInputDataMultiInstanceCollection;
 	public static String messagesSectionDescription;
-	public static String generateCronExpression;
 	public static String minutes;
 	public static String every;
 	public static String minuteLabel;
