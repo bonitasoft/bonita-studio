@@ -19,8 +19,8 @@
 package org.bonitasoft.studio.properties.sections.diagram;
 
 
-import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.general.ActivateValidationPropertySectionContribution;
 import org.bonitasoft.studio.properties.sections.general.DescriptionGridPropertySectionContribution;
 import org.bonitasoft.studio.properties.sections.general.NameGridPropertySectionContribution;

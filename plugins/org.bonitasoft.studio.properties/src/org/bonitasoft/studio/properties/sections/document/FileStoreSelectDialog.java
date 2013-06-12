@@ -17,6 +17,8 @@
  */
 package org.bonitasoft.studio.properties.sections.document;
 
+import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -57,7 +59,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import static org.bonitasoft.studio.common.Messages.bonitaPortalModuleName;
 /**
  * @author Aurelien Pupier
  *

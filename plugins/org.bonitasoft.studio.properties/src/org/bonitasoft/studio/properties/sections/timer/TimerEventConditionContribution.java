@@ -15,9 +15,6 @@
 
 package org.bonitasoft.studio.properties.sections.timer;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
@@ -26,7 +23,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.AbstractTimerEvent;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.model.process.StartTimerEvent;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.timer.wizard.EditTimerConditionWizard;
 import org.eclipse.emf.ecore.EObject;

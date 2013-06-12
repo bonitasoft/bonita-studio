@@ -7,8 +7,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceFileStore.ResourceType;
+import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
 import org.bonitasoft.studio.model.process.AssociatedFile;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;

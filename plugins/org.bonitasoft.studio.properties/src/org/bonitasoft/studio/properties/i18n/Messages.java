@@ -86,7 +86,6 @@ public class Messages extends NLS {
     public static String FormsSection_wizardVarsGroup_Tooltip;
     public static String multipleWidget;
 
-    public static String deadlineTypeLabel;
 
     //resource section
     public static String Browse;
@@ -101,9 +100,7 @@ public class Messages extends NLS {
     public static String ResourceSection_ProcessTemplate;
     public static String ResourceSection_LoginPage;
     public static String ResourceSection_AutoLogin;
-    public static String ResourceSection_loginAs;
     public static String ResourceSection_AutoLoginTooltip;
-    public static String ResourceSection_loginAsTooltip;
     public static String ResourceSection_HostPageTemplate;
 
     //
@@ -121,8 +118,6 @@ public class Messages extends NLS {
     public static String sourceParameter;
     public static String targetParameter;
 
-    public static String varDataType;
-    public static String deadlineVarNameLabel;
 
     public static String removeEventConfirmMessage;
 
@@ -232,27 +227,6 @@ public class Messages extends NLS {
     public static String stepSummaryHint;
     public static String executionTimeHint;
 
-    public static String StartTimerCondition_everyYear;
-    public static String StartTimerCondition_everyMonth;
-    public static String StartTimerCondition_everyDay;
-    public static String StartTimerCondition_everyWeek;
-    public static String StartTimerCondition_everyHour;
-    public static String StartTimerCondition_everyMinutes;
-    public static String StartTimerCondition_script;
-    public static String StartTimerCondition_dayOfMonth;
-    public static String StartTimerCondition_dayOfYear;
-    public static String StartTimerCondition_dayOfMonthInWeek;
-    public static String StartTimerCondition_from;
-    public static String StartTimerCondition_at;
-    public static String StartTimerCondition_every;
-    public static String StartTimerCondition_hours;
-    public static String StartTimerCondition_minutes;
-    public static String StartTimerCondition_everyDayAt;
-    public static String StartTimerCondition_ofEachWeek;
-    public static String StartTimerCondition_ofEachMonth;
-    public static String StartTimerCondition_dayOfTheYear;
-    public static String StartTimerCondition_of;
-
     public static String january;
     public static String february;
     public static String march;
@@ -281,10 +255,6 @@ public class Messages extends NLS {
     public static String signalEvent_throwHint;
     public static String endErrorEvent_error;
 
-    public static String StartTimerCondition_hint_monthlyDayOfTheWeek;
-    public static String StartTimerCondition_customize;
-
-
     public static String confirmDeleteFile_title;
     public static String confirmDeleteFile_msg;
 
@@ -305,8 +275,6 @@ public class Messages extends NLS {
     public static String ChooseFigure;
 
     public static String applyStyle;
-
-    public static String StartTimerCondition_fixedDate;
 
     public static String activityType_abstractTask;
 
@@ -442,7 +410,6 @@ public class Messages extends NLS {
 	public static String monthly;
 	public static String yearly;
 	public static String generateCronButtonLabel;
-	public static String startCondition;
 	public static String at;
 	public static String hourLabel;
 	public static String startTime;

@@ -17,9 +17,9 @@
  */
 package org.bonitasoft.studio.properties.filters;
 
+import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.ViewPageFlow;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.IFilter;
