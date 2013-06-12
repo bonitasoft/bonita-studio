@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * BonitaSoft, 31 rue Gustave Eiffel - 35000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,21 +22,19 @@ import static org.bonitasoft.studio.properties.i18n.Messages.deadlineVarNameLabe
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 
 import junit.framework.Assert;
 
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory;
@@ -45,7 +43,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotList;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTabItem;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.hamcrest.Matcher;
 import org.junit.After;
@@ -56,553 +54,500 @@ import org.junit.BeforeClass;
  * @author Aurelien Pupier
  *
  */
-public class TestTimer extends SWTBotGefTestCase {
+public class TestTimer extends SWTBotGefTestCase implements SWTBotConstants{
 
 
-    private static final String JAVA_LANG_LONG = "java.lang.Long";
-    private static final String DEFAULT_TIMER_NAME = "Timer1";
-    private static boolean disablePopup;
+	private static final String JAVA_LANG_LONG = "java.lang.Long";
+	private static final String DEFAULT_TIMER_NAME = "Timer1";
+	private static boolean disablePopup;
 
-    private final String editExpressionShellLabel = "Edit expression";
+	private final String editExpressionShellLabel = "Edit expression";
 
 
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        disablePopup = FileActionDialog.getDisablePopup();
-        FileActionDialog.setDisablePopup(true);
-    }
+	@BeforeClass
+	public static void setUpBeforeClass() {
+		disablePopup = FileActionDialog.getDisablePopup();
+		FileActionDialog.setDisablePopup(true);
+	}
 
 
-    @AfterClass
-    public static void tearDownAfterClass() {
+	@AfterClass
+	public static void tearDownAfterClass() {
 
-        FileActionDialog.setDisablePopup(disablePopup);
-    }
+		FileActionDialog.setDisablePopup(disablePopup);
+	}
 
-    @Override
-    @After
-    public void tearDown() {
-        // if it fails before the end of the test
-        bot.saveAllEditors();
-    }
-
-    public void testEditTimerCondition() throws IOException{
-        /*Import process*/
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestTimer_1_0.bos", "Bonita 6.x", "TestTimer", this.getClass(), false);
-        SWTBotGefEditor gefEditor = bot.gefEditor(bot.activeEditor().getTitle());
-        /*Select step on which there is the connector to test*/
+	@Override
+	@After
+	public void tearDown() {
+		// if it fails before the end of the test
+		bot.saveAllEditors();
+	}
 
-        gefEditor.select(gefEditor.getEditPart("StartTimer").parent());
+	public void testEditTimerCondition() throws IOException{
+		/*Import process*/
+		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "TestTimer_1_0.bos", "Bonita 6.x", "TestTimer", this.getClass(), false);
+		SWTBotGefEditor gefEditor = bot.gefEditor(bot.activeEditor().getTitle());
+		/*Select step on which there is the connector to test*/
 
-        /*Open connector configuration wizard to test the connector*/
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
-        bot.button(Messages.editCondition).click();
-        bot.waitUntil(Conditions.shellIsActive(Messages.timerConditionWizardTitle));
+		gefEditor.select(gefEditor.getEditPart("StartTimer").parent());
 
-        /*In the wizard add the data*/
-        bot.list().select(Messages.StartTimerCondition_script);
-        String testValue = "Value for test";
-        bot.text().setText(testValue);
-        bot.sleep(1000); // Due to delayed observable on databinding
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        bot.activeEditor().save();
-        /*Ensure that the field is correctly fill*/
-        assertEquals(testValue, bot.textWithLabel(Messages.timerCondition).getText());
-        bot.saveAllEditors();
-        bot.closeAllEditors();
 
-    }
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).setFocus();
+		SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
+		bot.button(Messages.editCondition).click();
+		bot.waitUntil(Conditions.shellIsActive(Messages.timerConditionWizardTitle));
 
-    /** Set properties on a "Every Minute" Timer in a new Diagram.
-     * 
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ExecutionException
-     */
-    public void testEditTimerConditionEveryMinute() throws Exception{
+		/*In the wizard add the data*/
+		String testValue = "0 0 12 1/1 * ? *";
+		bot.textWithId(SWTBOT_ID_EXPRESSIONVIEWER_TEXT).setText(testValue);
+		bot.sleep(500); // Due to delayed observable on databinding
+		bot.button(IDialogConstants.FINISH_LABEL).click();
+		bot.activeEditor().save();
+		/*Ensure that the field is correctly fill*/
+		assertEquals(testValue, bot.textWithLabel(Messages.timerCondition).getText());
+		bot.saveAllEditors();
+		bot.closeAllEditors();
 
-        // create new Diagram
-        SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
-        createStartTimerDiagram(gmfEditor);
+	}
 
-        // "Timer1", "Every minute"
-        changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_everyMinutes);
+	/** Set properties on a "Every Minute" Timer in a new Diagram.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 */
+	public void testEditTimerConditionEveryMinute() throws Exception{
 
-        // in the shell editor for 'Every minute'
-        bot.textWithLabel(Messages.StartTimerCondition_every).setText("5");
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+		// create new Diagram
+		SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
+		createStartTimerDiagram(gmfEditor);
 
-        Assert.assertEquals("Error: Wrong Timer Condition",Messages.StartTimerCondition_every+" 5 "+Messages.StartTimerCondition_minutes,bot.textWithLabel(Messages.timerCondition).getText());
-
-        bot.menu("Diagram").menu("Save").click();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(),status.isOK());
-
+		// "Timer1", "Every minute"
+		setCycleType(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.minutes);
 
-    }
-
+		// in the shell editor for 'Every minute'
+		bot.textWithLabel(Messages.every).setText("5");
 
-    /** Set properties on a "Every Year" Timer in a new Diagram.
-     * 
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws ExecutionException 
-     */
-    public void testEditTimerConditionEveryYear() throws Exception{
+		bot.button(Messages.generateCronButtonLabel).click();
+		bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        // create new Diagram
-        SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
-        createStartTimerDiagram(gmfEditor);
-        AbstractProcess proc = ModelHelper.getParentProcess(((IGraphicalEditPart)gmfEditor.getEditPart("Step1").part()).resolveSemanticElement());
+		Assert.assertEquals("Error: Wrong Timer Condition","0 0/5 * 1/1 * ? *",bot.textWithLabel(Messages.timerCondition).getText());
 
-        // Every year
-        changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_everyYear);
+		bot.menu("Diagram").menu("Save").click();
+		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+		assertTrue(status.getMessage(),status.isOK());
+	}
 
-        // in the shell editor for 'Every year'
-       // bot.checkBox().select();
-        // "Every"
-        bot.textWithLabel(Messages.StartTimerCondition_every).setText("3");
-        bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        Assert.assertEquals("Error: Wrong Timer Condition",Messages.StartTimerCondition_every+" 3 "+Messages.StartTimerCondition_dayOfTheYear,bot.textWithLabel(Messages.timerCondition).getText());
-
-        bot.menu("Diagram").menu("Save").click();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(),status.isOK());
+	/** Set properties on a "Every Year" Timer in a new Diagram.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws ExecutionException 
+	 */
+	public void testEditTimerConditionEveryYear() throws Exception{
 
-    }
+		// create new Diagram
+		SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
+		createStartTimerDiagram(gmfEditor);
 
-    /** Set properties on a "Fixe Date" Timer in a new Diagram.
-     * 
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public void testEditTimerConditionFixeDate() throws Exception{
+		// Every year
+		setCycleType(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.yearly);
 
-        // create new Diagram
-        SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
-        createStartTimerDiagram(gmfEditor);
-        // Every year
-        changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_fixedDate);
+		bot.radio(Messages.the).click();
+		bot.comboBox(1).setSelection(Messages.second);
+		bot.comboBox(3).setSelection(Messages.april);
+		bot.comboBox(4).setSelection("08");
+		bot.comboBox(5).setSelection("30");
+		bot.button(Messages.generateCronButtonLabel).click();	
+		bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+		Assert.assertEquals("Error: Wrong Timer Condition","0 30 8 ? 4 MON#2 *",bot.textWithLabel(Messages.timerCondition).getText());
 
-        Assert.assertTrue("Error: Wrong Timer Condition",bot.textWithLabel(Messages.timerCondition).getText().startsWith("at"));
+		bot.menu("Diagram").menu("Save").click();
+		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+		assertTrue(status.getMessage(),status.isOK());
 
-        bot.menu("Diagram").menu("Save").click();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(),status.isOK());
+	}
 
-    }
 
-    /** Set properties on a "Every Month" Timer in a new Diagram.
-     * 
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public void testEditTimerConditionEveryMonth() throws Exception{
+	/** Set properties on a "Every Month" Timer in a new Diagram.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void testEditTimerConditionEveryMonth() throws Exception{
 
-        // create new Diagram
-        SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
-        createStartTimerDiagram(gmfEditor);
+		// create new Diagram
+		SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
+		createStartTimerDiagram(gmfEditor);
 
-        // "Timer1", "Every month"
-        changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_everyMonth);
+		// "Timer1", "Every month"
+		setCycleType(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.monthly);
 
-        // "Day of month in week"
-        bot.comboBox(0).setSelection(Messages.StartTimerCondition_dayOfMonthInWeek);
-        // "Every"
-        bot.textWithLabel(Messages.StartTimerCondition_every).setText("2");
-        // "Monday"
-        bot.comboBox(1).setSelection(Messages.monday);
-        bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        Assert.assertEquals("Error: Wrong Timer Condition",Messages.StartTimerCondition_every+" 2 "+Messages.monday+" "+Messages.StartTimerCondition_ofEachMonth,bot.textWithLabel(Messages.timerCondition).getText());
+		bot.radio(Messages.the).click();
+		bot.comboBox(0).setSelection(Messages.second);
+		bot.comboBox(1).setSelection(Messages.tuesday);
+		bot.button(Messages.generateCronButtonLabel).click();
+		bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        bot.menu("Diagram").menu("Save").click();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(),status.isOK());
+		Assert.assertEquals("Error: Wrong Timer Condition","0 0 12 ? 1/1 TUE#2 *",bot.textWithLabel(Messages.timerCondition).getText());
 
-    }
-    /** Set properties on a "Every Week" Timer in a new Diagram.
-     * 
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public void testEditTimerConditionEveryWeek() throws Exception{
+		bot.menu("Diagram").menu("Save").click();
+		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+		assertTrue(status.getMessage(),status.isOK());
 
-        // create new Diagram
-        SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
-        createStartTimerDiagram(gmfEditor);
+	}
+	/** Set properties on a "Every Week" Timer in a new Diagram.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void testEditTimerConditionEveryWeek() throws Exception{
 
-        // Timer 1, Every week
-        changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_everyWeek);
+		// create new Diagram
+		SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
+		createStartTimerDiagram(gmfEditor);
 
-//        // in the shell editor for 'Every minute'
-//        bot.checkBox().select();
+		// Timer 1, Every week
+		setCycleType(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.weekly);
 
-        bot.comboBox().setSelection(Messages.wednesday);
-        // "at"
-        bot.dateTimeWithLabel(Messages.StartTimerCondition_at).setDate(new Date());
+		bot.checkBox(Messages.wednesday).select();
+		// "at"
+		bot.comboBox(0).setSelection("09");
+		bot.comboBox(1).setSelection("15");
+		bot.button(Messages.generateCronButtonLabel).click();	
+		bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+		Assert.assertEquals("Error: Wrong Timer Condition","0 15 9 ? * WED *",bot.textWithLabel(Messages.timerCondition).getText());
 
-        Assert.assertEquals("Error: Wrong Timer Condition",Messages.StartTimerCondition_every+" "+Messages.wednesday+" "+Messages.StartTimerCondition_ofEachWeek,bot.textWithLabel(Messages.timerCondition).getText());
+		bot.menu("Diagram").menu("Save").click();
+		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+		assertTrue(status.getMessage(),status.isOK());
 
-        bot.menu("Diagram").menu("Save").click();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(),status.isOK());
+	}
 
-    }
+	/** Set properties on a "Every Day" Timer in a new Diagram.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void testEditTimerConditionEveryDay() throws Exception{
 
-    /** Set properties on a "Every Day" Timer in a new Diagram.
-     * 
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public void testEditTimerConditionEveryDay() throws Exception{
+		// create new Diagram
+		SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
+		createStartTimerDiagram(gmfEditor);
 
-        // create new Diagram
-        SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
-        createStartTimerDiagram(gmfEditor);
+		setCycleType(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.daily);
 
-        changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_everyDay);
+		// "Every day at"
+		bot.comboBox(0).setSelection("14");
+		bot.comboBox(1).setSelection("00");
+		bot.button(Messages.generateCronButtonLabel).click();
+		bot.button(IDialogConstants.FINISH_LABEL).click();
 
-//        // in the shell editor for 'Every day'
-//        bot.checkBox().select();
+		// "Every day at xx:yy:zz"
+		Assert.assertEquals("Error: Wrong Timer Condition","0 0 14 1/1 * ? *",bot.textWithLabel(Messages.timerCondition).getText());
 
+		bot.menu("Diagram").menu("Save").click();
+		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+		assertTrue(status.getMessage(),status.isOK());
 
-        Calendar calendar = Calendar.getInstance();
+	}
 
-        String s = Messages.StartTimerCondition_everyDayAt + " " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE)
-                + ":" + calendar.get(Calendar.SECOND);
-        System.out.println("s = "+s);
-        // "Every day at"
-        bot.dateTimeWithLabel(Messages.StartTimerCondition_everyDayAt).setDate(calendar.getTime());
+	/** Set properties on a "Every Hour" Timer in a new Diagram.
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void testEditTimerConditionEveryHour() throws Exception{
 
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+		// create new Diagram
+		SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
+		createStartTimerDiagram(gmfEditor);
 
-        // "Every day at xx:yy:zz"
-        Assert.assertEquals("Error: Wrong Timer Condition",s,bot.textWithLabel(Messages.timerCondition).getText());
+		// "Timer1", "Every hour"
+		setCycleType(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.hourly);
 
-        bot.menu("Diagram").menu("Save").click();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(),status.isOK());
+		// text with label "Every"
+		bot.textWithLabel(Messages.hourLabel).setText("4");
+		bot.button(Messages.generateCronButtonLabel).click();
+		bot.button(IDialogConstants.FINISH_LABEL).click();
 
-    }
+		// "Every 4 hours"
+		Assert.assertEquals("Error: Wrong Timer Condition","0 0 0/1 1/1 * ? *",bot.textWithLabel(Messages.timerCondition).getText());
 
-    /** Set properties on a "Every Hour" Timer in a new Diagram.
-     * 
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public void testEditTimerConditionEveryHour() throws Exception{
+		bot.menu("Diagram").menu("Save").click();
+		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+		assertTrue(status.getMessage(),status.isOK());
 
-        // create new Diagram
-        SWTBotGefEditor gmfEditor = createNewEmptyDiagram();
-        createStartTimerDiagram(gmfEditor);
+	}
 
-        // "Timer1", "Every hour"
-        changeTimerProperties(gmfEditor, TestTimer.DEFAULT_TIMER_NAME, Messages.StartTimerCondition_everyHour);
+	/** Set properties on a Duration Timer .
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void testEditDurationTimerCondition() throws Exception{
 
-//        // in the shell editor for 'Every hour'
-//        bot.checkBox().select();
+		// Create a new Diagram and add a timer and a Service Task linked
+		SWTBotGefEditor gmfEditor = addTimerAndTaskToDiagram();
 
-        // text with label "Every"
-        bot.textWithLabel(Messages.StartTimerCondition_every).setText("4");
+		// Set Timer1
+		editTimerCondition(gmfEditor,DEFAULT_TIMER_NAME);
 
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+		// Select the Duration
+		bot.radio(Messages.durationLabel).click();
 
-        // "Every 4 hours"
-        Assert.assertEquals("Error: Wrong Timer Condition",Messages.StartTimerCondition_every+" 4 "+Messages.StartTimerCondition_hours,bot.textWithLabel(Messages.timerCondition).getText());
+		// Add a Duration of 2 days, 2 hours and 2 minutes.
+		bot.spinnerWithLabel(org.bonitasoft.studio.common.Messages.daysLabel).setSelection(2);
+		bot.spinnerWithLabel(org.bonitasoft.studio.common.Messages.hoursLabel).setSelection(2);
+		bot.spinnerWithLabel(org.bonitasoft.studio.common.Messages.minutesLabel).setSelection(2);
 
-        bot.menu("Diagram").menu("Save").click();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(),status.isOK());
+		bot.button(Messages.generateDurationLabel).click();
+		bot.button(IDialogConstants.FINISH_LABEL).click();
 
-    }
+		String conditionRes = 2+" "+daysLabel+" "+"02:02:00";
 
-    /** Set properties on a Duration Timer .
-     * 
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public void testEditDurationTimerCondition() throws Exception{
+		Assert.assertEquals("Error: Wrong Timer Condition",conditionRes,bot.textWithLabel(Messages.timerCondition).getText());
 
-        // Create a new Diagram and add a timer and a Service Task linked
-        SWTBotGefEditor gmfEditor = addTimerAndTaskToDiagram();
+		bot.menu("Diagram").menu("Save").click();
+		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+		assertTrue(status.getMessage(),status.isOK());
 
-        // Set Timer1
-        editTimerCondition(gmfEditor,DEFAULT_TIMER_NAME);
+	}
 
-        // Select the Duration
-        bot.radio(Messages.durationLabel).click();
 
-        // Add a Duration of 2 days, 2 hours and 2 minutes.
-        bot.spinnerWithLabel(org.bonitasoft.studio.common.Messages.daysLabel).setSelection(2);
-        bot.spinnerWithLabel(org.bonitasoft.studio.common.Messages.hoursLabel).setSelection(2);
-        bot.spinnerWithLabel(org.bonitasoft.studio.common.Messages.minutesLabel).setSelection(2);
-        // in the shell editor for 'Every hour'
 
-        bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        String conditionRes = 2+" "+daysLabel+" "+"02:02:00";
+	/**Set properties on a Fixed Date Timer .
+	 * 
+	 * @throws InterruptedException
+	 * @throws ParseException
+	 */
+	public void testEditFixedDateTimerCondition() throws Exception{
 
-        Assert.assertEquals("Error: Wrong Timer Condition",conditionRes,bot.textWithLabel(Messages.timerCondition).getText());
+		SWTBotGefEditor gmfEditor = addTimerAndTaskToDiagram();
 
-        bot.menu("Diagram").menu("Save").click();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(),status.isOK());
+		// Set Timer1
+		editTimerCondition(gmfEditor,DEFAULT_TIMER_NAME);
 
-    }
+		// Select the date
+		bot.radio(Messages.fixedDate).click();
+		Date d = new Date();
+		bot.dateTime(0).setDate(d);
+		bot.dateTime(1).setDate(d);
+		bot.button(Messages.generateFixedDateLabel).click();
+		bot.button(IDialogConstants.FINISH_LABEL).click();
+		
+		
+		Assert.assertFalse("Error: Wrong Timer Condition",bot.textWithLabel(Messages.timerCondition).getText().isEmpty());
 
+		bot.menu("Diagram").menu("Save").click();
+		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+		assertTrue(status.getMessage(),status.isOK());
 
 
+	}
 
-    /**Set properties on a Fixed Date Timer .
-     * 
-     * @throws InterruptedException
-     * @throws ParseException
-     */
-    public void testEditVariableTimerCondition() throws Exception{
+	/**Set properties on a Fixed Date Timer .
+	 * 
+	 * @throws InterruptedException
+	 * @throws ParseException
+	 */
+	public void testEditVariableScriptTimerCondition() throws Exception{
 
-        SWTBotGefEditor gmfEditor = addTimerAndTaskToDiagram();
+		SWTBotGefEditor gmfEditor = addTimerAndTaskToDiagram();
 
-        // Set Timer1
-        editTimerCondition(gmfEditor,DEFAULT_TIMER_NAME);
+		// Set Timer1
+		editTimerCondition(gmfEditor,DEFAULT_TIMER_NAME);
 
-        // Select the Variable
-        bot.radio(Messages.varDataType).click();
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel(deadlineVarNameLabel)));
-        SWTBotText text = bot.textWithLabel(deadlineVarNameLabel);
-        
-        Assert.assertEquals("Error: Wrong Initial Timer Condition setted","0",text.getText());
+		bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
 
-        text.setText("120000");
-        bot.sleep(1000);
+		// wait for "Edit Expression" shell
+		bot.waitUntil(Conditions.shellIsActive(editExpressionShellLabel));
 
-        Assert.assertEquals("Error: Wrong Timer Condition setted","120000",text.getText());
-        bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel(Messages.timerCondition)));
-        Assert.assertEquals("Error: Wrong Timer Condition","00:02:00",bot.textWithLabel(Messages.timerCondition).getText());
+		bot.table().select("Script");
 
-        bot.menu("Diagram").menu("Save").click();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(),status.isOK());
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name *")));
+		bot.textWithLabel("Name *").setText("myScript");
 
+		bot.styledText().setText("120000");
 
-    }
+		Assert.assertEquals("Error: Wrong Timer Condition setted","120000",bot.styledText().getText());
 
-    /**Set properties on a Fixed Date Timer .
-     * 
-     * @throws InterruptedException
-     * @throws ParseException
-     */
-    public void testEditVariableScriptTimerCondition() throws Exception{
+		// "Return type" , "java.lang.Long"
+		bot.comboBoxWithLabel(org.bonitasoft.studio.groovy.ui.Messages.returnType).setSelection(TestTimer.JAVA_LANG_LONG);
 
-        SWTBotGefEditor gmfEditor = addTimerAndTaskToDiagram();
+		Assert.assertEquals("Error: Wrong Timer Condition return type setted",TestTimer.JAVA_LANG_LONG,bot.comboBoxWithLabel(org.bonitasoft.studio.groovy.ui.Messages.returnType).getText());
 
-        // Set Timer1
-        editTimerCondition(gmfEditor,DEFAULT_TIMER_NAME);
+		// in the shell editor for 'Every hour'
+		bot.button(IDialogConstants.OK_LABEL).click();
 
-        // Select the Variable
-        bot.radio(Messages.varDataType).click();
+		assertEquals("xpression not created correctly", "myScript",bot.text().getText());
 
-        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
 
+		bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        // wait for "Edit Expression" shell
-        bot.waitUntil(Conditions.shellIsActive(editExpressionShellLabel));
+		Assert.assertEquals("Error: Wrong Timer Condition","00:02:00",bot.textWithLabel(Messages.timerCondition).getText());
 
+		bot.menu("Diagram").menu("Save").click();
+		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+		assertTrue(status.getMessage(),status.isOK());
 
-        bot.table().select("Script");
 
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Name *")));
-        bot.textWithLabel("Name *").setText("myScript");
+	}
 
-        bot.styledText().setText("120000");
+	/**Set properties on a Fixed Date Timer .
+	 * 
+	 * @throws InterruptedException
+	 * @throws ParseException
+	 */
+	public void testEditVariableConstantTimerCondition() throws Exception{
 
-        Assert.assertEquals("Error: Wrong Timer Condition setted","120000",bot.styledText().getText());
+		SWTBotGefEditor gmfEditor = addTimerAndTaskToDiagram();
 
-        // "Return type" , "java.lang.Long"
-        bot.comboBoxWithLabel(org.bonitasoft.studio.groovy.ui.Messages.returnType).setSelection(TestTimer.JAVA_LANG_LONG);
+		// Set Timer1
+		editTimerCondition(gmfEditor,DEFAULT_TIMER_NAME);
 
-        Assert.assertEquals("Error: Wrong Timer Condition return type setted",TestTimer.JAVA_LANG_LONG,bot.comboBoxWithLabel(org.bonitasoft.studio.groovy.ui.Messages.returnType).getText());
-        bot.sleep(3000);
+		bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
 
-        // in the shell editor for 'Every hour'
-        bot.button(IDialogConstants.OK_LABEL).click();
 
-        assertEquals("xpression not created correctly", "myScript",bot.text().getText());
+		// wait for "Edit Expression" shell
+		bot.waitUntil(Conditions.shellIsActive(editExpressionShellLabel));
 
 
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+		bot.table().select("Constant");
 
-        String conditionRes = "00:02:00";
-        bot.sleep(1000);
-        Assert.assertEquals("Error: Wrong Timer Condition",conditionRes,bot.textWithLabel(Messages.timerCondition).getText());
+		Matcher<Widget> matcher = WidgetMatcherFactory.withLabel("Value");
 
-        bot.menu("Diagram").menu("Save").click();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(),status.isOK());
+		bot.waitUntil(Conditions.waitForWidget(matcher));
+		bot.textWithLabel("Value").setText("120000");
 
+		Assert.assertEquals("Error: Wrong Timer Condition setted","120000",bot.textWithLabel("Value").getText());
 
-    }
+		// "Return type" , "java.lang.Long"
+		SWTBotCombo returnTypeCombo = bot.comboBoxWithLabel(org.bonitasoft.studio.groovy.ui.Messages.returnType);
+		returnTypeCombo.setSelection(Long.class.getName());
 
-    /**Set properties on a Fixed Date Timer .
-     * 
-     * @throws InterruptedException
-     * @throws ParseException
-     */
-    public void testEditVariableConstantTimerCondition() throws Exception{
+		Assert.assertEquals("Error: Wrong Timer Condition return type setted",Long.class.getName(),returnTypeCombo.getText());
 
-        SWTBotGefEditor gmfEditor = addTimerAndTaskToDiagram();
 
-        // Set Timer1
-        editTimerCondition(gmfEditor,DEFAULT_TIMER_NAME);
+		// in the shell editor for 'Every hour'
+		bot.button(IDialogConstants.OK_LABEL).click();
 
-        // Select and Edit the Variable
-        bot.radio(Messages.varDataType).click();
-        bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
 
+		Assert.assertEquals("Error: Content of text field is not corrected.", "120000", bot.text().getText());
+		bot.button(IDialogConstants.FINISH_LABEL).click();
 
-        // wait for "Edit Expression" shell
-        bot.waitUntil(Conditions.shellIsActive(editExpressionShellLabel));
+		Assert.assertEquals("Error: Wrong Timer Condition","00:02:00",bot.textWithLabel(Messages.timerCondition).getText());
+		editTimerCondition(gmfEditor,DEFAULT_TIMER_NAME);
+		Assert.assertTrue("Error: Wrong Timer Condition",bot.radio(Messages.durationLabel).isSelected());
+		bot.button(IDialogConstants.CANCEL_LABEL).click();
+		bot.menu("Diagram").menu("Save").click();
+		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
+		assertTrue(status.getMessage(),status.isOK());
 
 
-        bot.table().select("Constant");
+	}
 
-        Matcher<Widget> matcher = WidgetMatcherFactory.withLabel("Value");
 
-        bot.waitUntil(Conditions.waitForWidget(matcher));
-        bot.textWithLabel("Value").setText("120000");
+	/**
+	 * @return
+	 */
+	private SWTBotGefEditor addTimerAndTaskToDiagram() {
+		// create new Diagram
+		SWTBotTestUtil.createNewDiagram(bot);
+		SWTBotEditor activeEditor = bot.activeEditor();
+		String editorTitle = activeEditor.getTitle();
 
-        Assert.assertEquals("Error: Wrong Timer Condition setted","120000",bot.textWithLabel("Value").getText());
+		SWTBotGefEditor gmfEditor = bot.gefEditor(editorTitle);
 
-        // "Return type" , "java.lang.Long"
-        SWTBotCombo returnTypeCombo = bot.comboBoxWithLabel(org.bonitasoft.studio.groovy.ui.Messages.returnType);
-        returnTypeCombo.setSelection(TestTimer.JAVA_LANG_LONG);
+		// add a Timer
+		gmfEditor.activateTool("Timer");
+		gmfEditor.click(400, 100);
+		gmfEditor.click(400, 200);
 
-        Assert.assertEquals("Error: Wrong Timer Condition return type setted",TestTimer.JAVA_LANG_LONG,returnTypeCombo.getText());
-        bot.sleep(3000);
+		// Add Transition Timer1 -> Step1
+		SWTBotTestUtil.selectTransitionFromSelectedElementAndDragIt(gmfEditor, "Step1",  new Point(405, 105) );
 
-        // in the shell editor for 'Every hour'
-        bot.button(IDialogConstants.OK_LABEL).click();
+		// Add Service Task & Transition Timer1 -> Step2
+		SWTBotTestUtil.selectTaskFromSelectedElementAndDragIt(gmfEditor, "Timer1", new Point(610,110));
+		return gmfEditor;
+	}
 
 
-        Assert.assertEquals("Error: Content of text field is not corrected.", "120000", bot.text().getText());
-        //assertEquals("xpression not created correctly", "myScript",bot.text().getText());
+	/** In an editor, add a Start Timer, a Humand task and a Transition between them.
+	 * @param gmfEditor
+	 * @throws InterruptedException
+	 */
+	private void createStartTimerDiagram(SWTBotGefEditor gmfEditor)
+			throws InterruptedException {
+		gmfEditor.activateTool("Start timer");
+		gmfEditor.click(200, 100);
+		Matcher<Widget> matcher =  WidgetMatcherFactory.withLabel("Timer1");
+		bot.waitUntilWidgetAppears(Conditions.waitForWidget(matcher));
+		gmfEditor.click(150, 150);
 
+		// "Timer1" -> "Step1"
+		SWTBotTestUtil.selectTaskFromSelectedElementAndDragIt(gmfEditor, "Timer1", new Point(400,100));
 
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+	}
 
-        String conditionRes = "00:02:00";
-        bot.sleep(1000);
-        Assert.assertEquals("Error: Wrong Timer Condition",conditionRes,bot.textWithLabel(Messages.timerCondition).getText());
 
-        bot.menu("Diagram").menu("Save").click();
-        IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
-        assertTrue(status.getMessage(),status.isOK());
+	/** Create a Diagram, and remove the initial Start and Task.
+	 * @return
+	 * @throws InterruptedException
+	 */
+	private SWTBotGefEditor createNewEmptyDiagram() throws InterruptedException {
+		SWTBotTestUtil.createNewDiagram(bot);
+		SWTBotEditor activeEditor = bot.activeEditor();
+		String editorTitle = activeEditor.getTitle();
 
+		SWTBotGefEditor gmfEditor = bot.gefEditor(editorTitle);
 
-    }
 
+		// remove actual diagram
+		gmfEditor.getEditPart("Start1").parent().select();
 
-    /**
-     * @return
-     */
-    private SWTBotGefEditor addTimerAndTaskToDiagram() {
-        // create new Diagram
-        SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor activeEditor = bot.activeEditor();
-        String editorTitle = activeEditor.getTitle();
+		bot.sleep(500);
+		SWTBotTestUtil.pressDelete();
+		gmfEditor.getEditPart("Step1").parent().select();
 
-        SWTBotGefEditor gmfEditor = bot.gefEditor(editorTitle);
+		bot.sleep(500);
+		SWTBotTestUtil.pressDelete();
+		return gmfEditor;
+	}
 
-        // add a Timer
-        gmfEditor.activateTool("Timer");
-        gmfEditor.click(400, 100);
-        gmfEditor.click(400, 200);
+	/** Open the General Tab, launch the editor shell of a Timer and select the type of timer
+	 * @param gmfEditor
+	 * @param timerName
+	 * @param typeToSelect
+	 * 
+	 */
+	private void setCycleType(SWTBotGefEditor gmfEditor, String timerName, String typeToSelect) {
+		editTimerCondition(gmfEditor, timerName);
 
-        // Add Transition Timer1 -> Step1
-        SWTBotTestUtil.selectTransitionFromSelectedElementAndDragIt(gmfEditor, "Step1",  new Point(405, 105) );
+		bot.radio(Messages.cycle).click();
+		final SWTBotTabItem tabItem = bot.tabItem(typeToSelect);
+		Assert.assertNotNull("Error: "+typeToSelect+" element does not exist.", tabItem);
+		tabItem.activate();
+	}
 
-        // Add Service Task & Transition Timer1 -> Step2
-        SWTBotTestUtil.selectTaskFromSelectedElementAndDragIt(gmfEditor, "Timer1", new Point(610,110));
-        return gmfEditor;
-    }
 
+	/** Open the General Tab, launch the editor shell of a Timer
+	 * @param gmfEditor
+	 * @param timerName
+	 */
+	private void editTimerCondition(SWTBotGefEditor gmfEditor, String timerName) {
+		gmfEditor.getEditPart(timerName).parent().select();
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+		SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
 
-    /** In an editor, add a Start Timer, a Humand task and a Transition between them.
-     * @param gmfEditor
-     * @throws InterruptedException
-     */
-    private void createStartTimerDiagram(SWTBotGefEditor gmfEditor)
-            throws InterruptedException {
-        gmfEditor.activateTool("Start timer");
-        gmfEditor.click(200, 100);
-        Matcher<Widget> matcher =  WidgetMatcherFactory.withLabel("Timer1");
-        bot.waitUntilWidgetAppears(Conditions.waitForWidget(matcher));
-        gmfEditor.click(150, 150);
-
-        // "Timer1" -> "Step1"
-        SWTBotTestUtil.selectTaskFromSelectedElementAndDragIt(gmfEditor, "Timer1", new Point(400,100));
-
-    }
-
-
-    /** Create a Diagram, and remove the initial Start and Task.
-     * @return
-     * @throws InterruptedException
-     */
-    private SWTBotGefEditor createNewEmptyDiagram() throws InterruptedException {
-        SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor activeEditor = bot.activeEditor();
-        String editorTitle = activeEditor.getTitle();
-
-        SWTBotGefEditor gmfEditor = bot.gefEditor(editorTitle);
-
-
-        // remove actual diagram
-        gmfEditor.getEditPart("Start1").parent().select();
-
-        bot.sleep(500);
-        SWTBotTestUtil.pressDelete();
-        gmfEditor.getEditPart("Step1").parent().select();
-
-        bot.sleep(500);
-        SWTBotTestUtil.pressDelete();
-        return gmfEditor;
-    }
-
-    /** Open the General Tab, launch the editor shell of a Timer and select the type of timer
-     * @param gmfEditor
-     * @param timerName
-     * @param typeToSelect
-     * 
-     */
-    private void changeTimerProperties(SWTBotGefEditor gmfEditor, String timerName, String typeToSelect) {
-        editTimerCondition(gmfEditor, timerName);
-
-        SWTBotList table = bot.list();
-        Assert.assertTrue("Error: "+typeToSelect+" element does not exist.", table.indexOf(typeToSelect)!=-1);
-
-        table.select(typeToSelect);
-    }
-
-
-    /** Open the General Tab, launch the editor shell of a Timer
-     * @param gmfEditor
-     * @param timerName
-     */
-    private void editTimerCondition(SWTBotGefEditor gmfEditor, String timerName) {
-        gmfEditor.getEditPart(timerName).parent().select();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
-
-        bot.button(Messages.editCondition).click();
-        bot.waitUntil(Conditions.shellIsActive(Messages.timerConditionWizardTitle));
-    }
+		bot.button(Messages.editCondition).click();
+		bot.waitUntil(Conditions.shellIsActive(Messages.timerConditionWizardTitle));
+	}
 }
