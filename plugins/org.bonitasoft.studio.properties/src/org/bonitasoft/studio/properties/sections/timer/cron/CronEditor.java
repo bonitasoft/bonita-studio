@@ -141,7 +141,7 @@ public class CronEditor extends Composite {
 		"59",
 	};
 
-	private static final String[] RANK = new String[]{Messages.first,Messages.second,Messages.third,Messages.fourth};
+	private static final String[] RANK = new String[]{Messages.first,Messages.second,Messages.third,Messages.fourth,Messages.fifth};
 	private static final String[] DAYS_OF_WEEK = new String[]{Messages.monday,
 		Messages.tuesday,
 		Messages.wednesday,
@@ -248,7 +248,7 @@ public class CronEditor extends Composite {
 
 		final Composite yearlyContent = new Composite(tablFolder, SWT.NONE);
 		yearlyContent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		yearlyContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		yearlyContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 10).create());
 
 		final Button everyRadio = new Button(yearlyContent, SWT.RADIO);
 		everyRadio.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
@@ -363,6 +363,8 @@ public class CronEditor extends Composite {
 					return 3;
 				}else if(fromObject.toString().equals(Messages.fourth)){
 					return 4;
+				}else if(fromObject.toString().equals(Messages.fifth)){
+					return 5;
 				}
 				return 1;
 			}
@@ -379,6 +381,7 @@ public class CronEditor extends Composite {
 				case 2:return Messages.second;
 				case 3:return Messages.third;
 				case 4:return Messages.fourth;
+				case 5:return Messages.fifth;
 				default:
 					break;
 				}
@@ -579,7 +582,7 @@ public class CronEditor extends Composite {
 
 		final Composite monthlyContent = new Composite(tablFolder, SWT.NONE);
 		monthlyContent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		monthlyContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		monthlyContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 10).create());
 
 		final Button dayRadio = new Button(monthlyContent, SWT.RADIO);
 		dayRadio.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
@@ -642,6 +645,8 @@ public class CronEditor extends Composite {
 					return 3;
 				}else if(fromObject.toString().equals(Messages.fourth)){
 					return 4;
+				}else if(fromObject.toString().equals(Messages.fifth)){
+					return 5;
 				}
 				return 1;
 			}
@@ -658,6 +663,7 @@ public class CronEditor extends Composite {
 				case 2:return Messages.second;
 				case 3:return Messages.third;
 				case 4:return Messages.fourth;
+				case 5:return Messages.fifth;
 				default:
 					break;
 				}
@@ -759,7 +765,7 @@ public class CronEditor extends Composite {
 
 		final Composite weeklyContent = new Composite(tablFolder, SWT.NONE);
 		weeklyContent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		weeklyContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).create());
+		weeklyContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).margins(15, 10).create());
 
 		final Button mondayButton = new Button(weeklyContent, SWT.CHECK);
 		mondayButton.setText(Messages.monday);
@@ -804,7 +810,7 @@ public class CronEditor extends Composite {
 
 		final Composite dailyContent = new Composite(tablFolder, SWT.NONE);
 		dailyContent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		dailyContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		dailyContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 10).create());
 
 		final Button everyRadio = new Button(dailyContent, SWT.RADIO);
 		everyRadio.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
@@ -852,7 +858,7 @@ public class CronEditor extends Composite {
 
 		final Composite hourlyContent = new Composite(tablFolder, SWT.NONE);
 		hourlyContent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		hourlyContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		hourlyContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(15, 10).create());
 
 		final Button everyRadio = new Button(hourlyContent, SWT.RADIO);
 		everyRadio.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).create());
@@ -930,7 +936,7 @@ public class CronEditor extends Composite {
 		item.setText(Messages.minutes);
 		final Composite minuteContent = new Composite(tablFolder, SWT.NONE);
 		minuteContent.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		minuteContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).create());
+		minuteContent.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(15, 10).create());
 
 		final Label everyLabel = new Label(minuteContent, SWT.NONE);
 		everyLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
