@@ -116,7 +116,7 @@ public class FormFieldMigration extends ReportCustomMigration {
 	private void setDefaultValue(Model model, Instance widget) {
 		Instance expression = null;
 		if(defaultValueScripts.containsKey(widget.getUuid())){
-			expression = getConverter(model,getScope(widget)).parse(defaultValueScripts.get(widget.getUuid()), String.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(defaultValueScripts.get(widget.getUuid()), String.class.getName(), false);
 			if(ExpressionConstants.VARIABLE_TYPE.equals(expression.get("type")) && getParentPageFlow(widget).instanceOf("process.Pool")){
 				model.delete(expression);
 				widget.set("defaultExpression", StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true));
@@ -128,7 +128,7 @@ public class FormFieldMigration extends ReportCustomMigration {
 			}
 			addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.initialValueMigrationDescription, Messages.dataProperty, StringToExpressionConverter.getStatusForExpression(expression));
 		}else{
-			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
+			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
 		}
 		widget.set("defaultExpression", expression);
 	}
@@ -144,13 +144,13 @@ public class FormFieldMigration extends ReportCustomMigration {
 	private void setDefaultValueAfterEvent(Model model, Instance widget) {
 		Instance expression = null;
 		if(defaultValueAfterEventScripts.containsKey(widget.getUuid())){
-			expression = getConverter(model,getScope(widget)).parse(defaultValueAfterEventScripts.get(widget.getUuid()), Object.class.getName(), true);
+			expression = getConverter(model,getScope(widget)).parse(defaultValueAfterEventScripts.get(widget.getUuid()), Object.class.getName(), false);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "updateSelectedValueScript");
 			}
 			addReportChange((String) widget.get("name"),widget.getEClass().getName(), widget.getUuid(), Messages.updateSelectedValueMigrationDescription, Messages.contingencyProperty, StringToExpressionConverter.getStatusForExpression(expression));
 		}else{
-			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", Object.class.getName(), ExpressionConstants.CONSTANT_TYPE, true);
+			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", Object.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
 		}
 		widget.set("defaultExpressionAfterEvent", expression);
 	}
