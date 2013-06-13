@@ -15,15 +15,12 @@
 	</parent>
 
 	<modules>
+		<module>org.bonitasoft.studio.actors.nl_de</module>
 		<module>org.bonitasoft.studio.application.nl_de</module>
 		<module>org.bonitasoft.studio.common.nl_de</module>
 		<module>org.bonitasoft.studio.common.repository.nl_de</module>
-		<module>org.bonitasoft.studio.connector.wizard.sap.nl_de</module>
-		<module>org.bonitasoft.studio.connectors.evaluation.nl_de</module>
 		<module>org.bonitasoft.studio.connectors.nl_de</module>
-		<module>org.bonitasoft.studio.connectors.wizards.java.nl_de</module>
-		<module>org.bonitasoft.studio.console.nl_de</module>
-		<module>org.bonitasoft.studio.datas.nl_de</module>
+		<module>org.bonitasoft.studio.data.nl_de</module>
 		<module>org.bonitasoft.studio.debug.nl_de</module>
 		<module>org.bonitasoft.studio.decision.core.nl_de</module>
 		<module>org.bonitasoft.studio.decision.ui.nl_de</module>
