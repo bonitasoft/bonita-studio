@@ -18,7 +18,7 @@
    </license>
 
    <requires>
-      <import feature="studio-feature" version="6.0.0" match="equivalent"/>
+      <import feature="studio-feature" version="6.1.0" match="equivalent"/>
    </requires>
 
    <plugin
@@ -4188,8 +4188,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
-            <plugin
+
+   <plugin
          id="org.bonitasoft.studio.form.preview.nl_de"
          download-size="0"
          install-size="0"
@@ -4228,40 +4228,40 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
-      <plugin
+
+   <plugin
          id="org.bonitasoft.studio.profiles.nl_pt"
          download-size="0"
          install-size="0"
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
-       <plugin
+
+   <plugin
          id="org.bonitasoft.studio.profiles.nl_fr"
          download-size="0"
          install-size="0"
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
-       <plugin
+
+   <plugin
          id="org.bonitasoft.studio.profiles.nl_es"
          download-size="0"
          install-size="0"
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
-        <plugin
+
+   <plugin
          id="org.bonitasoft.studio.profiles.nl_de"
          download-size="0"
          install-size="0"
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
-       <plugin
+
+   <plugin
          id="org.bonitasoft.studio.profiles.nl_it"
          download-size="0"
          install-size="0"
