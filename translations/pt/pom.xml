@@ -22,8 +22,8 @@
 		<module>org.bonitasoft.studio.condition.nl_pt</module>
 		<module>org.bonitasoft.studio.condition.ui.nl_pt</module>
 		<module>org.bonitasoft.studio.configuration.nl_pt</module>
-		<module>org.bonitasoft.studio.connector.model.edit.nl_pt</module>
-		<module>org.bonitasoft.studio.connector.model.nl_pt</module>
+		<module>org.bonitasoft.studio.connectors.model.edit.nl_pt</module>
+		<module>org.bonitasoft.studio.connectors.model.nl_pt</module>
 		<module>org.bonitasoft.studio.connectors.nl_pt</module>
 		<module>org.bonitasoft.studio.data.nl_pt</module>
 		<module>org.bonitasoft.studio.debug.nl_pt</module>
