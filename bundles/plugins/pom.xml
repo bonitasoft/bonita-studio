@@ -75,8 +75,7 @@
 		<module>org.bonitasoft.studio.xpdl</module>
 		<module>org.omg.schema.spec.bpmn</module>
 		<module>org.bonitasoft.studio.logging.extension</module>
+		<module>org.bonitasoft.studio-product</module>
 	</modules>
-	<properties>
-		<sonar.jacoco.itReportPath>../../target/jacoco.exec</sonar.jacoco.itReportPath>
-	</properties>
+
 </project>
