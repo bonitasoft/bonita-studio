@@ -19,11 +19,17 @@
 		<module>org.bonitasoft.studio.application.nl_de</module>
 		<module>org.bonitasoft.studio.common.nl_de</module>
 		<module>org.bonitasoft.studio.common.repository.nl_de</module>
+		<module>org.bonitasoft.studio.condition.nl_de</module>
+		<module>org.bonitasoft.studio.condition.ui.nl_de</module>
+		<module>org.bonitasoft.studio.configuration.nl_de</module>
+		<module>org.bonitasoft.studio.connector.model.edit.nl_de</module>
+		<module>org.bonitasoft.studio.connector.model.nl_de</module>
 		<module>org.bonitasoft.studio.connectors.nl_de</module>
 		<module>org.bonitasoft.studio.data.nl_de</module>
 		<module>org.bonitasoft.studio.debug.nl_de</module>
 		<module>org.bonitasoft.studio.decision.core.nl_de</module>
 		<module>org.bonitasoft.studio.decision.ui.nl_de</module>
+		<module>org.bonitasoft.studio.dependencies.nl_de</module>
 		<module>org.bonitasoft.studio.diagram.custom.nl_de</module>
 		<module>org.bonitasoft.studio.diagram.form.custom.nl_de</module>
 		<module>org.bonitasoft.studio.diagram.form.properties.nl_de</module>
