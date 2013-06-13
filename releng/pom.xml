@@ -15,7 +15,6 @@
      <module>studio-feature</module>
      <module>studio-bos-specific-feature</module>
      <module>bos-branding-feature</module>
-     <module>studio-repository</module>
   </modules>
   
   <parent>
