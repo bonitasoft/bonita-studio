@@ -11,10 +11,10 @@
       <module>org.bonitasoft.studio-antTasks</module>
   	  <module>org.bonitasoft.studio-product</module>
      <module>rootfiles-feature</module>
+     <module>platform-specific-feature</module>
      <module>studio-feature</module>
      <module>studio-bos-specific-feature</module>
      <module>bos-branding-feature</module>
-     <module>platform-specific-feature</module>
      <module>studio-repository</module>
      <module>../translations/org.bonitasoft.studio.bos.translations-feature</module>
 	<module>../translations/org.bonitasoft.studio.translations-feature</module>
