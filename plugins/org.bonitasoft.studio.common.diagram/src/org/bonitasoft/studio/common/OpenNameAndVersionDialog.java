@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -204,7 +205,7 @@ public class OpenNameAndVersionDialog extends Dialog {
             }
         });
 
-        targetToModel.setBeforeSetValidator(new URLEncodableInputValidator(Messages.name));
+        targetToModel.setBeforeSetValidator(new UTF8InputValidator(Messages.name));
         ControlDecorationSupport.create(dbc.bindValue(observeNameText, PojoProperties.value("diagramName").observe(this),targetToModel,null), SWT.LEFT);
 
         final UpdateValueStrategy versionTargetToModel = new UpdateValueStrategy();
@@ -220,7 +221,7 @@ public class OpenNameAndVersionDialog extends Dialog {
                 return status;
             }
         });
-        versionTargetToModel.setBeforeSetValidator(new URLEncodableInputValidator(Messages.version));
+        versionTargetToModel.setBeforeSetValidator(new UTF8InputValidator(Messages.version));
         ControlDecorationSupport.create(dbc.bindValue(observeVersionText, PojoProperties.value("diagramVersion").observe(this),versionTargetToModel,null), SWT.LEFT);
 
     }

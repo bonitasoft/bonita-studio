@@ -34,6 +34,7 @@ import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
@@ -240,7 +241,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 	@Override
 	protected void createBinding(EMFDataBindingContext context) {
 		labelTargetToModelUpdate = new UpdateValueStrategy();
-		labelTargetToModelUpdate.setAfterGetValidator(new URLEncodableInputValidator(Messages.name)) ;
+		labelTargetToModelUpdate.setAfterGetValidator(new UTF8InputValidator(Messages.name)) ;
 		labelTargetToModelUpdate.setBeforeSetValidator(new InputLengthValidator(Messages.name, 50)) ;
 
 		observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));

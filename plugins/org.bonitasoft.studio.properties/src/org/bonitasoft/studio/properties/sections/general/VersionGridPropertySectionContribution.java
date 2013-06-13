@@ -19,6 +19,7 @@ package org.bonitasoft.studio.properties.sections.general;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -78,7 +79,7 @@ public class VersionGridPropertySectionContribution implements IExtensibleGridPr
     protected void createBinding(EMFDataBindingContext context) {
         UpdateValueStrategy versionUpdate = new UpdateValueStrategy();
         versionUpdate.setAfterGetValidator(new EmptyInputValidator(Messages.GeneralSection_Version));
-        versionUpdate.setBeforeSetValidator(new URLEncodableInputValidator(Messages.GeneralSection_Version));
+        versionUpdate.setBeforeSetValidator(new UTF8InputValidator(Messages.GeneralSection_Version));
 
         ISWTObservableValue observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
         context.bindValue(observable, EMFEditObservables.observeValue(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION),versionUpdate,versionUpdate);
