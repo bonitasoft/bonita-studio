@@ -12,7 +12,7 @@
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>all-in-one</artifactId>
 	<version>6.1.0-SNAPSHOT</version>
-	<packaging>eclipse-plugin</packaging>
+	<packaging>eclipse-repository</packaging>
 
 	<properties>
 		<product.short.name>BonitaBPMCommunity</product.short.name>
@@ -20,6 +20,43 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-repository-plugin</artifactId>
+				<version>${tychoVersion}</version>
+				<configuration>
+					<includeAllDependencies>true</includeAllDependencies>
+					<finalName>${project.artifactId}-${project.version}</finalName>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-director-plugin</artifactId>
+				<version>${tychoVersion}</version>
+				<configuration>
+					<formats>
+						<macosx>tar.gz</macosx>
+						<linux>tar.gz</linux>
+						<win>zip</win>
+					</formats>
+				</configuration>
+				<executions>
+					<execution>
+						<id>materialize-products</id>
+						<goals>
+							<goal>materialize-products</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>archive-products</id>
+						<goals>
+							<goal>archive-products</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		
 			<!-- Retrieve each platform artifact -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
