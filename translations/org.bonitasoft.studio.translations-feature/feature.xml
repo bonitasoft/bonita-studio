@@ -3503,13 +3503,6 @@
          fragment="true"
          unpack="false"/>
 
-   <plugin
-         id="org.bonitasoft.studio.condition.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio.condition.ui.nl_de"
@@ -3551,13 +3544,6 @@
          fragment="true"
          unpack="false"/>
 
-   <plugin
-         id="org.bonitasoft.studio.condition.ui.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio.configuration.nl_de"
@@ -3999,13 +3985,6 @@
          fragment="true"
          unpack="false"/>
 
-   <plugin
-         id="org.bonitasoft.studio.migration.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio.repository.themes.nl_de"
