@@ -54,7 +54,7 @@
 			</plugin>
 
 
-			<!-- Prepare all-in-one assembly with all platforms -->
+			<!--all-in-one assembly with all platforms -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -65,6 +65,18 @@
 						<configuration>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptor>${basedir}/assembly-descriptor.xml</descriptor>
+							<finalName>${product.short.name}-${project.version}</finalName>
+						</configuration>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>make-zip-assembly</id>
+						<phase>install</phase>
+						<configuration>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
 							<finalName>${product.short.name}-${project.version}</finalName>
 						</configuration>
 						<goals>
@@ -105,26 +117,6 @@
 						<phase>package</phase>
 						<goals>
 							<goal>eclipse-run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- Make all-in-one archive -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>make-zip-assembly</id>
-						<phase>install</phase>
-						<configuration>
-							<appendAssemblyId>false</appendAssemblyId>
-							<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
-							<finalName>${product.short.name}-${project.version}</finalName>
-						</configuration>
-						<goals>
-							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
