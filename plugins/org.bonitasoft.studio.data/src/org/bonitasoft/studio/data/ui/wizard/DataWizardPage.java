@@ -517,8 +517,9 @@ public class DataWizardPage extends WizardPage {
 					}
 				}
 
-				/* Search above level */
-				for (final Object object : ModelHelper.getAccessibleData(container, true)) {
+				/* Search all level */
+				List<Data> allData = ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(container), ProcessPackage.Literals.DATA);
+				for (final Data object : allData) {
 					if (object instanceof Data) {
 						final Data otherData = (Data) object;
 						final Data originalData = ((DataWizard) getWizard()).getOriginalData();
