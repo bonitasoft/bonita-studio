@@ -389,29 +389,7 @@
          fragment="true"
          unpack="false"/>
 
-   <plugin
-         id="org.bonitasoft.studio.intro.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
 
-   <plugin
-         id="org.bonitasoft.studio.jpdl.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.omg.schema.spec.bpmn.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio.application.nl_pt"
