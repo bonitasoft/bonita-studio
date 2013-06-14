@@ -84,6 +84,8 @@ public class Messages extends NLS {
 	public static String browserForPreview;
 	public static String invalidWorkspaceTitle;
 	public static String invalidWorkspace;
+	public static String failedToOpenLogTitle;
+	public static String failedToOpenLogMessage;
 
 
 
