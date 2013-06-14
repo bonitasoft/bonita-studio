@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2010-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import org.bonitasoft.studio.model.process.Assignable;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
@@ -44,13 +45,13 @@ public class AssignableConstraint extends AbstractLiveValidationMarkerConstraint
         final EStructuralFeature featureTriggered = ctx.getFeature();
         if(featureTriggered.equals(ProcessPackage.Literals.ASSIGNABLE__ACTOR)){
             final Assignable assignable = (Assignable) ctx.getTarget();
-            if(noActorsDefined(assignable)){
+            if(!hasActorsDefined(assignable)){
                 return ctx.createFailureStatus(new Object[] { ((Element) assignable).getName() });
             }
         }else if(featureTriggered.equals(NotationPackage.Literals.VIEW__ELEMENT)){
             EObject eobject = (EObject) ctx.getFeatureNewValue();
             if(eobject instanceof Assignable){
-                if(noActorsDefined((Assignable) eobject)){
+                if(!hasActorsDefined((Assignable) eobject)){
                     return ctx.createFailureStatus(new Object[] {  ((Element) eobject).getName() });
                 }
             }
@@ -58,19 +59,30 @@ public class AssignableConstraint extends AbstractLiveValidationMarkerConstraint
             final Task task = (Task) ctx.getTarget();
             final Boolean overrideGroupsOfLane = (Boolean) ctx.getFeatureNewValue();
             if(overrideGroupsOfLane){
-                if(noActorsDefined(task)){
+                if(!hasActorsDefined(task)){
                     return ctx.createFailureStatus(new Object[] { task.getName() });
                 }
             }
         }
         return ctx.createSuccessStatus();
     }
-
-    protected boolean noActorsDefined(Assignable assignable){
-        if(assignable instanceof Task && !((Task) assignable).isOverrideActorsOfTheLane() && assignable.eContainer() instanceof Lane ){
-            return false;
-        }
-        return assignable.getActor() == null ;
+    
+    private boolean hasActorsDefined(Assignable assignable){
+    	if(assignable instanceof Task){
+    		if(((Task) assignable).isOverrideActorsOfTheLane()){
+    			return assignable.getActor() != null;
+    		} else {
+    			final Lane parentLane = getParentLane(assignable);
+    			if(parentLane != null){
+    				return hasActorsDefined(parentLane);
+    			} else {
+    				return false;
+    			}
+    		}
+    	} else {
+    		return assignable.getActor() != null;
+    	}
+    	
     }
 
     @Override
@@ -86,31 +98,48 @@ public class AssignableConstraint extends AbstractLiveValidationMarkerConstraint
     @Override
     protected IStatus performBatchValidation(IValidationContext ctx) {
         EObject eObj = ctx.getTarget();
-        if (eObj instanceof Task) {
-            Task task = (Task) eObj;
-            // task must have at least an actor (or group)
-            if(task.isOverrideActorsOfTheLane() || !(task.eContainer() instanceof Lane)){
-                if (noActorsDefined(task)){
-                    return ctx.createFailureStatus(new Object[] { ((Task) eObj).getName() });
-                }
-            } else if(!task.isOverrideActorsOfTheLane() && task.eContainer() instanceof Lane){
-                if (noActorsDefined((Assignable) task.eContainer())){
-                    return ctx.createFailureStatus(new Object[] { ((Task) eObj).getName() });
-                }
-            }
-        } else if(eObj instanceof Lane){
-            if (noActorsDefined((Assignable) eObj)){
-                for(EObject temp : ((Lane)eObj).getElements()){
-                    if(temp instanceof Task){
-                        if(!((Task) temp).isOverrideActorsOfTheLane()){
-                            return ctx.createFailureStatus(new Object[] { ((Lane) eObj).getName() });
-                        }
-                    }
-                }
+        if (eObj instanceof Assignable) {
+        	Assignable assignable = (Assignable) eObj;
+            if(!hasActorsDefined(assignable)){
+            	if(assignable instanceof Lane){
+            		if(hasTaskUsingLaneActor((Lane)assignable)){
+            			return ctx.createFailureStatus(new Object[] { ((Element) assignable).getName() });
+            		}
+            	} else {
+            		return ctx.createFailureStatus(new Object[] { ((Element) assignable).getName() });
+            	}
             }
         }
         return ctx.createSuccessStatus();
     }
 
+    private boolean hasTaskUsingLaneActor(Lane lane) {
+    	for(Element element : lane.getElements()){
+    		if(element instanceof Task){
+    			if(!((Task) element).isOverrideActorsOfTheLane()){
+    				return true;
+    			}
+    		} else if(element instanceof SubProcessEvent){
+    			for (Element elementInSubProc : ((SubProcessEvent) element).getElements()) {
+    				if(!((Task) elementInSubProc).isOverrideActorsOfTheLane()){
+    					return true;
+    				}
+    			}
+    		}
+    	}
+    	return false;
+    }
 
+	private Lane getParentLane(EObject eObject){
+		Lane res = null;
+		EObject current = eObject;
+		while(current != null && res == null){
+			if(current instanceof Lane){
+				res = (Lane) current;
+			} else {
+				current = current.eContainer();
+			}		
+		}
+		return res;
+	}
 }
