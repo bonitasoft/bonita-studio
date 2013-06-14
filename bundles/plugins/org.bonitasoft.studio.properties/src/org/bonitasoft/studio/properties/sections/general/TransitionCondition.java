@@ -466,12 +466,14 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
                         ViewerProperties.singleSelection().observe(conditionViewer),
                         EMFEditProperties.value(editingDomain, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION).observe(transition));
                 conditionViewer.setInput(transition) ;
+                
+                dataBindingContext.bindValue(SWTObservables.observeSelection(useExpressionCondition),SWTObservables.observeEnabled(conditionViewer.getControl()));
             }
             
             dataBindingContext.bindValue(SWTObservables.observeEnabled(useExpressionCondition),
                     EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
             
-            dataBindingContext.bindValue(SWTObservables.observeSelection(useExpressionCondition),SWTObservables.observeEnabled(conditionViewer.getControl()));
+      
             
             dataBindingContext.bindValue(SWTObservables.observeEnabled(useDecisionTable),
                     EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
@@ -481,29 +483,6 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
                         EMFEditObservables.observeValue(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__IS_DEFAULT),new UpdateValueStrategy().setConverter(conditionConverter),new UpdateValueStrategy().setConverter(conditionConverter));
 
             }
-
-
-            //		conditionText.setEditingDomain(editingDomain);
-            //		if (transition.getConditionType() == SequenceFlowConditionType.EXPRESSION && transition.getCondition() != null && transition.getCondition().getContent() != null) {
-            //			conditionText.setText(transition.getCondition());
-            //		} else if (transition.getConditionType() == SequenceFlowConditionType.DECISION_TABLE) {
-            //			conditionText.setText(DecisionTableUtil.DECISION_TABLE);
-            //		}
-            //		conditionText.addValueChangedListener(new Listener() {
-            //			public void handleEvent(Event event) {
-            //				if (!DecisionTableUtil.DECISION_TABLE.equals(conditionText.getText())) {
-            //					CompoundCommand command = new CompoundCommand();
-            //					command.append(new SetCommand(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION, conditionText.getText()));
-            //					if (transition.getConditionType() == SequenceFlowConditionType.DECISION_TABLE) {
-            //						command.append(new SetCommand(editingDomain, transition, ProcessPackage.Literals.SEQUENCE_FLOW__CONDITION_TYPE, SequenceFlowConditionType.GROOVY_EXPRESSION));
-            //					}
-            //					editingDomain.getCommandStack().execute(command);
-            //				}
-            //			}
-            //
-            //		});
-
-
         }
     }
 
