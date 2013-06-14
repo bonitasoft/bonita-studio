@@ -10,12 +10,12 @@
 	<name>Bonita Studio</name>
 	<properties>
 		<!--forceContextQualifier-->
-		<tychoVersion>0.17.0</tychoVersion>
-		<tychoExtrasVersion>0.17.0</tychoExtrasVersion>
+		<tychoVersion>0.18.0</tychoVersion>
+		<tychoExtrasVersion>0.18.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>6.0.1-rc-01</bundle.version>
 		<engine.version>6.0.1-rc-01</engine.version>
-		<connector.version>6.0.0</connector.version>
+		<connector.version>6.0.1-rc-01</connector.version>
 		<simulation.version>6.0.0</simulation.version>
 		<filters.version>6.0.0</filters.version>
 		<theme.builder.version>6.0.0</theme.builder.version>
