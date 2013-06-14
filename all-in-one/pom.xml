@@ -26,7 +26,7 @@
 				<version>${tychoVersion}</version>
 				<configuration>
 					<includeAllDependencies>true</includeAllDependencies>
-					<finalName>${project.artifactId}-${project.version}</finalName>
+					<finalName>studio-repository-${project.version}</finalName>
 				</configuration>
 			</plugin>
 
@@ -44,17 +44,17 @@
 				<executions>
 					<execution>
 						<id>materialize-products</id>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>materialize-products</goal>
 						</goals>
-						<phase>generate-resources</phase>
 					</execution>
 					<execution>
 						<id>archive-products</id>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>archive-products</goal>
 						</goals>
-						<phase>generate-resources</phase>
 					</execution>
 				</executions>
 			</plugin>
