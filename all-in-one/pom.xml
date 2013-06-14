@@ -24,20 +24,6 @@
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-p2-publisher-plugin</artifactId>
-				<version>${tychoVersion}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>publish-products</goal>
-						</goals>
-						<phase>prepare-package</phase>
-					</execution>
-				</executions>
-			</plugin>
-		
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
 				<version>${tychoVersion}</version>
 				<configuration>
@@ -45,8 +31,6 @@
 					<finalName>${repositoryId}-${project.version}</finalName>
 				</configuration>
 			</plugin>
-			
-
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-director-plugin</artifactId>
@@ -64,7 +48,7 @@
 						<goals>
 							<goal>materialize-products</goal>
 						</goals>
-						<phase>prepare-package</phase>
+						<phase>package</phase>
 					</execution>
 				</executions>
 			</plugin>
@@ -77,7 +61,7 @@
 				<executions>
 					<execution>
 						<id>make-directory-assembly</id>
-						<phase>prepare-package</phase>
+						<phase>package</phase>
 						<configuration>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptor>${basedir}/assembly-descriptor.xml</descriptor>
@@ -118,7 +102,7 @@
 				</configuration>
 				<executions>
 					<execution>
-						<phase>prepare-package</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>eclipse-run</goal>
 						</goals>
@@ -133,7 +117,7 @@
 				<executions>
 					<execution>
 						<id>make-zip-assembly</id>
-						<phase>package</phase>
+						<phase>install</phase>
 						<configuration>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptor>${basedir}/assembly-zip-descriptor.xml</descriptor>
@@ -153,7 +137,7 @@
 				<executions>
 					<execution>
 						<id>linux-x86</id>
-						<phase>package</phase>
+						<phase>install</phase>
 						<configuration>
 							<arguments>
 								<argument>build</argument>
@@ -167,7 +151,7 @@
 					</execution>
 					<execution>
 						<id>linux-x86_64</id>
-						<phase>package</phase>
+						<phase>install</phase>
 						<configuration>
 							<arguments>
 								<argument>build</argument>
@@ -181,7 +165,7 @@
 					</execution>
 					<execution>
 						<id>macosx-x86</id>
-						<phase>package</phase>
+						<phase>install</phase>
 						<configuration>
 							<arguments>
 								<argument>build</argument>
@@ -195,7 +179,7 @@
 					</execution>
 					<execution>
 						<id>macosx-x86_64</id>
-						<phase>package</phase>
+						<phase>install</phase>
 						<configuration>
 							<arguments>
 								<argument>build</argument>
@@ -209,7 +193,7 @@
 					</execution>
 					<execution>
 						<id>win-x86</id>
-						<phase>package</phase>
+						<phase>install</phase>
 						<configuration>
 							<arguments>
 								<argument>build</argument>
@@ -223,7 +207,7 @@
 					</execution>
 					<execution>
 						<id>win-x86_64</id>
-						<phase>package</phase>
+						<phase>install</phase>
 						<configuration>
 							<arguments>
 								<argument>build</argument>
