@@ -24,6 +24,20 @@
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-publisher-plugin</artifactId>
+				<version>${tychoVersion}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>publish-products</goal>
+						</goals>
+						<phase>prepare-package</phase>
+					</execution>
+				</executions>
+			</plugin>
+		
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
 				<version>${tychoVersion}</version>
 				<configuration>
@@ -31,6 +45,7 @@
 					<finalName>${repositoryId}-${project.version}</finalName>
 				</configuration>
 			</plugin>
+			
 
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -49,150 +64,10 @@
 						<goals>
 							<goal>materialize-products</goal>
 						</goals>
+						<phase>prepare-package</phase>
 					</execution>
-<!-- 					<execution> -->
-<!-- 						<id>archive-products</id> -->
-<!-- 						<goals> -->
-<!-- 							<goal>archive-products</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
 				</executions>
 			</plugin>
-		
-			<!-- Retrieve each platform artifact -->
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
-<!-- 				<artifactId>maven-dependency-plugin</artifactId> -->
-<!-- 				<version>2.6</version> -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<id>unpack-linux.gtk.x86_64</id> -->
-<!-- 						<phase>prepare-package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.bonitasoft.studio.releng</groupId> -->
-<!-- 									<artifactId>${repositoryId}</artifactId> -->
-<!-- 									<version>${project.version}</version> -->
-<!-- 									<classifier>linux.gtk.x86_64</classifier> -->
-<!-- 									<type>tar.gz</type> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/linux.gtk.x86_64</outputDirectory> -->
-<!-- 							<overWriteReleases>false</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 						<id>unpack-linux.gtk.x86</id> -->
-<!-- 						<phase>prepare-package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.bonitasoft.studio.releng</groupId> -->
-<!-- 									<artifactId>${repositoryId}</artifactId> -->
-<!-- 									<version>${project.version}</version> -->
-<!-- 									<classifier>linux.gtk.x86</classifier> -->
-<!-- 									<type>tar.gz</type> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/linux.gtk.x86</outputDirectory> -->
-<!-- 							<overWriteReleases>false</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 						<id>unpack-macosx.cocoa.x86_64</id> -->
-<!-- 						<phase>prepare-package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.bonitasoft.studio.releng</groupId> -->
-<!-- 									<artifactId>${repositoryId}</artifactId> -->
-<!-- 									<version>${project.version}</version> -->
-<!-- 									<classifier>macosx.cocoa.x86_64</classifier> -->
-<!-- 									<type>tar.gz</type> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/macosx.cocoa.x86_64</outputDirectory> -->
-<!-- 							<overWriteReleases>false</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 						<id>unpack-macosx.cocoa.x86</id> -->
-<!-- 						<phase>prepare-package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.bonitasoft.studio.releng</groupId> -->
-<!-- 									<artifactId>${repositoryId}</artifactId> -->
-<!-- 									<version>${project.version}</version> -->
-<!-- 									<classifier>macosx.cocoa.x86</classifier> -->
-<!-- 									<type>tar.gz</type> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/macosx.cocoa.x86</outputDirectory> -->
-<!-- 							<overWriteReleases>false</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 						<id>unpack-win32.x86_64</id> -->
-<!-- 						<phase>prepare-package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.bonitasoft.studio.releng</groupId> -->
-<!-- 									<artifactId>${repositoryId}</artifactId> -->
-<!-- 									<version>${project.version}</version> -->
-<!-- 									<classifier>win32.win32.x86_64</classifier> -->
-<!-- 									<type>zip</type> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/win32.win32.x86_64</outputDirectory> -->
-<!-- 							<overWriteReleases>false</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 					<execution> -->
-<!-- 						<id>unpack-win32.x86</id> -->
-<!-- 						<phase>prepare-package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>org.bonitasoft.studio.releng</groupId> -->
-<!-- 									<artifactId>studio-repository</artifactId> -->
-<!-- 									<version>${project.version}</version> -->
-<!-- 									<classifier>win32.win32.x86</classifier> -->
-<!-- 									<type>zip</type> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/win32.win32.x86</outputDirectory> -->
-<!-- 							<overWriteReleases>false</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 			</plugin> -->
 
 
 			<!-- Prepare all-in-one assembly with all platforms -->
@@ -202,7 +77,7 @@
 				<executions>
 					<execution>
 						<id>make-directory-assembly</id>
-						<phase>package</phase>
+						<phase>prepare-package</phase>
 						<configuration>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptor>${basedir}/assembly-descriptor.xml</descriptor>
@@ -221,7 +96,10 @@
 				<artifactId>tycho-eclipserun-plugin</artifactId>
 				<version>0.16.0</version>
 				<configuration>
-					<appArgLine>${os-jvm-flags} -application org.eclipse.ant.core.antRunner -buildfile p2AllInOne.xml -clean -noSplash -consoleLog -Droot.dir=${project.build.directory}/${product.short.name}-${project.version}/</appArgLine>
+					<appArgLine>${os-jvm-flags} -application
+						org.eclipse.ant.core.antRunner -buildfile p2AllInOne.xml -clean
+						-noSplash -consoleLog
+						-Droot.dir=${project.build.directory}/${product.short.name}-${project.version}/</appArgLine>
 					<argLine>-Xmx512m -Xms256m -XX:MaxPermSize=512m</argLine>
 					<dependencies>
 						<dependency>
@@ -240,14 +118,14 @@
 				</configuration>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>eclipse-run</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<!-- Make all-in-one archive -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -268,13 +146,13 @@
 				</executions>
 			</plugin>
 
-			<!-- Build installers for each platform-->
+			<!-- Build installers for each platform -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<executions>
 					<execution>
-					 	<id>linux-x86</id>
+						<id>linux-x86</id>
 						<phase>package</phase>
 						<configuration>
 							<arguments>
@@ -288,7 +166,7 @@
 						</goals>
 					</execution>
 					<execution>
-					 	<id>linux-x86_64</id>
+						<id>linux-x86_64</id>
 						<phase>package</phase>
 						<configuration>
 							<arguments>
@@ -302,7 +180,7 @@
 						</goals>
 					</execution>
 					<execution>
-					 	<id>macosx-x86</id>
+						<id>macosx-x86</id>
 						<phase>package</phase>
 						<configuration>
 							<arguments>
@@ -316,7 +194,7 @@
 						</goals>
 					</execution>
 					<execution>
-					 	<id>macosx-x86_64</id>
+						<id>macosx-x86_64</id>
 						<phase>package</phase>
 						<configuration>
 							<arguments>
@@ -330,7 +208,7 @@
 						</goals>
 					</execution>
 					<execution>
-					 	<id>win-x86</id>
+						<id>win-x86</id>
 						<phase>package</phase>
 						<configuration>
 							<arguments>
@@ -344,7 +222,7 @@
 						</goals>
 					</execution>
 					<execution>
-					 	<id>win-x86_64</id>
+						<id>win-x86_64</id>
 						<phase>package</phase>
 						<configuration>
 							<arguments>
@@ -365,18 +243,21 @@
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
-					 <execution>
+					<execution>
 						<id>linux x86 installer file</id>
 						<phase>prepare-package</phase>
 						<configuration>
 							<target>
-							    <property name="studio.dir" value="${project.build.directory}/products/${productId}/linux/gtk/x86"/>
-							    <property name="bitrock.install" value="${project.build.directory}/installers"/>
-							    <property name="os_arch" value="32" />
-								<property file="installer/installer.properties"/>
-								<property name="installer.name" value="${product.short.name}-${product.version}-x86.run"/>
-								<property name="updated.project.file" value="${basedir}/installer/installer_project_linux_x86.xml" />
-								<ant antfile="createInstallerProject.xml" />		
+								<property name="studio.dir"
+									value="${project.build.directory}/products/${productId}/linux/gtk/x86" />
+								<property name="bitrock.install" value="${project.build.directory}/installers" />
+								<property name="os_arch" value="32" />
+								<property file="installer/installer.properties" />
+								<property name="installer.name"
+									value="${product.short.name}-${product.version}-x86.run" />
+								<property name="updated.project.file"
+									value="${basedir}/installer/installer_project_linux_x86.xml" />
+								<ant antfile="createInstallerProject.xml" />
 							</target>
 						</configuration>
 						<goals>
@@ -388,12 +269,15 @@
 						<phase>prepare-package</phase>
 						<configuration>
 							<target>
-							    <property name="studio.dir" value="${project.build.directory}/products/${productId}/linux/gtk/x86_64"/>
-							    <property name="bitrock.install" value="${project.build.directory}/installers"/>
-							    <property name="os_arch" value="64" />
-								<property file="installer/installer.properties"/>
-								<property name="installer.name" value="${product.short.name}-${product.version}-x86_64.run"/>
-								<property name="updated.project.file" value="${basedir}/installer/installer_project_linux_x86_64.xml" />
+								<property name="studio.dir"
+									value="${project.build.directory}/products/${productId}/linux/gtk/x86_64" />
+								<property name="bitrock.install" value="${project.build.directory}/installers" />
+								<property name="os_arch" value="64" />
+								<property file="installer/installer.properties" />
+								<property name="installer.name"
+									value="${product.short.name}-${product.version}-x86_64.run" />
+								<property name="updated.project.file"
+									value="${basedir}/installer/installer_project_linux_x86_64.xml" />
 								<ant antfile="createInstallerProject.xml" />
 							</target>
 						</configuration>
@@ -406,12 +290,15 @@
 						<phase>prepare-package</phase>
 						<configuration>
 							<target>
-							    <property name="studio.dir" value="${project.build.directory}/products/${productId}/macosx/cocoa/x86"/>
-							    <property name="bitrock.install" value="${project.build.directory}/installers"/>
-							    <property name="os_arch" value="32" />
-								<property file="installer/installer.properties"/>
-								<property name="installer.name" value="${product.short.name}-${product.version}-x86"/>
-								<property name="updated.project.file" value="${basedir}/installer/installer_project_macosx_x86.xml" />
+								<property name="studio.dir"
+									value="${project.build.directory}/products/${productId}/macosx/cocoa/x86" />
+								<property name="bitrock.install" value="${project.build.directory}/installers" />
+								<property name="os_arch" value="32" />
+								<property file="installer/installer.properties" />
+								<property name="installer.name"
+									value="${product.short.name}-${product.version}-x86" />
+								<property name="updated.project.file"
+									value="${basedir}/installer/installer_project_macosx_x86.xml" />
 								<ant antfile="createInstallerProject.xml" />
 							</target>
 						</configuration>
@@ -424,12 +311,15 @@
 						<phase>prepare-package</phase>
 						<configuration>
 							<target>
-							    <property name="studio.dir" value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64"/>
-							    <property name="bitrock.install" value="${project.build.directory}/installers"/>
-							    <property name="os_arch" value="64" />
-								<property file="installer/installer.properties"/>
-								<property name="installer.name" value="${product.short.name}-${product.version}-x86_64"/>
-								<property name="updated.project.file" value="${basedir}/installer/installer_project_macosx_x86_64.xml" />
+								<property name="studio.dir"
+									value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64" />
+								<property name="bitrock.install" value="${project.build.directory}/installers" />
+								<property name="os_arch" value="64" />
+								<property file="installer/installer.properties" />
+								<property name="installer.name"
+									value="${product.short.name}-${product.version}-x86_64" />
+								<property name="updated.project.file"
+									value="${basedir}/installer/installer_project_macosx_x86_64.xml" />
 								<ant antfile="createInstallerProject.xml" />
 							</target>
 						</configuration>
@@ -442,12 +332,15 @@
 						<phase>prepare-package</phase>
 						<configuration>
 							<target>
-							    <property name="studio.dir" value="${project.build.directory}/products/${productId}/win32/win32/x86"/>
-							    <property name="bitrock.install" value="${project.build.directory}/installers"/>
-							    <property name="os_arch" value="32" />
-								<property file="installer/installer.properties"/>
-								<property name="installer.name" value="${product.short.name}-${product.version}-x86.exe"/>
-								<property name="updated.project.file" value="${basedir}/installer/installer_project_win_x86.xml" />
+								<property name="studio.dir"
+									value="${project.build.directory}/products/${productId}/win32/win32/x86" />
+								<property name="bitrock.install" value="${project.build.directory}/installers" />
+								<property name="os_arch" value="32" />
+								<property file="installer/installer.properties" />
+								<property name="installer.name"
+									value="${product.short.name}-${product.version}-x86.exe" />
+								<property name="updated.project.file"
+									value="${basedir}/installer/installer_project_win_x86.xml" />
 								<ant antfile="createInstallerProject.xml" />
 							</target>
 						</configuration>
@@ -460,12 +353,15 @@
 						<phase>prepare-package</phase>
 						<configuration>
 							<target>
-							    <property name="studio.dir" value="${project.build.directory}/products/${productId}/win32/win32/x86_64"/>
-							    <property name="bitrock.install" value="${project.build.directory}/installers"/>
-							    <property name="os_arch" value="64" />
-								<property file="installer/installer.properties"/>
-								<property name="installer.name" value="${product.short.name}-${product.version}-x86_64.exe"/>
-								<property name="updated.project.file" value="${basedir}/installer/installer_project_win_x86_64.xml" />
+								<property name="studio.dir"
+									value="${project.build.directory}/products/${productId}/win32/win32/x86_64" />
+								<property name="bitrock.install" value="${project.build.directory}/installers" />
+								<property name="os_arch" value="64" />
+								<property file="installer/installer.properties" />
+								<property name="installer.name"
+									value="${product.short.name}-${product.version}-x86_64.exe" />
+								<property name="updated.project.file"
+									value="${basedir}/installer/installer_project_win_x86_64.xml" />
 								<ant antfile="createInstallerProject.xml" />
 							</target>
 						</configuration>
@@ -475,7 +371,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 		</plugins>
 	</build>
 
