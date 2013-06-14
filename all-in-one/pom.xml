@@ -67,7 +67,7 @@
 				<executions>
 					<execution>
 						<id>unpack-linux.gtk.x86_64</id>
-						<phase>generate-resources</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -88,7 +88,7 @@
 					</execution>
 					<execution>
 						<id>unpack-linux.gtk.x86</id>
-						<phase>generate-resources</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -109,7 +109,7 @@
 					</execution>
 					<execution>
 						<id>unpack-macosx.cocoa.x86_64</id>
-						<phase>generate-resources</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -130,7 +130,7 @@
 					</execution>
 					<execution>
 						<id>unpack-macosx.cocoa.x86</id>
-						<phase>generate-resources</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -151,7 +151,7 @@
 					</execution>
 					<execution>
 						<id>unpack-win32.x86_64</id>
-						<phase>generate-resources</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -172,7 +172,7 @@
 					</execution>
 					<execution>
 						<id>unpack-win32.x86</id>
-						<phase>generate-resources</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>unpack</goal>
 						</goals>
@@ -201,7 +201,7 @@
 				<executions>
 					<execution>
 						<id>make-directory-assembly</id>
-						<phase>process-resources</phase>
+						<phase>prepare-package</phase>
 						<configuration>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptor>${basedir}/assembly-descriptor.xml</descriptor>
