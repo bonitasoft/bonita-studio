@@ -481,7 +481,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 				}
 			}
 		}
-		if(alreadyExists){
+		if(!(sourceCopy instanceof Connection) && alreadyExists){
 			updateLabelandId(COPY_LABEL +" "+name, sourceCopy, elems);
 		}else{
 			sourceCopy.setName(name) ;
