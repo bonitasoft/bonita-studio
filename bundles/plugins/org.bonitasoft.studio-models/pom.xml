@@ -31,12 +31,6 @@
 								<repository>
 							        <id>local platform</id>
 							        <url>${p2MirrorUrl}</url>
-							        <releases>
-							           <enabled>true</enabled>
-							        </releases>
-							        <snapshots>
-							          <enabled>false</enabled>
-							        </snapshots>        
 					    		 </repository>
 							</repositories>
 							<appArgLine>${os-jvm-flags} -data ${workspacePath} -application org.eclipse.ant.ui.antRunner -buildfile generateGenModels.xml -clean -noSplash -consoleLog</appArgLine>
