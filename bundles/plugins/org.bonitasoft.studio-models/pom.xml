@@ -27,6 +27,18 @@
 							<artifactId>tycho-eclipserun-plugin</artifactId>
 							<version>0.18.0</version>
 							<configuration>
+							<repositories>
+								<repository>
+							        <id>local platform</id>
+							        <url>${p2MirrorUrl}</url>
+							        <releases>
+							           <enabled>true</enabled>
+							        </releases>
+							        <snapshots>
+							          <enabled>false</enabled>
+							        </snapshots>        
+					    		 </repository>
+							</repositories>
 							<appArgLine>${os-jvm-flags} -data ${workspacePath} -application org.eclipse.ant.ui.antRunner -buildfile generateGenModels.xml -clean -noSplash -consoleLog</appArgLine>
 							<argLine>-Xmx512m -Xms256m -XX:MaxPermSize=512m -DworkspacePath=${workspacePath}</argLine>
 							<dependencies>
