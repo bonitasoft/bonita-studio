@@ -111,7 +111,7 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
         setDiagramOk();
         bot.text("Pool").setText("test:name/invalid");
         bot.sleep(500);
-        assertFalse("We allow to duplicate a diagram with just different case although it doesn't work on windows",
+        assertTrue("We now allow UTF-8 characters in pool names",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
@@ -121,7 +121,7 @@ public class OpenNameAndVersionForDiagramDialogTest extends SWTBotEclipseTestCas
         setDiagramOk();
         bot.text("1.0").setText("1.0?beta");
         bot.sleep(500);
-        assertFalse("We allow to duplicate a diagram with just different case although it doesn't work on windows",
+        assertTrue("We now allow UTF-8 characters in pool versions",
                 bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.CANCEL_LABEL).click();
     }
