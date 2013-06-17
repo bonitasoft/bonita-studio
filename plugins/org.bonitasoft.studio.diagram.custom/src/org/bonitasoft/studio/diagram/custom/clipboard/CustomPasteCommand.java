@@ -321,7 +321,11 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 						}					
 					}
 				}
-				ModelHelper.removedInvalidReferencedEObjects(res); //REMOVE DANDLING REFS !
+				AbstractProcess targetProcess = ModelHelper.getParentProcess(targetElement);
+				AbstractProcess sourceProcess = ModelHelper.getParentProcess(res);
+				if(targetProcess == null || !targetProcess.equals(sourceProcess)){
+					ModelHelper.removedReferencedEObjects(res);//REMOVE DANDLING REFS !
+				}
 			}
 
 			final IGraphicalEditPart newEp = (IGraphicalEditPart) selectedTargetEditPart.findEditPart(selectedTargetEditPart, res);
@@ -343,7 +347,11 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 		/* Create form diagram related to form element */
 		Set<Form> formsToCreateDiagram = ModelHelper.getAllFormsContainedIn(res);
 		for (final Form form : formsToCreateDiagram) {
-			ModelHelper.removedReferencedEObjects(form);
+			AbstractProcess targetProcess = ModelHelper.getParentProcess(targetElement);
+			AbstractProcess sourceProcess = ModelHelper.getParentProcess(form);
+			if(targetProcess == null || !targetProcess.equals(sourceProcess)){
+				ModelHelper.removedReferencedEObjects(form);
+			}
 			final Diagram diagram = ViewService.createDiagram(form, FormEditPart.MODEL_ID, FormDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
 			targetElement.eResource().getContents().add(diagram);
 		}
