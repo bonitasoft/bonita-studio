@@ -17,34 +17,22 @@
  */
 package org.bonitasoft.studio.properties.sections.general;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.bonitasoft.studio.common.ConfigurationIdProvider;
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.OpenNameAndVersionDialog;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -57,19 +45,12 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.transaction.util.TransactionUtil;
-import org.eclipse.emf.workspace.WorkspaceEditingDomainFactory;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -77,15 +58,12 @@ import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 /**
@@ -96,13 +74,11 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 
 
 	protected ISWTObservableValue observable;
-
 	private UpdateValueStrategy labelModelToTargetUpdate;
-
 	private UpdateValueStrategy labelTargetToModelUpdate;
-
 	private boolean bindingInitialized = false;
-
+	private ProcessNamingTools processNamingTools ;
+	
 	private final NotificationListener updateMessage =new NotificationListener() {
 
 		@Override
@@ -204,7 +180,12 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 							.getFirstElement()).getParent());
 		}
 		this.selection = selection;
-
+	}
+	
+	@Override
+	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+		super.setEditingDomain(editingDomain);
+		processNamingTools = new ProcessNamingTools(editingDomain);
 	}
 
 	private void updateBindings() {
@@ -267,29 +248,18 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 				final String newPoolName = dialog1.getDiagramName() ;
 				final String oldVersion = ((Pool) element).getVersion() ;
 				final String newVersion = dialog1.getDiagramVersion() ;
-				proceedForPools(element,newPoolName,oldPoolName,oldVersion,newVersion);
+				processNamingTools.proceedForPools(element,newPoolName,oldPoolName,oldVersion,newVersion);
 			}
 
 		}else{
 			MainProcess diagram = ModelHelper.getMainProcess(element);
-			//            String oldName = diagram.getName();
-			//            String oldVerison = diagram.getVersion();
 			final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(),diagram,diagramStore) ;
 			if(nameDialog.open() == Dialog.OK ) {
 				DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
 				MainProcess newProcess   = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
-				//                if(!(oldName.equals(nameDialog.getDiagramName()) && oldVerison.equals(nameDialog.getDiagramVersion()))){
-				//                    if(diagramStore.getDiagram(nameDialog.getDiagramName(), nameDialog.getDiagramVersion()) != null ){
-				//                        MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.diagramAlreadyExistsTitle, Messages.diagramAlreadyExistsMsg) ;
-				//                        return ;
-				//                    }
-				//                }
-
-
-				changeProcessNameAndVersion(newProcess, nameDialog.getDiagramName(), nameDialog.getDiagramVersion());
-
+				processNamingTools.changeProcessNameAndVersion(newProcess, nameDialog.getDiagramName(), nameDialog.getDiagramVersion());
 				for(ProcessesNameVersion pnv : nameDialog.getPools()){
-					changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
+					processNamingTools.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
 				}
 
 				try{
@@ -307,129 +277,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 	}
 
 
-	private void proceedForPools(final Element pool,final String newPoolName,final String oldPoolName,final String oldVersion,final String newVersion) {
-		List<AbstractProcess> processes = diagramStore.getAllProcesses() ;
-		StringBuilder activitiesToUpdateMsg = new StringBuilder() ;
-		final Set<CallActivity> toUpdate = new HashSet<CallActivity>();
-		for(AbstractProcess process : processes){
-			List<CallActivity> callActivities = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.CALL_ACTIVITY) ;
-			for(CallActivity sub : callActivities){
-				String subprocessName = null;
-				if(sub.getCalledActivityName() != null
-						&& sub.getCalledActivityName().getContent() != null){
-					subprocessName = sub.getCalledActivityName().getContent();
-				}
-				String subprocessVersion = null;
-				if(sub.getCalledActivityVersion() != null
-						&& sub.getCalledActivityVersion().getContent() != null){
-					subprocessVersion = sub.getCalledActivityVersion().getContent();
-				}
-
-				if(subprocessName != null && subprocessName.equals(oldPoolName) //same pool name
-						&& ((subprocessVersion == null || subprocessVersion.isEmpty() /*ie Latest*/) || subprocessVersion.equals(oldVersion))){ //same version or Latest
-					activitiesToUpdateMsg.append(sub.getName()+" ("+process.getName()+")");
-					activitiesToUpdateMsg.append(SWT.CR) ;
-					toUpdate.add(sub) ;
-				}
-			}
-		}
-
-		CompoundCommand cc = new CompoundCommand("Rename pool") ;
-		cc.append(SetCommand.create(editingDomain,pool, ProcessPackage.eINSTANCE.getElement_Name(), newPoolName)) ;
-		cc.append(SetCommand.create(editingDomain, pool, ProcessPackage.eINSTANCE.getAbstractProcess_Version(), newVersion)) ;
-		editingDomain.getCommandStack().execute(cc) ;
-
-		if(!toUpdate.isEmpty() && MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.updateReferencesTitle, Messages.bind(Messages.updateReferencesMsg,activitiesToUpdateMsg.toString()))){
-			IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
-			try {
-				service.run(true,false, new IRunnableWithProgress() {
-
-					@Override
-					public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
-						monitor.beginTask(Messages.updatingReferences, IProgressMonitor.UNKNOWN) ;
-						for(CallActivity sub : toUpdate){
-							String subprocessName = null;
-							if(sub.getCalledActivityName() != null
-									&& sub.getCalledActivityName().getContent() != null){
-								subprocessName = sub.getCalledActivityName().getContent();
-							}
-							String subprocessVersion = null;
-							if(sub.getCalledActivityVersion() != null
-									&& sub.getCalledActivityVersion().getContent() != null){
-								subprocessVersion = sub.getCalledActivityVersion().getContent();
-							}
-							if(subprocessName != null){
-
-								CompoundCommand cc = new CompoundCommand("Update pool references") ;
-								CallActivity toModify = sub ;
-								TransactionalEditingDomain domain = TransactionUtil.getEditingDomain(toModify) ;
-								boolean loadResource = domain == null ;
-								Resource res = null ;
-								if(loadResource){
-									URI uri = EcoreUtil.getURI(sub) ;
-									domain = WorkspaceEditingDomainFactory.INSTANCE.createEditingDomain() ;
-									res = domain.getResourceSet().createResource(uri) ;
-
-									try {
-										res.load(Collections.emptyMap()) ;
-									} catch (IOException e) {
-										BonitaStudioLog.error(e) ;
-									}
-
-									MainProcess mainProc = (MainProcess) res.getContents().get(0) ;
-									for(EObject subproc : ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CALL_ACTIVITY)){
-										if(ModelHelper.getEObjectID(subproc).equals(EcoreUtil.getURI(sub).fragment())){
-											toModify = (CallActivity) subproc ;
-											break ;
-										}
-									}
-								}
-
-								if(!subprocessName.equals(NamingUtils.convertToId(newPoolName))){
-									cc.append(SetCommand.create(domain, toModify, ProcessPackage.Literals.CALL_ACTIVITY__CALLED_ACTIVITY_NAME, createStringExpression(newPoolName))) ;
-								}
-								if(subprocessVersion != null  && newVersion != null && !(newVersion.equals(oldVersion))){
-									cc.append(SetCommand.create(domain, toModify, ProcessPackage.Literals.CALL_ACTIVITY__CALLED_ACTIVITY_VERSION, createStringExpression(newVersion))) ;
-								}
-								domain.getCommandStack().execute(cc) ;
+	
 
 
-								if(loadResource && res != null){
-									try {
-										res.save(Collections.emptyMap()) ;
-									} catch (IOException e) {
-										BonitaStudioLog.error(e) ;
-									}
-									domain.dispose();
-								}
-							}
-						}
-
-					}
-				});
-			} catch (InvocationTargetException e) {
-				BonitaStudioLog.error(e) ;
-			} catch (InterruptedException e) {
-				BonitaStudioLog.error(e) ;
-			}
-		}
-	}
-
-	protected Expression createStringExpression(String value) {
-		Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-		exp.setName(value);
-		exp.setContent(value);
-		exp.setReturnType(String.class.getName());
-		exp.setType(ExpressionConstants.CONSTANT_TYPE);
-		exp.setReturnTypeFixed(true);
-		return exp;
-	}
-
-
-	private void changeProcessNameAndVersion(final AbstractProcess process,final String name, final String version) {
-		proceedForPools(process, name, process.getName(), ((AbstractProcess) process).getVersion(), version);
-		if(process instanceof MainProcess){
-			editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID, ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId((MainProcess) process)));
-		}
-	}
 }

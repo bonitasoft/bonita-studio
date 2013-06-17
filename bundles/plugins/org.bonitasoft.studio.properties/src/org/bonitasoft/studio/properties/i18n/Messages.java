@@ -300,9 +300,6 @@ public class Messages extends NLS {
     public static String ResourceSection_ErrorTemplate_hint;
     public static String ResourceSection_HostPageTemplate_hint;
     public static String ResourceSection_ViewTemplate_hint;
-    public static String updateReferencesTitle;
-    public static String updateReferencesMsg;
-    public static String updatingReferences;
     public static String autoMap;
     public static String autoMap_description;
 
