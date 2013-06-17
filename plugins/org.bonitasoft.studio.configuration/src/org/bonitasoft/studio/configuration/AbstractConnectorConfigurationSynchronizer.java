@@ -231,23 +231,6 @@ public abstract class AbstractConnectorConfigurationSynchronizer implements ICon
 				editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, connectorContainer, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, depFragment)) ;
 			}
 		}
-		final String connectorJarName = NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(), implementation.getImplementationVersion(), false) ;
-		boolean exists = false ;
-		for(Fragment dep : connectorContainer.getFragments()){
-			if(dep.getValue().equals(connectorJarName)){
-				exists = true ;
-				break ;
-			}
-		}
-		if(!exists){
-			Fragment depFragment = ConfigurationFactory.eINSTANCE.createFragment() ;
-			depFragment.setExported(true) ;
-			depFragment.setKey(implementation.getImplementationId() +" -- " + implementation.getImplementationVersion()) ;
-			depFragment.setValue(connectorJarName) ;
-			depFragment.setType(getFragmentContainerId()) ;
-			editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, connectorContainer, ConfigurationPackage.Literals.FRAGMENT_CONTAINER__FRAGMENTS, depFragment)) ;
-		}
-
 	}
 
 	private void removeConnectorDefinitions(Configuration configuration, AbstractProcess process,CompoundCommand cc, EditingDomain editingDomain) {

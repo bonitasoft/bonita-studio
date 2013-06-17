@@ -105,6 +105,7 @@ public class ExportConnectorArchiveOperation {
 		progressMonitor.beginTask(Messages.exporting, IProgressMonitor.UNKNOWN) ;
 		IStatus status = Status.OK_STATUS  ;
 		try{
+			ignoredLibs.add(NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(),false)+".jar");
 			cleanAfterExport = new ArrayList<IResource>() ;
 			final SourceRepositoryStore sourceStore = getSourceStore() ;
 			final IRepositoryStore implStore = getImplementationStore() ;
@@ -389,7 +390,9 @@ public class ExportConnectorArchiveOperation {
 		}else{
 			implBackup = EcoreUtil.copy(impl);
 			String jarName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(),impl.getImplementationVersion(),false) + ".jar" ;
-			impl.getJarDependencies().getJarDependency().add(jarName) ;
+			if(!impl.getJarDependencies().getJarDependency().contains(jarName)){
+				impl.getJarDependencies().getJarDependency().add(jarName) ;
+			}
 			impl.setHasSources(includeSources) ;
 			IRepositoryFileStore file = store.getChild(fileName) ;
 			file.save(EcoreUtil.copy(impl)) ;
@@ -462,7 +465,7 @@ public class ExportConnectorArchiveOperation {
 	}
 
 	public void addIgnoredDependencies(Set<String> ignoredLibs) {
-		this.ignoredLibs  = ignoredLibs ;
+		this.ignoredLibs.addAll(ignoredLibs) ;
 	}
 
 }

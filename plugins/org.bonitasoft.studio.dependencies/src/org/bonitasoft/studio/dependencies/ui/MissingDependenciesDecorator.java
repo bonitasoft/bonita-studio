@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Fragment;
+import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
@@ -85,6 +86,9 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
             if(lib.endsWith(DependencyRepositoryStore.JAR_EXT)){
                 final DependencyRepositoryStore store = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
                 IRepositoryFileStore file = store.getChild(lib) ;
+                if(file == null && isGeneratedJar(lib,fragment)){//Check in custom connector
+                	return null;
+                }
                 if (image != null && file == null) {
                     if(icon == null){
                         icon =  new DecorationOverlayIcon(image,Pics.getImageDescriptor(PicsConstants.error_decorator) , IDecoration.BOTTOM_RIGHT).createImage() ;
@@ -96,7 +100,16 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
         return null;
     }
 
-    /* (non-Javadoc)
+    private boolean isGeneratedJar(String lib, Fragment fragment) {
+    	FragmentContainer container = (FragmentContainer) fragment.eContainer();
+    	String id = container.getId();
+    	if(lib.equals(id+".jar")){
+    		return true;
+    	}
+    	return false;
+	}
+
+	/* (non-Javadoc)
      * @see org.eclipse.jface.viewers.ILabelDecorator#decorateText(java.lang.String, java.lang.Object)
      */
     @Override
@@ -107,6 +120,9 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
             if(lib.endsWith(DependencyRepositoryStore.JAR_EXT)){
                 final DependencyRepositoryStore store = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
                 IRepositoryFileStore file = store.getChild(lib) ;
+                if(file == null && isGeneratedJar(lib, fragment) && text != null){
+                	return text;
+                }
                 if (text != null && file == null) {
                     return text + " ("+Messages.missingDependenciesInRepository+")";
                 }

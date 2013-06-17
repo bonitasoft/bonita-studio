@@ -25,6 +25,7 @@ import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.Fragment;
+import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
@@ -55,6 +56,9 @@ public class ProcessDependenciesConfigurationWizardPage extends AbstractDependen
                     String jarName = ((Fragment) f).getValue() ;
                     if(jarName.endsWith(DependencyRepositoryStore.JAR_EXT)){
                         IRepositoryFileStore jarFile =  store.getChild(jarName) ;
+                        if(jarFile == null && isGeneratedJar(jarName,(Fragment) f)){
+                        	return null;
+                        }
                         if(jarFile == null){
                             return Messages.bind(Messages.missingJarFileInRepository, ((Fragment) f).getValue()) ;
                         }
@@ -65,9 +69,16 @@ public class ProcessDependenciesConfigurationWizardPage extends AbstractDependen
         return null;
     }
 
+    private boolean isGeneratedJar(String lib, Fragment fragment) {
+    	FragmentContainer container = (FragmentContainer) fragment.eContainer();
+    	String id = container.getId();
+    	if(lib.equals(id+".jar")){
+    		return true;
+    	}
+    	return false;
+	}
 
-
-    protected boolean isAProcessDependency(EObject f) {
+	protected boolean isAProcessDependency(EObject f) {
         return ConfigurationPackage.Literals.CONFIGURATION__PROCESS_DEPENDENCIES.equals(getContainingFeature(f));
     }
 

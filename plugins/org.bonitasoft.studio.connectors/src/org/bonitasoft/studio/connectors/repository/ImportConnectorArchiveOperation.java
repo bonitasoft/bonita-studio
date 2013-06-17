@@ -168,13 +168,10 @@ public class ImportConnectorArchiveOperation {
                 BonitaStudioLog.error(e) ;
             }
 
-
             IRepositoryFileStore implFileStore = implStore.getChild(implFile.getName()) ;
             ConnectorImplementation impl = (ConnectorImplementation) implFileStore.getContent() ;
             if(impl.isHasSources()){
                 final String implJarName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)+".jar" ;
-                impl.getJarDependencies().getJarDependency().remove(implJarName) ;
-                implFileStore.save(impl) ;
                 importImplementationSources(tmpDir,implJarName) ;
             }
             importImplementationDependencies(tmpDir,impl);
