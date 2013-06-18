@@ -202,14 +202,14 @@ public class SaveCommandHandler extends SaveHandler {
 
 						@Override
 						public void widgetSelected(SelectionEvent e) {
-							askRename = askAgainButton.getSelection();
+							askRename = !askAgainButton.getSelection();
 						}
 					});
 					createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
 							true).addSelectionListener(new SelectionAdapter() {
 								@Override
 								public void widgetSelected(SelectionEvent e) {
-									BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE,!askRename);
+									BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE,askRename);
 								}
 							});
 				}
