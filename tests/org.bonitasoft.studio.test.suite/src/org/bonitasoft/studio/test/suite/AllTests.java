@@ -135,6 +135,7 @@ public class AllTests {
     public static void setUp() {
         BonitaStudioLog.info("AllTests","org.bonitasoft.studio.tests");
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
+        BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
         WebBrowserUIPlugin.getInstance().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);
         ProfilePlugin.getDefault().getPreferenceStore().setValue(BonitaProfilesManager.SHOW_SELECT_PROFILE,false) ;

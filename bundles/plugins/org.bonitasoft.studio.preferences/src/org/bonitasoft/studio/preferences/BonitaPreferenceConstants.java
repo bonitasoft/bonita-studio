@@ -200,6 +200,7 @@ public class BonitaPreferenceConstants {
     public static final String DEFAULT_ORGANIZATION = "defaultOrganization";
     public static final String DEFAULT_ORGANIZATION_NAME = "ACME";
     public static final String VALIDATION_BEFORE_RUN = "validateBeforeRun";
+	public static final String ASK_RENAME_ON_FIRST_SAVE = "renameOnFirstSave";
 
     /**
      * @param locales2 TODO

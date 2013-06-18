@@ -23,11 +23,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
+import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.form.Form;
@@ -35,6 +39,8 @@ import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.emf.common.util.URI;
@@ -42,9 +48,22 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.parts.DiagramDocumentEditor;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -72,7 +91,7 @@ public class SaveCommandHandler extends SaveHandler {
 			boolean changed = false;
 			if(editorPart instanceof DiagramEditor){
 				DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
-				
+
 				if(editorPart instanceof ProcessDiagramEditor){
 					DiagramEditPart diagram = ((ProcessDiagramEditor) editorPart).getDiagramEditPart();
 					proc = (MainProcess) diagram.resolveSemanticElement() ;
@@ -81,6 +100,7 @@ public class SaveCommandHandler extends SaveHandler {
 					Form form = (Form) formDiagram.resolveSemanticElement();
 					proc = ModelHelper.getMainProcess(form.eContainer()) ;
 				}
+
 				DiagramFileStore oldArtifact = null;
 				List<DiagramDocumentEditor> editorsWithSameResourceSet = new ArrayList<DiagramDocumentEditor>();
 				if (nameOrVersionChanged(proc)) {
@@ -143,8 +163,8 @@ public class SaveCommandHandler extends SaveHandler {
 						}else{
 							editorPart.doSave(Repository.NULL_PROGRESS_MONITOR);
 						}
-						
-						
+
+
 					}
 				} catch (Exception ex) {
 					BonitaStudioLog.error(ex);
@@ -160,8 +180,50 @@ public class SaveCommandHandler extends SaveHandler {
 	 * @param proc
 	 * @return
 	 */
-	 protected boolean nameOrVersionChanged(MainProcess proc) {
+	protected boolean nameOrVersionChanged(MainProcess proc) {
 		MainProcess originalProcess = getOldProcess(proc);
+		if(originalProcess.getAuthor() == null && BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE)){
+			DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+			final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(),proc,diagramStore){
+				
+				private boolean askRename = true;
+				
+				@Override
+				protected void createButtonsForButtonBar(Composite parent) {
+					GridData gridData = (GridData) parent.getLayoutData();
+					gridData.horizontalAlignment = SWT.FILL;
+					((GridLayout) parent.getLayout()).numColumns++;
+					((GridLayout) parent.getLayout()).makeColumnsEqualWidth = false;
+					final Button askAgainButton = new Button(parent, SWT.CHECK);
+					askAgainButton.setText(Messages.doNotDisplayForOtherDiagrams);
+					askAgainButton.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(true, false).create());
+					askAgainButton.addSelectionListener(new SelectionAdapter() {
+						
+
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							askRename = askAgainButton.getSelection();
+						}
+					});
+					createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
+							true).addSelectionListener(new SelectionAdapter() {
+								@Override
+								public void widgetSelected(SelectionEvent e) {
+									BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE,!askRename);
+								}
+							});
+				}
+			};
+			if(nameDialog.open() == Dialog.OK) {
+				EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(proc);
+				final ProcessNamingTools tool = new ProcessNamingTools(domain);
+				tool.changeProcessNameAndVersion(proc, nameDialog.getDiagramName(), nameDialog.getDiagramVersion());
+				for(ProcessesNameVersion pnv : nameDialog.getPools()){
+					tool.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
+				}
+			}
+
+		}
 		return ! (originalProcess.getName().equals(proc.getName()) && originalProcess.getVersion().equals(proc.getVersion()));
 	}
 

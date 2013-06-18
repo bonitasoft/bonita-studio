@@ -109,7 +109,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 
 			@Override
 			public boolean test() throws Exception {
-				return nbEditorsBefore +1 == bot.editors().size() && !bot.activeEditor().isDirty();
+				return nbEditorsBefore +1 == bot.editors().size();
 			}
 
 			@Override
@@ -118,10 +118,11 @@ public class SWTBotTestUtil implements SWTBotConstants{
 
 			@Override
 			public String getFailureMessage() {
-				return "Editor for new diagram has not been opened or is dirty after new";
+				return "Editor for new diagram has not been opened";
 			}
-		}, 30000);
+		}, 30000,100);
 		System.out.println("Time to create a new diagram: "+String.valueOf(System.currentTimeMillis()-timebeforeCreatenewDiagram));
+		menu.menu("Save").click();
 	}
 
 	public static IStatus selectAndRunFirstPoolFound(final SWTGefBot bot) throws ExecutionException {

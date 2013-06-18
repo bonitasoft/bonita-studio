@@ -98,7 +98,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(BonitaPreferenceConstants.DEFAULT_APPLICATION_THEME, "Default Application") ;
         store.setDefault(BonitaPreferenceConstants.DEFAULT_ORGANIZATION, BonitaPreferenceConstants.DEFAULT_ORGANIZATION_NAME) ;
         store.setDefault(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN, true) ;
-        
+        store.setDefault(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, true);
         PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.DISABLE_OPEN_EDITOR_IN_PLACE, true);
     }
 

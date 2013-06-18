@@ -87,6 +87,8 @@ public class Messages extends NLS {
 	public static String failedToOpenLogTitle;
 	public static String failedToOpenLogMessage;
 
+	public static String doNotDisplayForOtherDiagrams;
+
 
 
 
