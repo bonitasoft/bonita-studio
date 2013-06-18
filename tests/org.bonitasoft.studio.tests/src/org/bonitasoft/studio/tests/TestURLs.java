@@ -32,6 +32,7 @@ import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Aurelien Pupier
@@ -66,5 +67,9 @@ public class TestURLs extends TestCase {
         assertTrue("wrong user User XP url, current:" +stringURL, stringURL.contains(URLEncoder.encode("bonita/console/homepage","UTF-8")));
     }
 
+    @Override
+    protected void tearDown() throws Exception {
+    	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+    }
 
 }
