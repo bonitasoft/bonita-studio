@@ -122,7 +122,6 @@ public class SWTBotTestUtil implements SWTBotConstants{
 			}
 		}, 30000,100);
 		System.out.println("Time to create a new diagram: "+String.valueOf(System.currentTimeMillis()-timebeforeCreatenewDiagram));
-		menu.menu("Save").click();
 	}
 
 	public static IStatus selectAndRunFirstPoolFound(final SWTGefBot bot) throws ExecutionException {
