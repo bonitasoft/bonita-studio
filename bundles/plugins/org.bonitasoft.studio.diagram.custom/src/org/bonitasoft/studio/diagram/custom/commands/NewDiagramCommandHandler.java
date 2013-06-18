@@ -119,7 +119,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 	}
 
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public DiagramFileStore execute(ExecutionEvent event) throws ExecutionException {
 		IRepository repository = RepositoryManager.getInstance().getCurrentRepository() ;
 		diagramStore = (DiagramRepositoryStore) repository.getRepositoryStore(DiagramRepositoryStore.class) ;
 		try{
@@ -164,7 +164,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 			BonitaStudioLog.error(e);
 		}
 
-		return null ;
+		return fileStore ;
 	}
 
 
