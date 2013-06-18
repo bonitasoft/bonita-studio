@@ -24,6 +24,7 @@ import org.bonitasoft.studio.diagram.test.DiagramTests;
 import org.bonitasoft.studio.diagram.test.FormsDiagramTests;
 import org.bonitasoft.studio.diagram.test.TestDeleteTaskWithForm;
 import org.bonitasoft.studio.diagram.test.TestOpenDiagram;
+import org.bonitasoft.studio.diagram.test.TestRenameDiagram;
 import org.bonitasoft.studio.diagram.test.TestUndoRedoStackLimit;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -70,6 +71,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     TestBugsSWTBot.class,
     DiagramTests.class,
+    TestRenameDiagram.class,
     TestPatternExpressionViewer.class,
     TestLoadSaveConnectorConfiguration.class,
     TestConditionExpression.class,
