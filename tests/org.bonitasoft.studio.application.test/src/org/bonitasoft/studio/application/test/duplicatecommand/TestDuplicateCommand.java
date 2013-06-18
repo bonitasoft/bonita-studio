@@ -38,6 +38,7 @@ import org.bonitasoft.studio.model.process.ResourceFolder;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.ui.PlatformUI;
 import org.junit.Test;
 
 /**
@@ -58,7 +59,7 @@ public class TestDuplicateCommand extends TestCase {
         final NewDiagramCommandHandler npch = new NewDiagramCommandHandler();
         npch.execute(null);
         DiagramFileStore pa = npch.getNewDiagramFileStore();
-
+        pa.save(pa.getOpenedEditor());
         final String newProcessLabel = pa.getContent().getName() + "duplicatedInTest";
         new SaveProcessAsCommand().duplicate(pa.getContent(), newProcessLabel, pa.getContent().getVersion(), new ArrayList<ProcessesNameVersion>());
         DiagramFileStore paDuplicated =diagramStore.getDiagram(newProcessLabel, pa.getContent().getVersion());
@@ -100,6 +101,11 @@ public class TestDuplicateCommand extends TestCase {
             new SaveProcessAsCommand().duplicate(mainProcess, mainProcess.getName(), newProcessVersion, new ArrayList<ProcessesNameVersion>());
             paDuplicated = diagramStore.getDiagram(mainProcess.getName(), newProcessVersion);
         }
+    }
+    
+    @Override
+    protected void tearDown() throws Exception {
+    	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
     }
 
     @Test
