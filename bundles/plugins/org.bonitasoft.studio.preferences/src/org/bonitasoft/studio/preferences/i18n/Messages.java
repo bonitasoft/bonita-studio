@@ -42,8 +42,6 @@ public class Messages extends NLS {
     public static String studioLocalLabel;
     public static String restartQuestion_title;
     public static String restartQuestion_msg;
-    public static String automaticIdLabel;
-    public static String automaticIdInfo;
     public static String defaultCoolbarAppearance;
     public static String small;
     public static String normal;
@@ -72,5 +70,6 @@ public class Messages extends NLS {
     public static String defaultAppliThemeLabel;
     public static String validateBeforeRun;
 	public static String BonitaPreferenceDialog_DBConnectors;
+	public static String askRenameDiagram;
 	
 }
