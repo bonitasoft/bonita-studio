@@ -63,6 +63,7 @@ public class TestBug1640 extends SWTBotGefTestCase {
         // Create first process
         SWTBotMenu saveMenu = bot.menu("Diagram").menu("Save");
         SWTBotTestUtil.createNewDiagram(bot);
+        saveMenu.click();
         SWTBotGefEditor editor = bot.gefEditor(bot.editors().get(0).getTitle());
         assertTrue(!editor.isDirty());
 
