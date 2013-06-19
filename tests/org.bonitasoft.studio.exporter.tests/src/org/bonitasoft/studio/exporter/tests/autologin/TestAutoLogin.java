@@ -45,7 +45,8 @@ public class TestAutoLogin extends TestCase {
 	protected void setUp() throws Exception {
         if(pool == null){
             NewDiagramCommandHandler newDiagram =  new NewDiagramCommandHandler();
-            AbstractProcess p = (AbstractProcess) newDiagram.execute(null).getContent().getElements().get(0);
+            newDiagram.execute(null);
+            AbstractProcess p = (AbstractProcess) newDiagram.getNewDiagramFileStore().getContent().getElements().get(0);
             pool = EcoreUtil.copy(p);
             Configuration conf = ConfigurationFactory.eINSTANCE.createConfiguration();
             
