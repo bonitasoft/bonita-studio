@@ -29,6 +29,7 @@ import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.ui.PlatformUI;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -43,6 +44,8 @@ public class TestAutoLogin extends TestCase {
     private static AbstractProcess pool;
 	@Override
 	protected void setUp() throws Exception {
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
         if(pool == null){
             NewDiagramCommandHandler newDiagram =  new NewDiagramCommandHandler();
             newDiagram.execute(null);
