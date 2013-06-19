@@ -19,7 +19,6 @@ package org.bonitasoft.studio.diagram.custom.commands;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ConfigurationIdProvider;
@@ -98,6 +97,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -115,7 +115,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 
 
 	public NewDiagramCommandHandler(){
-
+		
 	}
 
 
@@ -130,8 +130,11 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 
 					diagramIdentifier = getNewProcessIdentifier(diagramStore);
 					diagramName =  NamingUtils.convertToId(org.bonitasoft.studio.diagram.custom.Messages.newFilePrefix + diagramIdentifier)  ;
+
 					String uniqueFileName = NamingUtils.toDiagramFilename(diagramName ,BASE_VERSION) ;
+
 					fileStore = diagramStore.createRepositoryFileStore(uniqueFileName) ;
+
 					MainProcess model = createInitialModel();
 					final Diagram diagram = ViewService.createDiagram(model,
 							MainProcessEditPart.MODEL_ID,
@@ -142,23 +145,30 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 					fileStore.getEMFResource().getContents().add(model) ;
 					fileStore.getEMFResource().getContents().add(diagram) ;
 					fileStore.save(null) ;
-					Diagram d = (Diagram) fileStore.getEMFResource().getContents().get(1) ;
-					buildDiagram(d);
-					IEditorPart editor = (IEditorPart) fileStore.open() ;
-					if(editor instanceof DiagramEditor){
-						final String author = System.getProperty("user.name","unknown");
-						final TransactionalEditingDomain editingDomain = ((DiagramEditor) editor).getDiagramEditPart().getEditingDomain();
-						editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, 
-								((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement(), ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
-					}
-					
-					//clear the OperationHistory because it implies otherwise and that we don't need undo/redo for the basic creation.
-					OperationHistoryFactory.getOperationHistory().dispose((IUndoContext) editor.getAdapter(IUndoContext.class), true, true, true);
+
+					Display.getDefault().syncExec(new Runnable() {
+
+						public void run() {
+							Diagram d = (Diagram) fileStore.getEMFResource().getContents().get(1) ;
+							buildDiagram(d);
+							IEditorPart editor = (IEditorPart) fileStore.open() ;
+							if(editor instanceof DiagramEditor){
+								final String author = System.getProperty("user.name","unknown");
+								final TransactionalEditingDomain editingDomain = ((DiagramEditor) editor).getDiagramEditPart().getEditingDomain();
+								editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, 
+										((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement(), ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
+							}
+							//clear the OperationHistory because it implies otherwise and that we don't need undo/redo for the basic creation.
+							OperationHistoryFactory.getOperationHistory().dispose((IUndoContext) editor.getAdapter(IUndoContext.class), true, true, true);
+						}
+
+					});
+
 				}
 			};
 
 			IProgressService progressService = PlatformUI.getWorkbench().getProgressService() ;
-			progressService.run(false, false, runnable) ;
+			progressService.run(true, false, runnable) ;
 
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
