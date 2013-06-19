@@ -64,7 +64,7 @@ public class TestSave extends SWTBotGefTestCase {
 
         // When Creating a new Diagram
         SWTBotTestUtil.createNewDiagram(bot);
-        bot.menu("Diagram").click().menu("Save").click();
+        bot.toolbarButton(SAVE_BUTTON_TEXT).click();
         
         // test button
         isSaveButtonEnable=  bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled();
@@ -87,7 +87,7 @@ public class TestSave extends SWTBotGefTestCase {
         boolean isSaveMenuEnable= false;
 
         SWTBotTestUtil.createNewDiagram(bot);
-        bot.menu("Diagram").click().menu("Save").click();
+        bot.toolbarButton(SAVE_BUTTON_TEXT).click();
         SWTBotTestUtil.changeDiagramName(bot, "Step1", "testSave2");
 
         // test button
