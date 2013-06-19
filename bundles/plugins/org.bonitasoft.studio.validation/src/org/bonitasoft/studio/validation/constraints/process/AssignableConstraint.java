@@ -40,7 +40,9 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
  */
 public class AssignableConstraint extends AbstractLiveValidationMarkerConstraint {
 
-    @Override
+    public static final String ID = "org.bonitasoft.studio.validation.constraints.assignable";
+
+	@Override
     protected IStatus performLiveValidation(IValidationContext ctx) {
         final EStructuralFeature featureTriggered = ctx.getFeature();
         if(featureTriggered.equals(ProcessPackage.Literals.ASSIGNABLE__ACTOR)){
@@ -92,7 +94,7 @@ public class AssignableConstraint extends AbstractLiveValidationMarkerConstraint
 
     @Override
     protected String getConstraintId() {
-        return "org.bonitasoft.studio.validation.constraints.assignable";
+        return ID;
     }
 
     @Override

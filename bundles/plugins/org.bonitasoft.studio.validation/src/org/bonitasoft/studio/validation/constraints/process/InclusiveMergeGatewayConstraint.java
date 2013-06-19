@@ -38,6 +38,8 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
  */
 public class InclusiveMergeGatewayConstraint extends AbstractLiveValidationMarkerConstraint {
 
+	 public static final String ID = "org.bonitasoft.studio.validation.constraints.inclusiveMerge";
+	
     @Override
     protected IStatus performLiveValidation(IValidationContext ctx) {
         return ctx.createSuccessStatus();
@@ -50,7 +52,7 @@ public class InclusiveMergeGatewayConstraint extends AbstractLiveValidationMarke
 
     @Override
     protected String getConstraintId() {
-        return "org.bonitasoft.studio.validation.constraints.inclusiveMerge";
+        return ID;
     }
 
     @Override

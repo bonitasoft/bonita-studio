@@ -38,7 +38,9 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 public class XORGatewayConstraint extends AbstractLiveValidationMarkerConstraint {
 
 
-    @Override
+    public static final String ID = "org.bonitasoft.studio.validation.xorGateway";
+
+	@Override
     protected IStatus performLiveValidation(IValidationContext ctx) {
         EStructuralFeature feature = ctx.getFeature();
         if(feature.equals(ProcessPackage.Literals.SOURCE_ELEMENT__OUTGOING)){
@@ -96,7 +98,7 @@ public class XORGatewayConstraint extends AbstractLiveValidationMarkerConstraint
 
     @Override
     protected String getConstraintId() {
-        return "org.bonitasoft.studio.validation.xorGateway";
+        return ID;
     }
 
     private boolean existDecisionTable(SequenceFlow sequenceFlow) {

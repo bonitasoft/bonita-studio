@@ -28,4 +28,6 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: BonitaSoft S.A.
 Import-Package: org.bonitasoft.studio.properties.i18n
-Export-Package: org.bonitasoft.studio.validation.constraints
+Export-Package: org.bonitasoft.studio.validation.constraints,
+ org.bonitasoft.studio.validation.constraints.form;x-friends:="org.bonitasoft.studio.validation.test",
+ org.bonitasoft.studio.validation.constraints.process;x-friends:="org.bonitasoft.studio.validation.test"
