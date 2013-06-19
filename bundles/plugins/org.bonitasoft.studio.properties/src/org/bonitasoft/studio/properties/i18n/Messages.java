@@ -19,377 +19,372 @@ package org.bonitasoft.studio.properties.i18n;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-    private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
-
-
-	//GeneralSection
-    public static String GeneralSection_Name;
-    public static String GeneralSection_Description;
-    public static String GeneralSection_Version;
-    // Add data Wizard
-    public static String dataNameLabel;
-    public static String dataDescriptionLabel;
-    public static String datatypeLabel;
-    public static String defaultValueLabel;
-
-    // Connector section
-    public static String updateConnector;
-    public static String removeConnector;
-    public static String addConnector;
-    public static String removeConnectorConfirmTitle;
-    public static String removeConnectorConfirmMessage;
-    public static String connectorAdd_tooltip;
-
-    // Activity type selection
-    public static String activityType;
-    public static String activityType_task;
-    public static String activityType_callActivity;
-    public static String activityType_receiveTask;
-    public static String activityType_sendTask;
-    public static String activityType_serviceTask;
-    public static String activityType_scriptTask;
-
-    //Form Section
-    public static String createForm_title;
-    public static String createForm_desc;
-    public static String createForm_defaultName;
-    public static String createForm_noData;
-    public static String error_allreadyExists;
-    public static String error_empty;
-    public static String duplicateForm_desc;
-    public static String duplicateForm_title;
-    public static String duplicateForm_radioCreate;
-    public static String duplicateForm_radioDuplicate;
-    public static String subprocess;
-    public static String connectionConnection;
-    public static String gatwetypeAnd;
-    public static String gatwetypeXor;
-    public static String gatwetypeInclusive;
-    public static String gatewayType;
-    public static String addForm;
-    public static String removeForm;
-    public static String editForm;
-    public static String formUp;
-    public static String formDown;
-    public static String selectAll;
-    public static String unselectAll;
-    public static String FormsSection_ConfirmationTemplate;
-    public static String formAddFormCommandDescription;
-    public static String formAddFormCommandLabel;
-    public static String formRemoveFormCommand;
-    public static String FormsSection_widgetTypeDate;
-    public static String FormsSection_widgetTypeText;
-    public static String FormsSection_widgetTypeFile;
-    public static String FormsSection_widgetTypeCheckBox;
-    public static String FormsSection_widgetTypeRadio;
-    public static String FormsSection_wizardVarsGroup_Title;
-    public static String FormsSection_wizardVarsGroup_Tooltip;
-    public static String multipleWidget;
+	private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
+
+	// GeneralSection
+	public static String GeneralSection_Name;
+	public static String GeneralSection_Description;
+	public static String GeneralSection_Version;
+	// Add data Wizard
+	public static String dataNameLabel;
+	public static String dataDescriptionLabel;
+	public static String datatypeLabel;
+	public static String defaultValueLabel;
+
+	// Connector section
+	public static String updateConnector;
+	public static String removeConnector;
+	public static String addConnector;
+	public static String removeConnectorConfirmTitle;
+	public static String removeConnectorConfirmMessage;
+	public static String connectorAdd_tooltip;
+
+	// Activity type selection
+	public static String activityType;
+	public static String activityType_task;
+	public static String activityType_callActivity;
+	public static String activityType_receiveTask;
+	public static String activityType_sendTask;
+	public static String activityType_serviceTask;
+	public static String activityType_scriptTask;
+
+	// Form Section
+	public static String createForm_title;
+	public static String createForm_desc;
+	public static String createForm_defaultName;
+	public static String createForm_noData;
+	public static String error_allreadyExists;
+	public static String error_empty;
+	public static String duplicateForm_desc;
+	public static String duplicateForm_title;
+	public static String duplicateForm_radioCreate;
+	public static String duplicateForm_radioDuplicate;
+	public static String subprocess;
+	public static String connectionConnection;
+	public static String gatwetypeAnd;
+	public static String gatwetypeXor;
+	public static String gatwetypeInclusive;
+	public static String gatewayType;
+	public static String addForm;
+	public static String removeForm;
+	public static String editForm;
+	public static String formUp;
+	public static String formDown;
+	public static String selectAll;
+	public static String unselectAll;
+	public static String FormsSection_ConfirmationTemplate;
+	public static String formAddFormCommandDescription;
+	public static String formAddFormCommandLabel;
+	public static String formRemoveFormCommand;
+	public static String FormsSection_widgetTypeDate;
+	public static String FormsSection_widgetTypeText;
+	public static String FormsSection_widgetTypeFile;
+	public static String FormsSection_widgetTypeCheckBox;
+	public static String FormsSection_widgetTypeRadio;
+	public static String FormsSection_wizardVarsGroup_Title;
+	public static String FormsSection_wizardVarsGroup_Tooltip;
+	public static String multipleWidget;
 
+	// resource section
+	public static String Browse;
+	public static String Remove;
+	public static String File;
+	public static String Folder;
+	public static String Add;
+	public static String Clear;
+	public static String Download;
+	public static String Error;
+	public static String ResourceSection_ErrorTemplate;
+	public static String ResourceSection_ProcessTemplate;
+	public static String ResourceSection_LoginPage;
+	public static String ResourceSection_AutoLogin;
+	public static String ResourceSection_AutoLoginTooltip;
+	public static String ResourceSection_HostPageTemplate;
 
-    //resource section
-    public static String Browse;
-    public static String Remove;
-    public static String File;
-    public static String Folder;
-    public static String Add;
-    public static String Clear;
-    public static String Download;
-    public static String Error;
-    public static String ResourceSection_ErrorTemplate;
-    public static String ResourceSection_ProcessTemplate;
-    public static String ResourceSection_LoginPage;
-    public static String ResourceSection_AutoLogin;
-    public static String ResourceSection_AutoLoginTooltip;
-    public static String ResourceSection_HostPageTemplate;
+	//
+	public static String up;
+	public static String down;
 
-    //
-    public static String up;
-    public static String down;
+	public static String priority;
 
-    public static String priority;
+	public static String isMultiInstantiated;
 
-    public static String isMultiInstantiated;
+	public static String durationLabel;
+	public static String estimatadExecutionTimeLabel;
 
-    public static String durationLabel;
-    public static String estimatadExecutionTimeLabel;
+	public static String assignTo;
+	public static String sourceParameter;
+	public static String targetParameter;
 
-    public static String assignTo;
-    public static String sourceParameter;
-    public static String targetParameter;
+	public static String removeEventConfirmMessage;
 
+	public static String removeEventConfirmTitle;
 
-    public static String removeEventConfirmMessage;
+	public static String messageEventAddWizardPageName;
 
-    public static String removeEventConfirmTitle;
+	public static String messageEventAddWizardPageTitle;
 
-    public static String messageEventAddWizardPageName;
+	public static String messageEventAddWizardPageDesc;
 
-    public static String messageEventAddWizardPageTitle;
+	public static String selectMessageEventLabel;
 
-    public static String messageEventAddWizardPageDesc;
+	public static String messageFlowEventChoice;
 
-    public static String selectMessageEventLabel;
+	public static String eventType_messageStart;
 
-    public static String messageFlowEventChoice;
+	public static String eventType_messageEnd;
 
-    public static String eventType_messageStart;
+	public static String eventType_intermediateCatch;
 
-    public static String eventType_messageEnd;
+	public static String eventType_intermediateThrow;
 
-    public static String eventType_intermediateCatch;
+	public static String messageEventType;
 
-    public static String eventType_intermediateThrow;
+	public static String timerConditionWizardTitle;
 
-    public static String messageEventType;
+	public static String timerCondition;
 
-    public static String timerConditionWizardTitle;
+	public static String editCondition;
 
-    public static String timerCondition;
+	public static String addTargetEventDialogTitle;
 
-    public static String editCondition;
+	public static String processNameLabel;
 
-    public static String addTargetEventDialogTitle;
+	public static String eventNameLabel;
 
-    public static String processNameLabel;
+	public static String External;
 
-    public static String eventNameLabel;
+	public static String Internal;
 
-    public static String External;
+	public static String gotoLabel;
 
-    public static String Internal;
+	public static String fromLinksLabel;
 
+	public static String linkType;
 
-    public static String gotoLabel;
+	public static String catchLink;
 
-    public static String fromLinksLabel;
+	public static String throwLink;
 
-    public static String linkType;
+	public static String selectSignalEventLabel;
+	public static String defaultFlowLabel;
 
-    public static String catchLink;
+	public static String isLoopLabel;
+	public static String testBeforeLabel;
+	public static String loopConditionLabel;
+	public static String maximumLoopLabel;
 
-    public static String throwLink;
+	public static String noneLabel;
+	public static String optionalLabel;
 
-    public static String selectSignalEventLabel;
-    public static String defaultFlowLabel;
+	public static String confirmationMessage;
 
-    public static String isLoopLabel;
-    public static String testBeforeLabel;
-    public static String loopConditionLabel;
-    public static String maximumLoopLabel;
+	public static String version;
+	public static String name;
 
-    public static String noneLabel;
-    public static String optionalLabel;
+	public static String localTemplate;
 
-    public static String confirmationMessage;
+	public static String selectLocalTemplateWizardPageDescription;
+	public static String selectLocalTemplateWizardPageTitle;
 
-    public static String version;
-    public static String name;
+	public static String webTemplates;
 
-    public static String localTemplate;
+	public static String ResourceSection_PageTemplate;
 
-    public static String selectLocalTemplateWizardPageDescription;
-    public static String selectLocalTemplateWizardPageTitle;
+	public static String dynamicLabelLabel;
+	public static String testAfterLabel;
 
-    public static String webTemplates;
+	public static String dynamicDescriptionLabel;
 
-    public static String ResourceSection_PageTemplate;
+	public static String saveAsTemplate_templateLabel;
+	public static String saveAsTemplate_previewPathLabel;
 
-    public static String dynamicLabelLabel;
-    public static String testAfterLabel;
+	public static String ResourceSection_SaveAsTemplate;
 
-    public static String dynamicDescriptionLabel;
+	public static String Edit;
 
-    public static String saveAsTemplate_templateLabel;
-    public static String saveAsTemplate_previewPathLabel;
+	public static String saveAsTemplate_title;
 
-    public static String ResourceSection_SaveAsTemplate;
+	public static String newCategory;
+	public static String ResourceSection_importTemplate;
+	public static String ResourceSection_export;
 
-    public static String Edit;
+	public static String ResourceSection_ViewTemplate;
 
-    public static String saveAsTemplate_title;
+	public static String StepSummarySectionContribution_title;
+	public static String save;
+	public static String showLabel;
+	public static String errorEvent_error;
+	public static String errorEvent_errorCodeHint;
+	public static String errorEvent_errorCodeCatchHint;
+	public static String mustBeSet;
+	public static String dynamicDescriptionHint;
+	public static String dynamicLabelHint;
+	public static String stepSummaryHint;
+	public static String executionTimeHint;
 
-    public static String newCategory;
-    public static String ResourceSection_importTemplate;
-    public static String ResourceSection_export;
+	public static String january;
+	public static String february;
+	public static String march;
+	public static String april;
+	public static String may;
+	public static String june;
+	public static String july;
+	public static String august;
+	public static String september;
+	public static String october;
+	public static String november;
+	public static String december;
 
-    public static String ResourceSection_ViewTemplate;
+	public static String monday;
+	public static String tuesday;
+	public static String wednesday;
+	public static String thursday;
+	public static String friday;
+	public static String saturday;
+	public static String sunday;
 
-    public static String StepSummarySectionContribution_title;
-    public static String save;
-    public static String showLabel;
-    public static String errorEvent_error;
-    public static String errorEvent_errorCodeHint;
-    public static String errorEvent_errorCodeCatchHint;
-    public static String mustBeSet;
-    public static String dynamicDescriptionHint;
-    public static String dynamicLabelHint;
-    public static String stepSummaryHint;
-    public static String executionTimeHint;
+	public static String targetProcessMessageHint;
 
-    public static String january;
-    public static String february;
-    public static String march;
-    public static String april;
-    public static String may;
-    public static String june;
-    public static String july;
-    public static String august;
-    public static String september;
-    public static String october;
-    public static String november;
-    public static String december;
+	public static String targetEventMessageHint;
+	public static String signalEvent_catchHint;
+	public static String signalEvent_throwHint;
+	public static String endErrorEvent_error;
 
-    public static String monday;
-    public static String tuesday;
-    public static String wednesday;
-    public static String thursday;
-    public static String friday;
-    public static String saturday;
-    public static String sunday;
+	public static String confirmDeleteFile_title;
+	public static String confirmDeleteFile_msg;
 
-    public static String targetProcessMessageHint;
+	public static String pageFlowTransientDataConnectors;
+	public static String pageFlowTransientData;
+	public static String formsTabLabel;
+	public static String transientDatTabLabel;
+	public static String pageFlow;
+	public static String skip;
+	public static String skipPageFlowTooltip;
+	public static String messageEventAddWizardNameAlreadyExists;
 
-    public static String targetEventMessageHint;
-    public static String signalEvent_catchHint;
-    public static String signalEvent_throwHint;
-    public static String endErrorEvent_error;
+	public static String chooseFont;
 
-    public static String confirmDeleteFile_title;
-    public static String confirmDeleteFile_msg;
+	public static String ChooseFigure;
 
+	public static String applyStyle;
 
+	public static String activityType_abstractTask;
 
-    public static String pageFlowTransientDataConnectors;
-    public static String pageFlowTransientData;
-    public static String formsTabLabel;
-    public static String transientDatTabLabel;
-    public static String pageFlow;
-    public static String skip;
-    public static String skipPageFlowTooltip;
-    public static String messageEventAddWizardNameAlreadyExists;
+	public static String GeneralSection_ActivateValidation;
 
+	public static String ResourceSection_OverWrite_title;
 
-    public static String chooseFont;
+	public static String ResourceSection_OverWrite_msg;
 
-    public static String ChooseFigure;
+	public static String saveAsTemplate_error;
+	public static String saveAsTemplate_import_error;
 
-    public static String applyStyle;
-
-    public static String activityType_abstractTask;
-
-    public static String GeneralSection_ActivateValidation;
-
-    public static String ResourceSection_OverWrite_title;
-
-    public static String ResourceSection_OverWrite_msg;
-
-    public static String saveAsTemplate_error;
-    public static String saveAsTemplate_import_error;
-
-    public static String confirmationPathTooltip;
-    public static String confirmationMessageTooltip;
-
-    public static String ResourceSection_BasedOnLookAndFeel;
-
-    public static String widgetRemovedWarning_title;
-    public static String widgetRemovedWarning_msg;
-
-    public static String ResourceSection_ProcessTemplate_hint;
-    public static String ResourceSection_PageTemplate_hint;
-    public static String ResourceSection_ErrorTemplate_hint;
-    public static String ResourceSection_HostPageTemplate_hint;
-    public static String ResourceSection_ViewTemplate_hint;
-    public static String autoMap;
-    public static String autoMap_description;
-
-    public static String addMessageContent;
-    public static String correlation;
-    public static String noCorrelation;
-    public static String useCorrelationkeys;
-    public static String AddCorrelation;
-    public static String removeCorrelation;
-    public static String removeMessageContent;
-    public static String addMessageContentButton;
-    public static String autoFillMessageContent;
-    public static String useExpression;
-    public static String useDecisionTable ;
-    public static String editDecisionTable;
-    public static String and;
-    public static String dontTakeTransition;
-    public static String takeTransition;
-    public static String emptyName;
-    public static String operationExplanation;
-    public static String dublicateIdErrorMessage;
-
-    public static String highestPriority;
-    public static String lowestPriority;
-    public static String underNormalPriority;
-    public static String aboveNormalPriority;
-    public static String normalPriority;
-    public static String transitionOrderingExplanation;
-    public static String transitionOrderingExplanation_Short;
-
-    public static String documentDefaultName;
-
-    public static String remove;
-    public static String selectDocumentDescription;
-    public static String explanationExternalDocument;
-    public static String explanationInternalDocument;
-    public static String selectDocumentDialogTitle;
-    public static String importEtc;
-    public static String AddSimple;
-    public static String description;
-    public static String mimeType;
-    public static String hintExternalUrl;
-
-    public static String explanationMimeTypeDocument;
-    public static String hintMimeTypeDocument;
-    public static String calledProcessVersionHint;
-    public static String avoidElement;
-    public static String avoidElementHint;
-
-    public static String multiInstance_useCollection;
-    public static String multiInstance_inputData;
-    public static String multiInstance_outputData;
-    public static String multiInstance_useCardinality;
-    public static String clearSelection;
-    public static String multiInstance_inputDataDescription;
-    public static String multiInstance_sequentialDescription;
-    public static String multiInstance_completionConditionLabel;
-    public static String multiInstance_completionConditionDescription;
-    public static String multiInstance_sequentialButton;
-    public static String multiInstance_useCollectionDescription;
-    public static String multiInstance_outputDataDescription;
-    public static String multiInstance_useCardinalityDescription;
-    public static String multiInstance_listOutputDataDescription;
-    public static String multiInstance_listOutputDataLabel;
-    public static String addFormTitle;
-    public static String correlationKey;
-    public static String correlationValue;
-    public static String messageContentID;
-    public static String expressionName;
-    public static String messageContentIdExistenceWarning;
-    public static String throwMessageExpressionTypeWarning;
-    public static String NoIncomingMessageWarning;
-    public static String generalPropertiesSectionDescription;
-    public static String diagramSectionDescription;
-    public static String catchMessageContentEventSectionDescription;
-    public static String catchMessageEventCorrelationSectionDescription;
-    public static String documentPropertySectionDescription;
-    public static String laneSectionDescription;
-    public static String looknfeelPropertySectionDescription;
-    public static String resourcePropertySectionDescription;
-    public static String parametersMappingSectionDescription;
-    public static String userXPSectionDescription;
-    public static String confirmationPropertySectionDescription;
-    public static String loopSectionDescription;
-    public static String correlationHelp;
-    public static String exportSuccessfullMsg;
-    public static String exportSuccessfullTitle;
-    public static String exporting;
-    public static String importResultTitle;
-    public static String importSuccessMsg;
+	public static String confirmationPathTooltip;
+	public static String confirmationMessageTooltip;
+
+	public static String ResourceSection_BasedOnLookAndFeel;
+
+	public static String widgetRemovedWarning_title;
+	public static String widgetRemovedWarning_msg;
+
+	public static String ResourceSection_ProcessTemplate_hint;
+	public static String ResourceSection_PageTemplate_hint;
+	public static String ResourceSection_ErrorTemplate_hint;
+	public static String ResourceSection_HostPageTemplate_hint;
+	public static String ResourceSection_ViewTemplate_hint;
+	public static String autoMap;
+	public static String autoMap_description;
+
+	public static String addMessageContent;
+	public static String correlation;
+	public static String correlationDescription;
+	public static String correlationKeyHelp;
+	public static String useCorrelationkeys;
+	public static String AddCorrelation;
+	public static String removeCorrelation;
+	public static String removeMessageContent;
+	public static String addMessageContentButton;
+	public static String addMessageContentDescription;
+	public static String autoFillMessageContent;
+	public static String useExpression;
+	public static String useDecisionTable;
+	public static String editDecisionTable;
+	public static String and;
+	public static String dontTakeTransition;
+	public static String takeTransition;
+	public static String emptyName;
+	public static String operationExplanation;
+	public static String dublicateIdErrorMessage;
+
+	public static String highestPriority;
+	public static String lowestPriority;
+	public static String underNormalPriority;
+	public static String aboveNormalPriority;
+	public static String normalPriority;
+	public static String transitionOrderingExplanation;
+	public static String transitionOrderingExplanation_Short;
+
+	public static String documentDefaultName;
+
+	public static String remove;
+	public static String selectDocumentDescription;
+	public static String explanationExternalDocument;
+	public static String explanationInternalDocument;
+	public static String selectDocumentDialogTitle;
+	public static String importEtc;
+	public static String AddSimple;
+	public static String description;
+	public static String mimeType;
+	public static String hintExternalUrl;
+
+	public static String explanationMimeTypeDocument;
+	public static String hintMimeTypeDocument;
+	public static String calledProcessVersionHint;
+	public static String avoidElement;
+	public static String avoidElementHint;
+
+	public static String multiInstance_useCollection;
+	public static String multiInstance_inputData;
+	public static String multiInstance_outputData;
+	public static String multiInstance_useCardinality;
+	public static String clearSelection;
+	public static String multiInstance_inputDataDescription;
+	public static String multiInstance_sequentialDescription;
+	public static String multiInstance_completionConditionLabel;
+	public static String multiInstance_completionConditionDescription;
+	public static String multiInstance_sequentialButton;
+	public static String multiInstance_useCollectionDescription;
+	public static String multiInstance_outputDataDescription;
+	public static String multiInstance_useCardinalityDescription;
+	public static String multiInstance_listOutputDataDescription;
+	public static String multiInstance_listOutputDataLabel;
+	public static String addFormTitle;
+	public static String correlationKey;
+	public static String correlationValue;
+	public static String messageContentID;
+	public static String expressionName;
+	public static String messageContentIdExistenceWarning;
+	public static String throwMessageExpressionTypeWarning;
+	public static String NoIncomingMessageWarning;
+	public static String generalPropertiesSectionDescription;
+	public static String diagramSectionDescription;
+	public static String catchMessageContentEventSectionDescription;
+	public static String catchMessageEventCorrelationSectionDescription;
+	public static String documentPropertySectionDescription;
+	public static String laneSectionDescription;
+	public static String looknfeelPropertySectionDescription;
+	public static String resourcePropertySectionDescription;
+	public static String parametersMappingSectionDescription;
+	public static String userXPSectionDescription;
+	public static String confirmationPropertySectionDescription;
+	public static String loopSectionDescription;
+	public static String correlationHelp;
+	public static String exportSuccessfullMsg;
+	public static String exportSuccessfullTitle;
+	public static String exporting;
+	public static String importResultTitle;
+	public static String importSuccessMsg;
 	public static String oneCorrelationAtLeastNeeded;
 	public static String valueShouldBeDefined;
 	public static String idShouldBeDefined;
@@ -439,24 +434,24 @@ public class Messages extends NLS {
 	public static String startTimerConditionDescription;
 	public static String startTimerConditionHint;
 	public static String cronShortDescription;
-	
-    static {
-        // initialize resource bundle
-        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-    }
 
-    private Messages() {
-    }
+	static {
+		// initialize resource bundle
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+	}
 
-    /**
-     * @param event
-     * @return
-     */
-    public static String getValue(String event) {
-        try {
-            return (String) Messages.class.getField(event).get(null);
-        } catch (Exception ex) {
-            return "Field [" + event + "] does not exist in Messages";
-        }
-    }
+	private Messages() {
+	}
+
+	/**
+	 * @param event
+	 * @return
+	 */
+	public static String getValue(String event) {
+		try {
+			return (String) Messages.class.getField(event).get(null);
+		} catch (Exception ex) {
+			return "Field [" + event + "] does not exist in Messages";
+		}
+	}
 }
