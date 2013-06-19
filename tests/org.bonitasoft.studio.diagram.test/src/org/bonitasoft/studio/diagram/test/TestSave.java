@@ -64,7 +64,8 @@ public class TestSave extends SWTBotGefTestCase {
 
         // When Creating a new Diagram
         SWTBotTestUtil.createNewDiagram(bot);
-
+        bot.menu("Diagram").click().menu("Save").click();
+        
         // test button
         isSaveButtonEnable=  bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled();
         Assert.assertFalse("Error: Save button must be disabled when creating a new diagram.", isSaveButtonEnable);
@@ -86,6 +87,7 @@ public class TestSave extends SWTBotGefTestCase {
         boolean isSaveMenuEnable= false;
 
         SWTBotTestUtil.createNewDiagram(bot);
+        bot.menu("Diagram").click().menu("Save").click();
         SWTBotTestUtil.changeDiagramName(bot, "Step1", "testSave2");
 
         // test button
@@ -97,7 +99,8 @@ public class TestSave extends SWTBotGefTestCase {
         Assert.assertFalse("Error: Save menu must not be enabled when changing diagram name.", isSaveMenuEnable);
 
         SWTBotTestUtil.createNewDiagram(bot);
-
+        bot.menu("Diagram").click().menu("Save").click();
+        
         // test button
         isSaveButtonEnable=  bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled();
         Assert.assertFalse("Error: Save button must be disabled for the new editor of a new Dragram created.", isSaveButtonEnable);
