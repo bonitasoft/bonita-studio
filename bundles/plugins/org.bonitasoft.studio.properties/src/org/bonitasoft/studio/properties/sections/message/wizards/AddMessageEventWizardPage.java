@@ -303,7 +303,8 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		final ExpressionCollectionViewer ecv = new ExpressionCollectionViewer(
 				correlationComposite, 5, false, 2, true, captions, false, true);
 		ecv.setLayoutData(GridDataFactory.fillDefaults().grab(true, false)
-				.create());
+				.hint(SWT.DEFAULT, 140).create());
+
 		ecv.setAddRowLabel(Messages.AddCorrelation);
 		ecv.setRemoveRowLabel(Messages.removeCorrelation);
 		final List<ViewerFilter> filters = new ArrayList<ViewerFilter>(2);
