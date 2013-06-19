@@ -43,6 +43,7 @@
 		<module>org.bonitasoft.studio.tests.hotspot</module>
 		<module>org.bonitasoft.studio.util.tests</module>
 		<module>org.bonitasoft.studio.validators.test</module>
+		<module>org.bonitasoft.studio.validation.test</module>
 		<module>org.bonitasoft.studio.workspace.test</module>
 		<module>org.bonitasoft.studio.xml.tests</module>
 		<module>org.bonitasoft.studio.tests</module>
