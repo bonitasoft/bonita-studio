@@ -32,90 +32,112 @@ import org.eclipse.osgi.framework.util.SecureAction;
  */
 public class BonitaStudioLog {
 
-    /** The system property used to specify the log level */
-    private static final String PROP_LOG_LEVEL = "eclipse.log.level"; //$NON-NLS-1$
-    private static final SecureAction secureAction = AccessController.doPrivileged(SecureAction.createSecureAction());
-    private static int logLevel ;
-    static{
-        String newLogLevel = secureAction.getProperty(PROP_LOG_LEVEL);
-        if (newLogLevel != null) {
-            if (newLogLevel.equals("ERROR")) {
-                logLevel = FrameworkLogEntry.ERROR;
-            } else if (newLogLevel.equals("WARNING")) {
-                logLevel = FrameworkLogEntry.ERROR | FrameworkLogEntry.WARNING;
-            } else if (newLogLevel.equals("INFO")) {
-                logLevel = FrameworkLogEntry.INFO | FrameworkLogEntry.ERROR | FrameworkLogEntry.WARNING | FrameworkLogEntry.CANCEL;
-            }
-            else {
-                logLevel = FrameworkLogEntry.OK; // OK (0) means log everything
-            }
-        }
-    }
+	/** The system property used to specify the log level */
+	private static final String PROP_LOG_LEVEL = "eclipse.log.level"; //$NON-NLS-1$
+	private static final SecureAction secureAction = AccessController.doPrivileged(SecureAction.createSecureAction());
+	private static int logLevel ;
+	static{
+		String newLogLevel = secureAction.getProperty(PROP_LOG_LEVEL);
+		if (newLogLevel != null) {
+			if (newLogLevel.equals("ERROR")) {
+				logLevel = FrameworkLogEntry.ERROR;
+			} else if (newLogLevel.equals("WARNING")) {
+				logLevel = FrameworkLogEntry.ERROR | FrameworkLogEntry.WARNING;
+			} else if (newLogLevel.equals("INFO")) {
+				logLevel = FrameworkLogEntry.INFO | FrameworkLogEntry.ERROR | FrameworkLogEntry.WARNING | FrameworkLogEntry.CANCEL;
+			}
+			else {
+				logLevel = FrameworkLogEntry.OK; // OK (0) means log everything
+			}
+		}
+	}
 
-    public static void log(String message) {
-        ILog logger = Activator.getDefault().getLogger();
-        logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, message));
-    }
+	public static void log(String message) {
+		ILog logger = Activator.getDefault().getLogger();
+		if(logger != null){
+			logger.log(new Status(IStatus.INFO, Activator.PLUGIN_ID, message));
+		}
+	}
 
-    public static void error(Throwable exception) {
-        final ILog logger = Activator.getDefault().getLogger();
-        logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, exception.getMessage(),exception));
-    }
+	public static void error(Throwable exception) {
+		final ILog logger = getLogger();
+		if(logger != null){
+			logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, exception.getMessage(),exception));
+		}
+	}
 
-    /**
-     * Log an error
-     * @param exception - the exception to log
-     * @param bundleId - the bundle id of the original exception to log
-     */
-    public static void error(Throwable exception,String bundleId){
-        final ILog logger = Activator.getDefault().getLogger();
-        logger.log(new Status(IStatus.ERROR, bundleId, exception.getMessage(),exception));
-    }
+	/**
+	 * Log an error
+	 * @param exception - the exception to log
+	 * @param bundleId - the bundle id of the original exception to log
+	 */
+	public static void error(Throwable exception,String bundleId){
+		final ILog logger = getLogger();
+		if(logger != null){
+			logger.log(new Status(IStatus.ERROR, bundleId, exception.getMessage(),exception));
+		}
+	}
 
-    /**
-     * Log an error
-     * @param message - the message to log
-     * @param bundleId - the bundle id of the original exception to log
-     */
-    public static void error(String message,String bundleId){
-        final ILog logger = Activator.getDefault().getLogger();
-        logger.log(new Status(IStatus.ERROR, bundleId, message));
-    }
+	protected static ILog getLogger() {
+		Activator activator = Activator.getDefault();
+		if(activator != null){
+			return Activator.getDefault().getLogger();
+		}
+		return null;
+	}
 
-    /**
-     * Log an information
-     * @param message - the message to log
-     * @param bundleId - the bundle id of the original exception to log
-     */
-    public static void info(String message,String bundleId){
-        final ILog logger = Activator.getDefault().getLogger();
-        logger.log(new Status(IStatus.INFO, bundleId, message));
-    }
+	/**
+	 * Log an error
+	 * @param message - the message to log
+	 * @param bundleId - the bundle id of the original exception to log
+	 */
+	public static void error(String message,String bundleId){
+		final ILog logger = getLogger();
+		if(logger != null){
+			logger.log(new Status(IStatus.ERROR, bundleId, message));
+		}
+	}
 
-    /**
-     * Log a warning
-     * @param message - the message to log
-     * @param bundleId - the bundle id of the original exception to log
-     */
-    public static void warning(String message,String bundleId){
-        final ILog logger = Activator.getDefault().getLogger();
-        logger.log(new Status(IStatus.WARNING, bundleId, message));
-    }
+	/**
+	 * Log an information
+	 * @param message - the message to log
+	 * @param bundleId - the bundle id of the original exception to log
+	 */
+	public static void info(String message,String bundleId){
+		final ILog logger = getLogger();
+		if(logger != null){
+			logger.log(new Status(IStatus.INFO, bundleId, message));
+		}
+	}
 
-    /**
-     * Log a debug information
-     * @param message - the message to log
-     * @param bundleId - the bundle id of the original exception to log
-     */
-    public static void debug(String message,String bundleId){
-        final ILog logger = Activator.getDefault().getLogger();
-        logger.log(new Status(IStatus.OK,bundleId, message));
-    }
+	/**
+	 * Log a warning
+	 * @param message - the message to log
+	 * @param bundleId - the bundle id of the original exception to log
+	 */
+	public static void warning(String message,String bundleId){
+		final ILog logger = getLogger();
+		if(logger != null){
+			logger.log(new Status(IStatus.WARNING, bundleId, message));
+		}
+	}
 
-    public static boolean isLoggable(int level) {
-        if (logLevel == 0) {
-            return true;
-        }
-        return (level & logLevel) != 0;
-    }
+	/**
+	 * Log a debug information
+	 * @param message - the message to log
+	 * @param bundleId - the bundle id of the original exception to log
+	 */
+	public static void debug(String message,String bundleId){
+		final ILog logger = getLogger();
+		if(logger != null){
+			logger.log(new Status(IStatus.OK,bundleId, message));
+		}
+	}
+
+	public static boolean isLoggable(int level) {
+		if (logLevel == 0) {
+			return true;
+		}
+		return (level & logLevel) != 0;
+	}
 }
