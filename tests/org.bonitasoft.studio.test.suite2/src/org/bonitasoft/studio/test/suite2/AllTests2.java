@@ -53,6 +53,7 @@ import org.bonitasoft.studio.themes.tests.TestCSSModel;
 import org.bonitasoft.studio.themes.tests.TestDirtyState;
 import org.bonitasoft.studio.themes.tests.TestThemeRepository;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
+import org.bonitasoft.studio.validation.test.TestValidationConstraints;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
@@ -98,6 +99,7 @@ import org.junit.runners.Suite;
     // keep it at the end because if it fails it might be in an infinite loop
     TestDeployCommand.class,
     MigrationReportPDFExportTest.class,
+    TestValidationConstraints.class,
     CloseAllEditors.class,
 })
 public class AllTests2 extends TestSuite {
