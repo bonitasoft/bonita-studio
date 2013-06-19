@@ -88,6 +88,8 @@ public class TestDuplicateCommand extends TestCase {
      * */
     @Override
     public void setUp() throws Exception {
+    	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
+    	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
         DiagramRepositoryStore drs = (DiagramRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
         if(initialPa == null){
             /*import the process for the test*/
