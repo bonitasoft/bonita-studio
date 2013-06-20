@@ -38,7 +38,6 @@
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
-<unit id="com.sun.syndication.source" version="0.9.0.v200803061811"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -55,7 +54,6 @@
 <unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="2.2.2.I20110602-1700"/>
 <unit id="org.polarion.eclipse.team.svn.connector.svnkit15.feature.group" version="2.2.2.I20110602-1700"/>
 <unit id="org.polarion.eclipse.team.svn.connector.svnkit16.feature.group" version="2.2.2.I20110602-1700"/>
-<unit id="org.polarion.eclipse.team.svn.connector.source.feature.group" version="2.2.2.I20110602-1700"/>
 <repository location="http://community.polarion.com/projects/subversive/download/eclipse/2.0/indigo-site/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
