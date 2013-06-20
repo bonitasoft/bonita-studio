@@ -3,7 +3,7 @@
 
 <target includeMode="feature" name="mirrored" sequenceNumber="45">
 <locations>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
 <repository location="XXX_REPOSITORY_URL_XXX"/>
 <unit id="org.uguess.tribix.feature.group" version="2.5.2.201107181644"/>
 <unit id="org.eclipse.gmf.sdk.experimental.feature.group" version="1.2.0.201108160853"/>
@@ -23,7 +23,6 @@
 <unit id="org.eclipse.emf.edapt.runtime.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.edapt.runtime.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
-<unit id="com.sun.syndication.source" version="0.9.0.v200803061811"/>
 <unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.sdk.feature.group" version="0.0.0"/>
@@ -31,7 +30,6 @@
 <unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="2.2.2.I20110602-1700"/>
 <unit id="org.polarion.eclipse.team.svn.connector.svnkit15.feature.group" version="2.2.2.I20110602-1700"/>
 <unit id="org.polarion.eclipse.team.svn.connector.svnkit16.feature.group" version="2.2.2.I20110602-1700"/>
-<unit id="org.polarion.eclipse.team.svn.connector.source.feature.group" version="2.2.2.I20110602-1700"/>
 <unit id="org.codehaus.groovy18.feature.feature.group" version="2.7.2.xx-RELEASE-20121219-0800-e37"/>
 <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.7.2.xx-RELEASE-20121219-0800-e37"/>
 <unit id="org.eclipse.birt.feature.group" version="3.7.2.v20120213-BDF9E9bGTzuHh03p2c0AWvmC3Ltk"/>
