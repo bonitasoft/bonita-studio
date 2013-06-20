@@ -42,7 +42,7 @@ import org.junit.Test;
 public class TestValidationConstraints extends ValidationTestBase {
 
 	@AfterClass
-	public void close(){
+	public static void close(){
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
 	}
