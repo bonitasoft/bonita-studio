@@ -1046,6 +1046,21 @@
                      class="Form">
                </target>
             </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.form.AvailableValuesReturnTypeConstraint"
+                  id="org.bonitasoft.studio.validation.constraints.AvailableValuesReturnTypeConstraint"
+                  lang="Java"
+                  mode="Batch"
+                  name="%AvailableValues"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="MultipleValuatedFormField">
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/expression">
