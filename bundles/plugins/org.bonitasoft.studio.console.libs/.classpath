@@ -11,7 +11,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/theme-builder.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/forms-model.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/forms-server.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/platform-model.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/platform-server-impl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
