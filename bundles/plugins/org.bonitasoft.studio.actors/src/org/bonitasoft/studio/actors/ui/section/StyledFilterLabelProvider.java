@@ -111,10 +111,13 @@ public class StyledFilterLabelProvider extends StyledCellLabelProvider implement
         styledString.append(filter.getName(), null);
         styledString.append(" -- ",StyledString.QUALIFIER_STYLER) ;
         String connectorType = messageProvider.getConnectorDefinitionLabel(def) ;
-        if(connectorType==null){
+        if(connectorType==null && def != null) {
             connectorType = def.getId();
         }
-        styledString.append(connectorType, StyledString.DECORATIONS_STYLER);
+        if(connectorType!=null){
+        	 styledString.append(connectorType, StyledString.DECORATIONS_STYLER);
+        }
+       
         if(filter.getEvent() != null && !filter.getEvent().isEmpty()){
             styledString.append(" -- ",StyledString.QUALIFIER_STYLER) ;
             styledString.append(filter.getEvent(), StyledString.COUNTER_STYLER);
