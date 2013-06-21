@@ -10,22 +10,5 @@
     <groupId>org.bonitasoft.studio.translations.pt</groupId>
   <artifactId>org.bonitasoft.studio.common.nl_pt</artifactId>
   <version>6.1.0-SNAPSHOT</version>
-<packaging>bundle</packaging>
-   <build>
-    <plugins>
-      <plugin>    
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <instructions>
-         		<Bundle-Version>6.1.0.qualifier</Bundle-Version>
-				<Include-Resource>
-					messages_pt.properties,plugin_pt.properties
-				</Include-Resource>
-          </instructions>
-        </configuration>
-      </plugin>   
-    </plugins>
-  </build>
+  <packaging>eclipse-plugin</packaging>
 </project>
