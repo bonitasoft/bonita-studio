@@ -2,9 +2,12 @@ package org.bonitasoft.studio.connectors.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.bonitasoft.studio.connectors.configuration.SelectConnectorImplementationWizard;
@@ -17,6 +20,8 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration
 import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -34,9 +39,6 @@ public class TestConnectorUtil {
 			IWizardContainer wd ) {
 		IImplementationRepositoryStore implStore = getImplementationStore();
 		final List<ConnectorImplementation> implementations =  implStore.getImplementations(connectorDefId,connectorDefVersion);
-
-		ManageConnectorJarDialog jd = new ManageConnectorJarDialog(shell) ;
-		int retCode =jd.open();
 
 		ConnectorImplementation impl = null ;
 		if(implementations.isEmpty()){
@@ -56,7 +58,22 @@ public class TestConnectorUtil {
 				return false;
 			}
 		}
-
+		
+		final Set<String> jars = TestConnectorOperation.checkImplementationDependencies(impl, Repository.NULL_PROGRESS_MONITOR);
+		final ManageConnectorJarDialog jd = new ManageConnectorJarDialog(shell,Messages.connectorAdditionalDependencyTitle,Messages.connectorAdditionalDependencyMessage) ;
+		jd.setFilter(new ViewerFilter() {
+			
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if(element instanceof IRepositoryFileStore){
+					if(jars.contains(((IRepositoryFileStore) element).getName())){
+						return false;
+					}
+				}
+				return true;
+			}
+		});
+		int retCode =jd.open();
 		if(retCode == Window.OK){
 			TestConnectorOperation operation = new TestConnectorOperation() ;
 			operation.setImplementation(impl) ;
@@ -81,6 +98,7 @@ public class TestConnectorUtil {
 		}
 		return false; //Keep wizard open on after test operation
 	}
+
 	
 	protected static IImplementationRepositoryStore getImplementationStore() {
 		return (IImplementationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);

@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -339,11 +340,13 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 		}
 	}
 
-	protected void checkImplementationDependencies(final ConnectorImplementation implementation,IProgressMonitor monitor) {
+	public static Set<String> checkImplementationDependencies(final ConnectorImplementation implementation,IProgressMonitor monitor) {
+		Set<String> dependencies = new HashSet<String>();
 		if(!implementation.getJarDependencies().getJarDependency().isEmpty()){
 			DependencyRepositoryStore depStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
 			final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class), ConnectorPlugin.getDefault().getBundle()) ;
 			for(String jarName : implementation.getJarDependencies().getJarDependency()){
+				dependencies.add(jarName);
 				if(depStore.getChild(jarName) == null){
 					InputStream is = resourceProvider.getDependencyInputStream(jarName) ;
 					if(is != null){
@@ -352,6 +355,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 				}
 			}
 		}
+		return dependencies;
 	}
 
 	public void setConnectorOutput(Connector connector){

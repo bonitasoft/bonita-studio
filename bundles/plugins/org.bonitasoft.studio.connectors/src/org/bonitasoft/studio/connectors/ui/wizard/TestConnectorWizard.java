@@ -56,13 +56,16 @@ public class TestConnectorWizard extends ConnectorWizard {
 
 	@Override
 	protected void addOuputPage(ConnectorDefinition definition) {
-		final TestConnectorOutputWizardPage outputPage = new TestConnectorOutputWizardPage() ;
-		createDefaultOutputs(definition) ;
-		outputPage.setElementContainer(container) ;
-		outputPage.setConnector(connectorWorkingCopy) ;
-		outputPage.setDefinition(definition) ;
-		addAdditionalPage(outputPage) ;	
+		if(!definition.getOutput().isEmpty()){
+			final TestConnectorOutputWizardPage outputPage = new TestConnectorOutputWizardPage() ;
+			createDefaultOutputs(definition) ;
+			outputPage.setElementContainer(container) ;
+			outputPage.setConnector(connectorWorkingCopy) ;
+			outputPage.setDefinition(definition) ;
+			addAdditionalPage(outputPage) ;	
+		}
 	}
+
 
 	@Override
 	protected void addNameAndDescriptionPage() {
@@ -91,7 +94,7 @@ public class TestConnectorWizard extends ConnectorWizard {
 		return TestConnectorUtil.testConnectorWithConfiguration(configuration, defId, defVersion, connectorWorkingCopy, getShell(), getContainer());
 	}
 
-	
+
 
 	protected ConnectorImplementation openImplementationSelection(String defId, String defVersion) {
 		SelectConnectorImplementationWizard wizard = new SelectConnectorImplementationWizard(defId,defVersion) ;
@@ -129,7 +132,7 @@ public class TestConnectorWizard extends ConnectorWizard {
 			extension = findCustomWizardExtension(definition) ;
 			recreateConnectorConfigurationPages(definition,false);
 		}
-		
+
 		List<IWizardPage> pages = getAllPageList() ;
 		int index = pages.indexOf(page);
 		if (index == pages.size() - 1 || index == -1) {

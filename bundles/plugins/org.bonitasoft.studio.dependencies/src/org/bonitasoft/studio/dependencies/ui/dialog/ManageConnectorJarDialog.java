@@ -58,108 +58,131 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ManageConnectorJarDialog extends Dialog {
 
-    protected TreeViewer treeViewer;
-    private final IRepositoryStore libStore;
-    
-    protected DataBindingContext context;
-    private ViewerFilter searchFilter;
-    CheckboxTableViewer languageViewer;
-    
-    protected Set<IRepositoryFileStore> selectedJars ;
+	protected TreeViewer treeViewer;
+	private final IRepositoryStore libStore;
 
-    
-    public ManageConnectorJarDialog(Shell parentShell) {
+	protected DataBindingContext context;
+	private ViewerFilter searchFilter;
+	protected CheckboxTableViewer languageViewer;
+
+	protected Set<IRepositoryFileStore> selectedJars ;
+	private ViewerFilter filter;
+	private String title;
+	private String infoLabel;
+
+
+	public ManageConnectorJarDialog(Shell parentShell) {
 		super(parentShell);
-        libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
-        
+		libStore = RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
 	}
-    
-    @Override
-    protected void configureShell(Shell newShell) {
-        super.configureShell(newShell);
-        newShell.setText(Messages.selectMissingJarTitle) ;
-    }
-	
-    @Override
-    protected Control createDialogArea(Composite parent) {
-        context = new DataBindingContext() ;
-        Composite composite = (Composite) super.createDialogArea(parent);
-        composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
-        addLabel(composite);
-        createTree(composite);
-        
-        UpdateValueStrategy selectionStartegy = new UpdateValueStrategy() ;
-        selectionStartegy.setAfterGetValidator(new IValidator() {
 
-            @Override
-            public IStatus validate(Object value) {
-                if( value == null){
-                    return ValidationStatus.error("Selection is empty") ;
-                }
-                return Status.OK_STATUS;
-            }
-        }) ;
+	public ManageConnectorJarDialog(Shell parentShell,String label,String infoLabel) {
+		this(parentShell);
+		this.title = label;
+		this.infoLabel = infoLabel;
+	}
 
-        context.bindSet(ViewersObservables.observeCheckedElements(languageViewer, IRepositoryFileStore.class.getName()), PojoProperties.set(ManageConnectorJarDialog.class,"selectedJars").observe(this)) ;
-        
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		if(title == null){
+			newShell.setText(Messages.selectMissingJarTitle) ;
+		}else{
+			newShell.setText(title) ;
+		}
+	}
 
-        return composite;
-    }
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		context = new DataBindingContext() ;
+		Composite composite = (Composite) super.createDialogArea(parent);
+		composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
+		if(infoLabel != null){
+			addLabel(composite);
+		}
+		
+		createTree(composite);
 
-    protected void createTree(Composite composite) {
-        final Text searchText = new Text(composite,SWT.SEARCH | SWT.ICON_SEARCH | SWT.BORDER | SWT.CANCEL) ;
-        searchText.setMessage(Messages.search) ;
-        searchText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+		UpdateValueStrategy selectionStartegy = new UpdateValueStrategy() ;
+		selectionStartegy.setAfterGetValidator(new IValidator() {
 
-        searchFilter = new ViewerFilter() {
+			@Override
+			public IStatus validate(Object value) {
+				if( value == null){
+					return ValidationStatus.error("Selection is empty") ;
+				}
+				return Status.OK_STATUS;
+			}
+		}) ;
 
-            @Override
-            public boolean select(Viewer arg0, Object arg1, Object element) {
-                if(!searchText.getText().isEmpty()){
-                    String searchQuery = searchText.getText().toLowerCase() ;
-                    IRepositoryFileStore file = (IRepositoryFileStore) element ;
-                    return file.getName().toLowerCase().contains(searchQuery) ;
-                }
-                return true;
-            }
-        };
+		context.bindSet(ViewersObservables.observeCheckedElements(languageViewer, IRepositoryFileStore.class.getName()), PojoProperties.set(ManageConnectorJarDialog.class,"selectedJars").observe(this)) ;
 
-        //new Label(composite,SWT.NONE) ; //FILLER
 
-        languageViewer = CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL) ;
-        languageViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 190).create()) ;
-        languageViewer.getTable().setLinesVisible(true) ;
-        languageViewer.getTable().setHeaderVisible(false) ;
-        final TableLayout layout = new TableLayout() ;
-        layout.addColumnData(new ColumnWeightData(65)) ;
-        languageViewer.getTable().setLayout(layout) ;
-        languageViewer.setContentProvider(new ArrayContentProvider()) ;
-        languageViewer.setLabelProvider(new FileStoreLabelProvider()) ;
-        languageViewer.addFilter(searchFilter) ;
-        languageViewer.setInput(libStore.getChildren()) ;
-        languageViewer.getTable().setFocus() ;
-        
-        
-        searchText.addModifyListener(new ModifyListener() {
+		return composite;
+	}
 
-            @Override
-            public void modifyText(ModifyEvent e) {
-            	languageViewer.refresh() ;
-            }
-        }) ;
+	protected void createTree(Composite composite) {
+		final Text searchText = new Text(composite,SWT.SEARCH | SWT.ICON_SEARCH | SWT.BORDER | SWT.CANCEL) ;
+		searchText.setMessage(Messages.search) ;
+		searchText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
-    }
-    
-    protected void addLabel(Composite composite){
-    	Label label = new Label(composite, SWT.BOLD);
-    	label.setText(Messages.popUpMessage);
-    }
-    
-    
-    @Override
-    protected void okPressed() {
-    	super.okPressed();
-    }
+		searchFilter = new ViewerFilter() {
+
+			@Override
+			public boolean select(Viewer arg0, Object arg1, Object element) {
+				if(!searchText.getText().isEmpty()){
+					String searchQuery = searchText.getText().toLowerCase() ;
+					IRepositoryFileStore file = (IRepositoryFileStore) element ;
+					return file.getName().toLowerCase().contains(searchQuery) ;
+				}
+				return true;
+			}
+		};
+
+		//new Label(composite,SWT.NONE) ; //FILLER
+
+		languageViewer = CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.V_SCROLL) ;
+		languageViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 190).create()) ;
+		languageViewer.getTable().setLinesVisible(true) ;
+		languageViewer.getTable().setHeaderVisible(false) ;
+		final TableLayout layout = new TableLayout() ;
+		layout.addColumnData(new ColumnWeightData(65)) ;
+		languageViewer.getTable().setLayout(layout) ;
+		languageViewer.setContentProvider(new ArrayContentProvider()) ;
+		languageViewer.setLabelProvider(new FileStoreLabelProvider()) ;
+		languageViewer.addFilter(searchFilter) ;
+		if(filter != null){
+			languageViewer.addFilter(filter);
+		}
+		languageViewer.setInput(libStore.getChildren()) ;
+		languageViewer.getTable().setFocus() ;
+
+
+		searchText.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				languageViewer.refresh() ;
+			}
+		}) ;
+
+	}
+
+	protected void addLabel(Composite composite){
+		final Label label = new Label(composite, SWT.WRAP);
+		if(infoLabel == null){
+			label.setText(Messages.popUpMessage);
+		}else{
+			label.setText(infoLabel);
+		}
+		
+	}
+
+
+	@Override
+	protected void okPressed() {
+		super.okPressed();
+	}
 
 	/**
 	 * @return the selectedJars
@@ -175,6 +198,10 @@ public class ManageConnectorJarDialog extends Dialog {
 		this.selectedJars = selectedJars;
 	}
 
-    
-    
+	public void setFilter(ViewerFilter viewerFilter) {
+		this.filter = viewerFilter;
+	}
+
+
+
 }
