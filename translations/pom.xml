@@ -17,10 +17,6 @@
 
 	<modules>
 		<module>de</module>
-		<module>es</module>
-		<module>fr</module>
-		<module>it</module>
-		<module>pt</module>
 	</modules>
 
 </project>

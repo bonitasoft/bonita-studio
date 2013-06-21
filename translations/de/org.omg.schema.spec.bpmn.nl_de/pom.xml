@@ -21,7 +21,7 @@
           <instructions>
          		<Bundle-Version>6.1.0.qualifier</Bundle-Version>
 				<Include-Resource>
-					messages_de.properties,plugin_de.properties
+					plugin_de.properties
 				</Include-Resource>
           </instructions>
         </configuration>
