@@ -482,22 +482,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.equinox.ds.nl_es"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.ds.nl_fr"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.equinox.preferences.nl_es"
          download-size="0"
          install-size="0"
