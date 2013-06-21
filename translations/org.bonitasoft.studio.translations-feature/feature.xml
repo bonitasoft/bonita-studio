@@ -17,10 +17,6 @@
       [Enter License Description here.]
    </license>
 
-   <requires>
-      <import feature="studio-feature" version="6.1.0" match="equivalent"/>
-   </requires>
-
    <plugin
          id="org.bonitasoft.studio.application.nl_es"
          download-size="0"

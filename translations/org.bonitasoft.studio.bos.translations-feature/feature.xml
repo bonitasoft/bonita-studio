@@ -17,12 +17,6 @@
       [Enter License Description here.]
    </license>
 
-   <requires>
-      <import feature="studio-bos-specific-feature" version="6.1.0" match="equivalent"/>
-      <import feature="org.eclipse.rcp" version="3.7.2.v20120120-1424-9DB5FmnFq5JCf1UA38R-kz0S0272" match="greaterOrEqual"/>
-      <import feature="platform-specific-feature" version="6.1.0" match="equivalent"/>
-   </requires>
-
    <plugin
          id="org.bonitasoft.studio.registration.nl_es"
          download-size="0"
