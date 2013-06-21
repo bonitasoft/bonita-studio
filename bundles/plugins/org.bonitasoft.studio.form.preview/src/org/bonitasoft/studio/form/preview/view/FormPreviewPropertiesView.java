@@ -52,18 +52,15 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 public class FormPreviewPropertiesView extends ViewPart{
 
 	public static final String VIEW_ID = "org.bonitasoft.studio.views.properties.form.preview";
-	private static final String ADVANCED_PREVIEW_ID = "org.bonitasoft.studio.form.previewEx.advancedFormPreview";
 	private LookNFeelRepositoryStore repositoryStore;
 	private ComboViewer webBrowserCombo;
 	private ComboViewer lnfCombo; 
-	private DataBindingContext context;
 	private TabbedPropertySheetWidgetFactory widgetFactory;
 	private IFormPreviewContribution advancedFormPreview;
 
 
 	public FormPreviewPropertiesView(){
 		super();
-		context = new DataBindingContext();
 		repositoryStore = (LookNFeelRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);	
 	}
 
@@ -71,11 +68,11 @@ public class FormPreviewPropertiesView extends ViewPart{
 	public void createPartControl(Composite parent) {
 		widgetFactory = new TabbedPropertySheetWidgetFactory();
 		Composite mainComposite = widgetFactory.createComposite(parent, SWT.NONE);
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(5, 0, 3, 1).create());
-		
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(10, 10, 3, 1).create());
+
 		mainComposite.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		createButtonsLine(mainComposite);
-	    createLookNFeelSelection(mainComposite);
+		createLookNFeelSelection(mainComposite);
 		createBrowserSelection(mainComposite);
 
 	}
@@ -123,7 +120,7 @@ public class FormPreviewPropertiesView extends ViewPart{
 
 	private void createAdvancedPreviewButton(Composite buttonsComposite) {
 		IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.form.preview.formPreviewContribution"); //$NON-NLS-1$
-		
+
 		for (IConfigurationElement elem : elements) {
 			try {
 				advancedFormPreview = (IFormPreviewContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
@@ -132,12 +129,12 @@ public class FormPreviewPropertiesView extends ViewPart{
 				advancedFormPreview.setForm(form);
 				advancedFormPreview.setLookNfeel(getCurrentLookNFeel());
 				break;
-				} catch (CoreException e ){
-					BonitaStudioLog.error(e);
-				}
+			} catch (CoreException e ){
+				BonitaStudioLog.error(e);
+			}
 		}
-		
-		
+
+
 	}
 
 	private void createLookNFeelSelection(Composite mainComposite) {
@@ -151,14 +148,14 @@ public class FormPreviewPropertiesView extends ViewPart{
 		lnfCombo.setInput(repositoryStore.getApplicationLookNFeels());
 		lnfCombo.setSelection(new StructuredSelection(getCurrentLookNFeel()));
 		lnfCombo.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (advancedFormPreview!=null){
 					StructuredSelection selection = (StructuredSelection)event.getSelection();
 					advancedFormPreview.setLookNfeel((ApplicationLookNFeelFileStore)selection.getFirstElement());
 				}
-				
+
 			}
 		});
 		if (advancedFormPreview!=null){
@@ -176,14 +173,14 @@ public class FormPreviewPropertiesView extends ViewPart{
 		webBrowserCombo.setInput(BrowserManager.getInstance().getWebBrowsers());
 		webBrowserCombo.setSelection(new StructuredSelection(BrowserManager.getInstance().getCurrentWebBrowser()));
 		webBrowserCombo.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (advancedFormPreview!=null){
 					StructuredSelection selection = (StructuredSelection)event.getSelection();
 					advancedFormPreview.setBrowser((IBrowserDescriptor)selection.getFirstElement());
 				}
-				
+
 			}
 		});
 		if (advancedFormPreview!=null){
