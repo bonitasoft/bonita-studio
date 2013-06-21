@@ -17,6 +17,7 @@
 
 package org.bonitasoft.studio.form.preview;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
@@ -24,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bonitasoft.engine.api.IdentityAPI;
@@ -43,11 +45,13 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.common.BonitaConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
+import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.WebTemplatesUtil;
@@ -78,19 +82,40 @@ import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XMLData;
+import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorUtil;
+import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.preferences.pages.BonitaLanguagePreferencePage;
 import org.bonitasoft.studio.repository.themes.ApplicationLookNFeelFileStore;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
+import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
+import org.eclipse.gmf.runtime.notation.util.NotationAdapterFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -108,19 +133,20 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 	private Form formCopy;
 	private ApplicationLookNFeelFileStore lookNFeel;
 	private IBrowserDescriptor browser;
-	private boolean isOnTask = false;
-	private boolean canPreview = true;
 	private static String lastProcessDeployed;
-	private static final String VERSION ="1.0";
 	private static final int MAX_IT= 100;
+	private TransactionalEditingDomain editingDomain;
+	private AbstractFormPreviewInitialization formPreviewInit;
 
 
 
-	public FormPreviewOperation(Form form,ApplicationLookNFeelFileStore lookNFeel, IBrowserDescriptor browser){
-		this.form = form;
-		this.lookNFeel = lookNFeel;
-		this.browser = browser;
-		initializeForm();
+	public FormPreviewOperation(AbstractFormPreviewInitialization formPreviewInit){
+		this.formPreviewInit = formPreviewInit;
+		this.form = formPreviewInit.getForm();
+		this.lookNFeel = formPreviewInit.getLookNFeel();
+		this.browser = formPreviewInit.getBrowser();
+		
+		
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -135,30 +161,31 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 		ProcessAPI processApi = null;
 		long procId = -1;
 		final Configuration configuration = ConfigurationFactory.eINSTANCE.createConfiguration();
-		final AbstractProcess proc = createAbstractProcess(configuration);
-
-		if (canPreview){
+		final AbstractProcess proc = formPreviewInit.createAbstractProcess(configuration);
+		
+		if (formPreviewInit.isCanPreview()){
 			configuration.setName("formPreviewConfig");
 
 			new ConfigurationSynchronizer(proc, configuration).synchronize();
 
 			try {
-
+				Resource resource = doCreateEMFResource(proc,monitor);
+				initializeLookNFeel(proc, resource);
 				session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
 				processApi = BOSEngineManager.getInstance().getProcessAPI(session);
 				Assert.isNotNull(processApi) ;
 
 				undeployProcess(proc, processApi);
-
+				
 				BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,configuration,Collections.EMPTY_SET,false);
-
+				cleanResources(proc, resource);
 				ProcessDefinition def = processApi.deploy(businessArchive);
 				procId = def.getId();
 				processApi.enableProcess(procId) ;
 
 
 				ExternalBrowserInstance browserInstance = new ExternalBrowserInstance(null, browser);
-				if (!isOnTask){
+				if (!formPreviewInit.isOnTask()){
 					ApplicationURLBuilder builder = new ApplicationURLBuilder(proc,procId,configuration.getName(),ApplicationURLBuilder.MODE_FORM);
 					URL url = builder.toURL(monitor);
 					OpenBrowserCommand openCmd = new OpenBrowserCommand(url, browserInstance.getId(), "");
@@ -224,225 +251,40 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 
 
 
-	public AbstractProcess createAbstractProcess(Configuration configuration){
-		AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
-		proc.setName(form.getName()+" preview");
-		proc.setVersion(VERSION);
-		if (lookNFeel !=null && lookNFeel.getName()!=null){
-			proc.setBasedOnLookAndFeel(lookNFeel.getName());
-		}
-		Element parent =ModelHelper.getParentFlowElement(form);
-		if (parent ==null){
-			proc.getForm().add(formCopy);
+	
 
-		} else {
-			if (parent instanceof Task){
-				initializeTask(parent,proc,configuration);
-			}
-		}
-		configuration.setUsername(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
-		configuration.setPassword("bpm");
-		return proc;
+
+	private Resource doCreateEMFResource(final AbstractProcess proc,IProgressMonitor monitor) throws IOException, ExecutionException{
+		URI uri = URI.createFileURI(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath()+File.separator+proc.getName()+".proc");
+
+		final XMLResourceImpl resource =	new XMLResourceImpl(uri){
+			protected boolean useUUIDs() {
+				return true;
+			};
+		};
+		resource.getContents().add(proc);
+		resource.save(ProcessDiagramEditorUtil.getSaveOptions()) ;
+		return resource;
 	}
-
-
-	private void initializeTask(Element parent,AbstractProcess proc, Configuration configuration){
-		AbstractProcess parentProc = ModelHelper.getParentProcess(parent);
-		Task task= ProcessFactory.eINSTANCE.createTask();
-		task.setName(((Task)parent).getName());
-		task.getForm().add(formCopy);
-		copyActors(parentProc, proc);
-		if (((Task)parent).getActor()!=null){
-			addActorToTask(task,((Task)parent).getActor());
-		} else {
-			if(ModelHelper.getParentContainer(parent) instanceof Lane){
-				Lane lane = ModelHelper.getParentLane(parent);
-				Actor actorCopy=addActorToTask(task,lane.getActor());
-				proc.getActors().add(actorCopy);
-			} else {
-				canPreview=false;
-				MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.noActorDefinedTitle, Messages.bind(Messages.noActorDefined, ((Task)parent).getName()));
-			}
-
-		}
-		setActorMapping(parentProc, configuration);
-		proc.setByPassFormsGeneration(true);
-		proc.getElements().add(task);
-		isOnTask = true;
+	
+	private void cleanResources(AbstractProcess proc, Resource resource) throws IOException{
+		ApplicationResourceRepositoryStore store = (ApplicationResourceRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class);
+		store.getChild(ModelHelper.getEObjectID(proc)).delete();
+		resource.delete(Collections.EMPTY_MAP);
 	}
-
-
-	private Actor addActorToTask(Task task,Actor actor){
-		Actor actorCopy = (Actor)EcoreUtil.copy(actor);
-		actorCopy.setInitiator(true);
-		task.setActor(actorCopy);
-		return actorCopy;
-	}
-
-
-	private void setActorMapping(AbstractProcess proc,Configuration previewConfiguration){
-		ProcessConfigurationRepositoryStore configurationStore =  (ProcessConfigurationRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class);
-		String id = ModelHelper.getEObjectID(proc);
-		ProcessConfigurationFileStore configurationFileStore = configurationStore.getChild(id+".conf");
-		Configuration configuration = configurationFileStore.getContent();
-		ActorMappingsType actorMapping = EcoreUtil.copy(configuration.getActorMappings());
-		if (actorMapping==null){
-			//MessageDialog.openError(Display.getCurrent().getActiveShell(),Messages.noActorMappingDefinedTitle ,  Messages.noActorMappingDefined);
-			//canPreview = false;
-			actorMapping = ActorMappingFactory.eINSTANCE.createActorMappingsType();
-			ActorMapping newMapping = ActorMappingFactory.eINSTANCE.createActorMapping();
-			newMapping.setName(proc.getActors().get(0).getName());
-			Users users = ActorMappingFactory.eINSTANCE.createUsers();
-			users.getUser().add(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
-			newMapping.setUsers(users);
-			newMapping.setGroups(ActorMappingFactory.eINSTANCE.createGroups());
-			newMapping.setMemberships(ActorMappingFactory.eINSTANCE.createMembership());
-			newMapping.setRoles(ActorMappingFactory.eINSTANCE.createRoles());
-			actorMapping.getActorMapping().add(newMapping);
-		} else {
-			for(ActorMapping mapping : actorMapping.getActorMapping()){
-				mapping.getMemberships().getMembership().clear();
-				mapping.getGroups().getGroup().clear();
-				mapping.getUsers().getUser().clear();
-				mapping.getRoles().getRole().clear();
-				mapping.getUsers().getUser().add(BonitaConstants.STUDIO_TECHNICAL_USER_NAME);
-			}
-		}
-		previewConfiguration.setActorMappings(actorMapping);
-
-	}
-
-
-
-
-	private void initializeLookNFeel(AbstractProcess proc){
+	
+	private void initializeLookNFeel(AbstractProcess proc,Resource resource){
 		ResourceSet resourceSet = new ResourceSetImpl();
-		TransactionalEditingDomain editingDomain  = GMFEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
-		Resource resource = resourceSet.createResource(proc.eResource().getURI());
-		try {
-			resource.load(resourceSet.getLoadOptions());
-		} catch (IOException e1) {
-			BonitaStudioLog.error(e1);
-		}
+		editingDomain  = GMFEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
 		proc = (AbstractProcess) resource.getEObject(proc.eResource().getURIFragment(proc));
 		CompoundCommand cc = WebTemplatesUtil.createAddTemplateCommand(editingDomain, proc, lookNFeel, new NullProgressMonitor());
 		editingDomain.getCommandStack().execute(cc);
 	}
 
 
-	private void initializeForm(){
-		formCopy = EcoreUtil.copy(form);
-		List<Expression> exprs = ModelHelper.getAllItemsOfType(formCopy, ExpressionPackage.Literals.EXPRESSION);
-		for (Expression expr:exprs){
-			expr = initializeExpression(form,expr);
-		}
-		initializeAllWidgets(formCopy);
-		formCopy.getData().clear();
-		formCopy.getKpis().clear();
-		formCopy.getValidators().clear();
-		formCopy.getActions().clear();
-		formCopy.getConnectors().clear();
-	}
 
-	private void initializeAllWidgets(Form formCopy){
-		List<Widget> widgets = ModelHelper.getAllWidgetInsideForm(formCopy);
-		WidgetSwitch widgetSwitch = new WidgetSwitch();
-		for (Widget widget:widgets){
-			deleteAllOperations(widget);
-			if (!widget.getDependOn().isEmpty()){
-				Expression exprDisplayDependentWidgetOnly = widget.getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition();
-				exprDisplayDependentWidgetOnly.setContent("true");
-				exprDisplayDependentWidgetOnly.setReturnType(Boolean.class.getName());
-				Expression exprDisplayAfterEventDependsOnCondiditionScript = widget.getDisplayAfterEventDependsOnConditionScript();
-				exprDisplayAfterEventDependsOnCondiditionScript.setContent("true");
-				exprDisplayAfterEventDependsOnCondiditionScript.setReturnType(Boolean.class.getName());
-			}
-			widget = (Widget)widgetSwitch.doSwitch(widget);
-		}
-	}
 
-	private void deleteAllOperations(Widget widget){
-		List<Operation> operations = ModelHelper.getAllItemsOfType(widget, ExpressionPackage.Literals.OPERATION);
-		for (Operation operation:operations){
-			EcoreUtil.delete(operation);
-		}
-	}
 
-	private Expression initializeExpression(Form form,Expression expr){
-		if (ExpressionConstants.VARIABLE_TYPE.equals(expr.getType())){
-			Data data =getReferencedData(form, expr);
-			if (data !=null && data.getDefaultValue()!=null && data.getDefaultValue().getContent()!=null && !data.getDefaultValue().getContent().isEmpty()){
-				if (data.getDataType() instanceof JavaType ) {
-					expr.setType(ExpressionConstants.SCRIPT_TYPE);
-					expr.setInterpreter(ExpressionConstants.GROOVY);
-					if (data.getDefaultValue().getReferencedElements().isEmpty()){
-						expr.setContent(data.getDefaultValue().getContent());
-						expr.getReferencedElements().clear();
-					} else {
-						expr.setType(ExpressionConstants.CONSTANT_TYPE);
-						expr.setContent("");
-
-					}
-				} else {
-					if (data.getDataType() instanceof XMLData){
-						expr.setType(ExpressionConstants.CONSTANT_TYPE);
-						expr.setContent("");
-					} else {
-						expr.setType(ExpressionConstants.CONSTANT_TYPE);
-						expr.setContent(data.getDefaultValue().getContent());
-						expr.getReferencedElements().clear();
-					}
-				}
-			} else {
-				expr.setType(ExpressionConstants.CONSTANT_TYPE);
-				expr.setContent("");
-				expr.getReferencedElements().clear();
-			}
-
-		} else {
-			if (ExpressionConstants.PARAMETER_TYPE.equals(expr.getType())){
-				Parameter parameter = (Parameter) expr.getReferencedElements().get(0);
-				expr.setType(ExpressionConstants.CONSTANT_TYPE);
-				expr.setContent(parameter.getValue());
-			} else {
-				if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(expr.getType())) {
-					expr.setType(ExpressionConstants.CONSTANT_TYPE);
-					expr.setContent("");
-				} else {
-					if (ExpressionConstants.CONNECTOR_TYPE.equals(expr.getType())) {
-						expr.setType(ExpressionConstants.CONSTANT_TYPE);
-						expr.setContent("");
-					} else {
-						if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())){
-							if (!expr.getReferencedElements().isEmpty()){
-								expr.setType(ExpressionConstants.CONSTANT_TYPE);
-								expr.setContent("");
-								expr.getReferencedElements().clear();
-							} 
-						} else {
-							if (ExpressionConstants.DOCUMENT_TYPE.equals(expr.getType()) || ExpressionConstants.DOCUMENT_REF_TYPE.equals(expr.getType())){
-								expr.setContent("");
-								expr.getReferencedElements().clear();
-							} else {
-								expr.setType(ExpressionConstants.CONSTANT_TYPE);
-							}
-						}
-					}
-				}
-			}	
-		}
-		return expr;
-	}
-
-	private Data getReferencedData(Form form,Expression expr){
-		List<Data> datas = ModelHelper.getAccessibleData(form, true);
-		for (Data data:datas){
-			if (data.getName().equals(expr.getName())){
-				return data;
-			}
-		}
-		return null;
-	}
 
 
 
@@ -454,7 +296,7 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 			}
 			List<ProcessDeploymentInfo> processes = processApi.getProcessDeploymentInfos(0, (int) nbDeployedProcesses, ProcessDeploymentInfoCriterion.DEFAULT) ;
 			for(ProcessDeploymentInfo info : processes){
-				if(info.getName().equals(lastProcessDeployed) && info.getVersion().equals(VERSION)){
+				if(info.getName().equals(lastProcessDeployed) && info.getVersion().equals(formPreviewInit.VERSION)){
 					try{
 						if (processApi.getProcessDeploymentInfo(info.getProcessId()).getActivationState() == ActivationState.ENABLED){
 							processApi.disableProcess(info.getProcessId()) ;
@@ -469,11 +311,6 @@ public class FormPreviewOperation implements IRunnableWithProgress {
 	}
 
 
-	private void copyActors(AbstractProcess proc,AbstractProcess procCopy){
-		List<Actor> actors = proc.getActors();
-		for (Actor actor:actors){
-			procCopy.getActors().add((Actor)EcoreUtil.copy(actor));
-		}
-	}
+
 
 }

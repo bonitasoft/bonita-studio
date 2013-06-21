@@ -22,6 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.form.preview.AbstractFormPreviewInitialization;
+import org.bonitasoft.studio.form.preview.FormPreviewInitialization;
 import org.bonitasoft.studio.form.preview.FormPreviewOperation;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -88,7 +90,8 @@ public class PreviewFormHandler extends AbstractHandler {
 		}
 		if(form!=null){
 			IBrowserDescriptor browser = (IBrowserDescriptor)BrowserManager.getInstance().getCurrentWebBrowser();
-			final FormPreviewOperation operation = new FormPreviewOperation(form,getCurrentLookNFeel(),browser);
+			AbstractFormPreviewInitialization formPreviewInit = new FormPreviewInitialization(form, getCurrentLookNFeel(), browser);
+			final FormPreviewOperation operation = new FormPreviewOperation(formPreviewInit);
 			try {
 				progressManager.run(true, false, operation);
 			} catch (InvocationTargetException e) {
