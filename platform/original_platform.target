@@ -111,8 +111,6 @@
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.xtext.xbase.feature.group" version="2.3.1.v201208210947"/>
-<unit id="org.eclipse.xtext.docs.feature.group" version="2.3.1.v201208210947"/>
-<unit id="org.eclipse.xtext.examples.feature.group" version="2.3.1.v201208210947"/>
 <unit id="org.eclipse.xtext.runtime.feature.group" version="2.3.1.v201208210947"/>
 <unit id="org.eclipse.xtext.sdk.feature.group" version="2.3.1.v201208210947"/>
 <unit id="org.eclipse.xtext.ui.feature.group" version="2.3.1.v201208210947"/>
