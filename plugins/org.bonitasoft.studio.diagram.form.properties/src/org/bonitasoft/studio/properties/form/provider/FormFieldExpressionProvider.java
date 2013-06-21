@@ -34,6 +34,7 @@ import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormButton;
 import org.bonitasoft.studio.model.form.FormField;
+import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.NextFormButton;
 import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.form.TextFormField;
@@ -82,8 +83,8 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 			if(relevantParent instanceof SubmitFormButton){
 				if(relevantParent.eContainer()!= null && relevantParent.eContainer() instanceof Form){
 					Form f = ModelHelper.getParentForm(relevantParent);
-					for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
-						if (w instanceof FormField){
+					for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+						if (w instanceof FormField || w instanceof Group){
 							result.add( createExpression(w) ) ;
 						}
 					}
@@ -97,8 +98,8 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 				Form parentForm = ModelHelper.getParentForm(relevantParent);
 				for (Form f : forms){
 					if(!f.equals(parentForm)){
-						for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
-							if (w instanceof FormField || w instanceof NextFormButton){
+						for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+							if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group){
 								result.add( createExpression(w) ) ;
 							}
 						}
@@ -112,8 +113,8 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 				if(pageFlow != null){
 					List<? extends Form> forms= getForms(pageFlow, (Form) relevantParent);					
 					for (Form f : forms){
-						for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
-							if (w instanceof FormField || w instanceof FormButton){
+						for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+							if (w instanceof FormField || w instanceof FormButton || w instanceof Group){
 								result.add( createExpression(w) ) ;
 							}
 						}
@@ -125,16 +126,16 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 			if(relevantParent instanceof PageFlow){
 				if(relevantParent != null){
 					for (Form f : ((PageFlow) relevantParent).getForm()){
-						for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
-							if (w instanceof FormField || w instanceof NextFormButton){
+						for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+							if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group){
 								result.add( createExpression(w) ) ;
 							}
 						}
 					}
 					if(relevantParent instanceof ViewPageFlow){
 						for (Form f : ((ViewPageFlow) relevantParent).getViewForm()){
-							for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
-								if (w instanceof FormField || w instanceof NextFormButton){
+							for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+								if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group){
 									result.add( createExpression(w) ) ;
 								}
 							}
@@ -142,8 +143,8 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 					}
 					if(relevantParent instanceof RecapFlow){
 						for (Form f : ((RecapFlow) relevantParent).getRecapForms()){
-							for (Widget w : ModelHelper.getAllWidgetInsideForm(f)) {
-								if (w instanceof FormField || w instanceof NextFormButton){
+							for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
+								if (w instanceof FormField || w instanceof NextFormButton || w instanceof Group){
 									result.add( createExpression(w) ) ;
 								}
 							}
