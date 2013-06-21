@@ -15,7 +15,9 @@
 package org.bonitasoft.studio.properties.sections.message.wizards;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -31,43 +33,46 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class CatchMessageEventNamesExpressionNatureProvider implements IExpressionNatureProvider {
 
-    private AbstractProcess process;
+	private List<AbstractProcess> processes;
 
-    @Override
-    public Expression[] getExpressions() {
-        List<Expression> result = new ArrayList<Expression>();
-        if(process != null){
-            List<String> names = new ArrayList<String>();
-            for(AbstractCatchMessageEvent catchMessage :  ModelHelper.getAllCatchEvent(process)){
-                if(!names.contains(catchMessage.getName()) && catchMessage.getIncomingMessag() == null){
-                    names.add(catchMessage.getName());
-                }
-            }
-            for(String pName : names){
-                Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-                exp.setName(pName);
-                exp.setContent(pName);
-                exp.setReturnType(String.class.getName());
-                exp.setReturnTypeFixed(true);
-                exp.setType(ExpressionConstants.CONSTANT_TYPE);
-                result.add(exp);
-            }
-        }
-        return result.toArray(new Expression[result.size()]);
-    }
+	@Override
+	public Expression[] getExpressions() {
+		List<Expression> result = new ArrayList<Expression>();
+		if(processes != null && !processes.isEmpty()){
+			final Set<String> names = new HashSet<String>();
+			for(AbstractProcess process : processes){
+				for(AbstractCatchMessageEvent catchMessage :  ModelHelper.getAllCatchEvent(process)){
+					if(!names.contains(catchMessage.getName()) && catchMessage.getIncomingMessag() == null){
+						names.add(catchMessage.getName());
+					}
+				}
+				for(String pName : names){
+					Expression exp = ExpressionFactory.eINSTANCE.createExpression();
+					exp.setName(pName);
+					exp.setContent(pName);
+					exp.setReturnType(String.class.getName());
+					exp.setReturnTypeFixed(true);
+					exp.setType(ExpressionConstants.CONSTANT_TYPE);
+					result.add(exp);
+				}
+			}
+		}
+		return result.toArray(new Expression[result.size()]);
+	}
 
-    @Override
-    public void setContext(final EObject context) {
-        if(context instanceof AbstractProcess){
-            process = (AbstractProcess) context;
-        }else if(context == null){
-            process = null;
-        }
-    }
+	public void setFoundProcesses(List<AbstractProcess> processes){
+		this.processes = processes;
+	}
+	
 
-    @Override
-    public AbstractProcess getContext() {
-        return process;
-    }
+	@Override
+	public void setContext(final EObject context) {
+
+	}
+
+	@Override
+	public AbstractProcess getContext() {
+		return null;
+	}
 
 }
