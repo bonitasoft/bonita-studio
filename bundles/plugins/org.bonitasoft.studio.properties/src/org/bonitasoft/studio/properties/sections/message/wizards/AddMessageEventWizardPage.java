@@ -633,23 +633,21 @@ public class AddMessageEventWizardPage extends WizardPage implements
 				AbstractProcess proc = getProcessOnDiagram(
 						ModelHelper.getMainProcess(element),
 						procName.getContent());
-				if (proc == null) {
 					DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager
 							.getInstance().getRepositoryStore(
 									DiagramRepositoryStore.class);
-					List<AbstractProcess> otherProcesses = store
+					List<AbstractProcess> processes = store
 							.findProcesses(procName.getContent());
-					if (!otherProcesses.isEmpty()) {
-						proc = otherProcesses.get(0);
-					} else {
-						return;
+					if (proc != null) {
+						processes.add(proc);
 					}
-
+					catchEventNatureProvider.setFoundProcesses(processes);
+				}else{
+					catchEventNatureProvider.setFoundProcesses(null);
 				}
-				catchEventNatureProvider.setContext(proc);
+				
 				elementExpressionViewer.updateAutocompletionProposals();
 			}
-		}
 	}
 
 	private AbstractProcess getProcessOnDiagram(MainProcess mainProcess,
