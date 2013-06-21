@@ -17,6 +17,8 @@
 
 	<modules>
 		<module>de</module>
+		<module>org.bonitasoft.studio.bos.translations-feature</module>
+		<module>org.bonitasoft.studio.translations-feature</module>
 	</modules>
 
 </project>
