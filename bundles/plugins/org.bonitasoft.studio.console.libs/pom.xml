@@ -143,28 +143,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.console</groupId>
-			<artifactId>common-model</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.bonitasoft.console</groupId>
-			<artifactId>console-model</artifactId>
-			<version>${bundle.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>*</groupId>
-					<artifactId>*</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 	</dependencies>
 	<build>
 		<pluginManagement>
