@@ -217,7 +217,9 @@ public class FormPreviewPropertiesView extends ViewPart{
 		lnfCombo.setInput(repositoryStore.getApplicationLookNFeels());
 		lnfCombo.setSelection(new StructuredSelection(getCurrentLookNFeel()));
 		Form form = (Form) ((FormDiagramEditor)getSite().getPage().getActiveEditor()).getDiagramEditPart().resolveSemanticElement();
-		advancedFormPreview.setForm(form);
+		if (advancedFormPreview!=null){
+			advancedFormPreview.setForm(form);
+		}
 		//webBrowserCombo.setSelection(new StructuredSelection(BrowserManager.getInstance().getCurrentWebBrowser()));
 	}
 
