@@ -332,6 +332,9 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 						diagram.setBonitaModelVersion(ModelVersion.CURRENT_VERSION);
 					}	
 					diagram.setConfigId(ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId(diagram));
+					if(diagram.getAuthor() == null){
+						diagram.setAuthor(System.getProperty("user.name", "Unknown"));
+					}
 					try {
 						r.save(Collections.EMPTY_MAP);
 					} catch (IOException e) {
