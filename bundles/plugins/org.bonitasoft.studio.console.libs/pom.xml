@@ -333,7 +333,7 @@
 							 org.bonitasoft.forms.server.exception;version="0.0.0",
 							 org.bonitasoft.forms.server.provider.impl.util;version="0.0.0",
 							 org.bonitasoft.forms.server.validator;version="0.0.0",
-							 org.bonitasoft.theme.*;version="0.0.0";version="0.0.0"
+							 org.bonitasoft.theme.*;version="0.0.0"
 						</_exportcontents>
 						<_nouses>true</_nouses>
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
