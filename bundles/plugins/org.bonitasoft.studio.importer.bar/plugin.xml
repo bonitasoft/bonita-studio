@@ -12,5 +12,17 @@
             priorityDisplay="2">
       </importFactory>
    </extension>
+   <extension
+         point="org.bonitasoft.studio.connectors.connectorDefinitionMapper">
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.EmailConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.GroovyConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.JDBCConnectorMapper">
+      </connectorDefinitionMapper>
+   </extension>
 
 </plugin>

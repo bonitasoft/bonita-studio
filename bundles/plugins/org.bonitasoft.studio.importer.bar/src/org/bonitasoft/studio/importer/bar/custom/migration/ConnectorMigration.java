@@ -16,6 +16,10 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bonitasoft.studio.importer.bar.custom.migration.connector.Connector5Descriptor;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.eclipse.core.runtime.IStatus;
@@ -30,12 +34,31 @@ import org.eclipse.emf.edapt.migration.Model;
  */
 public class ConnectorMigration extends ReportCustomMigration {
 
+	private List<Connector5Descriptor> descriptors = new ArrayList<Connector5Descriptor>();
+
 	@Override
 	public void migrateBefore(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance connector : model.getAllInstances("process.Connector")){
-			addReportChange((String) connector.get("name"),connector.getType().getEClass().getName(), connector.getContainer().getUuid(), Messages.removeConnectorMigrationDescription, Messages.connectorProperty, IStatus.ERROR);
-			model.delete(connector);
+			final Connector5Descriptor connectorDescriptor = new Connector5Descriptor(connector);
+			if(connectorDescriptor.canBeMigrated()){
+				descriptors.add(connectorDescriptor);
+			}else{
+				addReportChange((String) connector.get("name"),connector.getType().getEClass().getName(), connector.getContainer().getUuid(), Messages.removeConnectorMigrationDescription, Messages.connectorProperty, IStatus.ERROR);
+				model.delete(connector);
+			}
+		}
+	}
+	
+	@Override
+	public void migrateAfter(Model model, Metamodel metamodel)
+			throws MigrationException {
+		for(Instance connector : model.getAllInstances("process.Connector")){
+			for(Connector5Descriptor descriptor : descriptors){
+				if(descriptor.appliesTo(connector)){
+					descriptor.migrate(model, connector, getConverter(model, getScope(connector)));
+				}
+			}
 		}
 	}
 }
