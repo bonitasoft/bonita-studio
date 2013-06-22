@@ -50,6 +50,9 @@ public class AvailableValuesReturnTypeConstraint extends AbstractLiveValidationM
 		if (eObj instanceof MultipleValuatedFormField) {
 			MultipleValuatedFormField widget = (MultipleValuatedFormField) eObj;
 			final Expression availableValues = widget.getInputExpression();
+			if(availableValues == null){
+				return ctx.createSuccessStatus();
+			}
 			String returnType = availableValues.getReturnType();
 			Class<?> returnTypeClass;
 			try {
