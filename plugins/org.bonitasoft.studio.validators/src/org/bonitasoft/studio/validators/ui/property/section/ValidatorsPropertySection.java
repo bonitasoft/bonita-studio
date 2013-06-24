@@ -323,10 +323,11 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
                         selection = ExpressionFactory.eINSTANCE.createExpression() ;
                         getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator, FormPackage.Literals.VALIDATOR__PARAMETER, selection)) ;
                     }
+                    parameterExpressionViewer.setInput(getValidable()) ;
                     expressionContext.bindValue(
                     		ViewerProperties.singleSelection().observe(parameterExpressionViewer),
                     		EMFEditProperties.value(getEditingDomain(), FormPackage.Literals.VALIDATOR__PARAMETER).observe(currentValidator));
-                    parameterExpressionViewer.setInput(currentValidator) ;
+                 
                 }
 
                 if(currentValidator != null){
@@ -336,10 +337,11 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
                         selection = ExpressionFactory.eINSTANCE.createExpression() ;
                         getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator, FormPackage.Literals.VALIDATOR__DISPLAY_NAME, selection)) ;
                     }
+                    labelExpressionViewer.setInput(getValidable()) ;
                     expressionContext.bindValue(
                     		ViewerProperties.singleSelection().observe(labelExpressionViewer),
                     		EMFEditProperties.value(getEditingDomain(), FormPackage.Literals.VALIDATOR__DISPLAY_NAME).observe(currentValidator));
-                    labelExpressionViewer.setInput(currentValidator) ;
+                 
                 }
                 updateButton();
             }
