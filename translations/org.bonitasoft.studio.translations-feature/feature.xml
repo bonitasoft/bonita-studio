@@ -390,23 +390,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.intro.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.jpdl.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.omg.schema.spec.bpmn.nl_pt_BR"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -3526,14 +3510,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.condition.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.condition.ui.nl_de"
          download-size="0"
          install-size="0"
@@ -4022,14 +3998,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.migration.nl_pt_BR"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.repository.themes.nl_de"
          download-size="0"
          install-size="0"
@@ -4188,8 +4156,8 @@
          version="0.0.0"
          fragment="true"
          unpack="false"/>
-         
-            <plugin
+
+   <plugin
          id="org.bonitasoft.studio.form.preview.nl_de"
          download-size="0"
          install-size="0"
