@@ -52,7 +52,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.intro.IIntroConstants;
 import org.eclipse.ui.intro.IIntroManager;
 import org.osgi.framework.Bundle;
 
@@ -441,11 +440,14 @@ public class PlatformUtil {
 	}
 
 	public static boolean isHeadless() {
-		String id = null ;
 		if(Platform.getCommandLineArgs().length > 1){
-			id = Platform.getCommandLineArgs()[1] ;
+			for(String arg : Platform.getCommandLineArgs()){
+				if(arg.equals("org.bonitasoft.studio.application.InitializerApplication") || arg.equals("org.bonitasoft.studio.application.WorkspaceRecovery")){
+					return true;
+				}
+			}
 		}
-		return id != null && (id.equals("org.bonitasoft.studio.application.InitializerApplication") || id.equals("org.bonitasoft.studio.application.WorkspaceRecovery"));
+		return false;
 	}
 
 	public static Properties getStudioGlobalProperties() {
