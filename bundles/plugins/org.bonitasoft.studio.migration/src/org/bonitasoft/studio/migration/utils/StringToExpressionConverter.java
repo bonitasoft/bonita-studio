@@ -44,6 +44,7 @@ public class StringToExpressionConverter {
 	private Map<String,Instance> data = new HashMap<String, Instance>();
 	private Map<String,Instance> widget = new HashMap<String, Instance>();
 	private Map<String,Instance> documents = new HashMap<String, Instance>();
+
 	private boolean useSimulationDataScope = false;
 
 
@@ -226,6 +227,8 @@ public class StringToExpressionConverter {
 		}
 	}
 	
+
+
 	public void resolveDocumentDependencies(Instance expression) {
 		final String content = expression.get("content");
 		for(String documentName : documents.keySet()){
@@ -251,7 +254,7 @@ public class StringToExpressionConverter {
 					validSuffix = true;
 				}
 				if(validPrefix && validSuffix){
-					Instance dependencyInstance = createDocumentDependencyInstance(documents.get(documentName));
+					Instance dependencyInstance = copyInstance(documents.get(documentName));
 					List<Instance> instList = expression.get("referencedElements");
 					if(!dependancyAlreadyExists(instList, dependencyInstance)){
 						expression.add("referencedElements", dependencyInstance);
@@ -261,8 +264,8 @@ public class StringToExpressionConverter {
 		}
 	}
 
-	private Instance createDocumentDependencyInstance(Instance documentInstance) {
-		Instance copy = documentInstance.copy();
+	private Instance copyInstance(Instance instance) {
+		Instance copy = instance.copy();
 		return copy;
 	}
 

@@ -57,6 +57,7 @@ public class ConnectorMigration extends ReportCustomMigration {
 			for(Connector5Descriptor descriptor : descriptors){
 				if(descriptor.appliesTo(connector)){
 					descriptor.migrate(model, connector, getConverter(model, getScope(connector)));
+					addReportChange((String) connector.get("name"),connector.getType().getEClass().getName(), connector.getContainer().getUuid(), Messages.connectorMigrationDescription, Messages.connectorProperty, IStatus.WARNING);
 				}
 			}
 		}

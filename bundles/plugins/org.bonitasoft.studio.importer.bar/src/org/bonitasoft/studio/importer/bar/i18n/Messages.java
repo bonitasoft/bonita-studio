@@ -130,6 +130,7 @@ public class Messages extends NLS {
 	public static String invalidArchiveStructure;
 	public static String startTimerCycleMigration;
 	public static String timerCondition;
+	public static String connectorMigrationDescription;
 	
 
     static {

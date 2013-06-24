@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
 import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
@@ -118,12 +117,6 @@ public class Connector5Descriptor {
 	private void addOutputs(Model model, Instance connectorInstance, StringToExpressionConverter converter) {
 		for(Entry<String, Object> output : outputs.entrySet()){
 			final Instance operation = converter.parseOperation(String.class.getName(), false, (String) output.getValue(), output.getKey());
-			Instance rightOp = operation.get("rightOperand");
-			if(rightOp != null){
-				rightOp.set("name", null);
-				rightOp.set("content", null);
-				rightOp.set("type", ExpressionConstants.CONSTANT_TYPE);
-			}
 			connectorInstance.add(OUTPUTS, operation);
 		}
 	}
