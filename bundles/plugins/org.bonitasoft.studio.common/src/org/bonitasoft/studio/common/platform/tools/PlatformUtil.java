@@ -59,7 +59,6 @@ import org.osgi.framework.Bundle;
  * @author Romain Bioteau
  *
  */
-@SuppressWarnings("restriction")
 public class PlatformUtil {
 
 	private static IFileSystem fileSystem; //SINGLETON
