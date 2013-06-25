@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.importer.bar.tests.TestBarImporterInput;
 import org.bonitasoft.studio.importer.bar.tests.TestSimpleMigrationUseCase;
 import org.bonitasoft.studio.importer.bar.tests.attachmentDataImport.AttachmentDataImportTest;
+import org.bonitasoft.studio.importer.bar.tests.connector.TestConnectorMigrationUseCase;
 import org.bonitasoft.studio.importer.bar.tests.examples.Test59ExampleImport;
 import org.bonitasoft.studio.importer.bar.tests.messagesImport.CorrelationMigrationTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -48,6 +49,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     TestBarImporterInput.class,
     TestSimpleMigrationUseCase.class,
+    TestConnectorMigrationUseCase.class,
     Test59ExampleImport.class,
     AttachmentDataImportTest.class,
     CorrelationMigrationTest.class,

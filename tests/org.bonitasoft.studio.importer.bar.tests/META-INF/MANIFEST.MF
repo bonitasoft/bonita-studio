@@ -27,5 +27,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer.bar.tests,
  org.bonitasoft.studio.importer.bar.tests.attachmentDataImport,
+ org.bonitasoft.studio.importer.bar.tests.connector,
  org.bonitasoft.studio.importer.bar.tests.examples,
  org.bonitasoft.studio.importer.bar.tests.messagesImport
+Import-Package: org.bonitasoft.engine.bpm.connector
