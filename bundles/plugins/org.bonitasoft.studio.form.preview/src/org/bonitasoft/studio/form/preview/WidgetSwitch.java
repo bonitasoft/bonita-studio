@@ -79,17 +79,6 @@ public class WidgetSwitch extends FormSwitch<Object> {
 	
 	
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.model.form.util.FormSwitch#caseCheckBoxSingleFormField(org.bonitasoft.studio.model.form.CheckBoxSingleFormField)
-	 */
-	@Override
-	public Object caseCheckBoxSingleFormField(CheckBoxSingleFormField object) {
-		Expression inputExpr = object.getInputExpression();
-		if (inputExpr.getContent()==null || inputExpr.getContent().isEmpty()){
-			inputExpr.setContent("\"item1\"");
-		}
-		return object;
-	}
 	
 
 	/* (non-Javadoc)
