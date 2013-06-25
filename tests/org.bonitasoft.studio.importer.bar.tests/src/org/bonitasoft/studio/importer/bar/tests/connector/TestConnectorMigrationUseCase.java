@@ -16,9 +16,10 @@
  */
 package org.bonitasoft.studio.importer.bar.tests.connector;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URL;
@@ -138,7 +139,18 @@ public class TestConnectorMigrationUseCase {
 		assertEquals("Invalid number of connector", 2, connectors.size()); 
 	}
 
-	
+	@Test
+	public void testConnectorInFormsMigration() throws Exception{
+		final URL url = TestConnectorMigrationUseCase.class.getResource("ConnectorInFormsUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		
+		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 9, connectors.size()); 
+	}
 
 
 }
