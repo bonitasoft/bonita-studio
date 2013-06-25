@@ -39,6 +39,7 @@ import org.bonitasoft.studio.importer.test.bos.TestBOSArchiveImport;
 import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportTest;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.properties.test.TestLookAndFeel;
 import org.bonitasoft.studio.simulation.tests.TestSimulationResourceRepository;
 import org.bonitasoft.studio.tests.CloseAllEditors;
 import org.bonitasoft.studio.tests.IHeapDumper;
@@ -79,6 +80,7 @@ import org.junit.runners.Suite;
     TestAutomaticSwitchPerspective.class,
     TestBOSArchiveImport.class,
     TestSimulationResourceRepository.class,
+    TestLookAndFeel.class,
     
     TestExportProcessBar.class,
     TestThemeRepository.class,
