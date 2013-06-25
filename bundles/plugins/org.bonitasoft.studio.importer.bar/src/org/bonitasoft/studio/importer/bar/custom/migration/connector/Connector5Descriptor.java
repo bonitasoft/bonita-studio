@@ -69,6 +69,9 @@ public class Connector5Descriptor {
 	private Map<String, Object> inputs = new HashMap<String,Object>();
 	private Map<String, Object> outputs = new HashMap<String,Object>();
 	private IConnectorDefinitionMapper definitionMapper;
+//	private Instance container;
+//	private EReference containementRef;
+
 
 	public Connector5Descriptor(Instance connectorInstance) {
 		this.uuid = connectorInstance.getUuid();
@@ -89,9 +92,17 @@ public class Connector5Descriptor {
 			String value = output.get(OUTPUT_EXPRESSION);
 			if(data != null){
 				outputs.put((String) data.get("name"), value);
+			}else{
+				Instance container = connectorInstance.getContainer();
+				if(container.instanceOf("form.Widget")){
+					String id = "field_"+container.get("name");
+					outputs.put(id, value);
+				}
 			}
 		}
 		definitionMapper = ConnectorIdToDefinitionMapping.getInstance().getDefinitionMapper(connectorId);
+//		this.container = container;
+//		this.containementRef= ref;
 	}
 
 	public boolean canBeMigrated(){

@@ -24,7 +24,11 @@ import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.SubmitFormButton;
 import org.bonitasoft.studio.model.process.Connector;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
@@ -38,81 +42,84 @@ import org.eclipse.swt.graphics.TextStyle;
  */
 public class StyledConnectorLabelProvider extends StyledCellLabelProvider implements ILabelProvider {
 
-    private final ConnectorDefRepositoryStore connectorDefStore;
-    private final DefinitionResourceProvider resourceProvider;
+	private final ConnectorDefRepositoryStore connectorDefStore;
+	private final DefinitionResourceProvider resourceProvider;
 	private List<ConnectorDefinition> definitions;
 
-    public StyledConnectorLabelProvider() {
-        super();
-        connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-        definitions = connectorDefStore.getDefinitions();
-        resourceProvider = DefinitionResourceProvider.getInstance(connectorDefStore, ConnectorPlugin.getDefault().getBundle()) ;
-    }
+	public StyledConnectorLabelProvider() {
+		super();
+		connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+		definitions = connectorDefStore.getDefinitions();
+		resourceProvider = DefinitionResourceProvider.getInstance(connectorDefStore, ConnectorPlugin.getDefault().getBundle()) ;
+	}
 
 
-    @Override
-    public String getToolTipText(Object element) {
-        return null;
-    }
+	@Override
+	public String getToolTipText(Object element) {
+		return null;
+	}
 
-    @Override
-    public void update(ViewerCell cell) {
-        if (cell.getElement() instanceof Connector) {
-            Connector connector = (Connector) cell.getElement();
-            ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion(),definitions) ;
-            if(def == null){
-            	def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion()) ;
-            }
-            StyledString styledString = new StyledString();
+	@Override
+	public void update(ViewerCell cell) {
+		if (cell.getElement() instanceof Connector) {
+			Connector connector = (Connector) cell.getElement();
+			ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion(),definitions) ;
+			if(def == null){
+				def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion()) ;
+			}
+			StyledString styledString = new StyledString();
 
-            styledString.append(getText(connector), null);
-            styledString.append(" -- ",StyledString.QUALIFIER_STYLER) ;
-            String connectorType = connector.getDefinitionId() +" ("+connector.getDefinitionVersion()+")";
-            styledString.append(connectorType, StyledString.DECORATIONS_STYLER);
-            if(connector.getEvent() != null && !connector.getEvent().isEmpty()){
-                styledString.append(" -- ",StyledString.QUALIFIER_STYLER) ;
-                styledString.append(connector.getEvent(), StyledString.COUNTER_STYLER);
-            }
-            if(def == null){
-                styledString.setStyle(0, styledString.length(), new org.eclipse.jface.viewers.StyledString.Styler() {
+			styledString.append(getText(connector), null);
+			styledString.append(" -- ",StyledString.QUALIFIER_STYLER) ;
+			String connectorType = connector.getDefinitionId() +" ("+connector.getDefinitionVersion()+")";
+			styledString.append(connectorType, StyledString.DECORATIONS_STYLER);
+			EObject parent = connector.eContainer();
+			if(!(parent instanceof Expression) && !(parent instanceof Form) && !(parent instanceof SubmitFormButton)){
+				if(connector.getEvent() != null && !connector.getEvent().isEmpty()){
+					styledString.append(" -- ",StyledString.QUALIFIER_STYLER) ;
+					styledString.append(connector.getEvent(), StyledString.COUNTER_STYLER);
+				}
+			}
+			if(def == null){
+				styledString.setStyle(0, styledString.length(), new org.eclipse.jface.viewers.StyledString.Styler() {
 
-                    @Override
-                    public void applyStyles(TextStyle textStyle) {
-                        textStyle.strikeout = true ;
-                    }
-                }) ;
-                styledString.append(" ");
-                styledString.append(Messages.bind(Messages.connectorDefinitionNotFound,connector.getDefinitionId() + " ("+connector.getDefinitionVersion()+")")) ;
-            }
+					@Override
+					public void applyStyles(TextStyle textStyle) {
+						textStyle.strikeout = true ;
+					}
+				}) ;
+				styledString.append(" ");
+				styledString.append(Messages.bind(Messages.connectorDefinitionNotFound,connector.getDefinitionId() + " ("+connector.getDefinitionVersion()+")")) ;
+			}
 
-            cell.setText(styledString.getString());
-            cell.setImage(getImage(connector)) ;
-            cell.setStyleRanges(styledString.getStyleRanges());
-        }
-    }
+			cell.setText(styledString.getString());
+			cell.setImage(getImage(connector)) ;
+			cell.setStyleRanges(styledString.getStyleRanges());
+		}
+	}
 
 
 
-    @Override
-    public Image getImage(Object element) {
-        if(element instanceof Connector){
-            ConnectorDefinition def = connectorDefStore.getDefinition(((Connector) element).getDefinitionId(),((Connector)element).getDefinitionVersion(),definitions) ;
-            if(def == null){
-            	def = connectorDefStore.getDefinition(((Connector) element).getDefinitionId(),((Connector)element).getDefinitionVersion()) ;
-            }
-            return resourceProvider.getDefinitionIcon(def) ;
-        }
-        return null;
-    }
+	@Override
+	public Image getImage(Object element) {
+		if(element instanceof Connector){
+			ConnectorDefinition def = connectorDefStore.getDefinition(((Connector) element).getDefinitionId(),((Connector)element).getDefinitionVersion(),definitions) ;
+			if(def == null){
+				def = connectorDefStore.getDefinition(((Connector) element).getDefinitionId(),((Connector)element).getDefinitionVersion()) ;
+			}
+			return resourceProvider.getDefinitionIcon(def) ;
+		}
+		return null;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-     */
-    @Override
-    public String getText(Object element) {
-        return ((Connector) element).getName();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+	 */
+	@Override
+	public String getText(Object element) {
+		return ((Connector) element).getName();
+	}
 }

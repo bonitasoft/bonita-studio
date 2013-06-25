@@ -7478,6 +7478,8 @@
     <changes xsi:type="history:CompositeChange">
       <changes xsi:type="history:Set" element="process.ecore#//Document/mimeType"
           featureName="containment" dataValue="true" oldDataValue="false"/>
+      <changes xsi:type="history:Set" element="expression.ecore#//Expression/connectors"
+          featureName="containment" dataValue="true" oldDataValue="false"/>
     </changes>
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="process.ecore#//Pool" referenceName="eStructuralFeatures"

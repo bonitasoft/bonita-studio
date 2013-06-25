@@ -27,7 +27,6 @@ import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.FormPackage;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
@@ -49,6 +48,9 @@ public class WidgetMigration extends ReportCustomMigration {
 	private Map<String, String> displayAfterEventDependsOnConditionScripts = new HashMap<String,String>();
 	private Map<String, String> helpMessages = new HashMap<String,String>();
 	private Map<String, String> injectWidgetScripts = new HashMap<String,String>();
+	private Map<String, Instance> initialValueConnectors = new HashMap<String, Instance>();
+	private Map<String, Instance> afterEventConnector = new HashMap<String, Instance>();
+
 
 	@Override
 	public void migrateBefore(Model model, Metamodel metamodel)
@@ -86,7 +88,25 @@ public class WidgetMigration extends ReportCustomMigration {
 				storeDisplayAfterEventDependsOnConditionScripts(widget);
 				storeHelpMessages(widget);
 				storeInjectWidgetScripts(widget);
+				storeInputConnectors(widget);
+				storeAfterEventConnectors(widget);
 			}
+		}
+	}
+
+	private void storeInputConnectors(Instance widget) {
+		List<Instance> connectors = widget.get("inputConnectors");
+		if(!connectors.isEmpty()){
+			final Instance instance = connectors.get(0);
+			initialValueConnectors.put(widget.getUuid(), instance.copy());
+		}
+	}
+
+	private void storeAfterEventConnectors(Instance widget) {
+		List<Instance> connectors = widget.get("afterEventConnectors");
+		if(!connectors.isEmpty()){
+			final Instance instance = connectors.get(0);
+			afterEventConnector.put(widget.getUuid(), instance.copy());
 		}
 	}
 
@@ -199,7 +219,18 @@ public class WidgetMigration extends ReportCustomMigration {
 
 	private void setScriptAfterEvents(Instance widget, Model model) {
 		Instance expression = null ;
-		if(scriptAfterEvents.containsKey(widget.getUuid())){
+		if(afterEventConnector.containsKey(widget.getUuid())){
+			Instance connector = afterEventConnector.get(widget.getUuid());
+			expression = model.newInstance("expression.Expression");
+			expression.set("name", connector.get("name"));
+			expression.set("content",  connector.get("name"));
+			expression.set("type", ExpressionConstants.CONNECTOR_TYPE);
+			List<Instance> outputs = connector.get("outputs");
+			if(outputs.isEmpty()){
+				connector.add("outputs", createWidgetOutput(model,connector));
+			}
+			expression.add("connectors", connector);
+		}else if(scriptAfterEvents.containsKey(widget.getUuid())){
 			expression = getConverter(model,getScope(widget)).parse(scriptAfterEvents.get(widget.getUuid()), Object.class.getName(), false);
 			String description = Messages.updateValueMigrationDescription;
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
@@ -303,7 +334,18 @@ public class WidgetMigration extends ReportCustomMigration {
 
 	private void setInputScripts(Instance widget,Model model) {
 		Instance expression = null;
-		if(widgetInputs.containsKey(widget.getUuid())){
+		if(initialValueConnectors.containsKey(widget.getUuid())){
+			Instance connector = initialValueConnectors.get(widget.getUuid());
+			expression = model.newInstance("expression.Expression");
+			expression.set("name", connector.get("name"));
+			expression.set("content",  connector.get("name"));
+			expression.set("type", ExpressionConstants.CONNECTOR_TYPE);
+			List<Instance> outputs = connector.get("outputs");
+			if(outputs.isEmpty()){
+				connector.add("outputs", createWidgetOutput(model,connector));
+			}
+			expression.add("connectors", connector);
+		}else if(widgetInputs.containsKey(widget.getUuid())){
 			expression = getConverter(model,getScope(widget)).parse(widgetInputs.get(widget.getUuid()), String.class.getName(), false);
 			if(ExpressionConstants.VARIABLE_TYPE.equals(expression.get("type"))){
 				Instance data = ((List<Instance>) expression.get("referencedElements")).get(0);
@@ -340,6 +382,13 @@ public class WidgetMigration extends ReportCustomMigration {
 			expression = StringToExpressionConverter.createExpressionInstance(model, "", "", String.class.getName(), ExpressionConstants.CONSTANT_TYPE, false);
 		}
 		widget.set("inputExpression", expression);
+	}
+
+	private Instance createWidgetOutput(Model model,Instance connector) {
+		Instance output = model.newInstance("expression.Operation");
+		Instance expression = model.newInstance("expression.Expression");
+		output.set("rightOperand", expression);
+		return output;
 	}
 
 	private String generateListScript(Instance datatype) {

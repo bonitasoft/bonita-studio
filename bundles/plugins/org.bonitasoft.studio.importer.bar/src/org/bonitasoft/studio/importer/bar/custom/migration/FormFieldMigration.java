@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -37,8 +38,12 @@ public class FormFieldMigration extends ReportCustomMigration {
 
 	private Map<String, String> exampleScripts = new HashMap<String,String>();
 	private Map<String, String> defaultValueScripts = new HashMap<String,String>();
+	private Map<String, Instance> defaultValueConnector = new HashMap<String,Instance>();
+	private Map<String, Instance> defaultConnectorAfterEvent = new HashMap<String,Instance>();
 	private Map<String, String> defaultValueAfterEventScripts = new HashMap<String,String>();
-	
+	private Map<String, Instance> initialValueConnectors = new HashMap<String, Instance>();
+	private Map<String, Instance> afterEventConnector = new HashMap<String, Instance>();
+
 	@Override
 	public void migrateBefore(Model model, Metamodel metamodel)
 			throws MigrationException {
@@ -52,7 +57,52 @@ public class FormFieldMigration extends ReportCustomMigration {
 			final Instance widgetContainer = widget.getContainer();
 			if(widgetContainer != null && !(widgetContainer.instanceOf("expression.Expression"))){
 				storeDefaultValues(widget);
+				storeDefaultValueConnector(widget);
 				storeDefaultValuesAfterEvent(widget);
+				storeDefaultValueAfterEventConnector(widget);
+				storeAfterEventConnectors(widget);
+				storeInputConnectors(widget);
+			}
+		}
+	}
+
+	private void storeDefaultValueAfterEventConnector(Instance widget) {
+		final Instance expression = widget.get("afterEventExpression");
+		if(expression != null){
+			final List<Instance> defaultValueConnectors = expression.get("connectors");
+			if(!defaultValueConnectors.isEmpty()){
+				defaultConnectorAfterEvent.put(widget.getUuid(),defaultValueConnectors.get(0).copy());	
+			}
+		}
+	}
+
+	private void storeDefaultValueConnector(Instance widget) {
+		final Instance expression = widget.get("inputExpression");
+		if(expression != null){
+			final List<Instance> defaultValueConnectors = expression.get("connectors");
+			if(!defaultValueConnectors.isEmpty()){
+				defaultValueConnector.put(widget.getUuid(),defaultValueConnectors.get(0).copy());	
+			}
+		}
+	}
+
+	private void storeInputConnectors(Instance widget) {
+		if(widget.instanceOf("form.MultipleValuatedFormField")){
+			List<Instance> connectors = widget.get("defaultConnectors");
+			if(!connectors.isEmpty()){
+				final Instance instance = connectors.get(0);
+				initialValueConnectors.put(widget.getUuid(), instance.copy());
+			}
+		}
+
+	}
+
+	private void storeAfterEventConnectors(Instance widget) {
+		if(widget.instanceOf("form.MultipleValuatedFormField")){
+			List<Instance> connectors = widget.get("defaultAfterEventConnectors");
+			if(!connectors.isEmpty()){
+				final Instance instance = connectors.get(0);
+				afterEventConnector.put(widget.getUuid(), instance.copy());
 			}
 		}
 	}
@@ -72,7 +122,7 @@ public class FormFieldMigration extends ReportCustomMigration {
 			exampleScripts.put(widget.getUuid(), exampleScript);
 		}
 	}
-	
+
 	private void storeDefaultValues(Instance widget) {
 		final String defaultValue = widget.get("defaultValue");
 		widget.set("defaultValue", null);
@@ -80,7 +130,7 @@ public class FormFieldMigration extends ReportCustomMigration {
 			defaultValueScripts.put(widget.getUuid(), defaultValue);
 		}
 	}
-	
+
 	@Override
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
@@ -94,9 +144,53 @@ public class FormFieldMigration extends ReportCustomMigration {
 			final Instance widgetContainer = widget.getContainer();
 			if(widgetContainer != null && !(widgetContainer.instanceOf("expression.Expression"))){
 				setDefaultValue(model, widget);
+				setInitialValueConnector(model, widget);
 				setDefaultValueAfterEvent(model, widget);
+				setAfterEventConnector(widget, model);
 			}
 		}
+	}
+
+	private void setInitialValueConnector(Model model, Instance widget) {
+		Instance expression = null;
+		if(initialValueConnectors.containsKey(widget.getUuid())){
+			Instance connector = initialValueConnectors.get(widget.getUuid());
+			expression = model.newInstance("expression.Expression");
+			expression.set("name", connector.get("name"));
+			expression.set("content",  connector.get("name"));
+			expression.set("type", ExpressionConstants.CONNECTOR_TYPE);
+			List<Instance> outputs = connector.get("outputs");
+			if(outputs.isEmpty()){
+				connector.add("outputs", createWidgetOutput(model,connector));
+			}
+			expression.add("connectors", connector);
+		}
+		Instance oldExpression = widget.get("inputExpression");
+		if(oldExpression != null){
+			model.delete(oldExpression);
+		}
+		widget.set("inputExpression", expression);
+	}
+
+	private void setAfterEventConnector(Instance widget, Model model) {
+		Instance expression = null ;
+		if(afterEventConnector.containsKey(widget.getUuid())){
+			Instance connector = afterEventConnector.get(widget.getUuid());
+			expression = model.newInstance("expression.Expression");
+			expression.set("name", connector.get("name"));
+			expression.set("content",  connector.get("name"));
+			expression.set("type", ExpressionConstants.CONNECTOR_TYPE);
+			List<Instance> outputs = connector.get("outputs");
+			if(outputs.isEmpty()){
+				connector.add("outputs", createWidgetOutput(model,connector));
+			}
+			expression.add("connectors", connector);
+		}
+		Instance oldExpression = widget.get("afterEventExpression");
+		if(oldExpression != null){
+			model.delete(oldExpression);
+		}
+		widget.set("afterEventExpression", expression);
 	}
 
 	private void setExampleMessage(Model model, Instance widget) {
@@ -112,10 +206,21 @@ public class FormFieldMigration extends ReportCustomMigration {
 		}
 		widget.set("exampleMessage", expression);
 	}
-	
+
 	private void setDefaultValue(Model model, Instance widget) {
 		Instance expression = null;
-		if(defaultValueScripts.containsKey(widget.getUuid())){
+		if(defaultValueConnector.containsKey(widget.getUuid())){
+			Instance connector = defaultValueConnector.get(widget.getUuid());
+			expression = model.newInstance("expression.Expression");
+			expression.set("name", connector.get("name"));
+			expression.set("content",  connector.get("name"));
+			expression.set("type", ExpressionConstants.CONNECTOR_TYPE);
+			List<Instance> outputs = connector.get("outputs");
+			if(outputs.isEmpty()){
+				connector.add("outputs", createWidgetOutput(model,connector));
+			}
+			expression.add("connectors", connector);
+		}else if(defaultValueScripts.containsKey(widget.getUuid())){
 			expression = getConverter(model,getScope(widget)).parse(defaultValueScripts.get(widget.getUuid()), String.class.getName(), false);
 			if(ExpressionConstants.VARIABLE_TYPE.equals(expression.get("type")) && getParentPageFlow(widget).instanceOf("process.Pool")){
 				model.delete(expression);
@@ -132,7 +237,14 @@ public class FormFieldMigration extends ReportCustomMigration {
 		}
 		widget.set("defaultExpression", expression);
 	}
-	
+
+	private Instance createWidgetOutput(Model model,Instance connector) {
+		Instance output = model.newInstance("expression.Operation");
+		Instance expression = model.newInstance("expression.Expression");
+		output.set("rightOperand", expression);
+		return output;
+	}
+
 	private Instance getParentPageFlow(Instance widget) {
 		Instance current =  widget.getContainer();
 		while(current != null && !current.instanceOf("process.AbstractPageFlow")){
@@ -140,10 +252,21 @@ public class FormFieldMigration extends ReportCustomMigration {
 		}
 		return current;
 	}
-	
+
 	private void setDefaultValueAfterEvent(Model model, Instance widget) {
 		Instance expression = null;
-		if(defaultValueAfterEventScripts.containsKey(widget.getUuid())){
+		if(defaultConnectorAfterEvent.containsKey(widget.getUuid())){
+			Instance connector = defaultConnectorAfterEvent.get(widget.getUuid());
+			expression = model.newInstance("expression.Expression");
+			expression.set("name", connector.get("name"));
+			expression.set("content",  connector.get("name"));
+			expression.set("type", ExpressionConstants.CONNECTOR_TYPE);
+			List<Instance> outputs = connector.get("outputs");
+			if(outputs.isEmpty()){
+				connector.add("outputs", createWidgetOutput(model,connector));
+			}
+			expression.add("connectors", connector);
+		}else if(defaultValueAfterEventScripts.containsKey(widget.getUuid())){
 			expression = getConverter(model,getScope(widget)).parse(defaultValueAfterEventScripts.get(widget.getUuid()), Object.class.getName(), false);
 			if(ExpressionConstants.SCRIPT_TYPE.equals(expression.get("type"))){
 				expression.set("name", "updateSelectedValueScript");
@@ -154,5 +277,5 @@ public class FormFieldMigration extends ReportCustomMigration {
 		}
 		widget.set("defaultExpressionAfterEvent", expression);
 	}
-	
+
 }
