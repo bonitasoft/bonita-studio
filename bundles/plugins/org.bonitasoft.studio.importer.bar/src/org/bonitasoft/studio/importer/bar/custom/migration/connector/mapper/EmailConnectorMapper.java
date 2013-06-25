@@ -42,7 +42,7 @@ public class EmailConnectorMapper extends AbstractConnectorDefinitionMapper impl
 	
 	@Override
 	public String getExpectedExpresstionType(String input, Object value) {
-		if(MESSAGE.equals(input) && !value.toString().startsWith("${")){
+		if(MESSAGE.equals(input) && !(value.toString().startsWith("${") && value.toString().endsWith("}"))){
 			return ExpressionConstants.PATTERN_TYPE;
 		}
 		return super.getExpectedExpresstionType(input, value);
