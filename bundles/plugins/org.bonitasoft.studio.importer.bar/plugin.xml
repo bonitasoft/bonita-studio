@@ -32,6 +32,21 @@
       <connectorDefinitionMapper
             class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.AS400ConnectorMapper">
       </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.MSSqlConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.PostgresConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.H2ConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.HSQLConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.DB2ConnectorMapper">
+      </connectorDefinitionMapper>
    </extension>
 
 </plugin>
