@@ -69,8 +69,6 @@ public class Connector5Descriptor {
 	private Map<String, Object> inputs = new HashMap<String,Object>();
 	private Map<String, Object> outputs = new HashMap<String,Object>();
 	private IConnectorDefinitionMapper definitionMapper;
-//	private Instance container;
-//	private EReference containementRef;
 
 
 	public Connector5Descriptor(Instance connectorInstance) {
@@ -101,8 +99,6 @@ public class Connector5Descriptor {
 			}
 		}
 		definitionMapper = ConnectorIdToDefinitionMapping.getInstance().getDefinitionMapper(connectorId);
-//		this.container = container;
-//		this.containementRef= ref;
 	}
 
 	public boolean canBeMigrated(){
