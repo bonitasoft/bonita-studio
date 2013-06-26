@@ -42,7 +42,7 @@ public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint{
     protected IStatus performLiveValidation(IValidationContext ctx) {
         final EObject eObj = ctx.getTarget();
         Object newValue = ctx.getFeatureNewValue();
-        if (eObj instanceof Element) {
+        if (eObj instanceof Element && !(eObj instanceof SequenceFlow)) {
             if (newValue == null || ((String) newValue).trim().isEmpty()) {
                 return ctx.createFailureStatus(new Object[] { eObj.eClass().getName() });
             }
