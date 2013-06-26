@@ -164,12 +164,13 @@ public class FormFieldMigration extends ReportCustomMigration {
 				connector.add("outputs", createWidgetOutput(model,connector));
 			}
 			expression.add("connectors", connector);
+			Instance oldExpression = widget.get("inputExpression");
+			if(oldExpression != null){
+				model.delete(oldExpression);
+			}
+			widget.set("inputExpression", expression);
 		}
-		Instance oldExpression = widget.get("inputExpression");
-		if(oldExpression != null){
-			model.delete(oldExpression);
-		}
-		widget.set("inputExpression", expression);
+		
 	}
 
 	private void setAfterEventConnector(Instance widget, Model model) {
@@ -185,12 +186,12 @@ public class FormFieldMigration extends ReportCustomMigration {
 				connector.add("outputs", createWidgetOutput(model,connector));
 			}
 			expression.add("connectors", connector);
+			Instance oldExpression = widget.get("afterEventExpression");
+			if(oldExpression != null){
+				model.delete(oldExpression);
+			}
+			widget.set("afterEventExpression", expression);
 		}
-		Instance oldExpression = widget.get("afterEventExpression");
-		if(oldExpression != null){
-			model.delete(oldExpression);
-		}
-		widget.set("afterEventExpression", expression);
 	}
 
 	private void setExampleMessage(Model model, Instance widget) {
