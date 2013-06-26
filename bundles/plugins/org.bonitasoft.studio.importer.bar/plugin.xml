@@ -23,6 +23,9 @@
       <connectorDefinitionMapper
             class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.JDBCConnectorMapper">
       </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.WebServiceConnectorMapper">
+      </connectorDefinitionMapper>
    </extension>
 
 </plugin>

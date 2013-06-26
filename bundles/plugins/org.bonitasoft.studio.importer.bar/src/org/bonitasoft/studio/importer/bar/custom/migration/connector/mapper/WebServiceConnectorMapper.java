@@ -24,42 +24,57 @@ import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
  * @author Romain Bioteau
  *
  */
-public class JDBCConnectorMapper extends AbstractConnectorDefinitionMapper implements IConnectorDefinitionMapper {
+public class WebServiceConnectorMapper extends AbstractConnectorDefinitionMapper implements IConnectorDefinitionMapper {
 
-	private static final String JDBC4_CONNECTOR_DEFINITION_ID = "database-jdbc";
-	private static final String LEGACY_JDBC_CONNECTOR_ID = "GenericJDBCConnector";
-	private static final String LEGACY_BATCH_JDBC_CONNECTOR_ID = "GenericJDBCBatchConnector";
+	private static final String LEGACY_WEBSERVICE_CONNECTOR_ID = "CXFClient";
+	private static final String LEGACY_SECURED_XML_WEBSERVICE_CONNECTOR_ID = "SecureWSConnectorCXF_2_4_0";
 	
-	private static final String LEGACY_QUERY_KEY = "setQuery";
-	private static final String SCRIPT = "script";
+
+	private static final String LEGACY_USERNAME = "setAuthUserName";
+	private static final String USERNAME = "userName";
+	private static final String LEGACY_PASSWORD = "setAuthPassword";
+	private static final String PASSWORD = "password";
+	private static final String LEGACY_ENVELOPPE = "setEnveloppe";
+	private static final String ENVELOPPE = "envelope";
+	private static final String WEBSERVICE_CONNECTOR_DEFINITION_ID = "webservice";
+	private static final Object LEGACY_REQUEST = "setRequest";
 
 	@Override
 	public boolean appliesTo(String legacyConnectorId) {
-		return legacyConnectorId != null && (legacyConnectorId.equals(LEGACY_JDBC_CONNECTOR_ID)
-				|| legacyConnectorId.equals(LEGACY_BATCH_JDBC_CONNECTOR_ID));
+		return legacyConnectorId != null && (legacyConnectorId.equals(LEGACY_WEBSERVICE_CONNECTOR_ID)
+				|| legacyConnectorId.equals(LEGACY_SECURED_XML_WEBSERVICE_CONNECTOR_ID));
 	}
 	
 	@Override
 	public String getLegacyConnectorId() {
-		return LEGACY_JDBC_CONNECTOR_ID;
+		return LEGACY_WEBSERVICE_CONNECTOR_ID;
 	}
 	
 	@Override
 	public String getDefinitionId() {
-		return JDBC4_CONNECTOR_DEFINITION_ID;
+		return WEBSERVICE_CONNECTOR_DEFINITION_ID;
 	}
 
 	@Override
 	public String getParameterKeyFor(String legacyParameterKey) {
-		if(LEGACY_QUERY_KEY.equals(legacyParameterKey)){
-			return SCRIPT;
+		if(LEGACY_USERNAME.equals(legacyParameterKey)){
+			return USERNAME;
+		}
+		if(LEGACY_PASSWORD.equals(legacyParameterKey)){
+			return PASSWORD;
+		}
+		if(LEGACY_REQUEST.equals(legacyParameterKey)){
+			return ENVELOPPE;
+		}
+		if(LEGACY_ENVELOPPE.equals(legacyParameterKey)){
+			return ENVELOPPE;
 		}
 		return super.getParameterKeyFor(legacyParameterKey);
 	}
 	
 	@Override
 	public String getExpectedExpresstionType(String input, Object value) {
-		if(SCRIPT.equals(input) && !(value.toString().startsWith("${") && value.toString().endsWith("}"))){
+		if(ENVELOPPE.equals(input) && !(value.toString().startsWith("${") && value.toString().endsWith("}"))){
 			return ExpressionConstants.PATTERN_TYPE;
 		}
 		return super.getExpectedExpresstionType(input, value);
