@@ -146,7 +146,7 @@ public class Connector5Descriptor {
 			if(parameterKeyFor != null){
 				final Instance parameter = model.newInstance("connectorconfiguration.ConnectorParameter");
 				parameter.set("key", parameterKeyFor);
-				parameter.set("expression", getParameterExpressionFor(model,parameterKeyFor,converter,definitionMapper.transformParameterValue(parameterKeyFor,input.getValue()),getReturnType(parameterKeyFor)));
+				parameter.set("expression", getParameterExpressionFor(model,parameterKeyFor,converter,definitionMapper.transformParameterValue(parameterKeyFor,input.getValue(),inputs),getReturnType(parameterKeyFor)));
 				configuration.add("parameters", parameter);
 			}else{
 				if(BonitaStudioLog.isLoggable(IStatus.OK)){

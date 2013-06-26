@@ -26,6 +26,12 @@
       <connectorDefinitionMapper
             class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.WebServiceConnectorMapper">
       </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.MySQLConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.AS400ConnectorMapper">
+      </connectorDefinitionMapper>
    </extension>
 
 </plugin>

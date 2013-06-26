@@ -16,40 +16,39 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper;
 
-import java.util.Map;
-
-import org.bonitasoft.studio.connectors.extension.AbstractConnectorDefinitionMapper;
 import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class GroovyConnectorMapper extends AbstractConnectorDefinitionMapper implements IConnectorDefinitionMapper {
+public class MySQLConnectorMapper extends AbstractDatabaseConnectorDefinitionMapper implements IConnectorDefinitionMapper {
 
-	private static final String GROOVY_SCRIPT_CONNECTOR_DEFINITION_ID = "scripting-groovy";
-	private static final String LEGACY_GROOVY_CONNECTOR_ID = "GroovyConnector";
-	private static final String SCRIPT = "script";
+	private static final String MYSQL_CONNECTOR_DEFINITION_ID = "database-mysql";
+	private static final String LEGACY_MYSQL_CONNECTOR_ID = "MySQL";
 
-
+	
 	@Override
 	public String getLegacyConnectorId() {
-		return LEGACY_GROOVY_CONNECTOR_ID;
-	}
-
-	@Override
-	public String getDefinitionId() {
-		return GROOVY_SCRIPT_CONNECTOR_DEFINITION_ID;
+		return LEGACY_MYSQL_CONNECTOR_ID;
 	}
 	
 	@Override
-	public Object transformParameterValue(String input, Object value,Map<String, Object> otherInputs) {
-		if(SCRIPT.equals(input) && value != null){
-			return "${"+value.toString()+"}";
-		}
-		return super.transformParameterValue(input, value,otherInputs);
+	public String getDefinitionId() {
+		return MYSQL_CONNECTOR_DEFINITION_ID;
 	}
 
+	
+	protected String getUrlPrefix() {
+		return "jdbc:mysql://";
+	}
+
+	@Override
+	protected String getUrlSuffix() {
+		return null;
+	}
+
+	
 
 
 }

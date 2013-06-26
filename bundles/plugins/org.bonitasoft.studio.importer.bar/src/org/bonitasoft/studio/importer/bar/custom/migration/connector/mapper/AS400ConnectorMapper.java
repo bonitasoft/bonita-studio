@@ -16,40 +16,36 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper;
 
-import java.util.Map;
-
-import org.bonitasoft.studio.connectors.extension.AbstractConnectorDefinitionMapper;
 import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
 
 /**
  * @author Romain Bioteau
  *
  */
-public class GroovyConnectorMapper extends AbstractConnectorDefinitionMapper implements IConnectorDefinitionMapper {
+public class AS400ConnectorMapper extends AbstractDatabaseConnectorDefinitionMapper implements IConnectorDefinitionMapper {
 
-	private static final String GROOVY_SCRIPT_CONNECTOR_DEFINITION_ID = "scripting-groovy";
-	private static final String LEGACY_GROOVY_CONNECTOR_ID = "GroovyConnector";
-	private static final String SCRIPT = "script";
+	private static final String AS400_CONNECTOR_DEFINITION_ID = "database-as400";
+	private static final String LEGACY_AS400_CONNECTOR_ID = "AS400";
 
 
 	@Override
 	public String getLegacyConnectorId() {
-		return LEGACY_GROOVY_CONNECTOR_ID;
-	}
-
-	@Override
-	public String getDefinitionId() {
-		return GROOVY_SCRIPT_CONNECTOR_DEFINITION_ID;
+		return LEGACY_AS400_CONNECTOR_ID;
 	}
 	
 	@Override
-	public Object transformParameterValue(String input, Object value,Map<String, Object> otherInputs) {
-		if(SCRIPT.equals(input) && value != null){
-			return "${"+value.toString()+"}";
-		}
-		return super.transformParameterValue(input, value,otherInputs);
+	public String getDefinitionId() {
+		return AS400_CONNECTOR_DEFINITION_ID;
 	}
 
+	protected String getUrlPrefix() {
+		return "jdbc:as400://";
+	}
+
+	@Override
+	protected String getUrlSuffix() {
+		return ";prompt=false";
+	}
 
 
 }
