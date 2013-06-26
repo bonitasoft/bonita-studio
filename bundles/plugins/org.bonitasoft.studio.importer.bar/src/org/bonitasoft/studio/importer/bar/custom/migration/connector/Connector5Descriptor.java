@@ -196,7 +196,11 @@ public class Connector5Descriptor {
 			}
 		}else{
 			if(BonitaStudioLog.isLoggable(IStatus.OK)){
-				BonitaStudioLog.debug(input +" value "+value.toString()+" cannot be transform to an expression", BarImporterPlugin.PLUGIN_ID);
+				String valueString = "null";
+				if(value != null){
+					valueString = value.toString();
+				}
+				BonitaStudioLog.debug(input +" value "+valueString+" cannot be transform to an expression", BarImporterPlugin.PLUGIN_ID);
 			}
 		}
 		return null;
