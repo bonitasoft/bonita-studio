@@ -16,6 +16,9 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bonitasoft.studio.connectors.extension.AbstractConnectorDefinitionMapper;
 import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
 
@@ -41,10 +44,24 @@ public class SalesForceCreateObjectConnectorMapper extends
 
 	@Override
 	public String getParameterKeyFor(String legacyParameterKey) {
-		if ("setPassword_securityToken".equals(legacyParameterKey)) {
-			// TODO : redirect to password + securityToken
-			// SecurityToen lenght always 25 ???
-		}
 		return super.getParameterKeyFor(legacyParameterKey);
+	}
+
+	@Override
+	public Map<String, Object> getAdditionalInputs(Map<String, Object> inputs) {
+		final Object o = inputs.get("setPassword_securityToken");
+		if(o!=null && o instanceof String){
+			String passwordAndSecurityToken = (String)o;
+			if(!isGroovyString(passwordAndSecurityToken) && (passwordAndSecurityToken.length() > 25)){
+				final int sep = passwordAndSecurityToken.length() - 25;
+				final String password = passwordAndSecurityToken.substring(0,sep);
+				final String securityToken = passwordAndSecurityToken.substring(sep);
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("password", password);
+				map.put("securityToken", securityToken);
+				return map;
+			}
+		}
+		return super.getAdditionalInputs(inputs);
 	}
 }
