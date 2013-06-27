@@ -63,12 +63,12 @@ public abstract class AbstractDatabaseConnectorDefinitionMapper extends
 		if(JDBC_URL_KEY.equals(parameterKeyFor) && value != null){
 			Object port = otherInputs.get(LEGACY_PORT_KEY);
 			String dbName = (String) otherInputs.get(LEGACY_DB_NAME_PORT_KEY);
-			return buildJdbcUrl(value.toString(),port != null ? port.toString() : null,dbName);
+			return buildJdbcUrl(value.toString(),port != null ? port.toString() : null,dbName,otherInputs);
 		}
 		return super.transformParameterValue(parameterKeyFor,value,otherInputs);
 	}
 
-	protected String buildJdbcUrl(String hostName,String port,String dbName) {
+	protected String buildJdbcUrl(String hostName,String port,String dbName, Map<String, Object> otherInputs) {
 		boolean constantHostName = true;
 		boolean constantPort = true;
 		boolean constantDbName = true;
@@ -105,9 +105,7 @@ public abstract class AbstractDatabaseConnectorDefinitionMapper extends
 					return "${\""+getUrlPrefix()+hostName+"/"+dbName+"}";
 				}
 			}
-			
 		}
-		
 	}
 	
 }

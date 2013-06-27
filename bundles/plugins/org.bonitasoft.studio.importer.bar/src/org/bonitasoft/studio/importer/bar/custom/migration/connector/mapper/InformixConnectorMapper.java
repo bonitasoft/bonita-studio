@@ -24,24 +24,25 @@ import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
  * @author Romain Bioteau
  *
  */
-public class H2ConnectorMapper extends AbstractDatabaseConnectorDefinitionMapper implements IConnectorDefinitionMapper {
+public class InformixConnectorMapper extends AbstractDatabaseConnectorDefinitionMapper implements IConnectorDefinitionMapper {
 
-	private static final String H2_CONNECTOR_DEFINITION_ID = "database-h2";
-	private static final String LEGACY_H2_CONNECTOR_ID = "H2";
+	private static final String INFORMIX_CONNECTOR_DEFINITION_ID = "database-informix";
+	private static final String LEGACY_INFORMIX_CONNECTOR_ID = "Informix";
 
-
+	
 	@Override
 	public String getLegacyConnectorId() {
-		return LEGACY_H2_CONNECTOR_ID;
+		return LEGACY_INFORMIX_CONNECTOR_ID;
 	}
-
+	
 	@Override
 	public String getDefinitionId() {
-		return H2_CONNECTOR_DEFINITION_ID;
+		return INFORMIX_CONNECTOR_DEFINITION_ID;
 	}
 
+	
 	protected String getUrlPrefix() {
-		return "jdbc:h2:";
+		return "jdbc:informix-sqli://";
 	}
 
 	@Override
@@ -49,14 +50,17 @@ public class H2ConnectorMapper extends AbstractDatabaseConnectorDefinitionMapper
 		return null;
 	}
 
+	@Override
 	protected String buildJdbcUrl(String hostName,String port,String dbName, Map<String, Object> otherInputs) {
 		boolean constantHostName = true;
 		boolean constantPort = true;
 		boolean constantDbName = true;
-
-		boolean isServer = (Boolean) (otherInputs.get("setServer") != null ? otherInputs.get("setServer") : false);
-		boolean isSSL = (Boolean) (otherInputs.get("setSsl") != null ? otherInputs.get("setSsl") : false);
-
+		boolean constantDbServer = true;
+		Object dbServer = otherInputs.get("setDbServer");
+		if(dbServer != null && isGroovyString(dbServer.toString())){
+			constantDbServer =false;
+			dbServer = "\"+"+dbServer.toString().substring(2, dbServer.toString().length()-1);
+		}
 		if(isGroovyString(hostName)){
 			constantHostName =false;
 			hostName = "\"+"+hostName.substring(2, hostName.length()-1)+"+\"";
@@ -67,47 +71,15 @@ public class H2ConnectorMapper extends AbstractDatabaseConnectorDefinitionMapper
 		}
 		if(isGroovyString(dbName)){
 			constantDbName =false;
-			dbName = "\"+"+dbName.substring(2, dbName.length()-1);
+			dbName = "\"+"+dbName.substring(2, dbName.length()-1)+"+\"";
 		}
-		if(constantPort && constantDbName && constantHostName){
-			if(isSSL || isServer){
-				if(isServer){
-					if(port != null){
-						return getUrlPrefix()+"tcp://"+hostName+":"+port+"/"+dbName;
-					}else{
-						return getUrlPrefix()+"tcp://"+hostName+"/"+dbName;
-					}
-				}else{
-					if(port != null){
-						return getUrlPrefix()+"ssl://"+hostName+":"+port+"/"+dbName;
-					}else{
-						return getUrlPrefix()+"ssl://"+hostName+"/"+dbName;
-					}
-				}
-
-			}else {
-				return getUrlPrefix()+"file:"+dbName;
-			}
-
+		if(constantPort && constantDbName && constantHostName && constantDbServer){
+			return getUrlPrefix()+hostName+":"+port+"/"+dbName+ ":informixserver="+ dbServer.toString();
 		}else{
-			if(isSSL || isServer){
-				if(isServer){
-					if(port != null){
-						return "${\""+getUrlPrefix()+"tcp://"+hostName+"/"+dbName+"}";
-					}else{
-						return "${\""+getUrlPrefix()+"tcp://"+hostName+":"+port+"/"+dbName+"}";
-					}
-				}else{
-					if(port != null){
-						return "${\""+getUrlPrefix()+"ssl://"+hostName+"/"+dbName+"}";
-					}else{
-						return "${\""+getUrlPrefix()+"ssl://"+hostName+":"+port+"/"+dbName+"}";
-					}
-				}
-			} else {
-				return "${\""+getUrlPrefix()+"file:"+dbName+"}";
-			}
+			return "${\""+getUrlPrefix()+hostName+":"+port+"/"+dbName+ ":informixserver="+ dbServer.toString()+"}";
 		}
+
 	}
+
 
 }

@@ -54,6 +54,21 @@
             class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.DB2ConnectorMapper">
       </connectorDefinitionMapper>
       <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.InformixConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.IngresConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.OracleConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.SybaseConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.TeradataConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
             class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.SapConnectorMapper">
       </connectorDefinitionMapper>
 

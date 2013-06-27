@@ -24,24 +24,25 @@ import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
  * @author Romain Bioteau
  *
  */
-public class HSQLConnectorMapper extends AbstractDatabaseConnectorDefinitionMapper implements IConnectorDefinitionMapper {
+public class OracleConnectorMapper extends AbstractDatabaseConnectorDefinitionMapper implements IConnectorDefinitionMapper {
 
-	private static final String HSQL_CONNECTOR_DEFINITION_ID = "database-hsqldb";
-	private static final String LEGACY_HSQL_CONNECTOR_ID = "HSQLDB";
+	private static final String ORACLE_CONNECTOR_DEFINITION_ID = "database-oracle11g";
+	private static final String LEGACY_ORACLE_CONNECTOR_ID = "Oracle";
 
 
 	@Override
 	public String getLegacyConnectorId() {
-		return LEGACY_HSQL_CONNECTOR_ID;
+		return LEGACY_ORACLE_CONNECTOR_ID;
 	}
 
 	@Override
 	public String getDefinitionId() {
-		return HSQL_CONNECTOR_DEFINITION_ID;
+		return ORACLE_CONNECTOR_DEFINITION_ID;
 	}
 
+
 	protected String getUrlPrefix() {
-		return "jdbc:hsqldb:";
+		return "jdbc:oracle:";
 	}
 
 	@Override
@@ -49,15 +50,15 @@ public class HSQLConnectorMapper extends AbstractDatabaseConnectorDefinitionMapp
 		return null;
 	}
 
+	@Override
 	protected String buildJdbcUrl(String hostName,String port,String dbName, Map<String, Object> otherInputs) {
 		boolean constantHostName = true;
 		boolean constantPort = true;
 		boolean constantDbName = true;
-
-		boolean isWebServer = (Boolean) (otherInputs.get("setWebServer") != null ? otherInputs.get("setWebServer") : false);
-		boolean isServer = (Boolean) (otherInputs.get("setServer") != null ? otherInputs.get("setServer") : false);
-		boolean isSSL = (Boolean) (otherInputs.get("setSsl") != null ? otherInputs.get("setSsl") : false);
-
+		Object sID = otherInputs.get("setOracleSID");
+		Object serviceName = otherInputs.get("setOracleServiceName");
+		boolean isOracleSID = sID != null ? Boolean.valueOf((Boolean) sID) : false;
+		boolean isServiceName = serviceName != null ? Boolean.valueOf((Boolean) serviceName) : false;
 		if(isGroovyString(hostName)){
 			constantHostName =false;
 			hostName = "\"+"+hostName.substring(2, hostName.length()-1)+"+\"";
@@ -71,38 +72,23 @@ public class HSQLConnectorMapper extends AbstractDatabaseConnectorDefinitionMapp
 			dbName = "\"+"+dbName.substring(2, dbName.length()-1);
 		}
 		if(constantPort && constantDbName && constantHostName){
-			if(isServer){
-				if(isSSL){
-					return getUrlPrefix()+"hsqls://"+hostName+":"+port+"/"+dbName;
-				}else{
-					return getUrlPrefix()+"hsql://"+hostName+":"+port+"/"+dbName;
-				}
-			}else if(isWebServer){
-				if(isSSL){
-					return getUrlPrefix()+"https://"+hostName+":"+port+"/"+dbName;
-				}else{
-					return getUrlPrefix()+"http://"+hostName+":"+port+"/"+dbName;
-				}
-			}else {
-				return getUrlPrefix()+"file:"+dbName;
+			if(isOracleSID){
+				return getUrlPrefix()+"thin:@"+hostName+":"+port+":"+dbName;
+			}else if(isServiceName){
+				return getUrlPrefix()+"thin:@(description=(address=(protocol=tcp)(host="+hostName+")(port="+port+"))(connect_data=(service_name="+dbName+")))";
+			}else{
+				return getUrlPrefix()+"oci8:@"+dbName;
 			}
 		}else{
-			if(isServer){
-				if(isSSL){
-					return "${\""+getUrlPrefix()+"hsqls://"+hostName+":"+port+"/"+dbName+"}";
-				}else{
-					return "${\""+getUrlPrefix()+"hsql://"+hostName+":"+port+"/"+dbName+"}";
-				}
-			}else if(isWebServer){
-				if(isSSL){
-					return "${\""+getUrlPrefix()+"https://"+hostName+":"+port+"/"+dbName+"}";
-				}else{
-					return "${\""+getUrlPrefix()+"http://"+hostName+":"+port+"/"+dbName+"}";
-				}
+			if(isOracleSID){
+				return "${\""+getUrlPrefix()+"thin:@"+hostName+":"+port+":"+dbName+"}";
+			}else if(isServiceName){
+				return "${\""+getUrlPrefix()+"thin:@(description=(address=(protocol=tcp)(host="+hostName+")(port="+port+"))(connect_data=(service_name="+dbName+")))}"; 
 			}else{
-				return "${\""+getUrlPrefix()+"file:"+dbName+"}";
+				return "${\""+getUrlPrefix()+"oci8:@"+dbName+"}";
 			}
+			
 		}
-	}
 
+	}
 }
