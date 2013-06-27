@@ -56,7 +56,7 @@
       <connectorDefinitionMapper
             class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.SapConnectorMapper">
       </connectorDefinitionMapper>
->>>>>>> .r27414
+
    </extension>
 
 </plugin>
