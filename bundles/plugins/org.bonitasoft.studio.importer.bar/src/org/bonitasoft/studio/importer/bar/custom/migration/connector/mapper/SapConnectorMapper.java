@@ -49,20 +49,6 @@ public class SapConnectorMapper extends AbstractConnectorDefinitionMapper
 		}
 		return super.getParameterKeyFor(legacyParameterKey);
 	}
-
-	@Override
-	public String getExpectedExpresstionType(String input, Object value) {
-		System.out.println(input);
-		return super.getExpectedExpresstionType(input, value);
-	}
-
-	@Override
-	public String getInputReturnType(String inputName) {
-		System.out.println(inputName);
-		return super.getInputReturnType(inputName);
-	}
-
-	
 	
 	@Override
 	public Object transformParameterValue(String parameterKeyFor, Object value, Map<String, Object> otherInputs) {
