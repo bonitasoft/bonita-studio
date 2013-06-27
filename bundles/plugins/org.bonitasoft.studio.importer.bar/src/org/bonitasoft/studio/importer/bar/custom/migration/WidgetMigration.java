@@ -72,9 +72,10 @@ public class WidgetMigration extends ReportCustomMigration {
 							Instance data = widget.get("enum");
 							if(data != null){
 								List<String> literals = widget.get("literals");
-								if(literals.isEmpty()){
+								Instance datatype = data.get("dataType");
+								if(literals.isEmpty() && datatype != null && datatype.instanceOf("process.EnumType")){
 									widgetInputs.put(widget.getUuid(), "${"+generateListScript((Instance) data.get("dataType"))+"}");
-								}else{
+								}else if(!literals.isEmpty()){
 									widgetInputs.put(widget.getUuid(), "${"+generateListScript(literals)+"}");
 								}
 							}
