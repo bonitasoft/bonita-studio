@@ -81,7 +81,7 @@ public class OracleConnectorMapper extends AbstractDatabaseConnectorDefinitionMa
 			}else if(isServiceName){
 				return "${\""+getUrlPrefix()+"thin:@(description=(address=(protocol=tcp)(host="+hostName+")(port="+port+"))(connect_data=(service_name="+dbName+")))}"; 
 			}else{
-				return "${\""+getUrlPrefix()+"oci8:@"+dbName+"}";
+				return "${\""+getUrlPrefix()+"oci:@"+dbName+"}";
 			}
 			
 		}
