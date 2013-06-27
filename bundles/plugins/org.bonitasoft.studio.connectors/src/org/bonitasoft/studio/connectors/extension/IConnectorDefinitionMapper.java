@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.connectors.extension;
 
+import java.util.Map;
+
 /**
  * @author Romain Bioteau
  *
@@ -34,7 +36,7 @@ public interface IConnectorDefinitionMapper {
 
 	String getInputReturnType(String inputName);
 
-	Object transformParameterValue(String parameterKeyFor, Object value);
+	Object transformParameterValue(String parameterKeyFor, Object value, Map<String, Object> otherInputs);
 
 	String getExpectedExpresstionType(String input, Object value);
 	

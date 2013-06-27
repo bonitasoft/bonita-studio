@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.connectors.extension;
 
+import java.util.Map;
+
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
@@ -72,7 +74,7 @@ public abstract class AbstractConnectorDefinitionMapper implements IConnectorDef
 	}
 
 	@Override
-	public Object transformParameterValue(String parameterKeyFor, Object value) {
+	public Object transformParameterValue(String parameterKeyFor, Object value, Map<String, Object> otherInputs) {
 		return value;
 	}
 
@@ -87,6 +89,10 @@ public abstract class AbstractConnectorDefinitionMapper implements IConnectorDef
 	@Override
 	public String getExpectedExpresstionType(String input, Object value) {
 		return null;
+	}
+	
+	protected boolean isGroovyString(String string) {
+		return string != null && string.startsWith("${") && string.endsWith("}");
 	}
 	
 }
