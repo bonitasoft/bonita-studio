@@ -341,5 +341,22 @@ public class TestConnectorMigrationUseCase {
 				"setPassword_securityToken parameter need to be split into password and securityToken in 6.0. I think security token lenght always be 25",
 				false);
 	}
+	
+	@Test
+	public void testAlfrescoConnectorsMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("AlfrescoConnectors--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
+
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 4, connectors.size());
+	}
 
 }
