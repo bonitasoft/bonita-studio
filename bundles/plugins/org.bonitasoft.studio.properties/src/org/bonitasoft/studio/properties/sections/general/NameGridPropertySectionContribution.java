@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.Processes
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.SpecialCharactersValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
@@ -224,6 +225,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 		labelTargetToModelUpdate = new UpdateValueStrategy();
 		labelTargetToModelUpdate.setAfterGetValidator(new UTF8InputValidator(Messages.name)) ;
 		labelTargetToModelUpdate.setBeforeSetValidator(new InputLengthValidator(Messages.name, 50)) ;
+		labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());
 
 		observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
 		observable.addValueChangeListener(new IValueChangeListener() {

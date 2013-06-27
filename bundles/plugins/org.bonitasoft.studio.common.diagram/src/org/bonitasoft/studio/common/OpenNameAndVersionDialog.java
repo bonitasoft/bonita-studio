@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
+import org.bonitasoft.studio.common.jface.databinding.validator.SpecialCharactersValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -207,12 +208,16 @@ public class OpenNameAndVersionDialog extends Dialog {
 		final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
 		final EmptyInputValidator emptyValidator = new EmptyInputValidator(Messages.name);
 		final InputLengthValidator lenghtValidator = new InputLengthValidator(Messages.name,50);
+		final SpecialCharactersValidator specialCharValidator = new SpecialCharactersValidator();
 		targetToModel.setAfterGetValidator(new IValidator() {
 
 			public IStatus validate(Object value) {
 				IStatus status = emptyValidator.validate(value);
 				if(status.isOK()){
 					status = lenghtValidator.validate(value);
+					if (status.isOK()){
+						status = specialCharValidator.validate(value);
+					}
 				}
 				return status;
 			}
