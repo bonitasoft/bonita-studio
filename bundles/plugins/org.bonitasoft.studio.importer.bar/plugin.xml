@@ -95,6 +95,9 @@
       <connectorDefinitionMapper
             class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.SalesForceDeleteObjectsConnectorMapper">
       </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.UploadFileAlfrescoConnectorMapper">
+      </connectorDefinitionMapper>
    </extension>
 
 </plugin>
