@@ -27,7 +27,6 @@ import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.bonitasoft.studio.model.form.FormFactory;
-import org.bonitasoft.studio.model.form.FormPackage;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
@@ -70,9 +69,10 @@ public class WidgetMigration extends ReportCustomMigration {
 							Instance data = widget.get("enum");
 							if(data != null){
 								List<String> literals = widget.get("literals");
-								if(literals.isEmpty()){
+								Instance datatype = data.get("dataType");
+								if(literals.isEmpty() && datatype != null && datatype.instanceOf("process.EnumType")){
 									widgetInputs.put(widget.getUuid(), "${"+generateListScript((Instance) data.get("dataType"))+"}");
-								}else{
+								}else if(!literals.isEmpty()){
 									widgetInputs.put(widget.getUuid(), "${"+generateListScript(literals)+"}");
 								}
 							}
