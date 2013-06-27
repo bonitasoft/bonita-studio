@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.connectors.extension;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -93,6 +94,11 @@ public abstract class AbstractConnectorDefinitionMapper implements IConnectorDef
 	
 	protected boolean isGroovyString(String string) {
 		return string != null && string.startsWith("${") && string.endsWith("}");
+	}
+	
+	@Override
+	public Map<String, Object> getAdditionalInputs(Map<String, Object> inputs) {
+		return Collections.emptyMap();
 	}
 	
 }

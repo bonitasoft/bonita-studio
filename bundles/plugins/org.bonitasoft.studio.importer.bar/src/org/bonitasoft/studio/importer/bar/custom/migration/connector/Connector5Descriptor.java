@@ -141,7 +141,10 @@ public class Connector5Descriptor {
 		final Instance configuration = model.newInstance("connectorconfiguration.ConnectorConfiguration");
 		configuration.set("definitionId",getDefinitionId());
 		configuration.set("version",getDefinitionVersion());
-		for(Entry<String, Object> input : inputs.entrySet()){
+		final Map<String,Object> additionalInputs = definitionMapper.getAdditionalInputs(inputs);
+		final Map<String,Object> allInput = new HashMap<String, Object>(inputs);
+		allInput.putAll(additionalInputs);
+		for(Entry<String, Object> input : allInput.entrySet()){
 			final String parameterKeyFor = getParameterKeyFor(input.getKey());
 			if(parameterKeyFor != null){
 				final Instance parameter = model.newInstance("connectorconfiguration.ConnectorParameter");
@@ -156,6 +159,7 @@ public class Connector5Descriptor {
 		}
 		return configuration;
 	}
+
 
 	private String getReturnType(String inputName) {
 		return definitionMapper.getInputReturnType(inputName);

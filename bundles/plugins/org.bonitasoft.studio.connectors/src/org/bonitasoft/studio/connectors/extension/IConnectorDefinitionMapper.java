@@ -39,5 +39,7 @@ public interface IConnectorDefinitionMapper {
 	Object transformParameterValue(String parameterKeyFor, Object value, Map<String, Object> otherInputs);
 
 	String getExpectedExpresstionType(String input, Object value);
+
+	Map<String, Object> getAdditionalInputs(Map<String, Object> inputs);
 	
 }

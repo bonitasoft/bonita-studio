@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -109,5 +110,5 @@ public abstract class AbstractDatabaseConnectorDefinitionMapper extends
 			}
 		}
 	}
-	
+
 }
