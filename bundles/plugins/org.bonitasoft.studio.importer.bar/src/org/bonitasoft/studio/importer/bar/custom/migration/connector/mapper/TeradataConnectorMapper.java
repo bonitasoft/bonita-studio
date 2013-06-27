@@ -43,12 +43,4 @@ public class TeradataConnectorMapper extends AbstractDatabaseConnectorDefinition
 		return "jdbc:teradata://";
 	}
 
-	@Override
-	protected String getUrlSuffix() {
-		return null;
-	}
-
-	
-
-
 }

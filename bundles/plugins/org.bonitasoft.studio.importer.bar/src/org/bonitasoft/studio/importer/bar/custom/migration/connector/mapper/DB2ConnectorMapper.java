@@ -42,10 +42,5 @@ public class DB2ConnectorMapper extends AbstractDatabaseConnectorDefinitionMappe
 		return "jdbc:db2://";
 	}
 
-	@Override
-	protected String getUrlSuffix() {
-		return null;
-	}
-
 
 }

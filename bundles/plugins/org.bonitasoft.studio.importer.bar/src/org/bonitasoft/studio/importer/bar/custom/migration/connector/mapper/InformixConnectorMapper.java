@@ -46,11 +46,6 @@ public class InformixConnectorMapper extends AbstractDatabaseConnectorDefinition
 	}
 
 	@Override
-	protected String getUrlSuffix() {
-		return null;
-	}
-
-	@Override
 	protected String buildJdbcUrl(String hostName,String port,String dbName, Map<String, Object> otherInputs) {
 		boolean constantHostName = true;
 		boolean constantPort = true;

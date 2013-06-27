@@ -44,11 +44,6 @@ public class H2ConnectorMapper extends AbstractDatabaseConnectorDefinitionMapper
 		return "jdbc:h2:";
 	}
 
-	@Override
-	protected String getUrlSuffix() {
-		return null;
-	}
-
 	protected String buildJdbcUrl(String hostName,String port,String dbName, Map<String, Object> otherInputs) {
 		boolean constantHostName = true;
 		boolean constantPort = true;

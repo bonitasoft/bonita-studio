@@ -43,12 +43,5 @@ public class IngresConnectorMapper extends AbstractDatabaseConnectorDefinitionMa
 		return "jdbc:ingres://";
 	}
 
-	@Override
-	protected String getUrlSuffix() {
-		return null;
-	}
-
-	
-
 
 }

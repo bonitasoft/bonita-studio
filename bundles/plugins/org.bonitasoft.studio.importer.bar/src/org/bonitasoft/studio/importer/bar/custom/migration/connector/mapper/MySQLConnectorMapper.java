@@ -43,12 +43,5 @@ public class MySQLConnectorMapper extends AbstractDatabaseConnectorDefinitionMap
 		return "jdbc:mysql://";
 	}
 
-	@Override
-	protected String getUrlSuffix() {
-		return null;
-	}
-
-	
-
 
 }

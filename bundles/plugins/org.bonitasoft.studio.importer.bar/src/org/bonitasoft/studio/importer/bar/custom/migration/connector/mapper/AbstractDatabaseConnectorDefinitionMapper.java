@@ -37,7 +37,9 @@ public abstract class AbstractDatabaseConnectorDefinitionMapper extends
 	
 	protected abstract String getUrlPrefix();
 	
-	protected abstract String getUrlSuffix();
+	protected String getUrlSuffix(){
+		return "";
+	}
 	
 	@Override
 	public String getParameterKeyFor(String legacyParameterKey) {

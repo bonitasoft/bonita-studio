@@ -44,11 +44,6 @@ public class HSQLConnectorMapper extends AbstractDatabaseConnectorDefinitionMapp
 		return "jdbc:hsqldb:";
 	}
 
-	@Override
-	protected String getUrlSuffix() {
-		return null;
-	}
-
 	protected String buildJdbcUrl(String hostName,String port,String dbName, Map<String, Object> otherInputs) {
 		boolean constantHostName = true;
 		boolean constantPort = true;

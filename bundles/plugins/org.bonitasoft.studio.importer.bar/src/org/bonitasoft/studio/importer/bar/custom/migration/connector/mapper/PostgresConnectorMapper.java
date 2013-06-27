@@ -43,12 +43,4 @@ public class PostgresConnectorMapper extends AbstractDatabaseConnectorDefinition
 		return "jdbc:postgresql://";
 	}
 
-	@Override
-	protected String getUrlSuffix() {
-		return null;
-	}
-
-	
-
-
 }

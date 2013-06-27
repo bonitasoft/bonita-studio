@@ -43,12 +43,5 @@ public class SybaseConnectorMapper extends AbstractDatabaseConnectorDefinitionMa
 		return "jdbc:sybase:Tds:";
 	}
 
-	@Override
-	protected String getUrlSuffix() {
-		return null;
-	}
-
-	
-
 
 }

@@ -45,10 +45,6 @@ public class OracleConnectorMapper extends AbstractDatabaseConnectorDefinitionMa
 		return "jdbc:oracle:";
 	}
 
-	@Override
-	protected String getUrlSuffix() {
-		return null;
-	}
 
 	@Override
 	protected String buildJdbcUrl(String hostName,String port,String dbName, Map<String, Object> otherInputs) {
@@ -77,7 +73,7 @@ public class OracleConnectorMapper extends AbstractDatabaseConnectorDefinitionMa
 			}else if(isServiceName){
 				return getUrlPrefix()+"thin:@(description=(address=(protocol=tcp)(host="+hostName+")(port="+port+"))(connect_data=(service_name="+dbName+")))";
 			}else{
-				return getUrlPrefix()+"oci8:@"+dbName;
+				return getUrlPrefix()+"oci:@"+dbName;
 			}
 		}else{
 			if(isOracleSID){
