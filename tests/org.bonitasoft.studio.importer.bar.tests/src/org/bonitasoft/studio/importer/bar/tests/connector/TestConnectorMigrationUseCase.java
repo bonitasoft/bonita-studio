@@ -182,6 +182,19 @@ public class TestConnectorMigrationUseCase {
 	}
 	
 	@Test
+	public void testDatabaseConnectorMigration() throws Exception{
+		final URL url = TestConnectorMigrationUseCase.class.getResource("DatabaseConnectorsUseCase--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		
+		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 18, connectors.size()); 
+	}
+	
+	@Test
 	public void testSapConnectorMigration() throws Exception {
 		final URL url = TestConnectorMigrationUseCase.class
 				.getResource("SapConnectorMigrationUseCase--1.0.bar");
