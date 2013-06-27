@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.bonitasoft.studio.connectors.extension.AbstractConnectorDefinitionMapper;
 import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
@@ -61,8 +62,10 @@ public class SapConnectorMapper extends AbstractConnectorDefinitionMapper
 		return super.getInputReturnType(inputName);
 	}
 
+	
+	
 	@Override
-	public Object transformParameterValue(String parameterKeyFor, Object value) {
+	public Object transformParameterValue(String parameterKeyFor, Object value, Map<String, Object> otherInputs) {
 		if (parameterKeyFor.equals("outputParameters")) {
 			ArrayList<Object> arrayValue = (ArrayList<Object>) value;
 			for (Object object : arrayValue) {
@@ -71,7 +74,7 @@ public class SapConnectorMapper extends AbstractConnectorDefinitionMapper
 			}
 			return value;
 		} else {
-			return super.transformParameterValue(parameterKeyFor, value);
+			return super.transformParameterValue(parameterKeyFor, value,otherInputs);
 		}
 	}
 }
