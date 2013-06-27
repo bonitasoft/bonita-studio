@@ -83,7 +83,7 @@ public class TestConnectorMigrationUseCase {
 		assertTrue(expression instanceof Expression);
 		assertEquals( ExpressionConstants.SCRIPT_TYPE,((Expression)expression).getType());
 		assertEquals(2,((Expression)expression).getReferencedElements().size());
-		
+
 		assertEquals(1,c.getOutputs().size());
 		Expression leftOp =  c.getOutputs().get(0).getLeftOperand();
 		Expression rightOp =  c.getOutputs().get(0).getLeftOperand();
@@ -91,10 +91,10 @@ public class TestConnectorMigrationUseCase {
 		assertNotNull(rightOp);
 		assertNotNull(leftOp);
 		assertNotNull(op);
-		
+
 		assertFalse(leftOp.getContent().isEmpty());
 		assertFalse(rightOp.getContent().isEmpty());
-		
+
 		assertEquals(ExpressionConstants.ASSIGNMENT_OPERATOR,op.getType());
 		assertEquals(ExpressionConstants.VARIABLE_TYPE,leftOp.getType());
 	}
@@ -107,12 +107,12 @@ public class TestConnectorMigrationUseCase {
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		
+
 		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size()); 
-	
+
 	}
-	
+
 	@Test
 	public void testEmailWithScriptConnectorMigration() throws Exception{
 		final URL url = TestConnectorMigrationUseCase.class.getResource("EmailConnectorWithScriptMessageMigrationUseCase--1.0.bar");
@@ -121,11 +121,11 @@ public class TestConnectorMigrationUseCase {
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		
+
 		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size()); 
 	}
-	
+
 	@Test
 	public void testJDBCConnectorMigration() throws Exception{
 		final URL url = TestConnectorMigrationUseCase.class.getResource("GenericJDBCConnectorMigration--1.0.bar");
@@ -134,7 +134,7 @@ public class TestConnectorMigrationUseCase {
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		
+
 		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 2, connectors.size()); 
 	}
@@ -147,10 +147,26 @@ public class TestConnectorMigrationUseCase {
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		
+
 		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 9, connectors.size()); 
 	}
+
+
+	@Test
+	public void testTalendConnectorsMigration() throws Exception{
+		final URL url = TestConnectorMigrationUseCase.class.getResource("talend_connectors.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+
+		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 2, connectors.size()); 
+	}
+
+
 
 	@Test
 	public void testWebServiceConnectorMigration() throws Exception{
@@ -181,4 +197,5 @@ public class TestConnectorMigrationUseCase {
 		assertEquals("Invalid number of connector", 1, connectors.size());
 	}
 	
+
 }
