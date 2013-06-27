@@ -41,53 +41,57 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class TestConnectorMigrationUseCase {
-
 
 	private static boolean disablepopup;
 
 	@BeforeClass
-	public static void disablePopup(){
+	public static void disablePopup() {
 		disablepopup = FileActionDialog.getDisablePopup();
 		FileActionDialog.setDisablePopup(true);
 	}
 
 	@AfterClass
-	public static void resetdisablePopup(){
+	public static void resetdisablePopup() {
 		FileActionDialog.setDisablePopup(disablepopup);
 	}
 
-
 	@Test
-	public void testGroovyConnectorMigration() throws Exception{
-		final URL url = TestConnectorMigrationUseCase.class.getResource("GroovyConnectorMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+	public void testGroovyConnectorMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("GroovyConnectorMigrationUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
 
-		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertEquals("Invalid number of connector", 1, connectors.size()); 
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
 		Connector c = connectors.get(0);
 		assertEquals("grrovyConnector", c.getName());
 		assertEquals(ConnectorEvent.ON_ENTER.name(), c.getEvent());
-		assertEquals(1,c.getConfiguration().getParameters().size());
-		final AbstractExpression expression = c.getConfiguration().getParameters().get(0).getExpression();
+		assertEquals(1, c.getConfiguration().getParameters().size());
+		final AbstractExpression expression = c.getConfiguration()
+				.getParameters().get(0).getExpression();
 		assertNotNull(expression);
 		assertTrue(expression instanceof Expression);
-		assertEquals( ExpressionConstants.SCRIPT_TYPE,((Expression)expression).getType());
-		assertEquals(2,((Expression)expression).getReferencedElements().size());
+		assertEquals(ExpressionConstants.SCRIPT_TYPE,
+				((Expression) expression).getType());
+		assertEquals(2, ((Expression) expression).getReferencedElements()
+				.size());
 
-		assertEquals(1,c.getOutputs().size());
-		Expression leftOp =  c.getOutputs().get(0).getLeftOperand();
-		Expression rightOp =  c.getOutputs().get(0).getLeftOperand();
-		Operator op =  c.getOutputs().get(0).getOperator();
+		assertEquals(1, c.getOutputs().size());
+		Expression leftOp = c.getOutputs().get(0).getLeftOperand();
+		Expression rightOp = c.getOutputs().get(0).getLeftOperand();
+		Operator op = c.getOutputs().get(0).getOperator();
 		assertNotNull(rightOp);
 		assertNotNull(leftOp);
 		assertNotNull(op);
@@ -95,105 +99,130 @@ public class TestConnectorMigrationUseCase {
 		assertFalse(leftOp.getContent().isEmpty());
 		assertFalse(rightOp.getContent().isEmpty());
 
-		assertEquals(ExpressionConstants.ASSIGNMENT_OPERATOR,op.getType());
-		assertEquals(ExpressionConstants.VARIABLE_TYPE,leftOp.getType());
+		assertEquals(ExpressionConstants.ASSIGNMENT_OPERATOR, op.getType());
+		assertEquals(ExpressionConstants.VARIABLE_TYPE, leftOp.getType());
 	}
 
 	@Test
-	public void testEmailConnectorMigration() throws Exception{
-		final URL url = TestConnectorMigrationUseCase.class.getResource("EmailConnectorMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+	public void testEmailConnectorMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("EmailConnectorMigrationUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
 
-		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertEquals("Invalid number of connector", 1, connectors.size()); 
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
 
 	}
 
 	@Test
-	public void testEmailWithScriptConnectorMigration() throws Exception{
-		final URL url = TestConnectorMigrationUseCase.class.getResource("EmailConnectorWithScriptMessageMigrationUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+	public void testEmailWithScriptConnectorMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("EmailConnectorWithScriptMessageMigrationUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
 
-		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertEquals("Invalid number of connector", 1, connectors.size()); 
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
 	}
 
 	@Test
-	public void testJDBCConnectorMigration() throws Exception{
-		final URL url = TestConnectorMigrationUseCase.class.getResource("GenericJDBCConnectorMigration--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+	public void testJDBCConnectorMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("GenericJDBCConnectorMigration--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
 
-		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertEquals("Invalid number of connector", 2, connectors.size()); 
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 2, connectors.size());
 	}
 
 	@Test
-	public void testConnectorInFormsMigration() throws Exception{
-		final URL url = TestConnectorMigrationUseCase.class.getResource("ConnectorInFormsUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+	public void testConnectorInFormsMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("ConnectorInFormsUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
 
-		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertEquals("Invalid number of connector", 9, connectors.size()); 
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 9, connectors.size());
 	}
-
 
 	@Test
-	public void testTalendConnectorsMigration() throws Exception{
-		final URL url = TestConnectorMigrationUseCase.class.getResource("talend_connectors.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+	public void testTalendConnectorsMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("talend_connectors.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
 
-		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertEquals("Invalid number of connector", 2, connectors.size()); 
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 2, connectors.size());
 	}
-
-
 
 	@Test
-	public void testWebServiceConnectorMigration() throws Exception{
-		final URL url = TestConnectorMigrationUseCase.class.getResource("WebServiceConnectorMigration--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+	public void testWebServiceConnectorMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("WebServiceConnectorMigration--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		
-		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertEquals("Invalid number of connector", 2, connectors.size()); 
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
+
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 2, connectors.size());
 	}
-	
+
 	@Test
-	public void testDatabaseConnectorMigration() throws Exception{
-		final URL url = TestConnectorMigrationUseCase.class.getResource("DatabaseConnectorsUseCase--1.0.bar");
-		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+	public void testDatabaseConnectorMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("DatabaseConnectorsUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
 		assertNotNull("Fail to migrate bar file", migratedProc);
 		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
-		
-		final List<Connector> connectors =  ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertEquals("Invalid number of connector", 18, connectors.size()); 
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
+
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 18, connectors.size());
 	}
-	
+
 	@Test
 	public void testSapConnectorMigration() throws Exception {
 		final URL url = TestConnectorMigrationUseCase.class
@@ -209,6 +238,108 @@ public class TestConnectorMigrationUseCase {
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
 	}
-	
+
+	@Test
+	public void testSalesForceCreateObjectConnectorMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("SalesforceCreateObjectMigrationUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
+
+		assertTrue(
+				"setPassword_securityToken parameter need to be split into password and securityToken in 6.0. I think security token lenght always be 25",
+				false);
+
+	}
+
+	@Test
+	public void testSalesForceDeleteObjectsConnectorMigration()
+			throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("SalesforceDeleteObjectsMigrationUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
+
+		assertTrue(
+				"setPassword_securityToken parameter need to be split into password and securityToken in 6.0. I think security token lenght always be 25",
+				false);
+	}
+
+	@Test
+	public void testSalesForceQueryObjectsConnectorMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("SalesforceQueryObjectsMigrationUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
+
+		assertTrue(
+				"setPassword_securityToken parameter need to be split into password and securityToken in 6.0. I think security token lenght always be 25",
+				false);
+	}
+
+	@Test
+	public void testSalesForceRetrieveObjectsConnectorMigration()
+			throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("SalesforceRetrieveObjectsMigrationUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
+
+		assertTrue(
+				"setPassword_securityToken parameter need to be split into password and securityToken in 6.0. I think security token lenght always be 25",
+				false);
+	}
+
+	@Test
+	public void testSalesForceUpdateObjectConnectorMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("SalesforceUpdateObjectMigrationUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
+
+		assertTrue(
+				"setPassword_securityToken parameter need to be split into password and securityToken in 6.0. I think security token lenght always be 25",
+				false);
+	}
 
 }
