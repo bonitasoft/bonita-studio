@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.bonitasoft.studio.connector.model.definition.Category#getIcon <em>Icon</em>}</li>
  *   <li>{@link org.bonitasoft.studio.connector.model.definition.Category#getId <em>Id</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.connector.model.definition.Category#getParentCategoryId <em>Parent Category Id</em>}</li>
  * </ul>
  * </p>
  *
@@ -79,5 +80,32 @@ public interface Category extends EObject {
 	 * @generated
 	 */
     void setId(String value);
+
+				/**
+	 * Returns the value of the '<em><b>Parent Category Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Parent Category Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Parent Category Id</em>' attribute.
+	 * @see #setParentCategoryId(String)
+	 * @see org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage#getCategory_ParentCategoryId()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.String"
+	 *        extendedMetaData="kind='attribute' name='parentCategoryId'"
+	 * @generated
+	 */
+	String getParentCategoryId();
+
+				/**
+	 * Sets the value of the '{@link org.bonitasoft.studio.connector.model.definition.Category#getParentCategoryId <em>Parent Category Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Parent Category Id</em>' attribute.
+	 * @see #getParentCategoryId()
+	 * @generated
+	 */
+	void setParentCategoryId(String value);
 
 } // Category

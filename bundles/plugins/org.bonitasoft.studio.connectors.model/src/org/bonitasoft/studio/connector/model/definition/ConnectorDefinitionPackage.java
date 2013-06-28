@@ -44,7 +44,7 @@ public interface ConnectorDefinitionPackage extends EPackage {
      * <!-- end-user-doc -->
 	 * @generated
 	 */
-    String eNS_URI = "http://www.bonitasoft.org/ns/connector/definition/6.0";
+    String eNS_URI = "http://www.bonitasoft.org/ns/connector/definition/6.1";
 
     /**
 	 * The package namespace name.
@@ -275,13 +275,22 @@ public interface ConnectorDefinitionPackage extends EPackage {
     int CATEGORY__ID = 1;
 
     /**
+	 * The feature id for the '<em><b>Parent Category Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY__PARENT_CATEGORY_ID = 2;
+
+				/**
 	 * The number of structural features of the '<em>Category</em>' class.
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-    int CATEGORY_FEATURE_COUNT = 2;
+    int CATEGORY_FEATURE_COUNT = 3;
 
     /**
 	 * The meta object id for the '{@link org.bonitasoft.studio.connector.model.definition.impl.CheckboxImpl <em>Checkbox</em>}' class.
@@ -1182,6 +1191,17 @@ public interface ConnectorDefinitionPackage extends EPackage {
     EAttribute getCategory_Id();
 
     /**
+	 * Returns the meta object for the attribute '{@link org.bonitasoft.studio.connector.model.definition.Category#getParentCategoryId <em>Parent Category Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Parent Category Id</em>'.
+	 * @see org.bonitasoft.studio.connector.model.definition.Category#getParentCategoryId()
+	 * @see #getCategory()
+	 * @generated
+	 */
+	EAttribute getCategory_ParentCategoryId();
+
+				/**
 	 * Returns the meta object for class '{@link org.bonitasoft.studio.connector.model.definition.Checkbox <em>Checkbox</em>}'.
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1823,6 +1843,14 @@ public interface ConnectorDefinitionPackage extends EPackage {
         EAttribute CATEGORY__ID = eINSTANCE.getCategory_Id();
 
         /**
+		 * The meta object literal for the '<em><b>Parent Category Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CATEGORY__PARENT_CATEGORY_ID = eINSTANCE.getCategory_ParentCategoryId();
+
+								/**
 		 * The meta object literal for the '{@link org.bonitasoft.studio.connector.model.definition.impl.CheckboxImpl <em>Checkbox</em>}' class.
 		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->

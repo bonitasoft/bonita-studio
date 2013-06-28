@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <ul>
  *   <li>{@link org.bonitasoft.studio.connector.model.definition.impl.CategoryImpl#getIcon <em>Icon</em>}</li>
  *   <li>{@link org.bonitasoft.studio.connector.model.definition.impl.CategoryImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.bonitasoft.studio.connector.model.definition.impl.CategoryImpl#getParentCategoryId <em>Parent Category Id</em>}</li>
  * </ul>
  * </p>
  *
@@ -72,6 +73,26 @@ public class CategoryImpl extends EObjectImpl implements Category {
     protected String id = ID_EDEFAULT;
 
     /**
+	 * The default value of the '{@link #getParentCategoryId() <em>Parent Category Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getParentCategoryId()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String PARENT_CATEGORY_ID_EDEFAULT = null;
+
+				/**
+	 * The cached value of the '{@link #getParentCategoryId() <em>Parent Category Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getParentCategoryId()
+	 * @generated
+	 * @ordered
+	 */
+	protected String parentCategoryId = PARENT_CATEGORY_ID_EDEFAULT;
+
+				/**
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @generated
@@ -134,6 +155,27 @@ public class CategoryImpl extends EObjectImpl implements Category {
 
     /**
 	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getParentCategoryId() {
+		return parentCategoryId;
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setParentCategoryId(String newParentCategoryId) {
+		String oldParentCategoryId = parentCategoryId;
+		parentCategoryId = newParentCategoryId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ConnectorDefinitionPackage.CATEGORY__PARENT_CATEGORY_ID, oldParentCategoryId, parentCategoryId));
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @generated
 	 */
@@ -144,6 +186,8 @@ public class CategoryImpl extends EObjectImpl implements Category {
 				return getIcon();
 			case ConnectorDefinitionPackage.CATEGORY__ID:
 				return getId();
+			case ConnectorDefinitionPackage.CATEGORY__PARENT_CATEGORY_ID:
+				return getParentCategoryId();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -161,6 +205,9 @@ public class CategoryImpl extends EObjectImpl implements Category {
 				return;
 			case ConnectorDefinitionPackage.CATEGORY__ID:
 				setId((String)newValue);
+				return;
+			case ConnectorDefinitionPackage.CATEGORY__PARENT_CATEGORY_ID:
+				setParentCategoryId((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -180,6 +227,9 @@ public class CategoryImpl extends EObjectImpl implements Category {
 			case ConnectorDefinitionPackage.CATEGORY__ID:
 				setId(ID_EDEFAULT);
 				return;
+			case ConnectorDefinitionPackage.CATEGORY__PARENT_CATEGORY_ID:
+				setParentCategoryId(PARENT_CATEGORY_ID_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -196,6 +246,8 @@ public class CategoryImpl extends EObjectImpl implements Category {
 				return ICON_EDEFAULT == null ? icon != null : !ICON_EDEFAULT.equals(icon);
 			case ConnectorDefinitionPackage.CATEGORY__ID:
 				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case ConnectorDefinitionPackage.CATEGORY__PARENT_CATEGORY_ID:
+				return PARENT_CATEGORY_ID_EDEFAULT == null ? parentCategoryId != null : !PARENT_CATEGORY_ID_EDEFAULT.equals(parentCategoryId);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -214,6 +266,8 @@ public class CategoryImpl extends EObjectImpl implements Category {
 		result.append(icon);
 		result.append(", id: ");
 		result.append(id);
+		result.append(", parentCategoryId: ");
+		result.append(parentCategoryId);
 		result.append(')');
 		return result.toString();
 	}

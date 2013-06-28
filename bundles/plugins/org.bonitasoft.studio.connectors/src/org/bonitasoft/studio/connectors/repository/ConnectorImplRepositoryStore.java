@@ -16,21 +16,42 @@
  */
 package org.bonitasoft.studio.connectors.repository;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationAdapterFactory;
+import org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationResourceImpl;
+import org.bonitasoft.studio.connector.model.implementation.util.ConnectorImplementationXMLProcessor;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
+import org.eclipse.emf.edapt.history.Release;
+import org.eclipse.emf.edapt.migration.MigrationException;
+import org.eclipse.emf.edapt.migration.execution.Migrator;
+import org.eclipse.emf.edapt.migration.execution.ValidationLevel;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.swt.graphics.Image;
 
@@ -180,6 +201,41 @@ public class ConnectorImplRepositoryStore extends AbstractEMFRepositoryStore<Con
 		return null;
 	}
 
+	@Override
+    protected void performMigration(Migrator migrator, URI resourceURI,
+    		Release release) throws MigrationException {
+		migrator.setLevel(ValidationLevel.NONE);
+		ResourceSet rSet = migrator.migrateAndLoad(
+				Collections.singletonList(resourceURI), release,
+				null, Repository.NULL_PROGRESS_MONITOR);
+		if(!rSet.getResources().isEmpty()){
+			FileOutputStream fos = null;
+			try{
+				ConnectorImplementationResourceImpl r = (ConnectorImplementationResourceImpl) rSet.getResources().get(0);
+				Resource resource = new XMLResourceImpl(resourceURI) ;
+				org.bonitasoft.studio.connector.model.implementation.DocumentRoot root = ConnectorImplementationFactory.eINSTANCE.createDocumentRoot() ;
+				final ConnectorImplementation definition = EcoreUtil.copy(((org.bonitasoft.studio.connector.model.implementation.DocumentRoot)r.getContents().get(0)).getConnectorImplementation());
+				root.setConnectorImplementation(definition);
+				resource.getContents().add(root) ;
+				Map<String, String> options = new HashMap<String, String>() ;
+				options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+				options.put(XMLResource.OPTION_XML_VERSION, "1.0");
+				File target = new File(resourceURI.toFileString());
+				fos = new FileOutputStream(target)  ;
+				new ConnectorImplementationXMLProcessor().save(fos, resource, options)  ;
+			}catch (Exception e) {
+				BonitaStudioLog.error(e, ConnectorPlugin.PLUGIN_ID);
+			}finally{
+				if(fos != null){
+					try {
+						fos.close() ;
+					} catch (IOException e) {
+						BonitaStudioLog.error(e,ConnectorPlugin.PLUGIN_ID);
+					}
+				}
+			}
+		}
 
+    }
 
 }

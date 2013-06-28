@@ -37,6 +37,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -49,8 +50,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class CategorySelectionDialog extends Dialog {
 
-
-    private TableViewer categoryViewer;
+    private TreeViewer categoryViewer;
     private List<Category> categories  = new ArrayList<Category>() ;
     private DataBindingContext context;
     private final DefinitionResourceProvider messageProvider;
@@ -75,9 +75,9 @@ public class CategorySelectionDialog extends Dialog {
 
         context = new DataBindingContext() ;
 
-        categoryViewer = new TableViewer(mainComposite, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION) ;
-        categoryViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-        categoryViewer.setContentProvider(new ArrayContentProvider()) ;
+        categoryViewer = new TreeViewer(mainComposite, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION) ;
+        categoryViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
+        categoryViewer.setContentProvider(new DefinitionCategoryContentProvider()) ;
         categoryViewer.setLabelProvider(new ConnectorDefinitionTreeLabelProvider(messageProvider)) ;
         categoryViewer.setInput(getAllCategories()) ;
         final IViewerObservableList observeSelection = ViewerProperties.multipleSelection().observe(categoryViewer);

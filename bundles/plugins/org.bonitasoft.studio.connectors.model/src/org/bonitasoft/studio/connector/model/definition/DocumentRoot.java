@@ -61,7 +61,7 @@ public interface DocumentRoot extends EObject {
      * <!-- end-user-doc -->
 	 * @return the value of the '<em>XMLNS Prefix Map</em>' map.
 	 * @see org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage#getDocumentRoot_XMLNSPrefixMap()
-	 * @model mapType="org.eclipse.emf.ecore.EStringToStringMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>" transient="true"
+	 * @model mapType="org.eclipse.emf.ecore.EStringToStringMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>"
 	 *        extendedMetaData="kind='attribute' name='xmlns:prefix'"
 	 * @generated
 	 */
@@ -79,7 +79,7 @@ public interface DocumentRoot extends EObject {
      * <!-- end-user-doc -->
 	 * @return the value of the '<em>XSI Schema Location</em>' map.
 	 * @see org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage#getDocumentRoot_XSISchemaLocation()
-	 * @model mapType="org.eclipse.emf.ecore.EStringToStringMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>" transient="true"
+	 * @model mapType="org.eclipse.emf.ecore.EStringToStringMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>"
 	 *        extendedMetaData="kind='attribute' name='xsi:schemaLocation'"
 	 * @generated
 	 */
@@ -96,7 +96,7 @@ public interface DocumentRoot extends EObject {
 	 * @return the value of the '<em>Connector Definition</em>' containment reference.
 	 * @see #setConnectorDefinition(ConnectorDefinition)
 	 * @see org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage#getDocumentRoot_ConnectorDefinition()
-	 * @model containment="true" upper="-2" transient="true" volatile="true" derived="true"
+	 * @model containment="true"
 	 *        extendedMetaData="kind='element' name='ConnectorDefinition' namespace='##targetNamespace'"
 	 * @generated
 	 */

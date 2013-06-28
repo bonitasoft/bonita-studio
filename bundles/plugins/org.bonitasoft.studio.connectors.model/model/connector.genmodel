@@ -24,6 +24,7 @@
     <genClasses ecoreClass="definition.ecore#//Category">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Category/icon"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Category/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute definition.ecore#//Category/parentCategoryId"/>
     </genClasses>
     <genClasses ecoreClass="definition.ecore#//Checkbox"/>
     <genClasses image="false" ecoreClass="definition.ecore#//Component">

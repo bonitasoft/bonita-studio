@@ -18,6 +18,7 @@ package org.bonitasoft.studio.connector.model.definition.dialog;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
@@ -29,6 +30,7 @@ import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -44,6 +46,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -115,11 +118,34 @@ public class NewCategoryDialog extends Dialog {
         displayNameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
         context.bindValue(SWTObservables.observeText(displayNameText, SWT.Modify), PojoProperties.value(NewCategoryDialog.class,"displayName").observe(this)) ;
-
+        
+        final Label parentCategoryLabel = new Label(mainComposite, SWT.NONE) ;
+        parentCategoryLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
+        parentCategoryLabel.setText(Messages.parentCategoryLabel) ;
+       
+        
+        final Combo parentCategoryCombo = new Combo(mainComposite, SWT.BORDER | SWT.READ_ONLY) ;
+        parentCategoryCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+        Set<String> categories = new HashSet<String>(existingCatIds);
+        categories.add("");
+        parentCategoryCombo.setItems(categories.toArray(new String[]{}));
+        
+        UpdateValueStrategy str = new UpdateValueStrategy();
+        str.setConverter(new Converter(String.class,String.class) {
+			
+			@Override
+			public Object convert(Object fromObject) {
+				if(fromObject.toString().isEmpty()){
+					return null;
+				}
+				return fromObject;
+			}
+		});
+        context.bindValue(SWTObservables.observeText(parentCategoryCombo), EMFObservables.observeValue(category,ConnectorDefinitionPackage.Literals.CATEGORY__PARENT_CATEGORY_ID),str,null);
+        
         final Label iconLabel = new Label(mainComposite, SWT.NONE) ;
         iconLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
         iconLabel.setText(Messages.iconLabel) ;
-
 
 
         final Composite iconComposite = new Composite(mainComposite, SWT.NONE) ;

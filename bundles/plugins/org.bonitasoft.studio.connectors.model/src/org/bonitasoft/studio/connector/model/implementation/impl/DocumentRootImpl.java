@@ -10,6 +10,7 @@ import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementat
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
 import org.bonitasoft.studio.connector.model.implementation.DocumentRoot;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EMap;
@@ -19,6 +20,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 
@@ -75,6 +77,16 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
     protected EMap<String, String> xSISchemaLocation;
 
     /**
+	 * The cached value of the '{@link #getConnectorImplementation() <em>Connector Implementation</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getConnectorImplementation()
+	 * @generated
+	 * @ordered
+	 */
+	protected ConnectorImplementation connectorImplementation;
+
+				/**
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @generated
@@ -135,7 +147,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * @generated
 	 */
     public ConnectorImplementation getConnectorImplementation() {
-		return (ConnectorImplementation)getMixed().get(ConnectorImplementationPackage.Literals.DOCUMENT_ROOT__CONNECTOR_IMPLEMENTATION, true);
+		return connectorImplementation;
 	}
 
     /**
@@ -144,7 +156,13 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * @generated
 	 */
     public NotificationChain basicSetConnectorImplementation(ConnectorImplementation newConnectorImplementation, NotificationChain msgs) {
-		return ((FeatureMap.Internal)getMixed()).basicAdd(ConnectorImplementationPackage.Literals.DOCUMENT_ROOT__CONNECTOR_IMPLEMENTATION, newConnectorImplementation, msgs);
+		ConnectorImplementation oldConnectorImplementation = connectorImplementation;
+		connectorImplementation = newConnectorImplementation;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ConnectorImplementationPackage.DOCUMENT_ROOT__CONNECTOR_IMPLEMENTATION, oldConnectorImplementation, newConnectorImplementation);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
     /**
@@ -153,7 +171,17 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * @generated
 	 */
     public void setConnectorImplementation(ConnectorImplementation newConnectorImplementation) {
-		((FeatureMap.Internal)getMixed()).set(ConnectorImplementationPackage.Literals.DOCUMENT_ROOT__CONNECTOR_IMPLEMENTATION, newConnectorImplementation);
+		if (newConnectorImplementation != connectorImplementation) {
+			NotificationChain msgs = null;
+			if (connectorImplementation != null)
+				msgs = ((InternalEObject)connectorImplementation).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ConnectorImplementationPackage.DOCUMENT_ROOT__CONNECTOR_IMPLEMENTATION, null, msgs);
+			if (newConnectorImplementation != null)
+				msgs = ((InternalEObject)newConnectorImplementation).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ConnectorImplementationPackage.DOCUMENT_ROOT__CONNECTOR_IMPLEMENTATION, null, msgs);
+			msgs = basicSetConnectorImplementation(newConnectorImplementation, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ConnectorImplementationPackage.DOCUMENT_ROOT__CONNECTOR_IMPLEMENTATION, newConnectorImplementation, newConnectorImplementation));
 	}
 
     /**
@@ -262,7 +290,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 			case ConnectorImplementationPackage.DOCUMENT_ROOT__XSI_SCHEMA_LOCATION:
 				return xSISchemaLocation != null && !xSISchemaLocation.isEmpty();
 			case ConnectorImplementationPackage.DOCUMENT_ROOT__CONNECTOR_IMPLEMENTATION:
-				return getConnectorImplementation() != null;
+				return connectorImplementation != null;
 		}
 		return super.eIsSet(featureID);
 	}

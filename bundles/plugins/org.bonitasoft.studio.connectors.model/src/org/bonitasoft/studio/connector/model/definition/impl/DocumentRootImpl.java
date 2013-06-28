@@ -9,12 +9,14 @@ package org.bonitasoft.studio.connector.model.definition.impl;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
 import org.bonitasoft.studio.connector.model.definition.DocumentRoot;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.impl.EStringToStringMapEntryImpl;
 import org.eclipse.emf.ecore.util.BasicFeatureMap;
@@ -70,6 +72,16 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
     protected EMap<String, String> xSISchemaLocation;
 
     /**
+	 * The cached value of the '{@link #getConnectorDefinition() <em>Connector Definition</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getConnectorDefinition()
+	 * @generated
+	 * @ordered
+	 */
+	protected ConnectorDefinition connectorDefinition;
+
+				/**
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @generated
@@ -134,7 +146,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 */
     @Override
     public ConnectorDefinition getConnectorDefinition() {
-		return (ConnectorDefinition)getMixed().get(ConnectorDefinitionPackage.Literals.DOCUMENT_ROOT__CONNECTOR_DEFINITION, true);
+		return connectorDefinition;
 	}
 
     /**
@@ -143,7 +155,13 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 * @generated
 	 */
     public NotificationChain basicSetConnectorDefinition(ConnectorDefinition newConnectorDefinition, NotificationChain msgs) {
-		return ((FeatureMap.Internal)getMixed()).basicAdd(ConnectorDefinitionPackage.Literals.DOCUMENT_ROOT__CONNECTOR_DEFINITION, newConnectorDefinition, msgs);
+		ConnectorDefinition oldConnectorDefinition = connectorDefinition;
+		connectorDefinition = newConnectorDefinition;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ConnectorDefinitionPackage.DOCUMENT_ROOT__CONNECTOR_DEFINITION, oldConnectorDefinition, newConnectorDefinition);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
     /**
@@ -153,7 +171,17 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 	 */
     @Override
     public void setConnectorDefinition(ConnectorDefinition newConnectorDefinition) {
-		((FeatureMap.Internal)getMixed()).set(ConnectorDefinitionPackage.Literals.DOCUMENT_ROOT__CONNECTOR_DEFINITION, newConnectorDefinition);
+		if (newConnectorDefinition != connectorDefinition) {
+			NotificationChain msgs = null;
+			if (connectorDefinition != null)
+				msgs = ((InternalEObject)connectorDefinition).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ConnectorDefinitionPackage.DOCUMENT_ROOT__CONNECTOR_DEFINITION, null, msgs);
+			if (newConnectorDefinition != null)
+				msgs = ((InternalEObject)newConnectorDefinition).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ConnectorDefinitionPackage.DOCUMENT_ROOT__CONNECTOR_DEFINITION, null, msgs);
+			msgs = basicSetConnectorDefinition(newConnectorDefinition, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ConnectorDefinitionPackage.DOCUMENT_ROOT__CONNECTOR_DEFINITION, newConnectorDefinition, newConnectorDefinition));
 	}
 
     /**
@@ -262,7 +290,7 @@ public class DocumentRootImpl extends EObjectImpl implements DocumentRoot {
 			case ConnectorDefinitionPackage.DOCUMENT_ROOT__XSI_SCHEMA_LOCATION:
 				return xSISchemaLocation != null && !xSISchemaLocation.isEmpty();
 			case ConnectorDefinitionPackage.DOCUMENT_ROOT__CONNECTOR_DEFINITION:
-				return getConnectorDefinition() != null;
+				return connectorDefinition != null;
 		}
 		return super.eIsSet(featureID);
 	}

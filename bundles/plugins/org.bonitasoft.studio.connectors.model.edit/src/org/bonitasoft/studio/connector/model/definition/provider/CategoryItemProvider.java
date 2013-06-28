@@ -66,6 +66,7 @@ public class CategoryItemProvider
 
 			addIconPropertyDescriptor(object);
 			addIdPropertyDescriptor(object);
+			addParentCategoryIdPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -115,6 +116,28 @@ public class CategoryItemProvider
 	}
 
     /**
+	 * This adds a property descriptor for the Parent Category Id feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addParentCategoryIdPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Category_parentCategoryId_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Category_parentCategoryId_feature", "_UI_Category_type"),
+				 ConnectorDefinitionPackage.Literals.CATEGORY__PARENT_CATEGORY_ID,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+				/**
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
 	 * @generated
@@ -163,6 +186,7 @@ public class CategoryItemProvider
 		switch (notification.getFeatureID(Category.class)) {
 			case ConnectorDefinitionPackage.CATEGORY__ICON:
 			case ConnectorDefinitionPackage.CATEGORY__ID:
+			case ConnectorDefinitionPackage.CATEGORY__PARENT_CATEGORY_ID:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}
