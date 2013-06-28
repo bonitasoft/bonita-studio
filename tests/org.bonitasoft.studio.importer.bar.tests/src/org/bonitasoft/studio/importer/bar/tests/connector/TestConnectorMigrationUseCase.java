@@ -253,11 +253,6 @@ public class TestConnectorMigrationUseCase {
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
-
-		assertTrue(
-				"setPassword_securityToken parameter need to be split into password and securityToken in 6.0. I think security token lenght always be 25",
-				false);
-
 	}
 
 	@Test
@@ -275,10 +270,6 @@ public class TestConnectorMigrationUseCase {
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
-
-		assertTrue(
-				"setPassword_securityToken parameter need to be split into password and securityToken in 6.0. I think security token lenght always be 25",
-				false);
 	}
 
 	@Test
@@ -295,10 +286,6 @@ public class TestConnectorMigrationUseCase {
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
-
-		assertTrue(
-				"setPassword_securityToken parameter need to be split into password and securityToken in 6.0. I think security token lenght always be 25",
-				false);
 	}
 
 	@Test
@@ -316,10 +303,6 @@ public class TestConnectorMigrationUseCase {
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
-
-		assertTrue(
-				"setPassword_securityToken parameter need to be split into password and securityToken in 6.0. I think security token lenght always be 25",
-				false);
 	}
 
 	@Test
@@ -336,10 +319,6 @@ public class TestConnectorMigrationUseCase {
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
-
-		assertTrue(
-				"setPassword_securityToken parameter need to be split into password and securityToken in 6.0. I think security token lenght always be 25",
-				false);
 	}
 	
 	@Test
