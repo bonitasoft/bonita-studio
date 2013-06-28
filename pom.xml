@@ -17,7 +17,7 @@
 		<engine.version>6.0.1-rc-02</engine.version>
 		<connector.version>6.0.1-rc-03</connector.version>
 		<simulation.version>6.0.0</simulation.version>
-		<filters.version>6.0.0</filters.version>
+		<filters.version>6.0.1</filters.version>
 		<theme.builder.version>6.0.0</theme.builder.version>
 		<watchdog.version>6.0.1</watchdog.version>
 		<p2MirrorUrl>http://192.168.1.227/p2_repository/</p2MirrorUrl>
