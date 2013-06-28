@@ -29,13 +29,13 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author aurelie zara
- *
+ * 
  */
 public class DataWizardDialog extends WizardDialog {
 
-	private static final int CREATE_AND_NEW_ID=1245;
+	private static final int CREATE_AND_NEW_ID = 1245;
 	private final AbstractDataSection dataSection;
-	private Button createAndNewButton ;
+	private Button createAndNewButton;
 
 	// Minimum dialog width (in dialog units)
 	private static final int MIN_DIALOG_WIDTH = 350;
@@ -43,7 +43,8 @@ public class DataWizardDialog extends WizardDialog {
 	// Minimum dialog height (in dialog units)
 	private static final int MIN_DIALOG_HEIGHT = 270;
 
-	public DataWizardDialog(Shell parentShell, IWizard newWizard,AbstractDataSection dataSection) {
+	public DataWizardDialog(Shell parentShell, IWizard newWizard,
+			AbstractDataSection dataSection) {
 		super(parentShell, newWizard);
 		this.dataSection = dataSection;
 	}
@@ -56,35 +57,44 @@ public class DataWizardDialog extends WizardDialog {
 				Math.max(convertVerticalDLUsToPixels(MIN_DIALOG_HEIGHT),
 						shellSize.y));
 	}
-	
+
 	@Override
-	protected void createButtonsForButtonBar(Composite parent){
+	protected void createButtonsForButtonBar(Composite parent) {
 		super.createButtonsForButtonBar(parent);
-		createAndNewButton = super.createButton(parent, CREATE_AND_NEW_ID, Messages.createAndNewButton, true);
-		setButtonLayoutData(createAndNewButton);
+		if (dataSection != null) {
+			createAndNewButton = super.createButton(parent, CREATE_AND_NEW_ID,
+					Messages.createAndNewButton, true);
+			setButtonLayoutData(createAndNewButton);
+		}
 		Button cancelButton = getButton(IDialogConstants.CANCEL_ID);
 		cancelButton.setText(IDialogConstants.CANCEL_LABEL);
 		Button finishButton = getButton(IDialogConstants.FINISH_ID);
 		finishButton.setText(IDialogConstants.FINISH_LABEL);
 		cancelButton.moveBelow(null);
-		createAndNewButton.moveAbove(cancelButton);
-		finishButton.moveAbove(createAndNewButton );
+		if (dataSection != null) {
+			createAndNewButton.moveAbove(cancelButton);
+		}
+		finishButton.moveAbove(createAndNewButton);
 	}
 
 	@Override
-	protected void buttonPressed(int buttonId){
+	protected void buttonPressed(int buttonId) {
 		super.buttonPressed(buttonId);
-		if (buttonId==CREATE_AND_NEW_ID){
+		if (buttonId == CREATE_AND_NEW_ID) {
 			getWizard().performFinish();
 			close();
-			dataSection.setWizardDialog();
+			if (dataSection != null) {
+				dataSection.setWizardDialog();
+			}
 		}
 	}
 
 	@Override
-	public void updateButtons(){
+	public void updateButtons() {
 		super.updateButtons();
 		boolean canFinish = getWizard().canFinish();
-		createAndNewButton.setEnabled(canFinish);
+		if (dataSection != null) {
+			createAndNewButton.setEnabled(canFinish);
+		}
 	}
 }
