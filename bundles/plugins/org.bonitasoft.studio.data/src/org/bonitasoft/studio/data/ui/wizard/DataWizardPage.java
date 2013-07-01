@@ -52,6 +52,7 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.DoubleType;
@@ -520,7 +521,7 @@ public class DataWizardPage extends WizardPage {
 				/* Search above level */
 				List<Data> allData = ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(container), ProcessPackage.Literals.DATA);
 				for (final Data object : allData) {
-					if (object instanceof Data) {
+					if (object instanceof Data && !(object.eContainer() instanceof Expression)) {
 						final Data otherData = (Data) object;
 						final Data originalData = ((DataWizard) getWizard()).getOriginalData();
 						if (!otherData.equals(originalData) && value.toString().equals(otherData.getName())) {
