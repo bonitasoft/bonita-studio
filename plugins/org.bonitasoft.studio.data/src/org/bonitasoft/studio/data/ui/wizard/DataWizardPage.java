@@ -520,7 +520,7 @@ public class DataWizardPage extends WizardPage {
 				/* Search all level */
 				List<Data> allData = ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(container), ProcessPackage.Literals.DATA);
 				for (final Data object : allData) {
-					if (object instanceof Data) {
+					if (object instanceof Data && !(object.eContainer() instanceof Expression)) {
 						final Data otherData = (Data) object;
 						final Data originalData = ((DataWizard) getWizard()).getOriginalData();
 						if (!otherData.equals(originalData) && value.toString().equals(otherData.getName())) {
