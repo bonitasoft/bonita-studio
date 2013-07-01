@@ -241,7 +241,7 @@ public class TimerConditionWizardPage extends WizardPage {
 		final Label selectDateLabel = new Label(calendarControl, SWT.NONE);
 		selectDateLabel.setText(Messages.selectDateLabel);
 
-		final DateTime dateChooser = new DateTime(calendarControl, SWT.DATE | SWT.BORDER);
+		final DateTime dateChooser = new DateTime(calendarControl, SWT.DATE| SWT.DROP_DOWN | SWT.BORDER);
 
 		final Label atLabel = new Label(calendarControl, SWT.NONE);
 		atLabel.setText(Messages.at);
