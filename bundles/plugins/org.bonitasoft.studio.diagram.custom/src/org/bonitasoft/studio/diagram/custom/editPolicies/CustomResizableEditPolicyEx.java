@@ -87,7 +87,9 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 	@Override
 	public void deactivate() {
 		super.deactivate();
-		zoomManager.removeZoomListener(this) ;
+		if(zoomManager != null){
+			zoomManager.removeZoomListener(this) ;
+		}
 	}
 	@Override
 	protected IFigure createDragSourceFeedbackFigure() {
