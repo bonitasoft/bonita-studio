@@ -490,6 +490,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		}else{
 			autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		}
+		autoCompletion.setContext(expressionNatureProvider.getContext());
 		autoCompletion.setProposals(filteredExpressions.toArray(new Expression[filteredExpressions.size()])) ;
 	}
 

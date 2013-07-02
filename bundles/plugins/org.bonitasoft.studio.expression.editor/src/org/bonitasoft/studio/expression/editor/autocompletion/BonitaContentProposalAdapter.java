@@ -13,12 +13,17 @@ package org.bonitasoft.studio.expression.editor.autocompletion;
 
 import java.util.ArrayList;
 
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.dialogs.PopupDialog;
-import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.IContentProposalListener2;
@@ -26,6 +31,8 @@ import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
 import org.eclipse.jface.fieldassist.IControlContentAdapter2;
 import org.eclipse.jface.fieldassist.SimpleContentProposalProvider;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.JFacePreferences;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.Util;
@@ -35,6 +42,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -46,6 +54,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
@@ -71,6 +80,8 @@ import org.eclipse.swt.widgets.Text;
  */
 public class BonitaContentProposalAdapter implements SWTBotConstants {
 
+	public ArrayList<Link> linkList;
+
 	/*
 	 * The lightweight popup used to show content proposals for a text field. If
 	 * additional information exists for a proposal, then selecting that
@@ -90,11 +101,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 			public void handleEvent(final Event e) {
 
-				int width = getControl().getBounds().width ;
-				if( e.x >= width - 18 && e.x <= width - 12 && e.y >= 8 && e.y <= 12){
+				int width = getControl().getBounds().width;
+				if (e.x >= width - 18 && e.x <= width - 12 && e.y >= 8
+						&& e.y <= 12) {
 					return;
 				}
-				
+
 				// If focus is leaving an important widget or the field's
 				// shell is deactivating
 				if (e.type == SWT.FocusOut) {
@@ -124,8 +136,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 								}
 								/*
 								 * System.out.println(e);
-								 * System.out.println(e.display.getFocusControl());
-								 * System.out.println(e.display.getActiveShell());
+								 * System.out.println(e.display
+								 * .getFocusControl());
+								 * System.out.println(e.display
+								 * .getActiveShell());
 								 */
 								close();
 							}
@@ -140,7 +154,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 					scrollbarClicked = true;
 					return;
 				}
-				
+
 				// For all other events, merely getting them dictates closure.
 				close();
 			}
@@ -320,8 +334,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 							String contents = getControlContentAdapter()
 									.getControlContents(getControl());
 							// If there are no contents, changes in cursor
-							// position have no effect. Note also that we do 
-							// not affect the filter text on ARROW_LEFT as 
+							// position have no effect. Note also that we do
+							// not affect the filter text on ARROW_LEFT as
 							// we would with BS.
 							if (contents.length() > 0) {
 								asyncRecomputeProposals(filterText);
@@ -333,7 +347,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 					// Modifier keys are explicitly checked and ignored because
 					// they are not complete yet (no character).
 					default:
-						if (e.keyCode != SWT.CAPS_LOCK && e.keyCode != SWT.NUM_LOCK 
+						if (e.keyCode != SWT.CAPS_LOCK
+								&& e.keyCode != SWT.NUM_LOCK
 								&& e.keyCode != SWT.MOD1
 								&& e.keyCode != SWT.MOD2
 								&& e.keyCode != SWT.MOD3
@@ -384,8 +399,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 							return;
 						}
 						// There is filter to back out of
-						filterText = filterText.substring(0, filterText
-								.length() - 1);
+						filterText = filterText.substring(0,
+								filterText.length() - 1);
 						asyncRecomputeProposals(filterText);
 						return;
 					}
@@ -441,8 +456,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			 * Construct an info-popup with the specified parent.
 			 */
 			InfoPopupDialog(Shell parent) {
-				super(parent, PopupDialog.HOVER_SHELLSTYLE, false, false, false,
-						false, false, null, null);
+				super(parent, PopupDialog.HOVER_SHELLSTYLE, false, false,
+						false, false, false, null, null);
 			}
 
 			/*
@@ -514,23 +529,25 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 				}
 				getShell().setBounds(proposedBounds);
 			}
-			
+
 			/*
 			 * (non-Javadoc)
+			 * 
 			 * @see org.eclipse.jface.dialogs.PopupDialog#getForeground()
 			 */
 			protected Color getForeground() {
-				return control.getDisplay().
-						getSystemColor(SWT.COLOR_INFO_FOREGROUND);
+				return control.getDisplay().getSystemColor(
+						SWT.COLOR_INFO_FOREGROUND);
 			}
-			
+
 			/*
 			 * (non-Javadoc)
+			 * 
 			 * @see org.eclipse.jface.dialogs.PopupDialog#getBackground()
 			 */
 			protected Color getBackground() {
-				return control.getDisplay().
-						getSystemColor(SWT.COLOR_INFO_BACKGROUND);
+				return control.getDisplay().getSystemColor(
+						SWT.COLOR_INFO_BACKGROUND);
 			}
 
 			/*
@@ -559,7 +576,6 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		}
 
 		private static final int TB_OFFSET = 32;
-
 
 		/*
 		 * The listener installed on the target control.
@@ -615,28 +631,31 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			// On platforms where SWT.ON_TOP overrides SWT.RESIZE, we will live
 			// with this.
 			// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=126138
-			super(control.getShell(), SWT.RESIZE | SWT.ON_TOP, false, false, false,
-					false, false, null, infoText);
+			super(control.getShell(), SWT.RESIZE | SWT.ON_TOP, false, false,
+					false, false, false, null, infoText);
 			this.proposals = proposals;
 		}
 
 		@Override
 		protected void configureShell(Shell shell) {
 			super.configureShell(shell);
-			shell.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_SHELL);
+			shell.setData(SWTBOT_WIDGET_ID_KEY,
+					SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_SHELL);
 		}
-		
+
 		/*
 		 * (non-Javadoc)
+		 * 
 		 * @see org.eclipse.jface.dialogs.PopupDialog#getForeground()
 		 */
 		protected Color getForeground() {
 			return JFaceResources.getColorRegistry().get(
 					JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR);
 		}
-		
+
 		/*
 		 * (non-Javadoc)
+		 * 
 		 * @see org.eclipse.jface.dialogs.PopupDialog#getBackground()
 		 */
 		protected Color getBackground() {
@@ -653,11 +672,22 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		 * not be <code>null</code>.
 		 */
 		protected final Control createDialogArea(final Composite parent) {
-			// Use virtual where appropriate (see flag definition).
-			if (USE_VIRTUAL) {
-				proposalTable = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL
-						| SWT.VIRTUAL);
+			createProposalTable(parent);
+			createVariableCreationZone(parent);
+			return parent;
+		}
 
+		private void createProposalTable(final Composite parent) {
+			// Use virtual where appropriate (see flag definition).
+			final Composite proposalTableComposite = new Composite(parent,
+					SWT.NONE);
+			proposalTableComposite.setLayout(GridLayoutFactory.fillDefaults()
+					.create());
+			proposalTableComposite.setLayoutData(GridDataFactory.fillDefaults()
+					.grab(true, true).create());
+			if (USE_VIRTUAL) {
+				proposalTable = new Table(proposalTableComposite, SWT.H_SCROLL
+						| SWT.V_SCROLL | SWT.VIRTUAL);
 				Listener listener = new Listener() {
 					public void handleEvent(Event event) {
 						handleSetData(event);
@@ -665,15 +695,16 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 				};
 				proposalTable.addListener(SWT.SetData, listener);
 			} else {
-				proposalTable = new Table(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+				proposalTable = new Table(proposalTableComposite, SWT.H_SCROLL
+						| SWT.V_SCROLL);
 			}
-			proposalTable.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_TABLE);
+			proposalTable.setData(SWTBOT_WIDGET_ID_KEY,
+					SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_TABLE);
 			// set the proposals to force population of the table.
 			setProposals(filterProposals(proposals, filterText));
 
 			proposalTable.setHeaderVisible(false);
 			proposalTable.addSelectionListener(new SelectionListener() {
-
 				public void widgetSelected(SelectionEvent e) {
 					// If a proposal has been selected, show it in the secondary
 					// popup. Otherwise close the popup.
@@ -691,7 +722,40 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 					acceptCurrentProposal();
 				}
 			});
-			return proposalTable;
+		}
+
+		private void createVariableCreationZone(final Composite parent) {
+			final Composite creationZoneComposite = new Composite(parent,
+					SWT.NONE);
+			creationZoneComposite.setLayout(GridLayoutFactory.fillDefaults()
+					.margins(10, 10).create());
+			creationZoneComposite.setLayoutData(GridDataFactory.fillDefaults()
+					.grab(true, false).create());
+
+			Link createDataLink;
+
+			for (IConfigurationElement element : BonitaStudioExtensionRegistryManager
+					.getInstance()
+					.getConfigurationElements(
+							"org.bonitasoft.studio.expression.proposalListener")) {
+				createDataLink = new Link(creationZoneComposite, SWT.NONE);
+				final String name = element.getAttribute("name");
+				createDataLink.setText(name);
+				try {
+					final IProposalListener listener = (IProposalListener) element
+							.createExecutableExtension("providerClass");
+					createDataLink.addSelectionListener(new SelectionAdapter() {
+
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							listener.handleEvent(context);
+						}
+					});
+				} catch (CoreException e1) {
+					BonitaStudioLog.error(e1);
+				}
+				linkList.add(createDataLink);
+			}
 		}
 
 		/*
@@ -701,7 +765,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		 */
 		protected void adjustBounds() {
 			// Get our control's location in display coordinates.
-			Point location = control.getDisplay().map(control.getParent(), null, control.getLocation());			
+			Point location = control.getDisplay().map(control.getParent(),
+					null, control.getLocation());
 			int initialX = location.x + POPUP_OFFSET;
 			int initialY = location.y + control.getSize().y + POPUP_OFFSET;
 			// If we are inserting content, use the cursor position to
@@ -720,22 +785,25 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 				GridData data = new GridData(GridData.FILL_BOTH);
 				data.heightHint = proposalTable.getItemHeight()
 						* POPUP_CHAR_HEIGHT;
-				data.widthHint = Math.max(control.getSize().x+TB_OFFSET,
+				data.widthHint = Math.max(control.getSize().x + TB_OFFSET,
 						POPUP_MINIMUM_WIDTH);
 				proposalTable.setLayoutData(data);
 				getShell().pack();
 				popupSize = getShell().getSize();
 			}
-			
+
 			// Constrain to the display
-			Rectangle constrainedBounds = getConstrainedShellBounds(new Rectangle(initialX, initialY, popupSize.x, popupSize.y));
-			
-			// If there has been an adjustment causing the popup to overlap 
+			Rectangle constrainedBounds = getConstrainedShellBounds(new Rectangle(
+					initialX, initialY, popupSize.x, popupSize.y));
+
+			// If there has been an adjustment causing the popup to overlap
 			// with the control, then put the popup above the control.
 			if (constrainedBounds.y < initialY)
-				getShell().setBounds(initialX, location.y - popupSize.y, popupSize.x, popupSize.y);
+				getShell().setBounds(initialX, location.y - popupSize.y,
+						popupSize.x, popupSize.y);
 			else
-				getShell().setBounds(initialX, initialY, popupSize.x, popupSize.y);
+				getShell().setBounds(initialX, initialY, popupSize.x,
+						popupSize.y);
 
 			// Now set up a listener to monitor any changes in size.
 			getShell().addListener(SWT.Resize, new Listener() {
@@ -798,6 +866,15 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 					}
 					proposalTable.setRedraw(true);
 				}
+				// In case of no proposal data don't show the list, only the
+				// link to add variables/parameters
+				if (proposalTable.getItemCount() == 0) {
+					proposalTable.getParent().setLayoutData(
+							GridDataFactory.swtDefaults().grab(true, false)
+									.hint(SWT.DEFAULT, 0).create());
+					proposalTable.getParent().layout(true);
+				}
+
 				// Default to the first selection if there is content.
 				if (newProposals.length > 0) {
 					selectProposal(0);
@@ -861,6 +938,11 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			if (!isValid()) {
 				return false;
 			}
+			for (Link l : linkList) {
+				if (!l.isDisposed() && l.isFocusControl()) {
+					return true;
+				}
+			}
 			if (getShell().isFocusControl() || proposalTable.isFocusControl()) {
 				return true;
 			}
@@ -888,9 +970,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		 * Select the proposal at the given index.
 		 */
 		private void selectProposal(int index) {
-			Assert
-					.isTrue(index >= 0,
-							"Proposal index should never be negative"); //$NON-NLS-1$
+			Assert.isTrue(index >= 0, "Proposal index should never be negative"); //$NON-NLS-1$
 			if (!isValid() || proposals == null || index >= proposals.length) {
 				return;
 			}
@@ -1020,7 +1100,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		private void recomputeProposals(String filterText) {
 			IContentProposal[] allProposals = getProposals();
 			if (allProposals == null)
-				 allProposals = getEmptyProposalArray();
+				allProposals = getEmptyProposalArray();
 			// If the non-filtered proposal list is empty, we should
 			// close the popup.
 			// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=147377
@@ -1282,6 +1362,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 */
 	private boolean watchModify = false;
 
+	protected EObject context;
+
 	/**
 	 * Construct a content proposal adapter that can assist the user with
 	 * choosing content for the field.
@@ -1295,8 +1377,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 *            not be <code>null</code>.
 	 * @param proposalProvider
 	 *            the <code>IContentProposalProvider</code> used to obtain
-	 *            content proposals for this control, or <code>null</code> if
-	 *            no content proposal is available.
+	 *            content proposals for this control, or <code>null</code> if no
+	 *            content proposal is available.
 	 * @param keyStroke
 	 *            the keystroke that will invoke the content proposal popup. If
 	 *            this value is <code>null</code>, then proposals will be
@@ -1323,7 +1405,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		Assert.isNotNull(controlContentAdapter);
 		this.control = control;
 		this.controlContentAdapter = controlContentAdapter;
-
+		linkList = new ArrayList<Link>();
 		// The rest of these may be null
 		this.proposalProvider = proposalProvider;
 		this.triggerKeyStroke = keyStroke;
@@ -1331,6 +1413,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			this.autoActivateString = new String(autoActivationCharacters);
 		}
 		addControlListener(control);
+	}
+
+	public void setContext(EObject context) {
+		this.context = context;
 	}
 
 	/**
@@ -1376,8 +1462,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 	/**
 	 * Return the proposal provider that provides content proposals given the
-	 * current content of the field. A value of <code>null</code> indicates
-	 * that there are no content proposals available for the field.
+	 * current content of the field. A value of <code>null</code> indicates that
+	 * there are no content proposals available for the field.
 	 * 
 	 * @return the {@link IContentProposalProvider} used to show proposals. May
 	 *         be <code>null</code>.
@@ -1427,9 +1513,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 *            an explicit invocation keyStroke was specified. If this
 	 *            parameter is <code>null</code>, then only a specified
 	 *            keyStroke will invoke content proposal. If this parameter is
-	 *            <code>null</code> and the keyStroke value is
-	 *            <code>null</code>, then all alphanumeric characters will
-	 *            auto-activate content proposal.
+	 *            <code>null</code> and the keyStroke value is <code>null</code>
+	 *            , then all alphanumeric characters will auto-activate content
+	 *            proposal.
 	 * 
 	 */
 	public void setAutoActivationCharacters(char[] autoActivationCharacters) {
@@ -1500,10 +1586,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 *         specifies that no filtering will occur in the content proposal
 	 *         list as keys are typed. <code>FILTER_CHARACTER</code> specifies
 	 *         the content of the popup will be filtered by the most recently
-	 *         typed character. <code>FILTER_CUMULATIVE</code> is deprecated
-	 *         and no longer recommended. It specifies that the content of the
-	 *         popup will be filtered by a string containing all the characters
-	 *         typed since the popup has been open. The default is
+	 *         typed character. <code>FILTER_CUMULATIVE</code> is deprecated and
+	 *         no longer recommended. It specifies that the content of the popup
+	 *         will be filtered by a string containing all the characters typed
+	 *         since the popup has been open. The default is
 	 *         <code>FILTER_NONE</code>.
 	 */
 	public int getFilterStyle() {
@@ -1523,14 +1609,14 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 * @param filterStyle
 	 *            a constant indicating how keystrokes received in the proposal
 	 *            popup affect filtering of the proposals shown.
-	 *            <code>FILTER_NONE</code> specifies that no automatic
-	 *            filtering of the content proposal list will occur as keys are
-	 *            typed in the popup. <code>FILTER_CHARACTER</code> specifies
-	 *            that the content of the popup will be filtered by the most
-	 *            recently typed character. <code>FILTER_CUMULATIVE</code> is
-	 *            deprecated and no longer recommended. It specifies that the
-	 *            content of the popup will be filtered by a string containing
-	 *            all the characters typed since the popup has been open.
+	 *            <code>FILTER_NONE</code> specifies that no automatic filtering
+	 *            of the content proposal list will occur as keys are typed in
+	 *            the popup. <code>FILTER_CHARACTER</code> specifies that the
+	 *            content of the popup will be filtered by the most recently
+	 *            typed character. <code>FILTER_CUMULATIVE</code> is deprecated
+	 *            and no longer recommended. It specifies that the content of
+	 *            the popup will be filtered by a string containing all the
+	 *            characters typed since the popup has been open.
 	 */
 	public void setFilterStyle(int filterStyle) {
 		this.filterStyle = filterStyle;
@@ -1605,9 +1691,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 * Set the boolean flag that determines whether the adapter is enabled.
 	 * 
 	 * @param enabled
-	 *            <code>true</code> if the adapter is enabled and responding
-	 *            to user input, <code>false</code> if it is ignoring user
-	 *            input.
+	 *            <code>true</code> if the adapter is enabled and responding to
+	 *            user input, <code>false</code> if it is ignoring user input.
 	 * 
 	 */
 	public void setEnabled(boolean enabled) {
@@ -1623,14 +1708,13 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 	/**
 	 * Add the specified listener to the list of content proposal listeners that
-	 * are notified when content proposals are chosen.
-	 * </p>
+	 * are notified when content proposals are chosen. </p>
 	 * 
 	 * @param listener
 	 *            the IContentProposalListener to be added as a listener. Must
-	 *            not be <code>null</code>. If an attempt is made to register
-	 *            an instance which is already registered with this instance,
-	 *            this method has no effect.
+	 *            not be <code>null</code>. If an attempt is made to register an
+	 *            instance which is already registered with this instance, this
+	 *            method has no effect.
 	 * 
 	 * @see org.eclipse.jface.fieldassist.IContentProposalListener
 	 */
@@ -1640,13 +1724,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 	/**
 	 * Removes the specified listener from the list of content proposal
-	 * listeners that are notified when content proposals are chosen.
-	 * </p>
+	 * listeners that are notified when content proposals are chosen. </p>
 	 * 
 	 * @param listener
 	 *            the IContentProposalListener to be removed as a listener. Must
-	 *            not be <code>null</code>. If the listener has not already
-	 *            been registered, this method has no effect.
+	 *            not be <code>null</code>. If the listener has not already been
+	 *            registered, this method has no effect.
 	 * 
 	 * @since 3.3
 	 * @see org.eclipse.jface.fieldassist.IContentProposalListener
@@ -1657,31 +1740,30 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 	/**
 	 * Add the specified listener to the list of content proposal listeners that
-	 * are notified when a content proposal popup is opened or closed.
-	 * </p>
+	 * are notified when a content proposal popup is opened or closed. </p>
 	 * 
 	 * @param listener
 	 *            the IContentProposalListener2 to be added as a listener. Must
-	 *            not be <code>null</code>. If an attempt is made to register
-	 *            an instance which is already registered with this instance,
-	 *            this method has no effect.
+	 *            not be <code>null</code>. If an attempt is made to register an
+	 *            instance which is already registered with this instance, this
+	 *            method has no effect.
 	 * 
 	 * @since 3.3
 	 * @see org.eclipse.jface.fieldassist.IContentProposalListener2
 	 */
-	public void addContentProposalListener(IBonitaContentProposalListener2 listener) {
+	public void addContentProposalListener(
+			IBonitaContentProposalListener2 listener) {
 		proposalListeners2.add(listener);
 	}
 
 	/**
 	 * Remove the specified listener from the list of content proposal listeners
-	 * that are notified when a content proposal popup is opened or closed.
-	 * </p>
+	 * that are notified when a content proposal popup is opened or closed. </p>
 	 * 
 	 * @param listener
 	 *            the IContentProposalListener2 to be removed as a listener.
-	 *            Must not be <code>null</code>. If the listener has not
-	 *            already been registered, this method has no effect.
+	 *            Must not be <code>null</code>. If the listener has not already
+	 *            been registered, this method has no effect.
 	 * 
 	 * @since 3.3
 	 * @see org.eclipse.jface.fieldassist.IContentProposalListener2
@@ -1736,8 +1818,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 							sb.append(" after being handled by popup"); //$NON-NLS-1$
 							dump(sb.toString(), e);
 						}
-						// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=192633
-						// If the popup is open and this is a valid character, we
+						// See
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=192633
+						// If the popup is open and this is a valid character,
+						// we
 						// want to watch for the modified text.
 						if (propagateKeys && e.character != 0)
 							watchModify = true;
@@ -1756,10 +1840,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 						// Either there are no modifiers for the trigger and we
 						// check the character field...
 						if ((triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY && triggerKeyStroke
-								.getNaturalKey() == e.character)
-								||
-								// ...or there are modifiers, in which case the
-								// keycode and state must match
+								.getNaturalKey() == e.character) ||
+						// ...or there are modifiers, in which case the
+						// keycode and state must match
 								(triggerKeyStroke.getNaturalKey() == e.keyCode && ((triggerKeyStroke
 										.getModifierKeys() & e.stateMask) == triggerKeyStroke
 										.getModifierKeys()))) {
@@ -1800,51 +1883,59 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 						}
 					} else {
 						// A non-character key has been pressed. Interrupt any
-						// autoactivation that is pending due to autoactivation delay.
+						// autoactivation that is pending due to autoactivation
+						// delay.
 						receivedKeyDown = true;
 					}
 					break;
 
-
-					// There are times when we want to monitor content changes
-					// rather than individual keystrokes to determine whether
-					// the popup should be closed or opened based on the entire
-					// content of the control.
-					// The watchModify flag ensures that we don't autoactivate if
-					// the content change was caused by something other than typing.
-					// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=183650
-					case SWT.Modify:
-						if (allowsAutoActivate() && watchModify) {
-							if (DEBUG) {
-								dump("Modify event triggers popup open or close", e); //$NON-NLS-1$
-							}
-							watchModify = false;
-							// We are in autoactivation mode, either for specific
-							// characters or for all characters. In either case, 
-							// we should close the proposal popup when there is no
-							// content in the control.
-							if (isControlContentEmpty()) {
-								// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=192633
-								closeProposalPopup();
+				// There are times when we want to monitor content changes
+				// rather than individual keystrokes to determine whether
+				// the popup should be closed or opened based on the entire
+				// content of the control.
+				// The watchModify flag ensures that we don't autoactivate if
+				// the content change was caused by something other than typing.
+				// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=183650
+				case SWT.Modify:
+					if (allowsAutoActivate() && watchModify) {
+						if (DEBUG) {
+							dump("Modify event triggers popup open or close", e); //$NON-NLS-1$
+						}
+						watchModify = false;
+						// We are in autoactivation mode, either for specific
+						// characters or for all characters. In either case,
+						// we should close the proposal popup when there is no
+						// content in the control.
+						if (isControlContentEmpty()) {
+							// see
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=192633
+							closeProposalPopup();
+						} else {
+							// See
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=147377
+							// Given that we will close the popup when there are
+							// no valid proposals, we must consider reopening it
+							// on any
+							// content change when there are no particular
+							// autoActivation
+							// characters
+							if (autoActivateString == null) {
+								autoActivate();
 							} else {
-								// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=147377
-								// Given that we will close the popup when there are
-								// no valid proposals, we must consider reopening it on any
-								// content change when there are no particular autoActivation
-								// characters
-								if (autoActivateString == null) {
-									autoActivate();
-								} else {
-									// Autoactivation characters are defined, but this
-									// modify event does not involve one of them.  See
-									// if any of the autoactivation characters are left
-									// in the content and close the popup if none remain.
-									if (!shouldPopupRemainOpen())
-										closeProposalPopup();
-								}
+								// Autoactivation characters are defined, but
+								// this
+								// modify event does not involve one of them.
+								// See
+								// if any of the autoactivation characters are
+								// left
+								// in the content and close the popup if none
+								// remain.
+								if (!shouldPopupRemainOpen())
+									closeProposalPopup();
 							}
 						}
-						break;
+					}
+					break;
 				default:
 					break;
 				}
@@ -1956,12 +2047,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	private void proposalAccepted(IContentProposal proposal) {
 		switch (proposalAcceptanceStyle) {
 		case (PROPOSAL_REPLACE):
-			setControlContent(proposal.getContent(), proposal
-					.getCursorPosition());
+			setControlContent(proposal.getContent(),
+					proposal.getCursorPosition());
 			break;
 		case (PROPOSAL_INSERT):
-			insertControlContent(proposal.getContent(), proposal
-					.getCursorPosition());
+			insertControlContent(proposal.getContent(),
+					proposal.getCursorPosition());
 			break;
 		default:
 			// do nothing. Typically a listener is installed to handle this in
@@ -2161,47 +2252,56 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		return getControlContentAdapter().getControlContents(getControl())
 				.length() == 0;
 	}
-	
+
 	/*
-	 * The popup has just opened, but listeners have not yet
-	 * been notified.  Perform any cleanup that is needed.
+	 * The popup has just opened, but listeners have not yet been notified.
+	 * Perform any cleanup that is needed.
 	 */
 	private void internalPopupOpened() {
 		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=243612
 		if (control instanceof Combo) {
-			((Combo)control).setListVisible(false);
+			((Combo) control).setListVisible(false);
 		}
 	}
-	
+
 	/*
-	 * Return whether a proposal popup should remain open.
-	 * If it was autoactivated by specific characters, and 
-	 * none of those characters remain, then it should not remain
-	 * open.  This method should not be used to determine
-	 * whether autoactivation has occurred or should occur, only whether
-	 * the circumstances would dictate that a popup remain open.
+	 * Return whether a proposal popup should remain open. If it was
+	 * autoactivated by specific characters, and none of those characters
+	 * remain, then it should not remain open. This method should not be used to
+	 * determine whether autoactivation has occurred or should occur, only
+	 * whether the circumstances would dictate that a popup remain open.
 	 */
 	private boolean shouldPopupRemainOpen() {
-		// If we always autoactivate or never autoactivate, it should remain open
+		// If we always autoactivate or never autoactivate, it should remain
+		// open
 		if (autoActivateString == null || autoActivateString.length() == 0)
 			return true;
-		String content = getControlContentAdapter().getControlContents(getControl());
-		for (int i=0; i<autoActivateString.length(); i++) {
+		String content = getControlContentAdapter().getControlContents(
+				getControl());
+		for (int i = 0; i < autoActivateString.length(); i++) {
 			if (content.indexOf(autoActivateString.charAt(i)) >= 0)
 				return true;
 		}
 		return false;
 	}
-	
+
 	/*
-	 * Return whether this adapter is configured for autoactivation, by
-	 * specific characters or by any characters.
+	 * Return whether this adapter is configured for autoactivation, by specific
+	 * characters or by any characters.
 	 */
 	private boolean allowsAutoActivate() {
-		return (autoActivateString != null && autoActivateString.length() > 0) // there are specific autoactivation chars supplied
-		  || (autoActivateString == null && triggerKeyStroke == null);    // we autoactivate on everything
+		return (autoActivateString != null && autoActivateString.length() > 0) // there
+																				// are
+																				// specific
+																				// autoactivation
+																				// chars
+																				// supplied
+				|| (autoActivateString == null && triggerKeyStroke == null); // we
+																				// autoactivate
+																				// on
+																				// everything
 	}
-	
+
 	/**
 	 * Sets focus to the proposal popup. If the proposal popup is not opened,
 	 * this method is ignored. If the secondary popup has focus, focus is
@@ -2213,7 +2313,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		if (isValid() && popup != null)
 			popup.getShell().setFocus();
 	}
-	
+
 	/**
 	 * Answers a boolean indicating whether the main proposal popup is open.
 	 * 
@@ -2231,5 +2331,4 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	public void showProposalPopup() {
 		openProposalPopup(false);
 	}
-
 }
