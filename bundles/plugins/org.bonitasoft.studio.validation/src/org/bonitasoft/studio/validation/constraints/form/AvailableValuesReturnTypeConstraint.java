@@ -47,7 +47,7 @@ public class AvailableValuesReturnTypeConstraint extends AbstractLiveValidationM
 	@Override
 	protected IStatus performBatchValidation(IValidationContext ctx) {
 		EObject eObj = ctx.getTarget();
-		if (eObj instanceof MultipleValuatedFormField) {
+		if (eObj instanceof MultipleValuatedFormField && !(eObj.eContainer() instanceof Expression)) {
 			MultipleValuatedFormField widget = (MultipleValuatedFormField) eObj;
 			final Expression availableValues = widget.getInputExpression();
 			if(availableValues == null){
