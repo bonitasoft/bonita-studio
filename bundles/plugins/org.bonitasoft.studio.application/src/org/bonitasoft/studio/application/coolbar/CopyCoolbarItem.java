@@ -97,7 +97,7 @@ public class CopyCoolbarItem implements IBonitaContributionItem,ISelectionChange
 	@Override
 	public boolean isEnabled() {
 		Command cmd = getCommand();
-		return cmd.isEnabled();
+		return cmd.isEnabled() && cmd.isHandled();
 	}
 
 	/* (non-Javadoc)

@@ -97,7 +97,7 @@ public class PasteCoolbarItem implements IBonitaContributionItem,ISelectionChang
     @Override
     public boolean isEnabled() {
         Command cmd = getCommand();
-        return cmd.isEnabled();
+        return cmd.isEnabled() && cmd.isHandled();
     }
 
     /* (non-Javadoc)
@@ -207,7 +207,6 @@ public class PasteCoolbarItem implements IBonitaContributionItem,ISelectionChang
                 }
             }
         }) ;
-
     }
 
     @Override
