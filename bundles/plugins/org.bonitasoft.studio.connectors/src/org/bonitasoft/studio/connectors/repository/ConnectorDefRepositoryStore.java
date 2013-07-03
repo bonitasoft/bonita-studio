@@ -28,6 +28,8 @@ import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
@@ -124,6 +126,12 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     @Override
     protected Bundle getBundle() {
         return ConnectorPlugin.getDefault().getBundle();
+    }
+    
+    @Override
+    public void migrate() throws CoreException, MigrationException {
+    	super.migrate();
+    	 resourceProvider.loadDefinitionsCategories(null);
     }
 
 }

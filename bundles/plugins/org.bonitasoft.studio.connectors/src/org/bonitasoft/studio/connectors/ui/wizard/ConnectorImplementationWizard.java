@@ -36,17 +36,22 @@ import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
-import org.bonitasoft.studio.connector.model.implementation.wizard.ImplementationWizardPage;
+import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractImplementationDefinitionWizardPage;
+import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractImplementationWizardPage;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
+import org.bonitasoft.studio.connectors.ui.provider.ConnectorDefinitionContentProvider;
+import org.bonitasoft.studio.connectors.ui.provider.UniqueConnectorDefinitionContentProvider;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -67,7 +72,6 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
     private boolean editMode = false;
     protected IRepositoryFileStore fileStore;
     protected final ConnectorImplementation implWorkingCopy;
-    private ImplementationWizardPage infoPage;
     protected ConnectorImplementation originalImpl;
     private IFile fileToOpen;
     protected  IRepositoryStore implStore;
@@ -124,9 +128,47 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 
 
 
-        infoPage = new ImplementationWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),sourceStore,getPageTitle(),getPageDescription(),messageProvider) ;
-        addPage(infoPage) ;
+        addPage(getDefinitionSelectionWizardPage(existingImplementation)) ;
+        addPage(getImplementationPage(existingImplementation));
     }
+
+
+
+	protected IWizardPage getDefinitionSelectionWizardPage(
+			List<ConnectorImplementation> existingImplementation) {
+		return new AbstractImplementationDefinitionWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),getSelectionPageTitle(),getSelectionPageDescription(),messageProvider){
+
+			@Override
+			protected ITreeContentProvider getContentProvider() {
+				return new UniqueConnectorDefinitionContentProvider();
+			}
+			
+		};
+	}
+	
+	protected String getSelectionPageDescription() {
+		return Messages.selectConnectorDefinitionDesc;
+	}
+
+
+
+	protected String getSelectionPageTitle() {
+		return Messages.selectConnectorDefinitionTitle;
+	}
+
+
+
+	protected IWizardPage getImplementationPage(
+			List<ConnectorImplementation> existingImplementation) {
+		return new AbstractImplementationWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),sourceStore,getPageTitle(),getPageDescription(),messageProvider){
+
+			@Override
+			protected ITreeContentProvider getContentProvider() {
+				return new ConnectorDefinitionContentProvider();
+			}
+			
+		};
+	}
 
 
 

@@ -348,6 +348,7 @@ public class Messages extends NLS {
 	public static String idIsInvalid;
 	public static String noWhiteSpaceInPageID;
 	public static String parentCategoryLabel;
+	public static String definitionVersion;
 
 
 

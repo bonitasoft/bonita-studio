@@ -31,7 +31,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class ConnectorDefinitionTreeLabelProvider extends LabelProvider {
 
-    private final DefinitionResourceProvider messageProvider;
+    protected final DefinitionResourceProvider messageProvider;
 
     public ConnectorDefinitionTreeLabelProvider(
             DefinitionResourceProvider messageProvider) {
@@ -48,7 +48,7 @@ public class ConnectorDefinitionTreeLabelProvider extends LabelProvider {
         return super.getText(element);
     }
 
-    private String getLabelFor(Object element) {
+    protected String getLabelFor(Object element) {
         String desc = messageProvider
                 .getConnectorDefinitionDescription((ConnectorDefinition) element);
         String connectorDefinitionLabel = messageProvider

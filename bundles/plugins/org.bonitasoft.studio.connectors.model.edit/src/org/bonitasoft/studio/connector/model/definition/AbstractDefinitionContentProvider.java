@@ -36,9 +36,9 @@ import org.osgi.framework.Bundle;
  */
 public abstract class AbstractDefinitionContentProvider implements ITreeContentProvider {
 
-	private final List<ConnectorDefinition> connectorDefList;
-	private final DefinitionResourceProvider messageProvider;
-	private final String unloadableCategoryName;
+	protected final List<ConnectorDefinition> connectorDefList;
+	protected final DefinitionResourceProvider messageProvider;
+	protected final String unloadableCategoryName;
 
 	public AbstractDefinitionContentProvider() {
 		this(false);
@@ -106,7 +106,7 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
 				} else {
 					if (def.getCategory().isEmpty()
 							&& cat.getId().equals(Messages.uncategorized)) {//FIXME category id is nls string????
-									result.add(def);
+						result.add(def);
 					}
 					for (Category c : def.getCategory()) {
 						if (c.getId().equals(((Category) element).getId())) {
@@ -137,6 +137,24 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
 
 	@Override
 	public Object getParent(Object element) {
+		if(element instanceof ConnectorDefinition){
+			ConnectorDefinition def = (ConnectorDefinition) element ;
+			if(def.getCategory().isEmpty()){
+				return null;
+			}
+			for(Category c : def.getCategory()){
+				if(!new DefinitionCategoryContentProvider(messageProvider.getAllCategories()).hasChildren(c)){
+					return c;
+				}
+			}
+		}else if(element instanceof Category){
+			Category category = (Category) element ;
+			for(Category c : messageProvider.getAllCategories()){
+				if(c.getId().equals(category.getParentCategoryId())){
+					return c;
+				}
+			}
+		}
 		return null;
 	}
 

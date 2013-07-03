@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connector.model.definition.wizard;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
@@ -34,6 +35,7 @@ import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
 import org.bonitasoft.studio.connector.model.definition.dialog.CategorySelectionDialog;
+import org.bonitasoft.studio.connector.model.definition.dialog.DefinitionCategoryContentProvider;
 import org.bonitasoft.studio.connector.model.definition.dialog.NewCategoryDialog;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
@@ -63,6 +65,9 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -99,7 +104,7 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 	private final Image defaultImage;
 	private final DefinitionResourceProvider messageProvider;
 
-	private Button removeCategoryButton;
+	//private Button removeCategoryButton;
 
 	public DefinitionInformationWizardPage(ConnectorDefinition definition, Properties messages,List<ConnectorDefinition> existingDefinitions,Image defaultImage, DefinitionResourceProvider messageProvider) {
 		super(DefinitionInformationWizardPage.class.getName());
@@ -264,7 +269,7 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 			}
 		});
 
-		createCategoryVieer(mainComposite) ;
+		createCategoryViewer(mainComposite) ;
 
 		createDependenciesViewer(mainComposite) ;
 
@@ -285,15 +290,22 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 		}
 	}
 
-	protected void createCategoryVieer(Composite mainComposite) {
+	protected void createCategoryViewer(Composite mainComposite) {
 		Label categoryLabel = new Label(mainComposite, SWT.NONE);
-		categoryLabel.setText(Messages.categoriesLabel);
+		categoryLabel.setText(Messages.categoryLabel);
 		categoryLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.TOP).create()) ;
 
-		final TableViewer categoryViewer = new TableViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION) ;
-		categoryViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).create()) ;
+		final TreeViewer categoryViewer = new TreeViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION | SWT.SINGLE) ;
+		categoryViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).create()) ;
 		categoryViewer.addSelectionChangedListener(this) ;
-		categoryViewer.setContentProvider(new ArrayContentProvider()) ;
+		categoryViewer.addFilter(new ViewerFilter() {
+			
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				return element instanceof Category && !Messages.uncategorized.equals(((Category) element).getId());
+			}
+		});
+		categoryViewer.setContentProvider(new DefinitionCategoryContentProvider()) ;
 		categoryViewer.setLabelProvider(new ConnectorDefinitionTreeLabelProvider(messageProvider){
 			@Override
 			public String getText(Object element) {
@@ -304,33 +316,49 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 				return label ;
 			}
 		}) ;
+		categoryViewer.setInput(messageProvider.getAllCategories());
 
+		categoryViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				Category selection = (Category) ((IStructuredSelection) event.getSelection()).getFirstElement();
+				definition.getCategory().clear();
+				
+				definition.getCategory().add(selection);
+				List<Category> categories = (List<Category>) categoryViewer.getInput();
+				List<Category> parentCategories = new ArrayList<Category>();
+				getParentCategories(parentCategories,categories,selection);
+				definition.getCategory().addAll(parentCategories);
+			}
+		});
+		
 		final Composite buttonComposite = new Composite(mainComposite, SWT.NONE) ;
 		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create()) ;
 		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create()) ;
 
-		final Button addButton = new Button(buttonComposite, SWT.FLAT) ;
-		addButton.setText(Messages.add) ;
-		addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create()) ;
-		addButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				CategorySelectionDialog dialog = new CategorySelectionDialog(Display.getDefault().getActiveShell(),messageProvider) ;
-				if(dialog.open() == Dialog.OK){
-					Set<String> existingCatIds = new HashSet<String>() ;
-					for(Category existing : definition.getCategory()){
-						existingCatIds.add(existing.getId()) ;
-					}
-					for(Category cat :  dialog.getCategories()){
-						if(!existingCatIds.contains(cat.getId())){
-							definition.getCategory().add(cat) ;
-							messageProvider.setCategoryLabel(messages,cat.getId(), messageProvider.getCategoryLabel(cat)) ;
-						}
-					}
-					categoryViewer.refresh() ;
-				}
-			}
-		}) ;
+//		final Button addButton = new Button(buttonComposite, SWT.FLAT) ;
+//		addButton.setText(Messages.add) ;
+//		addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create()) ;
+//		addButton.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				CategorySelectionDialog dialog = new CategorySelectionDialog(Display.getDefault().getActiveShell(),messageProvider) ;
+//				if(dialog.open() == Dialog.OK){
+//					Set<String> existingCatIds = new HashSet<String>() ;
+//					for(Category existing : definition.getCategory()){
+//						existingCatIds.add(existing.getId()) ;
+//					}
+//					for(Category cat :  dialog.getCategories()){
+//						if(!existingCatIds.contains(cat.getId())){
+//							definition.getCategory().add(cat) ;
+//							messageProvider.setCategoryLabel(messages,cat.getId(), messageProvider.getCategoryLabel(cat)) ;
+//						}
+//					}
+//					categoryViewer.refresh() ;
+//				}
+//			}
+//		}) ;
 
 
 		final Button createButton = new Button(buttonComposite, SWT.FLAT) ;
@@ -354,28 +382,39 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 					if(imageFile != null){
 						messageProvider.createIcon(imageFile,newCategory.getIcon()) ;
 					}
-					definition.getCategory().add(newCategory) ;
-					categoryViewer.refresh() ;
+					List<Object> input = (List<Object>) categoryViewer.getInput();
+					input.add(newCategory);
+					categoryViewer.setInput(input) ;
 				}
 			}
 		}) ;
 
-		removeCategoryButton = new Button(buttonComposite, SWT.FLAT) ;
-		removeCategoryButton.setText(Messages.remove) ;
-		removeCategoryButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create()) ;
-		removeCategoryButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				definition.getCategory().removeAll(((IStructuredSelection) categoryViewer.getSelection()).toList()) ;
-				for(Object c : ((IStructuredSelection) categoryViewer.getSelection()).toList()){
-					messageProvider.removeCategoryLabel(messages,(Category)c);
-				}
-				categoryViewer.refresh() ;
-			}
-		}) ;
+//		removeCategoryButton = new Button(buttonComposite, SWT.FLAT) ;
+//		removeCategoryButton.setText(Messages.remove) ;
+//		removeCategoryButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create()) ;
+//		removeCategoryButton.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				definition.getCategory().removeAll(((IStructuredSelection) categoryViewer.getSelection()).toList()) ;
+//				for(Object c : ((IStructuredSelection) categoryViewer.getSelection()).toList()){
+//					messageProvider.removeCategoryLabel(messages,(Category)c);
+//				}
+//				categoryViewer.refresh() ;
+//			}
+//		}) ;
 
-		context.bindValue(ViewersObservables.observeInput(categoryViewer), EMFObservables.observeValue(definition, ConnectorDefinitionPackage.Literals.CONNECTOR_DEFINITION__CATEGORY)) ;
+	//	context.bindList(ViewersObservables.observeMultiPostSelection(categoryViewer), EMFObservables.observeList(definition, ConnectorDefinitionPackage.Literals.CONNECTOR_DEFINITION__CATEGORY)) ;
 	}
+
+	protected void getParentCategories(List<Category> parentCategories,List<Category> allCategories, Category selection) {
+		for(Category c : allCategories){
+			if(selection.getParentCategoryId() != null && selection.getParentCategoryId().equals(c.getId())){
+				parentCategories.add(c);
+				getParentCategories(parentCategories, allCategories, c);
+			}
+		}
+	}
+
 
 	protected void createDependenciesViewer(Composite mainComposite) {
 		Label dependencyLabel = new Label(mainComposite, SWT.NONE);
@@ -475,9 +514,9 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 		if(removeJarButton != null && !removeJarButton.isDisposed()){
 			removeJarButton.setEnabled(((IStructuredSelection) selection).getFirstElement() instanceof String) ;
 		}
-		if(removeCategoryButton != null  && !removeCategoryButton.isDisposed()){
-			removeCategoryButton.setEnabled(((IStructuredSelection) selection).getFirstElement() instanceof Category) ;
-		}
+//		if(removeCategoryButton != null  && !removeCategoryButton.isDisposed()){
+//			removeCategoryButton.setEnabled(((IStructuredSelection) selection).getFirstElement() instanceof Category) ;
+//		}
 	}
 
 

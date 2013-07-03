@@ -28,6 +28,8 @@ import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionReposi
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
@@ -120,6 +122,12 @@ public class ActorFilterDefRepositoryStore extends AbstractDefinitionRepositoryS
         if(reloadCategories){
             messageProvider.loadDefinitionsCategories(null);
         }
+    }
+    
+    @Override
+    public void migrate() throws CoreException, MigrationException {
+    	super.migrate();
+    	 resourceProvider.loadDefinitionsCategories(null);
     }
 
 }

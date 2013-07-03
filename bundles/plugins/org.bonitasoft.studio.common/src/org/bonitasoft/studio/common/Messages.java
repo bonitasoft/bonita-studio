@@ -318,5 +318,6 @@ public class Messages extends NLS {
     public static String nameMustStartWithLowerCase;
 	public static String reservedKeyword;
 	public static String nameFieldIssue;
+	public static String filterLabel;
 	public static String InvalidCharacterError;
 }

@@ -16,18 +16,26 @@
  */
 package org.bonitasoft.studio.actors.ui.wizard;
 
+import java.util.List;
+
 import org.bonitasoft.engine.filter.AbstractUserFilter;
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.actors.repository.ActorFilterSourceRepositoryStore;
+import org.bonitasoft.studio.actors.ui.wizard.page.FilterUniqueDefinitionContentProvider;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractImplementationDefinitionWizardPage;
+import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractImplementationWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorImplementationWizard;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.wizard.IWizardPage;
 
 
 /**
@@ -76,6 +84,31 @@ public class FilterImplementationWizard extends ConnectorImplementationWizard {
     protected String getPageDescription() {
         return Messages.actorFilterImplementationPageDesc ;
     }
+    
+    @Override
+    protected IWizardPage getDefinitionSelectionWizardPage(
+    		List<ConnectorImplementation> existingImplementation) {
+    	return new AbstractImplementationDefinitionWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),getPageTitle(),getPageDescription(),messageProvider){
 
+			@Override
+			protected ITreeContentProvider getContentProvider() {
+				return new FilterUniqueDefinitionContentProvider();
+			}
+			
+		};
+    }
+
+    @Override
+    protected IWizardPage getImplementationPage(
+    		List<ConnectorImplementation> existingImplementation) {
+    	return new AbstractImplementationWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),sourceStore,getPageTitle(),getPageDescription(),messageProvider){
+
+			@Override
+			protected ITreeContentProvider getContentProvider() {
+				return new FilterUniqueDefinitionContentProvider();
+			}
+			
+		};
+    }
 
 }
