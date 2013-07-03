@@ -28,6 +28,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.CorrelationTypeActive;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
@@ -91,30 +92,32 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
 						List<AbstractCatchMessageEvent> events = ModelHelper.getAllItemsOfType(p, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT);
 						for(AbstractCatchMessageEvent ev : events){
 							if(targetElemName.equals(ev.getName())){
-								final List<String> targetKeyList = new ArrayList<String>();
-								for (ListExpression listExpression : ev.getCorrelation().getExpressions()) {
-									targetKeyList.add(listExpression.getExpressions().get(0).getContent());
-								}
-								final MultiStatus multi =  new MultiStatus(Activator.PLUGIN_ID, IStatus.OK, "", null);
-								final List<String> eventKeyList = new ArrayList<String>();
-								for (ListExpression listExpression : event.getCorrelation().getCorrelationAssociation().getExpressions()) {
-									if(listExpression.getExpressions().size()>0){
-										String eventKeyName = listExpression.getExpressions().get(0).getContent();
-										eventKeyList.add(eventKeyName);
-										if(!targetKeyList.contains(eventKeyName)){
-											String [] messageArgs = {eventKeyName,event.getName(),targetElemName};
-											multi.add(ctx.createFailureStatus(Messages.bind(Messages.Validation_CorrelationKeyNotUsed, messageArgs)));
+								if(event.getCorrelation().getCorrelationType()!=CorrelationTypeActive.INACTIVE){
+									final List<String> targetKeyList = new ArrayList<String>();
+									for (ListExpression listExpression : ev.getCorrelation().getExpressions()) {
+										targetKeyList.add(listExpression.getExpressions().get(0).getContent());
+									}
+									final MultiStatus multi =  new MultiStatus(Activator.PLUGIN_ID, IStatus.OK, "", null);
+									final List<String> eventKeyList = new ArrayList<String>();
+									for (ListExpression listExpression : event.getCorrelation().getCorrelationAssociation().getExpressions()) {
+										if(listExpression.getExpressions().size()>0){
+											String eventKeyName = listExpression.getExpressions().get(0).getContent();
+											eventKeyList.add(eventKeyName);
+											if(!targetKeyList.contains(eventKeyName)){
+												String [] messageArgs = {eventKeyName,event.getName(),targetElemName};
+												multi.add(ctx.createFailureStatus(Messages.bind(Messages.Validation_CorrelationKeyNotUsed, messageArgs)));
+											}
 										}
 									}
-								}
-								for (String eventKey : targetKeyList) {
-									if(!eventKeyList.contains(eventKey)){
-										String [] messageArgs = {eventKey,targetElemName,event.getName()};
-										multi.add(ctx.createFailureStatus(Messages.bind(Messages.Validation_CorrelationKeyNotDefine, messageArgs)));
+									for (String eventKey : targetKeyList) {
+										if(!eventKeyList.contains(eventKey)){
+											String [] messageArgs = {eventKey,targetElemName,event.getName()};
+											multi.add(ctx.createFailureStatus(Messages.bind(Messages.Validation_CorrelationKeyNotDefine, messageArgs)));
+										}
 									}
-								}
-								if(!multi.isOK()){
-									return multi;
+									if(!multi.isOK()){
+										return multi;
+									}
 								}
 								return ctx.createSuccessStatus();
 							}
