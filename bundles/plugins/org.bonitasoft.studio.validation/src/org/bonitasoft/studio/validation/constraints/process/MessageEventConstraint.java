@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -24,14 +25,17 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ListExpression;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
+import org.bonitasoft.studio.validation.Activator;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -72,20 +76,46 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
 		final Message event = (Message) ctx.getTarget();
 		if(event.getTargetProcessExpression() == null || event.getTargetProcessExpression().getContent() == null || event.getTargetProcessExpression().getContent().isEmpty()){
 			return ctx.createFailureStatus(Messages.targetProcessNotSet);
-		}else{
+		}
+		else{
 			if(ExpressionConstants.CONSTANT_TYPE.equals(event.getTargetProcessExpression().getType())){
 				final DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-				List<AbstractProcess> processes = store.findProcesses(event.getTargetProcessExpression().getContent());
+				final List<AbstractProcess> processes = store.findProcesses(event.getTargetProcessExpression().getContent());
 				if(processes.isEmpty()){
 					return ctx.createFailureStatus(Messages.bind(Messages.processDoesNotExist, event.getTargetProcessExpression().getContent(), event.getName()));
 				}
-				Expression targetElem = event.getTargetElementExpression();
+				final Expression targetElem = event.getTargetElementExpression();
 				if(targetElem != null && targetElem.getContent() != null && !targetElem.getContent().isEmpty() && targetElem.getType().equals(ExpressionConstants.CONSTANT_TYPE)){
 					String targetElemName = targetElem.getContent() ;
 					for(AbstractProcess p : processes){
 						List<AbstractCatchMessageEvent> events = ModelHelper.getAllItemsOfType(p, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT);
 						for(AbstractCatchMessageEvent ev : events){
 							if(targetElemName.equals(ev.getName())){
+								final List<String> targetKeyList = new ArrayList<String>();
+								for (ListExpression listExpression : ev.getCorrelation().getExpressions()) {
+									targetKeyList.add(listExpression.getExpressions().get(0).getContent());
+								}
+								final MultiStatus multi =  new MultiStatus(Activator.PLUGIN_ID, IStatus.OK, "", null);
+								final List<String> eventKeyList = new ArrayList<String>();
+								for (ListExpression listExpression : event.getCorrelation().getCorrelationAssociation().getExpressions()) {
+									if(listExpression.getExpressions().size()>0){
+										String eventKeyName = listExpression.getExpressions().get(0).getContent();
+										eventKeyList.add(eventKeyName);
+										if(!targetKeyList.contains(eventKeyName)){
+											String [] messageArgs = {eventKeyName,event.getName(),targetElemName};
+											multi.add(ctx.createFailureStatus(Messages.bind(Messages.Validation_CorrelationKeyNotUsed, messageArgs)));
+										}
+									}
+								}
+								for (String eventKey : targetKeyList) {
+									if(!eventKeyList.contains(eventKey)){
+										String [] messageArgs = {eventKey,targetElemName,event.getName()};
+										multi.add(ctx.createFailureStatus(Messages.bind(Messages.Validation_CorrelationKeyNotDefine, messageArgs)));
+									}
+								}
+								if(!multi.isOK()){
+									return multi;
+								}
 								return ctx.createSuccessStatus();
 							}
 						}
@@ -94,7 +124,7 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
 				}
 			}
 		}
-		return ctx.createSuccessStatus();
+		return ctx.createSuccessStatus();	
 	}
 
 }

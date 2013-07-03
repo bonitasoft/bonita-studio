@@ -20,6 +20,8 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
+    public static String Validation_CorrelationKeyNotUsed;
+    public static String Validation_CorrelationKeyNotDefine;
     public static String Validation_SeveralDefaultTransitionsAfterXORGateway;
     public static String Validation_NotConditionalTransitionAfterXORGateway;
     public static String Validation_Validator_EmptyErrorMessage;
