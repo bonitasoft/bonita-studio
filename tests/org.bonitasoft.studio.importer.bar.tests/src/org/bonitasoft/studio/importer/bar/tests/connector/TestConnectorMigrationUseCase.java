@@ -320,7 +320,7 @@ public class TestConnectorMigrationUseCase {
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
 	}
-	
+
 	@Test
 	public void testAlfrescoConnectorsMigration() throws Exception {
 		final URL url = TestConnectorMigrationUseCase.class
@@ -336,6 +336,38 @@ public class TestConnectorMigrationUseCase {
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 4, connectors.size());
+	}
+
+	@Test
+	public void testTwitterDirectConnectorMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("TwitterDirectMigrationUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
+	}
+
+	@Test
+	public void testTwitterUpdateConnectorMigration() throws Exception {
+		final URL url = TestConnectorMigrationUseCase.class
+				.getResource("TwitterUpdateMigrationUseCase--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
 	}
 
 }
