@@ -21,17 +21,22 @@ import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
 import org.bonitasoft.studio.profiles.manager.IBonitaActivitiesCategory;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
@@ -40,9 +45,10 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
  * @author Mickael Istria
- *
+ * 
  */
-public class ActivateValidationPropertySectionContribution implements IExtensibleGridPropertySectionContribution {
+public class ActivateValidationPropertySectionContribution implements
+		IExtensibleGridPropertySectionContribution {
 
 	private Button checkbox;
 	private MainProcess process;
@@ -50,78 +56,128 @@ public class ActivateValidationPropertySectionContribution implements IExtensibl
 
 	private EMFDataBindingContext context;
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#createControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bonitasoft.studio.properties.sections.general.
+	 * IExtenstibleGridPropertySectionContribution
+	 * #createControl(org.eclipse.swt.widgets.Composite,
+	 * org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory)
 	 */
-	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection page) {
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	public void createControl(Composite composite,
+			TabbedPropertySheetWidgetFactory widgetFactory,
+			ExtensibleGridPropertySection page) {
+		composite
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		composite.setLayout(new RowLayout());
- 		checkbox = widgetFactory.createButton(composite, Messages.GeneralSection_ActivateValidation, SWT.CHECK); //$NON-NLS-1$
-	
-		if (process != null) {
-			checkbox.setSelection(process.isEnableValidation()) ;
-		}
-	
-		context = new EMFDataBindingContext() ;
-		createBinding(context) ;
-		
-	}
+		checkbox = widgetFactory.createButton(composite,
+				Messages.GeneralSection_ActivateValidation, SWT.CHECK); //$NON-NLS-1$
 
+		if (process != null) {
+			checkbox.setSelection(process.isEnableValidation());
+		}
+		checkbox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (!checkbox.getSelection()) {
+					IFile target = process.eResource() != null ? WorkspaceSynchronizer
+							.getFile(process.eResource()) : null;
+					if (target != null) {
+						ProcessMarkerNavigationProvider.deleteMarkers(target);
+						org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider
+								.deleteMarkers(target);
+					}
+				}
+			}
+		});
+		context = new EMFDataBindingContext();
+		createBinding(context);
+
+	}
 
 	protected void createBinding(EMFDataBindingContext context) {
-		ISWTObservableValue observable = SWTObservables.observeSelection(checkbox) ;
-		context.bindValue(observable, EMFEditObservables.observeValue(editingDomain, process, ProcessPackage.Literals.MAIN_PROCESS__ENABLE_VALIDATION));	
+		ISWTObservableValue observable = SWTObservables
+				.observeSelection(checkbox);
+		context.bindValue(observable, EMFEditObservables.observeValue(
+				editingDomain, process,
+				ProcessPackage.Literals.MAIN_PROCESS__ENABLE_VALIDATION));
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#getLabel()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bonitasoft.studio.properties.sections.general.
+	 * IExtenstibleGridPropertySectionContribution#getLabel()
 	 */
 	public String getLabel() {
-		return  " " ; 
+		return " ";
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#refresh()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bonitasoft.studio.properties.sections.general.
+	 * IExtenstibleGridPropertySectionContribution#refresh()
 	 */
 	public void refresh() {
-		
-	}
-	
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#setEObject(org.eclipse.emf.ecore.EObject)
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bonitasoft.studio.properties.sections.general.
+	 * IExtenstibleGridPropertySectionContribution
+	 * #setEObject(org.eclipse.emf.ecore.EObject)
 	 */
 	public void setEObject(EObject object) {
-		this.process = (MainProcess) object;			
+		this.process = (MainProcess) object;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bonitasoft.studio.properties.sections.general.
+	 * IExtenstibleGridPropertySectionContribution
+	 * #setEditingDomain(org.eclipse.emf.transaction.TransactionalEditingDomain)
 	 */
 	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
 		this.editingDomain = editingDomain;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bonitasoft.studio.properties.sections.general.
+	 * IExtenstibleGridPropertySectionContribution
+	 * #isRelevantFor(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isRelevantFor(EObject eObject) {
-		return eObject instanceof MainProcess && BonitaProfilesManager.getInstance().isEnabled(IBonitaActivitiesCategory.VALIDATION) ;
+		return eObject instanceof MainProcess
+				&& BonitaProfilesManager.getInstance().isEnabled(
+						IBonitaActivitiesCategory.VALIDATION);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.properties.sections.general.IExtenstibleGridPropertySectionContribution#setSelection(org.eclipse.jface.viewers.ISelection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bonitasoft.studio.properties.sections.general.
+	 * IExtenstibleGridPropertySectionContribution
+	 * #setSelection(org.eclipse.jface.viewers.ISelection)
 	 */
 	public void setSelection(ISelection selection) {
 		// NOTHING
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#dispose()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.bonitasoft.studio.common.properties.
+	 * IExtensibleGridPropertySectionContribution#dispose()
 	 */
 	public void dispose() {
-		if(context != null){
-			context.dispose() ;
+		if (context != null) {
+			context.dispose();
 		}
 	}
 

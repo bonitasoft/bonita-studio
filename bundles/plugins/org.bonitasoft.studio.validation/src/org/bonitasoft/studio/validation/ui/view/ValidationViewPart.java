@@ -64,9 +64,10 @@ import org.eclipse.ui.part.ViewPart;
 
 /**
  * @author Florine Boudin
- *
+ * 
  */
-public class ValidationViewPart extends ViewPart implements ISelectionListener,ISelectionChangedListener,ISelectionProvider{
+public class ValidationViewPart extends ViewPart implements ISelectionListener,
+		ISelectionChangedListener, ISelectionProvider {
 
 	public static String ID = "org.bonitasoft.studio.validation.view";
 
@@ -79,47 +80,59 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets
+	 * .Composite)
 	 */
 	public void createPartControl(Composite parent) {
 
 		Composite mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(5, 0, 3, 1).create());
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults()
+				.extendedMargins(5, 0, 3, 1).create());
 
 		createValidateButton(mainComposite);
 		createTableComposite(mainComposite);
 
-
-		ISelectionService ss = getSite().getWorkbenchWindow().getSelectionService();
+		ISelectionService ss = getSite().getWorkbenchWindow()
+				.getSelectionService();
 		ss.addPostSelectionListener(this);
-		if(getSite().getPage().getActiveEditor() != null){
-			selectionProvider =  getSite().getPage().getActiveEditor().getEditorSite().getSelectionProvider();
+		if (getSite().getPage().getActiveEditor() != null) {
+			selectionProvider = getSite().getPage().getActiveEditor()
+					.getEditorSite().getSelectionProvider();
 			getSite().setSelectionProvider(this);
 
 		}
 
-		TableColumnSorter sorter = new TableColumnSorter(tableViewer) ;
-		sorter.setColumn(severityColumn.getColumn()) ;
+		TableColumnSorter sorter = new TableColumnSorter(tableViewer);
+		sorter.setColumn(severityColumn.getColumn());
 	}
 
 	private void createValidateButton(Composite mainComposite) {
 
-		IWorkbenchPage activePage =  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		IWorkbenchPage activePage = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage();
 		validateAction = new ValidationViewAction();
 		validateAction.setActivePage(activePage);
 		validateAction.setTableViewer(tableViewer);
 
-
-		Composite buttonComposite = new Composite(mainComposite,SWT.NONE);
-		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0,0).create());
-		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		Button validateButton = new Button(buttonComposite,SWT.PUSH);
+		Composite buttonComposite = new Composite(mainComposite, SWT.NONE);
+		buttonComposite.setLayout(GridLayoutFactory.fillDefaults()
+				.margins(0, 0).create());
+		buttonComposite.setLayoutData(GridDataFactory.fillDefaults()
+				.grab(true, false).create());
+		Button validateButton = new Button(buttonComposite, SWT.PUSH);
 		validateButton.setLayoutData(GridDataFactory.fillDefaults().create());
 		validateButton.setText(Messages.validationViewValidateButtonLabel);
 		validateButton.addSelectionListener(new SelectionAdapter() {
-			/* (non-Javadoc)
-			 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see
+			 * org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse
+			 * .swt.events.SelectionEvent)
 			 */
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -136,12 +149,14 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 	private void createTableComposite(Composite mainComposite) {
 		Composite tableComposite = new Composite(mainComposite, SWT.NONE);
 		tableComposite.setLayout(GridLayoutFactory.fillDefaults().create());
-		tableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		tableComposite.setLayoutData(GridDataFactory.fillDefaults()
+				.grab(true, true).create());
 
-
-		tableViewer = new TableViewer(tableComposite,SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION) ;
+		tableViewer = new TableViewer(tableComposite, SWT.SINGLE | SWT.BORDER
+				| SWT.FULL_SELECTION);
 		final Table table = tableViewer.getTable();
-		table.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(400, SWT.DEFAULT).create());
+		table.setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
+				.hint(400, SWT.DEFAULT).create());
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
@@ -162,38 +177,48 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 		tableViewer.addSelectionChangedListener(this);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
 	 */
 	public void setFocus() {
 
 	}
 
-
-	private void addElementNameColumn(){
-		TableViewerColumn elements = new TableViewerColumn(tableViewer, SWT.NONE);
+	private void addElementNameColumn() {
+		TableViewerColumn elements = new TableViewerColumn(tableViewer,
+				SWT.NONE);
 		elements.getColumn().setText(Messages.validationViewElementColumnName);
-		elements.setLabelProvider(new ColumnLabelProvider(){
+		elements.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				Marker marker = (Marker) element;
 				try {
 
-					String elementId = (String) marker.getAttribute(org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID);
+					String elementId = (String) marker
+							.getAttribute(org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID);
 					String location = (String) marker.getAttribute("location");
 					int idx = location.lastIndexOf(":");
-					if(idx>0){
-						String result = location.substring(idx+1);;
-						if(!(result.startsWith("<") && result.endsWith(">"))){
+					if (idx > 0) {
+						String result = location.substring(idx + 1);
+						;
+						if (!(result.startsWith("<") && result.endsWith(">"))) {
 							return result;
-						}else{
-							DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-							DiagramFileStore file = store.getChild(marker.getResource().getLocation().toFile().getName());
-							if(file != null){
-								EObject view = file.getEMFResource().getEObject(elementId);
-								if(view != null){
-									for(EObject object : view.eCrossReferences()){
-										if(object instanceof Element){
+						} else {
+							DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager
+									.getInstance().getRepositoryStore(
+											DiagramRepositoryStore.class);
+							DiagramFileStore file = store.getChild(marker
+									.getResource().getLocation().toFile()
+									.getName());
+							if (file != null) {
+								EObject view = file.getEMFResource()
+										.getEObject(elementId);
+								if (view != null) {
+									for (EObject object : view
+											.eCrossReferences()) {
+										if (object instanceof Element) {
 											return ((Element) object).getName();
 										}
 									}
@@ -213,10 +238,12 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 
 	}
 
-	private void addErrorDescriptionColumn(){
-		TableViewerColumn elements = new TableViewerColumn(tableViewer, SWT.NONE);
-		elements.getColumn().setText(Messages.validationViewDescriptionColumnName);
-		elements.setLabelProvider(new ColumnLabelProvider(){
+	private void addErrorDescriptionColumn() {
+		TableViewerColumn elements = new TableViewerColumn(tableViewer,
+				SWT.NONE);
+		elements.getColumn().setText(
+				Messages.validationViewDescriptionColumnName);
+		elements.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 
@@ -230,14 +257,13 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 		});
 	}
 
-
-	private void addSeverityDescriptionColumn(){
+	private void addSeverityDescriptionColumn() {
 		severityColumn = new TableViewerColumn(tableViewer, SWT.NONE);
-		severityColumn.getColumn().setText(Messages.validationViewSeverityColumnName);
+		severityColumn.getColumn().setText(
+				Messages.validationViewSeverityColumnName);
 		severityColumn.setLabelProvider(new SeverityColumnLabelProvider());
 		ColumnViewerToolTipSupport.enableFor(severityColumn.getViewer());
 	}
-
 
 	@Override
 	public void dispose() {
@@ -267,64 +293,77 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,I
 
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
-		if(event.getSelection() instanceof StructuredSelection && ((StructuredSelection)event.getSelection()).getFirstElement() instanceof Marker){
-			Marker m =(Marker) ((StructuredSelection)event.getSelection()).getFirstElement();
+		if (event.getSelection() instanceof StructuredSelection
+				&& ((StructuredSelection) event.getSelection())
+						.getFirstElement() instanceof Marker) {
+			Marker m = (Marker) ((StructuredSelection) event.getSelection())
+					.getFirstElement();
 
-			String elementId = m.getAttribute(org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID, null);
-			if (elementId == null || !(getSite().getPage().getActiveEditor() instanceof DiagramEditor)) {
-				return ;
+			String elementId = m
+					.getAttribute(
+							org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID,
+							null);
+			if (elementId == null
+					|| !(getSite().getPage().getActiveEditor() instanceof DiagramEditor)) {
+				return;
 			}
-			DiagramEditor editor = (DiagramEditor) getSite().getPage().getActiveEditor();
-			Map editPartRegistry = editor.getDiagramGraphicalViewer().getEditPartRegistry();
-			EObject targetView = editor.getDiagram().eResource().getEObject(elementId);
+			DiagramEditor editor = (DiagramEditor) getSite().getPage()
+					.getActiveEditor();
+			Map editPartRegistry = editor.getDiagramGraphicalViewer()
+					.getEditPartRegistry();
+			EObject targetView = editor.getDiagram().eResource()
+					.getEObject(elementId);
 			if (targetView == null) {
-				return ;
+				return;
 			}
-			EditPart targetEditPart = (EditPart) editPartRegistry.get(targetView);
+			EditPart targetEditPart = (EditPart) editPartRegistry
+					.get(targetView);
 			if (targetEditPart != null) {
 				ProcessDiagramEditorUtil.selectElementsInDiagram(editor,
 						Arrays.asList(new EditPart[] { targetEditPart }));
 			}
 		}
 
-
 	}
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
-		if(selection instanceof StructuredSelection && !tableViewer.getTable().isDisposed()){
-			Object selectedEP = ((StructuredSelection) selection).getFirstElement();
-			if(selectedEP instanceof IGraphicalEditPart){
+		if (selection instanceof StructuredSelection
+				&& !tableViewer.getTable().isDisposed()) {
+			Object selectedEP = ((StructuredSelection) selection)
+					.getFirstElement();
+			if (selectedEP instanceof IGraphicalEditPart) {
 				IEditorPart editorPart = getSite().getPage().getActiveEditor();
-				if(editorPart != null ){
-					if(!editorPart.equals(tableViewer.getInput())){
-						selectionProvider = editorPart.getEditorSite().getSelectionProvider();
+				if (editorPart != null) {
+					if (!editorPart.equals(tableViewer.getInput())) {
+						selectionProvider = editorPart.getEditorSite()
+								.getSelectionProvider();
 						tableViewer.setInput(editorPart);
-					}else{
+					} else {
 
 						tableViewer.refresh();
 					}
 				}
-				tableViewer.getTable().layout(true,true);
+				tableViewer.getTable().layout(true, true);
 			}
 
 			// change Validate Action
-			IWorkbenchPage activePage =  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			IWorkbenchPage activePage = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage();
 
-			//tableViewer.setInput(activePage.getActiveEditor());
+			// tableViewer.setInput(activePage.getActiveEditor());
 			validateAction = new ValidationViewAction();
 			validateAction.setActivePage(activePage);
 			validateAction.setTableViewer(tableViewer);
 
 			tableViewer.refresh();
 
-
 		}
 	}
 
 	public void refreshViewer() {
-		if(tableViewer != null && !tableViewer.getTable().isDisposed()){
+		if (tableViewer != null && !tableViewer.getTable().isDisposed()) {
 			tableViewer.setInput(tableViewer.getInput());
 		}
 	}
