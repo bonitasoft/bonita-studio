@@ -33,7 +33,7 @@ import org.eclipse.core.runtime.Status;
 
 /**
  * @author Baptiste Mesta
- *
+ * 
  */
 public class ApplicationLookNFeelFileStore extends LookNFeelFileStore {
 
@@ -53,63 +53,69 @@ public class ApplicationLookNFeelFileStore extends LookNFeelFileStore {
 	 * @throws ThemeCreationException
 	 */
 	public ApplicationLookNFeelFileStore(String name, IRepositoryStore store) {
-		super(name,store);
+		super(name, store);
 	}
 
 	public IFolder getResourcesApplicationFolderAsIResource() {
-		return getResource().getFolder(APPLICATION_FOLDER)  ;
+		return getResource().getFolder(APPLICATION_FOLDER);
 	}
-	
+
 	public File getResourcesApplicationFolder() {
-		return getResource().getFolder(APPLICATION_FOLDER).getLocation().toFile() ;
+		return getResource().getFolder(APPLICATION_FOLDER).getLocation()
+				.toFile();
 	}
+
 	public File getProcessTemplate() {
 		return getTemplate(TemplateType.PROCESS);
 	}
-	
+
 	protected File getTemplateFolder() {
 		return getResource().getFolder(HTML_FOLDER).getLocation().toFile();
 	}
-	
+
 	public File getConsultationTemplate() {
 		return getTemplate(TemplateType.GLOBAL_CONSULTATION);
 	}
-	
+
 	public File getErrorTemplate() {
 		return getTemplate(TemplateType.ERROR);
 	}
-	
+
 	public File getGlobalPageTemplate() {
 		return getTemplate(TemplateType.GLOBAL_PAGE);
 	}
+
 	public File getLoginPage() {
 		return getTemplate(TemplateType.LOGIN_PAGE);
 	}
+
 	public File getHostPage() {
 		return getTemplate(TemplateType.HOST_PAGE);
 	}
 
-	public File getConfirmationTemplate(){
+	public File getConfirmationTemplate() {
 		return getTemplate(TemplateType.CONFIRMATION);
 	}
+
 	public File getWelcomePage() {
 		return getTemplate(TemplateType.WELCOME);
 	}
 
-	public File getTemplate(TemplateType type){
+	public File getTemplate(TemplateType type) {
 		String templateFileName = getTemplateFileName(type);
-		if(templateFileName != null){
-			return new File(getTemplateFolder() ,templateFileName);
-		} else{
+		if (templateFileName != null) {
+			return new File(getTemplateFolder(), templateFileName);
+		} else {
 			return null;
 		}
 	}
-	
-	public IFile getTemplateAsIResource(TemplateType type){
+
+	public IFile getTemplateAsIResource(TemplateType type) {
 		String templateFileName = getTemplateFileName(type);
-		if(templateFileName != null){
-			return getResource().getFolder(HTML_FOLDER).getFile(templateFileName);
-		} else{
+		if (templateFileName != null) {
+			return getResource().getFolder(HTML_FOLDER).getFile(
+					templateFileName);
+		} else {
 			return null;
 		}
 	}
@@ -143,44 +149,45 @@ public class ApplicationLookNFeelFileStore extends LookNFeelFileStore {
 	/**
 	 * 
 	 * @param type
-	 * @return
-	 * 		true if the template was deleted
+	 * @return true if the template was deleted
 	 */
-	public boolean deleteTemplate(TemplateType type){
+	public boolean deleteTemplate(TemplateType type) {
 		File template = getTemplate(type);
-		if(template!= null && template.exists()){
-			return template.delete() ;
+		if (template != null && template.exists()) {
+			return template.delete();
 		}
 		return false;
 	}
 
-	public void setTemplate(TemplateType type, InputStream inputStream) throws CoreException{
+	public void setTemplate(TemplateType type, InputStream inputStream)
+			throws CoreException {
 		File template = getTemplate(type);
 		if (template != null) {
 			if (!template.exists()) {
-				try{
-					template.createNewFile() ;
-					FileOutputStream fos = new FileOutputStream(template) ;
-					FileUtil.copy(inputStream, fos) ;
-					fos.close() ;
-				}catch (Exception e) {
-					BonitaStudioLog.error(e) ;
+				try {
+					File file = new File(template.getParent());
+					file.mkdirs();
+					template.createNewFile();
+					FileOutputStream fos = new FileOutputStream(template);
+					FileUtil.copy(inputStream, fos);
+					fos.close();
+				} catch (Exception e) {
+					BonitaStudioLog.error(e);
 				}
-			}else{
-				try{
-					template.delete() ;
-					template.createNewFile() ;
-					FileOutputStream fos = new FileOutputStream(template) ;
-					FileUtil.copy(inputStream, fos) ;
-					fos.close() ;
-				}catch (Exception e) {
-					BonitaStudioLog.error(e) ;
+			} else {
+				try {
+					template.delete();
+					template.createNewFile();
+					FileOutputStream fos = new FileOutputStream(template);
+					FileUtil.copy(inputStream, fos);
+					fos.close();
+				} catch (Exception e) {
+					BonitaStudioLog.error(e);
 				}
 			}
 		} else {
 			throw new CoreException(Status.CANCEL_STATUS);
 		}
 	}
-
 
 }
