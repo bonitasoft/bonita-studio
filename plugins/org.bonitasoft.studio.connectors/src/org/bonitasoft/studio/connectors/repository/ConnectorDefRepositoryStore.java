@@ -28,6 +28,8 @@ import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
@@ -39,91 +41,96 @@ import org.osgi.framework.Bundle;
  */
 public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositoryStore<ConnectorDefFileStore>{
 
-    public static final String STORE_NAME = "connectors-def";
-    private static final Set<String> extensions = new HashSet<String>() ;
-    public static final String CONNECTOR_DEF_EXT = "def";
-    static{
-        extensions.add(CONNECTOR_DEF_EXT) ;
-    }
+	public static final String STORE_NAME = "connectors-def";
+	private static final Set<String> extensions = new HashSet<String>() ;
+	public static final String CONNECTOR_DEF_EXT = "def";
+	static{
+		extensions.add(CONNECTOR_DEF_EXT) ;
+	}
 
 
-    private DefinitionResourceProvider resourceProvider;
+	private DefinitionResourceProvider resourceProvider;
 
-    @Override
-    public void createRepositoryStore(IRepository repository) {
-        super.createRepositoryStore(repository);
-        final ConnectorPlugin plugin = ConnectorPlugin.getDefault();
-        final Bundle bundle = plugin.getBundle();
-        resourceProvider = DefinitionResourceProvider.getInstance(this,bundle);
-        resourceProvider.loadDefinitionsCategories(null);
-    }
+	@Override
+	public void createRepositoryStore(IRepository repository) {
+		super.createRepositoryStore(repository);
+		final ConnectorPlugin plugin = ConnectorPlugin.getDefault();
+		final Bundle bundle = plugin.getBundle();
+		resourceProvider = DefinitionResourceProvider.getInstance(this,bundle);
+		resourceProvider.loadDefinitionsCategories(null);
+	}
 
-    @Override
-    public ConnectorDefFileStore createRepositoryFileStore(String fileName) {
-        if(fileName.endsWith(CONNECTOR_DEF_EXT)){
-            return new ConnectorDefFileStore(fileName, this);
-        }
-        return null;
-    }
+	@Override
+	public ConnectorDefFileStore createRepositoryFileStore(String fileName) {
+		if(fileName.endsWith(CONNECTOR_DEF_EXT)){
+			return new ConnectorDefFileStore(fileName, this);
+		}
+		return null;
+	}
 
-    public DefinitionResourceProvider getResourceProvider() {
-        return resourceProvider;
-    }
+	public DefinitionResourceProvider getResourceProvider() {
+		return resourceProvider;
+	}
 
-    @Override
-    protected ConnectorDefFileStore doImportInputStream(String fileName, InputStream inputStream) {
-        ConnectorDefFileStore definition = super.doImportInputStream(fileName, inputStream);
-        if(definition != null){
-            final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(this,getBundle());
-            reloadCategories(definition.getContent(), resourceProvider);
-        }
-        return definition;
-    }
+	@Override
+	protected ConnectorDefFileStore doImportInputStream(String fileName, InputStream inputStream) {
+		ConnectorDefFileStore definition = super.doImportInputStream(fileName, inputStream);
+		if(definition != null){
+			final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(this,getBundle());
+			reloadCategories(definition.getContent(), resourceProvider);
+		}
+		return definition;
+	}
 
-    private void reloadCategories(org.bonitasoft.studio.connector.model.definition.ConnectorDefinition definition,DefinitionResourceProvider messageProvider) {
-        boolean reloadCategories = false ;
-        for(Category c : definition.getCategory()){
-            if(!messageProvider.getAllCategories().contains(c)){
-                reloadCategories = true ;
-                break;
-            }
-        }
-        if(reloadCategories){
-            messageProvider.loadDefinitionsCategories(null);
-        }
-    }
-
-
-    @Override
-    public String getName() {
-        return STORE_NAME ;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return Messages.connectorDefRepositoryName;
-    }
-
-    @Override
-    public Image getIcon() {
-        return Pics.getImage("connector.png",ConnectorPlugin.getDefault());
-    }
-
-    @Override
-    public Set<String> getCompatibleExtensions() {
-        return extensions;
-    }
+	private void reloadCategories(org.bonitasoft.studio.connector.model.definition.ConnectorDefinition definition,DefinitionResourceProvider messageProvider) {
+		boolean reloadCategories = false ;
+		for(Category c : definition.getCategory()){
+			if(!messageProvider.getAllCategories().contains(c)){
+				reloadCategories = true ;
+				break;
+			}
+		}
+		if(reloadCategories){
+			messageProvider.loadDefinitionsCategories(null);
+		}
+	}
 
 
-    @Override
-    protected ConnectorDefFileStore getDefFileStore(URL url) {
-        return new URLConnectorDefFileStore(url, this);
-    }
+	@Override
+	public String getName() {
+		return STORE_NAME ;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return Messages.connectorDefRepositoryName;
+	}
+
+	@Override
+	public Image getIcon() {
+		return Pics.getImage("connector.png",ConnectorPlugin.getDefault());
+	}
+
+	@Override
+	public Set<String> getCompatibleExtensions() {
+		return extensions;
+	}
 
 
-    @Override
-    protected Bundle getBundle() {
-        return ConnectorPlugin.getDefault().getBundle();
-    }
+	@Override
+	protected ConnectorDefFileStore getDefFileStore(URL url) {
+		return new URLConnectorDefFileStore(url, this);
+	}
 
+
+	@Override
+	protected Bundle getBundle() {
+		return ConnectorPlugin.getDefault().getBundle();
+	}
+
+	@Override
+	public void migrate() throws CoreException, MigrationException {
+		super.migrate();
+		resourceProvider.loadDefinitionsCategories(null);
+	}
 }

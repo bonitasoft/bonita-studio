@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -50,6 +51,7 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
         URI uri = URI.createFileURI(getParentStore().getResource().getLocation().toFile().getAbsolutePath()+File.separatorChar+getName()) ;
         try{
             final EditingDomain editingDomain  = getParentStore().getEditingDomain();
+            editingDomain.getResourceSet().getLoadOptions().put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
             if(new File(uri.toFileString()).exists()){
                 return editingDomain.getResourceSet().getResource(uri,true) ;
             }else{
