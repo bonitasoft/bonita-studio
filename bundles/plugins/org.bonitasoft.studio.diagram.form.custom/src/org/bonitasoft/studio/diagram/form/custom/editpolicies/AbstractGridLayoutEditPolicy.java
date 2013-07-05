@@ -160,7 +160,6 @@ public abstract class AbstractGridLayoutEditPolicy extends ConstrainedLayoutEdit
 		List<Rectangle> rectangles = new ArrayList<Rectangle>();
 		boolean showInsertionFeedback = false ;
 		boolean canAdd = false ;
-
 		if (request instanceof CreateRequest) {
 			/*show feedback only if it is in the grid*/
 			Point point = ((CreateRequest) request).getLocation().getCopy().translate(getLayoutOrigin().getNegated());
@@ -172,17 +171,15 @@ public abstract class AbstractGridLayoutEditPolicy extends ConstrainedLayoutEdit
 				rectangles.add(rectFeedback);
 			}	else {
 				Point newGridPoint = getGridLayoutManager().getConstraintFor(point);
-				Point insertionPoint = getGridLayoutManager().getClosestInsertionPoint(newGridPoint) ;
-				if(insertionPoint.x  == 0 || insertionPoint.x >= getGridFigure().getNumColumn() || insertionPoint.y >= getGridFigure().getNumLine()){
+				InsertionPoint iPoint = getGridLayoutManager().getClosestInsertionPoint(newGridPoint, point);
+				if(!iPoint.getOutBoundsPosition().equals(InsertionPoint.Position.UNDEFINE)){
 					showInsertionFeedback = true ;
-					showInsertionLineFeedback(request,insertionPoint,1,1) ;
+					showInsertionLineFeedback(request,iPoint,1,1) ;
 				}
 			}
 		} else if (request instanceof ChangeBoundsRequest) {
 			ChangeBoundsRequest changeBoundsRequest = (ChangeBoundsRequest) request;
-
 			ListIterator<GraphicalEditPart> children = changeBoundsRequest.getEditParts().listIterator();
-
 			int width = 1 ;
 			int height = 1 ;
 			while (children.hasNext()) {
@@ -201,16 +198,14 @@ public abstract class AbstractGridLayoutEditPolicy extends ConstrainedLayoutEdit
 					rectangles.add((Rectangle) getConstraintFor(changeBoundsRequest, child));
 				}				
 			}
-
 			if(!canAdd){
 				Point point = ((ChangeBoundsRequest) request).getLocation().getCopy().translate(getLayoutOrigin().getNegated());
 				FiguresHelper.translateToAbsolute(((IGraphicalEditPart) getHost()).getContentPane(), point);
 				Point newGridPoint = getGridLayoutManager().getConstraintFor(point);
-				Point insertionPoint = getGridLayoutManager().getClosestInsertionPoint(newGridPoint) ;
-			
-				if(insertionPoint.x  == 0 || insertionPoint.x >= getGridFigure().getNumColumn() || insertionPoint.y >= getGridFigure().getNumLine()){
+				InsertionPoint iPoint = getGridLayoutManager().getClosestInsertionPoint(newGridPoint, point);
+				if(!iPoint.getOutBoundsPosition().equals(InsertionPoint.Position.UNDEFINE)){
 					showInsertionFeedback = true ;
-					showInsertionLineFeedback(request,insertionPoint,width,height) ;
+					showInsertionLineFeedback(request,iPoint,width,height) ;
 				}
 			}
 		}
@@ -251,46 +246,41 @@ public abstract class AbstractGridLayoutEditPolicy extends ConstrainedLayoutEdit
 	 * @param request
 	 * @return a PositionConstant
 	 */
-	protected int getFeedbackDirectionFor(Request request,Point gridPosition) {
-
-		if(gridPosition.x == 0 && gridPosition.y < getGridFigure().getNumLine()  ){
-			return PositionConstants.WEST ;
+	protected int getFeedbackDirectionFor(Request request, InsertionPoint instertionPoint) {		
+		if(instertionPoint.getOutBoundsPosition()!=InsertionPoint.Position.UNDEFINE){
+			if(instertionPoint.getOutBoundsPosition().equals(InsertionPoint.Position.UP)){
+				return PositionConstants.NORTH ;
+			}
+			else if(instertionPoint.getOutBoundsPosition().equals(InsertionPoint.Position.LEFT)){
+				return PositionConstants.WEST ;
+			}
+			else if(instertionPoint.getOutBoundsPosition().equals(InsertionPoint.Position.RIGHT)){
+				return PositionConstants.EAST ;
+			}
+			else if(instertionPoint.getOutBoundsPosition().equals(InsertionPoint.Position.DOWN)){
+				return PositionConstants.SOUTH ;
+			}
 		}
-
-		//		if(gridPosition.y == 0){
-		//			return PositionConstants.NORTH ;
-		//		}
-
-		if(gridPosition.y >= getGridFigure().getNumLine()){
-			return PositionConstants.SOUTH ;
-		}
-
-		if(gridPosition.x >= getGridFigure().getNumColumn()){
-			return PositionConstants.EAST ;
-		}
-
-
-
-		return PositionConstants.SOUTH;
+		return PositionConstants.SOUTH;	
 	}
 
 
-	protected void showInsertionLineFeedback(Request request, Point newPoint, int width, int height) {
+	protected void showInsertionLineFeedback(Request request, InsertionPoint instertionPoint, int width, int height) {
 		if (getHost().getChildren().size() == 0)
 			return;
 		Polyline fb = getLineFeedback();
 
 		//direction is a PositionConstant
-		int direction = getFeedbackDirectionFor(request,newPoint);
+		int direction = getFeedbackDirectionFor(request,instertionPoint);
 		ImageFigure arrow = getArrowFeedback(direction) ;
 		arrow.setSize(16, 16) ;
 
 		if(direction == PositionConstants.NORTH || direction == PositionConstants.SOUTH){
-			Point p1 = getGridLayoutManager().getGridField(new Rectangle(newPoint, new Dimension(width,height))).getTopLeft();
+			Point p1 = getGridLayoutManager().getGridField(new Rectangle(instertionPoint.getPoint(), new Dimension(width,height))).getTopLeft();
 			p1.x = p1.x + getGridFigure().getMargin() ;
 			p1.y = p1.y + getGridFigure().getMargin()  ;
 
-			Point p2 = getGridLayoutManager().getGridField(new Rectangle(newPoint, new Dimension(width,height))).getTopRight() ;
+			Point p2 = getGridLayoutManager().getGridField(new Rectangle(instertionPoint.getPoint(), new Dimension(width,height))).getTopRight() ;
 			p2.x = p2.x + getGridFigure().getMargin()  ;
 			p2.y = p2.y + getGridFigure().getMargin()  ;
 
@@ -305,11 +295,11 @@ public abstract class AbstractGridLayoutEditPolicy extends ConstrainedLayoutEdit
 
 
 		}else{
-			Point p1 = getGridLayoutManager().getGridField(new Rectangle(newPoint, new Dimension(width,height))).getTopLeft();
+			Point p1 = getGridLayoutManager().getGridField(new Rectangle(instertionPoint.getPoint(), new Dimension(width,height))).getTopLeft();
 			p1.x = p1.x + getGridFigure().getMargin() ;
 			p1.y = p1.y + getGridFigure().getMargin()  ;
 
-			Point p2 = getGridLayoutManager().getGridField(new Rectangle(newPoint, new Dimension(width,height))).getBottomLeft() ;
+			Point p2 = getGridLayoutManager().getGridField(new Rectangle(instertionPoint.getPoint(), new Dimension(width,height))).getBottomLeft() ;
 			p2.x = p2.x + getGridFigure().getMargin()  ;
 			p2.y = p2.y + getGridFigure().getMargin()  ;
 

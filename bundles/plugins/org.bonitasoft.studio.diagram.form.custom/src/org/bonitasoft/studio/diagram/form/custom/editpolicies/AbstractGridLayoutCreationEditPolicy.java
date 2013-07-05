@@ -109,7 +109,7 @@ public abstract class AbstractGridLayoutCreationEditPolicy extends CreationEditP
 			}
 		
 			Point newPosition = layer.getGridLayout().getConstraintFor(point);
-			Point insertPosition = layer.getGridLayout().getClosestInsertionPoint(newPosition) ; 
+			Point insertPosition = layer.getGridLayout().getClosestInsertionPoint(newPosition).getPoint() ; 
 			lineTemp = insertPosition.y;
 			columnTemp = insertPosition.x;
 

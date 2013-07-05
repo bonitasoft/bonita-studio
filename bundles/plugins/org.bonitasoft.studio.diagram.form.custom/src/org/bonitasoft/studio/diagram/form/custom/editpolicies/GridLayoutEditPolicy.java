@@ -96,6 +96,7 @@ public class GridLayoutEditPolicy extends AbstractGridLayoutEditPolicy {
 			ChangeBoundsRequest req = (ChangeBoundsRequest) request;
 			List<?> editParts = req.getEditParts();
 			Point requestLocation = req.getLocation();
+			
 			Point point = requestLocation.getCopy().translate(getLayoutOrigin().getNegated());
 			FiguresHelper.translateToAbsolute(((IGraphicalEditPart) getHost()).getContentPane(), point);
 			Point newPoint = getGridLayoutManager().getConstraintFor(point);
@@ -106,27 +107,29 @@ public class GridLayoutEditPolicy extends AbstractGridLayoutEditPolicy {
 					command.add(createMoveChildCommand(child, newPoint));
 				} else {
 					if( getHost() instanceof FormEditPart){
-
-
-						Point insertionPoint = getGridLayoutManager().getClosestInsertionPoint(newPoint) ;
+						InsertionPoint iPoint = (getGridLayoutManager().getClosestInsertionPoint(newPoint, point)) ;
 						Rectangle dim = (Rectangle) getGridLayoutManager().getConstraint(child.getFigure()) ;
 						int width = dim.width ;
 						int height = dim.height ;
-
-						if(getGridFigure().getNumColumn() < insertionPoint.x + width){ //ADD RIGHT
+						Point insertionPoint = iPoint.getPoint();
+						if(iPoint.getOutBoundsPosition().equals(InsertionPoint.Position.RIGHT)){
 							for(int j = 0 ; i < width ; i++){
 								command.add(new ICommandProxy(new AddColumnCommand((FormEditPart) getHost(), insertionPoint.x + j)));
 							}
-							command.add(createMoveChildCommand(child, insertionPoint));
-						}else if(getGridFigure().getNumLine() < insertionPoint.y + height){ //ADD BOTTOM
-
+							command.add(createMoveChildCommand(child, iPoint.getPoint()));
+						} else if(iPoint.getOutBoundsPosition().equals(InsertionPoint.Position.DOWN)){
 							for(int j = 0 ; i < height ; i++){
 								command.add(new ICommandProxy(new AddRowCommand((FormEditPart) getHost(), insertionPoint.y + j)));
 							}
 							command.add(createMoveChildCommand(child, insertionPoint));
-						}else if(insertionPoint.x == 0 && insertionPoint.y < getGridFigure().getNumLine()){ //ADD LEFT
+						} else if(iPoint.getOutBoundsPosition().equals(InsertionPoint.Position.LEFT)){
 							for(int j = 0 ; i < width ; i++){
 								command.add(new ICommandProxy(new AddColumnCommand((FormEditPart) getHost(), insertionPoint.x + j)));
+							}
+							command.add(createMoveChildCommand(child, insertionPoint));
+						} else if(iPoint.getOutBoundsPosition().equals(InsertionPoint.Position.UP)){
+							for(int j = 0 ; i < height ; i++){
+								command.add(new ICommandProxy(new AddRowCommand((FormEditPart) getHost(), insertionPoint.y + j)));
 							}
 							command.add(createMoveChildCommand(child, insertionPoint));
 						}
@@ -164,7 +167,7 @@ public class GridLayoutEditPolicy extends AbstractGridLayoutEditPolicy {
 		Point locPoint = requestLocation.getCopy().translate(getLayoutOrigin().getNegated());
 		FiguresHelper.translateToAbsolute(((IGraphicalEditPart) getHost()).getContentPane(), locPoint);
 		Point newPoint = getGridLayoutManager().getConstraintFor(locPoint);
-		Point insertionPoint = getGridLayoutManager().getClosestInsertionPoint(newPoint) ;
+		Point insertionPoint = getGridLayoutManager().getClosestInsertionPoint(newPoint).getPoint() ;
 		boolean onBorder = insertionPoint.x == 0 || insertionPoint.y == getGridFigure().getNumLine() || insertionPoint.x == getGridFigure().getNumColumn();
 		if(onBorder){
 			return false ;
