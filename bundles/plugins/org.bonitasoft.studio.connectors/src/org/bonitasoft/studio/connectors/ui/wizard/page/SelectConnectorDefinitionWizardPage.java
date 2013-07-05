@@ -37,6 +37,7 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -85,10 +86,25 @@ public class SelectConnectorDefinitionWizardPage extends WizardPage implements I
 
             @Override
             public boolean select(Viewer arg0, Object arg1, Object element) {
-                if(element instanceof Category){
-                    return ((ITreeContentProvider)filterTree.getViewer().getContentProvider()).getChildren(element).length > 0 ;
-                }
-                return true;
+                if (element instanceof Category){
+            		if(!((ITreeContentProvider)((ContentViewer) arg0).getContentProvider()).hasChildren(element)){
+            			return false;
+            		}
+            		for(Object c : ((ITreeContentProvider)((ContentViewer) arg0).getContentProvider()).getChildren(element)){
+            			if(c instanceof ConnectorDefinition){
+            				return true;
+            			}else{
+            				if(select(arg0, element, c)){
+            					return true;
+            				}
+            			}
+            		}
+            	}else if(element instanceof ConnectorDefinition){
+            		return true;
+    
+    			}
+                
+                return false;
             }
         }) ;
         filterTree.getViewer().setInput(new Object());
