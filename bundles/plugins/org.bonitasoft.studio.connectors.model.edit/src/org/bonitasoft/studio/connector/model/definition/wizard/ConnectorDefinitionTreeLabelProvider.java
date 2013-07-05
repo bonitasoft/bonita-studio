@@ -16,10 +16,12 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
+import org.bonitasoft.studio.connector.model.definition.AbstractUniqueDefinitionContentProvider;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -40,6 +42,9 @@ public class ConnectorDefinitionTreeLabelProvider extends LabelProvider {
 
     @Override
     public String getText(Object element) {
+    	if(AbstractUniqueDefinitionContentProvider.ROOT.equals(element)){
+    		return Messages.all;
+    	}
         if (element instanceof ConnectorDefinition) {
             return getLabelFor(element);
         } else if (element instanceof Category) {

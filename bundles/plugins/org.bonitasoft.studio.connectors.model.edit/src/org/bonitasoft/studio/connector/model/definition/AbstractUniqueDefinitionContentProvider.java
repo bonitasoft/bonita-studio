@@ -30,6 +30,7 @@ import org.bonitasoft.studio.connector.model.i18n.Messages;
  */
 public abstract class AbstractUniqueDefinitionContentProvider extends AbstractDefinitionContentProvider {
 
+	public static final Object ROOT = new Object();
 	
 	public AbstractUniqueDefinitionContentProvider(boolean userDefinitionOnly) {
 		super(userDefinitionOnly);
@@ -40,8 +41,23 @@ public abstract class AbstractUniqueDefinitionContentProvider extends AbstractDe
 	}
 	
 	@Override
+	public Object[] getElements(Object element) {
+		return new Object[]{ROOT};
+	}
+
+	@Override
+	public boolean hasChildren(Object element) {
+		if(ROOT.equals(element)){
+			return true;
+		}
+		return super.hasChildren(element);
+	}
+
+	@Override
 	public Object[] getChildren(Object element) {
-		if (element instanceof Category) {
+		if(ROOT.equals(element)){
+			return super.getElements(ROOT);
+		}else if (element instanceof Category) {
 			Category cat = (Category) element;
 			List<Object> result = new ArrayList<Object>();
 			Set<String> addedId = new HashSet<String>();

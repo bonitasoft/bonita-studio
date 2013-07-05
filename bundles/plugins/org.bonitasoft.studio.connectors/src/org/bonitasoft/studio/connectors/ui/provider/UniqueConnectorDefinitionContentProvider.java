@@ -28,9 +28,12 @@ import org.osgi.framework.Bundle;
  */
 public class UniqueConnectorDefinitionContentProvider extends AbstractUniqueDefinitionContentProvider {
 
+
+
 	public UniqueConnectorDefinitionContentProvider(boolean userDefinitionOnly) {
 		super(userDefinitionOnly);
 	}
+	
 
 	public UniqueConnectorDefinitionContentProvider() {
 		super();

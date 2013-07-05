@@ -25,6 +25,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -56,18 +58,23 @@ public class TreeExplorer extends Composite {
 	private TableViewer rightTable;
 	private ITreeContentProvider contentProvider;
 	private ILabelProvider labelProvider;
+	private Composite additionalComposite;
 
 	public TreeExplorer(Composite parent, int style) {
 		super(parent, style);
-		setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
+		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
 		final Text searchField = new Text(this, SWT.BORDER | SWT.SEARCH | SWT.ICON_SEARCH | SWT.ICON_CANCEL);
 		searchField.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		searchField.setMessage(Messages.filterLabel);
+		
+		additionalComposite = new Composite(this, SWT.NONE);
+		additionalComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).hint(0, 0).create());
+		additionalComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
 		final Composite content = new Composite(this, SWT.BORDER | SWT.FLAT);
 		content.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).spacing(0, 0).margins(0, 0).create());
-		content.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		content.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
 
 		leftTree = new TreeViewer(content, SWT.V_SCROLL);
 		leftTree.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -99,6 +106,22 @@ public class TreeExplorer extends Composite {
 			}
 		});
 		
+		leftTree.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				Object selection =  ((IStructuredSelection) event.getSelection()).getFirstElement() ;
+		        if(selection != null){
+		        	if(leftTree.getExpandedState(selection)){
+		        		leftTree.collapseToLevel(selection, 1) ;
+		        	}else{
+		        		leftTree.expandToLevel(selection, 1) ;
+		        	}
+		        	
+		        }
+			}
+		});
+		
 		rightTable.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
@@ -127,7 +150,6 @@ public class TreeExplorer extends Composite {
 				
 			}
 		});
-
 	}
 
 	protected Object[] getSubtree(Object selection) {
@@ -170,6 +192,10 @@ public class TreeExplorer extends Composite {
 		rightTable.setLabelProvider(labelProvider);
 		leftTree.setInput(input);
 	}
+	
+	public Composite getAdditionalComposite() {
+		return additionalComposite;
+	}
 
 	public void setLeftHeader(String title) {
 		leftTree.getTree().setHeaderVisible(true);
@@ -191,6 +217,10 @@ public class TreeExplorer extends Composite {
 
 	public Viewer getRightTableViewer() {
 		return rightTable;
+	}
+	
+	public TreeViewer geLeftTreeViewer() {
+		return leftTree;
 	}
 
 }

@@ -36,7 +36,7 @@ import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
-import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractImplementationDefinitionWizardPage;
+import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractImplementationWizardPage;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
@@ -136,18 +136,23 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 
 	protected IWizardPage getDefinitionSelectionWizardPage(
 			List<ConnectorImplementation> existingImplementation) {
-		return new AbstractImplementationDefinitionWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),getSelectionPageTitle(),getSelectionPageDescription(),messageProvider){
+		return new AbstractDefinitionSelectionImpementationWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),getSelectionPageTitle(),getSelectionPageDescription(),messageProvider){
 
 			@Override
 			protected ITreeContentProvider getContentProvider() {
 				return new UniqueConnectorDefinitionContentProvider();
 			}
 			
+			@Override
+			protected ITreeContentProvider getCustomContentProvider() {
+				return new UniqueConnectorDefinitionContentProvider(true);
+			}
+			
 		};
 	}
 	
 	protected String getSelectionPageDescription() {
-		return Messages.selectConnectorDefinitionDesc;
+		return Messages.selectConnectorDefinitionForImplDesc;
 	}
 
 

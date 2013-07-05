@@ -30,7 +30,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
-import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractImplementationDefinitionWizardPage;
+import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractImplementationWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorImplementationWizard;
 import org.bonitasoft.studio.pics.Pics;
@@ -88,11 +88,16 @@ public class FilterImplementationWizard extends ConnectorImplementationWizard {
     @Override
     protected IWizardPage getDefinitionSelectionWizardPage(
     		List<ConnectorImplementation> existingImplementation) {
-    	return new AbstractImplementationDefinitionWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),getPageTitle(),getPageDescription(),messageProvider){
+    	return new AbstractDefinitionSelectionImpementationWizardPage(implWorkingCopy,existingImplementation,((IDefinitionRepositoryStore) defStore).getDefinitions(),getPageTitle(),getPageDescription(),messageProvider){
 
 			@Override
 			protected ITreeContentProvider getContentProvider() {
 				return new FilterUniqueDefinitionContentProvider();
+			}
+			
+			@Override
+			protected ITreeContentProvider getCustomContentProvider() {
+				return  new FilterUniqueDefinitionContentProvider(true);
 			}
 			
 		};

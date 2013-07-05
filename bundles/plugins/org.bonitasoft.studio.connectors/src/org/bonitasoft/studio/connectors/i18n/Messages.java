@@ -134,6 +134,7 @@ public class Messages extends NLS {
 	public static String selectConnectorConfigurationWizardPageDescription;
 	public static String connectorAdditionalDependencyTitle;
 	public static String connectorAdditionalDependencyMessage;
+	public static String selectConnectorDefinitionForImplDesc;
 
     /**
      * @param event
