@@ -19,6 +19,7 @@
 package org.bonitasoft.studio.diagram.custom.parts;
 
 import org.bonitasoft.studio.diagram.custom.Activator;
+import org.bonitasoft.studio.diagram.custom.editPolicies.SequenceFlowCreationEditPolicy;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Gateway;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -35,8 +36,10 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.Request;
 import org.eclipse.gmf.runtime.diagram.core.listener.DiagramEventBroker;
 import org.eclipse.gmf.runtime.diagram.core.listener.NotificationListener;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -60,6 +63,13 @@ public class CustomSequenceFlowEditPart extends SequenceFlowEditPart {
         super(view);
     }
 
+    @Override
+    protected void createDefaultEditPolicies() {
+    	super.createDefaultEditPolicies();
+    	installEditPolicy(EditPolicyRoles.CREATION_ROLE,
+				new SequenceFlowCreationEditPolicy());
+    }
+    
 
     @Override
     public void activate() {
