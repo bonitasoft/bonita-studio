@@ -52,7 +52,6 @@ public abstract class EMFFileStore extends AbstractFileStore implements IReposit
         try{
             final EditingDomain editingDomain  = getParentStore().getEditingDomain();
             if(new File(uri.toFileString()).exists()){
-            	editingDomain.getResourceSet().getLoadOptions().put(XMLResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
                 return editingDomain.getResourceSet().getResource(uri,true) ;
             }else{
                 return editingDomain.getResourceSet().createResource(uri) ;
