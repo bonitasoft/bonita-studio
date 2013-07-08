@@ -225,9 +225,8 @@ public class FlowElementSwitch extends AbstractSwitch {
 		String message =  object.getEvent() ;
 		if(message != null){
 			CatchMessageEventTriggerDefinitionBuilder triggerBuilder =  eventBuilder.addMessageEventTrigger(message) ;
-			for(Operation operation : object.getMessageContent()){
-				triggerBuilder.addOperation(EngineExpressionUtil.createOperationForMessageContent(operation)) ;
-			}
+			addMessageContent(object, triggerBuilder);
+			addMessageCorrelation(object, triggerBuilder);
 		}
 		addDescription(eventBuilder, object.getDocumentation()) ;
 		return object;
