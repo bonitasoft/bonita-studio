@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -49,8 +50,27 @@ import org.junit.runner.RunWith;
  */
 
 @RunWith(SWTBotJunit4ClassRunner.class)
-public class ActorFilterImplementationTest extends SWTBotGefTestCase {
+public class ActorFilterImplementationTest extends SWTBotGefTestCase implements SWTBotConstants{
 
+	protected void selectDefinition(final String definition) {
+		bot.treeWithId(SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
+        bot.waitUntil(new ICondition() {
+			
+			public boolean test() throws Exception {
+				return  bot.tableWithId(SWTBOT_ID_EXPLORER_RIGHT_TABLE).rowCount() > 0;
+			}
+			
+			public void init(SWTBot bot) {
+			}
+			
+			public String getFailureMessage() {
+				return "No items found in right table of connector explorer";
+			}
+		});
+        bot.tableWithId(SWTBOT_ID_EXPLORER_RIGHT_TABLE).select(definition);
+        bot.button(IDialogConstants.NEXT_LABEL).click();
+	}
+	
     @Before
     public void createDefinition() {
         final String id = "testEdit";
@@ -75,14 +95,14 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
         // TODO add dependancies test
     	final int nbEditorsBefore = bot.editors().size();
         final String id = "testImplementation";
-        final String definition = "testEdit (1.0.0)";
+        final String definition = "testEdit";
         final String className = "MyactorFilterImpl";
         final String packageName = "org.bonita.actorFilter.test";
         SWTBotActorFilterUtil.activateActorFilterImplementationShell(bot);
         assertFalse("Finish button should be disabled",
                 bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        selectDefinition(definition);
         bot.textWithLabel("Implementation id *").setText(id);
-        bot.comboBoxWithLabel("Definition *").setSelection(definition);
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
@@ -122,12 +142,12 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
     @Test
     public void testPackageSyntax() throws Exception {
         final String id = "testImplementation";
-        final String definition = "testEdit (1.0.0)";
+        final String definition = "testEdit";
         final String className = "MyactorFilterImpl";
         final String packageName = "org.bonita.actorFilter.";
         SWTBotActorFilterUtil.activateActorFilterImplementationShell(bot);
+        selectDefinition(definition);
         bot.textWithLabel("Implementation id *").setText(id);
-        bot.comboBoxWithLabel("Definition *").setSelection(definition);
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
         assertFalse("finish button should be desabled",
@@ -141,12 +161,12 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
         final int nbEditorsBefore = bot.editors().size();
         final String id = "testImplementation2";
         final String id2 = "textImplementation3";
-        final String definition = "testEdit (1.0.0)";
+        final String definition = "testEdit";
         final String className = "MyactorFilterImpl2";
         final String packageName = "org.bonita.actorFilter.test";
         SWTBotActorFilterUtil.activateActorFilterImplementationShell(bot);
+        selectDefinition(definition);
         bot.textWithLabel("Implementation id *").setText(id);
-        bot.comboBoxWithLabel("Definition *").setSelection(definition);
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
@@ -189,6 +209,7 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
         });
         bot.table().select(id + " (1.0.0) -- " + packageName + "." + className);
         bot.button(Messages.Edit).click();
+        selectDefinition(definition);
         assertEquals("Implementation id should be " + id,
                 bot.textWithLabel("Implementation id *").getText(), id);
         assertEquals("Version should be 1.0.0", bot.textWithLabel("Version *")
@@ -221,12 +242,12 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
         final int nbEditorsBefore = bot.editors().size();
         final String id = "testImplementation4";
         final String id2 = "testImplementation5";
-        final String definition = "testEdit (1.0.0)";
+        final String definition = "testEdit";
         final String className = "MyactorFilterImpl";
         final String packageName = "org.bonita.actorFilter.test";
         SWTBotActorFilterUtil.activateActorFilterImplementationShell(bot);
+        selectDefinition(definition);
         bot.textWithLabel("Implementation id *").setText(id);
-        bot.comboBoxWithLabel("Definition *").setSelection(definition);
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
@@ -249,8 +270,8 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase {
         }, 30000);
 
         SWTBotActorFilterUtil.activateActorFilterImplementationShell(bot);
+        selectDefinition(definition);
         bot.textWithLabel("Implementation id *").setText(id2);
-        bot.comboBoxWithLabel("Definition *").setSelection(definition);
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
         bot.waitUntil(new ICondition() {
