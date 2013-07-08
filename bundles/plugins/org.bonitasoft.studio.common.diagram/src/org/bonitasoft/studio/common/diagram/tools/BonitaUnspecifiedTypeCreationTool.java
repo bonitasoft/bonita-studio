@@ -65,6 +65,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElemen
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest.ViewAndElementDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeCreationTool;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
@@ -141,11 +142,13 @@ public class BonitaUnspecifiedTypeCreationTool extends UnspecifiedTypeCreationTo
 		if (!isTargetLocked()) {
 			EditPart editPart = null;
 			if(figure != null){
-				final Rectangle shrink = figure.getBounds().getCopy().shrink(getInsetsFor((CreateUnspecifiedTypeRequest) getCreateRequest()));
+				final Rectangle copy = figure.getBounds().getCopy();
+			//	System.out.println(copy.translate(0, 15));
+				final Rectangle shrink = copy;
 				for(Object v : getCurrentViewer().getEditPartRegistry().keySet()){
 					if(v instanceof Connector){
 						ConnectionEditPart ep = (ConnectionEditPart) getCurrentViewer().getEditPartRegistry().get(v);
-						if(shrink.intersects(ep.getFigure().getBounds().getCopy())){
+						if(((PolylineConnectionEx)ep.getFigure()).getSimpleBounds().getCopy().expand(new Insets(((PolylineConnectionEx)ep.getFigure()).getLineWidth(), 0, 0, 0)).intersects(shrink)){
 							editPart = ep;
 						}
 					}
@@ -225,7 +228,7 @@ public class BonitaUnspecifiedTypeCreationTool extends UnspecifiedTypeCreationTo
 		if(id.contains("Gateway")){
 			return new Insets(15, 0, 15, 0);
 		}else if(id.contains("Event")){
-			return new Insets(20, 0, 10, 0);
+			return new Insets(0, 0, 0, 0);
 		}else{
 			return new Insets(15, 0, 25, 0);
 		}

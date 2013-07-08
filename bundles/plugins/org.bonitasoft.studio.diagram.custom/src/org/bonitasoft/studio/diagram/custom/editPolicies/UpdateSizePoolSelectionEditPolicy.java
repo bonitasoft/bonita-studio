@@ -51,6 +51,7 @@ import org.eclipse.gef.editpolicies.SelectionEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 
@@ -142,7 +143,7 @@ public class UpdateSizePoolSelectionEditPolicy extends SelectionEditPolicy imple
         if(!(((IGraphicalEditPart) getHost()).resolveSemanticElement() instanceof Pool)){
             return ;
         }
-        if(getHost() instanceof ITextAwareEditPart){
+        if(getHost() instanceof ITextAwareEditPart || getHost() instanceof ShapeCompartmentEditPart) {
             return ;
         }
 
