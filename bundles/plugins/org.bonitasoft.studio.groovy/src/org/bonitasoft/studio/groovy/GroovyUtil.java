@@ -332,7 +332,8 @@ public class GroovyUtil {
 			final EObject element, ViewerFilter[] filters) {
 		final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(element,filters);
 		for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
-			result.add(new ScriptVariable(expressionConstants.getEngineConstantName(),getEngineExpressionReturnType(expressionConstants.getEngineConstantName())));
+			ScriptVariable scriptVariable =new ScriptVariable(expressionConstants.getEngineConstantName(),getEngineExpressionReturnType(expressionConstants.getEngineConstantName()));
+			result.add(scriptVariable);
 		}
 		if (element!=null && element instanceof Validator){
 			result.add(new ScriptVariable(AbstractFormValidator.CLICKED_BUTTON_VARNAME,
@@ -575,30 +576,44 @@ public class GroovyUtil {
 		if (org.bonitasoft.studio.common.ExpressionConstants.FORM_FIELD_TYPE
 				.equals(e.getType())) {
 			final Widget widget = (Widget) e.getReferencedElements().get(0);
-			return createScriptVariable(widget);
+			ScriptVariable scriptVariable=createScriptVariable(widget);
+			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.FORM_FIELD_TYPE);
+			return scriptVariable;
 		} else if (org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE
 				.equals(e.getType())) {
 			final Data data = (Data) e.getReferencedElements().get(0);
-			return createScriptVariable(data);
+			ScriptVariable scriptVariable=createScriptVariable(data);
+			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+			return scriptVariable;
 		} else if (org.bonitasoft.studio.common.ExpressionConstants.PARAMETER_TYPE
 				.equals(e.getType())) {
 			final Parameter parameter = (Parameter) e.getReferencedElements()
 					.get(0);
-			return createScriptVariable(parameter);
+			ScriptVariable scriptVariable=createScriptVariable(parameter);
+			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.PARAMETER_TYPE);
+			return scriptVariable;
 		} else if (org.bonitasoft.studio.common.ExpressionConstants.CONNECTOR_OUTPUT_TYPE
 				.equals(e.getType())) {
 			final Output output = (Output) e.getReferencedElements().get(0);
-			return createScriptVariable(output);
+			ScriptVariable scriptVariable=createScriptVariable(output);
+			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
+			return scriptVariable;
 		} else if (org.bonitasoft.studio.common.ExpressionConstants.SIMULATION_VARIABLE_TYPE
 				.equals(e.getType())) {
 			final SimulationData data = (SimulationData) e
 					.getReferencedElements().get(0);
-			return createScriptVariable(data);
+			ScriptVariable scriptVariable=createScriptVariable(data);
+			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.SIMULATION_VARIABLE_TYPE);
+			return scriptVariable;
 		} else if (org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE
 				.equals(e.getType())) {
-			return new ScriptVariable(e.getContent(),getEngineExpressionReturnType(e.getName()));
+			ScriptVariable scriptVariable = new ScriptVariable(e.getContent(),getEngineExpressionReturnType(e.getName()));
+			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.ENGINE_CONSTANT_TYPE);
+			return scriptVariable;
 		}else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
-			return new ScriptVariable(e.getContent(), e.getReturnType());
+			ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
+			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE);
+			return scriptVariable;
 		}
 		return null;
 	}

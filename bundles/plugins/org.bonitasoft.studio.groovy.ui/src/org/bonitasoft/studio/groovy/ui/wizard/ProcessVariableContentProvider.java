@@ -20,8 +20,14 @@ package org.bonitasoft.studio.groovy.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeMap;
 
+import org.bonitasoft.studio.groovy.ScriptVariable;
+import org.bonitasoft.studio.groovy.ui.Messages;
+import org.eclipse.core.internal.dtree.IComparator;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -31,26 +37,87 @@ import org.eclipse.jface.viewers.Viewer;
  */
 public class ProcessVariableContentProvider implements IStructuredContentProvider {
 
-    public static Object SELECT_ENTRY = new Object();
+	public static Object SELECT_ENTRY = new Object();
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Object[] getElements(Object inputElement) {
-        List<Object> res = new ArrayList<Object>();
-        res.add(SELECT_ENTRY);
-        res.addAll((Collection<? extends Object>) inputElement);
-        return res.toArray();
-    }
+	TreeMap<String, List<Object>> map;
 
-    @Override
-    public void dispose() {
+	@Override
+	@SuppressWarnings("unchecked")
+	public Object[] getElements(Object inputElement) {
 
-    }
+		List<Object> res = new ArrayList<Object>();
+		res.addAll((Collection<? extends Object>) inputElement);
+		map = getClassifiedVariables(res);
+		List<Object> inputElements = new ArrayList<Object>();
+		//int i=map.keySet().size()-1;
+		for (String key:map.keySet()){
+			if (!key.equals(Messages.SelectProcessVariableLabel) && !key.isEmpty()){
+				inputElements.add(key);
+			}
+			List<Object> scriptVariables = sortList(map.get(key));
+			inputElements.addAll(scriptVariables);
+		}
+		return inputElements.toArray();
+	}
 
-    @Override
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	@Override
+	public void dispose() {
 
-    }
+	}
 
+	@Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+
+	}
+	
+	private List<Object> sortList(List<Object> list){
+		List<Object> sortedList = new ArrayList<Object>();
+		if (!list.isEmpty() && list.get(0) instanceof ScriptVariable){
+			List<ScriptVariable> scriptVariables = new ArrayList<ScriptVariable>();
+			for (Object object : list){
+				scriptVariables.add((ScriptVariable)object);
+			}
+			Collections.sort(scriptVariables, new Comparator<ScriptVariable>() {
+				
+
+				@Override
+				public int compare(ScriptVariable arg0, ScriptVariable arg1) {
+					return arg0.getName().compareTo(arg1.getName());
+				}
+			});
+			
+			sortedList.addAll(scriptVariables);
+			
+		} else {
+			if (!list.isEmpty()){
+				sortedList.addAll(list);
+			}
+		}
+		return sortedList;
+	}
+
+	private TreeMap getClassifiedVariables(List<Object> res){
+		TreeMap<String,List<Object>> map = new TreeMap<String,List<Object>>();
+		List<Object> select_entry_list = new ArrayList<Object>(1);
+		select_entry_list.add(SELECT_ENTRY);
+		map.put(Messages.SelectProcessVariableLabel, select_entry_list);
+		for (Object object:res){
+			if (object instanceof ScriptVariable){
+				ScriptVariable scriptVariable = (ScriptVariable)object;
+				String key=scriptVariable.getCategory();
+				if (key==null){ key="";}
+					if (map.containsKey(key)){
+						List<Object> scriptVariables = map.get(key);
+						scriptVariables.add(scriptVariable);
+					} else {
+						List<Object> scriptVariables = new ArrayList<Object>();
+						scriptVariables.add(scriptVariable);
+						map.put(key, scriptVariables);
+					}
+				}
+			
+		}
+		return map;
+	}
 
 }

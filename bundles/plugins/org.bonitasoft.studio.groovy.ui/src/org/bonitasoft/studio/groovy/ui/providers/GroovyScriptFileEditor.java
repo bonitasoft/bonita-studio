@@ -82,9 +82,9 @@ public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor impleme
         nodes = groovyViewer.getFieldNodes() ;
 
         if (context == null && (nodes == null || nodes.isEmpty())) {
-            dataCombo.getCombo().add(Messages.noProcessVariableAvailable);
-            dataCombo.getCombo().setText(Messages.noProcessVariableAvailable);
-            dataCombo.getCombo().setEnabled(false);
+            dataCombo.add(Messages.noProcessVariableAvailable);
+            dataCombo.getTableCombo().setText(Messages.noProcessVariableAvailable);
+            dataCombo.getTableCombo().setEnabled(false);
         }else if(nodes != null){
             dataCombo.setInput(nodes);
             dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
