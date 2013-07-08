@@ -16,7 +16,7 @@
 		<bundle.version>6.1.0-rc-04</bundle.version>
 		<engine.version>6.1.0-rc-04</engine.version>
 		<connector.version>6.1.0-rc-02</connector.version>
-		<simulation.version>6.1.0-rc-01</simulation.version>
+		<simulation.version>6.1.0-rc-02</simulation.version>
 		<filters.version>6.1.0-rc-01</filters.version>
 		<theme.builder.version>6.0.0</theme.builder.version>
 		<watchdog.version>6.0.1</watchdog.version>
