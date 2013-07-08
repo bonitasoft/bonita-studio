@@ -24,6 +24,7 @@
 <unit id="org.eclipse.emf.edapt.runtime.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
 <unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.runtime.core.feature.group" version="0.0.0"/>
