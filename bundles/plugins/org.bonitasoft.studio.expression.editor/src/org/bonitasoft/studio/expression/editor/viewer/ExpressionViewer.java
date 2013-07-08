@@ -461,8 +461,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		if(input instanceof IObservableValue){
 			input = ((IObservableValue) input).getValue();
 		}
-		if(input != null && input instanceof EObject && expressionReference != null){
-			selectedExpression = (Expression) ((EObject)input).eGet(expressionReference);
+		if(input != null && input instanceof EObject && expressionReference != null ){
+			Object o = ((EObject)input).eGet(expressionReference);
+			if(o instanceof Expression){
+				selectedExpression = (Expression) o;
+			}
 		} else {
 			//FIXME: it might be  org.eclipse.emf.ecore.util.EObjectContainmentEList
 		}
