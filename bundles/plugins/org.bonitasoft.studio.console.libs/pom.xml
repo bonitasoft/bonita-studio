@@ -260,7 +260,6 @@
 							<target>
 								<delete dir="${tomcat.bundle.dir}" />
 								<delete dir="${bonita.home.dir}" />
-								<delete file="META-INF/MANIFEST.MF" />
 								<delete file="javadoc.zip" />
 								<mkdir dir="${project.build.directory}/classes" />
 							</target>
@@ -274,6 +273,8 @@
 						<phase>generate-resources</phase>
 						<configuration>
 							<target>
+							
+								<delete file="META-INF/MANIFEST.MF" />
 								<!-- Configure tomcat bundle resoruce -->
 								<move todir="${tomcat.bundle.dir}">
 									<fileset
