@@ -6668,29 +6668,25 @@
     </compartments>
     <palette>
       <groups
-          title="Default"
-          description="Holds top-level non-container tools">
+          title="Containers"
+          description=""
+          stack="true"
+          collapse="true">
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="Service Task"
-            description="Create a new Service Task"
-            genNodes="//@diagram/@childNodes.17 //@diagram/@topLevelNodes.8"/>
+            title="Pool"
+            description="Create a new Pool"
+            genNodes="//@diagram/@topLevelNodes.13"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="Human"
-            description="Create a new Human Step"
-            genNodes="//@diagram/@topLevelNodes.3 //@diagram/@childNodes.13"/>
-        <entries
-            xsi:type="gmfgen:ToolEntry"
-            title="Call Activity"
-            description="Create a new Call Activity"
-            genNodes="//@diagram/@topLevelNodes.4 //@diagram/@childNodes.12"/>
-        <entries
-            xsi:type="gmfgen:ToolEntry"
-            title="Evenemential SubProcess"
-            genNodes="//@diagram/@topLevelNodes.5 //@diagram/@childNodes.42"/>
-        <entries
-            xsi:type="gmfgen:Separator"/>
+            title="Lane"
+            description="Create a new Lane"
+            genNodes="//@diagram/@childNodes.40"/>
+      </groups>
+      <groups
+          title="Gateways"
+          stack="true"
+          collapse="true">
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Gate"
@@ -6706,40 +6702,66 @@
             title="Inclusive Gate"
             description="Create a new Inclusive Gate"
             genNodes="//@diagram/@childNodes.39 //@diagram/@topLevelNodes.11"/>
+      </groups>
+      <groups
+          title="Transition"
+          stack="true"
+          collapse="true">
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Transition"
             description="Create a new Transition"
-            genLinks="//@diagram/@links.0 //@diagram/@links.1 //@diagram/@links.2"/>
+            genLinks="//@diagram/@links.0"/>
+      </groups>
+      <groups
+          title="Activities"
+          description=""
+          stack="true"
+          collapse="true">
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="Throw Link"
-            description="Create a new Throw Link"
-            genNodes="//@diagram/@childNodes.43 //@diagram/@topLevelNodes.22"/>
+            title="Service Task"
+            description="Create a new Service Task"
+            genNodes="//@diagram/@childNodes.17 //@diagram/@topLevelNodes.8"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="Catch Link"
-            description="Create a new Catch Link"
-            genNodes="//@diagram/@childNodes.44 //@diagram/@topLevelNodes.21"/>
-        <entries
-            xsi:type="gmfgen:Separator"/>
+            title="Call Activity"
+            description="Create a new Call Activity"
+            genNodes="//@diagram/@topLevelNodes.4 //@diagram/@childNodes.12"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="Pool"
-            description="Create a new Pool"
-            genNodes="//@diagram/@topLevelNodes.13"/>
+            title="Human"
+            description="Create a new Human Step"
+            genNodes="//@diagram/@topLevelNodes.3 //@diagram/@childNodes.13"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="Lane"
-            description="Create a new Lane"
-            genNodes="//@diagram/@childNodes.40"/>
+            title="Evenemential SubProcess"
+            genNodes="//@diagram/@topLevelNodes.5 //@diagram/@childNodes.42"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="Text Annotation"
-            description="Create a new Text Annotation"
-            genNodes="//@diagram/@childNodes.28 //@diagram/@topLevelNodes.18"/>
+            title="Script Task"
+            description="Create a new Script Task"
+            genNodes="//@diagram/@childNodes.19 //@diagram/@topLevelNodes.9"/>
         <entries
-            xsi:type="gmfgen:Separator"/>
+            xsi:type="gmfgen:ToolEntry"
+            title="Receive Task"
+            description="Create a new Receive Message Task"
+            genNodes="//@diagram/@childNodes.14 //@diagram/@topLevelNodes.6"/>
+        <entries
+            xsi:type="gmfgen:ToolEntry"
+            title="Send Task"
+            description="Create a new Send Message Task"
+            genNodes="//@diagram/@childNodes.16 //@diagram/@topLevelNodes.7"/>
+        <entries
+            xsi:type="gmfgen:ToolEntry"
+            title="Step"
+            description="Create a new automatic Step"
+            genNodes="//@diagram/@childNodes.22 //@diagram/@topLevelNodes.12"/>
+      </groups>
+      <groups
+          title="Start Events"
+          stack="true"
+          collapse="true">
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Start"
@@ -6764,35 +6786,21 @@
             xsi:type="gmfgen:ToolEntry"
             title="Start Error"
             genNodes="//@diagram/@childNodes.37 //@diagram/@topLevelNodes.29"/>
+      </groups>
+      <groups
+          title="Intermediate Events"
+          stack="true"
+          collapse="true">
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="End"
-            description="Create a new End event"
-            genNodes="//@diagram/@topLevelNodes.2 //@diagram/@childNodes.11"/>
+            title="Throw Link"
+            description="Create a new Throw Link"
+            genNodes="//@diagram/@childNodes.43 //@diagram/@topLevelNodes.22"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="End Message"
-            description="Create a new End Message event"
-            genNodes="//@diagram/@childNodes.26 //@diagram/@topLevelNodes.15"/>
-        <entries
-            xsi:type="gmfgen:ToolEntry"
-            title="End Signal"
-            description="Create a new End Signal event"
-            genNodes="//@diagram/@childNodes.34 //@diagram/@topLevelNodes.26"/>
-        <entries
-            xsi:type="gmfgen:ToolEntry"
-            title="End Error"
-            description="Create a new End Error event"
-            genNodes="//@diagram/@childNodes.35 //@diagram/@topLevelNodes.28"/>
-        <entries
-            xsi:type="gmfgen:ToolEntry"
-            title="End Terminated Event"
-            genNodes="//@diagram/@childNodes.36 //@diagram/@topLevelNodes.30"/>
-        <entries
-            xsi:type="gmfgen:ToolEntry"
-            title="Timer"
-            description="Create a new Timer event"
-            genNodes="//@diagram/@childNodes.3 //@diagram/@childNodes.8 //@diagram/@childNodes.30 //@diagram/@topLevelNodes.19"/>
+            title="Catch Link"
+            description="Create a new Catch Link"
+            genNodes="//@diagram/@childNodes.44 //@diagram/@topLevelNodes.21"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
             title="Throw Message"
@@ -6830,27 +6838,49 @@
             smallIconPath="/org.bonitasoft.studio.model.edit/icons/full/obj16/Event.gif"
             genNodes="//@diagram/@childNodes.38 //@diagram/@topLevelNodes.27"/>
         <entries
-            xsi:type="gmfgen:Separator"/>
+            xsi:type="gmfgen:ToolEntry"
+            title="Timer"
+            description="Create a new Timer event"
+            genNodes="//@diagram/@childNodes.3 //@diagram/@childNodes.8 //@diagram/@childNodes.30 //@diagram/@topLevelNodes.19"/>
+      </groups>
+      <groups
+          title="End Events"
+          stack="true"
+          collapse="true">
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="Step"
-            description="Create a new automatic Step"
-            genNodes="//@diagram/@childNodes.22 //@diagram/@topLevelNodes.12"/>
+            title="End"
+            description="Create a new End event"
+            genNodes="//@diagram/@topLevelNodes.2 //@diagram/@childNodes.11"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="Script Task"
-            description="Create a new Script Task"
-            genNodes="//@diagram/@childNodes.19 //@diagram/@topLevelNodes.9"/>
+            title="End Message"
+            description="Create a new End Message event"
+            genNodes="//@diagram/@childNodes.26 //@diagram/@topLevelNodes.15"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="Receive Task"
-            description="Create a new Receive Message Task"
-            genNodes="//@diagram/@childNodes.14 //@diagram/@topLevelNodes.6"/>
+            title="End Signal"
+            description="Create a new End Signal event"
+            genNodes="//@diagram/@childNodes.34 //@diagram/@topLevelNodes.26"/>
         <entries
             xsi:type="gmfgen:ToolEntry"
-            title="Send Task"
-            description="Create a new Send Message Task"
-            genNodes="//@diagram/@childNodes.16 //@diagram/@topLevelNodes.7"/>
+            title="End Error"
+            description="Create a new End Error event"
+            genNodes="//@diagram/@childNodes.35 //@diagram/@topLevelNodes.28"/>
+        <entries
+            xsi:type="gmfgen:ToolEntry"
+            title="End Terminated Event"
+            genNodes="//@diagram/@childNodes.36 //@diagram/@topLevelNodes.30"/>
+      </groups>
+      <groups
+          title="Text Annotation"
+          stack="true"
+          collapse="true">
+        <entries
+            xsi:type="gmfgen:ToolEntry"
+            title="Text Annotation"
+            description="Create a new Text Annotation"
+            genNodes="//@diagram/@childNodes.28 //@diagram/@topLevelNodes.18"/>
       </groups>
     </palette>
     <preferencePages

@@ -70,7 +70,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.5"/>
+          href="process.gmftool#//@palette/@tools.1/@tools.0"/>
       <diagramNode
           href="process.gmfgraph#ExclusiveGateway"/>
     </ownedChild>
@@ -140,7 +140,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.16"/>
+          href="process.gmftool#//@palette/@tools.4/@tools.0"/>
       <diagramNode
           href="process.gmfgraph#StartEvent"/>
     </ownedChild>
@@ -211,7 +211,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.21"/>
+          href="process.gmftool#//@palette/@tools.6/@tools.0"/>
       <diagramNode
           href="process.gmfgraph#EndEvent"/>
     </ownedChild>
@@ -336,7 +336,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.1"/>
+          href="process.gmftool#//@palette/@tools.3/@tools.2"/>
       <diagramNode
           href="process.gmfgraph#Activity"/>
       <children
@@ -369,7 +369,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.31"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.6"/>
           <diagramNode
               href="process.gmfgraph#IntermediateCatchErrorEvent"/>
         </ownedChild>
@@ -404,7 +404,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.28"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.3"/>
           <diagramNode
               href="process.gmfgraph#BoundaryMessageEvent"/>
         </ownedChild>
@@ -438,7 +438,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.32"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.7"/>
           <diagramNode
               href="process.gmfgraph#NonInterruptingBoundaryTimerEvent"/>
         </ownedChild>
@@ -472,7 +472,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.26"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.9"/>
           <diagramNode
               href="process.gmfgraph#BoundaryTimerEvent"/>
         </ownedChild>
@@ -507,7 +507,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.30"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.5"/>
           <diagramNode
               href="process.gmfgraph#BoundarySignalEvent"/>
         </ownedChild>
@@ -624,7 +624,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.2"/>
+          href="process.gmftool#//@palette/@tools.3/@tools.1"/>
       <diagramNode
           href="process.gmfgraph#CallActivity"/>
       <children
@@ -657,7 +657,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.31"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.6"/>
           <diagramNode
               href="process.gmfgraph#IntermediateCatchErrorEvent"/>
         </ownedChild>
@@ -691,7 +691,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.28"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.3"/>
           <diagramNode
               href="process.gmfgraph#BoundaryMessageEvent"/>
         </ownedChild>
@@ -725,7 +725,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.32"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.7"/>
           <diagramNode
               href="process.gmfgraph#NonInterruptingBoundaryTimerEvent"/>
         </ownedChild>
@@ -759,7 +759,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.26"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.9"/>
           <diagramNode
               href="process.gmfgraph#BoundaryTimerEvent"/>
         </ownedChild>
@@ -794,7 +794,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.30"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.5"/>
           <diagramNode
               href="process.gmfgraph#BoundarySignalEvent"/>
         </ownedChild>
@@ -831,7 +831,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.3"/>
+          href="process.gmftool#//@palette/@tools.3/@tools.3"/>
       <diagramNode
           href="process.gmfgraph#EventSubProcess"/>
       <children
@@ -1089,7 +1089,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.37"/>
+          href="process.gmftool#//@palette/@tools.3/@tools.5"/>
       <diagramNode
           href="process.gmfgraph#Activity"/>
       <children
@@ -1122,7 +1122,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.31"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.6"/>
           <diagramNode
               href="process.gmfgraph#IntermediateCatchErrorEvent"/>
         </ownedChild>
@@ -1221,7 +1221,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.38"/>
+          href="process.gmftool#//@palette/@tools.3/@tools.6"/>
       <diagramNode
           href="process.gmfgraph#Activity"/>
     </ownedChild>
@@ -1318,7 +1318,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.0"/>
+          href="process.gmftool#//@palette/@tools.3/@tools.0"/>
       <diagramNode
           href="process.gmfgraph#Activity"/>
       <children
@@ -1351,7 +1351,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.31"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.6"/>
           <diagramNode
               href="process.gmfgraph#IntermediateCatchErrorEvent"/>
         </ownedChild>
@@ -1450,7 +1450,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.36"/>
+          href="process.gmftool#//@palette/@tools.3/@tools.4"/>
       <diagramNode
           href="process.gmfgraph#Activity"/>
       <children
@@ -1483,7 +1483,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.31"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.6"/>
           <diagramNode
               href="process.gmfgraph#IntermediateCatchErrorEvent"/>
         </ownedChild>
@@ -1564,7 +1564,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.6"/>
+          href="process.gmftool#//@palette/@tools.1/@tools.1"/>
       <diagramNode
           href="process.gmfgraph#XORGateway"/>
     </ownedChild>
@@ -1634,7 +1634,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.7"/>
+          href="process.gmftool#//@palette/@tools.1/@tools.2"/>
       <diagramNode
           href="process.gmfgraph#InclusiveGateway"/>
     </ownedChild>
@@ -1731,7 +1731,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.35"/>
+          href="process.gmftool#//@palette/@tools.3/@tools.7"/>
       <diagramNode
           href="process.gmfgraph#Activity"/>
       <children
@@ -1764,7 +1764,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.31"/>
+              href="process.gmftool#//@palette/@tools.5/@tools.6"/>
           <diagramNode
               href="process.gmfgraph#IntermediateCatchErrorEvent"/>
         </ownedChild>
@@ -1875,7 +1875,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.12"/>
+          href="process.gmftool#//@palette/@tools.0/@tools.0"/>
       <diagramNode
           href="process.gmfgraph#Pool"/>
       <children
@@ -1910,7 +1910,7 @@
           </labelMappings>
           <tool
               xsi:type="gmftool:CreationTool"
-              href="process.gmftool#//@palette/@tools.13"/>
+              href="process.gmftool#//@palette/@tools.0/@tools.1"/>
           <diagramNode
               href="process.gmfgraph#Lane"/>
           <children
@@ -2340,7 +2340,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.17"/>
+          href="process.gmftool#//@palette/@tools.4/@tools.1"/>
       <diagramNode
           href="process.gmfgraph#MessageStartEvent"/>
     </ownedChild>
@@ -2410,7 +2410,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.22"/>
+          href="process.gmftool#//@palette/@tools.6/@tools.1"/>
       <diagramNode
           href="process.gmfgraph#MessageEndEvent"/>
     </ownedChild>
@@ -2480,7 +2480,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.28"/>
+          href="process.gmftool#//@palette/@tools.5/@tools.3"/>
       <diagramNode
           href="process.gmfgraph#MessageIntermediateCatchEvent"/>
     </ownedChild>
@@ -2550,7 +2550,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.27"/>
+          href="process.gmftool#//@palette/@tools.5/@tools.2"/>
       <diagramNode
           href="process.gmfgraph#MessageIntermediateThrowEvent"/>
     </ownedChild>
@@ -2584,7 +2584,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.14"/>
+          href="process.gmftool#//@palette/@tools.7/@tools.0"/>
       <diagramNode
           href="process.gmfgraph#NoteFigure"/>
     </ownedChild>
@@ -2654,7 +2654,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.26"/>
+          href="process.gmftool#//@palette/@tools.5/@tools.9"/>
       <diagramNode
           href="process.gmfgraph#TimerIntermediateCatchEvent"/>
     </ownedChild>
@@ -2724,7 +2724,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.18"/>
+          href="process.gmftool#//@palette/@tools.4/@tools.2"/>
       <diagramNode
           href="process.gmfgraph#TimerStartEvent"/>
     </ownedChild>
@@ -2794,7 +2794,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.10"/>
+          href="process.gmftool#//@palette/@tools.5/@tools.1"/>
       <diagramNode
           href="process.gmfgraph#LinkCatchEvent"/>
     </ownedChild>
@@ -2863,7 +2863,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.9"/>
+          href="process.gmftool#//@palette/@tools.5/@tools.0"/>
       <diagramNode
           href="process.gmfgraph#LinkThrowEvent"/>
     </ownedChild>
@@ -2933,7 +2933,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.29"/>
+          href="process.gmftool#//@palette/@tools.5/@tools.4"/>
       <diagramNode
           href="process.gmfgraph#SignalThrowEvent"/>
     </ownedChild>
@@ -3003,7 +3003,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.30"/>
+          href="process.gmftool#//@palette/@tools.5/@tools.5"/>
       <diagramNode
           href="process.gmfgraph#SignalCatchEvent"/>
     </ownedChild>
@@ -3073,7 +3073,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.19"/>
+          href="process.gmftool#//@palette/@tools.4/@tools.3"/>
       <diagramNode
           href="process.gmfgraph#SignalStartEvent"/>
     </ownedChild>
@@ -3143,7 +3143,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.23"/>
+          href="process.gmftool#//@palette/@tools.6/@tools.2"/>
       <diagramNode
           href="process.gmfgraph#SignalEndEvent"/>
     </ownedChild>
@@ -3156,7 +3156,7 @@
           href="process.ecore#//Event"/>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.33"/>
+          href="process.gmftool#//@palette/@tools.5/@tools.8"/>
       <diagramNode
           href="process.gmfgraph#GenericEvent"/>
     </ownedChild>
@@ -3227,7 +3227,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.24"/>
+          href="process.gmftool#//@palette/@tools.6/@tools.3"/>
       <diagramNode
           href="process.gmfgraph#EndErrorEvent"/>
     </ownedChild>
@@ -3298,7 +3298,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.20"/>
+          href="process.gmftool#//@palette/@tools.4/@tools.4"/>
       <diagramNode
           href="process.gmfgraph#StartErrorEvent"/>
     </ownedChild>
@@ -3369,7 +3369,7 @@
       </labelMappings>
       <tool
           xsi:type="gmftool:CreationTool"
-          href="process.gmftool#//@palette/@tools.25"/>
+          href="process.gmftool#//@palette/@tools.6/@tools.4"/>
       <diagramNode
           href="process.gmfgraph#TerminatedEndErrorEvent"/>
     </ownedChild>
@@ -3411,7 +3411,7 @@
         href="process.ecore#//AbstractProcess/connections"/>
     <tool
         xsi:type="gmftool:CreationTool"
-        href="process.gmftool#//@palette/@tools.8"/>
+        href="process.gmftool#//@palette/@tools.2/@tools.0"/>
     <diagramLink
         href="process.gmfgraph#DefaultNormalFlow"/>
     <sourceMetaFeature
@@ -3453,9 +3453,6 @@
     </labelMappings>
     <containmentFeature
         href="process.ecore#//MainProcess/messageConnections"/>
-    <tool
-        xsi:type="gmftool:CreationTool"
-        href="process.gmftool#//@palette/@tools.8"/>
     <diagramLink
         href="process.gmfgraph#Message"/>
     <sourceMetaFeature
@@ -3475,9 +3472,6 @@
         href="process.ecore#//TextAnnotationAttachment"/>
     <containmentFeature
         href="process.ecore#//Element/textAnnotationAttachment"/>
-    <tool
-        xsi:type="gmftool:CreationTool"
-        href="process.gmftool#//@palette/@tools.8"/>
     <diagramLink
         href="process.gmfgraph#TextAnnotation"/>
     <sourceMetaFeature
