@@ -21,6 +21,7 @@ import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
+import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -118,13 +119,12 @@ public class ActorFilterDefinitionTest extends SWTBotGefTestCase {
     }
 
     @Test
-    public void testAddCategory() throws Exception {
+    public void testSelectCategory() throws Exception {
         final String id = "test2";
         final String textLabel = "Definition id *";
         final String version = "1.0.0";
         bot.textWithLabel(textLabel).setText(id);
-        bot.button("Add...").click();
-        SWTBotActorFilterUtil.addCategory(bot);
+        bot.treeWithLabel(Messages.categoryLabel).select(0);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) RepositoryManager
                 .getInstance().getRepositoryStore(
@@ -141,34 +141,35 @@ public class ActorFilterDefinitionTest extends SWTBotGefTestCase {
         final String categoryId = "category1";
         SWTBotActorFilterUtil.createActorFilterDefinition(bot, id, version);
         SWTBotActorFilterUtil.createNewCategory(bot, categoryId);
+        bot.treeWithLabel(Messages.categoryLabel).select(categoryId);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) RepositoryManager
                 .getInstance().getRepositoryStore(
                         ActorFilterDefRepositoryStore.class);
         ConnectorDefinition actorDefinition = store.getDefinition(id, version);
-        assertEquals("category list size should be equal to 1", actorDefinition
-                .getCategory().size(), 1);
+        assertEquals("category list size should be equal to 1", 1, actorDefinition
+                .getCategory().size());
     }
 
-    @Test
-    public void testRemoveCategory() throws Exception {
-        final String id = "test4";
-        final String textLabel = "Definition id *";
-        final String version = "1.0.0";
-        bot.textWithLabel(textLabel).setText(id);
-        bot.button("Add...").click();
-        SWTBotActorFilterUtil.addCategory(bot);
-        bot.tableWithLabel("Categories").select(0);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button("Remove")),5000);
-        bot.button("Remove").click();
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-        ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) RepositoryManager
-                .getInstance().getRepositoryStore(
-                        ActorFilterDefRepositoryStore.class);
-        ConnectorDefinition actorDefinition = store.getDefinition(id, version);
-        assertEquals("category list size should be equal to 0", actorDefinition
-                .getCategory().size(), 0);
-    }
+//    @Test
+//    public void testRemoveCategory() throws Exception {
+//        final String id = "test4";
+//        final String textLabel = "Definition id *";
+//        final String version = "1.0.0";
+//        bot.textWithLabel(textLabel).setText(id);
+//        bot.button("Add...").click();
+//        SWTBotActorFilterUtil.addCategory(bot);
+//        bot.tableWithLabel("Categories").select(0);
+//        bot.waitUntil(Conditions.widgetIsEnabled(bot.button("Remove")),5000);
+//        bot.button("Remove").click();
+//        bot.button(IDialogConstants.FINISH_LABEL).click();
+//        ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) RepositoryManager
+//                .getInstance().getRepositoryStore(
+//                        ActorFilterDefRepositoryStore.class);
+//        ConnectorDefinition actorDefinition = store.getDefinition(id, version);
+//        assertEquals("category list size should be equal to 0", actorDefinition
+//                .getCategory().size(), 0);
+//    }
 
     @Test
     public void testCreateExistingCategory() throws Exception {

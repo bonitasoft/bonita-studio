@@ -370,7 +370,8 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 				HashSet<String>existingCatIds = new HashSet<String>();
 				existingCatIds.addAll(messageProvider.getProvidedCategoriesIds());
 				existingCatIds.addAll(messageProvider.getUserCategoriesIds());
-				for (Category category:definition.getCategory()){
+				List<Category> input = (List<Category>) categoryViewer.getInput();
+				for (Category category:input){
 					existingCatIds.add(category.getId());
 				}
 				NewCategoryDialog dialog = new NewCategoryDialog(Display.getDefault().getActiveShell(),existingCatIds) ;
@@ -382,7 +383,7 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 					if(imageFile != null){
 						messageProvider.createIcon(imageFile,newCategory.getIcon()) ;
 					}
-					List<Object> input = (List<Object>) categoryViewer.getInput();
+					input = (List<Category>) categoryViewer.getInput();
 					input.add(newCategory);
 					categoryViewer.setInput(input) ;
 				}
