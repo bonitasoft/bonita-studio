@@ -32,7 +32,6 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,8 +41,6 @@ import org.junit.runner.RunWith;
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class ConnectorEditionTest extends SWTBotGefTestCase {
-
-
 
 	public void removeConnectorDefinition(final String name,final String version) {
 		SWTBotConnectorTestUtil.activateConnectorDefEditionShell( bot);
@@ -147,8 +144,7 @@ public class ConnectorEditionTest extends SWTBotGefTestCase {
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.tree().expandNode("Uncategorized").select(id + " (" + version + ")")),10000);
 		bot.tree().select("Uncategorized").expandNode("Uncategorized").select(id + " (" + version + ")");
 		bot.button(Messages.Edit).click();
-		bot.button("Add...").click();
-		addCategory();
+		bot.treeWithLabel(Messages.categoryLabel).select(0);
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 		ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
 				.getInstance().getRepositoryStore(
@@ -170,12 +166,5 @@ public class ConnectorEditionTest extends SWTBotGefTestCase {
 		bot.button(IDialogConstants.CANCEL_LABEL).click();
 	}
 
-	private void addCategory() throws Exception {
-		SWTBotShell shell = bot.activeShell();
-		shell.activate();
-		assertFalse("ok button should be desabled",
-				bot.button(IDialogConstants.OK_LABEL).isEnabled());
-		bot.table().select(0);
-		bot.button(IDialogConstants.OK_LABEL).click();
-	}
+
 }

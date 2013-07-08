@@ -183,8 +183,7 @@ public class ActorFilterEditionTest extends SWTBotGefTestCase {
         bot.tree().select("Uncategorized").expandNode("Uncategorized")
         .select(id + " (" + version + ")");
         bot.button(Messages.edit).click();
-        bot.button("Add...").click();
-        SWTBotActorFilterUtil.addCategory(bot);
+    	bot.treeWithLabel(org.bonitasoft.studio.connector.model.i18n.Messages.categoryLabel).select(0);
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ActorFilterDefRepositoryStore store = (ActorFilterDefRepositoryStore) RepositoryManager
                 .getInstance().getRepositoryStore(
