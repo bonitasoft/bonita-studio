@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.TreeColumn;
  * @author Romain Bioteau
  *
  */
-public class TreeExplorer extends Composite {
+public class TreeExplorer extends Composite implements SWTBotConstants{
 
 	private TreeViewer leftTree;
 	private TableViewer rightTable;
@@ -77,8 +77,10 @@ public class TreeExplorer extends Composite {
 		content.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
 
 		leftTree = new TreeViewer(content, SWT.V_SCROLL);
+		leftTree.getTree().setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPLORER_LEFT_TREE);
 		leftTree.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		rightTable = new TableViewer(content, SWT.NONE);
+		rightTable.getTable().setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPLORER_RIGHT_TABLE);
 		rightTable.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		rightTable.setSorter(new ViewerSorter());
 		rightTable.addFilter(new ViewerFilter() {
