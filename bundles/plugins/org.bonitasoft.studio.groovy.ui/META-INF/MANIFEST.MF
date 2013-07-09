@@ -71,4 +71,5 @@ Export-Package: org.bonitasoft.studio.groovy.ui;
  org.bonitasoft.studio.groovy.ui.providers,
  org.bonitasoft.studio.groovy.ui.viewer,
  org.bonitasoft.studio.groovy.ui.widgets,
- org.bonitasoft.studio.groovy.ui.widgets.pojo
+ org.bonitasoft.studio.groovy.ui.widgets.pojo,
+ org.bonitasoft.studio.groovy.ui.wizard
