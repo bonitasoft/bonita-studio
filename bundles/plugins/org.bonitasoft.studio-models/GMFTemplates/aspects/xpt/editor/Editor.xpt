@@ -611,7 +611,7 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 	 */
 		protected org.eclipse.gef.ui.palette.PaletteViewer constructPaletteViewer() {
 			final org.bonitasoft.studio.common.diagram.palette.CustomMainPaletteViewer constructPaletteViewer = new org.bonitasoft.studio.common.diagram.palette.CustomMainPaletteViewer();
-			
+			constructPaletteViewer.hidePaletteEntry("standardGroup");
 			constructPaletteViewer.setPaletteViewerPreferences(processPref);
 			//add property change listener to refresh the items (the default one does not work anymore with an other key)
 			paletteChangeListener = new java.beans.PropertyChangeListener() {
