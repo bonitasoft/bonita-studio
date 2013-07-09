@@ -18,6 +18,8 @@
 package org.bonitasoft.studio.diagram.custom.editPolicies;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.bonitasoft.studio.diagram.custom.tools.ToolAndToolEntry;
@@ -90,7 +92,32 @@ public class NextElementPaletteProvider {
 				}
 			}
 		}
+		Collections.sort(res, new Comparator<ToolAndToolEntry>(){
+
+			@Override
+			public int compare(ToolAndToolEntry arg0, ToolAndToolEntry arg1) {
+				return getToolOrder(arg0).compareTo(getToolOrder(arg1));
+			}
+
+		});
 		return res;
+	}
+
+	protected static Integer getToolOrder(ToolAndToolEntry entry) {
+		final String id = entry.getToolEntry().getId();
+		if(id.equals("createGate1CreationTool")){
+			return 1;
+		}
+		if(id.equals("createTransition1CreationTool")){
+			return 2;
+		}
+		if(id.equals("createServiceTask1CreationTool")){
+			return 0;
+		}
+		if(id.equals("createEvent9CreationTool")){
+			return 3;
+		}
+		return -1;
 	}
 
 }
