@@ -148,7 +148,7 @@ public class GroovyScriptExpressionEditor extends
 			final ScriptVariable e2sv = ((ScriptVariable) e2);
 			if (e2sv.getCategory() != null) {
 				if ((e1.toString()).equalsIgnoreCase(e2sv.getCategory())) {
-					return 1;
+					return -1;
 				} else {
 					return (e1.toString()).compareTo(e2sv.getCategory());
 				}
@@ -166,6 +166,8 @@ public class GroovyScriptExpressionEditor extends
 			} else {
 				return -1;
 			}
+		} else if(e1 instanceof String && e2 instanceof String) {
+			return (e1.toString()).compareTo(e2.toString());
 		} else {
 			return 1;
 		}

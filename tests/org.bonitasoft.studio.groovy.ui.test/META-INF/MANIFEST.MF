@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests for Groovy ui
+Bundle-SymbolicName: org.bonitasoft.studio.groovy.ui.test
+Bundle-Version: 6.1.0.qualifier
+Bundle-Activator: org.bonitasoft.studio.groovy.ui.test.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.junit4;bundle-version="4.8.1",
+ org.bonitasoft.studio.groovy;bundle-version="6.1.0",
+ org.bonitasoft.studio.common;bundle-version="6.1.0",
+ org.bonitasoft.studio.groovy.ui;bundle-version="6.1.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.bonitasoft.studio.groovy.ui.test
+Bundle-Vendor: BonitaSoft S.A.
