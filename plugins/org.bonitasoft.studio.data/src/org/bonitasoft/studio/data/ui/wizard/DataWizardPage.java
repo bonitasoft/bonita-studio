@@ -518,7 +518,12 @@ public class DataWizardPage extends WizardPage {
 				}
 
 				/* Search all level */
-				List<Data> allData = ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(container), ProcessPackage.Literals.DATA);
+				List<Data> allData = null;
+				if( container instanceof AbstractProcess){
+					 allData = ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(container), ProcessPackage.Literals.DATA);
+				}else{
+					 allData = ModelHelper.getAccessibleData(container, true);
+				}
 				for (final Data object : allData) {
 					if (object instanceof Data && !(object.eContainer() instanceof Expression)) {
 						final Data otherData = (Data) object;
