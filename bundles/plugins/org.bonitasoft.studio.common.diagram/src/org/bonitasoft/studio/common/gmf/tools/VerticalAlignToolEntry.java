@@ -37,7 +37,7 @@ public class VerticalAlignToolEntry extends ToolEntry{
 	}
 
 	public VerticalAlignToolEntry(String label, String description) {
-		super(label, description, null, null, VerticalAlignToolEntry.class);
+		super(label, description, null, null, VerticalAlignTool.class);
 		if (label == null || label.length() == 0)
 			setLabel(Messages.toolAlignVertical);
 		setUserModificationPermission(PERMISSION_NO_MODIFICATION);
