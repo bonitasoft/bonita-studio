@@ -192,9 +192,9 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 			String nsURI = ReleaseUtils.getNamespaceURI(resourceURI);
 			Migrator nextMigrator = store.getMigrator(nsURI);
 			nextMigrator.setLevel(ValidationLevel.RELEASE);
-//			nextMigrator.migrateAndSave(
-//					Collections.singletonList(resourceURI),getAlphaRelease(nextMigrator),
-//					null, Repository.NULL_PROGRESS_MONITOR);
+			nextMigrator.migrateAndSave(
+					Collections.singletonList(resourceURI),getAlphaRelease(nextMigrator),
+					null, Repository.NULL_PROGRESS_MONITOR);
 			addMigrationReport(migrator,resourceURI,(String) sourceVersion,progressMonitor);
 			DeadlineMigrationStore.clearDeadlines();
 		}else{
