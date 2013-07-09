@@ -4,11 +4,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:gmftool="http://www.eclipse.org/gmf/2005/ToolDefinition">
   <palette
-      title="BpmnPalette"
+      title="BPMN Palette"
       description="">
     <tools
         xsi:type="gmftool:ToolGroup"
-        title="Containers"
+        title="Swimlanes"
         description=""
         collapsible="true"
         stack="true">
@@ -41,7 +41,7 @@
     </tools>
     <tools
         xsi:type="gmftool:ToolGroup"
-        title="Transition"
+        title="Flow"
         collapsible="true"
         stack="true">
       <tools

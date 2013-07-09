@@ -6668,7 +6668,7 @@
     </compartments>
     <palette>
       <groups
-          title="Containers"
+          title="Swimlanes"
           description=""
           stack="true"
           collapse="true">
@@ -6704,7 +6704,7 @@
             genNodes="//@diagram/@childNodes.39 //@diagram/@topLevelNodes.11"/>
       </groups>
       <groups
-          title="Transition"
+          title="Flow"
           stack="true"
           collapse="true">
         <entries

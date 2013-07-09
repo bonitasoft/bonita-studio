@@ -84,12 +84,11 @@ protected org.eclipse.gef.palette.PaletteRoot createPaletteRoot(org.eclipse.gef.
 			}
 		}
 	if(!alreadyExists){
-	standard.add(new org.eclipse.gef.palette.MarqueeToolEntry()) ;
-	standard.add(new org.bonitasoft.studio.common.gmf.tools.ZoomInToolEntry());
-    standard.add(new org.bonitasoft.studio.common.gmf.tools.ZoomOutToolEntry());
-	standard.add(new org.eclipse.gef.palette.PaletteSeparator());
-	standard.add(hSpace) ;
-	standard.add(vSpave) ;
+		standard.add(new org.eclipse.gef.palette.MarqueeToolEntry()) ;
+		standard.add(new org.bonitasoft.studio.common.gmf.tools.ZoomInToolEntry());
+	    standard.add(new org.bonitasoft.studio.common.gmf.tools.ZoomOutToolEntry());
+		standard.add(hSpace) ;
+		standard.add(vSpave) ;
 	}
 		
 	applyCustomizationsToPalette(root);
@@ -215,9 +214,6 @@ protected void configureGraphicalViewer() {
 	«EXPAND configurePaletteViewer»
 	
 	«REM»customization of the palette«ENDREM»
-	«EXPAND createPartControl»
-	
-	«REM»customization of the palette«ENDREM»
 	«EXPAND constructPaletteViewer»
 	
 	«REM»default size for palette«ENDREM»
@@ -315,7 +311,7 @@ public void dispose() {
 		getDiagramGraphicalViewer().addDropTargetListener(new org.bonitasoft.studio.common.gmf.tools.PaletteToolTransferDropTargetListenerWithSelection(getGraphicalViewer()));
 		super.initializeGraphicalViewer();
 		getDiagramGraphicalViewer().setProperty(org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties.GRIDLINECOLOR, 0);
-		getDiagramGraphicalViewer().setProperty(org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties.GRIDLINESTYLE,SWT.LINE_SOLID);
+		getDiagramGraphicalViewer().setProperty(org.eclipse.gmf.runtime.diagram.ui.internal.properties.WorkspaceViewerProperties.GRIDLINESTYLE,org.eclipse.swt.SWT.LINE_SOLID);
 		if(org.eclipse.core.runtime.Platform.getOS().equals(org.eclipse.core.runtime.Platform.OS_MACOSX)){
 			getGraphicalViewer().setProperty(org.eclipse.gef.MouseWheelHandler.KeyGenerator.getKey(SWT.COMMAND), org.eclipse.gef.MouseWheelZoomHandler.SINGLETON);
 		}
@@ -562,145 +558,6 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
     }
 «ENDDEFINE»
 
-«DEFINE createPartControl FOR gmfgen::GenEditorView-»
-		/**
-		 *  @generated BonitaSoft
-		 */
-		public void createPartControl(org.eclipse.swt.widgets.Composite parent) {
-		super.createPartControl(parent);
-
-		org.eclipse.gef.ui.palette.FlyoutPaletteComposite control = (org.eclipse.gef.ui.palette.FlyoutPaletteComposite) parent.getChildren()[0];
-		// the palette composite
-		final org.eclipse.swt.widgets.Composite paletteComposite = (org.eclipse.swt.widgets.Composite) control.getChildren()[1];
-		
-		if(paletteComposite.getChildren().length>=3){
-			org.eclipse.swt.layout.GridLayout layout = new org.eclipse.swt.layout.GridLayout(2, false);
-			layout.horizontalSpacing = 0;
-			layout.verticalSpacing = 0;
-			layout.marginBottom = 0;
-			layout.marginTop = 0;
-			layout.marginHeight = 0;
-			layout.marginWidth = 0;
-			layout.marginLeft = 0;
-			layout.marginRight = 0;
-			paletteComposite.setLayout(layout);
-			org.eclipse.swt.widgets.Control title = paletteComposite.getChildren()[0];
-			title.setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().grab(true, true).span(3, 1).create());
-			title.setVisible(false);
-			final org.eclipse.swt.widgets.Control arrowButton = paletteComposite.getChildren()[1];
-			arrowButton.setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().hint(20, SWT.DEFAULT).create());
-			arrowButton.moveAbove(title);
-			// arrowButton.setVisible(false);
-			org.eclipse.swt.widgets.Control palette = paletteComposite.getChildren()[2];
-			palette.setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().grab(true, true).span(3, 1).create());
-	
-			final org.eclipse.swt.widgets.Composite buttonComposite = new org.eclipse.swt.widgets.Composite(paletteComposite, SWT.NONE);
-			org.eclipse.swt.layout.GridLayout layoutButton = new org.eclipse.swt.layout.GridLayout(3, false);
-			layoutButton.horizontalSpacing = 0;
-			layoutButton.verticalSpacing = 0;
-			layoutButton.marginBottom = 0;
-			layoutButton.marginTop = 0;
-			layoutButton.marginHeight = 0;
-			layoutButton.marginWidth = 0;
-			layoutButton.marginLeft = 1;
-			layoutButton.marginRight = 0;
-			buttonComposite.setLayout(layoutButton);
-			buttonComposite.setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().grab(true,false).create());
-			buttonComposite.moveAbove(palette);
-			buttonComposite.addPaintListener(new org.eclipse.swt.events.PaintListener() {
-				public void paintControl(org.eclipse.swt.events.PaintEvent e) {
-					buttonComposite.layout(true);
-				}
-			});
-			title.moveBelow(palette);
-	
-			int yHint = 25;
-			final org.eclipse.swt.widgets.Button onlyIcones = new org.eclipse.swt.widgets.Button(buttonComposite, org.eclipse.swt.SWT.TOGGLE | SWT.FLAT);
-			onlyIcones.setImage(org.bonitasoft.studio.pics.Pics.getImage(org.bonitasoft.studio.pics.PicsConstants.paletteIcones));
-			onlyIcones.setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().hint(org.eclipse.swt.SWT.DEFAULT, yHint).grab(true, false).create());
-			onlyIcones.setToolTipText(org.bonitasoft.studio.common.Messages.paletteTooltipOnlyIcone);
-			final org.eclipse.swt.widgets.Button simple = new org.eclipse.swt.widgets.Button(buttonComposite, org.eclipse.swt.SWT.TOGGLE | SWT.FLAT);
-			simple.setImage(org.bonitasoft.studio.pics.Pics.getImage(org.bonitasoft.studio.pics.PicsConstants.paletteSimple));
-			simple.setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().hint(org.eclipse.swt.SWT.DEFAULT, yHint).grab(true, false).create());
-			simple.setToolTipText(org.bonitasoft.studio.common.Messages.paletteTooltipSimple);
-			final org.eclipse.swt.widgets.Button full = new org.eclipse.swt.widgets.Button(buttonComposite, org.eclipse.swt.SWT.TOGGLE | SWT.FLAT);
-			full.setImage(org.bonitasoft.studio.pics.Pics.getImage(org.bonitasoft.studio.pics.PicsConstants.paletteFull));
-			full.setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().hint(org.eclipse.swt.SWT.DEFAULT, yHint).grab(true, false).create());
-			full.setToolTipText(org.bonitasoft.studio.common.Messages.paletteTooltipFull);
-	
-			org.eclipse.swt.widgets.Listener listener = new org.eclipse.swt.widgets.Listener() {
-				public void handleEvent(org.eclipse.swt.widgets.Event e) {
-					org.eclipse.swt.widgets.Control[] children = buttonComposite.getChildren();
-					for (int i = 0; i < children.length; i++) {
-						org.eclipse.swt.widgets.Control child = children[i];
-						if (e.widget != child && child instanceof org.eclipse.swt.widgets.Button && (child.getStyle() & org.eclipse.swt.SWT.TOGGLE) != 0) {
-							((org.eclipse.swt.widgets.Button) child).setSelection(false);
-						}
-					}
-					((org.eclipse.swt.widgets.Button) e.widget).setSelection(true);
-	
-				}
-			};
-	
-			org.eclipse.swt.events.SelectionAdapter launchSwitch = new org.eclipse.swt.events.SelectionAdapter() {
-				@Override
-				public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-					org.eclipse.ui.handlers.IHandlerService handlerService = (org.eclipse.ui.handlers.IHandlerService) PlatformUI.getWorkbench().getService(org.eclipse.ui.handlers.IHandlerService.class);
-					org.eclipse.ui.commands.ICommandService commandService = (org.eclipse.ui.commands.ICommandService) PlatformUI.getWorkbench().getService(org.eclipse.ui.commands.ICommandService.class);
-					org.eclipse.core.commands.Command switchPalette = commandService.getCommand("org.bonitasoft.studio.application.switchPalette");
-					String value;
-					if(e.widget.equals(simple)){
-						value = "simple";//$NON-NLS-1$
-					}else if (e.widget.equals(full)){
-						value = "full";//$NON-NLS-1$
-					}else{
-						value = "icones";//$NON-NLS-1$
-					}
-					org.eclipse.core.commands.IParameter mode;
-					try {
-						mode = switchPalette.getParameter("org.bonitasoft.studio.application.switch.advanced");
-						org.eclipse.core.commands.Parameterization parm = new org.eclipse.core.commands.Parameterization(mode, value);
-						org.eclipse.core.commands.ParameterizedCommand parmCommand = new org.eclipse.core.commands.ParameterizedCommand(switchPalette, new org.eclipse.core.commands.Parameterization[] { parm });
-						handlerService.executeCommand(parmCommand, null);
-					} catch (java.lang.Exception e1) {
-						org.bonitasoft.studio.common.log.BonitaStudioLog.error(e1);
-					}
-				}
-			};
-			simple.addSelectionListener(launchSwitch);
-			onlyIcones.addSelectionListener(launchSwitch);
-			full.addSelectionListener(launchSwitch);
-			simple.addListener(org.eclipse.swt.SWT.Selection, listener);
-			onlyIcones.addListener(org.eclipse.swt.SWT.Selection, listener);
-			full.addListener(org.eclipse.swt.SWT.Selection, listener);
-			
-			org.eclipse.gef.ui.palette.PaletteViewer paletteViewer = ((org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain)getDiagramEditDomain()).getPaletteViewer();
-			if(paletteViewer.getPaletteViewerPreferences().getLayoutSetting() == org.eclipse.gef.ui.palette.PaletteViewerPreferences.LAYOUT_ICONS){
-				//icones mode
-				onlyIcones.setSelection(true);
-			} else {
-				org.eclipse.gef.palette.PaletteContainer container = (org.eclipse.gef.palette.PaletteContainer) root.getChildren().get(root.getChildren().size()-1);
-				for (java.lang.Object item : container.getChildren()) {
-					if (item instanceof org.eclipse.gef.palette.PaletteEntry) {
-						org.eclipse.gef.palette.PaletteEntry entry = (org.eclipse.gef.palette.PaletteEntry) item;
-						if(!entry.isVisible()){
-							simple.setSelection(true);
-							break;
-						}
-						
-					}
-				}
-				if(!simple.getSelection()){
-					full.setSelection(true);
-				}
-				
-			}
-		}
-		
-	}
-
-«ENDDEFINE»
-
 
 «DEFINE configurePaletteViewer FOR gmfgen::GenEditorView-»
 
@@ -753,7 +610,7 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 	 *  @generated BonitaSoft
 	 */
 		protected org.eclipse.gef.ui.palette.PaletteViewer constructPaletteViewer() {
-			final org.eclipse.gef.ui.palette.PaletteViewer constructPaletteViewer = super.constructPaletteViewer();
+			final org.bonitasoft.studio.common.diagram.palette.CustomMainPaletteViewer constructPaletteViewer = new org.bonitasoft.studio.common.diagram.palette.CustomMainPaletteViewer();
 			
 			constructPaletteViewer.setPaletteViewerPreferences(processPref);
 			//add property change listener to refresh the items (the default one does not work anymore with an other key)
@@ -788,6 +645,19 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 			processPref.addPropertyChangeListener(paletteChangeListener);
 			org.eclipse.jface.preference.IPreferenceStore store = org.eclipse.gef.internal.InternalGEFPlugin.getDefault().getPreferenceStore();
 			store.setDefault(org.eclipse.gef.ui.palette.PaletteViewerPreferences.PREFERENCE_LAYOUT + preferencesKey, org.eclipse.gef.ui.palette.PaletteViewerPreferences.LAYOUT_ICONS);
+		
+			final org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer toolPaletteViewer = new org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer();
+			toolPaletteViewer.showOnlyPaletteEntry("standardGroup");
+			toolPaletteViewer.setPaletteRoot(root);
+			toolPaletteViewer.setMainPaletteViewer(constructPaletteViewer);
+			constructPaletteViewer.setToolPaletteViewer(toolPaletteViewer);
+			getRulerComposite().setLayout(org.eclipse.jface.layout.GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
+			getRulerComposite().getChildren()[0].setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().grab(true, true).create());
+			org.eclipse.swt.widgets.Control paletteControl = toolPaletteViewer.createControl(getRulerComposite());
+			paletteControl.setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().grab(true, false).create());
+			getRulerComposite().layout(true,true);
+		
+		
 			return constructPaletteViewer;
 	}
 «ENDDEFINE»
