@@ -320,4 +320,8 @@ public class Messages extends NLS {
 	public static String nameFieldIssue;
 	public static String filterLabel;
 	public static String InvalidCharacterError;
+	public static String toolAlignHorizontal;
+	public static String toolAlignHorizontalDesc;
+	public static String toolAlignVertical;
+	public static String toolAlignVerticalDesc;
 }

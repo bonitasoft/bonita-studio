@@ -90,13 +90,13 @@ public class CustomMainPaletteViewer extends PaletteViewerEx {
 		if(newMode.equals(activeEntry)){
 			return;
 		}
-
 		if (activeEntry != null){
 			final ToolEntryEditPart toolEntryEditPart = getToolEntryEditPart(activeEntry);
 			if(toolEntryEditPart != null){
 				toolEntryEditPart.setToolSelected(false);
 			}
 		}
+
 		activeEntry = newMode;
 		if (activeEntry != null) {
 			ToolEntryEditPart editpart = getToolEntryEditPart(activeEntry);
@@ -105,6 +105,7 @@ public class CustomMainPaletteViewer extends PaletteViewerEx {
 			}
 		}
 		fireModeChanged();
+
 		if(toolPalette != null){
 			setEditDomain(toolPalette.getEditDomain());
 			toolPalette.setActiveTool(newMode);

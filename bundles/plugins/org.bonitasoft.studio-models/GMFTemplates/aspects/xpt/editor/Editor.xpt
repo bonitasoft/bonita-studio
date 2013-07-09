@@ -89,6 +89,8 @@ protected org.eclipse.gef.palette.PaletteRoot createPaletteRoot(org.eclipse.gef.
 	    standard.add(new org.bonitasoft.studio.common.gmf.tools.ZoomOutToolEntry());
 		standard.add(hSpace) ;
 		standard.add(vSpave) ;
+		standard.add(new org.bonitasoft.studio.common.gmf.tools.HorizontalAlignToolEntry());
+		standard.add(new org.bonitasoft.studio.common.gmf.tools.VerticalAlignToolEntry());
 	}
 		
 	applyCustomizationsToPalette(root);
