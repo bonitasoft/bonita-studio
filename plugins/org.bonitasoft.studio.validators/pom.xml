@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>plugins</artifactId>
-		<version>6.0.1-SNAPSHOT</version>
+		<version>6.0.1</version>
 	</parent>
   <groupId>org.bonitasoft.studio.plugins</groupId>
   <artifactId>org.bonitasoft.studio.validators</artifactId>
-  <version>6.0.1-SNAPSHOT</version>
+  <version>6.0.1</version>
   <packaging>eclipse-plugin</packaging>
 </project>
