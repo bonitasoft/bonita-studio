@@ -71,6 +71,8 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 				(float) 0.1,
 				editorArea);
 		left.addView(PaletteView.ID);
+		layout.getViewLayout(PaletteView.ID).setCloseable(false);
+		layout.getViewLayout(PaletteView.ID).setMoveable(false);
 		left.addPlaceholder("org.bonitasoft.studio.migration.view");
 	}
 
