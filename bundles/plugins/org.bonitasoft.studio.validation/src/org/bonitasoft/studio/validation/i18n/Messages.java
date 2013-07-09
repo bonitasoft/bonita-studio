@@ -82,6 +82,8 @@ public class Messages extends NLS {
 	public static String unresolvedDependenciesFor;
 	public static String unresolvedPatternDependenciesFor;
 	public static String unsupportedReturnTypeForAvailableValuesOf;
+	public static String incomingTransitionNotSupported;
+	public static String outgoingTransitionNotSupported;
 
     
     static {

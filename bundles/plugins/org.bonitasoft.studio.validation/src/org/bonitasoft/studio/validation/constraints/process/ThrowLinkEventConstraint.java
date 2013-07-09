@@ -59,6 +59,10 @@ public class ThrowLinkEventConstraint extends AbstractLiveValidationMarkerConstr
     @Override
     protected IStatus performBatchValidation(IValidationContext ctx) {
         ThrowLinkEvent event = (ThrowLinkEvent) ctx.getTarget();
+        if(!event.getOutgoing().isEmpty()){
+        	  return ctx.createFailureStatus(new Object[] {Messages.outgoingTransitionNotSupported});
+        }
+        
         if(event.getTo() == null || event.getTo().getName().trim().isEmpty()){
             return ctx.createFailureStatus(new Object[] { Messages.Validation_LinkEvent_MissingTarget});
         }

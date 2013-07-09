@@ -59,13 +59,16 @@ public class CatchLinkEventConstraint extends AbstractLiveValidationMarkerConstr
 	@Override
 	protected IStatus performBatchValidation(IValidationContext ctx) {
 		CatchLinkEvent event = (CatchLinkEvent) ctx.getTarget();
+		if(!event.getIncoming().isEmpty()){
+			return ctx.createFailureStatus(new Object[] { Messages.incomingTransitionNotSupported});
+		}
 		if(((CatchLinkEvent) event).getFrom().isEmpty()){
 			return ctx.createFailureStatus(new Object[] { Messages.Validation_LinkEvent_MissingSource});
 		}
 		return ctx.createSuccessStatus();
 	}
 
-	
+
 	@Override
 	protected String getMarkerType(DiagramEditor editor) {
 		return ProcessMarkerNavigationProvider.MARKER_TYPE;
