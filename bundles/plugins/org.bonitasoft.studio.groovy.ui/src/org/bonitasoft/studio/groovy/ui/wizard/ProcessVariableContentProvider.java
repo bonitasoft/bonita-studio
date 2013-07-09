@@ -44,7 +44,6 @@ public class ProcessVariableContentProvider implements IStructuredContentProvide
 	@Override
 	@SuppressWarnings("unchecked")
 	public Object[] getElements(Object inputElement) {
-
 		List<Object> res = new ArrayList<Object>();
 		res.addAll((Collection<? extends Object>) inputElement);
 		map = getClassifiedVariables(res);
@@ -54,7 +53,8 @@ public class ProcessVariableContentProvider implements IStructuredContentProvide
 			if (!key.equals(Messages.SelectProcessVariableLabel) && !key.isEmpty()){
 				inputElements.add(key);
 			}
-			List<Object> scriptVariables = sortList(map.get(key));
+			List<Object> scriptVariables = map.get(key);
+			//List<Object> scriptVariables = sortList(map.get(key));
 			inputElements.addAll(scriptVariables);
 		}
 		return inputElements.toArray();
