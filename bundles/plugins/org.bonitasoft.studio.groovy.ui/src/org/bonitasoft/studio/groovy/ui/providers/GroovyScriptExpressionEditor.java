@@ -117,48 +117,7 @@ public class GroovyScriptExpressionEditor extends
 	private final ViewerSorter comboSorter = new ViewerSorter() {
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			if (e1 instanceof ScriptVariable && e2 instanceof ScriptVariable) {
-				final ScriptVariable e1sv = ((ScriptVariable) e1);
-				final ScriptVariable e2sv = ((ScriptVariable) e2);
-
-				if (e1sv.getCategory() == null) {
-					return -1;
-				} else if (e2sv.getCategory() == null) {
-					return 1;
-				} else {
-					if (e1sv.getCategory().equals(e2sv.getCategory())) {
-						return e1sv.getName().compareToIgnoreCase(
-								e2sv.getName());
-					} else {
-						return e1sv.getCategory().compareToIgnoreCase(
-								e2sv.getCategory());
-					}
-				}
-			} else if (e1 instanceof String && e2 instanceof ScriptVariable) {
-				final ScriptVariable e2sv = ((ScriptVariable) e2);
-				if (e2sv.getCategory() != null) {
-					if ((e1.toString()).equalsIgnoreCase(e2sv.getCategory())) {
-						return 1;
-					} else {
-						return (e1.toString()).compareTo(e2sv.getCategory());
-					}
-				} else {
-					return -1;
-				}
-			} else if (e1 instanceof ScriptVariable && e2 instanceof String) {
-				final ScriptVariable e1sv = ((ScriptVariable) e1);
-				if (e1sv.getCategory() != null) {
-					if (e1sv.getCategory().equalsIgnoreCase(e2.toString())) {
-						return 1;
-					} else {
-						return e1sv.getCategory().compareTo(e2.toString());
-					}
-				} else {
-					return -1;
-				}
-			} else {
-				return -1;
-			}
+			return comboSorterFunction(e1, e2);
 		}
 	};
 	private Button testButton;
@@ -167,6 +126,49 @@ public class GroovyScriptExpressionEditor extends
 		adapterFactory = new ComposedAdapterFactory(
 				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
+	}
+
+	public int comboSorterFunction(Object e1, Object e2) {
+		if (e1 instanceof ScriptVariable && e2 instanceof ScriptVariable) {
+			final ScriptVariable e1sv = ((ScriptVariable) e1);
+			final ScriptVariable e2sv = ((ScriptVariable) e2);
+			if (e1sv.getCategory() == null) {
+				return -1;
+			} else if (e2sv.getCategory() == null) {
+				return 1;
+			} else {
+				if (e1sv.getCategory().equals(e2sv.getCategory())) {
+					return e1sv.getName().compareToIgnoreCase(e2sv.getName());
+				} else {
+					return e1sv.getCategory().compareToIgnoreCase(
+							e2sv.getCategory());
+				}
+			}
+		} else if (e1 instanceof String && e2 instanceof ScriptVariable) {
+			final ScriptVariable e2sv = ((ScriptVariable) e2);
+			if (e2sv.getCategory() != null) {
+				if ((e1.toString()).equalsIgnoreCase(e2sv.getCategory())) {
+					return 1;
+				} else {
+					return (e1.toString()).compareTo(e2sv.getCategory());
+				}
+			} else {
+				return -1;
+			}
+		} else if (e1 instanceof ScriptVariable && e2 instanceof String) {
+			final ScriptVariable e1sv = ((ScriptVariable) e1);
+			if (e1sv.getCategory() != null) {
+				if (e1sv.getCategory().equalsIgnoreCase(e2.toString())) {
+					return 1;
+				} else {
+					return e1sv.getCategory().compareTo(e2.toString());
+				}
+			} else {
+				return -1;
+			}
+		} else {
+			return 1;
+		}
 	}
 
 	/*
