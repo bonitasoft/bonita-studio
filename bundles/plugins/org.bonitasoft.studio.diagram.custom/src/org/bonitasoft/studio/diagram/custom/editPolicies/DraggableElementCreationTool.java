@@ -101,6 +101,7 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
 		image = new Image(PlatformUI.getWorkbench().getDisplay(), 1, 1);
 		cursor = new Cursor(PlatformUI.getWorkbench().getDisplay(), image.getImageData(), 0, 0);
 		setDefaultCursor(cursor);
+		setUnloadWhenFinished(true);
 	}
 
 	/**

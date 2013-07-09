@@ -87,7 +87,8 @@ public class CustomMainPaletteViewer extends PaletteViewerEx {
 		if (newMode == null)
 			newMode = getPaletteRoot().getDefaultEntry();
 		
-		if(newMode.equals(activeEntry)){
+		if(newMode.equals(activeEntry) ){
+			fireModeChanged();
 			return;
 		}
 		if (activeEntry != null){
