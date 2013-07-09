@@ -17,8 +17,12 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
+import org.bonitasoft.studio.model.process.CorrelationTypeActive;
+import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.StartMessageEvent;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
@@ -74,6 +78,19 @@ public class CatchMessageEventConstraint extends AbstractLiveValidationMarkerCon
 		String eventId = event.getEvent();
 		if(eventId == null || eventId.trim().isEmpty()){
 			return ctx.createFailureStatus(new Object[] {Messages.Validation_CatchEventNoMessage});
+		}
+		if(event instanceof StartMessageEvent && !ModelHelper.isInEvenementialSubProcessPool(event)){
+			if(event.getIncomingMessag()!=null){
+				if(event.getIncomingMessag().getSource() != null){
+					for(Message message : event.getIncomingMessag().getSource().getEvents()){
+						if(message.getName().equals(eventId)){
+							if(message.getCorrelation().getCorrelationType() != CorrelationTypeActive.INACTIVE){
+								return ctx.createFailureStatus(new Object[] {Messages.Validation_StartMessageEventWithCorrelation});
+							}
+						}
+					}
+				}
+			}
 		}
 		return ctx.createSuccessStatus();
 	}

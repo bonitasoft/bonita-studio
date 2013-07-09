@@ -84,6 +84,7 @@ public class Messages extends NLS {
 	public static String unsupportedReturnTypeForAvailableValuesOf;
 	public static String incomingTransitionNotSupported;
 	public static String outgoingTransitionNotSupported;
+	public static String Validation_StartMessageEventWithCorrelation;
 
     
     static {

@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ListExpression;
+import org.bonitasoft.studio.model.expression.TableExpression;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.CorrelationTypeActive;
@@ -94,8 +95,11 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
 							if(targetElemName.equals(ev.getName())){
 								if(event.getCorrelation().getCorrelationType()!=CorrelationTypeActive.INACTIVE){
 									final List<String> targetKeyList = new ArrayList<String>();
-									for (ListExpression listExpression : ev.getCorrelation().getExpressions()) {
-										targetKeyList.add(listExpression.getExpressions().get(0).getContent());
+									final TableExpression correlation = ev.getCorrelation();
+									if(correlation != null){
+										for (ListExpression listExpression : correlation.getExpressions()) {
+											targetKeyList.add(listExpression.getExpressions().get(0).getContent());
+										}
 									}
 									final MultiStatus multi =  new MultiStatus(Activator.PLUGIN_ID, IStatus.OK, "", null);
 									final List<String> eventKeyList = new ArrayList<String>();
