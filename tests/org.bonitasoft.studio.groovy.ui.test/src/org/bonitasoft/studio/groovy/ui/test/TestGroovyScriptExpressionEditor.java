@@ -22,63 +22,63 @@ import org.junit.Test;
 public class TestGroovyScriptExpressionEditor extends TestCase {
 
 	@Test
-	public void testComboSorterFunction() {
+	public void testComboSorterFunctionTwoVariablesSameCategory() {
 		GroovyScriptExpressionEditor tester = new GroovyScriptExpressionEditor();
-		Integer res;
-		ScriptVariable variable1;
-		ScriptVariable variable2;
-		Object object1;
-		Object object2;
-
-		variable1 = new ScriptVariable("aaa", "type");
+		ScriptVariable variable1 = new ScriptVariable("aaa", "type");
 		variable1.setCategory(ExpressionConstants.VARIABLE_TYPE);
-		variable2 = new ScriptVariable("bbb", "type");
+		ScriptVariable variable2 = new ScriptVariable("bbb", "type");
 		variable2.setCategory(ExpressionConstants.VARIABLE_TYPE);
-		res = tester
-				.comboSorterFunction((Object) variable1, (Object) variable2);
+		int res = tester.comboSorterFunction((Object) variable1, (Object) variable2);
 		assertTrue("Error with two ScriptVariables with same category", res < 0);
-		res = tester
-				.comboSorterFunction((Object) variable2, (Object) variable1);
+		res = tester.comboSorterFunction((Object) variable2, (Object) variable1);
 		assertTrue("Error with two ScriptVariables with same category", res > 0);
-
-		variable1 = new ScriptVariable("aaaa", "type");
+	}
+	
+	@Test
+	public void testComboSorterFunctionTwoVariablesDifferentCategory(){
+		GroovyScriptExpressionEditor tester = new GroovyScriptExpressionEditor();
+		ScriptVariable variable1 = new ScriptVariable("aaaa", "type");
 		variable1.setCategory(ExpressionConstants.FORM_FIELD_TYPE);
-		variable2 = new ScriptVariable("aaaa", "type");
+		ScriptVariable variable2 = new ScriptVariable("aaaa", "type");
 		variable2.setCategory(ExpressionConstants.VARIABLE_TYPE);
-		res = tester
-				.comboSorterFunction((Object) variable1, (Object) variable2);
-		assertTrue("Error with two ScriptVariables with different category",
-				res < 0);
-		res = tester
-				.comboSorterFunction((Object) variable2, (Object) variable1);
+		int res = tester.comboSorterFunction((Object) variable1, (Object) variable2);
+		assertTrue("Error with two ScriptVariables with different category",res < 0);
+		res = tester.comboSorterFunction((Object) variable2, (Object) variable1);
 		assertTrue("Error with two ScriptVariables with same category", res > 0);
-
-		object1 = ExpressionConstants.FORM_FIELD_TYPE;
-		variable2 = new ScriptVariable("a", "type");
+	}
+	
+	@Test
+	public void testComboSorterFunctionVariablesWithItsCategory(){
+		GroovyScriptExpressionEditor tester = new GroovyScriptExpressionEditor();
+		Object object1 = ExpressionConstants.FORM_FIELD_TYPE;
+		ScriptVariable variable2 = new ScriptVariable("a", "type");
 		variable2.setCategory(ExpressionConstants.FORM_FIELD_TYPE);
-		res = tester.comboSorterFunction(object1, (Object) variable2);
-		assertTrue("Error with two ScriptVariables and its category label",
-				res < 0);
+		int res = tester.comboSorterFunction(object1, (Object) variable2);
+		assertTrue("Error with two ScriptVariables and its category",res < 0);
 		res = tester.comboSorterFunction((Object) variable2, object1);
-		assertTrue("Error with two ScriptVariables and its category label",
-				res > 0);
-
-		object1 = ExpressionConstants.FORM_FIELD_TYPE;
-		variable2 = new ScriptVariable("a", "type");
+		assertTrue("Error with two ScriptVariables and its category",res > 0);
+	}
+	
+	@Test
+	public void testComboSorterFunctionVariablesWithCategory(){
+		GroovyScriptExpressionEditor tester = new GroovyScriptExpressionEditor();
+		Object object1 = ExpressionConstants.FORM_FIELD_TYPE;
+		ScriptVariable variable2 = new ScriptVariable("a", "type");
 		variable2.setCategory(ExpressionConstants.VARIABLE_TYPE);
-		res = tester.comboSorterFunction(object1, (Object) variable2);
-		assertTrue("Error with two ScriptVariables and a category label",
-				res < 0);
+		int res = tester.comboSorterFunction(object1, (Object) variable2);
+		assertTrue("Error with two ScriptVariables and a category",	res < 0);
 		res = tester.comboSorterFunction((Object) variable2, object1);
-		assertTrue("Error with two ScriptVariables and a category label",
-				res > 0);
-
-		object1 = ExpressionConstants.FORM_FIELD_TYPE;
-		object2 = ExpressionConstants.VARIABLE_TYPE;
-		res = tester.comboSorterFunction(object1, object2);
+		assertTrue("Error with two ScriptVariables and a category",	res > 0);
+	}
+	
+	@Test
+	public void testComboSorterFunctionTwoCategory(){
+		GroovyScriptExpressionEditor tester = new GroovyScriptExpressionEditor();
+		Object object1 = ExpressionConstants.FORM_FIELD_TYPE;
+		Object object2 = ExpressionConstants.VARIABLE_TYPE;
+		int res = tester.comboSorterFunction(object1, object2);
 		assertTrue("Error with two category labels", res < 0);
 		res = tester.comboSorterFunction(object2, object1);
 		assertTrue("Error with two category labels", res > 0);
-
 	}
 }
