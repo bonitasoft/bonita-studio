@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.connector.model.implementation.wizard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.jface.TreeExplorer;
@@ -150,6 +151,10 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 						}
 
 					}
+				}else{
+					versionCombo.setInput(Collections.emptyList());
+					descriptionLabel.setText("");	
+					descriptionGroup.layout(true);
 				}
 
 			}
@@ -171,6 +176,9 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 							break;
 						}
 					}
+				}else{
+					descriptionLabel.setText("");
+					descriptionGroup.layout(true);
 				}
 			}
 		});
