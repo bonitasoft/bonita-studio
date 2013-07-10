@@ -17,6 +17,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
+import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -726,53 +727,48 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		}
 
 		private void createVariableCreationZone(final Composite parent) {
-			final Composite creationZoneComposite = new Composite(parent,
-					SWT.NONE);
-			creationZoneComposite.setLayout(GridLayoutFactory.fillDefaults()
-					.margins(10, 10).create());
-			creationZoneComposite.setLayoutData(GridDataFactory.fillDefaults()
-					.grab(true, false).create());
-
-			Link createDataLink;
-
-			for (IConfigurationElement element : BonitaStudioExtensionRegistryManager
-					.getInstance()
-					.getConfigurationElements(
-							"org.bonitasoft.studio.expression.proposalListener")) {
-				createDataLink = new Link(creationZoneComposite, SWT.NONE);
-				final String name = element.getAttribute("name");
-				createDataLink.setText(name);
-				try {
-					final IProposalListener listener = (IProposalListener) element
-							.createExecutableExtension("providerClass");
-					createDataLink.addSelectionListener(new SelectionAdapter() {
-
-						@Override
-						public void widgetSelected(SelectionEvent e) {
-							EObject newObject = listener.handleEvent(context);
-							if(newObject != null){
-//								String label = null;
-//								if(newObject instanceof Data){
-//									label = ((Data) newObject).getName();
-//								}
-								final IContentProposal[] proposals2 = getProposals();
-								setProposals(proposals2);
-//								for(TableItem p : proposalTable.getItems()){
-//									if(p.getText().contains(label)){
-//										selectProposal(proposalTable.indexOf(p));
-//										break;
-//									}
-//								}
-//								acceptCurrentProposal();
+			if (context != null && context.eResource() != null) {
+				final Composite creationZoneComposite = new Composite(parent, SWT.NONE);
+				creationZoneComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+				creationZoneComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+				Link createDataLink;
+				for (IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.expression.proposalListener")) {
+					createDataLink = new Link(creationZoneComposite, SWT.NONE);
+					final String name = element.getAttribute("name");
+					createDataLink.setText(name);
+					try {
+						final IProposalListener listener = (IProposalListener) element.createExecutableExtension("providerClass");
+						createDataLink.addSelectionListener(new SelectionAdapter() {
+							@Override
+							public void widgetSelected(SelectionEvent e) {
+								EObject newObject = listener.handleEvent(context);
+								if (newObject != null) {
+									fillExpressionViewer(newObject);
+								}
 							}
-						}
-					});
-				} catch (CoreException e1) {
-					BonitaStudioLog.error(e1);
+						});
+					} catch (CoreException e1) {
+						BonitaStudioLog.error(e1);
+					}
+					linkList.add(createDataLink);
 				}
-				linkList.add(createDataLink);
+				creationZoneComposite.getParent().layout(true, true);
 			}
-			creationZoneComposite.getParent().layout(true,true);
+		}
+
+		private void fillExpressionViewer(EObject newObject) {
+			String label = null;
+			// Data case
+			if (newObject instanceof Data) {
+				label = ((Data) newObject).getName();
+			}
+			// Parameter case
+			if (newObject instanceof Parameter) {
+				label = ((Parameter) newObject).getName();
+			}
+			if (label != null) {
+				setControlContent(label, 0);
+			}
 		}
 
 		/*
@@ -856,12 +852,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		 * been created.
 		 */
 		private void setProposals(IContentProposal[] newProposals) {
-			
+
 			if (newProposals == null || newProposals.length == 0) {
 				newProposals = getEmptyProposalArray();
 			}
 			this.proposals = newProposals;
-			
+
 			// If there is a table
 			if (isValid()) {
 				final int newSize = newProposals.length;
@@ -885,20 +881,23 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 					proposalTable.setRedraw(true);
 				}
 				// In case of no proposal data don't show the list, only the
-				// link to add variables/parameters	proposalTable.getParent().layout(true);
+				// link to add variables/parameters
+				// proposalTable.getParent().layout(true);
 				if (proposalTable.getItemCount() == 0) {
 					proposalTable.getParent().setLayoutData(
 							GridDataFactory.swtDefaults().grab(true, false)
 									.hint(SWT.DEFAULT, 0).create());
-				}else{
+				} else {
 					setPopupSize(null);
 					adjustBounds();
 					proposalTable.getParent().setLayoutData(
-							GridDataFactory.fillDefaults().grab(true, true).create());
-					proposalTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+							GridDataFactory.fillDefaults().grab(true, true)
+									.create());
+					proposalTable.setLayoutData(GridDataFactory.fillDefaults()
+							.grab(true, true).create());
 				}
-				proposalTable.getParent().layout(true,true);
-	
+				proposalTable.getParent().layout(true, true);
+
 				// Default to the first selection if there is content.
 				if (newProposals.length > 0) {
 					selectProposal(0);
@@ -2315,15 +2314,15 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 */
 	private boolean allowsAutoActivate() {
 		return (autoActivateString != null && autoActivateString.length() > 0) // there
-																				// are
-																				// specific
-																				// autoactivation
-																				// chars
-																				// supplied
+				// are
+				// specific
+				// autoactivation
+				// chars
+				// supplied
 				|| (autoActivateString == null && triggerKeyStroke == null); // we
-																				// autoactivate
-																				// on
-																				// everything
+		// autoactivate
+		// on
+		// everything
 	}
 
 	/**
