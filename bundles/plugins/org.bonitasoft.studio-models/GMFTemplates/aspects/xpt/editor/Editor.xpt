@@ -27,6 +27,8 @@ public static final String CONTEXT_ID = "«contextID»"; «EXPAND xpt::Common::n
 	«REM»Used to hide/show pelette elements from external commands«ENDREM»
 private org.eclipse.gef.palette.PaletteRoot root;
 
+private org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer toolPaletteViewer;
+
 	/**
 	 * @generated BonitaSoft
 	 */
@@ -648,18 +650,24 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 			org.eclipse.jface.preference.IPreferenceStore store = org.eclipse.gef.internal.InternalGEFPlugin.getDefault().getPreferenceStore();
 			store.setDefault(org.eclipse.gef.ui.palette.PaletteViewerPreferences.PREFERENCE_LAYOUT + preferencesKey, org.eclipse.gef.ui.palette.PaletteViewerPreferences.LAYOUT_ICONS);
 		
-			final org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer toolPaletteViewer = new org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer();
+			if(toolPaletteViewer != null && toolPaletteViewer.getControl() != null){
+				toolPaletteViewer.getControl().dispose();
+			}
+		
+			toolPaletteViewer = new org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer();
 			toolPaletteViewer.showOnlyPaletteEntry("standardGroup");
 			toolPaletteViewer.setPaletteRoot(root);
 			toolPaletteViewer.setMainPaletteViewer(constructPaletteViewer);
 			constructPaletteViewer.setToolPaletteViewer(toolPaletteViewer);
-			getRulerComposite().setLayout(org.eclipse.jface.layout.GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
-			getRulerComposite().getChildren()[0].setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().grab(true, true).create());
-			org.eclipse.swt.widgets.Control paletteControl = toolPaletteViewer.createControl(getRulerComposite());
-			paletteControl.setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().grab(true, false).create());
-			getRulerComposite().layout(true,true);
-		
-		
+			
+			final org.eclipse.gef.ui.rulers.RulerComposite rulerComposite = getRulerComposite();
+			if(rulerComposite != null){
+				rulerComposite.setLayout(org.eclipse.jface.layout.GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
+				rulerComposite.getChildren()[0].setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().grab(true, true).create());
+				org.eclipse.swt.widgets.Control paletteControl = toolPaletteViewer.createControl(rulerComposite);
+				paletteControl.setLayoutData(org.eclipse.jface.layout.GridDataFactory.fillDefaults().grab(true, false).create());
+				rulerComposite.layout(true,true);
+			}
 			return constructPaletteViewer;
 	}
 «ENDDEFINE»

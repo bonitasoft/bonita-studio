@@ -15,8 +15,20 @@ import org.eclipse.core.runtime.IProgressMonitorWithBlocking;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.StatusLineManager;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.presentations.defaultpresentation.DefaultSimpleTabListener;
+import org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder;
+import org.eclipse.ui.internal.presentations.defaultpresentation.DefaultThemeListener;
+import org.eclipse.ui.internal.presentations.util.PresentablePartFolder;
+import org.eclipse.ui.internal.presentations.util.StandardViewSystemMenu;
+import org.eclipse.ui.internal.presentations.util.TabbedStackPresentation;
+import org.eclipse.ui.presentations.IStackPresentationSite;
+import org.eclipse.ui.presentations.StackPresentation;
 import org.eclipse.ui.presentations.WorkbenchPresentationFactory;
 
 public class BonitaTabsPresentationFactory extends WorkbenchPresentationFactory {
@@ -27,6 +39,39 @@ public class BonitaTabsPresentationFactory extends WorkbenchPresentationFactory 
         final Control createdStatusLineControl = super.createStatusLineControl(statusLine, parent);
         createdStatusLineControl.setSize(createdStatusLineControl.getSize().x, 1);
         return createdStatusLineControl;
+    }
+    
+    @Override
+    public StackPresentation createViewPresentation(Composite parent,
+    		IStackPresentationSite site) {
+    	DefaultTabFolder folder = new DefaultTabFolder(parent, PlatformUI.getPreferenceStore()
+    			.getInt(IWorkbenchPreferenceConstants.VIEW_TAB_POSITION)
+				| SWT.BORDER, false, false);
+
+		final IPreferenceStore store = PlatformUI.getPreferenceStore();
+		final int minimumCharacters = store.getInt(IWorkbenchPreferenceConstants.VIEW_MINIMUM_CHARACTERS);
+		if (minimumCharacters >= 0) {
+			folder.setMinimumCharacters(minimumCharacters);
+		}
+
+		PresentablePartFolder partFolder = new PresentablePartFolder(folder);
+
+		folder.setUnselectedCloseVisible(false);
+		folder.setUnselectedImageVisible(false);
+
+
+		TabbedStackPresentation result = new TabbedStackPresentation(site,
+				partFolder, new StandardViewSystemMenu(site));
+
+		DefaultThemeListener themeListener = new DefaultThemeListener(folder,
+				result.getTheme());
+		result.getTheme().addListener(themeListener);
+
+		new DefaultSimpleTabListener(result.getApiPreferences(),
+				IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS,
+				folder);
+
+		return result;
     }
 
 
