@@ -67,11 +67,32 @@ public class SequenceFlowCreationEditPolicy extends CreationEditPolicy {
 	@Override
 	public boolean understandsRequest(Request request) {
 		if (request instanceof CreateUnspecifiedTypeRequest) {
-			if(((CreateUnspecifiedTypeRequest) request).getElementTypes().contains(ProcessElementTypes.TextAnnotation_3015)
-					|| ((CreateUnspecifiedTypeRequest) request).getElementTypes().contains(ProcessElementTypes.TextAnnotation_2015)
-					|| ((CreateUnspecifiedTypeRequest) request).getElementTypes().contains(ProcessElementTypes.Lane_3007)
-					|| ((CreateUnspecifiedTypeRequest) request).getElementTypes().contains(ProcessElementTypes.Pool_2007)){
-				return false;
+			final List elementTypes = ((CreateUnspecifiedTypeRequest) request).getElementTypes();
+			if(elementTypes.contains(ProcessElementTypes.TextAnnotation_3015)
+					|| elementTypes.contains(ProcessElementTypes.TextAnnotation_2015)
+					|| elementTypes.contains(ProcessElementTypes.Lane_3007)
+					|| elementTypes.contains(ProcessElementTypes.Pool_2007)
+					|| elementTypes.contains(ProcessElementTypes.StartErrorEvent_2033)
+					|| elementTypes.contains(ProcessElementTypes.StartErrorEvent_3060)
+					|| elementTypes.contains(ProcessElementTypes.StartEvent_2002)
+					|| elementTypes.contains(ProcessElementTypes.StartEvent_3002)
+					|| elementTypes.contains(ProcessElementTypes.StartMessageEvent_2010)
+					|| elementTypes.contains(ProcessElementTypes.StartMessageEvent_3012)
+					|| elementTypes.contains(ProcessElementTypes.StartSignalEvent_2022)
+					|| elementTypes.contains(ProcessElementTypes.StartSignalEvent_3023)
+					|| elementTypes.contains(ProcessElementTypes.StartTimerEvent_2016)
+					|| elementTypes.contains(ProcessElementTypes.StartTimerEvent_3016)
+					|| elementTypes.contains(ProcessElementTypes.EndErrorEvent_2029)
+					|| elementTypes.contains(ProcessElementTypes.EndErrorEvent_3050)
+					|| elementTypes.contains(ProcessElementTypes.EndEvent_2003)
+					|| elementTypes.contains(ProcessElementTypes.EndEvent_3003)
+					|| elementTypes.contains(ProcessElementTypes.EndMessageEvent_2011)
+					|| elementTypes.contains(ProcessElementTypes.EndMessageEvent_3011)
+					|| elementTypes.contains(ProcessElementTypes.EndSignalEvent_2023)
+					|| elementTypes.contains(ProcessElementTypes.EndSignalEvent_3020)
+					|| elementTypes.contains(ProcessElementTypes.EndTerminatedEvent_2035)
+					|| elementTypes.contains(ProcessElementTypes.EndTerminatedEvent_3062)){
+					return false;
 			}
 		}
 		return super.understandsRequest(request);
