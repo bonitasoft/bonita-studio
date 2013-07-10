@@ -91,7 +91,13 @@ public class SequenceFlowCreationEditPolicy extends CreationEditPolicy {
 					|| elementTypes.contains(ProcessElementTypes.EndSignalEvent_2023)
 					|| elementTypes.contains(ProcessElementTypes.EndSignalEvent_3020)
 					|| elementTypes.contains(ProcessElementTypes.EndTerminatedEvent_2035)
-					|| elementTypes.contains(ProcessElementTypes.EndTerminatedEvent_3062)){
+					|| elementTypes.contains(ProcessElementTypes.EndTerminatedEvent_3062)
+					|| elementTypes.contains(ProcessElementTypes.CatchLinkEvent_2018)
+					|| elementTypes.contains(ProcessElementTypes.CatchLinkEvent_3019)
+					|| elementTypes.contains(ProcessElementTypes.ThrowLinkEvent_2019)
+					|| elementTypes.contains(ProcessElementTypes.ThrowLinkEvent_3018)
+					|| elementTypes.contains(ProcessElementTypes.SubProcessEvent_2031)
+					|| elementTypes.contains(ProcessElementTypes.SubProcessEvent_3058)){
 					return false;
 			}
 		}
