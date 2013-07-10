@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
 public class SequenceFlowCreationEditPolicy extends CreationEditPolicy {
 
 
-	private static final Color FEEDBACK_COLOR = Display.getDefault().getSystemColor(SWT.COLOR_RED);
+	private static final Color FEEDBACK_COLOR = Display.getDefault().getSystemColor(SWT.COLOR_BLUE);
 	private Color originalColor;
 	private EditPart containerEp;
 
