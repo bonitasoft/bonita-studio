@@ -83,6 +83,8 @@ public class OperationsComposite extends Composite {
 	private IExpressionNatureProvider storageExpressionNatureProvider;
 	private IExpressionNatureProvider actionExpressionNatureProvider;
 	private Map<String, IExpressionValidator> validatorMap = new HashMap<String, IExpressionValidator>();
+	private EObject eObjectContexteObjectContext;
+	private EObject eObjectContext;
 
 	public OperationsComposite(TabbedPropertySheetPage tabbedPropertySheetPage,
 			Composite mainComposite, ViewerFilter actionExpressionFilter,
@@ -190,6 +192,9 @@ public class OperationsComposite extends Composite {
 		if(context != null){
 			viewer.setContext(context);
 		}
+		if(eObjectContext != null){
+			viewer.setContext(eObjectContext);
+		}
 		if(storageExpressionNatureProvider != null){
 			viewer.setStorageExpressionNatureProvider(storageExpressionNatureProvider);
 		}
@@ -204,6 +209,10 @@ public class OperationsComposite extends Composite {
 		viewer.setEObject(eObject);
 
 		return viewer;
+	}
+	
+	public void setContext(EObject context){
+		this.eObjectContext = context;
 	}
 
 	public void addActionExpressionValidator(String expressionType,IExpressionValidator validator){

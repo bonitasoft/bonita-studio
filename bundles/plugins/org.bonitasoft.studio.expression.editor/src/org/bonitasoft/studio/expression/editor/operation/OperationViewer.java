@@ -88,6 +88,7 @@ public class OperationViewer extends Composite {
 	private DefaultToolTip operatorTooltip;
 	private IExpressionNatureProvider actionExpressionProvider;
 	private Operation operation;
+	private EObject eObjectContext;
 
 	public OperationViewer(Composite parent,TabbedPropertySheetWidgetFactory widgetFactory ,EditingDomain editingDomain, ViewerFilter actionExpressionFilter, ViewerFilter storageExpressionFilter) {
 		super(parent, SWT.NONE);
@@ -111,9 +112,15 @@ public class OperationViewer extends Composite {
 			if(actionExpressionProvider != null){
 				actionExpression.setExpressionNatureProvider(actionExpressionProvider);
 			}
+//			if(eObjectContext!= null){
+//				actionExpression.setContext(eObjectContext);
+//			}
 			actionExpression.setInput(getEObject()) ;
 			if(storageExpressionProvider != null){
 				storageViewer.setExpressionNatureProvider(storageExpressionProvider);
+			}
+			if(eObjectContext!= null){
+				storageViewer.setContext(eObjectContext);
 			}
 			storageViewer.setInput(action);
 
@@ -335,6 +342,10 @@ public class OperationViewer extends Composite {
 			setOperationContainmentFeature(FormPackage.Literals.WIDGET__ACTION) ;
 		}
 		refreshDatabinding() ;
+	}
+	
+	public void setContext(EObject eObject) {
+		this.eObjectContext = eObject;
 	}
 
 	public void setOperationContainmentFeature(EReference actionTargetFeature) {

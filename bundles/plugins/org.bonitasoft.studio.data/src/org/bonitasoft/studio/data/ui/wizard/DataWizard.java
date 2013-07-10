@@ -162,6 +162,10 @@ public class DataWizard extends Wizard {
 		
 		return true;
 	}
+	
+	public Data getWorkingCopy(){
+		return page.getWorkingCopy();	
+	}
 
 	private void setDatasourceId(Data workingCopy, EStructuralFeature feature) {
 		if(feature.equals(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA)

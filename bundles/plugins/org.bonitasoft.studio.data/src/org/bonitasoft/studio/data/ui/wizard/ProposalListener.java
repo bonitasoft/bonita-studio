@@ -4,11 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
+import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
 
 /*******************************************************************************
@@ -30,7 +32,7 @@ public class ProposalListener implements IProposalListener {
 	}
 
 	@Override
-	public int handleEvent(EObject context) {
+	public EObject handleEvent(EObject context) {
 		Assert.isNotNull(context);
 		while (!(context instanceof DataAware)) {
 			context = context.eContainer();
@@ -38,10 +40,16 @@ public class ProposalListener implements IProposalListener {
 		EStructuralFeature feat = ProcessPackage.Literals.DATA_AWARE__DATA;
 		Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
 		res.add(ProcessPackage.Literals.DATA_AWARE__DATA);
+		final DataWizard newWizard = new DataWizard(context, feat, res, true);
 		final DataWizardDialog wizardDialog = new DataWizardDialog(Display
 				.getCurrent().getActiveShell().getParent().getShell(),
-				new DataWizard(context, feat, res, true), null);
-		return wizardDialog.open();
+				newWizard, null);
+		if(wizardDialog.open() == Dialog.OK){
+			return newWizard.getWorkingCopy();
+		}
+	
+		return null;
+
 	}
 
 }

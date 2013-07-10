@@ -17,6 +17,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
+import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -748,7 +749,22 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 						@Override
 						public void widgetSelected(SelectionEvent e) {
-							listener.handleEvent(context);
+							EObject newObject = listener.handleEvent(context);
+							if(newObject != null){
+//								String label = null;
+//								if(newObject instanceof Data){
+//									label = ((Data) newObject).getName();
+//								}
+								final IContentProposal[] proposals2 = getProposals();
+								setProposals(proposals2);
+//								for(TableItem p : proposalTable.getItems()){
+//									if(p.getText().contains(label)){
+//										selectProposal(proposalTable.indexOf(p));
+//										break;
+//									}
+//								}
+//								acceptCurrentProposal();
+							}
 						}
 					});
 				} catch (CoreException e1) {
@@ -756,6 +772,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 				}
 				linkList.add(createDataLink);
 			}
+			creationZoneComposite.getParent().layout(true,true);
 		}
 
 		/*
@@ -839,11 +856,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		 * been created.
 		 */
 		private void setProposals(IContentProposal[] newProposals) {
+			
 			if (newProposals == null || newProposals.length == 0) {
 				newProposals = getEmptyProposalArray();
 			}
 			this.proposals = newProposals;
-
+			
 			// If there is a table
 			if (isValid()) {
 				final int newSize = newProposals.length;
@@ -867,14 +885,20 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 					proposalTable.setRedraw(true);
 				}
 				// In case of no proposal data don't show the list, only the
-				// link to add variables/parameters
+				// link to add variables/parameters	proposalTable.getParent().layout(true);
 				if (proposalTable.getItemCount() == 0) {
 					proposalTable.getParent().setLayoutData(
 							GridDataFactory.swtDefaults().grab(true, false)
 									.hint(SWT.DEFAULT, 0).create());
-					proposalTable.getParent().layout(true);
+				}else{
+					setPopupSize(null);
+					adjustBounds();
+					proposalTable.getParent().setLayoutData(
+							GridDataFactory.fillDefaults().grab(true, true).create());
+					proposalTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 				}
-
+				proposalTable.getParent().layout(true,true);
+	
 				// Default to the first selection if there is content.
 				if (newProposals.length > 0) {
 					selectProposal(0);

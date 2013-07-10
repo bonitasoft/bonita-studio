@@ -16,5 +16,5 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface IProposalListener {
 
-	public int handleEvent(EObject context);
+	public EObject handleEvent(EObject context);
 }

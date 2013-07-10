@@ -58,6 +58,7 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
         lineComposite = new OperationsComposite(null, mainComposite, rightFilter, leftFilter) ;
         lineComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         lineComposite.setContext(context) ;
+        lineComposite.setContext(getElementContainer());
         lineComposite.setEObject(getConnector()) ;
         if(getOutputDataFeature() != null){
             lineComposite.setStorageExpressionNatureContentProvider(new DataExpressionNatureProvider(getOutputDataFeature())) ;
