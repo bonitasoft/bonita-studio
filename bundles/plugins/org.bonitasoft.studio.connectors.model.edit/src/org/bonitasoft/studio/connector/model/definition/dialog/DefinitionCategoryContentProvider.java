@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.connector.model.definition.Category;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -120,4 +121,22 @@ public class DefinitionCategoryContentProvider implements ITreeContentProvider {
 		return children != null && children.length > 0;
 	}
 
+	public boolean isLeafCategory(ConnectorDefinition def,Category category){
+		boolean isRoot = true;
+		boolean hasChild = false;
+		if(category.getParentCategoryId() == null && def.getCategory().size() == 1){
+			return true;
+		}
+		for(Category c : def.getCategory()){
+			if(!c.getId().equals(category.getId())){
+				if(category.getParentCategoryId() != null && category.getParentCategoryId().equals(c.getId())) {
+					isRoot = false;
+				}
+				if(c.getParentCategoryId() != null && c.getParentCategoryId().equals(category.getId())) {
+					hasChild = true;
+				}
+			}
+		}
+		return !isRoot && !hasChild;
+	}
 }

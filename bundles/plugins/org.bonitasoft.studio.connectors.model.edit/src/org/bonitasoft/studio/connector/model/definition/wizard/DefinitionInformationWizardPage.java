@@ -173,7 +173,7 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 				if(observableVersionText.getValue().toString().contains(" ")){
 					return  ValidationStatus.error(Messages.whitespaceInDefinitionIDNotAllowed) ;
 				}
-				
+
 				String defID = NamingUtils.toConnectorDefinitionFilename(observableIdText.getValue().toString(), observableVersionText.getValue().toString(), false) ;
 				for(ConnectorDefinition def : existingDefinitions){
 					String existingId = NamingUtils.toConnectorDefinitionFilename(def.getId(), def.getVersion(), false) ;
@@ -218,9 +218,9 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 
 		final Text descriptionText = new Text(mainComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
 		descriptionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 60).span(2, 1).create());
-        UpdateValueStrategy descStrategy=new UpdateValueStrategy();
-        descStrategy.setBeforeSetValidator(new InputLengthValidator(Messages.description, 255));
-        context.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), PojoProperties.value(DefinitionInformationWizardPage.class, "definitionDescription").observe(this),descStrategy,null) ;
+		UpdateValueStrategy descStrategy=new UpdateValueStrategy();
+		descStrategy.setBeforeSetValidator(new InputLengthValidator(Messages.description, 255));
+		context.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify), PojoProperties.value(DefinitionInformationWizardPage.class, "definitionDescription").observe(this),descStrategy,null) ;
 
 		final Label iconLabel = new Label(mainComposite, SWT.NONE);
 		iconLabel.setText(Messages.iconLabel);
@@ -299,7 +299,7 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 		categoryViewer.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).create()) ;
 		categoryViewer.addSelectionChangedListener(this) ;
 		categoryViewer.addFilter(new ViewerFilter() {
-			
+
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				return element instanceof Category && !Messages.uncategorized.equals(((Category) element).getId());
@@ -316,15 +316,19 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 				return label ;
 			}
 		}) ;
-		categoryViewer.setInput(messageProvider.getAllCategories());
-
+		final List<Category> allCategories = messageProvider.getAllCategories();
+		categoryViewer.setInput(allCategories);
+		final Category selectedCategory = getSelectedCategory(allCategories);
+		if(selectedCategory != null){
+			categoryViewer.setSelection(new StructuredSelection(selectedCategory));
+		}
 		categoryViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				Category selection = (Category) ((IStructuredSelection) event.getSelection()).getFirstElement();
 				definition.getCategory().clear();
-				
+
 				definition.getCategory().add(selection);
 				List<Category> categories = (List<Category>) categoryViewer.getInput();
 				List<Category> parentCategories = new ArrayList<Category>();
@@ -332,33 +336,33 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 				definition.getCategory().addAll(parentCategories);
 			}
 		});
-		
+
 		final Composite buttonComposite = new Composite(mainComposite, SWT.NONE) ;
 		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create()) ;
 		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 3).create()) ;
 
-//		final Button addButton = new Button(buttonComposite, SWT.FLAT) ;
-//		addButton.setText(Messages.add) ;
-//		addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create()) ;
-//		addButton.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				CategorySelectionDialog dialog = new CategorySelectionDialog(Display.getDefault().getActiveShell(),messageProvider) ;
-//				if(dialog.open() == Dialog.OK){
-//					Set<String> existingCatIds = new HashSet<String>() ;
-//					for(Category existing : definition.getCategory()){
-//						existingCatIds.add(existing.getId()) ;
-//					}
-//					for(Category cat :  dialog.getCategories()){
-//						if(!existingCatIds.contains(cat.getId())){
-//							definition.getCategory().add(cat) ;
-//							messageProvider.setCategoryLabel(messages,cat.getId(), messageProvider.getCategoryLabel(cat)) ;
-//						}
-//					}
-//					categoryViewer.refresh() ;
-//				}
-//			}
-//		}) ;
+		//		final Button addButton = new Button(buttonComposite, SWT.FLAT) ;
+		//		addButton.setText(Messages.add) ;
+		//		addButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create()) ;
+		//		addButton.addSelectionListener(new SelectionAdapter() {
+		//			@Override
+		//			public void widgetSelected(SelectionEvent e) {
+		//				CategorySelectionDialog dialog = new CategorySelectionDialog(Display.getDefault().getActiveShell(),messageProvider) ;
+		//				if(dialog.open() == Dialog.OK){
+		//					Set<String> existingCatIds = new HashSet<String>() ;
+		//					for(Category existing : definition.getCategory()){
+		//						existingCatIds.add(existing.getId()) ;
+		//					}
+		//					for(Category cat :  dialog.getCategories()){
+		//						if(!existingCatIds.contains(cat.getId())){
+		//							definition.getCategory().add(cat) ;
+		//							messageProvider.setCategoryLabel(messages,cat.getId(), messageProvider.getCategoryLabel(cat)) ;
+		//						}
+		//					}
+		//					categoryViewer.refresh() ;
+		//				}
+		//			}
+		//		}) ;
 
 
 		final Button createButton = new Button(buttonComposite, SWT.FLAT) ;
@@ -389,22 +393,18 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 				}
 			}
 		}) ;
+	}
 
-//		removeCategoryButton = new Button(buttonComposite, SWT.FLAT) ;
-//		removeCategoryButton.setText(Messages.remove) ;
-//		removeCategoryButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(DEFAULT_BUTTON_WIDTH_HINT, SWT.DEFAULT).create()) ;
-//		removeCategoryButton.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				definition.getCategory().removeAll(((IStructuredSelection) categoryViewer.getSelection()).toList()) ;
-//				for(Object c : ((IStructuredSelection) categoryViewer.getSelection()).toList()){
-//					messageProvider.removeCategoryLabel(messages,(Category)c);
-//				}
-//				categoryViewer.refresh() ;
-//			}
-//		}) ;
 
-	//	context.bindList(ViewersObservables.observeMultiPostSelection(categoryViewer), EMFObservables.observeList(definition, ConnectorDefinitionPackage.Literals.CONNECTOR_DEFINITION__CATEGORY)) ;
+	protected Category getSelectedCategory(List<Category> allCategories) {
+		if(definition != null){
+			for(Category c : definition.getCategory()){
+				if(!new DefinitionCategoryContentProvider(allCategories).hasChildren(c)){
+					return c;
+				}
+			}
+		}
+		return null;
 	}
 
 	protected void getParentCategories(List<Category> parentCategories,List<Category> allCategories, Category selection) {
@@ -515,9 +515,9 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 		if(removeJarButton != null && !removeJarButton.isDisposed()){
 			removeJarButton.setEnabled(((IStructuredSelection) selection).getFirstElement() instanceof String) ;
 		}
-//		if(removeCategoryButton != null  && !removeCategoryButton.isDisposed()){
-//			removeCategoryButton.setEnabled(((IStructuredSelection) selection).getFirstElement() instanceof Category) ;
-//		}
+		//		if(removeCategoryButton != null  && !removeCategoryButton.isDisposed()){
+		//			removeCategoryButton.setEnabled(((IStructuredSelection) selection).getFirstElement() instanceof Category) ;
+		//		}
 	}
 
 

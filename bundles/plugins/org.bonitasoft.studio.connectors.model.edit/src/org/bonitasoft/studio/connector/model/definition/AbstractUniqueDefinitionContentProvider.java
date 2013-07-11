@@ -85,7 +85,7 @@ public abstract class AbstractUniqueDefinitionContentProvider extends AbstractDe
 					}
 					for (Category c : def.getCategory()) {
 						if (c.getId().equals(((Category) element).getId())) {
-							if(!new DefinitionCategoryContentProvider(messageProvider.getAllCategories()).hasChildren(c)){
+							if(definitionCategoryContentProvider.isLeafCategory(def,c)){
 								if(!addedId.contains(def.getId())){
 									result.add(def);
 									addedId.add(def.getId());
