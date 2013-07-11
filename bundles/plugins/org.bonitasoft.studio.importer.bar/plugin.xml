@@ -104,6 +104,15 @@
       <connectorDefinitionMapper
             class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.TwitterUpdateConnectorMapper">
       </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.CMISCreateFolderConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.CMISDeleteFolderConnectorMapper">
+      </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.CMISUploadDocumentConnectorMapper">
+      </connectorDefinitionMapper>
    </extension>
 
 </plugin>
