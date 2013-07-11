@@ -29,11 +29,34 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.diagram.custom;bundle-version="1.0.0",
  org.bonitasoft.studio.connectors,
  org.bonitasoft.studio.connectors.model,
- org.bonitasoft.studio.connectors.model.edit;bundle-version="6.1.0"
+ org.bonitasoft.studio.connectors.model.edit;bundle-version="6.1.0",
+ org.eclipse.jdt.ui,
+ org.eclipse.text
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer.bar.custom.migration,
  org.bonitasoft.studio.importer.bar.exception,
  org.bonitasoft.studio.importer.bar.factory
 Import-Package: org.bonitasoft.engine.bpm.connector,
+ org.bonitasoft.engine.connector,
  org.bonitasoft.studio.exporter
+Bundle-ClassPath: .,
+ lib/bonita-client-5.10.1.jar,
+ lib/bonita-server-5.10.1.jar,
+ lib/asm-3.1.jar,
+ lib/commons-codec-1.4.jar,
+ lib/commons-httpclient-3.1.jar,
+ lib/commons-logging-1.1.1.jar,
+ lib/httpclient-4.2.2.jar,
+ lib/httpcore-4.2.2.jar,
+ lib/javassist-3.12.0.GA.jar,
+ lib/jaxrs-api-1.2.1.GA.jar,
+ lib/jcip-annotations-1.0.jar,
+ lib/ow2-ejb-3.0-spec-1.0.2.jar,
+ lib/resteasy-jaxrs-1.2.1.GA.jar,
+ lib/scannotation-1.0.2.jar,
+ lib/slf4j-api-1.5.8.jar,
+ lib/slf4j-jdk14-1.5.8.jar,
+ lib/xmlpull-1.1.3.1.jar,
+ lib/xpp3_min-1.1.4c.jar,
+ lib/xstream-1.4.2.jar
