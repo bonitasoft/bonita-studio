@@ -32,7 +32,7 @@ public class ProposalListener implements IProposalListener {
 	}
 
 	@Override
-	public EObject handleEvent(EObject context) {
+	public String handleEvent(EObject context) {
 		Assert.isNotNull(context);
 		while (!(context instanceof DataAware)) {
 			context = context.eContainer();
@@ -45,7 +45,13 @@ public class ProposalListener implements IProposalListener {
 				.getCurrent().getActiveShell().getParent().getShell(),
 				newWizard, null);
 		if(wizardDialog.open() == Dialog.OK){
-			return newWizard.getWorkingCopy();
+			EObject obj = newWizard.getWorkingCopy();
+			if(obj instanceof Data){
+				final Data d = (Data)obj;
+				if(d!=null){
+					return d.getName();
+				}
+			}
 		}
 	
 		return null;

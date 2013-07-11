@@ -17,8 +17,6 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.Data;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -741,9 +739,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 						createDataLink.addSelectionListener(new SelectionAdapter() {
 							@Override
 							public void widgetSelected(SelectionEvent e) {
-								EObject newObject = listener.handleEvent(context);
-								if (newObject != null) {
-									fillExpressionViewer(newObject);
+								String newObjectLabel = listener.handleEvent(context);
+								if (newObjectLabel != null) {
+									setControlContent(newObjectLabel, 0);
 								}
 							}
 						});
@@ -753,21 +751,6 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 					linkList.add(createDataLink);
 				}
 				creationZoneComposite.getParent().layout(true, true);
-			}
-		}
-
-		private void fillExpressionViewer(EObject newObject) {
-			String label = null;
-			// Data case
-			if (newObject instanceof Data) {
-				label = ((Data) newObject).getName();
-			}
-			// Parameter case
-			if (newObject instanceof Parameter) {
-				label = ((Parameter) newObject).getName();
-			}
-			if (label != null) {
-				setControlContent(label, 0);
 			}
 		}
 
