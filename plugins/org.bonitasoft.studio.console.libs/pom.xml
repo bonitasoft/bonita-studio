@@ -6,11 +6,11 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>plugins</artifactId>
-		<version>6.0.1-SNAPSHOT</version>
+		<version>6.0.2-SNAPSHOT</version>
 	</parent>
 	<groupId>org.bonitasoft.studio.plugins</groupId>
 	<artifactId>org.bonitasoft.studio.console.libs</artifactId>
-	<version>6.0.1-SNAPSHOT</version>
+	<version>6.0.2-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
@@ -373,7 +373,7 @@
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
 						<Bundle-Name>Bonita Console embedded in Studio</Bundle-Name>
 						<Bundle-Vendor>BonitaSoft S.A.</Bundle-Vendor>
-						<Bundle-Version>6.0.1.qualifier</Bundle-Version>
+						<Bundle-Version>6.0.2.qualifier</Bundle-Version>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Embed-Directory>${lib.dir}</Embed-Directory>
 						<Embed-StripVersion>true</Embed-StripVersion>
