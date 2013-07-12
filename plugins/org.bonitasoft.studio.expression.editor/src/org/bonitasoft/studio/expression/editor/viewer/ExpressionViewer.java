@@ -1052,6 +1052,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		if(proposalAcceptanceStyle == ContentProposalAdapter.PROPOSAL_REPLACE){
 			ExpressionProposal prop = (ExpressionProposal) proposal ;
 			final Expression copy = EcoreUtil.copy((Expression) prop.getExpression());
+			copy.setReturnTypeFixed(selectedExpression.isReturnTypeFixed());
 			if(copy.getType().equals(ExpressionConstants.FORM_FIELD_TYPE)){
 				EObject parent = context;
 				if(parent == null){
@@ -1059,15 +1060,17 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				}
 				if(parent instanceof Widget){
 					final Widget w = (Widget) parent;
-					if(w != null && w instanceof TextFormField){
+					if(w != null && w instanceof TextFormField && copy.getName().equals("field_"+w.getName()) ){
 						final String returnTypeModifier = w.getReturnTypeModifier();
 						if(returnTypeModifier != null){
-							copy.setReturnType(returnTypeModifier);
+							if(!copy.isReturnTypeFixed()){
+								copy.setReturnType(returnTypeModifier);
+							}
 						}
 					}
 				}
 			}
-			copy.setReturnTypeFixed(selectedExpression.isReturnTypeFixed());
+			
 			updateSelection(copy);
 			fireSelectionChanged(new SelectionChangedEvent(ExpressionViewer.this, new StructuredSelection(selectedExpression)));
 			validate();
