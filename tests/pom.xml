@@ -34,7 +34,6 @@
 		<module>org.bonitasoft.studio.importer.tests</module>
 		<module>org.bonitasoft.studio.importer.bar.tests</module>
 		<module>org.bonitasoft.studio.migration.tests</module>
-		<module>org.bonitasoft.studio.model.edit.custom.tests</module>
 		<module>org.bonitasoft.studio.profiles.tests</module>
 		<module>org.bonitasoft.studio.properties.test</module>
 		<module>org.bonitasoft.studio.repository.test</module>
