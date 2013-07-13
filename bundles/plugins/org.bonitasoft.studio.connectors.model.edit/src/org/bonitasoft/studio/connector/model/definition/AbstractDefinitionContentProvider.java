@@ -144,7 +144,7 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
 				return null;
 			}
 			for(Category c : def.getCategory()){
-				if(!new DefinitionCategoryContentProvider(messageProvider.getAllCategories()).hasChildren(c)){
+				if(definitionCategoryContentProvider.isLeafCategory(def, c)){
 					return c;
 				}
 			}

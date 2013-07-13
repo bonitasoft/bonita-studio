@@ -66,11 +66,13 @@ import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.Flags;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.WorkingCopyOwner;
 import org.eclipse.jface.text.BadLocationException;
 import org.ow2.bonita.connector.core.ConnectorDescription;
 import org.ow2.bonita.connector.core.desc.Array;
@@ -131,7 +133,7 @@ public class ConnectorDescriptorToConnectorDefinition {
 		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final ConnectorDefFileStore file = store.createRepositoryFileStore(NamingUtils.toConnectorDefinitionFilename(connectorId, connectorVersion, true));
 		file.save(connectorDefinition);
-
+		store.getResourceProvider().loadDefinitionsCategories(Repository.NULL_PROGRESS_MONITOR);
 	}
 
 	public void createConnectorImplementation() throws Exception{
@@ -153,8 +155,9 @@ public class ConnectorDescriptorToConnectorDefinition {
 		ClassGenerator.generateConnectorImplementationAbstractClass(connectorImplementation,definition,AbstractConnector.class.getName(),sourceStore, Repository.NULL_PROGRESS_MONITOR) ;
 		
 		IType classType = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(connectorImplementation.getImplementationClassname()) ;
-		classType.getCompilationUnit().delete(true, Repository.NULL_PROGRESS_MONITOR);
-		
+		if(classType != null){
+			classType.getCompilationUnit().delete(true, Repository.NULL_PROGRESS_MONITOR);
+		}
 		ClassGenerator.generateConnectorImplementationClass(connectorImplementation,definition,sourceStore, Repository.NULL_PROGRESS_MONITOR) ;
 		mergeSourceFile(v5Descriptor.getConnectorClass().getName(),sourceStore);
 
@@ -187,7 +190,13 @@ public class ConnectorDescriptorToConnectorDefinition {
 				for(IMethod method : originalImplType.getMethods()){
 					if(!isGetter(method) && !isSetter(method)){
 						if(!method.getElementName().equals("executeConnector")){
-							method.copy(implType, null, null, false, Repository.NULL_PROGRESS_MONITOR);
+							try{
+								if(!method.isReadOnly()){
+									method.copy(implType, null, null, false, Repository.NULL_PROGRESS_MONITOR);
+								}
+							}catch(CoreException e){
+								BonitaStudioLog.error(e);
+							}
 						}
 					}
 				}
@@ -219,7 +228,10 @@ public class ConnectorDescriptorToConnectorDefinition {
 						}
 					}
 				}
-				originalImplType.getCompilationUnit().delete(true, Repository.NULL_PROGRESS_MONITOR);
+				ICompilationUnit compilationUnit = originalImplType.getCompilationUnit();
+				if(compilationUnit != null){
+					compilationUnit.delete(true, Repository.NULL_PROGRESS_MONITOR);
+				}
 				RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
 			}
 		}
@@ -264,20 +276,20 @@ public class ConnectorDescriptorToConnectorDefinition {
 	protected org.bonitasoft.studio.connector.model.definition.Component createWidget(
 			Component component) {
 		org.bonitasoft.studio.connector.model.definition.Component widget = null;
-		if(component instanceof Text){
+		if(component instanceof Password){
+			widget = createPasswordWidget((Password)component);
+		}else if(component instanceof Text){
 			widget = createTextWidget((Text)component);
-		}else if(component instanceof Checkbox){
-			widget = createCheckboxWidget((Checkbox)component);
 		}else if(component instanceof Radio){
 			widget = createCheckboxWidget((Radio)component);
+		}else if(component instanceof Checkbox){
+			widget = createCheckboxWidget((Checkbox)component);
 		}else if(component instanceof Select){
 			widget = createSelectWidget((Select)component);
 		}else if(component instanceof Array){
 			widget = createTableWidget((Array)component);
 		}else if(component instanceof SimpleList){
 			widget = createListWidget((SimpleList)component);
-		}else if(component instanceof Password){
-			widget = createPasswordWidget((Password)component);
 		}else if(component instanceof Textarea){
 			widget = createTextAreaWidget((Textarea)component);
 		}

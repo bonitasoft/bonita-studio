@@ -183,16 +183,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 			}
 		});
 
-		String id = implementation.getDefinitionId() ;
-		if(id != null){
-			List<Object> input = (List<Object>) explorer.getRightTableViewer().getInput();
-			for(Object element : input){
-				if(element instanceof ConnectorDefinition && ((ConnectorDefinition) element).getId().equals(id)){
-					explorer.getRightTableViewer().setSelection(new StructuredSelection(element)) ;
-					break ;
-				}
-			}
-		}
+	
 		context.bindValue(ViewersObservables.observeSingleSelection(versionCombo), EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_VERSION));
 
 		setControl(mainComposite);
@@ -202,18 +193,18 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 	protected TreeExplorer createTreeExplorer(Composite mainComposite) {
 		final TreeExplorer explorer = new TreeExplorer(mainComposite, SWT.NONE);
 		explorer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 270).span(2, 1).create());
-		
+
 		final Composite additionalComposite = explorer.getAdditionalComposite();
 		additionalComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
 		final Button onlyCustomCheckbox = new Button(additionalComposite,SWT.CHECK);
 		onlyCustomCheckbox.setText(Messages.onlyCustomConnector);
 		onlyCustomCheckbox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		onlyCustomCheckbox.setSelection(true);
-		
+
 		final ITreeContentProvider contentProvider = getContentProvider();
 		explorer.setContentProvider(getCustomContentProvider());
 		explorer.setLabelProvider(new ConnectorDefinitionExplorerLabelProvider(messageProvider));
-	
+
 		explorer.addLeftTreeFilter(new ViewerFilter() {
 
 			@Override
@@ -222,22 +213,22 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 					return true;
 				}
 				if (element instanceof Category){
-            		if(!((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).hasChildren(element)){
-            			return false;
-            		}
-            		for(Object c : ((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).getChildren(element)){
-            			if(c instanceof ConnectorDefinition){
-            				return true;
-            			}else{
-            				if(select(viewer, element, c)){
-            					return true;
-            				}
-            			}
-            		}
-            	}else if(element instanceof ConnectorDefinition){
-            		return false;
-    
-    			}
+					if(!((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).hasChildren(element)){
+						return false;
+					}
+					for(Object c : ((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).getChildren(element)){
+						if(c instanceof ConnectorDefinition){
+							return true;
+						}else{
+							if(select(viewer, element, c)){
+								return true;
+							}
+						}
+					}
+				}else if(element instanceof ConnectorDefinition){
+					return false;
+
+				}
 				return false;
 			}
 		});
@@ -262,11 +253,10 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 					explorer.setContentProvider(getContentProvider());
 				}
 				explorer.setInput(new Object());
-				explorer.getRightTableViewer().setInput(new ArrayList<Object>());
 				explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
 			}
 		});
-		
+
 		if(implementation.getImplementationId() != null && !implementation.getImplementationId().isEmpty()){
 			Object[] rootElement = contentProvider.getElements(new Object());
 			List<Object> flattenTree = new ArrayList<Object>();
@@ -298,26 +288,29 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		}) ;
 
 
-		final UpdateValueStrategy defVersionStrategy = new UpdateValueStrategy() ;
-		defVersionStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class){
+		final UpdateValueStrategy defModelStrategy = new UpdateValueStrategy() ;
+		defModelStrategy.setConverter(new Converter(String.class,ConnectorDefinition.class){
 
 			@Override
 			public Object convert(Object from) {
-				if(from instanceof ConnectorDefinition){
-					return ((ConnectorDefinition) from).getVersion() ;
+				if(from instanceof String){
+					List<Object> definitions = (List<Object>) explorer.getRightTableViewer().getInput();
+					for(Object c : definitions){
+						if(c instanceof ConnectorDefinition && ((ConnectorDefinition)c).getId().equals(from.toString())){
+							return c;
+						}
+					}
 				}
-				return "";
+				return null;
 			}
 
 		}) ;
-		
-		
+
+
 
 
 		final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(explorer.getRightTableViewer());
-
-		context.bindValue(observeSingleSelection, EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_ID),defIdStrategy,null) ;
-
+		context.bindValue(observeSingleSelection, EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_ID),defIdStrategy,defModelStrategy) ;
 
 		return explorer;
 	}

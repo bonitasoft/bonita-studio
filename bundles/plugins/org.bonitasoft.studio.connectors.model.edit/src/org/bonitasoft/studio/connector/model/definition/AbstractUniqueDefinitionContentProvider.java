@@ -105,4 +105,16 @@ public abstract class AbstractUniqueDefinitionContentProvider extends AbstractDe
 		return null;
 	}
 
+	@Override
+	public Object getParent(Object element) {
+		if(element instanceof Category){
+			Object parent = super.getParent(element);
+			if(parent == null){
+				return ROOT;
+			}
+			return parent;
+		}
+		return super.getParent(element);
+	}
+	
 }

@@ -23,6 +23,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
 import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
+import org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.CustomConnectorDefinitionMapper;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 
@@ -58,6 +59,10 @@ public class ConnectorIdToDefinitionMapping {
 			if(mapper.appliesTo(connectorId)){
 				return mapper;
 			}
+		}
+		final CustomConnectorDefinitionMapper customMapper = new CustomConnectorDefinitionMapper();
+		if(customMapper.appliesTo(connectorId)){
+			return customMapper;
 		}
 		return null;
 	}

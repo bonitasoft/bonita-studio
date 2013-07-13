@@ -119,11 +119,12 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 	private static final String MIGRATION_HISTORY_PATH = "models/v60/process.history";
 	private static final String FORMS_LIBS = "forms/lib";
 	private static final String VALIDATORS = "validators";
-	private static final String LIBS = "lib/";
+	private static final String LIBS = "libs/";
 	private static final String CONNECTORS = "connectors/";
 
 	private File migratedProc;
 	private BOSMigrator migrator;
+	private List<String> connectorsJars = new ArrayList<String>();
 
 	public EdaptBarToProcProcessor(){
 		final URI migratorURI = URI.createPlatformPluginURI("/" + BarImporterPlugin.getDefault().getBundle().getSymbolicName() + "/" + MIGRATION_HISTORY_PATH, true);
@@ -150,11 +151,12 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 		final File barProcFile = getProcFormBar(archiveFile);
 
 		importAttachment(archiveFile,progressMonitor);
+		importCustomConnectors(archiveFile,progressMonitor);
 		importProcessJarDependencies(archiveFile,progressMonitor);
 		importFormJarDependencies(archiveFile,progressMonitor);
-		importCustomConnectors(archiveFile,progressMonitor);
 		importApplicationResources(archiveFile,progressMonitor);
-
+		
+		
 		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
 
 		final Resource resource =  new XMLResourceFactoryImpl().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
@@ -217,19 +219,18 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 	}
 
 	private void importCustomConnectors(File archiveFile,IProgressMonitor progressMonitor) throws Exception {
+		connectorsJars.clear();
 		final ZipFile zipfile = new ZipFile(archiveFile);
 		Enumeration<?> enumEntries = zipfile.entries();
 		ZipEntry zipEntry = null;
 		while (enumEntries.hasMoreElements()){
 			zipEntry=(ZipEntry)enumEntries.nextElement();
 			File currentFile = new File (zipEntry.getName());
-			if (!zipEntry.isDirectory() && zipEntry.getName().contains(CONNECTORS) && zipEntry.getName().endsWith(".jar") ){
+			if (!zipEntry.isDirectory() && (zipEntry.getName().startsWith(CONNECTORS) || zipEntry.getName().startsWith(LIBS)) && zipEntry.getName().endsWith(".jar") ){
 				proceedCustomConnector(currentFile.getName(),zipfile.getInputStream(zipEntry));
 			}
 		}
 		zipfile.close();
-		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-		store.getResourceProvider().loadDefinitionsCategories(progressMonitor);
 	}
 
 	private void proceedCustomConnector(String fileName,InputStream inputStream) throws Exception {
@@ -257,6 +258,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 		final URLClassLoader customURLClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),getClass().getClassLoader());
 		String connectorClassname =findCustomConnectorClassName(tmpConnectorJarFile);
 		if(connectorClassname != null){
+			connectorsJars .add(tmpConnectorJarFile.getName());
 			Class<? extends Connector> instanceClass = (Class<? extends Connector>) customURLClassLoader.loadClass(connectorClassname);
 			final ConnectorDescription descriptor = new ConnectorDescription(instanceClass,Locale.ENGLISH);
 			final ConnectorDescriptorToConnectorDefinition cdtocd = new ConnectorDescriptorToConnectorDefinition(descriptor,tmpConnectorJarFile);
@@ -275,7 +277,6 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 		String startWith = null;
 		while (enumEntries.hasMoreElements()){
 			zipEntry=(ZipEntry)enumEntries.nextElement();
-			//File currentFile = new File (zipEntry.getName());
 			if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".class") ){
 				startWith =	zipEntry.toString().replace(".class","");
 				className = zipEntry.toString().replace("/", ".").replace(".class","");
@@ -410,7 +411,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 			zipEntry=(ZipEntry)enumEntries.nextElement();
 			File currentFile = new File (zipEntry.getName());
 			if (!zipEntry.isDirectory() && zipEntry.getName().contains(LIBS) && zipEntry.getName().endsWith(".jar") ){
-				if(store.getChild(currentFile.getName()) == null){
+				if(!connectorsJars.contains(currentFile.getName()) && store.getChild(currentFile.getName()) == null){
 					store.importInputStream(currentFile.getName(), zipfile.getInputStream(zipEntry));
 				}
 			}

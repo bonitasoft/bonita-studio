@@ -55,7 +55,6 @@ public class ConnectorMigration extends ReportCustomMigration {
 	public void migrateAfter(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance connector : model.getAllInstances("process.Connector")){
-			connector.getContainer();
 			for(Connector5Descriptor descriptor : descriptors){
 				if(descriptor.appliesTo(connector)){
 					descriptor.migrate(model, connector, getConverter(model, getScope(connector)));
