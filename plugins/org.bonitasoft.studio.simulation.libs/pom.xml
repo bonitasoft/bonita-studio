@@ -77,9 +77,7 @@
 						<phase>clean</phase>
 						<configuration>
 							<target>
-								<delete includeemptydirs="true">
-									<fileset dir="${lib.dir}"/>
-								</delete>
+								<delete dir="${lib.dir}" />
 								<mkdir dir="${lib.dir}"/>
 							</target>
 						</configuration>
