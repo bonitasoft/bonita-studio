@@ -55,6 +55,7 @@ import org.bonitasoft.studio.connectors.ui.wizard.page.AbstractConnectorOutputWi
 import org.bonitasoft.studio.connectors.ui.wizard.page.ConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorDriversWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectConnectorDefinitionWizardPage;
+import org.bonitasoft.studio.connectors.ui.wizard.page.SelectDatabaseOutputTypeWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectEventConnectorNameAndDescWizardPage;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
@@ -481,10 +482,11 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	protected List<IWizardPage> getPagesFor(ConnectorDefinition definition) {
 		List<IWizardPage> result = new ArrayList<IWizardPage>() ;
-		if (isDatabaseConnector(definition)){
+		
+		if (isDatabaseConnector(definition)){//DRIVER SELECTION PAGE
 			result.add(new DatabaseConnectorDriversWizardPage(definition.getId()));
 		}
-
+		
 		if(extension != null && (!extension.hasCanBeUsedProvider() || extension.canBeUsed(definition,connectorWorkingCopy))){ //Extension page
 			List<AbstractConnectorConfigurationWizardPage> advancedPages = extension.getPages();
 			for(AbstractConnectorConfigurationWizardPage p : advancedPages){
@@ -499,6 +501,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 				p.setExpressionTypeFilter(getExpressionTypeFilter());
 				result.add(p) ;
 			}
+			
 			if(extension.useDefaultGeneratedPages()){
 				for(Page p : definition.getPage()){
 					result.add(createDefaultConnectorPage(definition,p)) ;
@@ -509,6 +512,17 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 				result.add(createDefaultConnectorPage(definition,p)) ;
 			}
 		}
+		
+		if (isDatabaseConnector(definition)){//OUTPUT TYPE SELECTION PAGE
+			SelectDatabaseOutputTypeWizardPage selectOutputPage = new SelectDatabaseOutputTypeWizardPage();
+			selectOutputPage.setMessageProvider(messageProvider) ;
+			selectOutputPage.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
+			selectOutputPage.setDefinition(definition) ;
+			selectOutputPage.setElementContainer(container) ;
+			selectOutputPage.setExpressionTypeFilter(getExpressionTypeFilter());
+			result.add(selectOutputPage);
+		}
+		
 		return result;
 	}
 
