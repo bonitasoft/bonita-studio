@@ -50,7 +50,6 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.data.attachment.repository.DocumentRepositoryStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ApplicationResourceRepositoryStore;
@@ -62,6 +61,8 @@ import org.bonitasoft.studio.importer.bar.exception.IncompatibleVersionException
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.MigrationPlugin;
 import org.bonitasoft.studio.migration.migrator.BOSMigrator;
+import org.bonitasoft.studio.migration.model.report.Change;
+import org.bonitasoft.studio.migration.model.report.MigrationReportFactory;
 import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.migration.preferences.BarImporterPreferenceConstants;
 import org.bonitasoft.studio.migration.ui.wizard.MigrationWarningWizard;
@@ -101,7 +102,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.ow2.bonita.connector.core.Connector;
 import org.ow2.bonita.connector.core.ConnectorDescription;
-import org.ow2.bonita.connector.core.ConnectorException;
 
 
 /**
@@ -121,7 +121,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 	private static final String VALIDATORS = "validators";
 	private static final String LIBS = "libs/";
 	private static final String CONNECTORS = "connectors/";
-
+	private List<Change> additionalChanges = new ArrayList<Change>();
 	private File migratedProc;
 	private BOSMigrator migrator;
 	private List<String> connectorsJars = new ArrayList<String>();
@@ -265,6 +265,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 			cdtocd.importConnectorDefinitionResources();
 			cdtocd.createConnectorDefinition();
 			cdtocd.createConnectorImplementation();
+			additionalChanges.add(cdtocd.createReportChange());
 		}
 
 	}
@@ -312,6 +313,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 			resource.load(Collections.EMPTY_MAP);
 			AbstractEMFOperation emfOperation = new AbstractEMFOperation(editingDomain, "Update report") {
 
+	
+
 				@Override
 				protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info)
 						throws ExecutionException {
@@ -328,8 +331,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 					report.setName(Messages.bind(Messages.migrationReportOf,diagramName));
 					report.setSourceRelease(sourceRelease);
 					report.setTargetRelease(ProductVersion.CURRENT_VERSION);
-
-
+					report.getChanges().addAll(additionalChanges);
+					additionalChanges.clear();
 					resource.getContents().add(report);
 					return Status.OK_STATUS;
 				}
@@ -346,6 +349,18 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 		} catch (IOException e) {
 			throw new MigrationException("Model could not be loaded", e);
 		}
+	}
+	
+	protected Change addReportChange(String elementName,String elementType,String elementUUID,String description,String propertyName, int status){
+		Change change = MigrationReportFactory.eINSTANCE.createChange();
+		change.setElementName(elementName);
+		change.setElementType(elementType);
+		change.setElementUUID(elementUUID);
+		change.setDescription(description);
+		change.setPropertyName(propertyName);
+		change.setStatus(status);
+		additionalChanges.add(change);
+		return change;
 	}
 
 	private void importApplicationResources(File archiveFile,IProgressMonitor progressMonitor) {

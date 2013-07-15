@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
+import org.bonitasoft.studio.exporter.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IStatus;
@@ -24,7 +25,6 @@ import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.emf.edapt.migration.Model;
-import org.bonitasoft.studio.exporter.Messages;
 /**
  * @author Florine Boudin
  *

@@ -23,7 +23,6 @@ import org.bonitasoft.studio.importer.bar.custom.migration.connector.Connector5D
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;

@@ -131,6 +131,9 @@ public class Messages extends NLS {
 	public static String startTimerCycleMigration;
 	public static String timerCondition;
 	public static String connectorMigrationDescription;
+	public static String development;
+	public static String customConnectorMigrationDescription;
+	public static String customConnector;
 	
 
     static {

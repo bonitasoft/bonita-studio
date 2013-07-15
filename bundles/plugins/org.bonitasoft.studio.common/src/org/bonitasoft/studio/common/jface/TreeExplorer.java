@@ -191,6 +191,11 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 		rightTable.addFilter(filter);
 	}
 
+	public void removeTreeFilter(ViewerFilter filter) {
+		rightTable.removeFilter(filter);
+	}
+
+	
 	public void setLabelProvider(ILabelProvider labelProvider){
 		this.labelProvider = labelProvider;
 	}
@@ -235,4 +240,5 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 		return leftTree;
 	}
 
+	
 }

@@ -34,10 +34,14 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -75,7 +79,22 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 	private WizardPageSupport pageSupport;
 	private final DefinitionResourceProvider messageProvider;
 	private final List<ConnectorDefinition> definitions;
-
+	private ViewerFilter customConnectorFilter = new ViewerFilter() {
+		
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			if(element instanceof ConnectorDefinition){
+				
+				final Resource eResource = ((ConnectorDefinition) element).eResource();
+				if(eResource != null){
+					IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+					return rootPath.isPrefixOf(Path.fromOSString(eResource.getURI().toFileString()));
+				}
+			}
+			return false;
+		}
+	};
+	
 	public AbstractDefinitionSelectionImpementationWizardPage(ConnectorImplementation implementation,List<ConnectorImplementation> existingImpl,List<ConnectorDefinition> definitions,String pageTitle,String pageDescription,DefinitionResourceProvider messageProvider) {
 		super(true,AbstractDefinitionSelectionImpementationWizardPage.class.getName());
 		setTitle(pageTitle);
@@ -169,11 +188,13 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 				if(sel instanceof ConnectorDefinition){
 					final String defId = ((ConnectorDefinition)sel).getId();
 					final String version = (String) ((IStructuredSelection)event.getSelection()).getFirstElement();
-					for(ConnectorDefinition def : definitions){
-						if(defId.equals(def.getId()) && version.equals(def.getVersion())){
-							descriptionLabel.setText(messageProvider.getConnectorDefinitionDescription(def));	
-							descriptionGroup.layout(true);
-							break;
+					if(defId != null && version != null){
+						for(ConnectorDefinition def : definitions){
+							if(defId.equals(def.getId()) && version.equals(def.getVersion())){
+								descriptionLabel.setText(messageProvider.getConnectorDefinitionDescription(def));	
+								descriptionGroup.layout(true);
+								break;
+							}
 						}
 					}
 				}else{
@@ -183,86 +204,6 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 			}
 		});
 
-	
-		context.bindValue(ViewersObservables.observeSingleSelection(versionCombo), EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_VERSION));
-
-		setControl(mainComposite);
-	}
-
-
-	protected TreeExplorer createTreeExplorer(Composite mainComposite) {
-		final TreeExplorer explorer = new TreeExplorer(mainComposite, SWT.NONE);
-		explorer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 270).span(2, 1).create());
-
-		final Composite additionalComposite = explorer.getAdditionalComposite();
-		additionalComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
-		final Button onlyCustomCheckbox = new Button(additionalComposite,SWT.CHECK);
-		onlyCustomCheckbox.setText(Messages.onlyCustomConnector);
-		onlyCustomCheckbox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		onlyCustomCheckbox.setSelection(true);
-
-		final ITreeContentProvider contentProvider = getContentProvider();
-		explorer.setContentProvider(getCustomContentProvider());
-		explorer.setLabelProvider(new ConnectorDefinitionExplorerLabelProvider(messageProvider));
-
-		explorer.addLeftTreeFilter(new ViewerFilter() {
-
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (AbstractUniqueDefinitionContentProvider.ROOT.equals(element)){
-					return true;
-				}
-				if (element instanceof Category){
-					if(!((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).hasChildren(element)){
-						return false;
-					}
-					for(Object c : ((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).getChildren(element)){
-						if(c instanceof ConnectorDefinition){
-							return true;
-						}else{
-							if(select(viewer, element, c)){
-								return true;
-							}
-						}
-					}
-				}else if(element instanceof ConnectorDefinition){
-					return false;
-
-				}
-				return false;
-			}
-		});
-
-		explorer.addRightTreeFilter(new ViewerFilter() {
-
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				return element instanceof ConnectorDefinition;
-			}
-		});
-		explorer.setLeftHeader(Messages.categoriesLabel);
-		explorer.setRightHeader(Messages.connectorDefinition);
-		explorer.setInput(new Object());
-		explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
-		onlyCustomCheckbox.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(onlyCustomCheckbox.getSelection()){
-					explorer.setContentProvider(getCustomContentProvider());
-				}else{
-					explorer.setContentProvider(getContentProvider());
-				}
-				explorer.setInput(new Object());
-				explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
-			}
-		});
-
-		if(implementation.getImplementationId() != null && !implementation.getImplementationId().isEmpty()){
-			Object[] rootElement = contentProvider.getElements(new Object());
-			List<Object> flattenTree = new ArrayList<Object>();
-			getFlattenTree(flattenTree,rootElement,contentProvider);
-			explorer.getRightTableViewer().setInput(flattenTree);
-		}
 
 		final UpdateValueStrategy defIdStrategy = new UpdateValueStrategy() ;
 		defIdStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class){
@@ -312,6 +253,91 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(explorer.getRightTableViewer());
 		context.bindValue(observeSingleSelection, EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_ID),defIdStrategy,defModelStrategy) ;
 
+		context.bindValue(ViewersObservables.observeSingleSelection(versionCombo), EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_VERSION));
+
+		setControl(mainComposite);
+	}
+
+
+	protected TreeExplorer createTreeExplorer(Composite mainComposite) {
+		final TreeExplorer explorer = new TreeExplorer(mainComposite, SWT.NONE);
+		explorer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 270).span(2, 1).create());
+
+		final Composite additionalComposite = explorer.getAdditionalComposite();
+		additionalComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
+		final Button onlyCustomCheckbox = new Button(additionalComposite,SWT.CHECK);
+		onlyCustomCheckbox.setText(Messages.onlyCustomConnector);
+		onlyCustomCheckbox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		onlyCustomCheckbox.setSelection(true);
+
+		final ITreeContentProvider contentProvider = getContentProvider();
+		explorer.setContentProvider(getCustomContentProvider());
+		explorer.setLabelProvider(new ConnectorDefinitionExplorerLabelProvider(messageProvider));
+		explorer.addRightTreeFilter(customConnectorFilter);
+		explorer.addLeftTreeFilter(new ViewerFilter() {
+
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if (AbstractUniqueDefinitionContentProvider.ROOT.equals(element)){
+					return true;
+				}
+				if (element instanceof Category){
+					if(!((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).hasChildren(element)){
+						return false;
+					}
+					for(Object c : ((ITreeContentProvider)((ContentViewer) viewer).getContentProvider()).getChildren(element)){
+						if(c instanceof ConnectorDefinition){
+							return true;
+						}else{
+							if(select(viewer, element, c)){
+								return true;
+							}
+						}
+					}
+				}else if(element instanceof ConnectorDefinition){
+					return false;
+
+				}
+				return false;
+			}
+		});
+
+		explorer.addRightTreeFilter(new ViewerFilter() {
+
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				return element instanceof ConnectorDefinition;
+			}
+		});
+		explorer.setLeftHeader(Messages.categoriesLabel);
+		explorer.setRightHeader(Messages.connectorDefinition);
+		explorer.setInput(new Object());
+		explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
+		onlyCustomCheckbox.addSelectionListener(new SelectionAdapter() {
+			
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(onlyCustomCheckbox.getSelection()){
+					explorer.setContentProvider(getCustomContentProvider());
+					explorer.addRightTreeFilter(customConnectorFilter);
+				}else{
+					explorer.setContentProvider(getContentProvider());
+					explorer.removeTreeFilter(customConnectorFilter);
+				}
+				explorer.setInput(new Object());
+				explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
+			}
+		});
+
+		if(implementation.getImplementationId() != null && !implementation.getImplementationId().isEmpty()){
+			Object[] rootElement = contentProvider.getElements(new Object());
+			List<Object> flattenTree = new ArrayList<Object>();
+			getFlattenTree(flattenTree,rootElement,contentProvider);
+			explorer.getRightTableViewer().setInput(flattenTree);
+		}
+
+		
 		return explorer;
 	}
 
