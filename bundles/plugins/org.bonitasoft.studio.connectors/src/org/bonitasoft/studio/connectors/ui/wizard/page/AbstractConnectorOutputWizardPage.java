@@ -38,7 +38,7 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage {
 
     private EObject elementContainer;
     private ConnectorDefinition definition;
-    private final EMFDataBindingContext context;
+    protected final EMFDataBindingContext context;
     private Connector connector;
     private EStructuralFeature outputDataFeature;
     private WizardPageSupport pageSupport;
