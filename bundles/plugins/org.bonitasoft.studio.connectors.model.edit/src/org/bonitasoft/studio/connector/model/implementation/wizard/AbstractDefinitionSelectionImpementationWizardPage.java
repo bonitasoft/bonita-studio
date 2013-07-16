@@ -80,11 +80,11 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 	private final DefinitionResourceProvider messageProvider;
 	private final List<ConnectorDefinition> definitions;
 	private ViewerFilter customConnectorFilter = new ViewerFilter() {
-		
+
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if(element instanceof ConnectorDefinition){
-				
+
 				final Resource eResource = ((ConnectorDefinition) element).eResource();
 				if(eResource != null){
 					IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
@@ -94,7 +94,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 			return false;
 		}
 	};
-	
+
 	public AbstractDefinitionSelectionImpementationWizardPage(ConnectorImplementation implementation,List<ConnectorImplementation> existingImpl,List<ConnectorDefinition> definitions,String pageTitle,String pageDescription,DefinitionResourceProvider messageProvider) {
 		super(true,AbstractDefinitionSelectionImpementationWizardPage.class.getName());
 		setTitle(pageTitle);
@@ -314,7 +314,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		explorer.setInput(new Object());
 		explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
 		onlyCustomCheckbox.addSelectionListener(new SelectionAdapter() {
-			
+
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -330,14 +330,11 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 			}
 		});
 
-		if(implementation.getImplementationId() != null && !implementation.getImplementationId().isEmpty()){
-			Object[] rootElement = contentProvider.getElements(new Object());
-			List<Object> flattenTree = new ArrayList<Object>();
-			getFlattenTree(flattenTree,rootElement,contentProvider);
-			explorer.getRightTableViewer().setInput(flattenTree);
-		}
+		Object[] rootElement = contentProvider.getElements(new Object());
+		List<Object> flattenTree = new ArrayList<Object>();
+		getFlattenTree(flattenTree,rootElement,contentProvider);
+		explorer.getRightTableViewer().setInput(flattenTree);
 
-		
 		return explorer;
 	}
 
