@@ -28,11 +28,9 @@ import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -99,17 +97,17 @@ public class ProcessVariableLabelProvider extends LabelProvider implements ITabl
 
 	@Override
 	public Color getForeground(Object element, int columnIndex) {
-		Display display = Display.getCurrent();
+		//Display display = Display.getCurrent();
 		//return display.getSystemColor(SWT.COLOR_LIST_SELECTION);
 		return null;
 	}
 
 	@Override
 	public Color getBackground(Object element, int columnIndex) {
-		if (element instanceof String){
-			Display display = Display.getCurrent();
+		//if (element instanceof String){
+		//	Display display = Display.getCurrent();
 		//	return display.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
-		}
+		//}
 		return null;
 	}
 
