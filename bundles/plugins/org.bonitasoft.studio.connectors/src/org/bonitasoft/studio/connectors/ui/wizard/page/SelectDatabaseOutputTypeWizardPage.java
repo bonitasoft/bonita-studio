@@ -16,11 +16,12 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
+import org.bonitasoft.studio.connectors.ui.wizard.page.sqlutil.SQLQueryUtil;
+import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.pics.Pics;
@@ -30,7 +31,9 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.SelectObservableValue;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -51,10 +54,9 @@ import org.eclipse.swt.widgets.Label;
  * @author Romain Bioteau
  *
  */
-public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigurationWizardPage implements DatabaseConnectorConstants{
+public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigurationWizardPage implements DatabaseConnectorConstants, IValueChangeListener{
 
-	private static final String FROM_CLAUSE = " from ";
-	private static final String SELECT_QUERY_PREFIX = "select ";
+
 
 	private Expression outputTypeExpression;
 	private IPreferenceStore preferenceStore;
@@ -63,12 +65,20 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 	private Button alwaysUseScriptCheckbox;
 	private SelectObservableValue radioGroupObservable;
 	private ISWTObservableValue graphicalModeSelectionValue;
+	private boolean editing;
 
-	public SelectDatabaseOutputTypeWizardPage() {
+	public SelectDatabaseOutputTypeWizardPage(boolean editing) {
 		super(SelectDatabaseOutputTypeWizardPage.class.getName());
 		setTitle(Messages.outputOperationsDefinitionTitle);
 		setDescription(Messages.outputOperationsDefinitionDesc);
+		this.editing = editing;
 		preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
+	}
+
+	@Override
+	public void setConfiguration(ConnectorConfiguration configuration) {
+		super.setConfiguration(configuration);
+
 	}
 
 	@Override
@@ -82,9 +92,12 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		selectLabel.setText(Messages.selectConnectorOutputMode);
 		selectLabel.setFont(BonitaStudioFontRegistry.getHighlightedFont());
 
+		scriptExpression = (Expression) getConnectorParameter(getInput(SCRIPT_KEY)).getExpression();
+		IObservableValue scriptContentValue = EMFObservables.observeValue(scriptExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+		scriptContentValue.addValueChangeListener(this);
 		outputTypeExpression = (Expression) getConnectorParameter(getInput(OUTPUT_TYPE_KEY)).getExpression();
 		outputTypeExpression.setName(OUTPUT_TYPE_KEY);
-		
+
 		final Composite choicesComposite = createGraphicalModeControl(mainComposite,context);
 		final Button singleModeRadio = createSingleChoice(choicesComposite,context);
 		final Button oneRowModeRadio = createOneRowNColsChoice(choicesComposite,context);
@@ -105,7 +118,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		radioGroupObservable.addOption(N_ROW, oneColValue);
 		radioGroupObservable.addOption(TABLE, tableValue);
 		radioGroupObservable.addOption(null, scriptValue);
-		
+
 
 		context.bindValue(radioGroupObservable, EMFObservables.observeValue(outputTypeExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT));
 		context.bindValue(SWTObservables.observeEnabled(alwaysUseScriptCheckbox), SWTObservables.observeSelection(scriptModeRadio));
@@ -125,51 +138,60 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(nRowModeRadio));
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(tableModeRadio));
 
+		graphicalModeSelectionValue.addValueChangeListener(new IValueChangeListener() {
+
+			@Override
+			public void handleValueChange(ValueChangeEvent event) {
+				if((Boolean)event.getObservableValue().getValue()){
+					if(!singleModeRadio.getSelection() 
+							&& !oneRowModeRadio.getSelection()
+							&& !nRowModeRadio.getSelection()
+							&& !tableModeRadio.getSelection()){
+						radioGroupObservable.setValue(TABLE);
+					}
+				}
+
+			}
+		});
+
+		parseQuery();
 
 		return mainComposite;
 	}
 
-	private void analyseQuery() {
-		String query = scriptExpression.getContent();
-		String expressionType = scriptExpression.getType();
-
-		IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
-		if(ExpressionConstants.CONSTANT_TYPE.equals(expressionType) ){
-			if(query != null && !query.isEmpty()){
-				if(query.trim().toLowerCase().startsWith(SELECT_QUERY_PREFIX)){
-					enableGraphicalMode.setValue(true);
+	protected void parseQuery() {
+		if(graphicalModeSelectionValue != null){
+			IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
+			if(SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)){
+				enableGraphicalMode.setValue(true);
+				if(!editing){
 					graphicalModeSelectionValue.setValue(true);
-					radioGroupObservable.setValue(TABLE);
-					return ;
-				}
-			}
-		}else if(ExpressionConstants.PATTERN_TYPE.equals(expressionType)){
-			if(query != null && !query.isEmpty()){
-				if(query.trim().toLowerCase().startsWith(SELECT_QUERY_PREFIX)){
-					int indexOfFromClause = query.toLowerCase().indexOf(FROM_CLAUSE);
-					if(indexOfFromClause != -1){
-						String columns = query.trim().toLowerCase().substring(SELECT_QUERY_PREFIX.length(),indexOfFromClause);
-						if(!columns.contains("${")){
-							enableGraphicalMode.setValue(true);
-							graphicalModeSelectionValue.setValue(true);
-							radioGroupObservable.setValue(TABLE);
-							return ;
-						}
+					if(outputTypeExpression.getContent() != null){
+						radioGroupObservable.setValue(outputTypeExpression.getContent());
+					}else{
+						radioGroupObservable.setValue(TABLE);
 					}
+				}else if(outputTypeExpression.getContent() == null){
+					graphicalModeSelectionValue.setValue(false);
 				}
+			}else{
+				enableGraphicalMode.setValue(false);
+				graphicalModeSelectionValue.setValue(false);
+				radioGroupObservable.setValue(null);
 			}
 		}
-		enableGraphicalMode.setValue(false);
-		graphicalModeSelectionValue.setValue(false);
-		radioGroupObservable.setValue(null);
 	}
 
-	@Override
-	public void setVisible(boolean visible) {
-		super.setVisible(visible);
-		if(visible){
-			scriptExpression = (Expression) getConnectorParameter(getInput(SCRIPT_KEY)).getExpression();
-			analyseQuery();
+	protected void updateQuery() {
+		if(graphicalModeSelectionValue != null){
+			IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
+			if(SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)){
+				enableGraphicalMode.setValue(true);
+			}else{
+				enableGraphicalMode.setValue(false);
+				graphicalModeSelectionValue.setValue(false);
+				radioGroupObservable.setValue(null);
+			}
 		}
 	}
 
@@ -278,5 +300,11 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 		return tableRadio;
 	}
+
+	@Override
+	public void handleValueChange(ValueChangeEvent event) {
+		updateQuery();
+	}
+
 
 }

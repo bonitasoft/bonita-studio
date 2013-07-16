@@ -155,6 +155,8 @@ public class Messages extends NLS {
 	public static String oneRowDatabaseOutputDescription;
 	public static String oneColDatabaseOutputDescription;
 	public static String nRowsNColsDatabaseOutputDescription;
+
+	public static String takeValueOf;
     /**
      * @param event
      * @return

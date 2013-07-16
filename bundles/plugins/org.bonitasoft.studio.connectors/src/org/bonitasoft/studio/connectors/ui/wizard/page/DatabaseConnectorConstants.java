@@ -28,5 +28,10 @@ public interface DatabaseConnectorConstants {
 	public static final String N_ROW = "n_row";
 	public static final String ONE_ROW = "one_row";
 	public static final String TABLE = "table";
+	public static final String RESULTSET_OUTPUT = "resultset";
+	public static final String SINGLE_RESULT_OUTPUT = "singleResult";
+	public static final String ONEROW_NCOL_RESULT_OUTPUT = "oneRowNColResult";
+	public static final String NROW_ONECOL_RESULT_OUTPUT = "nRowOneColResult";
+	public static final String TABLE_RESULT_OUTPUT = "tableResult";
 	
 }
