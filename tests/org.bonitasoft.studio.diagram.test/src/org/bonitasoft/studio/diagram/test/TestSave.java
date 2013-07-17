@@ -58,17 +58,17 @@ public class TestSave extends SWTBotGefTestCase {
         Assert.assertFalse("Error: Save button must be disabled when opening Bonita Studio.", isSaveButtonEnable);
 
         // test menu	
-        Assert.assertFalse("Error: Save menu must be disabled when opening Bonita Studio.",  bot.menu("Diagram").click().menu("Save").isEnabled());
+        Assert.assertFalse("Error: Save menu must be disabled when opening Bonita Studio.",  isSaveMenuEnabled());
 
         // When Creating a new Diagram
         SWTBotTestUtil.createNewDiagram(bot);
 
         // test button
         isSaveButtonEnable=  bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled();
-        Assert.assertTrue("Error: Save button must be disabled when creating a new diagram.", isSaveButtonEnable);
+        Assert.assertTrue("Error: Save button must be enabled when creating a new diagram.", isSaveButtonEnable);
 
         // test menu
-        Assert.assertTrue("Error: Save menu must be disabled when creating a new diagram.",  bot.menu("Diagram").click().menu("Save").isEnabled());
+        Assert.assertTrue("Error: Save menu must be enabled when creating a new diagram.",  isSaveMenuEnabled());
 
         bot.saveAllEditors();
 
@@ -77,12 +77,17 @@ public class TestSave extends SWTBotGefTestCase {
         Assert.assertFalse("Error: Save button must be disabled when creating a new diagram.", isSaveButtonEnable);
 
         // test menu
-        Assert.assertFalse("Error: Save menu must be disabled when creating a new diagram.",  bot.menu("Diagram").click().menu("Save").isEnabled());
+        Assert.assertFalse("Error: Save menu must be disabled when creating a new diagram.",  isSaveMenuEnabled());
 
     }
 
+
+	private boolean isSaveMenuEnabled() {
+		return bot.menu("Diagram").click().menu("Save").isEnabled();
+	}
+
     @Test
-    public void testSaveButtonAndMenuNotEnableWhenNewDiagram(){
+    public void testSaveButtonAndMenuEnableWhenNewDiagram(){
 
         boolean isSaveButtonEnable= false;
 
@@ -100,10 +105,10 @@ public class TestSave extends SWTBotGefTestCase {
 
         // test button
         isSaveButtonEnable=  bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled();
-        Assert.assertTrue("Error: Save button must be disabled for the new editor of a new Dragram created.", isSaveButtonEnable);
+        Assert.assertTrue("Error: Save button must enabled for the new editor of a new Dragram created.", isSaveButtonEnable);
 
         // test menu
-        Assert.assertTrue("Error: Save menu must be disabled for the new editor of a new Dragram created.",  bot.menu("Diagram").click().menu("Save").isEnabled());
+        Assert.assertTrue("Error: Save menu must be enabled for the new editor of a new Dragram created.",  isSaveMenuEnabled());
 
         bot.saveAllEditors();
         
@@ -112,7 +117,7 @@ public class TestSave extends SWTBotGefTestCase {
         Assert.assertFalse("Error: Save button must be disabled when creating a new diagram.", isSaveButtonEnable);
 
         // test menu
-        Assert.assertFalse("Error: Save menu must be disabled when creating a new diagram.",  bot.menu("Diagram").click().menu("Save").isEnabled());
+        Assert.assertFalse("Error: Save menu must be disabled when creating a new diagram.",  isSaveMenuEnabled());
     }
 
 }
