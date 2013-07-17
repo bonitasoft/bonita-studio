@@ -118,7 +118,16 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		radioGroupObservable.addOption(N_ROW, oneColValue);
 		radioGroupObservable.addOption(TABLE, tableValue);
 		radioGroupObservable.addOption(null, scriptValue);
-
+		radioGroupObservable.addValueChangeListener(new IValueChangeListener() {
+			
+			@Override
+			public void handleValueChange(ValueChangeEvent event) {
+				IWizardPage p = getNextPage();
+				if(p instanceof DatabaseConnectorOutputWizardPage){
+					((DatabaseConnectorOutputWizardPage)p).updateOutputs((String) event.getObservableValue().getValue());
+				}
+			}
+		});
 
 		context.bindValue(radioGroupObservable, EMFObservables.observeValue(outputTypeExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT));
 		context.bindValue(SWTObservables.observeEnabled(alwaysUseScriptCheckbox), SWTObservables.observeSelection(scriptModeRadio));
@@ -140,16 +149,29 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 			@Override
 			public Object convert(Object fromObject) {
-				if((outputTypeExpression.getContent() == null && !(Boolean)fromObject) || SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 || SQLQueryUtil.useWildcard(scriptExpression)){
+				if((outputTypeExpression.getContent() == null && !(Boolean)fromObject) || SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 && !SQLQueryUtil.useWildcard(scriptExpression)){
 					return false;
 				}
 				return fromObject;
 			}
 		});
+		
+		final UpdateValueStrategy disabledStrategy2 = new UpdateValueStrategy();
+		disabledStrategy2.setConverter(new Converter(Boolean.class,Boolean.class) {
+
+			@Override
+			public Object convert(Object fromObject) {
+				if((outputTypeExpression.getContent() == null && !(Boolean)fromObject) || SQLQueryUtil.useWildcard(scriptExpression)){
+					return false;
+				}
+				return fromObject;
+			}
+		});
+		
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(singleModeRadio),disabledStrategy,null);
 
 		oneRowNColModeRadioObserveEnabled = SWTObservables.observeEnabled(oneRowModeRadio);
-		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(oneRowModeRadio),disabledStrategy,null);
+		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(oneRowModeRadio),disabledStrategy2,null);
 		nRowsOneColModeRadioObserveEnabled = SWTObservables.observeEnabled(nRowModeRadio);
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(nRowModeRadio),disabledStrategy,null);
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(tableModeRadio));
@@ -193,20 +215,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 				}else if(outputTypeExpression.getContent() == null){
 					graphicalModeSelectionValue.setValue(false);
 				}
-				if(SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 || SQLQueryUtil.useWildcard(scriptExpression)){
-					singleModeRadioObserveEnabled.setValue(false);
-					nRowsOneColModeRadioObserveEnabled.setValue(false);
-					oneRowNColModeRadioObserveEnabled.setValue(false);
-					if(SINGLE.equals(outputTypeExpression.getContent()) 
-							|| N_ROW.equals(outputTypeExpression.getContent())
-							|| ONE_ROW.equals(outputTypeExpression.getContent())){
-						radioGroupObservable.setValue(TABLE);
-					}
-				}else if(outputTypeExpression.getContent() != null){
-					oneRowNColModeRadioObserveEnabled.setValue(true);
-					singleModeRadioObserveEnabled.setValue(true);
-					nRowsOneColModeRadioObserveEnabled.setValue(true);
-				}
+				updateEnabledChoices();
 			}else{
 				enableGraphicalMode.setValue(false);
 				graphicalModeSelectionValue.setValue(false);
@@ -215,26 +224,38 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		}
 	}
 
+
+	protected void updateEnabledChoices() {
+		if(SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 && !SQLQueryUtil.useWildcard(scriptExpression)){
+			singleModeRadioObserveEnabled.setValue(false);
+			nRowsOneColModeRadioObserveEnabled.setValue(false);
+			if(SINGLE.equals(outputTypeExpression.getContent()) 
+					|| N_ROW.equals(outputTypeExpression.getContent())
+					|| ONE_ROW.equals(outputTypeExpression.getContent())){
+				radioGroupObservable.setValue(TABLE);
+			}
+		}else if(SQLQueryUtil.useWildcard(scriptExpression)){
+			singleModeRadioObserveEnabled.setValue(false);
+			nRowsOneColModeRadioObserveEnabled.setValue(false);
+			oneRowNColModeRadioObserveEnabled.setValue(false);
+			if(SINGLE.equals(outputTypeExpression.getContent()) 
+					|| N_ROW.equals(outputTypeExpression.getContent())
+					|| ONE_ROW.equals(outputTypeExpression.getContent())){
+				radioGroupObservable.setValue(TABLE);
+			}
+		}else if(outputTypeExpression.getContent() != null){
+			oneRowNColModeRadioObserveEnabled.setValue(true);
+			singleModeRadioObserveEnabled.setValue(true);
+			nRowsOneColModeRadioObserveEnabled.setValue(true);
+		}
+	}
+
 	protected void updateQuery() {
 		if(graphicalModeSelectionValue != null){
 			IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
 			if(SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)){
 				enableGraphicalMode.setValue(true);
-				if(SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 || SQLQueryUtil.useWildcard(scriptExpression)){
-					singleModeRadioObserveEnabled.setValue(false);
-					nRowsOneColModeRadioObserveEnabled.setValue(false);
-					oneRowNColModeRadioObserveEnabled.setValue(false);
-					if(SINGLE.equals(outputTypeExpression.getContent()) 
-							|| N_ROW.equals(outputTypeExpression.getContent())
-							|| ONE_ROW.equals(outputTypeExpression.getContent())){
-						radioGroupObservable.setValue(TABLE);
-					}
-
-				}else if(outputTypeExpression.getContent() != null){
-					oneRowNColModeRadioObserveEnabled.setValue(true);
-					singleModeRadioObserveEnabled.setValue(true);
-					nRowsOneColModeRadioObserveEnabled.setValue(true);
-				}
+				updateEnabledChoices();
 			}else{
 				enableGraphicalMode.setValue(false);
 				graphicalModeSelectionValue.setValue(false);

@@ -366,17 +366,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		final Expression outputTypeExpression = (Expression) getConnectorParameter(configuration, getInput(OUTPUT_TYPE_KEY)).getExpression();
 		outputType = outputTypeExpression.getContent();
 		if(SINGLE.equals(outputType)){
-			List<Operation> toRemove = new ArrayList<Operation>();
-			for(Operation outputOp : getConnector().getOutputs()){
-				for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
-					if(connectorOutput instanceof Output){
-						if(!((Output) connectorOutput).getName().equals(SINGLE_RESULT_OUTPUT)){
-							toRemove.add(outputOp);
-						}
-					}
-				}
-			}
-			getConnector().getOutputs().removeAll(toRemove);
+			updateSingleOutput();
 			String column = SQLQueryUtil.getSelectedColumn(scriptExpression);
 			if(column != null){
 				singleColumnText.setText(column);
@@ -384,36 +374,12 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 			stackLayout.topControl = singleOutputComposite;
 			setDescription(Messages.singleDatabaseOutputDescription);
 		}else if(ONE_ROW.equals(outputType)){
-			List<Operation> toRemove = new ArrayList<Operation>();
-			for(Operation outputOp : getConnector().getOutputs()){
-				for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
-					if(connectorOutput instanceof Output){
-						if(((Output) connectorOutput).getName().equals(SINGLE_RESULT_OUTPUT)
-								|| ((Output) connectorOutput).getName().equals(NROW_ONECOL_RESULT_OUTPUT)
-								|| ((Output) connectorOutput).getName().equals(TABLE_RESULT_OUTPUT)
-								|| ((Output) connectorOutput).getName().equals(RESULTSET_OUTPUT)
-								|| ((Output) connectorOutput).getName().isEmpty()){
-							toRemove.add(outputOp);
-						}
-					}
-				}
-			}
-			getConnector().getOutputs().removeAll(toRemove);
+			updateOneRowOutput(scriptExpression);
 			buildListOfOutputForOneRowNCols(oneRowNColsscrolledComposite, context);
 			stackLayout.topControl = oneRowNColsOutputComposite ;
 			setDescription(Messages.oneRowDatabaseOutputDescription);
 		}else if(N_ROW.equals(outputType)){
-			List<Operation> toRemove = new ArrayList<Operation>();
-			for(Operation outputOp : getConnector().getOutputs()){
-				for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
-					if(connectorOutput instanceof Output){
-						if(!((Output) connectorOutput).getName().equals(NROW_ONECOL_RESULT_OUTPUT)){
-							toRemove.add(outputOp);
-						}
-					}
-				}
-			}
-			getConnector().getOutputs().removeAll(toRemove);
+			updateNRowOutput();
 			String column = SQLQueryUtil.getSelectedColumn(scriptExpression);
 			if(column != null){
 				nRowsOneColumnColumnText.setText(column);
@@ -421,42 +387,123 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 			stackLayout.topControl =  nRowsOneColumOutputComposite ;
 			setDescription(Messages.oneColDatabaseOutputDescription);
 		}else if(TABLE.equals(outputType)){
-			List<Operation> toRemove = new ArrayList<Operation>();
-			for(Operation outputOp : getConnector().getOutputs()){
-				for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
-					if(connectorOutput instanceof Output){
-						if(!((Output) connectorOutput).getName().equals(TABLE_RESULT_OUTPUT)){
-							toRemove.add(outputOp);
-						}
-					}
-				}
-			}
-			getConnector().getOutputs().removeAll(toRemove);
+			updateTableOutput();
 			stackLayout.topControl = nRowsNColumsOutputComposite;
 			setDescription(Messages.nRowsNColsDatabaseOutputDescription);
 		}else{
-			stackLayout.topControl = defaultOutputComposite ;
-			List<Operation> toRemove = new ArrayList<Operation>();
-			for(Operation outputOp : getConnector().getOutputs()){
-				for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
-					if(connectorOutput instanceof Output){
-						if(!((Output) connectorOutput).getName().equals(RESULTSET_OUTPUT)){
-							toRemove.add(outputOp);
-						}
-					}
-				}
-			}
-			getConnector().getOutputs().removeAll(toRemove);
-			if(getConnector().getOutputs().isEmpty()){
-				getConnector().getOutputs().add(createDefaultOutput(RESULTSET_OUTPUT, getDefinition()));
-			}
+			updateDefaultOutput();
 			lineComposite.setEObject(getConnector());
 			lineComposite.removeLinesUI();
 			lineComposite.fillTable();
 			lineComposite.refresh();
+			stackLayout.topControl = defaultOutputComposite ;
 			setDescription(Messages.outputMappingDesc);
 		}
 		topComposite.layout();
+	}
+	
+	public void updateOutputs(String outputType) {
+		final ConnectorConfiguration configuration = getConnector().getConfiguration();
+		final Expression scriptExpression = (Expression) getConnectorParameter(configuration, getInput(SCRIPT_KEY)).getExpression();
+		if(SINGLE.equals(outputType)){
+			updateSingleOutput();
+		}else if(ONE_ROW.equals(outputType)){
+			updateOneRowOutput(scriptExpression);
+		}else if(N_ROW.equals(outputType)){
+			updateNRowOutput();
+			
+		}else if(TABLE.equals(outputType)){
+			updateTableOutput();
+		}else{
+			updateDefaultOutput();
+		}
+	}
+
+	protected void updateSingleOutput() {
+		List<Operation> toRemove = new ArrayList<Operation>();
+		for(Operation outputOp : getConnector().getOutputs()){
+			for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
+				if(connectorOutput instanceof Output){
+					if(!((Output) connectorOutput).getName().equals(SINGLE_RESULT_OUTPUT)){
+						toRemove.add(outputOp);
+					}
+				}
+			}
+		}
+		getConnector().getOutputs().removeAll(toRemove);
+		if(getConnector().getOutputs().isEmpty()){
+			getConnector().getOutputs().add(createDefaultOutput(SINGLE_RESULT_OUTPUT, getDefinition()));
+		}
+	}
+
+	protected void updateOneRowOutput(final Expression scriptExpression) {
+		List<Operation> toRemove = new ArrayList<Operation>();
+		for(Operation outputOp : getConnector().getOutputs()){
+			for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
+				if(connectorOutput instanceof Output){
+					if(((Output) connectorOutput).getName().equals(SINGLE_RESULT_OUTPUT)
+							|| ((Output) connectorOutput).getName().equals(NROW_ONECOL_RESULT_OUTPUT)
+							|| ((Output) connectorOutput).getName().equals(TABLE_RESULT_OUTPUT)
+							|| ((Output) connectorOutput).getName().equals(RESULTSET_OUTPUT)
+							|| ((Output) connectorOutput).getName().isEmpty()){
+						toRemove.add(outputOp);
+					}
+				}
+			}
+		}
+		getConnector().getOutputs().removeAll(toRemove);
+		getOuputOperationsFor(ONEROW_NCOL_RESULT_OUTPUT,scriptExpression);
+	}
+
+	protected void updateNRowOutput() {
+		List<Operation> toRemove = new ArrayList<Operation>();
+		for(Operation outputOp : getConnector().getOutputs()){
+			for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
+				if(connectorOutput instanceof Output){
+					if(!((Output) connectorOutput).getName().equals(NROW_ONECOL_RESULT_OUTPUT)){
+						toRemove.add(outputOp);
+					}
+				}
+			}
+		}
+		getConnector().getOutputs().removeAll(toRemove);
+		if(getConnector().getOutputs().isEmpty()){
+			getConnector().getOutputs().add(createDefaultOutput(NROW_ONECOL_RESULT_OUTPUT, getDefinition()));
+		}
+	}
+
+	protected void updateDefaultOutput() {
+		List<Operation> toRemove = new ArrayList<Operation>();
+		for(Operation outputOp : getConnector().getOutputs()){
+			for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
+				if(connectorOutput instanceof Output){
+					if(!((Output) connectorOutput).getName().equals(RESULTSET_OUTPUT)){
+						toRemove.add(outputOp);
+					}
+				}
+			}
+		}
+		getConnector().getOutputs().removeAll(toRemove);
+		if(getConnector().getOutputs().isEmpty()){
+			getConnector().getOutputs().add(createDefaultOutput(RESULTSET_OUTPUT, getDefinition()));
+		}
+	}
+
+	protected void updateTableOutput() {
+		List<Operation> toRemove = new ArrayList<Operation>();
+		for(Operation outputOp : getConnector().getOutputs()){
+			for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
+				if(connectorOutput instanceof Output){
+					if(!((Output) connectorOutput).getName().equals(TABLE_RESULT_OUTPUT)){
+						toRemove.add(outputOp);
+					}
+				}
+			}
+		}
+		getConnector().getOutputs().removeAll(toRemove);
+		if(getConnector().getOutputs().isEmpty()){
+			getConnector().getOutputs().add(createDefaultOutput(TABLE_RESULT_OUTPUT, getDefinition()));
+		}
 	}
 
 	protected Input getInput(String inputName) {
