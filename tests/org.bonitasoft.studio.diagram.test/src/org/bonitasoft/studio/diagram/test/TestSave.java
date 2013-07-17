@@ -114,10 +114,10 @@ public class TestSave extends SWTBotGefTestCase {
         
        // test button
         isSaveButtonEnable=  bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled();
-        Assert.assertFalse("Error: Save button must be disabled when creating a new diagram.", isSaveButtonEnable);
+        Assert.assertFalse("Error: Save button must be disabled just after saving a new diagram..", isSaveButtonEnable);
 
         // test menu
-        Assert.assertFalse("Error: Save menu must be disabled when creating a new diagram.",  isSaveMenuEnabled());
+        Assert.assertFalse("Error: Save menu must be disabled just after saving a new diagram.",  isSaveMenuEnabled());
     }
 
 }
