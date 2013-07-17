@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.connector.model.definition.dialog.DefinitionCategoryContentProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 
 /**

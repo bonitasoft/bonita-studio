@@ -40,6 +40,7 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
 	protected final DefinitionResourceProvider messageProvider;
 	protected final String unloadableCategoryName;
 	protected DefinitionCategoryContentProvider definitionCategoryContentProvider;
+	private Category unCategorizedCategory;
 
 	public AbstractDefinitionContentProvider() {
 		this(false);
@@ -74,6 +75,7 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
 				connectorDefStore, bundle);
 		definitionCategoryContentProvider = new DefinitionCategoryContentProvider(messageProvider.getAllCategories());
 		unloadableCategoryName = messageProvider.getUnloadableCategory().getId();
+		unCategorizedCategory = messageProvider.getUncategorizedCategory();
 	}
 
 	protected abstract Bundle getBundle();
@@ -141,7 +143,7 @@ public abstract class AbstractDefinitionContentProvider implements ITreeContentP
 		if(element instanceof ConnectorDefinition){
 			ConnectorDefinition def = (ConnectorDefinition) element ;
 			if(def.getCategory().isEmpty()){
-				return null;
+				return unCategorizedCategory;
 			}
 			for(Category c : def.getCategory()){
 				if(definitionCategoryContentProvider.isLeafCategory(def, c)){
