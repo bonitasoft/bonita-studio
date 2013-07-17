@@ -23,6 +23,7 @@ import org.bonitasoft.studio.importer.bar.custom.migration.connector.Connector5D
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -40,6 +41,9 @@ public class ConnectorMigration extends ReportCustomMigration {
 	public void migrateBefore(Model model, Metamodel metamodel)
 			throws MigrationException {
 		for(Instance connector : model.getAllInstances("process.Connector")){
+			if(connector.getUuid() == null){
+				connector.setUuid(EcoreUtil.generateUUID());
+			}
 			final Connector5Descriptor connectorDescriptor = new Connector5Descriptor(connector);
 			if(connectorDescriptor.canBeMigrated()){
 				descriptors.add(connectorDescriptor);
