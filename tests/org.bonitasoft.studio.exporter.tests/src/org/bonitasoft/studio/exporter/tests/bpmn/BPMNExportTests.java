@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.ui.IEditorReference;
 import org.hamcrest.BaseMatcher;
@@ -177,8 +178,12 @@ public class BPMNExportTests extends SWTBotGefTestCase {
         final String className = "MyConnectorImpl"+System.currentTimeMillis();
         final String packageName = "org.bonita.connector.test";
 
-        bot.textWithLabel("Implementation id *").setText(id);
-        bot.comboBoxWithLabel("Definition *").setSelection(0);
+		bot.table().select(id);
+		SWTBotCombo comboBoxToSelectVersion = bot.comboBoxWithLabel("Definition version");
+		if(comboBoxToSelectVersion.isEnabled()){
+			comboBoxToSelectVersion.setSelection(0);
+		}
+		bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.textWithLabel("Class name *").setText(className);
         bot.textWithLabel("Package *").setText(packageName);
         bot.button(IDialogConstants.FINISH_LABEL).click();
