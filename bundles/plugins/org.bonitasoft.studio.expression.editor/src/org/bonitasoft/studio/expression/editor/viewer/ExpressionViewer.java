@@ -475,7 +475,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		refresh() ;
 	}
 
-	protected void manageNatureProviderAndAutocompletionProposal(Object input) {
+	public void manageNatureProviderAndAutocompletionProposal(Object input) {
 		if(expressionNatureProvider != null){
 			if(context == null){
 				expressionNatureProvider.setContext((EObject) input);
