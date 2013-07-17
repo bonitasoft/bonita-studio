@@ -66,7 +66,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -107,6 +106,7 @@ public class ExpressionCollectionViewer {
 	private Button downRowSortButton;
 	private List<ViewerFilter> viewerFilters = new ArrayList<ViewerFilter>();
 	private final List<IExpressionNatureProvider> viewerExprProviders = new ArrayList<IExpressionNatureProvider>();
+	private boolean withConnectors = false;
 	private final SelectionAdapter removeRowListener = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent event) {
@@ -124,6 +124,7 @@ public class ExpressionCollectionViewer {
 	};
 
 
+
 	public void setEditingDomain(EditingDomain editingDomain) {
 		this.editingDomain = editingDomain;
 		for (ExpressionCollectionEditingSupport ece : editingSupports) {
@@ -137,18 +138,8 @@ public class ExpressionCollectionViewer {
 			TabbedPropertySheetWidgetFactory widgetFactory,
 			EditingDomain editingDomain, boolean allowSwitchTableMode,
 			boolean allowRowSort) {
-		this.editingDomain = editingDomain;
-		captions = colCaptions;
-		minNbRow = nbRow;
-		minNbCol = nbCol;
-		listeners = new ArrayList<Listener>();
-		modeListeners = new ArrayList<IExpressionModeListener>();
-		this.fixedCol = fixedCol;
-		this.fixedRow = fixedRow;
-		editingSupports = new ArrayList<ExpressionCollectionEditingSupport>();
-		this.allowSwitchTableMode = allowSwitchTableMode;
-		this.allowRowSort = allowRowSort;
-		createComposite(composite, widgetFactory);
+		this(composite, nbRow, fixedRow, nbCol, fixedCol, colCaptions, widgetFactory,
+				editingDomain, allowSwitchTableMode, allowRowSort,false);
 	}
 
 	public ExpressionCollectionViewer(Composite composite, int nbRow,
@@ -161,6 +152,29 @@ public class ExpressionCollectionViewer {
 
 	public ExpressionCollectionViewer(Composite composite) {
 		this(composite, 0, false, 1, true, null, null, null, true, false);
+	}
+
+
+	public ExpressionCollectionViewer(Composite composite, int nbRow,
+			boolean fixedRow, int nbCol, boolean fixedCol,
+			List<String> colCaptions,
+			TabbedPropertySheetWidgetFactory widgetFactory,
+			EditingDomain editingDomain, boolean allowSwitchTableMode,
+			boolean allowRowSort,boolean withConnectors) {
+		this.editingDomain = editingDomain;
+		captions = colCaptions;
+		minNbRow = nbRow;
+		minNbCol = nbCol;
+		listeners = new ArrayList<Listener>();
+		modeListeners = new ArrayList<IExpressionModeListener>();
+		this.fixedCol = fixedCol;
+		this.fixedRow = fixedRow;
+		editingSupports = new ArrayList<ExpressionCollectionEditingSupport>();
+		this.allowSwitchTableMode = allowSwitchTableMode;
+		this.allowRowSort = allowRowSort;
+		this.withConnectors  = withConnectors;
+		createComposite(composite, widgetFactory);
+
 	}
 
 	private void createComposite(Composite parent,
@@ -317,7 +331,7 @@ public class ExpressionCollectionViewer {
 		expressionComposite.setLayoutData(GridDataFactory.fillDefaults()
 				.grab(true, false).create());
 		expressionEditor = new ExpressionViewer(expressionComposite,
-				SWT.BORDER, widgetFactory, null);
+				SWT.BORDER, widgetFactory, null,null,withConnectors);
 		expressionEditor.getControl().setLayoutData(
 				GridDataFactory.fillDefaults().grab(true, false).create());
 

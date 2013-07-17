@@ -171,7 +171,7 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
         allowHtmlButton = widgetFactory.createButton(mainComposite, Messages.GeneralSection_allowHTML, SWT.CHECK);
         allowHtmlButton.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).create()) ;
 
-        tableViewer = new ExpressionCollectionViewer(mainComposite,0,false,2,false,null,widgetFactory,getEditingDomain(), true, false) ;
+        tableViewer = new ExpressionCollectionViewer(mainComposite,0,false,2,false,null,widgetFactory,getEditingDomain(), true, false,true) ;
         tableViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).span(2, 1).create()) ;
 
         magicComposite = new MagicComposite(mainComposite, SWT.NONE) ;
