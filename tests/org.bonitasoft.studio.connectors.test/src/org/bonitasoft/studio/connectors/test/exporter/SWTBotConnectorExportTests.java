@@ -116,7 +116,7 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 		final String version = "1.0.0";
 		final String className = "MyConnectorTest1";
 		final String packageName = "org.bonitaSoft.studioTests";
-		final String userConnector = id + " (" + version + ")" + " -- "
+		final String userConnector = id + "-impl (" + version + ")" + " -- "
 				+ packageName + "." + className;
 		final String fileName = "connectorTest1-impl-1.0.0.zip";
 		SWTBotConnectorTestUtil.createConnectorDefAndImpl(bot, id, version,
@@ -131,7 +131,7 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 		final String version = "1.0.0";
 		final String className = "MyConnectorTest2";
 		final String packageName = "org.bonitaSoft.studioTests";
-		final String userConnector = id + " (" + version + ")" + " -- "
+		final String userConnector = id + "-impl (" + version + ")" + " -- "
 				+ packageName + "." + className;
 		final String fileName = "connectorTest2-impl-1.0.0.zip";
 		final String language1 = "de";

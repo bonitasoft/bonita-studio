@@ -93,6 +93,7 @@ public class DefinitionResourceProvider {
 	private DefinitionControl pluginControl;
 	private StoreControl storeControl;
 	private ArrayList<Category> categories;
+	private Category uncategorized;
 	private final static Map<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider> INSTANCES_MAP;
 
 	static {
@@ -520,6 +521,11 @@ public class DefinitionResourceProvider {
 		unloadable.setId(Messages.unloadable);
 		return unloadable;
 	}
+	
+
+	public Category getUncategorizedCategory() {
+		return uncategorized;
+	}
 
 	public Image getCategoryIcon(Category category) {
 		if(Messages.unloadable.equals(category.getId())){
@@ -635,7 +641,7 @@ public class DefinitionResourceProvider {
 		if (addUnloadableCategory) {
 			categories.add(getUnloadableCategory());
 		}
-		Category uncategorized = ConnectorDefinitionFactory.eINSTANCE.createCategory();
+		uncategorized = ConnectorDefinitionFactory.eINSTANCE.createCategory();
 		uncategorized.setId(Messages.uncategorized);
 		categories.add(uncategorized);
 
@@ -709,4 +715,5 @@ public class DefinitionResourceProvider {
 	public void removeCategoryLabel(Properties messages, Category c) {
 		messages.remove(c.getId() + "." + category);
 	}
+
 }
