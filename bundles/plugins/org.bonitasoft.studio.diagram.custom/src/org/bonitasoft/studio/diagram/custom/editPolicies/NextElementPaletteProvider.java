@@ -117,7 +117,7 @@ public class NextElementPaletteProvider {
 		if(id.equals("createEvent9CreationTool")){
 			return 3;
 		}
-		return -1;
+		return Integer.MAX_VALUE;
 	}
 
 }
