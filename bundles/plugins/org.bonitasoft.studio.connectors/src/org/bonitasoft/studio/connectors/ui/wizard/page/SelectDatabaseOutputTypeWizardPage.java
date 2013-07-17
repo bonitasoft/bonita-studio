@@ -41,6 +41,8 @@ import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -68,6 +70,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 	private ISWTObservableValue singleModeRadioObserveEnabled;
 	private ISWTObservableValue nRowsOneColModeRadioObserveEnabled;
 	private ISWTObservableValue oneRowNColModeRadioObserveEnabled;
+	private IWizardPage previousPageBackup;
 
 	public SelectDatabaseOutputTypeWizardPage(boolean editing) {
 		super(SelectDatabaseOutputTypeWizardPage.class.getName());
@@ -131,7 +134,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeSelection(alwaysUseScriptCheckbox),deselectStrategy, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(choicesComposite));
 		singleModeRadioObserveEnabled = SWTObservables.observeEnabled(singleModeRadio);
-		
+
 		final UpdateValueStrategy disabledStrategy = new UpdateValueStrategy();
 		disabledStrategy.setConverter(new Converter(Boolean.class,Boolean.class) {
 
@@ -144,7 +147,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 			}
 		});
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(singleModeRadio),disabledStrategy,null);
-		
+
 		oneRowNColModeRadioObserveEnabled = SWTObservables.observeEnabled(oneRowModeRadio);
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(oneRowModeRadio),disabledStrategy,null);
 		nRowsOneColModeRadioObserveEnabled = SWTObservables.observeEnabled(nRowModeRadio);
@@ -349,6 +352,25 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 	@Override
 	public void handleValueChange(ValueChangeEvent event) {
 		updateQuery();
+	}
+
+	@Override
+	public void setPreviousPage(IWizardPage page) {
+		this.previousPageBackup = page;
+		super.setPreviousPage(page);
+	}
+
+	@Override
+	public IWizardPage getPreviousPage() {
+		if(previousPageBackup != null){
+			return previousPageBackup;
+		}
+
+		IWizard wizard = getWizard();
+		if(wizard != null){
+			return wizard.getPreviousPage(this);
+		}
+		return super.getPreviousPage();
 	}
 
 
