@@ -17,6 +17,7 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -61,6 +62,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.ietf.jgss.Oid;
 
 /**
  * ContentProposalAdapter can be used to attach content proposal behavior to a
@@ -726,11 +728,16 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 		private void createVariableCreationZone(final Composite parent) {
 			if (context != null && context.eResource() != null) {
-				final Composite creationZoneComposite = new Composite(parent, SWT.NONE);
-				creationZoneComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
-				creationZoneComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+				final Composite creationZoneComposite = new Composite(parent,
+						SWT.NONE);
+				creationZoneComposite.setLayout(GridLayoutFactory
+						.fillDefaults().margins(10, 10).create());
+				creationZoneComposite.setLayoutData(GridDataFactory
+						.fillDefaults().grab(true, false).create());
 				Link createDataLink;
-				for (IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.expression.proposalListener")) {
+				for (IConfigurationElement element : BonitaStudioExtensionRegistryManager
+						.getInstance()
+						.getConfigurationElements("org.bonitasoft.studio.expression.proposalListener")) {
 					createDataLink = new Link(creationZoneComposite, SWT.NONE);
 					final String name = element.getAttribute("name");
 					createDataLink.setText(name);
@@ -739,14 +746,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 						createDataLink.addSelectionListener(new SelectionAdapter() {
 							@Override
 							public void widgetSelected(SelectionEvent e) {
-								String newObjectLabel = listener.handleEvent(context);
-								if (newObjectLabel != null) {
-									setControlContent(newObjectLabel, 0);
-								}
+								final String newObjectLabel = listener.handleEvent(context);
+								updateExpressionField(newObjectLabel);
 							}
 						});
-					} catch (CoreException e1) {
-						BonitaStudioLog.error(e1);
+					} catch (CoreException e) {
+						BonitaStudioLog.error(e);
 					}
 					linkList.add(createDataLink);
 				}
@@ -754,6 +759,26 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			}
 		}
 
+		private void updateExpressionField(String newObjectLabel){
+			if (newObjectLabel != null) {
+				final Object[] listenerArray = proposalListeners.getListeners();
+				for (int i = 0; i < listenerArray.length; i++) {
+					IContentProposalListener listener =  (IContentProposalListener) listenerArray[i];
+					if(listener instanceof ExpressionViewer){
+						((ExpressionViewer)listener).manageNatureProviderAndAutocompletionProposal(((ExpressionViewer)listener).getInput());
+					}
+				}
+				IContentProposal[] newProposals = getProposals();
+				setProposals(newProposals);
+				for(int i=0; i<newProposals.length;i++){
+					if(newProposals[i].getContent().equals(newObjectLabel)){
+						proposalAccepted(newProposals[i]);
+						break;
+					}
+				}
+			}
+		}
+		
 		/*
 		 * (non-Javadoc)
 		 * 
