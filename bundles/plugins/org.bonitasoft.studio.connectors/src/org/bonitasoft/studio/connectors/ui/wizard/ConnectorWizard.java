@@ -140,6 +140,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
 		this.featureToCheckForUniqueID.add(connectorContainmentFeature);
 		setWindowTitle(Messages.connectors);
+		setNeedsProgressMonitor(false);
 		initialize() ;
 	}
 
@@ -152,6 +153,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		editMode = true ;
 		this.featureToCheckForUniqueID = featureToCheckForUniqueID ;
 		setWindowTitle(Messages.connectors);
+		setNeedsProgressMonitor(false);
 		initialize() ;
 	}
 

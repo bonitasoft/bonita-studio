@@ -4,6 +4,7 @@
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -23,6 +24,9 @@ import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -43,7 +47,7 @@ import org.eclipse.swt.widgets.Text;
  * @author Romain Bioteau
  *
  */
-public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage implements DatabaseConnectorConstants{
+public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage implements DatabaseConnectorConstants, IValueChangeListener{
 
 	private String outputType;
 	private StackLayout stackLayout;
@@ -55,8 +59,10 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 	private Composite topComposite;
 	private Text singleColumnText;
 	private Composite oneRowNColsOutputComposite;
-	private Composite oneRowNColsComposite;
 	private ScrolledComposite oneRowNColsscrolledComposite;
+	private Composite nRowsOneColumOutputComposite;
+	private Text nRowsOneColumnColumnText;
+	private Composite nRowsNColumsOutputComposite;
 
 	public DatabaseConnectorOutputWizardPage(){
 		super();
@@ -88,12 +94,95 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		defaultOutputComposite = createDefaultOuputControl(topComposite, context);
 		singleOutputComposite = createSingleOuputControl(topComposite, context);
 		oneRowNColsOutputComposite = createOneRowNColsOuputControl(topComposite, context);
-		stackLayout.topControl = defaultOutputComposite;
+		nRowsOneColumOutputComposite = createNRowsOneColumOuputControl(topComposite, context);
+		nRowsNColumsOutputComposite = createNRowsNColsOuputControl(topComposite, context);
 
+		
+		updateStackLayout();
+		
+		final ConnectorConfiguration configuration = getConnector().getConfiguration();
+		final Expression outputTypeExpression = (Expression) getConnectorParameter(configuration, getInput(OUTPUT_TYPE_KEY)).getExpression();
+
+		final IObservableValue outputTypeObservalbe = EMFObservables.observeValue(outputTypeExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+		outputTypeObservalbe.addValueChangeListener(this);
+		
 		return topComposite;
 	}
 
 
+	protected Composite createNRowsOneColumOuputControl(Composite parent,
+			EMFDataBindingContext context) {
+		final Composite mainComposite = new Composite(parent, SWT.NONE) ;
+		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(20, 20).create());
+
+		Operation singleModeOuputOperation = getOuputOperationFor(NROW_ONECOL_RESULT_OUTPUT);
+		if(singleModeOuputOperation == null){
+			singleModeOuputOperation = createDefaultOutput(NROW_ONECOL_RESULT_OUTPUT, getDefinition());
+			getConnector().getOutputs().add(singleModeOuputOperation);
+		}
+		singleModeOuputOperation.getLeftOperand().setReturnType(Collection.class.getName());
+		singleModeOuputOperation.getLeftOperand().setReturnTypeFixed(true);
+		
+		final ReadOnlyExpressionViewer targetDataExpressionViewer = new ReadOnlyExpressionViewer(mainComposite,SWT.BORDER,null,null,ExpressionPackage.Literals.OPERATION__LEFT_OPERAND) ;
+		targetDataExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).hint(250, SWT.DEFAULT).create());
+		targetDataExpressionViewer.addFilter(leftFilter);
+		targetDataExpressionViewer.setContext(getElementContainer());
+		targetDataExpressionViewer.setInput(singleModeOuputOperation);
+
+		context.bindValue(ViewersObservables.observeSingleSelection(targetDataExpressionViewer), EMFObservables.observeValue(singleModeOuputOperation, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND)) ;
+
+		final Label takeValueOfLabel = new Label(mainComposite, SWT.NONE);
+		takeValueOfLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).create());
+		takeValueOfLabel.setText(Messages.takeValueOf);
+
+		nRowsOneColumnColumnText = new Text(mainComposite,SWT.BORDER | SWT.READ_ONLY) ;
+		nRowsOneColumnColumnText.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create());
+
+		final Label hintLabel = new Label(mainComposite, SWT.WRAP);
+		hintLabel.setLayoutData(GridDataFactory.swtDefaults().span(3, 1).create());
+		hintLabel.setText(Messages.nRowsOneColOutputHint);
+		
+		return mainComposite;
+	}
+
+	protected Composite createNRowsNColsOuputControl(Composite parent,
+			EMFDataBindingContext context) {
+		final Composite mainComposite = new Composite(parent, SWT.NONE) ;
+		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(20, 20).create());
+
+		Operation singleModeOuputOperation = getOuputOperationFor(TABLE_RESULT_OUTPUT);
+		if(singleModeOuputOperation == null){
+			singleModeOuputOperation = createDefaultOutput(TABLE_RESULT_OUTPUT, getDefinition());
+			getConnector().getOutputs().add(singleModeOuputOperation);
+		}
+		singleModeOuputOperation.getLeftOperand().setReturnType(Collection.class.getName());
+		singleModeOuputOperation.getLeftOperand().setReturnTypeFixed(true);
+		
+		final ReadOnlyExpressionViewer targetDataExpressionViewer = new ReadOnlyExpressionViewer(mainComposite,SWT.BORDER,null,null,ExpressionPackage.Literals.OPERATION__LEFT_OPERAND) ;
+		targetDataExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).hint(250, SWT.DEFAULT).create());
+		targetDataExpressionViewer.addFilter(leftFilter);
+		targetDataExpressionViewer.setContext(getElementContainer());
+		targetDataExpressionViewer.setInput(singleModeOuputOperation);
+
+		context.bindValue(ViewersObservables.observeSingleSelection(targetDataExpressionViewer), EMFObservables.observeValue(singleModeOuputOperation, ExpressionPackage.Literals.OPERATION__LEFT_OPERAND)) ;
+
+		final Label takeValueOfLabel = new Label(mainComposite, SWT.NONE);
+		takeValueOfLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).create());
+		takeValueOfLabel.setText(Messages.takeValueOf);
+
+		final Text nRowsNColumnsColumnText = new Text(mainComposite,SWT.BORDER | SWT.READ_ONLY) ;
+		nRowsNColumnsColumnText.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create());
+		nRowsNColumnsColumnText.setText(singleModeOuputOperation.getRightOperand().getName());
+		
+		final Label hintLabel = new Label(mainComposite, SWT.WRAP);
+		hintLabel.setLayoutData(GridDataFactory.swtDefaults().span(3, 1).create());
+		hintLabel.setText(Messages.nRowsNColsOutputHint);
+		
+		return mainComposite;
+	}
+	
 	protected Composite createOneRowNColsOuputControl(Composite parent,
 			EMFDataBindingContext context) {
 		oneRowNColsscrolledComposite = new ScrolledComposite(parent,SWT.V_SCROLL);
@@ -104,6 +193,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 	protected void buildListOfOutputForOneRowNCols(ScrolledComposite scrolledComposite,EMFDataBindingContext context) {
 		if(scrolledComposite.getContent() != null){
 			scrolledComposite.getContent().dispose();
+			scrolledComposite.setContent(null);
 		}
 		final Composite oneRowNColsComposite = new Composite(scrolledComposite, SWT.NONE) ;
 		oneRowNColsComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
@@ -125,9 +215,9 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 			takeValueOfLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).create());
 			takeValueOfLabel.setText(Messages.takeValueOf);
 
-			singleColumnText = new Text(oneRowNColsComposite,SWT.BORDER | SWT.READ_ONLY) ;
-			singleColumnText.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create());
-			singleColumnText.setText(op.getRightOperand().getName());
+			final Text columnText = new Text(oneRowNColsComposite,SWT.BORDER | SWT.READ_ONLY) ;
+			columnText.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create());
+			columnText.setText(op.getRightOperand().getName());
 		}
 		scrolledComposite.setMinSize(oneRowNColsComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		scrolledComposite.setAlwaysShowScrollBars(false);
@@ -222,7 +312,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		}
 
 		final ReadOnlyExpressionViewer targetDataExpressionViewer = new ReadOnlyExpressionViewer(mainComposite,SWT.BORDER,null,null,ExpressionPackage.Literals.OPERATION__LEFT_OPERAND) ;
-		targetDataExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create());
+		targetDataExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).hint(250, SWT.DEFAULT).create());
 		targetDataExpressionViewer.addFilter(leftFilter);
 		targetDataExpressionViewer.setContext(getElementContainer());
 		targetDataExpressionViewer.setInput(singleModeOuputOperation);
@@ -269,103 +359,104 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		return mainComposite;
 	}
 
-	@Override
-	public void setVisible(boolean visible) {
-		if(visible){
-			final ConnectorConfiguration configuration = getConnector().getConfiguration();
-			final Expression outputTypeExpression = (Expression) getConnectorParameter(configuration, getInput(OUTPUT_TYPE_KEY)).getExpression();
-			boolean changed = false;
-			if(outputType != null){
-				if(!outputType.equals(outputTypeExpression.getContent())){
-					changed = true;
+
+	protected void updateStackLayout() {
+		final ConnectorConfiguration configuration = getConnector().getConfiguration();
+		final Expression scriptExpression = (Expression) getConnectorParameter(configuration, getInput(SCRIPT_KEY)).getExpression();
+		final Expression outputTypeExpression = (Expression) getConnectorParameter(configuration, getInput(OUTPUT_TYPE_KEY)).getExpression();
+		outputType = outputTypeExpression.getContent();
+		if(SINGLE.equals(outputType)){
+			List<Operation> toRemove = new ArrayList<Operation>();
+			for(Operation outputOp : getConnector().getOutputs()){
+				for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
+					if(connectorOutput instanceof Output){
+						if(!((Output) connectorOutput).getName().equals(SINGLE_RESULT_OUTPUT)){
+							toRemove.add(outputOp);
+						}
+					}
 				}
 			}
-			outputType = outputTypeExpression.getContent();
-			if(SINGLE.equals(outputType)){
-				List<Operation> toRemove = new ArrayList<Operation>();
-				for(Operation outputOp : getConnector().getOutputs()){
-					for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
-						if(connectorOutput instanceof Output){
-							if(!((Output) connectorOutput).getName().equals(SINGLE_RESULT_OUTPUT)){
-								toRemove.add(outputOp);
-							}
-						}
-					}
-				}
-				getConnector().getOutputs().removeAll(toRemove);
-				final Expression scriptExpression = (Expression) getConnectorParameter(configuration, getInput(SCRIPT_KEY)).getExpression();
-				String column = SQLQueryUtil.getSelectedColumn(scriptExpression);
-				if(column != null){
-					singleColumnText.setText(column);
-				}
-				stackLayout.topControl = singleOutputComposite;
-				setDescription(Messages.singleDatabaseOutputDescription);
-			}else if(ONE_ROW.equals(outputType)){
-				List<Operation> toRemove = new ArrayList<Operation>();
-				for(Operation outputOp : getConnector().getOutputs()){
-					for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
-						if(connectorOutput instanceof Output){
-							if(((Output) connectorOutput).getName().equals(SINGLE_RESULT_OUTPUT)
-									|| ((Output) connectorOutput).getName().equals(NROW_ONECOL_RESULT_OUTPUT)
-									|| ((Output) connectorOutput).getName().equals(TABLE_RESULT_OUTPUT)
-									|| ((Output) connectorOutput).getName().equals(RESULTSET_OUTPUT)){
-								toRemove.add(outputOp);
-							}
-						}
-					}
-				}
-				getConnector().getOutputs().removeAll(toRemove);
-				buildListOfOutputForOneRowNCols(oneRowNColsscrolledComposite, context);
-				stackLayout.topControl = oneRowNColsOutputComposite ;
-				setDescription(Messages.oneRowDatabaseOutputDescription);
-			}else if(N_ROW.equals(outputType)){
-				List<Operation> toRemove = new ArrayList<Operation>();
-				for(Operation outputOp : getConnector().getOutputs()){
-					for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
-						if(connectorOutput instanceof Output){
-							if(!((Output) connectorOutput).getName().equals(NROW_ONECOL_RESULT_OUTPUT)){
-								toRemove.add(outputOp);
-							}
-						}
-					}
-				}
-				getConnector().getOutputs().removeAll(toRemove);
-				setDescription(Messages.oneColDatabaseOutputDescription);
-			}else if(TABLE.equals(outputType)){
-				List<Operation> toRemove = new ArrayList<Operation>();
-				for(Operation outputOp : getConnector().getOutputs()){
-					for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
-						if(connectorOutput instanceof Output){
-							if(!((Output) connectorOutput).getName().equals(TABLE_RESULT_OUTPUT)){
-								toRemove.add(outputOp);
-							}
-						}
-					}
-				}
-				getConnector().getOutputs().removeAll(toRemove);
-				setDescription(Messages.nRowsNColsDatabaseOutputDescription);
-			}else{
-				stackLayout.topControl = defaultOutputComposite ;
-				List<Operation> toRemove = new ArrayList<Operation>();
-				for(Operation outputOp : getConnector().getOutputs()){
-					for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
-						if(connectorOutput instanceof Output){
-							if(!((Output) connectorOutput).getName().equals(RESULTSET_OUTPUT)){
-								toRemove.add(outputOp);
-							}
-						}
-					}
-				}
-				getConnector().getOutputs().removeAll(toRemove);
-				lineComposite.setEObject(getConnector());
-				lineComposite.removeLinesUI();
-				lineComposite.fillTable();
-				lineComposite.refresh();
-				setDescription(Messages.outputMappingDesc);
+			getConnector().getOutputs().removeAll(toRemove);
+			String column = SQLQueryUtil.getSelectedColumn(scriptExpression);
+			if(column != null){
+				singleColumnText.setText(column);
 			}
-			topComposite.layout();
+			stackLayout.topControl = singleOutputComposite;
+			setDescription(Messages.singleDatabaseOutputDescription);
+		}else if(ONE_ROW.equals(outputType)){
+			List<Operation> toRemove = new ArrayList<Operation>();
+			for(Operation outputOp : getConnector().getOutputs()){
+				for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
+					if(connectorOutput instanceof Output){
+						if(((Output) connectorOutput).getName().equals(SINGLE_RESULT_OUTPUT)
+								|| ((Output) connectorOutput).getName().equals(NROW_ONECOL_RESULT_OUTPUT)
+								|| ((Output) connectorOutput).getName().equals(TABLE_RESULT_OUTPUT)
+								|| ((Output) connectorOutput).getName().equals(RESULTSET_OUTPUT)
+								|| ((Output) connectorOutput).getName().isEmpty()){
+							toRemove.add(outputOp);
+						}
+					}
+				}
+			}
+			getConnector().getOutputs().removeAll(toRemove);
+			buildListOfOutputForOneRowNCols(oneRowNColsscrolledComposite, context);
+			stackLayout.topControl = oneRowNColsOutputComposite ;
+			setDescription(Messages.oneRowDatabaseOutputDescription);
+		}else if(N_ROW.equals(outputType)){
+			List<Operation> toRemove = new ArrayList<Operation>();
+			for(Operation outputOp : getConnector().getOutputs()){
+				for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
+					if(connectorOutput instanceof Output){
+						if(!((Output) connectorOutput).getName().equals(NROW_ONECOL_RESULT_OUTPUT)){
+							toRemove.add(outputOp);
+						}
+					}
+				}
+			}
+			getConnector().getOutputs().removeAll(toRemove);
+			String column = SQLQueryUtil.getSelectedColumn(scriptExpression);
+			if(column != null){
+				nRowsOneColumnColumnText.setText(column);
+			}
+			stackLayout.topControl =  nRowsOneColumOutputComposite ;
+			setDescription(Messages.oneColDatabaseOutputDescription);
+		}else if(TABLE.equals(outputType)){
+			List<Operation> toRemove = new ArrayList<Operation>();
+			for(Operation outputOp : getConnector().getOutputs()){
+				for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
+					if(connectorOutput instanceof Output){
+						if(!((Output) connectorOutput).getName().equals(TABLE_RESULT_OUTPUT)){
+							toRemove.add(outputOp);
+						}
+					}
+				}
+			}
+			getConnector().getOutputs().removeAll(toRemove);
+			stackLayout.topControl = nRowsNColumsOutputComposite;
+			setDescription(Messages.nRowsNColsDatabaseOutputDescription);
+		}else{
+			stackLayout.topControl = defaultOutputComposite ;
+			List<Operation> toRemove = new ArrayList<Operation>();
+			for(Operation outputOp : getConnector().getOutputs()){
+				for(EObject connectorOutput : outputOp.getRightOperand().getReferencedElements()){
+					if(connectorOutput instanceof Output){
+						if(!((Output) connectorOutput).getName().equals(RESULTSET_OUTPUT)){
+							toRemove.add(outputOp);
+						}
+					}
+				}
+			}
+			getConnector().getOutputs().removeAll(toRemove);
+			if(getConnector().getOutputs().isEmpty()){
+				getConnector().getOutputs().add(createDefaultOutput(RESULTSET_OUTPUT, getDefinition()));
+			}
+			lineComposite.setEObject(getConnector());
+			lineComposite.removeLinesUI();
+			lineComposite.fillTable();
+			lineComposite.refresh();
+			setDescription(Messages.outputMappingDesc);
 		}
-		super.setVisible(visible);
+		topComposite.layout();
 	}
 
 	protected Input getInput(String inputName) {
@@ -408,5 +499,10 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void handleValueChange(ValueChangeEvent event) {
+		updateStackLayout();
 	}
 }

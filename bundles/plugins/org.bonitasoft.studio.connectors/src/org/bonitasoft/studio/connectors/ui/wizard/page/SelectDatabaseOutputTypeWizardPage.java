@@ -21,7 +21,6 @@ import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnector
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.ui.wizard.page.sqlutil.SQLQueryUtil;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.pics.Pics;
@@ -66,6 +65,9 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 	private SelectObservableValue radioGroupObservable;
 	private ISWTObservableValue graphicalModeSelectionValue;
 	private boolean editing;
+	private ISWTObservableValue singleModeRadioObserveEnabled;
+	private ISWTObservableValue nRowsOneColModeRadioObserveEnabled;
+	private ISWTObservableValue oneRowNColModeRadioObserveEnabled;
 
 	public SelectDatabaseOutputTypeWizardPage(boolean editing) {
 		super(SelectDatabaseOutputTypeWizardPage.class.getName());
@@ -75,17 +77,12 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
 	}
 
-	@Override
-	public void setConfiguration(ConnectorConfiguration configuration) {
-		super.setConfiguration(configuration);
-
-	}
 
 	@Override
 	protected Control doCreateControl(Composite parent,	EMFDataBindingContext context) {
 		final Composite mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).extendedMargins(10, 10, 10, 0).create());
+		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(10, 10, 5, -50).create());
 
 		final Label selectLabel = new Label(mainComposite, SWT.NONE);
 		selectLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
@@ -133,9 +130,25 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeSelection(alwaysUseScriptCheckbox),deselectStrategy, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(choicesComposite));
-		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(singleModeRadio));
-		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(oneRowModeRadio));
-		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(nRowModeRadio));
+		singleModeRadioObserveEnabled = SWTObservables.observeEnabled(singleModeRadio);
+		
+		final UpdateValueStrategy disabledStrategy = new UpdateValueStrategy();
+		disabledStrategy.setConverter(new Converter(Boolean.class,Boolean.class) {
+
+			@Override
+			public Object convert(Object fromObject) {
+				if((outputTypeExpression.getContent() == null && !(Boolean)fromObject) || SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 || SQLQueryUtil.useWildcard(scriptExpression)){
+					return false;
+				}
+				return fromObject;
+			}
+		});
+		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(singleModeRadio),disabledStrategy,null);
+		
+		oneRowNColModeRadioObserveEnabled = SWTObservables.observeEnabled(oneRowModeRadio);
+		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(oneRowModeRadio),disabledStrategy,null);
+		nRowsOneColModeRadioObserveEnabled = SWTObservables.observeEnabled(nRowModeRadio);
+		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(nRowModeRadio),disabledStrategy,null);
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(tableModeRadio));
 
 		graphicalModeSelectionValue.addValueChangeListener(new IValueChangeListener() {
@@ -143,10 +156,13 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
 				if((Boolean)event.getObservableValue().getValue()){
-					if(!singleModeRadio.getSelection() 
-							&& !oneRowModeRadio.getSelection()
-							&& !nRowModeRadio.getSelection()
-							&& !tableModeRadio.getSelection()){
+					if(singleModeRadio.getSelection()){
+						radioGroupObservable.setValue(SINGLE);
+					}else if(oneRowModeRadio.getSelection()){
+						radioGroupObservable.setValue(ONE_ROW);
+					}else if(nRowModeRadio.getSelection()){
+						radioGroupObservable.setValue(N_ROW);
+					}else{
 						radioGroupObservable.setValue(TABLE);
 					}
 				}
@@ -174,6 +190,20 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 				}else if(outputTypeExpression.getContent() == null){
 					graphicalModeSelectionValue.setValue(false);
 				}
+				if(SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 || SQLQueryUtil.useWildcard(scriptExpression)){
+					singleModeRadioObserveEnabled.setValue(false);
+					nRowsOneColModeRadioObserveEnabled.setValue(false);
+					oneRowNColModeRadioObserveEnabled.setValue(false);
+					if(SINGLE.equals(outputTypeExpression.getContent()) 
+							|| N_ROW.equals(outputTypeExpression.getContent())
+							|| ONE_ROW.equals(outputTypeExpression.getContent())){
+						radioGroupObservable.setValue(TABLE);
+					}
+				}else if(outputTypeExpression.getContent() != null){
+					oneRowNColModeRadioObserveEnabled.setValue(true);
+					singleModeRadioObserveEnabled.setValue(true);
+					nRowsOneColModeRadioObserveEnabled.setValue(true);
+				}
 			}else{
 				enableGraphicalMode.setValue(false);
 				graphicalModeSelectionValue.setValue(false);
@@ -187,6 +217,21 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 			IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
 			if(SQLQueryUtil.isGraphicalModeSupportedFor(scriptExpression)){
 				enableGraphicalMode.setValue(true);
+				if(SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 || SQLQueryUtil.useWildcard(scriptExpression)){
+					singleModeRadioObserveEnabled.setValue(false);
+					nRowsOneColModeRadioObserveEnabled.setValue(false);
+					oneRowNColModeRadioObserveEnabled.setValue(false);
+					if(SINGLE.equals(outputTypeExpression.getContent()) 
+							|| N_ROW.equals(outputTypeExpression.getContent())
+							|| ONE_ROW.equals(outputTypeExpression.getContent())){
+						radioGroupObservable.setValue(TABLE);
+					}
+
+				}else if(outputTypeExpression.getContent() != null){
+					oneRowNColModeRadioObserveEnabled.setValue(true);
+					singleModeRadioObserveEnabled.setValue(true);
+					nRowsOneColModeRadioObserveEnabled.setValue(true);
+				}
 			}else{
 				enableGraphicalMode.setValue(false);
 				graphicalModeSelectionValue.setValue(false);
@@ -197,12 +242,12 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 	protected Button createScriptModeControl(Composite parent) {
 		final Button scriptModeRadio = new Button(parent, SWT.RADIO);
-		scriptModeRadio.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(15, 0).create());
+		scriptModeRadio.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(15, 20).create());
 		scriptModeRadio.setText(Messages.scriptMode);
 		scriptModeRadio.setFont(BonitaStudioFontRegistry.getActiveFont());
 
 		final Composite descriptionComposite = new Composite(parent, SWT.NONE);
-		descriptionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(35, -5).create());
+		descriptionComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(45, -5).create());
 		descriptionComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
 		final Label scriptingDescriptionLabel = new Label(descriptionComposite, SWT.WRAP);
@@ -230,7 +275,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		gModeRadio.setFont(BonitaStudioFontRegistry.getActiveFont());
 
 		final Composite choicesComposite = new Composite(parent, SWT.NONE);
-		choicesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(35, -5).create());
+		choicesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(45, -5).create());
 		choicesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
 
 		final Label choiceDescriptionLabel = new Label(choicesComposite, SWT.WRAP);

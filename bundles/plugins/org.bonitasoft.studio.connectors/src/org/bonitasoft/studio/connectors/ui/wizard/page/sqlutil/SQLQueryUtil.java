@@ -18,7 +18,6 @@ package org.bonitasoft.studio.connectors.ui.wizard.page.sqlutil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -48,7 +47,6 @@ public class SQLQueryUtil {
 					if(indexOfFromClause != -1){
 						String columns = query.trim().toLowerCase().substring(SELECT_QUERY_PREFIX.length(),indexOfFromClause);
 						if(!columns.contains("${")){
-
 							return true;
 						}
 					}
@@ -56,6 +54,10 @@ public class SQLQueryUtil {
 			}
 		}
 		return false;
+	}
+
+	public static boolean useWildcard(Expression sqlQuery) {
+		return getSelectedColumns(sqlQuery).contains("*");
 	}
 
 	public static String getSelectedColumn(Expression sqlQuery) {
@@ -75,13 +77,15 @@ public class SQLQueryUtil {
 	public static List<String> getSelectedColumns(Expression sqlQuery) {
 		String columns = getSelectedColumn(sqlQuery);
 		final List<String> result = new ArrayList<String>();
-		if(columns.indexOf(",") != -1){
-			String[] cols = columns.split(",");
-			for(String col : cols){
-				result.add(col.trim());
+		if(columns != null){
+			if(columns.indexOf(",") != -1){
+				String[] cols = columns.split(",");
+				for(String col : cols){
+					result.add(col.trim());
+				}
+			}else{
+				result.add(columns);
 			}
-		}else{
-			result.add(columns);
 		}
 		return result;
 	}
