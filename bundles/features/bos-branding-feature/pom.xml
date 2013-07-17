@@ -5,10 +5,10 @@
   <parent>
     <groupId>org.bonitasoft.studio.bundles</groupId>
     <artifactId>features</artifactId>
-    <version>6.1.0</version>
+    <version>6.1.0-SNAPSHOT</version>
   </parent>
   <groupId>org.bonitasoft.studio.bundles.feature</groupId>
   <artifactId>bos-branding-feature</artifactId>
-  <version>6.1.0</version>
+  <version>6.1.0-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>
