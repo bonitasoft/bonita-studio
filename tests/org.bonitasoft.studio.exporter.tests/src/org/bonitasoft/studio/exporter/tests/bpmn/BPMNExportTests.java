@@ -174,7 +174,7 @@ public class BPMNExportTests extends SWTBotGefTestCase {
         bot.menu("Development").menu("Connectors").menu("New implementation...").click();
         bot.waitUntil(Conditions.shellIsActive("New connector implementation"));
 
-        final String id = "testImplementationBPMN";
+        final String id = "testImplementationBPMN-impl";
         final String className = "MyConnectorImpl"+System.currentTimeMillis();
         final String packageName = "org.bonita.connector.test";
 
