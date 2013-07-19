@@ -535,7 +535,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 			final SelectDatabaseOutputTypeWizardPage selectOutputPage = addDatabaseOutputModeSelectionPage(definition);
 			result.add(selectOutputPage);
 		}
-
+		initializeEmptyConnectorConfiguration(definition);
 		return result;
 	}
 

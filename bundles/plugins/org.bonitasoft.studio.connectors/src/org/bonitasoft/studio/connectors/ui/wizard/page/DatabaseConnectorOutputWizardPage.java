@@ -49,20 +49,20 @@ import org.eclipse.swt.widgets.Text;
  */
 public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage implements DatabaseConnectorConstants, IValueChangeListener{
 
-	private String outputType;
-	private StackLayout stackLayout;
-	private Composite defaultOutputComposite;
+	protected String outputType;
+	protected StackLayout stackLayout;
+	protected Composite defaultOutputComposite;
 	private OperationsComposite lineComposite;
-	private Composite singleOutputComposite;
+	protected Composite singleOutputComposite;
 	private AvailableExpressionTypeFilter leftFilter;
-	private AvailableExpressionTypeFilter rightFilter;
-	private Composite topComposite;
-	private Text singleColumnText;
-	private Composite oneRowNColsOutputComposite;
-	private ScrolledComposite oneRowNColsscrolledComposite;
-	private Composite nRowsOneColumOutputComposite;
-	private Text nRowsOneColumnColumnText;
-	private Composite nRowsNColumsOutputComposite;
+	protected AvailableExpressionTypeFilter rightFilter;
+	protected Composite topComposite;
+	protected Text singleColumnText;
+	protected Composite oneRowNColsOutputComposite;
+	protected ScrolledComposite oneRowNColsscrolledComposite;
+	protected Composite nRowsOneColumOutputComposite;
+	protected Text nRowsOneColumnColumnText;
+	protected Composite nRowsNColumsOutputComposite;
 
 	public DatabaseConnectorOutputWizardPage(){
 		super();
@@ -263,7 +263,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		return columns.indexOf(columName);
 	}
 
-	private List<Operation> getOuputOperationsFor(String outputName,Expression query) {
+	protected List<Operation> getOuputOperationsFor(String outputName,Expression query) {
 		List<Operation> outputs = new ArrayList<Operation>();
 		List<String> columnNames = SQLQueryUtil.getSelectedColumns(query);
 		for(Operation output : getConnector().getOutputs()){
