@@ -113,18 +113,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		radioGroupObservable.addOption(N_ROW, oneColValue);
 		radioGroupObservable.addOption(TABLE, tableValue);
 		radioGroupObservable.addOption(null, scriptValue);
-		radioGroupObservable.addValueChangeListener(new IValueChangeListener() {
-			
-			@Override
-			public void handleValueChange(ValueChangeEvent event) {
-				IWizardPage p = getNextPage();
-				if(p instanceof DatabaseConnectorOutputWizardPage){
-					((DatabaseConnectorOutputWizardPage)p).updateOutputs((String) event.getObservableValue().getValue());
-				}
-			}
-		});
-
-		context.bindValue(radioGroupObservable, EMFObservables.observeValue(outputTypeExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT));
+	
 		context.bindValue(SWTObservables.observeEnabled(alwaysUseScriptCheckbox), SWTObservables.observeSelection(scriptModeRadio));
 		final UpdateValueStrategy deselectStrategy = new UpdateValueStrategy();
 		deselectStrategy.setConverter(new Converter(Boolean.class,Boolean.class) {
@@ -171,6 +160,18 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(nRowModeRadio),disabledStrategy,null);
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(tableModeRadio));
 
+		radioGroupObservable.addValueChangeListener(new IValueChangeListener() {
+			
+			@Override
+			public void handleValueChange(ValueChangeEvent event) {
+				IWizardPage p = getNextPage();
+				if(p instanceof DatabaseConnectorOutputWizardPage){
+					((DatabaseConnectorOutputWizardPage)p).updateOutputs((String) event.getObservableValue().getValue());
+				}
+			}
+		});
+
+		context.bindValue(radioGroupObservable, EMFObservables.observeValue(outputTypeExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT));
 		graphicalModeSelectionValue.addValueChangeListener(new IValueChangeListener() {
 
 			@Override

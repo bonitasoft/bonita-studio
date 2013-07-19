@@ -53,6 +53,7 @@ import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.wizard.page.AbstractConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.ConnectorOutputWizardPage;
+import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorConstants;
 import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorDriversWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectConnectorDefinitionWizardPage;
@@ -256,22 +257,24 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	protected IWizardPage getOutputPageFor(ConnectorDefinition definition) {
 		AbstractConnectorOutputWizardPage outputPage = null ;
-		
+
 		if(!definition.getOutput().isEmpty()){
 			if(!editMode){
-				if(connectorWorkingCopy.getOutputs().isEmpty()){ //Add default output
-					createDefaultOutputs(definition) ;
+				if(!supportsDatabaseOutputMode(getDefinition())){
+					if(connectorWorkingCopy.getOutputs().isEmpty()){ //Add default output
+						createDefaultOutputs(definition) ;
+					}
 				}
 			}
 			if(extension != null && !extension.useDefaultOutputPage()){
 				outputPage = extension.getOutputPage() ;
 			}else{	
-				if(isDatabaseConnector(definition)){
+				if(supportsDatabaseOutputMode(definition)){
 					outputPage = new DatabaseConnectorOutputWizardPage() ;
 				}else{
 					outputPage = new ConnectorOutputWizardPage() ;
 				}
-				
+
 			}
 			outputPage.setElementContainer(container) ;
 			outputPage.setConnector(connectorWorkingCopy) ;
@@ -421,7 +424,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		}
 		return null;
 	}
-	
+
 	private ConnectorParameter getConnectorParameter(ConnectorConfiguration configuration, String inputName) {
 		for(ConnectorParameter param : configuration.getParameters()){
 			if(param.getKey().equals(inputName)){
@@ -441,6 +444,9 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 		if(!isConfigurationValid(getDefinition(),connectorWorkingCopy.getConfiguration())){
 			return false;
+		}
+		if(supportsDatabaseOutputMode(getDefinition())){
+			return  super.canFinish() && !connectorWorkingCopy.getOutputs().isEmpty();
 		}
 
 		return super.canFinish();
@@ -493,11 +499,11 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	protected List<IWizardPage> getPagesFor(ConnectorDefinition definition) {
 		List<IWizardPage> result = new ArrayList<IWizardPage>() ;
-		
+
 		if (isDatabaseConnector(definition)){//DRIVER SELECTION PAGE
 			result.add(new DatabaseConnectorDriversWizardPage(definition.getId()));
 		}
-		
+
 		if(extension != null && (!extension.hasCanBeUsedProvider() || extension.canBeUsed(definition,connectorWorkingCopy))){ //Extension page
 			List<AbstractConnectorConfigurationWizardPage> advancedPages = extension.getPages();
 			for(AbstractConnectorConfigurationWizardPage p : advancedPages){
@@ -512,7 +518,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 				p.setExpressionTypeFilter(getExpressionTypeFilter());
 				result.add(p) ;
 			}
-			
+
 			if(extension.useDefaultGeneratedPages()){
 				for(Page p : definition.getPage()){
 					result.add(createDefaultConnectorPage(definition,p)) ;
@@ -523,14 +529,45 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 				result.add(createDefaultConnectorPage(definition,p)) ;
 			}
 		}
-		
-		if (isDatabaseConnector(definition) 
-				&& !BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ALWAYS_USE_SCRIPTING_MODE)){//OUTPUT TYPE SELECTION PAGE
+
+		if (supportsDatabaseOutputMode(definition)){//OUTPUT TYPE SELECTION PAGE
 			final SelectDatabaseOutputTypeWizardPage selectOutputPage = addDatabaseOutputModeSelectionPage(definition);
 			result.add(selectOutputPage);
 		}
-		
+
 		return result;
+	}
+
+	protected boolean supportsDatabaseOutputMode(ConnectorDefinition def) {
+		boolean alwaysUseScripting = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ALWAYS_USE_SCRIPTING_MODE);
+		if(!alwaysUseScripting){
+			boolean containsOutputModeInput = false;
+			for (Input input : def.getInput()){
+				if(DatabaseConnectorConstants.OUTPUT_TYPE_KEY.equals(input.getName())){
+					containsOutputModeInput = true;
+					break;
+				}
+			}
+			if(containsOutputModeInput){
+				boolean hasSingleOutput = false;
+				boolean hasNRowOutput = false;
+				boolean hasOneRowOutput = false;
+				boolean hasTableOutput = false;
+				for(Output output : def.getOutput()){
+					if(DatabaseConnectorConstants.SINGLE_RESULT_OUTPUT.equals(output.getName())){
+						hasSingleOutput = true;
+					}else if(DatabaseConnectorConstants.NROW_ONECOL_RESULT_OUTPUT.equals(output.getName())){
+						hasNRowOutput = true;
+					}else if(DatabaseConnectorConstants.ONEROW_NCOL_RESULT_OUTPUT.equals(output.getName())){
+						hasOneRowOutput = true;
+					}else if(DatabaseConnectorConstants.TABLE_RESULT_OUTPUT.equals(output.getName())){
+						hasTableOutput = true;
+					}
+				}
+				return hasSingleOutput && hasNRowOutput && hasOneRowOutput && hasTableOutput;
+			}
+		}
+		return false;
 	}
 
 	protected SelectDatabaseOutputTypeWizardPage addDatabaseOutputModeSelectionPage(
@@ -582,7 +619,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	public Connector getOriginalConnector() {
 		return originalConnector;
 	}
-	
+
 	public Connector getWorkingCopyConnector() {
 		return connectorWorkingCopy;
 	}
