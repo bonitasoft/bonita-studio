@@ -17,6 +17,12 @@
  */
 package org.bonitasoft.studio.intro.actions;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -27,17 +33,26 @@ import org.eclipse.ui.intro.config.IIntroAction;
 
 /**
  * @author Mickael Istria
- *
+ * 
  */
 public class OpenSpecificProcessAction implements IIntroAction {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
 	public void run(IIntroSite site, Properties params) {
-		String fileName = (String) params.get("file");
-		DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
-		IRepositoryFileStore store = diagramSotre.getChild(fileName) ;
+		String fileName;
+		try {
+			fileName = URLDecoder.decode(params.getProperty("file"), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			fileName = params.getProperty("file");
+		}
+		DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager
+				.getInstance().getCurrentRepository()
+				.getRepositoryStore(DiagramRepositoryStore.class);
+		IRepositoryFileStore store = diagramSotre.getChild(fileName);
 		store.open();
 	}
 
