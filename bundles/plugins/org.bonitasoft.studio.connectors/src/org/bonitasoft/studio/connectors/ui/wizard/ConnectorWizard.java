@@ -530,7 +530,8 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 			}
 		}
 
-		if (supportsDatabaseOutputMode(definition)){//OUTPUT TYPE SELECTION PAGE
+		boolean alwaysUseScripting = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ALWAYS_USE_SCRIPTING_MODE);
+		if (!alwaysUseScripting && supportsDatabaseOutputMode(definition)){//OUTPUT TYPE SELECTION PAGE
 			final SelectDatabaseOutputTypeWizardPage selectOutputPage = addDatabaseOutputModeSelectionPage(definition);
 			result.add(selectOutputPage);
 		}
@@ -539,34 +540,32 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	}
 
 	protected boolean supportsDatabaseOutputMode(ConnectorDefinition def) {
-		boolean alwaysUseScripting = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ALWAYS_USE_SCRIPTING_MODE);
-		if(!alwaysUseScripting){
-			boolean containsOutputModeInput = false;
-			for (Input input : def.getInput()){
-				if(DatabaseConnectorConstants.OUTPUT_TYPE_KEY.equals(input.getName())){
-					containsOutputModeInput = true;
-					break;
-				}
-			}
-			if(containsOutputModeInput){
-				boolean hasSingleOutput = false;
-				boolean hasNRowOutput = false;
-				boolean hasOneRowOutput = false;
-				boolean hasTableOutput = false;
-				for(Output output : def.getOutput()){
-					if(DatabaseConnectorConstants.SINGLE_RESULT_OUTPUT.equals(output.getName())){
-						hasSingleOutput = true;
-					}else if(DatabaseConnectorConstants.NROW_ONECOL_RESULT_OUTPUT.equals(output.getName())){
-						hasNRowOutput = true;
-					}else if(DatabaseConnectorConstants.ONEROW_NCOL_RESULT_OUTPUT.equals(output.getName())){
-						hasOneRowOutput = true;
-					}else if(DatabaseConnectorConstants.TABLE_RESULT_OUTPUT.equals(output.getName())){
-						hasTableOutput = true;
-					}
-				}
-				return hasSingleOutput && hasNRowOutput && hasOneRowOutput && hasTableOutput;
+		boolean containsOutputModeInput = false;
+		for (Input input : def.getInput()){
+			if(DatabaseConnectorConstants.OUTPUT_TYPE_KEY.equals(input.getName())){
+				containsOutputModeInput = true;
+				break;
 			}
 		}
+		if(containsOutputModeInput){
+			boolean hasSingleOutput = false;
+			boolean hasNRowOutput = false;
+			boolean hasOneRowOutput = false;
+			boolean hasTableOutput = false;
+			for(Output output : def.getOutput()){
+				if(DatabaseConnectorConstants.SINGLE_RESULT_OUTPUT.equals(output.getName())){
+					hasSingleOutput = true;
+				}else if(DatabaseConnectorConstants.NROW_ONECOL_RESULT_OUTPUT.equals(output.getName())){
+					hasNRowOutput = true;
+				}else if(DatabaseConnectorConstants.ONEROW_NCOL_RESULT_OUTPUT.equals(output.getName())){
+					hasOneRowOutput = true;
+				}else if(DatabaseConnectorConstants.TABLE_RESULT_OUTPUT.equals(output.getName())){
+					hasTableOutput = true;
+				}
+			}
+			return hasSingleOutput && hasNRowOutput && hasOneRowOutput && hasTableOutput;
+		}
+
 		return false;
 	}
 

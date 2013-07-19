@@ -97,15 +97,15 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		nRowsOneColumOutputComposite = createNRowsOneColumOuputControl(topComposite, context);
 		nRowsNColumsOutputComposite = createNRowsNColsOuputControl(topComposite, context);
 
-		
+
 		updateStackLayout();
-		
+
 		final ConnectorConfiguration configuration = getConnector().getConfiguration();
 		final Expression outputTypeExpression = (Expression) getConnectorParameter(configuration, getInput(OUTPUT_TYPE_KEY)).getExpression();
-
-		final IObservableValue outputTypeObservalbe = EMFObservables.observeValue(outputTypeExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
-		outputTypeObservalbe.addValueChangeListener(this);
-		
+		if(outputTypeExpression != null){
+			final IObservableValue outputTypeObservalbe = EMFObservables.observeValue(outputTypeExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
+			outputTypeObservalbe.addValueChangeListener(this);
+		}
 		return topComposite;
 	}
 
@@ -123,7 +123,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		}
 		singleModeOuputOperation.getLeftOperand().setReturnType(Collection.class.getName());
 		singleModeOuputOperation.getLeftOperand().setReturnTypeFixed(true);
-		
+
 		final ReadOnlyExpressionViewer targetDataExpressionViewer = new ReadOnlyExpressionViewer(mainComposite,SWT.BORDER,null,null,ExpressionPackage.Literals.OPERATION__LEFT_OPERAND) ;
 		targetDataExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).hint(250, SWT.DEFAULT).create());
 		targetDataExpressionViewer.addFilter(leftFilter);
@@ -142,7 +142,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		final Label hintLabel = new Label(mainComposite, SWT.WRAP);
 		hintLabel.setLayoutData(GridDataFactory.swtDefaults().span(3, 1).create());
 		hintLabel.setText(Messages.nRowsOneColOutputHint);
-		
+
 		return mainComposite;
 	}
 
@@ -159,7 +159,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		}
 		singleModeOuputOperation.getLeftOperand().setReturnType(Collection.class.getName());
 		singleModeOuputOperation.getLeftOperand().setReturnTypeFixed(true);
-		
+
 		final ReadOnlyExpressionViewer targetDataExpressionViewer = new ReadOnlyExpressionViewer(mainComposite,SWT.BORDER,null,null,ExpressionPackage.Literals.OPERATION__LEFT_OPERAND) ;
 		targetDataExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).hint(250, SWT.DEFAULT).create());
 		targetDataExpressionViewer.addFilter(leftFilter);
@@ -175,14 +175,14 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		final Text nRowsNColumnsColumnText = new Text(mainComposite,SWT.BORDER | SWT.READ_ONLY) ;
 		nRowsNColumnsColumnText.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create());
 		nRowsNColumnsColumnText.setText(singleModeOuputOperation.getRightOperand().getName());
-		
+
 		final Label hintLabel = new Label(mainComposite, SWT.WRAP);
 		hintLabel.setLayoutData(GridDataFactory.swtDefaults().span(3, 1).create());
 		hintLabel.setText(Messages.nRowsNColsOutputHint);
-		
+
 		return mainComposite;
 	}
-	
+
 	protected Composite createOneRowNColsOuputControl(Composite parent,
 			EMFDataBindingContext context) {
 		oneRowNColsscrolledComposite = new ScrolledComposite(parent,SWT.V_SCROLL);
@@ -236,7 +236,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 			}
 		}
 		Assert.isNotNull(connectorOutput);	
-		
+
 		final Operation operation = ExpressionFactory.eINSTANCE.createOperation() ;
 		final Operator assignment = ExpressionFactory.eINSTANCE.createOperator() ;
 		assignment.setType(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
@@ -278,7 +278,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 				columnNames.remove(name);
 			}
 		}
-		 getConnector().getOutputs().clear();
+		getConnector().getOutputs().clear();
 		for(String columnName : columnNames){
 			Operation op = createOutputOperation(outputName,columnName, getDefinition());
 			outputs.add(op);
@@ -364,7 +364,11 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		final ConnectorConfiguration configuration = getConnector().getConfiguration();
 		final Expression scriptExpression = (Expression) getConnectorParameter(configuration, getInput(SCRIPT_KEY)).getExpression();
 		final Expression outputTypeExpression = (Expression) getConnectorParameter(configuration, getInput(OUTPUT_TYPE_KEY)).getExpression();
-		outputType = outputTypeExpression.getContent();
+		if(outputTypeExpression == null){
+			outputType = null;
+		}else{
+			outputType = outputTypeExpression.getContent();
+		}
 		if(SINGLE.equals(outputType)){
 			updateSingleOutput();
 			String column = SQLQueryUtil.getSelectedColumn(scriptExpression);
@@ -401,7 +405,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		}
 		topComposite.layout();
 	}
-	
+
 	public void updateOutputs(String outputType) {
 		final ConnectorConfiguration configuration = getConnector().getConfiguration();
 		final Expression scriptExpression = (Expression) getConnectorParameter(configuration, getInput(SCRIPT_KEY)).getExpression();
@@ -411,7 +415,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 			updateOneRowOutput(scriptExpression);
 		}else if(N_ROW.equals(outputType)){
 			updateNRowOutput();
-			
+
 		}else if(TABLE.equals(outputType)){
 			updateTableOutput();
 		}else{
