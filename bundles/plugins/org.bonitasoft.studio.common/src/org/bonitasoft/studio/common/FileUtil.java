@@ -419,6 +419,7 @@ public class FileUtil {
                 zipEntry = zin.getNextEntry();
             }
             if (zipEntry == null) {
+            	zin.close();
                 throw new FileNotFoundException("can't find entry " + entry + " in " + zipFile.getName()); //$NON-NLS-1$ //$NON-NLS-2$
             }
 

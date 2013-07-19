@@ -33,7 +33,6 @@ import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.XMLType;
-import org.w3c.dom.Document;
 
 /**
  * @author Romain Bioteau
