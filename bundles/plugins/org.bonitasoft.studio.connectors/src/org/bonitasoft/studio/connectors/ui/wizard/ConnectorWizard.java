@@ -110,7 +110,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	protected final EStructuralFeature connectorContainmentFeature;
 	protected SelectConnectorDefinitionWizardPage selectionPage;
 	private SelectNameAndDescWizardPage namePage;
-	private DefinitionResourceProvider messageProvider;
+	protected DefinitionResourceProvider messageProvider;
 	protected CustomWizardExtension extension;
 
 	private List<CustomWizardExtension> contributions;
@@ -526,16 +526,22 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		
 		if (isDatabaseConnector(definition) 
 				&& !BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ALWAYS_USE_SCRIPTING_MODE)){//OUTPUT TYPE SELECTION PAGE
-			final SelectDatabaseOutputTypeWizardPage selectOutputPage = new SelectDatabaseOutputTypeWizardPage(isEditMode());
-			selectOutputPage.setMessageProvider(messageProvider) ;
-			selectOutputPage.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
-			selectOutputPage.setDefinition(definition) ;
-			selectOutputPage.setElementContainer(container) ;
-			selectOutputPage.setExpressionTypeFilter(getExpressionTypeFilter());
+			final SelectDatabaseOutputTypeWizardPage selectOutputPage = addDatabaseOutputModeSelectionPage(definition);
 			result.add(selectOutputPage);
 		}
 		
 		return result;
+	}
+
+	protected SelectDatabaseOutputTypeWizardPage addDatabaseOutputModeSelectionPage(
+			ConnectorDefinition definition) {
+		final SelectDatabaseOutputTypeWizardPage selectOutputPage = new SelectDatabaseOutputTypeWizardPage(isEditMode());
+		selectOutputPage.setMessageProvider(messageProvider) ;
+		selectOutputPage.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
+		selectOutputPage.setDefinition(definition) ;
+		selectOutputPage.setElementContainer(container) ;
+		selectOutputPage.setExpressionTypeFilter(getExpressionTypeFilter());
+		return selectOutputPage;
 	}
 
 	protected IWizardPage createDefaultConnectorPage(ConnectorDefinition def,Page page) {

@@ -57,20 +57,18 @@ import org.eclipse.swt.widgets.Label;
  */
 public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigurationWizardPage implements DatabaseConnectorConstants, IValueChangeListener{
 
-
-
-	private Expression outputTypeExpression;
-	private IPreferenceStore preferenceStore;
-	private Expression scriptExpression;
-	private Button gModeRadio;
-	private Button alwaysUseScriptCheckbox;
-	private SelectObservableValue radioGroupObservable;
-	private ISWTObservableValue graphicalModeSelectionValue;
-	private boolean editing;
-	private ISWTObservableValue singleModeRadioObserveEnabled;
-	private ISWTObservableValue nRowsOneColModeRadioObserveEnabled;
-	private ISWTObservableValue oneRowNColModeRadioObserveEnabled;
-	private IWizardPage previousPageBackup;
+	protected Expression outputTypeExpression;
+	protected IPreferenceStore preferenceStore;
+	protected Expression scriptExpression;
+	protected Button gModeRadio;
+	protected Button alwaysUseScriptCheckbox;
+	protected SelectObservableValue radioGroupObservable;
+	protected ISWTObservableValue graphicalModeSelectionValue;
+	protected boolean editing;
+	protected ISWTObservableValue singleModeRadioObserveEnabled;
+	protected ISWTObservableValue nRowsOneColModeRadioObserveEnabled;
+	protected ISWTObservableValue oneRowNColModeRadioObserveEnabled;
+	protected IWizardPage previousPageBackup;
 
 	public SelectDatabaseOutputTypeWizardPage(boolean editing) {
 		super(SelectDatabaseOutputTypeWizardPage.class.getName());
@@ -87,10 +85,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(10, 10, 5, -50).create());
 
-		final Label selectLabel = new Label(mainComposite, SWT.NONE);
-		selectLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		selectLabel.setText(Messages.selectConnectorOutputMode);
-		selectLabel.setFont(BonitaStudioFontRegistry.getHighlightedFont());
+		createSelectModeLabelControl(mainComposite);
 
 		scriptExpression = (Expression) getConnectorParameter(getInput(SCRIPT_KEY)).getExpression();
 		IObservableValue scriptContentValue = EMFObservables.observeValue(scriptExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT);
@@ -200,6 +195,14 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		return mainComposite;
 	}
 
+
+	protected void createSelectModeLabelControl(final Composite mainComposite) {
+		final Label selectLabel = new Label(mainComposite, SWT.NONE);
+		selectLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		selectLabel.setText(Messages.selectConnectorOutputMode);
+		selectLabel.setFont(BonitaStudioFontRegistry.getHighlightedFont());
+	}
+
 	protected void parseQuery() {
 		if(graphicalModeSelectionValue != null){
 			IObservableValue enableGraphicalMode = SWTObservables.observeEnabled(gModeRadio);
@@ -295,18 +298,29 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 			EMFDataBindingContext context) {
 		gModeRadio = new Button(parent, SWT.RADIO);
 		gModeRadio.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(15, 0).create());
-		gModeRadio.setText(Messages.graphicalMode);
+		gModeRadio.setText(getAdvancedModeLabel());
 		gModeRadio.setFont(BonitaStudioFontRegistry.getActiveFont());
 
 		final Composite choicesComposite = new Composite(parent, SWT.NONE);
 		choicesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(45, -5).create());
 		choicesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
 
+		createAdvancedModeDescriptionControl(choicesComposite);
+
+		return choicesComposite;
+	}
+
+
+	protected void createAdvancedModeDescriptionControl(
+			final Composite choicesComposite) {
 		final Label choiceDescriptionLabel = new Label(choicesComposite, SWT.WRAP);
 		choiceDescriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(160, SWT.DEFAULT).span(2, 1).create());
 		choiceDescriptionLabel.setText(Messages.graphicalModeDescription);
+	}
 
-		return choicesComposite;
+
+	protected String getAdvancedModeLabel() {
+		return Messages.graphicalMode;
 	}
 
 	protected Button createSingleChoice(final Composite choicesComposite, EMFDataBindingContext context) {
