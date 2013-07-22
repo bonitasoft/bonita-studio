@@ -225,7 +225,8 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 		labelTargetToModelUpdate = new UpdateValueStrategy();
 		labelTargetToModelUpdate.setAfterGetValidator(new UTF8InputValidator(Messages.name)) ;
 		labelTargetToModelUpdate.setBeforeSetValidator(new InputLengthValidator(Messages.name, 50)) ;
-		labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());
+		//TODO: commented out in order that web can test it.
+		//labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());
 
 		observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
 		observable.addValueChangeListener(new IValueChangeListener() {

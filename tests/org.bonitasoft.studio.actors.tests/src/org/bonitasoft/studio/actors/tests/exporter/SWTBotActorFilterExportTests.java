@@ -96,7 +96,7 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         final String version = "1.0.0";
         final String className = "MyActorFilterTest1";
         final String packageName = "org.bonitaSoft.studioTests";
-        final String userActorFilter = id + " (" + version + ")" + " -- "
+        final String userActorFilter = id + "-impl (" + version + ")" + " -- "
                 + packageName + "." + className;
         final String fileName = "actorFilterTest1-impl-1.0.0.zip";
         SWTBotActorFilterUtil.createActorFilterDefAndImpl(bot, id, version,

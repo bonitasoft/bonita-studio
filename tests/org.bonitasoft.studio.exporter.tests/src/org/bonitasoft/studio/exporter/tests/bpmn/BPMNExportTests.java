@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.util.Collections;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.connectors.test.swtbot.SWTBotConnectorTestUtil;
 import org.bonitasoft.studio.exporter.bpmn.transfo.BonitaToBPMN;
 import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
@@ -45,6 +46,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.ui.IEditorReference;
 import org.hamcrest.BaseMatcher;
@@ -169,20 +171,11 @@ public class BPMNExportTests extends SWTBotGefTestCase {
     }
 
     public void testBPMN2MenuPresentAfterOepningAnotherEditor(){
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Development")));
-        bot.menu("Development").menu("Connectors").menu("New implementation...").click();
-        bot.waitUntil(Conditions.shellIsActive("New connector implementation"));
-
-        final String id = "testImplementationBPMN";
+    	final String id = "testBPMN2MenuPresentAfterOpeningAnotherEditor";     
         final String className = "MyConnectorImpl"+System.currentTimeMillis();
         final String packageName = "org.bonita.connector.test";
-
-        bot.textWithLabel("Implementation id *").setText(id);
-        bot.comboBoxWithLabel("Definition *").setSelection(0);
-        bot.textWithLabel("Class name *").setText(className);
-        bot.textWithLabel("Package *").setText(packageName);
-        bot.button(IDialogConstants.FINISH_LABEL).click();
-
+        SWTBotConnectorTestUtil.createConnectorDefAndImpl(bot, id, "1.0.0", className, packageName);
+        
         bot.waitUntil(Conditions.waitForEditor(new BaseMatcher<IEditorReference>() {
 
             public boolean matches(Object item) {

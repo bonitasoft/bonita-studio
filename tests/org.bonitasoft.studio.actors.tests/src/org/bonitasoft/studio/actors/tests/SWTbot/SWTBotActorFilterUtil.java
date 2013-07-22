@@ -25,6 +25,7 @@ import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 
 /**
@@ -243,9 +244,12 @@ bot.waitUntil(new ICondition() {
 		createActorFilterDefinition(bot, id, version);
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 		activateActorFilterImplementationShell(bot);
-		bot.textWithLabel("Implementation id *").setText(id);
-		bot.comboBoxWithLabel("Definition *").setSelection(
-				id + " (" + version + ")");
+		bot.table().select(id);
+		SWTBotCombo comboBoxToSelectVersion = bot.comboBoxWithLabel("Definition version");
+		if(comboBoxToSelectVersion.isEnabled()){
+			comboBoxToSelectVersion.setSelection(version);
+		}
+		bot.button(IDialogConstants.NEXT_LABEL).click();
 		bot.textWithLabel("Class name *").setText(className);
 		bot.textWithLabel("Package *").setText(packageName);
 		bot.button(IDialogConstants.FINISH_LABEL).click();

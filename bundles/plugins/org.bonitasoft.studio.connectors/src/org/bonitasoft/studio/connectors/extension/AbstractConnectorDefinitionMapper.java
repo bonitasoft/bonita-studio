@@ -48,7 +48,9 @@ public abstract class AbstractConnectorDefinitionMapper implements IConnectorDef
 	}
 	
 	public boolean appliesTo(String legacyConnectorId){
-		return legacyConnectorId != null && legacyConnectorId.equals(getLegacyConnectorId());
+		return legacyConnectorId != null //valid value
+				&& legacyConnectorId.equals(getLegacyConnectorId())//the legacy connectorId matches
+				&& definition != null;//we found the corresponding new connector definition, it can be null for SP connectors for instance.
 	}
 	
 	/* (non-Javadoc)
