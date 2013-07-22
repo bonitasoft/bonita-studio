@@ -34,7 +34,9 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.connectors.test,
+ org.bonitasoft.studio.connectors.test.database,
  org.bonitasoft.studio.connectors.test.exporter,
  org.bonitasoft.studio.connectors.test.importer,
  org.bonitasoft.studio.connectors.test.swtbot
-Import-Package: org.bonitasoft.studio.dependencies.i18n
+Import-Package: org.bonitasoft.studio.dependencies.i18n,
+ org.bonitasoft.studio.expression.editor.i18n

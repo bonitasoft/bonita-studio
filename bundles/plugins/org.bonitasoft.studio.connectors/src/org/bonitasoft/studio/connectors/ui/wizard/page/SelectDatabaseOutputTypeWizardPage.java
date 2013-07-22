@@ -116,7 +116,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 		radioGroupObservable.addOption(N_ROW, oneColValue);
 		radioGroupObservable.addOption(TABLE, tableValue);
 		radioGroupObservable.addOption(null, scriptValue);
-	
+
 		context.bindValue(SWTObservables.observeEnabled(alwaysUseScriptCheckbox),scriptValue);
 		final UpdateValueStrategy deselectStrategy = new UpdateValueStrategy();
 		deselectStrategy.setConverter(new Converter(Boolean.class,Boolean.class) {
@@ -129,7 +129,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeSelection(alwaysUseScriptCheckbox),deselectStrategy, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
 		context.bindValue(graphicalModeSelectionValue,SWTObservables.observeEnabled(choicesComposite));
-	
+
 
 		final UpdateValueStrategy disabledStrategy = new UpdateValueStrategy();
 		disabledStrategy.setConverter(new Converter(Boolean.class,Boolean.class) {
@@ -142,7 +142,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 				return fromObject;
 			}
 		});
-		
+
 		final UpdateValueStrategy disabledStrategy2 = new UpdateValueStrategy();
 		disabledStrategy2.setConverter(new Converter(Boolean.class,Boolean.class) {
 
@@ -154,11 +154,11 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 				return fromObject;
 			}
 		});
-		
+
 
 
 		radioGroupObservable.addValueChangeListener(new IValueChangeListener() {
-			
+
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
 				IWizardPage p = getNextPage();
@@ -235,30 +235,32 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 	protected void updateEnabledChoices() {
 		String content = outputTypeExpression.getContent();
-		if(SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 && !SQLQueryUtil.useWildcard(scriptExpression)){
-			singleModeRadioObserveEnabled.setValue(false);
-			nRowsOneColModeRadioObserveEnabled.setValue(false);
-			tableObserveEnabled.setValue(true);
-			oneRowNColModeRadioObserveEnabled.setValue(true);
-			if(SINGLE.equals(content) 
-					|| N_ROW.equals(content)){
-				radioGroupObservable.setValue(TABLE);
+		if(content != null){
+			if(SQLQueryUtil.getSelectedColumns(scriptExpression).size() != 1 && !SQLQueryUtil.useWildcard(scriptExpression)){
+				singleModeRadioObserveEnabled.setValue(false);
+				nRowsOneColModeRadioObserveEnabled.setValue(false);
+				tableObserveEnabled.setValue(true);
+				oneRowNColModeRadioObserveEnabled.setValue(true);
+				if(SINGLE.equals(content) 
+						|| N_ROW.equals(content)){
+					radioGroupObservable.setValue(TABLE);
+				}
+			}else if(SQLQueryUtil.useWildcard(scriptExpression)){
+				singleModeRadioObserveEnabled.setValue(false);
+				nRowsOneColModeRadioObserveEnabled.setValue(false);
+				oneRowNColModeRadioObserveEnabled.setValue(false);
+				tableObserveEnabled.setValue(true);
+				if(SINGLE.equals(content) 
+						|| N_ROW.equals(content)
+						|| ONE_ROW.equals(content)){
+					radioGroupObservable.setValue(TABLE);
+				}
+			}else{
+				oneRowNColModeRadioObserveEnabled.setValue(true);
+				singleModeRadioObserveEnabled.setValue(true);
+				nRowsOneColModeRadioObserveEnabled.setValue(true);
+				tableObserveEnabled.setValue(true);
 			}
-		}else if(SQLQueryUtil.useWildcard(scriptExpression) && content != null){
-			singleModeRadioObserveEnabled.setValue(false);
-			nRowsOneColModeRadioObserveEnabled.setValue(false);
-			oneRowNColModeRadioObserveEnabled.setValue(false);
-			tableObserveEnabled.setValue(true);
-			if(SINGLE.equals(content) 
-					|| N_ROW.equals(content)
-					|| ONE_ROW.equals(content)){
-				radioGroupObservable.setValue(TABLE);
-			}
-		}else if(content != null){
-			oneRowNColModeRadioObserveEnabled.setValue(true);
-			singleModeRadioObserveEnabled.setValue(true);
-			nRowsOneColModeRadioObserveEnabled.setValue(true);
-			tableObserveEnabled.setValue(true);
 		}
 	}
 
@@ -351,13 +353,13 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 				}else{
 					return Pics.getImage("single_placeholder_disabled.png",ConnectorPlugin.getDefault());
 				}
-				
+
 			}
-			
+
 		});
 		singleModeRadioObserveEnabled = SWTObservables.observeEnabled(singleRadio);
 		context.bindValue(SWTObservables.observeImage(singleIcon), singleModeRadioObserveEnabled,null,selectImageStrategy);
-		
+
 		return singleRadio;
 	}
 
@@ -383,13 +385,13 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 				}else{
 					return Pics.getImage("row_placeholder_disabled.png",ConnectorPlugin.getDefault());
 				}
-				
+
 			}
-			
+
 		});
 		oneRowNColModeRadioObserveEnabled = SWTObservables.observeEnabled(oneRowRadio);
 		context.bindValue(SWTObservables.observeImage(oneRowIcon), oneRowNColModeRadioObserveEnabled,null,selectImageStrategy);
-		
+
 		return oneRowRadio;
 	}
 
@@ -404,7 +406,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 		final Label oneColIcon = new Label(choicesComposite, SWT.NONE);
 		oneColIcon.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).indent(15, 0).grab(true, false).create());
-	
+
 		final UpdateValueStrategy selectImageStrategy = new UpdateValueStrategy();
 		selectImageStrategy.setConverter(new Converter(Boolean.class,Image.class){
 
@@ -415,14 +417,14 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 				}else{
 					return Pics.getImage("column_placeholder_disabled.png",ConnectorPlugin.getDefault());
 				}
-				
+
 			}
-			
+
 		});
-		
+
 		nRowsOneColModeRadioObserveEnabled = SWTObservables.observeEnabled(oneColRadio);
 		context.bindValue(SWTObservables.observeImage(oneColIcon), nRowsOneColModeRadioObserveEnabled,null,selectImageStrategy);
-		
+
 		return oneColRadio;
 
 	}
@@ -438,7 +440,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 
 		final Label tableIcon = new Label(choicesComposite, SWT.NONE);
 		tableIcon.setLayoutData(GridDataFactory.swtDefaults().align(SWT.BEGINNING, SWT.CENTER).indent(15, 0).grab(true, false).create());
-	
+
 		final UpdateValueStrategy selectImageStrategy = new UpdateValueStrategy();
 		selectImageStrategy.setConverter(new Converter(Boolean.class,Image.class){
 
@@ -449,13 +451,13 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 				}else{
 					return Pics.getImage("table_placeholder_disabled.png",ConnectorPlugin.getDefault());
 				}
-				
+
 			}
-			
+
 		});
 		tableObserveEnabled = SWTObservables.observeEnabled(tableRadio);
 		context.bindValue(SWTObservables.observeImage(tableIcon), tableObserveEnabled,null,selectImageStrategy);
-		
+
 		return tableRadio;
 	}
 
