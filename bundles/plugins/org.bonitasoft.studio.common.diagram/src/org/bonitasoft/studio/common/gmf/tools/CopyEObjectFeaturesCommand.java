@@ -21,11 +21,16 @@ import java.util.List;
 
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.form.FormButton;
+import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Info;
 import org.bonitasoft.studio.model.process.ANDGateway;
+import org.bonitasoft.studio.model.process.CatchLinkEvent;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.InclusiveGateway;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SequenceFlow;
+import org.bonitasoft.studio.model.process.ThrowLinkEvent;
 import org.bonitasoft.studio.model.process.XORGateway;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -100,6 +105,12 @@ public final class CopyEObjectFeaturesCommand extends AbstractTransactionalComma
             }
         }else if(targetElement instanceof Info){
             ((Info)targetElement).setAction(null);
+        }
+        
+        if(sourceElement.eClass().equals(ProcessPackage.Literals.THROW_LINK_EVENT)){
+        	((ThrowLinkEvent)sourceElement).setTo(null);
+        }else if(sourceElement.eClass().equals(ProcessPackage.Literals.CATCH_LINK_EVENT)){
+        	((CatchLinkEvent)sourceElement).getFrom().clear();
         }
         return CommandResult.newOKCommandResult(targetElement);
     }

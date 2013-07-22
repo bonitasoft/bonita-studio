@@ -202,7 +202,7 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
 
         try {
             CopyEObjectFeaturesCommand operation = new CopyEObjectFeaturesCommand(editingDomain, sourceElement, targetElement);
-            OperationHistoryFactory.getOperationHistory().execute(operation, new NullProgressMonitor(), null);
+            OperationHistoryFactory.getOperationHistory().execute(operation, monitor, null);
         } catch (ExecutionException e) {
             BonitaStudioLog.error(e);
         }
@@ -259,7 +259,7 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
                                 }
                             };
                             try {
-                                recreateExceptionFlowsOperation.execute(new NullProgressMonitor(), null);
+                                recreateExceptionFlowsOperation.execute(monitor, null);
                             } catch (ExecutionException e) {
                                 BonitaStudioLog.error(e);
                             }
