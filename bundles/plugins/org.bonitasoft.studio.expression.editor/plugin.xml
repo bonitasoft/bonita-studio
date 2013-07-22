@@ -15,5 +15,8 @@
       <expressionProvider
             providerClass="org.bonitasoft.studio.expression.editor.message.MessageIdExpressionProvider">
       </expressionProvider>
+      <expressionProvider
+            providerClass="org.bonitasoft.studio.expression.editor.formfield.FormFieldExpressionProvider">
+      </expressionProvider>
    </extension>
 </plugin>

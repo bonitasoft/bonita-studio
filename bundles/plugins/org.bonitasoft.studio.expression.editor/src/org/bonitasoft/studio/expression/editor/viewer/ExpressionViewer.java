@@ -374,7 +374,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	}
 
 	protected EditExpressionDialog createEditDialog(EObject editInput) {
-		return new EditExpressionDialog(control.getShell(),isPassword,EcoreUtil.copy(selectedExpression),editInput,editingDomain, filters.toArray(new ViewerFilter[filters.size()]));
+		return new EditExpressionDialog(control.getShell(),isPassword,EcoreUtil.copy(selectedExpression),editInput,editingDomain, filters.toArray(new ViewerFilter[filters.size()]),this);
 	}
 
 	protected void fireExpressionEditorChanged(SelectionChangedEvent selectionChangedEvent) {
@@ -1086,5 +1086,9 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	@Override
 	public void proposalPopupClosed(BonitaContentProposalAdapter adapter) {
 		
+	}
+
+	public IExpressionNatureProvider getExpressionNatureProvider() {
+		return expressionNatureProvider;
 	}
 }

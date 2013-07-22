@@ -33,6 +33,7 @@ import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.Data;
@@ -298,7 +299,7 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 
 
 	@Override
-	public void bindExpression(EMFDataBindingContext dataBindingContext,EObject context,Expression inputExpression,ViewerFilter[] filters) {
+	public void bindExpression(EMFDataBindingContext dataBindingContext,EObject context,Expression inputExpression,ViewerFilter[] filters,ExpressionViewer expressionViewer) {
 
 		editorInputExpression = inputExpression ;
 		setContentProvider(new PojoBrowserContentProvider()) ;

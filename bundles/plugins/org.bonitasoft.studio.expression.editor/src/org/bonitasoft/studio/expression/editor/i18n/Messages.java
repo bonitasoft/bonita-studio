@@ -83,6 +83,8 @@ public class Messages extends NLS {
 	public static String editXpathExpressionTooltip;
 	public static String editJavaExpressionTooltip;
 	public static String expressionValueNotCompatibleWithReturnType;
+	public static String formFieldTypeLabel;
+	public static String name;
 
 
     private Messages() {

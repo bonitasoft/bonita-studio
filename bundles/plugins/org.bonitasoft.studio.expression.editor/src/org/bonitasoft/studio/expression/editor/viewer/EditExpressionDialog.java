@@ -97,9 +97,10 @@ public class EditExpressionDialog extends TrayDialog {
 		}
 	};
 	protected Control helpControl;
+	private ExpressionViewer expressionViewer;
 
 
-	protected EditExpressionDialog(Shell parentShell,boolean isPassword, Expression inputExpression,EObject context,EditingDomain domain, ViewerFilter[] viewerTypeFilters) {
+	protected EditExpressionDialog(Shell parentShell,boolean isPassword, Expression inputExpression,EObject context,EditingDomain domain, ViewerFilter[] viewerTypeFilters,ExpressionViewer expressionViewer) {
 		super(parentShell);
 		this.inputExpression = inputExpression ;
 		if(this.inputExpression == null){
@@ -112,6 +113,7 @@ public class EditExpressionDialog extends TrayDialog {
 		this.domain = domain ;
 		this.viewerTypeFilters = viewerTypeFilters;
 		this.isPassword = isPassword;
+		this.expressionViewer = expressionViewer ;
 		setHelpAvailable(true);
 		if (isResizable()) {
 			setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE
@@ -311,7 +313,7 @@ public class EditExpressionDialog extends TrayDialog {
 			}else{
 				inputExpression.setType(type) ;
 			}
-			currentExpressionEditor.bindExpression(dataBindingContext,context,inputExpression,viewerTypeFilters) ;
+			currentExpressionEditor.bindExpression(dataBindingContext,context,inputExpression,viewerTypeFilters,expressionViewer) ;
 			currentExpressionEditor.addListener(new Listener() {
 				@Override
 				public void handleEvent(Event event) {

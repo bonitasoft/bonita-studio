@@ -16,17 +16,15 @@
  */
 package org.bonitasoft.studio.scripting.provider;
 
-import java.util.Date;
-
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.scripting.extensions.IScriptLanguageProvider;
 import org.bonitasoft.studio.scripting.extensions.ScriptLanguageService;
 import org.bonitasoft.studio.scripting.i18n.Messages;
@@ -47,7 +45,6 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogTray;
-import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -67,8 +64,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -218,7 +213,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 	}
 
 	@Override
-	public void bindExpression(EMFDataBindingContext dataBindingContext,EObject context, Expression inputExpression, ViewerFilter[] filters) {
+	public void bindExpression(EMFDataBindingContext dataBindingContext,EObject context, Expression inputExpression, ViewerFilter[] filters,ExpressionViewer viewer) {
 		this.inputExpression = inputExpression;
 		IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME) ;
 		IObservableValue interpreterModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__INTERPRETER) ;
@@ -245,7 +240,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 			}
 		}) ;
 
-		editor.bindExpression(dataBindingContext, context, inputExpression,filters) ;
+		editor.bindExpression(dataBindingContext, context, inputExpression,filters,viewer) ;
 
 		if(inputExpression.getReturnType() != null){
 			typeCombo.setInput(inputExpression.getReturnType()) ;
@@ -255,34 +250,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 		returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
 		dataBindingContext.bindValue(ViewersObservables.observeSingleSelection(typeCombo), returnTypeModelObservable) ;
 		dataBindingContext.bindValue(SWTObservables.observeText(typeCombo.getCombo()), returnTypeModelObservable) ;
-
-		if(context instanceof DateFormField){
-
-			final ControlDecoration cd = new ControlDecoration(typeCombo.getCombo(), SWT.TOP | SWT.LEFT);
-			cd.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
-			cd.setDescriptionText(Messages.dateWidgetReturnTypeWarning) ;
-			cd.setShowOnlyOnFocus(false) ;
-			if(typeCombo.getCombo().getText().equals(Date.class.getName()) || typeCombo.getCombo().getText().equals(String.class.getName())){
-				cd.hide();
-			}else{
-				cd.show();
-			}
-
-			returnTypeModelObservable.addValueChangeListener(new IValueChangeListener() {
-
-				@Override
-				public void handleValueChange(ValueChangeEvent event) {
-					if(typeCombo.getCombo().getText().equals(Date.class.getName()) || typeCombo.getCombo().getText().equals(String.class.getName())){
-						cd.hide();
-					}else{
-						cd.show();
-					}	
-
-				}
-			});
-
-
-		}
+		
 		typeCombo.getCombo().setEnabled(!inputExpression.isReturnTypeFixed()) ;
 		browseClassesButton.setEnabled(!inputExpression.isReturnTypeFixed()) ;
 	}

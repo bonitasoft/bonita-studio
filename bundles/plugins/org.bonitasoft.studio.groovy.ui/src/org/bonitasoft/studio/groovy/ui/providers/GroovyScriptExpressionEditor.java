@@ -32,6 +32,7 @@ import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.SelectDependencyDialog;
 import org.bonitasoft.studio.groovy.GroovyPlugin;
 import org.bonitasoft.studio.groovy.GroovyUtil;
@@ -218,7 +219,7 @@ public class GroovyScriptExpressionEditor extends
 		dataCombo = new TableComboViewer(combosComposite, SWT.READ_ONLY
 				| SWT.BORDER);
 		dataCombo.getTableCombo().setLayoutData(
-				GridDataFactory.fillDefaults().grab(true, false).create());
+				GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT,22).create());
 		dataCombo.getTableCombo().defineColumns(1);
 		dataCombo.setLabelProvider(new ProcessVariableLabelProvider());
 		dataCombo.setContentProvider(new ProcessVariableContentProvider());
@@ -231,7 +232,7 @@ public class GroovyScriptExpressionEditor extends
 				.setContentProvider(new ProcessVariableContentProvider());
 		bonitaDataCombo.setSorter(comboSorter);
 		bonitaDataCombo.getControl().setLayoutData(
-				GridDataFactory.fillDefaults().grab(true, false).create());
+				GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT,22).create());
 
 		bonitaDataCombo
 				.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -480,7 +481,7 @@ public class GroovyScriptExpressionEditor extends
 	@Override
 	public void bindExpression(EMFDataBindingContext dataBindingContext,
 			final EObject context, Expression inputExpression,
-			ViewerFilter[] filters) {
+			ViewerFilter[] filters,final ExpressionViewer viewer) {
 		this.inputExpression = inputExpression;
 		this.context = context;
 
@@ -513,7 +514,7 @@ public class GroovyScriptExpressionEditor extends
 		dataBindingContext.bindValue(SWTObservables.observeEnabled(testButton),
 				SWTObservables.observeText(groovyViewer.getSourceViewer()
 						.getTextWidget(), SWT.Modify), null, evaluateStrategy);
-		groovyViewer.setContext(context, filters);
+		groovyViewer.setContext(context, filters,viewer.getExpressionNatureProvider());
 		nodes = groovyViewer.getFieldNodes();
 
 		if (context == null && nodes == null) {

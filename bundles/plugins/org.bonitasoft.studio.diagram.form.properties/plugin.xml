@@ -250,11 +250,5 @@
          </propertySection>
       </propertySections>
    </extension>
-   <extension
-         point="org.bonitasoft.studio.expression.expressionProvider">
-      <expressionProvider
-            providerClass="org.bonitasoft.studio.properties.form.provider.FormFieldExpressionProvider">
-      </expressionProvider>
-   </extension>
 
 </plugin>
