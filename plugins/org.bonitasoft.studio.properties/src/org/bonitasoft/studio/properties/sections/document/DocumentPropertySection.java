@@ -330,35 +330,14 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 		resetDatabindingContext();
 		bindList();
 
-		final IObservableValue documentSelected = ViewersObservables.observeSingleSelection(documentListViewer);
+		final IObservableValue documentSelected = ViewerProperties.singleSelection().observe(documentListViewer);
 		bindDetails(documentSelected);
-//		
-//		if(documentSelected.getValue() != null){
-//			bindDetails(documentSelected);
-//		}
-//		documentSelected.addValueChangeListener(new IValueChangeListener() {
-//			
-//			@Override
-//			public void handleValueChange(ValueChangeEvent event) {
-//				final IObservableValue documentSelected =(IObservableValue) event.diff.getNewValue();
-//				if(documentSelected.getValue() != null){
-//					bindDetails(documentSelected);
-//				}
-//			}
-//		});
-		
-
-
 
 		documentListViewer.setSelection(new StructuredSelection());
-
 	}
 
 	protected void bindList() {
 		final IObservableList documentsListObserved = EMFEditProperties.list(getEditingDomain(), ProcessPackage.Literals.POOL__DOCUMENTS).observe(getPool());
-		emfDataBindingContext.bindList(
-				WidgetProperties.items().observe(documentListViewer.getList()),
-				documentsListObserved);
 		documentListViewer.setInput(documentsListObserved);
 	}
 
@@ -371,7 +350,8 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 				externalUrlObserved
 				);
 		documentUrlViewer.setInput(documentSelected);
-
+		
+		//Bind MIME_TYPE detail with master document selected
 		IObservableValue mimeTypeObserved = EMFEditProperties.value(
 				getEditingDomain(),
 				ProcessPackage.Literals.DOCUMENT__MIME_TYPE).observeDetail(documentSelected);
@@ -381,6 +361,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 				);
 		documentMimeTypeViewer.setInput(documentSelected);
 
+		//Bind NAME detail with master document selected
 		final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
 		targetToModel.setAfterGetValidator(new InputLengthValidator(Messages.name, 50));
 		targetToModel.setBeforeSetValidator(new GroovyReferenceValidator(Messages.name,false));
@@ -397,12 +378,14 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 				}
 			}
 		});
-
+		
+		//Bind Description detail with master document selected
 		IObservableValue descriptionObserved = EMFEditProperties.value(getEditingDomain(), ProcessPackage.Literals.ELEMENT__DOCUMENTATION).observeDetail(documentSelected);
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentDescriptionText, SWT.Modify)),
 				descriptionObserved);
-
+		
+		//Bind isInternal detail with master document selected
 		IObservableValue internalTypeObserved = EMFEditProperties.value(getEditingDomain(), ProcessPackage.Literals.DOCUMENT__IS_INTERNAL).observeDetail(documentSelected);
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeSelection(internalCheckbox),
@@ -412,7 +395,8 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentTextId, SWT.Modify)),
 				documentInternalIDObserved);
-
+		
+		//Bind isExternal (!isInternal) detail with master document selected
 		IObservableValue externalTypeObserved = EMFEditProperties.value(getEditingDomain(), ProcessPackage.Literals.DOCUMENT__IS_INTERNAL).observeDetail(documentSelected);
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeSelection(externalCheckbox),
@@ -429,20 +413,45 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 						return super.convert(!(Boolean)value);
 					}
 				});
-
+		
+		//bind internal/external widgets with model
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeEnabled(documentUrlViewer.getTextControl()),
-				SWTObservables.observeSelection(externalCheckbox));
+				externalTypeObserved,
+				new UpdateValueStrategy(){
+					@Override
+					public Object convert(Object value) {
+						return super.convert(!(Boolean)value);
+					}
+				},
+				new UpdateValueStrategy(){
+					@Override
+					public Object convert(Object value) {
+						return super.convert(!(Boolean)value);
+					}
+				});
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeEnabled(documentUrlViewer.getButtonControl()),
-				SWTObservables.observeSelection(externalCheckbox));
+				externalTypeObserved,
+				new UpdateValueStrategy(){
+					@Override
+					public Object convert(Object value) {
+						return super.convert(!(Boolean)value);
+					}
+				},
+				new UpdateValueStrategy(){
+					@Override
+					public Object convert(Object value) {
+						return super.convert(!(Boolean)value);
+					}
+				});
 
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeEnabled(documentTextId),
-				SWTObservables.observeSelection(internalCheckbox));
+				internalTypeObserved);
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeEnabled(browseButton),
-				SWTObservables.observeSelection(internalCheckbox));
+				internalTypeObserved);
 	}
 
 	protected void resetDatabindingContext() {
