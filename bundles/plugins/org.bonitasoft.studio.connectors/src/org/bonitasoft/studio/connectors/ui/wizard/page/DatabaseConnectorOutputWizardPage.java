@@ -397,9 +397,13 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		}else{
 			updateDefaultOutput();
 			lineComposite.setEObject(getConnector());
-			lineComposite.removeLinesUI();
-			lineComposite.fillTable();
-			lineComposite.refresh();
+			if(lineComposite.getNbLines() > 0){
+				lineComposite.removeLinesUI();
+				lineComposite.fillTable();
+				lineComposite.refresh();
+			}else{
+				lineComposite.fillTable();
+			}
 			stackLayout.topControl = defaultOutputComposite ;
 			setDescription(Messages.outputMappingDesc);
 		}
