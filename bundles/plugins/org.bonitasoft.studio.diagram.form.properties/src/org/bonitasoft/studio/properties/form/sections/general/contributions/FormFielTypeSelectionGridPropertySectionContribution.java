@@ -94,6 +94,7 @@ public class FormFielTypeSelectionGridPropertySectionContribution implements IEx
 	public static final String FORMFIELD_TYPE__SUBMIT = NamingUtils.getFormPaletteText(false, FormPackage.eINSTANCE.getSubmitFormButton());
 	public static final String FORMFIELD_TYPE__PREVIOUS = NamingUtils.getFormPaletteText(false, FormPackage.eINSTANCE.getPreviousFormButton());
 	public static final String FORMFIELD_TYPE__NEXT = NamingUtils.getFormPaletteText(false, FormPackage.eINSTANCE.getNextFormButton());
+	public static final String FORMFIELD_TYPE__SIMPLE_BUTTON = NamingUtils.getFormPaletteText(false, FormPackage.eINSTANCE.getFormButton());
 	public static final String FORMFIELD_TYPE__CHECKBOX_GROUP = NamingUtils.getFormPaletteText(false, FormPackage.eINSTANCE.getCheckBoxMultipleFormField());
 	public static final String FORMFIELD_TYPE__DURATION = NamingUtils.getFormPaletteText(false, FormPackage.eINSTANCE.getDurationFormField());
 	private static final String FORMFIELD_TYPE__HIDDEN = NamingUtils.getFormPaletteText(false, FormPackage.eINSTANCE.getHiddenWidget());
@@ -148,6 +149,7 @@ public class FormFielTypeSelectionGridPropertySectionContribution implements IEx
 		eClasses.put(FORMFIELD_TYPE__SUBMIT, FormPackage.Literals.SUBMIT_FORM_BUTTON);
 		eClasses.put(FORMFIELD_TYPE__PREVIOUS, FormPackage.Literals.PREVIOUS_FORM_BUTTON);
 		eClasses.put(FORMFIELD_TYPE__NEXT, FormPackage.Literals.NEXT_FORM_BUTTON);
+		eClasses.put(FORMFIELD_TYPE__SIMPLE_BUTTON, FormPackage.Literals.FORM_BUTTON);
 		eClasses.put(FORMFIELD_TYPE__MESSAGE, FormPackage.Literals.MESSAGE_INFO);
 		eClasses.put(FORMFIELD_TYPE__TEXT_BOX, FormPackage.Literals.TEXT_FORM_FIELD);
 		eClasses.put(FORMFIELD_TYPE__CHECKBOX_GROUP, FormPackage.Literals.CHECK_BOX_MULTIPLE_FORM_FIELD);
@@ -174,6 +176,7 @@ public class FormFielTypeSelectionGridPropertySectionContribution implements IEx
 		labels_button.add(FORMFIELD_TYPE__SUBMIT);
 		labels_button.add(FORMFIELD_TYPE__PREVIOUS);
 		labels_button.add(FORMFIELD_TYPE__NEXT);
+		labels_button.add(FORMFIELD_TYPE__SIMPLE_BUTTON);
 		// labels_button.add(FORMFIELD_TYPE__CUSTOMIZED);
 		labels_single.add(FORMFIELD_TYPE__MESSAGE);
 		labels_single.add(FORMFIELD_TYPE__TEXT);
@@ -219,7 +222,7 @@ public class FormFielTypeSelectionGridPropertySectionContribution implements IEx
 			labels = labels_multiplelist;
 		} else if (formField instanceof RadioFormField || formField instanceof SelectFormField || formField instanceof SuggestBox) {
 			labels = labels_singlelist;
-		} else if (formField.eClass().getESuperTypes().contains(FormPackage.Literals.FORM_BUTTON)) {
+		} else if (formField.eClass().equals(FormPackage.Literals.FORM_BUTTON) || formField.eClass().getESuperTypes().contains(FormPackage.Literals.FORM_BUTTON)) {
 			labels = labels_button;
 		} else if (formField.eClass().getESuperTypes().contains(FormPackage.Literals.INFO)) {
 			labels = labels_single;
