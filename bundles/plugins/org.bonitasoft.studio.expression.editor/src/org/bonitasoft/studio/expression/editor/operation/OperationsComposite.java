@@ -143,6 +143,10 @@ public class OperationsComposite extends Composite {
 		return TransactionUtil.getEditingDomain(getEObject());
 	}
 
+	public int getNbLines(){
+		return operationViewers.size();
+	}
+	
 	public void removeLinesUI() {
 		if(!operationViewers.isEmpty()){
 			for (int i = operationViewers.size() - 1; i >= 0; i--) {

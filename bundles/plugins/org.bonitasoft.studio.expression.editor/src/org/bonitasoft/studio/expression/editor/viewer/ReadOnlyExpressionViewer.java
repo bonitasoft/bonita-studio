@@ -75,7 +75,7 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 	}
 
 	@Override
-	protected void manageNatureProviderAndAutocompletionProposal(Object input) {
+	public void manageNatureProviderAndAutocompletionProposal(Object input) {
 		super.manageNatureProviderAndAutocompletionProposal(input);
 		setProposalsFiltering(false);
 	}

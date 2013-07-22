@@ -19,11 +19,15 @@ package org.bonitasoft.studio.connectors.extension;
 import java.util.Collections;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
+import org.bonitasoft.studio.connector.model.definition.Page;
+import org.bonitasoft.studio.connector.model.definition.TextArea;
+import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
-import org.eclipse.core.runtime.Assert;
 
 /**
  * @author Romain Bioteau
@@ -41,11 +45,12 @@ public abstract class AbstractConnectorDefinitionMapper implements IConnectorDef
 				break;
 			}
 		}
-		Assert.isNotNull(definition,getDefinitionId() +" not found");
 	}
 	
 	public boolean appliesTo(String legacyConnectorId){
-		return legacyConnectorId != null && legacyConnectorId.equals(getLegacyConnectorId());
+		return legacyConnectorId != null //valid value
+				&& legacyConnectorId.equals(getLegacyConnectorId())//the legacy connectorId matches
+				&& definition != null;//we found the corresponding new connector definition, it can be null for SP connectors for instance.
 	}
 	
 	/* (non-Javadoc)
@@ -89,9 +94,26 @@ public abstract class AbstractConnectorDefinitionMapper implements IConnectorDef
 	
 	@Override
 	public String getExpectedExpresstionType(String input, Object value) {
+		WidgetComponent widget = getWidgetForInput(input);
+		if(widget instanceof TextArea){
+			return ExpressionConstants.PATTERN_TYPE;
+		}
 		return null;
 	}
 	
+	private WidgetComponent getWidgetForInput(String input) {
+		for(Page p : definition.getPage()){
+			for(Component w : p.getWidget()){
+				if(w instanceof WidgetComponent){
+					if(((WidgetComponent) w).getInputName().equals(input)){
+						return (WidgetComponent) w;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	protected boolean isGroovyString(String string) {
 		return string != null && string.startsWith("${") && string.endsWith("}");
 	}

@@ -30,6 +30,7 @@ import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.pics.Pics;
@@ -148,7 +149,7 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
      * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#bindExpression(org.eclipse.emf.databinding.EMFDataBindingContext, org.eclipse.emf.ecore.EObject, org.bonitasoft.studio.model.expression.Expression, org.eclipse.emf.edit.domain.EditingDomain)
      */
     @Override
-    public void bindExpression(EMFDataBindingContext dataBindingContext,EObject context, Expression inputExpression,ViewerFilter[] filters) {
+    public void bindExpression(EMFDataBindingContext dataBindingContext,EObject context, Expression inputExpression,ViewerFilter[] filters,ExpressionViewer expressionViewer) {
         this.inputExpression = inputExpression ;
         Set<Output> input = new HashSet<Output>() ;
         IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.CONNECTOR_OUTPUT_TYPE) ;

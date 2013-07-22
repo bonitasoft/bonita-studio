@@ -17,24 +17,20 @@
 package org.bonitasoft.studio.importer.bar.tests.connector;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URL;
 import java.util.List;
 
-import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.bonitasoft.studio.importer.bar.tests.BarImporterTestUtil;
-import org.bonitasoft.studio.model.expression.AbstractExpression;
-import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -74,39 +70,19 @@ public class TestCustomConnectorMigrationUseCase {
 		final MainProcess mainProc = BarImporterTestUtil
 				.getMainProcess(resource);
 
-		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-		assertNotNull(store.getDefinition("MyConnectorId","1.0"));
+		final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+		assertNotNull(defStore.getDefinition("MyConnectorId","1.0.0"));
 		
+		final ConnectorImplRepositoryStore implStore = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+		ConnectorImplementation implementation = implStore.getImplementation("MyConnectorId-impl","1.0.0");
+		assertNotNull(implementation);
+		
+		final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
+		assertNotNull(sourceStore.getChild(implementation.getImplementationClassname()));
 		
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
-//		Connector c = connectors.get(0);
-//		assertEquals("grrovyConnector", c.getName());
-//		assertEquals(ConnectorEvent.ON_ENTER.name(), c.getEvent());
-//		assertEquals(1, c.getConfiguration().getParameters().size());
-//		final AbstractExpression expression = c.getConfiguration()
-//				.getParameters().get(0).getExpression();
-//		assertNotNull(expression);
-//		assertTrue(expression instanceof Expression);
-//		assertEquals(ExpressionConstants.SCRIPT_TYPE,
-//				((Expression) expression).getType());
-//		assertEquals(2, ((Expression) expression).getReferencedElements()
-//				.size());
-//
-//		assertEquals(1, c.getOutputs().size());
-//		Expression leftOp = c.getOutputs().get(0).getLeftOperand();
-//		Expression rightOp = c.getOutputs().get(0).getLeftOperand();
-//		Operator op = c.getOutputs().get(0).getOperator();
-//		assertNotNull(rightOp);
-//		assertNotNull(leftOp);
-//		assertNotNull(op);
-//
-//		assertFalse(leftOp.getContent().isEmpty());
-//		assertFalse(rightOp.getContent().isEmpty());
-//
-//		assertEquals(ExpressionConstants.ASSIGNMENT_OPERATOR, op.getType());
-//		assertEquals(ExpressionConstants.VARIABLE_TYPE, leftOp.getType());
 	}
 
 	

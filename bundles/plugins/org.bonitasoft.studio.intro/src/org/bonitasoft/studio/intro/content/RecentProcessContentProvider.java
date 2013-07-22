@@ -18,6 +18,9 @@
 package org.bonitasoft.studio.intro.content;
 
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -34,87 +37,116 @@ import org.w3c.dom.Text;
 
 /**
  * @author Mickael Istria
- *
+ * 
  */
 public class RecentProcessContentProvider implements IIntroXHTMLContentProvider {
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.intro.config.IIntroContentProvider#init(org.eclipse.ui.intro.config.IIntroContentProviderSite)
-     */
-    public void init(IIntroContentProviderSite site) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.intro.config.IIntroContentProvider#init(org.eclipse.ui
+	 * .intro.config.IIntroContentProviderSite)
+	 */
+	public void init(IIntroContentProviderSite site) {
 
+	}
 
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.intro.config.IIntroContentProvider#createContent(java.
+	 * lang.String, java.io.PrintWriter)
+	 */
+	public void createContent(String id, PrintWriter out) {
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.intro.config.IIntroContentProvider#createContent(java.lang.String, java.io.PrintWriter)
-     */
-    public void createContent(String id, PrintWriter out) {
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.intro.config.IIntroContentProvider#createContent(java.
+	 * lang.String, org.eclipse.swt.widgets.Composite,
+	 * org.eclipse.ui.forms.widgets.FormToolkit)
+	 */
+	public void createContent(String id, Composite parent, FormToolkit toolkit) {
 
-    }
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.intro.config.IIntroContentProvider#createContent(java.lang.String, org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
-     */
-    public void createContent(String id, Composite parent, FormToolkit toolkit) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.intro.config.IIntroContentProvider#dispose()
+	 */
+	public void dispose() {
 
+	}
 
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.intro.config.IIntroXHTMLContentProvider#createContent(
+	 * java.lang.String, org.w3c.dom.Element)
+	 */
+	public void createContent(String id, Element parent) {
+		DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager
+				.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+		int nbProc = Integer.parseInt(id.split(",")[0]);
+		Document doc = parent.getOwnerDocument();
+		Element ul = doc.createElement("ul");
+		parent.appendChild(ul);
+		if (nbProc == 0) {
+			return;
+		}
+		if (diagramSotre != null) {
+			for (IRepositoryFileStore proc : diagramSotre
+					.getRecentChildren(nbProc)) {
+				Element li = doc.createElement("li");
+				Element a = doc.createElement("a");
+				li.appendChild(a);
+				a.setAttribute("href", createOpenProcessHref(proc));
+				String displayNameForLabelProvider = proc.getDisplayName();
+				DiagramFileStore diagram = (DiagramFileStore) proc;
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.intro.config.IIntroContentProvider#dispose()
-     */
-    public void dispose() {
+				a.setAttribute("title", displayNameForLabelProvider);
+				if (displayNameForLabelProvider.length() > 82) {
+					displayNameForLabelProvider = displayNameForLabelProvider
+							.substring(0, 82) + "...";
+				}
+				Text procName = doc.createTextNode(displayNameForLabelProvider);
+				a.appendChild(procName);
+				if (diagram.getMigrationReport() != null) {
+					Element style = doc.createElement("font");
+					a.appendChild(style);
+					style.setAttribute("color", "#01A8CE");
+					Text migrationOngoing = doc
+							.createTextNode(" Migration ongoing");
+					style.appendChild(migrationOngoing);
+				}
+				ul.appendChild(li);
+			}
+		}
 
-    }
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.intro.config.IIntroXHTMLContentProvider#createContent(java.lang.String, org.w3c.dom.Element)
-     */
-    public void createContent(String id, Element parent) {
-        DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
-        int nbProc = Integer.parseInt(id.split(",")[0]);
-        Document doc = parent.getOwnerDocument();
-        Element ul = doc.createElement("ul");
-        parent.appendChild(ul);
-        if (nbProc == 0) {
-            return;
-        }
-        if(diagramSotre != null){
-        	for (IRepositoryFileStore proc : diagramSotre.getRecentChildren(nbProc)) {
-        		Element li = doc.createElement("li");
-        		Element a = doc.createElement("a");
-        		li.appendChild(a);
-        		a.setAttribute("href", createOpenProcessHref(proc));
-        		String displayNameForLabelProvider = proc.getDisplayName();
-        		DiagramFileStore diagram = (DiagramFileStore)proc;
-        		
-        		a.setAttribute("title", displayNameForLabelProvider) ;
-        		if (displayNameForLabelProvider.length() > 82) {
-        			displayNameForLabelProvider = displayNameForLabelProvider.substring(0,82 ) + "...";
-        		}
-        		Text procName = doc.createTextNode(displayNameForLabelProvider);
-        		a.appendChild(procName);
-        		if (diagram.getMigrationReport()!=null){
-        			Element style = doc.createElement("font");
-        			a.appendChild(style);
-        			style.setAttribute("color", "#01A8CE");
-        			Text migrationOngoing=doc.createTextNode(" Migration ongoing");
-        			style.appendChild(migrationOngoing);
-        		}
-        		ul.appendChild(li);
-        	}
-        }
-
-    }
-
-    /**
-     * @param proc
-     * @return
-     */
-    private String createOpenProcessHref(IRepositoryFileStore proc) {
-        return "http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&class=" + OpenSpecificProcessAction.class.getName() + "&file=" + proc.getName();
-    }
+	/**
+	 * @param proc
+	 * @return
+	 */
+	private String createOpenProcessHref(IRepositoryFileStore proc) {
+		String urlProcName;
+		try {
+			urlProcName = URLEncoder.encode(proc.getName(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			urlProcName = proc.getName();
+		}
+		return "http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&class="
+				+ OpenSpecificProcessAction.class.getName()
+				+ "&file="
+				+ urlProcName;
+	}
 
 }

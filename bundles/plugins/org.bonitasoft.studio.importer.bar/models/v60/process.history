@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<history:History xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<history:History xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:history="http://www.eclipse.org/emf/edapt/history/0.3">
   <releases date="2012-12-06T17:03:02.276+0100" label="5.9">
     <changes xsi:type="history:CompositeChange">
@@ -159,17 +158,17 @@
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.34/@changes.3/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.3/@changes.0/@element"
+          element="#//@releases.1/@changes.47/@changes.3/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.3/@changes.0/@element"
             featureName="name" dataValue="connectorId"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.3/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.3/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.34/@changes.4/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.4/@changes.0/@element"
+          element="#//@releases.1/@changes.47/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.4/@changes.0/@element"
             featureName="name" dataValue="configurationId"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.4/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.4/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
@@ -245,77 +244,77 @@
             featureName="value" dataValue="It will be used only if !ignoreErrors &amp;&amp; throwErrorEvent"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-          element="#//@releases.1/@changes.34/@changes.11/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.11/@changes.0/@element"
+          element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element"
             featureName="name" dataValue="Parameter"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.34/@changes.5/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.5/@changes.0/@element"
+          element="#//@releases.1/@changes.47/@changes.5/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.5/@changes.0/@element"
             featureName="name" dataValue="parameters"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.5/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.5/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.5/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.5/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.5/@changes.0/@element"
-            featureName="eType" referenceValue="#//@releases.1/@changes.34/@changes.11/@changes.0/@element"/>
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.5/@changes.0/@element"
+            featureName="eType" referenceValue="#//@releases.1/@changes.47/@changes.11/@changes.0/@element"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.34/@changes.11/@changes.0/@element"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.34/@changes.11/@changes.0/@element/key">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.11/@changes.0/@element/key"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.47/@changes.11/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element/key">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element/key"
             featureName="name" dataValue="key"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.11/@changes.0/@element/key"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element/key"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.34/@changes.11/@changes.0/@element"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.34/@changes.11/@changes.0/@element/value">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.11/@changes.0/@element/value"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.47/@changes.11/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element/value">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element/value"
             featureName="name" dataValue="value"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.11/@changes.0/@element/value"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element/value"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-          element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element"
+          element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element"
             featureName="name" dataValue="OutputParameterMapping"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.34/@changes.6/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.6/@changes.0/@element"
+          element="#//@releases.1/@changes.47/@changes.6/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.6/@changes.0/@element"
             featureName="name" dataValue="outputs"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.6/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.6/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.6/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.6/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.6/@changes.0/@element"
-            featureName="eType" referenceValue="#//@releases.1/@changes.34/@changes.12/@changes.0/@element"/>
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.6/@changes.0/@element"
+            featureName="eType" referenceValue="#//@releases.1/@changes.47/@changes.12/@changes.0/@element"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.34/@changes.12/@changes.0/@element"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/valueExpression">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/valueExpression"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.47/@changes.12/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/valueExpression">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/valueExpression"
             featureName="name" dataValue="valueExpression"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/valueExpression"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/valueExpression"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.34/@changes.12/@changes.0/@element"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/additionalPath">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/additionalPath"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.47/@changes.12/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/additionalPath">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/additionalPath"
             featureName="name" dataValue="additionalPath"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/additionalPath"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/additionalPath"
             featureName="defaultValueLiteral" dataValue=""/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/additionalPath"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/additionalPath"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/additionalPath"
-          referenceName="eAnnotations" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/additionalPath"
+          referenceName="eAnnotations" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="documentation"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/additionalPath/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="This field is used to provide additional description of the target data.&#xA;For example, if the selected data is &quot;myData&quot;, which is of XML, then this field will contain&#xA;&quot;:/myNode/@myAttr&quot; or &quot;:/myNode/text()&quot;"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -343,11 +342,11 @@
         <changes xsi:type="history:Set" element="process.ecore#//DataAware/data" featureName="eType"
             referenceValue="process.ecore#//Data"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.34/@changes.12/@changes.0/@element"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/targetData">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/targetData"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.47/@changes.12/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/targetData">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/targetData"
             featureName="name" dataValue="targetData"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/targetData"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/targetData"
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Data" referenceName="eStructuralFeatures"
@@ -636,10 +635,10 @@
             featureName="source" dataValue="Deprecated_since_5.4"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.35/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.34/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.0/@changes.0/@element"
             featureName="name" dataValue="confirmationMessage"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
@@ -665,10 +664,10 @@
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.35/@changes.2/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.2/@changes.0/@element"
+          element="#//@releases.1/@changes.34/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.2/@changes.0/@element"
             featureName="name" dataValue="entryRedirectionURL"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.2/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
@@ -755,10 +754,10 @@
             featureName="eType" referenceValue="process.ecore#//ConsultationPageFlowType"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//ViewPageFlow" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.35/@changes.6/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.6/@changes.0/@element"
+          element="#//@releases.1/@changes.34/@changes.6/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.6/@changes.0/@element"
             featureName="name" dataValue="viewPageFlowRedirectionURL"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.6/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.6/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -804,10 +803,10 @@
             featureName="eType" referenceValue="process.ecore#//ConsultationPageFlowType"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//RecapFlow" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.35/@changes.8/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.8/@changes.0/@element"
+          element="#//@releases.1/@changes.34/@changes.8/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.8/@changes.0/@element"
             featureName="name" dataValue="recapPageFlowRedirectionURL"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.8/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.8/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -849,10 +848,10 @@
             featureName="eType" referenceValue="process.ecore#//PageFlowTransition"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlowTransition"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.35/@changes.10/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.10/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.34/@changes.10/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.10/@changes.0/@element"
             featureName="name" dataValue="condition"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.10/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.10/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -1168,17 +1167,17 @@
             referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Message" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.36/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.36/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.35/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.0/@changes.0/@element"
             featureName="name" dataValue="targetProcessName"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.36/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Message" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.36/@changes.1/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.36/@changes.1/@changes.0/@element"
+          element="#//@releases.1/@changes.35/@changes.1/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.1/@changes.0/@element"
             featureName="name" dataValue="targetElementName"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.36/@changes.1/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.1/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -1193,10 +1192,10 @@
             featureName="eSuperTypes" referenceValue="process.ecore#//Element"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//AbstractTimerEvent"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.38/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.38/@changes.0/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.37/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.37/@changes.0/@changes.0/@element"
             featureName="name" dataValue="condition"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.38/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.37/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -3101,14 +3100,14 @@
             dataValue="GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.35/@changes.4/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.4/@changes.0/@element"
+          element="#//@releases.1/@changes.34/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.4/@changes.0/@element"
             featureName="name" dataValue="entryRedirectionActions"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.4/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.4/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.4/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.4/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.35/@changes.4/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.4/@changes.0/@element"
             featureName="eType" referenceValue="form.ecore#//GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//GroovyScript" referenceName="eStructuralFeatures"
@@ -3184,10 +3183,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Validator" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.43/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.42/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.42/@changes.0/@changes.0/@element"
             featureName="name" dataValue="label"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.42/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Validator" referenceName="eStructuralFeatures"
@@ -3198,12 +3197,12 @@
             referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Validator" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.43/@changes.1/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.1/@changes.0/@element"
+          element="#//@releases.1/@changes.42/@changes.1/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.42/@changes.1/@changes.0/@element"
             featureName="name" dataValue="parameter"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.1/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.42/@changes.1/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue=""/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.1/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.42/@changes.1/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Validator" referenceName="eStructuralFeatures"
@@ -3257,14 +3256,14 @@
             featureName="eType" referenceValue="form.ecore#//Form"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Form" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.39/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.38/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.38/@changes.0/@changes.0/@element"
             featureName="name" dataValue="scripts"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.38/@changes.0/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.38/@changes.0/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.38/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="form.ecore#//GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Form" referenceName="eStructuralFeatures"
@@ -3309,10 +3308,10 @@
             referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Form" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.39/@changes.2/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.2/@changes.0/@element"
+          element="#//@releases.1/@changes.38/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.38/@changes.2/@changes.0/@element"
             featureName="name" dataValue="pageLabel"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.2/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.38/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Form" referenceName="eStructuralFeatures"
@@ -3538,14 +3537,14 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.44/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.43/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.0/@changes.0/@element"
             featureName="name" dataValue="maxNumberOfDuplication"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.0/@changes.0/@element"
             featureName="lowerBound" dataValue="1" oldDataValue="0"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.0/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="10"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
@@ -3558,40 +3557,40 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.44/@changes.1/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.1/@changes.0/@element"
+          element="#//@releases.1/@changes.43/@changes.1/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.1/@changes.0/@element"
             featureName="name" dataValue="minNumberOfDuplication"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.1/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.1/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="2"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.1/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.1/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.44/@changes.2/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.2/@changes.0/@element"
+          element="#//@releases.1/@changes.43/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.2/@changes.0/@element"
             featureName="name" dataValue="displayLabelForAdd"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.2/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.44/@changes.3/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.3/@changes.0/@element"
+          element="#//@releases.1/@changes.43/@changes.3/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.3/@changes.0/@element"
             featureName="name" dataValue="tooltipForAdd"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.3/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.3/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.44/@changes.4/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.4/@changes.0/@element"
+          element="#//@releases.1/@changes.43/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.4/@changes.0/@element"
             featureName="name" dataValue="displayLabelForRemove"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.4/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.4/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Duplicable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.44/@changes.5/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.5/@changes.0/@element"
+          element="#//@releases.1/@changes.43/@changes.5/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.5/@changes.0/@element"
             featureName="name" dataValue="tooltipForRemove"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.5/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.43/@changes.5/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -3682,11 +3681,11 @@
         <changes xsi:type="history:Add" element="form.ecore#//Widget" featureName="eSuperTypes"
             referenceValue="form.ecore#//CSSCustomizable"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.34/@changes.12/@changes.0/@element"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/targetWidget">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/targetWidget"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.47/@changes.12/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/targetWidget">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/targetWidget"
             featureName="name" dataValue="targetWidget"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element/targetWidget"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element/targetWidget"
             featureName="eType" referenceValue="form.ecore#//Widget"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Form" referenceName="eStructuralFeatures"
@@ -3701,31 +3700,31 @@
             referenceValue="form.ecore#//Widget"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.40/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.39/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.0/@changes.0/@element"
             featureName="name" dataValue="script"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.0/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="form.ecore#//GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element"
+          element="#//@releases.1/@changes.39/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.4/@changes.0/@element"
             featureName="name" dataValue="tooltip"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.4/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.40/@changes.4/@changes.0/@element"
-          referenceName="eAnnotations" element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.39/@changes.4/@changes.0/@element"
+          referenceName="eAnnotations" element="#//@releases.1/@changes.39/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.40/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.39/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.1/@changes.39/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="documentation"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.4/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="The tooltip is mapped with title in forms.xml (and so in GWT)"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
@@ -3738,10 +3737,10 @@
             featureName="eType" referenceValue="form.ecore#//WidgetLayoutInfo"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.40/@changes.2/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.2/@changes.0/@element"
+          element="#//@releases.1/@changes.39/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.2/@changes.0/@element"
             featureName="name" dataValue="displayLabel"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.2/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
@@ -3807,30 +3806,30 @@
             featureName="value" dataValue="@Deprecated since 5.5"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.40/@changes.6/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.6/@changes.0/@element"
+          element="#//@releases.1/@changes.39/@changes.6/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.6/@changes.0/@element"
             featureName="name" dataValue="displayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.6/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.6/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="true"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.6/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.6/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.40/@changes.8/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.8/@changes.0/@element"
+          element="#//@releases.1/@changes.39/@changes.8/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.8/@changes.0/@element"
             featureName="name" dataValue="scriptAfterEvent"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.8/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.8/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.8/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.8/@changes.0/@element"
             featureName="eType" referenceValue="form.ecore#//GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.40/@changes.10/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.10/@changes.0/@element"
+          element="#//@releases.1/@changes.39/@changes.10/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.10/@changes.0/@element"
             featureName="name" dataValue="displayAfterEventDependsOnConditionScript"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.10/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.10/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="true"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.10/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.10/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
@@ -3872,36 +3871,36 @@
             featureName="eType" referenceValue="form.ecore#//LabelPosition"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.40/@changes.12/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.12/@changes.0/@element"
+          element="#//@releases.1/@changes.39/@changes.12/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.12/@changes.0/@element"
             featureName="name" dataValue="inputConnectors"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.12/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.12/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.12/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.12/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.12/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.12/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.40/@changes.13/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.13/@changes.0/@element"
+          element="#//@releases.1/@changes.39/@changes.13/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.13/@changes.0/@element"
             featureName="name" dataValue="outputConnectors"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.13/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.13/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.13/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.13/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.13/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.13/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.40/@changes.14/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.14/@changes.0/@element"
+          element="#//@releases.1/@changes.39/@changes.14/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.14/@changes.0/@element"
             featureName="name" dataValue="afterEventConnectors"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.14/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.14/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.14/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.14/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.14/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.14/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
@@ -3933,10 +3932,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.40/@changes.17/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.17/@changes.0/@element"
+          element="#//@releases.1/@changes.39/@changes.17/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.17/@changes.0/@element"
             featureName="name" dataValue="injectWidgetScript"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.17/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.17/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
@@ -3947,10 +3946,10 @@
             referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Widget" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.40/@changes.15/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.15/@changes.0/@element"
+          element="#//@releases.1/@changes.39/@changes.15/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.15/@changes.0/@element"
             featureName="name" dataValue="helpMessage"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.15/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.39/@changes.15/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//WidgetDependency" referenceName="eStructuralFeatures"
@@ -4061,10 +4060,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//FormField" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.41/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.40/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.0/@changes.0/@element"
             featureName="name" dataValue="exampleMessage"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//FormField" referenceName="eStructuralFeatures"
@@ -4086,95 +4085,95 @@
             featureName="eSuperTypes" referenceValue="form.ecore#//FormField"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.41/@changes.2/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.2/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.40/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.2/@changes.0/@element"
             featureName="name" dataValue="defaultValue"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.2/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.41/@changes.4/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.4/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element"
             featureName="name" dataValue="defaultValueAfterEvent"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.4/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.41/@changes.6/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.6/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.40/@changes.6/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.6/@changes.0/@element"
             featureName="name" dataValue="enum"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.6/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.6/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.41/@changes.7/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.7/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.40/@changes.7/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.7/@changes.0/@element"
             featureName="name" dataValue="enumAfterEvent"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.7/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.7/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Data"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.41/@changes.7/@changes.0/@element"
-          referenceName="eAnnotations" element="#//@releases.1/@changes.41/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.40/@changes.7/@changes.0/@element"
+          referenceName="eAnnotations" element="#//@releases.1/@changes.40/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.41/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="#//@releases.1/@changes.41/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.40/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.1/@changes.40/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="documentation"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.7/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="enum used for dependencies between widget."/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.41/@changes.8/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.8/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.40/@changes.8/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.8/@changes.0/@element"
             featureName="name" dataValue="literals"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.8/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.8/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.8/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.8/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.41/@changes.9/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.9/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.40/@changes.9/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.9/@changes.0/@element"
             featureName="name" dataValue="literalsAfterEvent"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.9/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.9/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.9/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.9/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.41/@changes.9/@changes.0/@element"
-          referenceName="eAnnotations" element="#//@releases.1/@changes.41/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.40/@changes.9/@changes.0/@element"
+          referenceName="eAnnotations" element="#//@releases.1/@changes.40/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
             featureName="source" dataValue="http://www.eclipse.org/emf/2002/GenModel"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.41/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
-          referenceName="details" element="#//@releases.1/@changes.41/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.40/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%"
+          referenceName="details" element="#//@releases.1/@changes.40/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="key" dataValue="documentation"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.9/@changes.0/@element/%http:%2F%2Fwww.eclipse.org%2Femf%2F2002%2FGenModel%/@details.0"
             featureName="value" dataValue="literals used on dependencies management."/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.41/@changes.10/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.10/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.40/@changes.10/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.10/@changes.0/@element"
             featureName="name" dataValue="defaultConnectors"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.10/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.10/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.10/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.10/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.10/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.10/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MultipleValuatedFormField"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.41/@changes.11/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.11/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.40/@changes.11/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.11/@changes.0/@element"
             featureName="name" dataValue="defaultAfterEventConnectors"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.11/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.11/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.11/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.11/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.11/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.40/@changes.11/@changes.0/@element"
             featureName="eType" referenceValue="process.ecore#//Connector"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4371,14 +4370,14 @@
             referenceValue="process.ecore#//ConnectableElement"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//SubmitFormButton" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.42/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.42/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.41/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.0/@changes.0/@element"
             featureName="name" dataValue="scripts"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.42/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.0/@changes.0/@element"
             featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.42/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.0/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.42/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.41/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="form.ecore#//GroovyScript"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4591,10 +4590,10 @@
             referenceValue="form.ecore#//MultipleValuatedFormField"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Table" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.45/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.44/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.0/@changes.0/@element"
             featureName="name" dataValue="maxRowForPagination"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Table" referenceName="eStructuralFeatures"
@@ -4625,17 +4624,17 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Table" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.45/@changes.2/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.2/@changes.0/@element"
+          element="#//@releases.1/@changes.44/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.2/@changes.0/@element"
             featureName="name" dataValue="columnForInitialSelectionIndex"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.2/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//Table" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.45/@changes.4/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.4/@changes.0/@element"
+          element="#//@releases.1/@changes.44/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.4/@changes.0/@element"
             featureName="name" dataValue="selectedValues"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.4/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.4/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
@@ -4674,10 +4673,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.45/@changes.6/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.6/@changes.0/@element"
+          element="#//@releases.1/@changes.44/@changes.6/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.6/@changes.0/@element"
             featureName="name" dataValue="cells"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.6/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.6/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
@@ -4690,10 +4689,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.45/@changes.7/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.7/@changes.0/@element"
+          element="#//@releases.1/@changes.44/@changes.7/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.7/@changes.0/@element"
             featureName="name" dataValue="horizontalHeader"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.7/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.7/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
@@ -4706,10 +4705,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//AbstractTable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.45/@changes.9/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.9/@changes.0/@element"
+          element="#//@releases.1/@changes.44/@changes.9/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.9/@changes.0/@element"
             featureName="name" dataValue="verticalHeader"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.9/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.9/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4731,10 +4730,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.45/@changes.12/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.12/@changes.0/@element"
+          element="#//@releases.1/@changes.44/@changes.12/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.12/@changes.0/@element"
             featureName="name" dataValue="minNumberOfColumn"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.12/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.12/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
@@ -4747,10 +4746,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.45/@changes.14/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.14/@changes.0/@element"
+          element="#//@releases.1/@changes.44/@changes.14/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.14/@changes.0/@element"
             featureName="name" dataValue="minNumberOfRow"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.14/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.14/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
@@ -4781,10 +4780,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.45/@changes.16/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.16/@changes.0/@element"
+          element="#//@releases.1/@changes.44/@changes.16/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.16/@changes.0/@element"
             featureName="name" dataValue="maxNumberOfColumn"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.16/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.16/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
@@ -4797,10 +4796,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//DynamicTable" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.45/@changes.18/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.18/@changes.0/@element"
+          element="#//@releases.1/@changes.44/@changes.18/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.18/@changes.0/@element"
             featureName="name" dataValue="maxNumberOfRow"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.18/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.44/@changes.18/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#/" referenceName="eClassifiers"
@@ -4922,21 +4921,21 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MandatoryFieldsCustomization"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.46/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.0/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.45/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.0/@changes.0/@element"
             featureName="name" dataValue="mandatorySymbol"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.0/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue="*"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//MandatoryFieldsCustomization"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.46/@changes.2/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.2/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.45/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.2/@changes.0/@element"
             featureName="name" dataValue="mandatoryLabel"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.2/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.2/@changes.0/@element"
             featureName="defaultValueLiteral" dataValue=""/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.2/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.45/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="form.ecore#//CSSCustomizable" referenceName="eStructuralFeatures"
@@ -5095,10 +5094,10 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//AbstractKPIBinding" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.47/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.46/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.0/@changes.0/@element"
             featureName="name" dataValue="request"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//AbstractKPIBinding" referenceName="eStructuralFeatures"
@@ -5127,10 +5126,10 @@
             featureName="eType" referenceValue="kpi.ecore#//KPIParameterMapping"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//KPIParameterMapping"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.47/@changes.2/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.2/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.46/@changes.2/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.2/@changes.0/@element"
             featureName="name" dataValue="value"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.2/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.2/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//KPIParameterMapping"
@@ -5141,22 +5140,22 @@
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#/" referenceName="eClassifiers"
-          element="#//@releases.1/@changes.47/@changes.17/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.17/@changes.0/@element"
+          element="#//@releases.1/@changes.46/@changes.17/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.17/@changes.0/@element"
             featureName="name" dataValue="DatabaseConfiguration"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.47/@changes.17/@changes.0/@element"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.47/@changes.17/@changes.0/@element/name">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.17/@changes.0/@element/name"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.46/@changes.17/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.46/@changes.17/@changes.0/@element/name">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.17/@changes.0/@element/name"
             featureName="name" dataValue="name"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.17/@changes.0/@element/name"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.17/@changes.0/@element/name"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
-      <changes xsi:type="history:Create" target="#//@releases.1/@changes.47/@changes.17/@changes.0/@element"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.47/@changes.17/@changes.0/@element/configuration">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.17/@changes.0/@element/configuration"
+      <changes xsi:type="history:Create" target="#//@releases.1/@changes.46/@changes.17/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.46/@changes.17/@changes.0/@element/configuration">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.17/@changes.0/@element/configuration"
             featureName="name" dataValue="configuration"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.17/@changes.0/@element/configuration"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.17/@changes.0/@element/configuration"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#/" referenceName="eClassifiers"
@@ -5167,13 +5166,13 @@
             referenceValue="kpi.ecore#//AbstractKPIBinding"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.47/@changes.4/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.4/@changes.0/@element"
+          element="#//@releases.1/@changes.46/@changes.4/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.4/@changes.0/@element"
             featureName="name" dataValue="databaseConfiguration"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.4/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.4/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.4/@changes.0/@element"
-            featureName="eType" referenceValue="#//@releases.1/@changes.47/@changes.17/@changes.0/@element"/>
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.4/@changes.0/@element"
+            featureName="eType" referenceValue="#//@releases.1/@changes.46/@changes.17/@changes.0/@element"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIBinding" referenceName="eStructuralFeatures"
           element="kpi.ecore#//DatabaseKPIBinding/tableName">
@@ -5190,13 +5189,13 @@
             featureName="eSuperTypes" referenceValue="kpi.ecore#//AbstractKPIDefinition"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIDefinition"
-          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element"
+          referenceName="eStructuralFeatures" element="#//@releases.1/@changes.46/@changes.11/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.11/@changes.0/@element"
             featureName="name" dataValue="defaultConfiguration"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.11/@changes.0/@element"
             featureName="containment" dataValue="true" oldDataValue="false"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element"
-            featureName="eType" referenceValue="#//@releases.1/@changes.47/@changes.17/@changes.0/@element"/>
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.46/@changes.11/@changes.0/@element"
+            featureName="eType" referenceValue="#//@releases.1/@changes.46/@changes.17/@changes.0/@element"/>
       </changes>
       <changes xsi:type="history:Create" target="kpi.ecore#//DatabaseKPIDefinition"
           referenceName="eStructuralFeatures" element="kpi.ecore#//DatabaseKPIDefinition/defaultTableName">
@@ -8903,248 +8902,6 @@
         </changes>
       </changes>
     </changes>
-    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.ConnectorMigration">
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
-            element="process.ecore#//DataAware">
-          <changes xsi:type="history:Set" element="process.ecore#//DataAware" featureName="name"
-              dataValue="DataAware"/>
-        </changes>
-        <operation name="newClass">
-          <parameters name="ePackage">
-            <referenceValue element="process.ecore#/"/>
-          </parameters>
-          <parameters name="name">
-            <dataValue>DataAware</dataValue>
-          </parameters>
-          <parameters name="superClasses"/>
-          <parameters name="abstr">
-            <dataValue>false</dataValue>
-          </parameters>
-        </operation>
-      </changes>
-      <changes xsi:type="history:CompositeChange">
-        <changes xsi:type="history:Add" element="process.ecore#//ConnectableElement"
-            featureName="eSuperTypes" referenceValue="process.ecore#//DataAware"/>
-      </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Move" target="process.ecore#//DataAware" referenceName="eStructuralFeatures"
-            element="process.ecore#//DataAware/data" source="process.ecore#//ConnectableElement"/>
-        <operation name="pullFeature">
-          <parameters name="features">
-            <referenceValue element="process.ecore#//DataAware/data"/>
-          </parameters>
-          <parameters name="targetClass">
-            <referenceValue element="process.ecore#//DataAware"/>
-          </parameters>
-        </operation>
-      </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Delete" target="process.ecore#//Connector" referenceName="eStructuralFeatures">
-          <element xsi:type="ecore:EAttribute" name="connectorId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        </changes>
-        <operation name="deleteFeature2">
-          <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.34/@changes.3/@changes.0/@element"/>
-          </parameters>
-        </operation>
-      </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Delete" target="process.ecore#//Connector" referenceName="eStructuralFeatures">
-          <element xsi:type="ecore:EAttribute" name="configurationId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        </changes>
-        <operation name="deleteFeature2">
-          <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.34/@changes.4/@changes.0/@element"/>
-          </parameters>
-        </operation>
-      </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Delete" target="process.ecore#//Connector" referenceName="eStructuralFeatures">
-          <element xsi:type="ecore:EReference" name="parameters" upperBound="-1" eType="#//@releases.1/@changes.34/@changes.11/@changes.0/@element"
-              containment="true"/>
-        </changes>
-        <operation name="deleteFeature2">
-          <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.34/@changes.5/@changes.0/@element"/>
-          </parameters>
-        </operation>
-      </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Delete" target="process.ecore#//Connector" referenceName="eStructuralFeatures">
-          <element xsi:type="ecore:EReference" name="outputs" upperBound="-1" eType="#//@releases.1/@changes.34/@changes.12/@changes.0/@element"
-              containment="true"/>
-        </changes>
-        <operation name="deleteFeature2">
-          <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.34/@changes.6/@changes.0/@element"/>
-          </parameters>
-        </operation>
-      </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
-            element="process.ecore#//Connector/definitionId">
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionId"
-              featureName="name" dataValue="definitionId"/>
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionId"
-              featureName="lowerBound" dataValue="1" oldDataValue="0"/>
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionId"
-              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        </changes>
-        <operation name="newAttribute">
-          <parameters name="eClass">
-            <referenceValue element="process.ecore#//Connector"/>
-          </parameters>
-          <parameters name="name">
-            <dataValue>definitionId</dataValue>
-          </parameters>
-          <parameters name="type">
-            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-          </parameters>
-          <parameters name="lowerBound">
-            <dataValue>1</dataValue>
-          </parameters>
-          <parameters name="upperBound">
-            <dataValue>1</dataValue>
-          </parameters>
-          <parameters name="defaultValue">
-            <dataValue xsi:nil="true"/>
-          </parameters>
-        </operation>
-      </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
-            element="process.ecore#//Connector/outputs">
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/outputs"
-              featureName="name" dataValue="outputs"/>
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/outputs"
-              featureName="upperBound" dataValue="-1" oldDataValue="1"/>
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/outputs"
-              featureName="containment" dataValue="true" oldDataValue="false"/>
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/outputs"
-              featureName="eType" referenceValue="expression.ecore#//Operation"/>
-        </changes>
-        <operation name="newReference">
-          <parameters name="eClass">
-            <referenceValue element="process.ecore#//Connector"/>
-          </parameters>
-          <parameters name="name">
-            <dataValue>outputs</dataValue>
-          </parameters>
-          <parameters name="type">
-            <referenceValue element="expression.ecore#//Operation"/>
-          </parameters>
-          <parameters name="lowerBound">
-            <dataValue>0</dataValue>
-          </parameters>
-          <parameters name="upperBound">
-            <dataValue>-1</dataValue>
-          </parameters>
-          <parameters name="containment">
-            <dataValue>true</dataValue>
-          </parameters>
-          <parameters name="opposite"/>
-        </operation>
-      </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
-            element="process.ecore#//Connector/configuration">
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/configuration"
-              featureName="name" dataValue="configuration"/>
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/configuration"
-              featureName="containment" dataValue="true" oldDataValue="false"/>
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/configuration"
-              featureName="eType" referenceValue="connector-configuration.ecore#//ConnectorConfiguration"/>
-        </changes>
-        <operation name="newReference">
-          <parameters name="eClass">
-            <referenceValue element="process.ecore#//Connector"/>
-          </parameters>
-          <parameters name="name">
-            <dataValue>configuration</dataValue>
-          </parameters>
-          <parameters name="type">
-            <referenceValue element="connector-configuration.ecore#//ConnectorConfiguration"/>
-          </parameters>
-          <parameters name="lowerBound">
-            <dataValue>0</dataValue>
-          </parameters>
-          <parameters name="upperBound">
-            <dataValue>1</dataValue>
-          </parameters>
-          <parameters name="containment">
-            <dataValue>true</dataValue>
-          </parameters>
-          <parameters name="opposite"/>
-        </operation>
-      </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
-            element="process.ecore#//Connector/definitionVersion">
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionVersion"
-              featureName="name" dataValue="definitionVersion"/>
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionVersion"
-              featureName="lowerBound" dataValue="1" oldDataValue="0"/>
-          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionVersion"
-              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        </changes>
-        <operation name="newAttribute">
-          <parameters name="eClass">
-            <referenceValue element="process.ecore#//Connector"/>
-          </parameters>
-          <parameters name="name">
-            <dataValue>definitionVersion</dataValue>
-          </parameters>
-          <parameters name="type">
-            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-          </parameters>
-          <parameters name="lowerBound">
-            <dataValue>1</dataValue>
-          </parameters>
-          <parameters name="upperBound">
-            <dataValue>1</dataValue>
-          </parameters>
-          <parameters name="defaultValue">
-            <dataValue xsi:nil="true"/>
-          </parameters>
-        </operation>
-      </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Delete" target="process.ecore#/" referenceName="eClassifiers">
-          <element xsi:type="ecore:EClass" name="Parameter">
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
-          </element>
-        </changes>
-        <operation name="deleteClass">
-          <parameters name="eClass">
-            <referenceValue element="#//@releases.1/@changes.34/@changes.11/@changes.0/@element"/>
-          </parameters>
-        </operation>
-      </changes>
-      <changes xsi:type="history:OperationChange">
-        <changes xsi:type="history:Delete" target="process.ecore#/" referenceName="eClassifiers">
-          <element xsi:type="ecore:EClass" name="OutputParameterMapping">
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueExpression"
-                eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            <eStructuralFeatures xsi:type="ecore:EReference" name="targetData" eType="ecore:EClass process.ecore#//Data"/>
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="additionalPath"
-                eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-                defaultValueLiteral="">
-              <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-                <details key="documentation" value="This field is used to provide additional description of the target data.&#xA;For example, if the selected data is &quot;myData&quot;, which is of XML, then this field will contain&#xA;&quot;:/myNode/@myAttr&quot; or &quot;:/myNode/text()&quot;"/>
-              </eAnnotations>
-            </eStructuralFeatures>
-            <eStructuralFeatures xsi:type="ecore:EReference" name="targetWidget" eType="ecore:EClass form.ecore#//Widget"/>
-          </element>
-        </changes>
-        <operation name="deleteClass">
-          <parameters name="eClass">
-            <referenceValue element="#//@releases.1/@changes.34/@changes.12/@changes.0/@element"/>
-          </parameters>
-        </operation>
-      </changes>
-    </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.PageFlowMigration">
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Delete" target="process.ecore#//PageFlow" referenceName="eStructuralFeatures">
@@ -9152,7 +8909,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.35/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.34/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9194,7 +8951,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.35/@changes.2/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.34/@changes.2/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9237,7 +8994,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.35/@changes.4/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.34/@changes.4/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9281,7 +9038,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.35/@changes.6/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.34/@changes.6/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9324,7 +9081,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.35/@changes.8/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.34/@changes.8/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9367,7 +9124,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.35/@changes.10/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.34/@changes.10/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9411,7 +9168,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.36/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.35/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9421,7 +9178,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.36/@changes.1/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.35/@changes.1/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9549,7 +9306,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.38/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.37/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9594,7 +9351,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.39/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.38/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9638,7 +9395,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.39/@changes.2/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.38/@changes.2/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9683,7 +9440,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.40/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.39/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9725,7 +9482,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.40/@changes.2/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.39/@changes.2/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9771,7 +9528,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.39/@changes.4/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9815,7 +9572,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.40/@changes.6/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.39/@changes.6/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9858,7 +9615,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.40/@changes.8/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.39/@changes.8/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9902,7 +9659,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.40/@changes.10/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.39/@changes.10/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9945,7 +9702,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.40/@changes.12/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.39/@changes.12/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9956,7 +9713,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.40/@changes.13/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.39/@changes.13/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9967,7 +9724,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.40/@changes.14/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.39/@changes.14/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -9977,7 +9734,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.40/@changes.15/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.39/@changes.15/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10019,7 +9776,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.40/@changes.17/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.39/@changes.17/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10124,7 +9881,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.41/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.40/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10167,7 +9924,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.41/@changes.2/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.40/@changes.2/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10210,7 +9967,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.41/@changes.4/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.40/@changes.4/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10253,7 +10010,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.41/@changes.6/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.40/@changes.6/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10268,7 +10025,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.41/@changes.7/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.40/@changes.7/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10279,7 +10036,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.41/@changes.8/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.40/@changes.8/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10295,7 +10052,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.41/@changes.9/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.40/@changes.9/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10307,7 +10064,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.41/@changes.10/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.40/@changes.10/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10319,7 +10076,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.41/@changes.11/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.40/@changes.11/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10333,7 +10090,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.42/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.41/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10379,7 +10136,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.43/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.42/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10390,7 +10147,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.43/@changes.1/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.42/@changes.1/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10468,7 +10225,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.44/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.43/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10479,7 +10236,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.44/@changes.1/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.43/@changes.1/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10489,7 +10246,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.44/@changes.2/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.43/@changes.2/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10499,7 +10256,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.44/@changes.3/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.43/@changes.3/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10509,7 +10266,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.44/@changes.4/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.43/@changes.4/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10519,7 +10276,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.44/@changes.5/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.43/@changes.5/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10723,7 +10480,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.45/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.44/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10766,7 +10523,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.45/@changes.2/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.44/@changes.2/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10808,7 +10565,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.45/@changes.4/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.44/@changes.4/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10850,7 +10607,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.45/@changes.6/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.44/@changes.6/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10860,7 +10617,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.45/@changes.7/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.44/@changes.7/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10902,7 +10659,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.45/@changes.9/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.44/@changes.9/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -10976,7 +10733,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.45/@changes.12/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.44/@changes.12/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -11018,7 +10775,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.45/@changes.14/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.44/@changes.14/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -11060,7 +10817,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.45/@changes.16/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.44/@changes.16/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -11102,7 +10859,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.45/@changes.18/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.44/@changes.18/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -11172,7 +10929,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.46/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.45/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -11216,7 +10973,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.46/@changes.2/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.45/@changes.2/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -11261,7 +11018,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.47/@changes.0/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.46/@changes.0/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -11304,7 +11061,7 @@
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.47/@changes.2/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.46/@changes.2/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -11343,12 +11100,12 @@
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Delete" target="kpi.ecore#//DatabaseKPIBinding"
             referenceName="eStructuralFeatures">
-          <element xsi:type="ecore:EReference" name="databaseConfiguration" eType="#//@releases.1/@changes.47/@changes.17/@changes.0/@element"
+          <element xsi:type="ecore:EReference" name="databaseConfiguration" eType="#//@releases.1/@changes.46/@changes.17/@changes.0/@element"
               containment="true"/>
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.47/@changes.4/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.46/@changes.4/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -11547,12 +11304,12 @@
       <changes xsi:type="history:OperationChange">
         <changes xsi:type="history:Delete" target="kpi.ecore#//DatabaseKPIDefinition"
             referenceName="eStructuralFeatures">
-          <element xsi:type="ecore:EReference" name="defaultConfiguration" eType="#//@releases.1/@changes.47/@changes.17/@changes.0/@element"
+          <element xsi:type="ecore:EReference" name="defaultConfiguration" eType="#//@releases.1/@changes.46/@changes.17/@changes.0/@element"
               containment="true"/>
         </changes>
         <operation name="deleteFeature2">
           <parameters name="feature">
-            <referenceValue element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.46/@changes.11/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>
@@ -11726,7 +11483,249 @@
         </changes>
         <operation name="deleteClass">
           <parameters name="eClass">
-            <referenceValue element="#//@releases.1/@changes.47/@changes.17/@changes.0/@element"/>
+            <referenceValue element="#//@releases.1/@changes.46/@changes.17/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+    </changes>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.ConnectorMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+            element="process.ecore#//DataAware">
+          <changes xsi:type="history:Set" element="process.ecore#//DataAware" featureName="name"
+              dataValue="DataAware"/>
+        </changes>
+        <operation name="newClass">
+          <parameters name="ePackage">
+            <referenceValue element="process.ecore#/"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>DataAware</dataValue>
+          </parameters>
+          <parameters name="superClasses"/>
+          <parameters name="abstr">
+            <dataValue>false</dataValue>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:CompositeChange">
+        <changes xsi:type="history:Add" element="process.ecore#//ConnectableElement"
+            featureName="eSuperTypes" referenceValue="process.ecore#//DataAware"/>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Move" target="process.ecore#//DataAware" referenceName="eStructuralFeatures"
+            element="process.ecore#//DataAware/data" source="process.ecore#//ConnectableElement"/>
+        <operation name="pullFeature">
+          <parameters name="features">
+            <referenceValue element="process.ecore#//DataAware/data"/>
+          </parameters>
+          <parameters name="targetClass">
+            <referenceValue element="process.ecore#//DataAware"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Connector" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="connectorId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.1/@changes.47/@changes.3/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Connector" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="configurationId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.1/@changes.47/@changes.4/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Connector" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" name="parameters" upperBound="-1" eType="#//@releases.1/@changes.47/@changes.11/@changes.0/@element"
+              containment="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.1/@changes.47/@changes.5/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Connector" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EReference" name="outputs" upperBound="-1" eType="#//@releases.1/@changes.47/@changes.12/@changes.0/@element"
+              containment="true"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.1/@changes.47/@changes.6/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
+            element="process.ecore#//Connector/definitionId">
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionId"
+              featureName="name" dataValue="definitionId"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionId"
+              featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionId"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//Connector"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>definitionId</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
+            element="process.ecore#//Connector/outputs">
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/outputs"
+              featureName="name" dataValue="outputs"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/outputs"
+              featureName="upperBound" dataValue="-1" oldDataValue="1"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/outputs"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/outputs"
+              featureName="eType" referenceValue="expression.ecore#//Operation"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//Connector"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>outputs</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="expression.ecore#//Operation"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>-1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
+            element="process.ecore#//Connector/configuration">
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/configuration"
+              featureName="name" dataValue="configuration"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/configuration"
+              featureName="containment" dataValue="true" oldDataValue="false"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/configuration"
+              featureName="eType" referenceValue="connector-configuration.ecore#//ConnectorConfiguration"/>
+        </changes>
+        <operation name="newReference">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//Connector"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>configuration</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="connector-configuration.ecore#//ConnectorConfiguration"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>0</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="containment">
+            <dataValue>true</dataValue>
+          </parameters>
+          <parameters name="opposite"/>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Create" target="process.ecore#//Connector" referenceName="eStructuralFeatures"
+            element="process.ecore#//Connector/definitionVersion">
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionVersion"
+              featureName="name" dataValue="definitionVersion"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionVersion"
+              featureName="lowerBound" dataValue="1" oldDataValue="0"/>
+          <changes xsi:type="history:Set" element="process.ecore#//Connector/definitionVersion"
+              featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="newAttribute">
+          <parameters name="eClass">
+            <referenceValue element="process.ecore#//Connector"/>
+          </parameters>
+          <parameters name="name">
+            <dataValue>definitionVersion</dataValue>
+          </parameters>
+          <parameters name="type">
+            <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+          </parameters>
+          <parameters name="lowerBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="upperBound">
+            <dataValue>1</dataValue>
+          </parameters>
+          <parameters name="defaultValue">
+            <dataValue xsi:nil="true"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#/" referenceName="eClassifiers">
+          <element xsi:type="ecore:EClass" name="Parameter">
+            <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+            <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+          </element>
+        </changes>
+        <operation name="deleteClass">
+          <parameters name="eClass">
+            <referenceValue element="#//@releases.1/@changes.47/@changes.11/@changes.0/@element"/>
+          </parameters>
+        </operation>
+      </changes>
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#/" referenceName="eClassifiers">
+          <element xsi:type="ecore:EClass" name="OutputParameterMapping">
+            <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueExpression"
+                eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+            <eStructuralFeatures xsi:type="ecore:EReference" name="targetData" eType="ecore:EClass process.ecore#//Data"/>
+            <eStructuralFeatures xsi:type="ecore:EAttribute" name="additionalPath"
+                eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+                defaultValueLiteral="">
+              <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+                <details key="documentation" value="This field is used to provide additional description of the target data.&#xA;For example, if the selected data is &quot;myData&quot;, which is of XML, then this field will contain&#xA;&quot;:/myNode/@myAttr&quot; or &quot;:/myNode/text()&quot;"/>
+              </eAnnotations>
+            </eStructuralFeatures>
+            <eStructuralFeatures xsi:type="ecore:EReference" name="targetWidget" eType="ecore:EClass form.ecore#//Widget"/>
+          </element>
+        </changes>
+        <operation name="deleteClass">
+          <parameters name="eClass">
+            <referenceValue element="#//@releases.1/@changes.47/@changes.12/@changes.0/@element"/>
           </parameters>
         </operation>
       </changes>

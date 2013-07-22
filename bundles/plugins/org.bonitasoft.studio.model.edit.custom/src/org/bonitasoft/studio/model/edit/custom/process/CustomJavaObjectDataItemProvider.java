@@ -17,8 +17,6 @@
  */
 package org.bonitasoft.studio.model.edit.custom.process;
 
-import java.net.URL;
-
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.edit.custom.EMFEditCustomPlugin;
 import org.bonitasoft.studio.model.process.Data;
@@ -26,8 +24,6 @@ import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.provider.JavaObjectDataItemProvider;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
@@ -60,7 +56,7 @@ public class CustomJavaObjectDataItemProvider extends JavaObjectDataItemProvider
 				if(((JavaObjectData) object).getClassName() != null){
 					try {
 						IType t = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(((JavaObjectData) object).getClassName());
-						if(t.isInterface()){
+						if(t != null && t.isInterface()){
 							iconImage = Pics.getImage("int_obj.gif");
 							if(EMFEditCustomPlugin.getDefault().getImageRegistry().get("decoratedImageForInterfaceJavaObject") == null){
 								EMFEditCustomPlugin.getDefault().getImageRegistry().put("decoratedImageForInterfaceJavaObject", new DecorationOverlayIcon(iconImage,Pics.getImageDescriptor("form_decorator.png",EMFEditCustomPlugin.getDefault()),IDecoration.BOTTOM_LEFT).createImage());

@@ -124,6 +124,9 @@ public class DefinitionCategoryContentProvider implements ITreeContentProvider {
 	public boolean isLeafCategory(ConnectorDefinition def,Category category){
 		boolean isRoot = true;
 		boolean hasChild = false;
+		if(def.getCategory().size() == 1){
+			return true;
+		}
 		if(category.getParentCategoryId() == null && def.getCategory().size() == 1){
 			return true;
 		}

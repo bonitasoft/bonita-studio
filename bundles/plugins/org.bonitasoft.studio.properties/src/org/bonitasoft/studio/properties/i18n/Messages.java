@@ -54,6 +54,7 @@ public class Messages extends NLS {
 	public static String createForm_defaultName;
 	public static String createForm_noData;
 	public static String error_allreadyExists;
+	public static String error_documentAllreadyexist;
 	public static String error_empty;
 	public static String duplicateForm_desc;
 	public static String duplicateForm_title;

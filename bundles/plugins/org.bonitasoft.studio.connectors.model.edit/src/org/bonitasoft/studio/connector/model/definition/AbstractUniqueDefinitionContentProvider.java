@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bonitasoft.studio.connector.model.definition.dialog.DefinitionCategoryContentProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 
 /**
@@ -105,4 +104,16 @@ public abstract class AbstractUniqueDefinitionContentProvider extends AbstractDe
 		return null;
 	}
 
+	@Override
+	public Object getParent(Object element) {
+		if(element instanceof Category){
+			Object parent = super.getParent(element);
+			if(parent == null){
+				return ROOT;
+			}
+			return parent;
+		}
+		return super.getParent(element);
+	}
+	
 }

@@ -45,7 +45,8 @@ Export-Package: org.bonitasoft.studio.connectors,
  org.bonitasoft.studio.connectors.ui.property.section,
  org.bonitasoft.studio.connectors.ui.provider,
  org.bonitasoft.studio.connectors.ui.wizard,
- org.bonitasoft.studio.connectors.ui.wizard.page
+ org.bonitasoft.studio.connectors.ui.wizard.page,
+ org.bonitasoft.studio.connectors.ui.wizard.page.sqlutil
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,
  org.bonitasoft.engine.bpm.bar,

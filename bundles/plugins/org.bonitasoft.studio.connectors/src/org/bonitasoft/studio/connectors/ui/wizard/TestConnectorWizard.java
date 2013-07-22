@@ -26,7 +26,9 @@ import org.bonitasoft.studio.connectors.configuration.SelectConnectorImplementat
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
+import org.bonitasoft.studio.connectors.ui.wizard.page.AbstractConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.TestConnectorOutputWizardPage;
+import org.bonitasoft.studio.connectors.ui.wizard.page.TestDatabaseConnectorOutputWizardPage;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.emf.ecore.EObject;
@@ -57,8 +59,13 @@ public class TestConnectorWizard extends ConnectorWizard {
 	@Override
 	protected void addOuputPage(ConnectorDefinition definition) {
 		if(!definition.getOutput().isEmpty()){
-			final TestConnectorOutputWizardPage outputPage = new TestConnectorOutputWizardPage() ;
-			createDefaultOutputs(definition) ;
+			AbstractConnectorOutputWizardPage outputPage = null;
+			if(supportsDatabaseOutputMode(definition)){
+				outputPage = new TestDatabaseConnectorOutputWizardPage();
+			}else{
+				outputPage = new TestConnectorOutputWizardPage() ;
+				createDefaultOutputs(definition) ;
+			}
 			outputPage.setElementContainer(container) ;
 			outputPage.setConnector(connectorWorkingCopy) ;
 			outputPage.setDefinition(definition) ;

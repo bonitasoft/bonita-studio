@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -63,9 +62,14 @@ import org.bonitasoft.studio.connectors.repository.ConnectorImplFileStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
+import org.bonitasoft.studio.importer.bar.i18n.Messages;
+import org.bonitasoft.studio.migration.model.report.Change;
+import org.bonitasoft.studio.migration.model.report.MigrationReportFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.core.Flags;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
@@ -96,7 +100,8 @@ public class ConnectorDescriptorToConnectorDefinition {
 	private static final String CONNECTOR_ID = "ConnectorId";
 	private static final String DESCRIPTION = "Description";
 	private static final String BASE_VERSION = "1.0.0";
-	private static final String MIGRATION_COMMENT = "	//Following code has been retrieved from a v5 connector. Please adapt this code with Bonita BPM 6 API\n";
+	private static final String MIGRATION_COMMENT = "	//Following code has been retrieved from a v5 connector. Please adapt this code with Bonita BPM 6 API";
+	private static final String DEFAULT_PACKAGE = "com.mycompany.connector.";
 
 
 	private ConnectorDescription v5Descriptor;
@@ -131,7 +136,7 @@ public class ConnectorDescriptorToConnectorDefinition {
 		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final ConnectorDefFileStore file = store.createRepositoryFileStore(NamingUtils.toConnectorDefinitionFilename(connectorId, connectorVersion, true));
 		file.save(connectorDefinition);
-
+		store.getResourceProvider().loadDefinitionsCategories(Repository.NULL_PROGRESS_MONITOR);
 	}
 
 	public void createConnectorImplementation() throws Exception{
@@ -144,7 +149,7 @@ public class ConnectorDescriptorToConnectorDefinition {
 		connectorImplementation.setDefinitionId(v5Descriptor.getId());
 		connectorImplementation.setHasSources(true);
 		connectorImplementation.setDescription(v5Descriptor.getDescription());
-		connectorImplementation.setImplementationClassname(v5Descriptor.getConnectorClass().getName()+"Impl");
+		connectorImplementation.setImplementationClassname(getNewImplementationClassName());
 
 		final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
@@ -153,14 +158,23 @@ public class ConnectorDescriptorToConnectorDefinition {
 		ClassGenerator.generateConnectorImplementationAbstractClass(connectorImplementation,definition,AbstractConnector.class.getName(),sourceStore, Repository.NULL_PROGRESS_MONITOR) ;
 		
 		IType classType = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(connectorImplementation.getImplementationClassname()) ;
-		classType.getCompilationUnit().delete(true, Repository.NULL_PROGRESS_MONITOR);
-		
+		if(classType != null){
+			classType.getCompilationUnit().delete(true, Repository.NULL_PROGRESS_MONITOR);
+		}
 		ClassGenerator.generateConnectorImplementationClass(connectorImplementation,definition,sourceStore, Repository.NULL_PROGRESS_MONITOR) ;
 		mergeSourceFile(v5Descriptor.getConnectorClass().getName(),sourceStore);
 
 		final ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
 		final ConnectorImplFileStore file = store.createRepositoryFileStore(NamingUtils.toConnectorImplementationFilename(implementationId, BASE_VERSION, true));
 		file.save(connectorImplementation);
+	}
+
+	private String getNewImplementationClassName() {
+		String name = v5Descriptor.getConnectorClass().getName();
+		if(name.indexOf(".") == -1){//no package
+			name = DEFAULT_PACKAGE + name;
+		}
+		return name+"Impl";
 	}
 
 	protected Map<String,String> mergeSourceFile(String implementationClassname,ConnectorSourceRepositoryStore sourceStore) throws ZipException, IOException, CoreException {
@@ -181,13 +195,19 @@ public class ConnectorDescriptorToConnectorDefinition {
 			RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
 			IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
 			IType originalImplType = project.findType(implementationClassname);
-			IType implType = project.findType(implementationClassname+"Impl");
+			IType implType = project.findType(getNewImplementationClassName());
 			if(originalImplType != null && implType != null){
 				org.eclipse.jface.text.Document doc = new org.eclipse.jface.text.Document();
 				for(IMethod method : originalImplType.getMethods()){
 					if(!isGetter(method) && !isSetter(method)){
 						if(!method.getElementName().equals("executeConnector")){
-							method.copy(implType, null, null, false, Repository.NULL_PROGRESS_MONITOR);
+							try{
+								if(!method.isReadOnly()){
+									method.copy(implType, null, null, false, Repository.NULL_PROGRESS_MONITOR);
+								}
+							}catch(CoreException e){
+								BonitaStudioLog.error(e);
+							}
 						}
 					}
 				}
@@ -219,7 +239,10 @@ public class ConnectorDescriptorToConnectorDefinition {
 						}
 					}
 				}
-				originalImplType.getCompilationUnit().delete(true, Repository.NULL_PROGRESS_MONITOR);
+				ICompilationUnit compilationUnit = originalImplType.getCompilationUnit();
+				if(compilationUnit != null){
+					compilationUnit.delete(true, Repository.NULL_PROGRESS_MONITOR);
+				}
 				RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
 			}
 		}
@@ -264,20 +287,20 @@ public class ConnectorDescriptorToConnectorDefinition {
 	protected org.bonitasoft.studio.connector.model.definition.Component createWidget(
 			Component component) {
 		org.bonitasoft.studio.connector.model.definition.Component widget = null;
-		if(component instanceof Text){
+		if(component instanceof Password){
+			widget = createPasswordWidget((Password)component);
+		}else if(component instanceof Text){
 			widget = createTextWidget((Text)component);
-		}else if(component instanceof Checkbox){
-			widget = createCheckboxWidget((Checkbox)component);
 		}else if(component instanceof Radio){
 			widget = createCheckboxWidget((Radio)component);
+		}else if(component instanceof Checkbox){
+			widget = createCheckboxWidget((Checkbox)component);
 		}else if(component instanceof Select){
 			widget = createSelectWidget((Select)component);
 		}else if(component instanceof Array){
 			widget = createTableWidget((Array)component);
 		}else if(component instanceof SimpleList){
 			widget = createListWidget((SimpleList)component);
-		}else if(component instanceof Password){
-			widget = createPasswordWidget((Password)component);
 		}else if(component instanceof Textarea){
 			widget = createTextAreaWidget((Textarea)component);
 		}
@@ -555,6 +578,17 @@ public class ConnectorDescriptorToConnectorDefinition {
 			iconName = iconName.substring(iconName.lastIndexOf("/")+1, iconName.length());
 		}
 		return iconName;
+	}
+
+	public Change createReportChange() {
+		Change change = MigrationReportFactory.eINSTANCE.createChange();
+		change.setElementName(v5Descriptor.getId());
+		change.setElementType(Messages.customConnector);
+		change.setElementUUID("");
+		change.setDescription(Messages.customConnectorMigrationDescription);
+		change.setPropertyName(Messages.development);
+		change.setStatus(IStatus.WARNING);
+		return change;
 	}
 
 

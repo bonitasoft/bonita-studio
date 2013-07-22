@@ -88,7 +88,6 @@ public class GeneralPropertySection extends ExtensibleGridPropertySection {
 
 	@Override
 	public String getSectionDescription() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

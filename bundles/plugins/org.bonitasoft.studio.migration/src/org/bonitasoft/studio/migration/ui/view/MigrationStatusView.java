@@ -261,7 +261,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 	}
 
 	protected void createTableComposite(Composite mainComposite) {
-		Composite tableComposite = new Composite(mainComposite, SWT.NONE);
+		final Composite tableComposite = new Composite(mainComposite, SWT.NONE);
 		tableComposite.setLayout(GridLayoutFactory.fillDefaults().create());
 		tableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
@@ -315,7 +315,14 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 						public void run() {
 							if(!tableViewer.getTable().isDisposed()){
 								tableViewer.getTable().setLayoutDeferred(false);
-								tableViewer.getTable().layout();
+								Point oldSize = tableViewer.getTable().getSize();
+								Point s = tableViewer.getTable().computeSize(SWT.DEFAULT, tableViewer.getTable().getBounds().height);
+								if(oldSize.x != s.x){
+									oldSize.x = s.x;
+									tableViewer.getTable().setSize(oldSize);
+								}
+								tableViewer.getTable().layout(true,true);
+								
 							}
 						}
 					});
@@ -556,7 +563,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 			Object selectedEP = ((StructuredSelection) selection).getFirstElement();
 			if(selectedEP instanceof IGraphicalEditPart){
 				IEditorPart editorPart = getSite().getPage().getActiveEditor();
-				if(editorPart != null && !editorPart.equals(tableViewer.getInput())){
+				if(editorPart instanceof DiagramEditor && !editorPart.equals(tableViewer.getInput())){
 					selectionProvider = editorPart.getEditorSite().getSelectionProvider();
 					tableViewer.setInput(editorPart);
 					exportAction.setReport(getReportFromEditor(editorPart));

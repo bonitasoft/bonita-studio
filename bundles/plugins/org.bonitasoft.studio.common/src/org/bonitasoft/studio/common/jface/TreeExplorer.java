@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -87,11 +88,23 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 			
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				Object leftSelection =((IStructuredSelection) leftTree.getSelection()).getFirstElement();
+				Set<Object> parents = new HashSet<Object>();
+				Object p = contentProvider.getParent(element);
+				if(p != null){
+					parents.add(p);
+				}
+				while (p != null) {
+					p = contentProvider.getParent(p);
+					if(p != null){
+						parents.add(p);
+					}
+				}
 				if(searchField.getText().isEmpty()){
-					return true;
+					return leftSelection == null || parents.contains(leftSelection);
 				}
 				final String text = labelProvider.getText(element);
-				return text != null && text.toLowerCase().contains(searchField.getText().toLowerCase()) ;
+				return text != null && text.toLowerCase().contains(searchField.getText().toLowerCase()) && ( leftSelection == null || parents.contains(leftSelection)) ;
 			}
 		});
 		leftTree.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -100,10 +113,7 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 			public void selectionChanged(SelectionChangedEvent event) {
 				Object selection =	((IStructuredSelection) event.getSelection()).getFirstElement();
 				if(selection != null){
-					Object[] children = getSubtree(selection);
-					if(children != null){
-						rightTable.setInput(children);
-					}
+					rightTable.refresh(null);
 				}
 			}
 		});
@@ -181,6 +191,11 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 		rightTable.addFilter(filter);
 	}
 
+	public void removeTreeFilter(ViewerFilter filter) {
+		rightTable.removeFilter(filter);
+	}
+
+	
 	public void setLabelProvider(ILabelProvider labelProvider){
 		this.labelProvider = labelProvider;
 	}
@@ -225,4 +240,5 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 		return leftTree;
 	}
 
+	
 }

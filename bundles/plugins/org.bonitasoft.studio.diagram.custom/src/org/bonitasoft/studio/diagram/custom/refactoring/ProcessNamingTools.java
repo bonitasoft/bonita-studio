@@ -84,6 +84,7 @@ public class ProcessNamingTools {
 	public void changeProcessNameAndVersion(final AbstractProcess process,final String name, final String version) {
 		proceedForPools(process, name, process.getName(), ((AbstractProcess) process).getVersion(), version);
 		if(process instanceof MainProcess){
+			editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, System.getProperty("user.name", "Unknown")));
 			editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID, ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId((MainProcess) process)));
 		}
 	}

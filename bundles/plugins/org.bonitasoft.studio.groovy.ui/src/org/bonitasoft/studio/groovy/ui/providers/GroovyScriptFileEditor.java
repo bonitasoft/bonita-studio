@@ -18,6 +18,7 @@ package org.bonitasoft.studio.groovy.ui.providers;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
@@ -71,14 +72,14 @@ public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor impleme
     }
 
     @Override
-    public void bindExpression(EMFDataBindingContext dataBindingContext,final EObject context, Expression inputExpression,ViewerFilter[] filters) {
+    public void bindExpression(EMFDataBindingContext dataBindingContext,final EObject context, Expression inputExpression,ViewerFilter[] filters,ExpressionViewer expressionViewer) {
         this.inputExpression = inputExpression ;
         this.context = context ;
 
         IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT) ;
 
         groovyViewer.getDocument().set(inputExpression.getContent()) ;
-        groovyViewer.setContext(context,filters) ;
+        groovyViewer.setContext(context,filters,expressionViewer.getExpressionNatureProvider()) ;
         nodes = groovyViewer.getFieldNodes() ;
 
         if (context == null && (nodes == null || nodes.isEmpty())) {

@@ -30,8 +30,8 @@ import org.eclipse.emf.ecore.EObject;
  */
 public class ExpressionContentProvider implements IExpressionNatureProvider {
 
-    private EObject context;
-    private Expression[] cachedExpressions;
+    protected EObject context;
+    protected Expression[] cachedExpressions;
 
     @Override
     public EObject getContext(){

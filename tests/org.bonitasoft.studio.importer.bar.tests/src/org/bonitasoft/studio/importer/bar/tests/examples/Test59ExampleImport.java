@@ -16,14 +16,24 @@
  */
 package org.bonitasoft.studio.importer.bar.tests.examples;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.ConnectorSourceRepositoryStore;
 import org.bonitasoft.studio.importer.bar.tests.BarImporterTestUtil;
+import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -51,7 +61,25 @@ public class Test59ExampleImport {
 	@Test
 	public void testBuyAMiniMigration() throws Exception{
 		String barName = "Buy_a_MINI--3.2.bar";
-		testExampleMigration(barName);
+		final MainProcess mainProc = testExampleMigration(barName);
+		
+		final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+		assertNotNull(defStore.getDefinition("MiniDueDateConnector","1.0.0"));
+		assertNotNull(defStore.getDefinition("MiniStockCheckConnector","1.0.0"));
+		
+		final ConnectorImplRepositoryStore implStore = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+		ConnectorImplementation dueDateImplementation = implStore.getImplementation("MiniDueDateConnector-impl","1.0.0");
+		assertNotNull(dueDateImplementation);
+		ConnectorImplementation stockCheckImplementation = implStore.getImplementation("MiniStockCheckConnector-impl","1.0.0");
+		assertNotNull(stockCheckImplementation);
+		
+		final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
+		assertNotNull(sourceStore.getChild(dueDateImplementation.getImplementationClassname()));
+		assertNotNull(sourceStore.getChild(stockCheckImplementation.getImplementationClassname()));
+		
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 2, connectors.size());
 	}
 	
 	@Test

@@ -135,7 +135,32 @@ public class Messages extends NLS {
 	public static String connectorAdditionalDependencyTitle;
 	public static String connectorAdditionalDependencyMessage;
 	public static String selectConnectorDefinitionForImplDesc;
+	public static String outputOperationsDefinitionTitle;
+	public static String outputOperationsDefinitionDesc;
+	public static String selectConnectorOutputMode;
+	public static String graphicalMode;
+	public static String graphicalModeDescription;
+	public static String singleValue;
+	public static String oneRowNCol;
+	public static String nRowOneCol;
+	public static String nRowsNcolumns;
+	public static String oneRowHint;
+	public static String oneColHint;
+	public static String tableHint;
+	public static String scriptMode;
+	public static String scriptModeDescription;
+	public static String alwaysUseScriptingMode;
 
+	public static String singleDatabaseOutputDescription;
+	public static String oneRowDatabaseOutputDescription;
+	public static String oneColDatabaseOutputDescription;
+	public static String nRowsNColsDatabaseOutputDescription;
+
+	public static String takeValueOf;
+	public static String nRowsOneColOutputHint;
+	public static String nRowsNColsOutputHint;
+
+	public static String alwaysUseScriptingModeOutputPref;
     /**
      * @param event
      * @return

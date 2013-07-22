@@ -36,6 +36,7 @@ import org.bonitasoft.studio.model.expression.Operator;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -186,7 +187,11 @@ public class TestConnectorMigrationUseCase {
 
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
-		assertEquals("Invalid number of connector", 2, connectors.size());
+		if("org.bonitasoft.studio.product".equals(Platform.getProduct().getId())){
+			assertEquals("Invalid number of connector", 1, connectors.size());
+		} else {
+			assertEquals("Invalid number of connector", 2, connectors.size());
+		}
 	}
 
 	@Test

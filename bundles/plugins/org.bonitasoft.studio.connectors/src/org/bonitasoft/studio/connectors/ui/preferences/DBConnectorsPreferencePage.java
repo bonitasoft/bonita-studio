@@ -41,17 +41,21 @@ import org.bonitasoft.studio.connectors.ui.provider.DatabaseDriversLabelProvider
 import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.preferences.pages.AbstractBonitaPreferencePage;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.gmf.runtime.common.ui.preferences.CheckBoxFieldEditor;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -92,9 +96,12 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 	private DatabaseDriversLabelProvider driversLabelProvider;
 	private Button automaticallyAddDriver;
 	private static final String CLASS = "class";
-	
+
+
+
 	@Override
 	protected Control createContents(Composite parent) {
+		setPreferenceStore(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore());
 		final Composite titleComposite = new Composite(parent, SWT.NONE) ;
 		titleComposite.setLayout(new GridLayout(2,false)) ;
 		titleComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create()) ;
@@ -113,6 +120,12 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		composite.setLayout(layout);
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
 
+		final Composite booleanEditorComposite = new Composite(composite, SWT.NONE);
+		booleanEditorComposite.setLayoutData(GridDataFactory.fillDefaults().span(2, 1).grab(true, false).create());
+		booleanEditorComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
+		BooleanFieldEditor editor = new CheckBoxFieldEditor(BonitaPreferenceConstants.ALWAYS_USE_SCRIPTING_MODE, Messages.alwaysUseScriptingModeOutputPref, booleanEditorComposite);
+		addField(editor);
+
 		final Label label = new Label(composite, SWT.WRAP);
 		label.setText(Messages.BonitaPreferencePage_DBConnectors_Description);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -120,8 +133,14 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
 		label.setLayoutData(data);
+
 		createDBConnectorsList(composite);
 		createDriverManager(composite);
+
+
+		initialize();
+		checkState();
+
 		return composite;
 	}
 
@@ -275,7 +294,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		});
 		bindButtonWithViewer(automaticallyAddDriver,viewer);
 	}
-	
+
 	private void bindButtonWithViewer(Button button,TableViewer viewer){
 		UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
 		modelToTarget.setConverter(new Converter(Object.class,Boolean.class){
@@ -326,7 +345,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 
 	@Override
 	protected void createFieldEditors() {
-	
+
 
 	}
 
@@ -350,7 +369,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		}
 		return jars;
 	}
-	
+
 	private void setJars(String connectorId, List<String> jars){
 		DatabaseConnectorPropertiesFileStore fileStore = store.getChild(getDBPrefFilename(connectorId));
 		if (fileStore ==null){
@@ -370,12 +389,12 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 	protected String getDBPrefFilename(String connectorId) {
 		return connectorId+"."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT;
 	}
-	
+
 	private boolean getAutoAddDriverProperty(String connectorId){
 		DatabaseConnectorPropertiesFileStore fileStore = store.getChild(connectorId+"."+DatabaseConnectorPropertiesRepositoryStore.CONF_EXT);
 		return fileStore !=null && fileStore.getAutoAddDriver();
 	}
-	
+
 	private void setDefaultDriver(String connectorId, String defaultDriver){
 		final String dbPrefFilename = getDBPrefFilename(connectorId);
 		DatabaseConnectorPropertiesFileStore fileStore = store.getChild(dbPrefFilename);
@@ -384,7 +403,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 		}
 		fileStore.setDefault(defaultDriver);
 	}
-	
+
 	private void setAutoAddDriverProperty(String connectorId){
 		final String dbPrefFilename = getDBPrefFilename(connectorId);
 		DatabaseConnectorPropertiesFileStore fileStore = store.getChild(dbPrefFilename);
@@ -394,7 +413,7 @@ public class DBConnectorsPreferencePage extends AbstractBonitaPreferencePage imp
 			fileStore =  store.createRepositoryFileStore(dbPrefFilename);
 		}
 	}
-	
+
 	@Override
 	protected void performDefaults() {
 		super.performDefaults();

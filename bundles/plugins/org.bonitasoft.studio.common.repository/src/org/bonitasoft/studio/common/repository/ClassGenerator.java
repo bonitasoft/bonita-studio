@@ -54,6 +54,7 @@ import org.eclipse.jdt.ui.cleanup.ICleanUp;
 import org.eclipse.jdt.ui.wizards.NewClassWizardPage;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 
 /**
@@ -90,8 +91,16 @@ public class ClassGenerator {
 
 		Map<String, String> settings= new Hashtable<String, String>();
 		settings.put(CleanUpConstants.FORMAT_SOURCE_CODE, CleanUpOptions.TRUE);
-		RefactoringExecutionStarter.startCleanupRefactoring(new ICompilationUnit[]{classType.getCompilationUnit()},  new ICleanUp[] {new CodeFormatCleanUp(settings)}, false, Display.getDefault().getActiveShell(), false,"");
-
+		Shell activeShell = Display.getDefault().getActiveShell();
+		boolean disposeShell = false;
+		if(activeShell == null){
+			activeShell = new Shell();
+			disposeShell = true;
+		}
+		RefactoringExecutionStarter.startCleanupRefactoring(new ICompilationUnit[]{classType.getCompilationUnit()},  new ICleanUp[] {new CodeFormatCleanUp(settings)}, false, activeShell, false,"");
+		if(disposeShell){
+			activeShell.dispose();
+		}
 
 		return (IFile) classType.getResource();
 	}
