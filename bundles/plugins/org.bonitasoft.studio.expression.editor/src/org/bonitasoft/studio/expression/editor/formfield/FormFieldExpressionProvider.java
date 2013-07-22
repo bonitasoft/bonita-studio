@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.form.provider;
+package org.bonitasoft.studio.expression.editor.formfield;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,9 +24,9 @@ import java.util.Set;
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
-import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Duplicable;
@@ -62,10 +62,16 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 
 	private final ComposedAdapterFactory adapterFactory;
 	private final AdapterFactoryLabelProvider adapterLabelProvider;
+	private boolean addContingentFields = true;
 
 	public FormFieldExpressionProvider(){
 		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		adapterLabelProvider  = new AdapterFactoryLabelProvider(adapterFactory) ;
+	}
+
+	public FormFieldExpressionProvider(boolean addContingentFields){
+		this();
+		this.addContingentFields  = addContingentFields;
 	}
 
 	public Set<Expression> getExpressions(EObject context) {
@@ -73,12 +79,13 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 		EObject relevantParent = getRelevantParent(context) ;
 		if (relevantParent instanceof Widget) {
 			result.add(createExpression((Widget) relevantParent) ) ;
-			for(WidgetDependency dep : ((Widget) relevantParent).getDependOn()){
-				if(dep.getWidget()!=null){
-					result.add(createExpression(dep.getWidget())) ;
+			if(addContingentFields){
+				for(WidgetDependency dep : ((Widget) relevantParent).getDependOn()){
+					if(dep.getWidget()!=null){
+						result.add(createExpression(dep.getWidget())) ;
+					}
 				}
 			}
-
 			// for the Submit button only, add fields of other widgets
 			if(relevantParent instanceof SubmitFormButton){
 				if(relevantParent.eContainer()!= null && relevantParent.eContainer() instanceof Form){

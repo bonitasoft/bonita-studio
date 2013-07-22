@@ -242,6 +242,8 @@ public class Messages extends NLS {
 
 	public static String Action_SelectedValue;
 
+	public static String dateWidgetReturnTypeWarning;
+
 
 
     static {

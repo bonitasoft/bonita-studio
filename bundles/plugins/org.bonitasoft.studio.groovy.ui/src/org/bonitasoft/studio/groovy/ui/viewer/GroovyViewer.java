@@ -33,6 +33,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
@@ -244,10 +245,13 @@ public class GroovyViewer {
 		getSourceViewer().getTextWidget().setLayoutData(layoutData);
 	}
 
-	public void setContext(final EObject context, final ViewerFilter[] filters) {
+	public void setContext(final EObject context, final ViewerFilter[] filters,IExpressionNatureProvider expressionProvider) {
 		nodes = new ArrayList<ScriptVariable>();
 
-		final ExpressionContentProvider provider = new ExpressionContentProvider();
+		IExpressionNatureProvider provider = expressionProvider;
+		if(provider == null){
+			 provider = new ExpressionContentProvider();
+		}
 		provider.setContext(context);
 
 		final Set<Expression> filteredExpressions = new HashSet<Expression>();

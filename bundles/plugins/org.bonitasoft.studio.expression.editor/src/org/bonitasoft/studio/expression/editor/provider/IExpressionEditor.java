@@ -18,6 +18,7 @@ package org.bonitasoft.studio.expression.editor.provider;
 
 import java.util.List;
 
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.databinding.observable.IObservable;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -38,7 +39,7 @@ public interface IExpressionEditor {
 
     Control createExpressionEditor(Composite contentComposite, boolean isPassword);
     
-    void bindExpression(EMFDataBindingContext dataBindingContext,EObject context, Expression inputExpression, ViewerFilter[] viewerTypeFilters);
+    void bindExpression(EMFDataBindingContext dataBindingContext,EObject context, Expression inputExpression, ViewerFilter[] viewerTypeFilters,ExpressionViewer viewer);
 
     boolean canFinish() ;
 

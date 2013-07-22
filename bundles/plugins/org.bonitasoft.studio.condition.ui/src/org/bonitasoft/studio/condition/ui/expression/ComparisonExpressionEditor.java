@@ -38,6 +38,7 @@ import org.bonitasoft.studio.expression.editor.constant.ExpressionReturnTypeCont
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.SelectDependencyDialog;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -313,7 +314,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 	@Override
 	public void bindExpression(EMFDataBindingContext dataBindingContext,
 			EObject context, Expression inputExpression,
-			ViewerFilter[] viewerTypeFilters) {
+			ViewerFilter[] viewerTypeFilters,ExpressionViewer expressionViewer) {
 		this.inputExpression = inputExpression;
 		final IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT) ;
 		final IObservableValue nameModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME) ;

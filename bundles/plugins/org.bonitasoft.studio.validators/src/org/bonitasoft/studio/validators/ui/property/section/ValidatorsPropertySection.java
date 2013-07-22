@@ -194,13 +194,13 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
         // Label text
         labelExpressionViewer = new ExpressionViewer(fieldsComposite,SWT.BORDER,getWidgetFactory(),getEditingDomain(),FormPackage.Literals.VALIDATOR__DISPLAY_NAME);
         labelExpressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 3, 1));
-
+        labelExpressionViewer.setExpressionNatureProvider(new ValidatorExpressionNatureProvider());
 
         /*create the parameter field */
         getWidgetFactory().createLabel(fieldsComposite, Messages.Validator_Parameter);
         parameterExpressionViewer = new ExpressionViewer(fieldsComposite,SWT.BORDER,getWidgetFactory(),getEditingDomain(),FormPackage.Literals.VALIDATOR__PARAMETER);
         parameterExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).span(3, 1).create());
-
+        parameterExpressionViewer.setExpressionNatureProvider(new ValidatorExpressionNatureProvider());
 
 
         // htmlClass Label

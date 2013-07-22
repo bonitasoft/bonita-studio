@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.form.provider;
+package org.bonitasoft.studio.expression.editor.formfield;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormField;
-import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.NextFormButton;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.PageFlow;
@@ -38,7 +37,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
- * @author aurelie Zara
+ * @author Aurelie Zara
  *
  */
 public class FormFieldExpressionNatureProvider implements

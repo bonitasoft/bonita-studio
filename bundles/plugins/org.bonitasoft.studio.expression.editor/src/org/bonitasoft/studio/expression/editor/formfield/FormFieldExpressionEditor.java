@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.properties.form.provider;
+package org.bonitasoft.studio.expression.editor.formfield;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -26,10 +26,11 @@ import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
+import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
-import org.bonitasoft.studio.form.properties.i18n.Messages;
+import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Duplicable;
@@ -100,7 +101,7 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
 
 		TableViewerColumn columnViewer = new TableViewerColumn(viewer,SWT.NONE) ;
 		TableColumn column = columnViewer.getColumn() ;
-		column.setText(Messages.name) ;
+		column.setText(Messages.name);
 
 		TableColumnSorter sorter = new TableColumnSorter(viewer) ;
 		sorter.setColumn(column) ;
@@ -141,7 +142,7 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#bindExpression(org.eclipse.emf.databinding.EMFDataBindingContext, org.eclipse.emf.ecore.EObject, org.bonitasoft.studio.model.expression.Expression, org.eclipse.emf.edit.domain.EditingDomain)
 	 */
-	public void bindExpression(EMFDataBindingContext dataBindingContext,EObject context, Expression inputExpression,ViewerFilter[] filters) {
+	public void bindExpression(EMFDataBindingContext dataBindingContext,EObject context, Expression inputExpression,ViewerFilter[] filters,ExpressionViewer expressionViewer) {
 		this.inputExpression = inputExpression ;
 		Set<Widget> input = new HashSet<Widget>() ;
 		IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.FORM_FIELD_TYPE) ;

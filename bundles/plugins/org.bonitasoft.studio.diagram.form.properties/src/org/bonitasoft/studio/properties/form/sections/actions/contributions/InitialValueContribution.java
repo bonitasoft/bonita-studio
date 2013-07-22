@@ -16,10 +16,13 @@
  */
 package org.bonitasoft.studio.properties.form.sections.actions.contributions;
 
+import java.util.Date;
+
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -38,12 +41,14 @@ import org.bonitasoft.studio.model.form.MessageInfo;
 import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
 import org.bonitasoft.studio.model.form.TextInfo;
 import org.bonitasoft.studio.model.form.Widget;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -89,6 +94,34 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
             expressionViewer.setMessage(Messages.data_tooltip_boolean,IStatus.INFO);
         } else {
             expressionViewer.setMessage(Messages.data_tooltip_text,IStatus.INFO);
+        }
+        if(widget instanceof DateFormField){
+        	expressionViewer.addExpressionValidator(ExpressionConstants.ALL_TYPES, new IExpressionValidator() {
+				
+				private Expression inputExpression;
+
+				public IStatus validate(Object value) {
+					String returnType = inputExpression.getReturnType();
+					if(returnType.equals(Date.class.getName()) 
+							|| returnType.equals(String.class.getName())){
+						return ValidationStatus.ok();
+					}else{
+						return ValidationStatus.warning(Messages.dateWidgetReturnTypeWarning);
+					}
+				}
+				
+				public void setInputExpression(Expression inputExpression) {
+					this.inputExpression = inputExpression;
+				}
+				
+				public void setDomain(EditingDomain domain) {
+					
+				}
+				
+				public void setContext(EObject context) {
+					
+				}
+			});
         }
         expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
