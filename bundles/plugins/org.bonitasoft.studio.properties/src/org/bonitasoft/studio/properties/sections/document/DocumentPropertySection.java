@@ -146,7 +146,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 		documentListFilter.setLayoutData(GridDataFactory.fillDefaults()
 				.grab(true, false).create());
 		documentListFilter
-				.setMessage(WorkbenchMessages.FilteredTree_FilterMessage);
+		.setMessage(WorkbenchMessages.FilteredTree_FilterMessage);
 		documentListFilter.addModifyListener(new ModifyListener() {
 
 			private ViewerFilter filter;
@@ -185,30 +185,30 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 		ListViewer documentListViewer = new ListViewer(list);
 		documentListViewer.setLabelProvider(new ElementForIdLabelProvider());
 		documentListViewer
-				.setContentProvider(new ObservableListContentProvider());
+		.setContentProvider(new ObservableListContentProvider());
 		documentListViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
+		.addSelectionChangedListener(new ISelectionChangedListener() {
 
-					@Override
-					public void selectionChanged(SelectionChangedEvent event) {
-						final ISelection listSelection = event.getSelection();
-						if (listSelection.isEmpty()) {
-							removeButton.setEnabled(false);
-							detailsComposite.setVisible(false);
-						} else {
-							detailsComposite.setVisible(true);
-							removeButton.setEnabled(true);
-							final Document document = (Document) ((IStructuredSelection) listSelection)
-									.getFirstElement();
-							documentUrlViewer.getTextControl().setEnabled(
-									!document.isIsInternal());
-							documentUrlViewer.getButtonControl().setEnabled(
-									!document.isIsInternal());
-							documentTextId.setEnabled(document.isIsInternal());
-							browseButton.setEnabled(document.isIsInternal());
-						}
-					}
-				});
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				final ISelection listSelection = event.getSelection();
+				if (listSelection.isEmpty()) {
+					removeButton.setEnabled(false);
+					detailsComposite.setVisible(false);
+				} else {
+					detailsComposite.setVisible(true);
+					removeButton.setEnabled(true);
+					final Document document = (Document) ((IStructuredSelection) listSelection)
+							.getFirstElement();
+					documentUrlViewer.getTextControl().setEnabled(
+							!document.isIsInternal());
+					documentUrlViewer.getButtonControl().setEnabled(
+							!document.isIsInternal());
+					documentTextId.setEnabled(document.isIsInternal());
+					browseButton.setEnabled(document.isIsInternal());
+				}
+			}
+		});
 		return documentListViewer;
 	}
 
@@ -345,16 +345,16 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 		ControlDecoration controlDecorationForExternal = new ControlDecoration(
 				externalCheckbox, SWT.RIGHT);
 		controlDecorationForExternal
-				.setImage(Pics.getImage(PicsConstants.hint));
+		.setImage(Pics.getImage(PicsConstants.hint));
 		controlDecorationForExternal
-				.setDescriptionText(Messages.explanationExternalDocument);
+		.setDescriptionText(Messages.explanationExternalDocument);
 		createDocumentURL(documentTypeComposite);
 		internalCheckbox = getWidgetFactory().createButton(
 				documentTypeComposite, Messages.Internal, SWT.RADIO);
 		ControlDecoration controlDecorationForInternal = new ControlDecoration(
 				internalCheckbox, SWT.RIGHT);
 		controlDecorationForInternal
-				.setImage(Pics.getImage(PicsConstants.hint));
+		.setImage(Pics.getImage(PicsConstants.hint));
 		controlDecorationForInternal.setDescriptionText(Messages.bind(
 				Messages.explanationInternalDocument,
 				new Object[] { bosProductName }));
@@ -373,7 +373,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 				GridDataFactory.fillDefaults().grab(true, true).create());
 		documentUrlViewer.setExample(Messages.hintExternalUrl);
 		documentUrlViewer
-				.setContentProvider(new ObservableExpressionContentProvider());
+		.setContentProvider(new ObservableExpressionContentProvider());
 	}
 
 	private void createDocumentBrowse(Composite slaveComposite) {
@@ -399,8 +399,8 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 				if (IDialogConstants.OK_ID == selectDocumentInBonitaStudioRepository
 						.open()) {
 					documentTextId
-							.setText(selectDocumentInBonitaStudioRepository
-									.getSelectedDocument().getName());
+					.setText(selectDocumentInBonitaStudioRepository
+							.getSelectedDocument().getName());
 				}
 			}
 		});
@@ -412,27 +412,9 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 		resetDatabindingContext();
 		bindList();
 
-		final IObservableValue documentSelected = ViewersObservables
-				.observeSingleSelection(documentListViewer);
+		final IObservableValue documentSelected = ViewersObservables.observeSingleSelection(documentListViewer);
 		bindDetails(documentSelected);
-		//
-		// if(documentSelected.getValue() != null){
-		// bindDetails(documentSelected);
-		// }
-		// documentSelected.addValueChangeListener(new IValueChangeListener() {
-		//
-		// @Override
-		// public void handleValueChange(ValueChangeEvent event) {
-		// final IObservableValue documentSelected =(IObservableValue)
-		// event.diff.getNewValue();
-		// if(documentSelected.getValue() != null){
-		// bindDetails(documentSelected);
-		// }
-		// }
-		// });
-
 		documentListViewer.setSelection(new StructuredSelection());
-
 	}
 
 	protected void bindList() {
@@ -456,30 +438,30 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 		IObservableValue mimeTypeObserved = EMFEditProperties
 				.value(getEditingDomain(),
 						ProcessPackage.Literals.DOCUMENT__MIME_TYPE)
-				.observeDetail(documentSelected);
+						.observeDetail(documentSelected);
 		emfDataBindingContext.bindValue(ViewerProperties.singleSelection()
 				.observe(documentMimeTypeViewer), mimeTypeObserved);
 		documentMimeTypeViewer.setInput(documentSelected);
 
 		final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-		
+
 		targetToModel.setAfterGetValidator(new InputLengthValidator(
 				Messages.name, 50));
 		targetToModel.setBeforeSetValidator(new GroovyReferenceValidator(
 				Messages.name, false));
 		targetToModel.setBeforeSetValidator(new DocumentNameValidator(documentListViewer));
-		
+
 		final IObservableValue nameObserved = EMFEditProperties.value(
 				getEditingDomain(), ProcessPackage.Literals.ELEMENT__NAME)
 				.observeDetail(documentSelected);
-		
+
 		decorationSupport = ControlDecorationSupport.create(
 				emfDataBindingContext.bindValue(
 						SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentNameText, SWT.Modify)), 
 						nameObserved,
 						targetToModel, 
 						null), 
-				SWT.LEFT);
+						SWT.LEFT);
 
 		nameObserved.addValueChangeListener(new IValueChangeListener() {
 			@Override
@@ -491,21 +473,20 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 			}
 		});
 
-		
-		
+
 		IObservableValue descriptionObserved = EMFEditProperties.value(
 				getEditingDomain(),
 				ProcessPackage.Literals.ELEMENT__DOCUMENTATION).observeDetail(
-				documentSelected);
+						documentSelected);
 		emfDataBindingContext.bindValue(SWTObservables
 				.observeDelayedValue(500, SWTObservables.observeText(
 						documentDescriptionText, SWT.Modify)),
-				descriptionObserved);
+						descriptionObserved);
 
 		IObservableValue internalTypeObserved = EMFEditProperties.value(
 				getEditingDomain(),
 				ProcessPackage.Literals.DOCUMENT__IS_INTERNAL).observeDetail(
-				documentSelected);
+						documentSelected);
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeSelection(internalCheckbox),
 				internalTypeObserved);
@@ -513,17 +494,17 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 		IObservableValue documentInternalIDObserved = EMFEditProperties
 				.value(getEditingDomain(),
 						ProcessPackage.Literals.DOCUMENT__DEFAULT_VALUE_ID_OF_DOCUMENT_STORE)
-				.observeDetail(documentSelected);
+						.observeDetail(documentSelected);
 		emfDataBindingContext
-				.bindValue(
-						SWTObservables.observeDelayedValue(500, SWTObservables
-								.observeText(documentTextId, SWT.Modify)),
+		.bindValue(
+				SWTObservables.observeDelayedValue(500, SWTObservables
+						.observeText(documentTextId, SWT.Modify)),
 						documentInternalIDObserved);
 
 		IObservableValue externalTypeObserved = EMFEditProperties.value(
 				getEditingDomain(),
 				ProcessPackage.Literals.DOCUMENT__IS_INTERNAL).observeDetail(
-				documentSelected);
+						documentSelected);
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeSelection(externalCheckbox),
 				externalTypeObserved, new UpdateValueStrategy() {
@@ -540,17 +521,38 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 
 		emfDataBindingContext.bindValue(SWTObservables
 				.observeEnabled(documentUrlViewer.getTextControl()),
-				SWTObservables.observeSelection(externalCheckbox));
-		emfDataBindingContext.bindValue(SWTObservables
-				.observeEnabled(documentUrlViewer.getButtonControl()),
-				SWTObservables.observeSelection(externalCheckbox));
+				externalTypeObserved, new UpdateValueStrategy() {
+			@Override
+			public Object convert(Object value) {
+				return super.convert(!(Boolean) value);
+			}
+		}, new UpdateValueStrategy() {
+			@Override
+			public Object convert(Object value) {
+				return super.convert(!(Boolean) value);
+			}
+		});
+		emfDataBindingContext.bindValue(SWTObservables.observeEnabled(documentUrlViewer.getButtonControl()),
+				externalTypeObserved,
+				new UpdateValueStrategy() {
+					@Override
+					public Object convert(Object value) {
+						return super.convert(!(Boolean) value);
+					}
+				},
+				new UpdateValueStrategy() {
+					@Override
+					public Object convert(Object value) {
+						return super.convert(!(Boolean) value);
+					}
+				});
 
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeEnabled(documentTextId),
-				SWTObservables.observeSelection(internalCheckbox));
+				internalTypeObserved);
 		emfDataBindingContext.bindValue(
 				SWTObservables.observeEnabled(browseButton),
-				SWTObservables.observeSelection(internalCheckbox));
+				internalTypeObserved);
 	}
 
 	protected void resetDatabindingContext() {
