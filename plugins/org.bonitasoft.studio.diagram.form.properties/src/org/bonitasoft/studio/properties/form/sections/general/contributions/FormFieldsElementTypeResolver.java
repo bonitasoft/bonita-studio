@@ -61,6 +61,7 @@ public class FormFieldsElementTypeResolver  implements ElementTypeResolver {
 			allowedChildren.add(ProcessElementTypes.RichTextAreaFormField_2140);
 			allowedChildren.add(ProcessElementTypes.SelectFormField_2119);
 			allowedChildren.add(ProcessElementTypes.SubmitFormButton_2126);
+			allowedChildren.add(ProcessElementTypes.FormButton_2138);
 			allowedChildren.add(ProcessElementTypes.TextFormField_2120);
 			allowedChildren.add(ProcessElementTypes.TextAreaFormField_2121);
 			allowedChildren.add(ProcessElementTypes.TextInfo_2132);
@@ -85,6 +86,7 @@ public class FormFieldsElementTypeResolver  implements ElementTypeResolver {
 			allowedChildren.add(ProcessElementTypes.ListFormField_3107);
 			allowedChildren.add(ProcessElementTypes.MessageInfo_3124);
 			allowedChildren.add(ProcessElementTypes.NextFormButton_3115);
+			allowedChildren.add(ProcessElementTypes.FormButton_3126);
 			allowedChildren.add(ProcessElementTypes.PasswordFormField_3109);
 			allowedChildren.add(ProcessElementTypes.PreviousFormButton_3114);
 			allowedChildren.add(ProcessElementTypes.RadioFormField_3110);
