@@ -312,7 +312,7 @@
             <command
                   commandId="org.bonitasoft.studio.application.openIntroCommand"
                   hoverIcon="icons/menuIcons/bonita_hover.png"
-                  icon="icons/welcome.png"
+                  icon="icons/bonitasoft-icon-16-16-transparent.png"
                   id="org.bonitasoft.studio.helpMenu.welcomeMenu"
                   label="%openWelcomePage_label"
                   style="push">
@@ -348,7 +348,6 @@
             </separator>
             <command
                   commandId="org.eclipse.ui.help.aboutAction"
-                  icon="icons/bonitasoft-icon-16-16-transparent.png"
                   style="push">
             </command>
             <visibleWhen
