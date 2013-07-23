@@ -19,10 +19,13 @@ package org.bonitasoft.studio.application;
 
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.debug.DebugPlugin;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -56,6 +59,11 @@ public class ApplicationPlugin extends AbstractUIPlugin {
 	private void init(BundleContext context) {
 		if(getDialogSettings().get(BAR_DEFAULT_PATH) == null){
 			getDialogSettings().put(BAR_DEFAULT_PATH, System.getProperty("user.home"));
+		}
+		try {
+			DebugPlugin.getDefault().getBundle().start();
+		} catch (BundleException e) {
+			BonitaStudioLog.error(e);
 		}
 	}
 

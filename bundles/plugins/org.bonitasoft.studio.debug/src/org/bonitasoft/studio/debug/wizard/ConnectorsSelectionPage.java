@@ -24,7 +24,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.debug.Activator;
+import org.bonitasoft.studio.debug.DebugPlugin;
 import org.bonitasoft.studio.debug.i18n.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -200,8 +200,8 @@ public class ConnectorsSelectionPage extends WizardPage {
 			@Override
 			public boolean isChecked(Object element) {
 				if(element instanceof Connector){
-					if(Activator.getDefault().getDialogSettings().get(DEBUG_KEY+ModelHelper.getEObjectID((EObject) element)) != null){
-						boolean isExceuting =  Activator.getDefault().getDialogSettings().getBoolean(DEBUG_KEY+ModelHelper.getEObjectID((EObject) element)) ;
+					if(DebugPlugin.getDefault().getDialogSettings().get(DEBUG_KEY+ModelHelper.getEObjectID((EObject) element)) != null){
+						boolean isExceuting =  DebugPlugin.getDefault().getDialogSettings().getBoolean(DEBUG_KEY+ModelHelper.getEObjectID((EObject) element)) ;
 						if(isExceuting){
 							checked.add((EObject) element) ;
 						}else{
@@ -305,9 +305,9 @@ public class ConnectorsSelectionPage extends WizardPage {
 		Set<EObject> unchecked = new HashSet<EObject>() ;
 		for(EObject o : input){
 			if(	checked.contains(o)){
-				Activator.getDefault().getDialogSettings().put(DEBUG_KEY+ModelHelper.getEObjectID(o), true) ;
+				DebugPlugin.getDefault().getDialogSettings().put(DEBUG_KEY+ModelHelper.getEObjectID(o), true) ;
 			}else{
-				Activator.getDefault().getDialogSettings().put(DEBUG_KEY+ModelHelper.getEObjectID(o), false) ;
+				DebugPlugin.getDefault().getDialogSettings().put(DEBUG_KEY+ModelHelper.getEObjectID(o), false) ;
 				unchecked.add(o) ;
 			}
 		}

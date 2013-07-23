@@ -256,6 +256,7 @@
                id="org.bonitasoft.studio.menu.view"
                label="%viewMenu_label">
             <menu
+                  id="org.bonitasoft.studio.menu.view.coolbar"
                   label="%CoolBarLabel">
                <command
                      commandId="org.bonitasoft.studio.application.smallCoolbar"
@@ -322,7 +323,7 @@
                   disabledIcon="icons/menuIcons/help_disabled.png"
                   hoverIcon="icons/menuIcons/help_hover.png"
                   icon="icons/menuIcons/help.png"
-                  label="%help_label"
+                  label="%online_documentation"
                   style="push">
             </command>
             <separator
