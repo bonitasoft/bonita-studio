@@ -145,7 +145,7 @@ public class TestProvidedDefinitionAndImplementation extends TestCase {
 
 				for(String inputName : inputs){
 					final int frequency = Collections.frequency(bindInputs, inputName);
-					if(frequency == 0){
+					if(frequency == 0 && !(inputName.equals("outputType") && definition.getId().startsWith("database-"))){
 						testReport.append("\n");
 						testReport.append("Input "+inputName+" is not bound to any widget in "+resourceName);
 					}
