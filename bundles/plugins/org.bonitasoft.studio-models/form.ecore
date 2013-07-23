@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="form"
-    nsURI="http://www.bonitasoft.org/ns/studio/form" nsPrefix="form">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="form" nsURI="http://www.bonitasoft.org/ns/studio/form" nsPrefix="form">
   <eAnnotations source="http://www.eclipse.org/edapt">
     <details key="historyURI" value="process.history"/>
   </eAnnotations>
@@ -274,7 +272,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="document" eType="ecore:EClass process.ecore#//Document"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="initialResourcePath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputType" eType="#//FileWidgetInputType"
-        defaultValueLiteral="URL"/>
+        defaultValueLiteral="Document"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputDocumentName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="updateDocument" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="true"/>
