@@ -134,7 +134,9 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 		bot.styledText().setText(QUERY);
 		bot.sleep(1000);
 		bot.button(IDialogConstants.NEXT_LABEL).click();
-		bot.button(IDialogConstants.NEXT_LABEL).click();
+		if(bot.button(IDialogConstants.NEXT_LABEL).isEnabled()){
+			bot.button(IDialogConstants.NEXT_LABEL).click();
+		}
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 		bot.sleep(1000);

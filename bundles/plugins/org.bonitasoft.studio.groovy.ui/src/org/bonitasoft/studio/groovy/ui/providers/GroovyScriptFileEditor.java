@@ -18,6 +18,7 @@ package org.bonitasoft.studio.groovy.ui.providers;
 
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ui.Messages;
@@ -49,61 +50,65 @@ import org.eclipse.swt.widgets.Event;
 public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor implements IExpressionEditor {
 
 
-    public GroovyScriptFileEditor(){
-        super();
-    }
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
-     */
-    @Override
-    public Control createExpressionEditor(Composite parent) {
-        createDataChooserArea(parent);
-        mainComposite = new Composite(parent,SWT.NONE) ;
-        mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create()) ;
-        mainComposite.setLayout(new FillLayout(SWT.VERTICAL)) ;
-        createGroovyEditor(parent);
-        return mainComposite;
-    }
+	public GroovyScriptFileEditor(){
+		super();
+	}
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
+	 */
+	@Override
+	public Control createExpressionEditor(Composite parent) {
+		createDataChooserArea(parent);
+		mainComposite = new Composite(parent,SWT.NONE) ;
+		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create()) ;
+		mainComposite.setLayout(new FillLayout(SWT.VERTICAL)) ;
+		createGroovyEditor(parent);
+		return mainComposite;
+	}
 
 
-    @Override
-    public boolean canFinish() {
-        return true;
-    }
+	@Override
+	public boolean canFinish() {
+		return true;
+	}
 
-    @Override
-    public void bindExpression(EMFDataBindingContext dataBindingContext,final EObject context, Expression inputExpression,ViewerFilter[] filters,ExpressionViewer expressionViewer) {
-        this.inputExpression = inputExpression ;
-        this.context = context ;
+	@Override
+	public void bindExpression(EMFDataBindingContext dataBindingContext,final EObject context, Expression inputExpression,ViewerFilter[] filters,ExpressionViewer expressionViewer) {
+		this.inputExpression = inputExpression ;
+		this.context = context ;
 
-        IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT) ;
+		IObservableValue contentModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT) ;
 
-        groovyViewer.getDocument().set(inputExpression.getContent()) ;
-        groovyViewer.setContext(context,filters,expressionViewer.getExpressionNatureProvider()) ;
-        nodes = groovyViewer.getFieldNodes() ;
+		groovyViewer.getDocument().set(inputExpression.getContent()) ;
+		IExpressionNatureProvider natureProvider = null;
+		if(expressionViewer != null){
+			natureProvider = expressionViewer.getExpressionNatureProvider();
+		}
+		groovyViewer.setContext(context,filters,natureProvider) ;
+		nodes = groovyViewer.getFieldNodes() ;
 
-        if (context == null && (nodes == null || nodes.isEmpty())) {
-            dataCombo.add(Messages.noProcessVariableAvailable);
-            dataCombo.getTableCombo().setText(Messages.noProcessVariableAvailable);
-            dataCombo.getTableCombo().setEnabled(false);
-        }else if(nodes != null){
-            dataCombo.setInput(nodes);
-            dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
-        }else{
-            dataCombo.setInput(groovyViewer.getFieldNodes());
-            dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
-        }
+		if (context == null && (nodes == null || nodes.isEmpty())) {
+			dataCombo.add(Messages.noProcessVariableAvailable);
+			dataCombo.getTableCombo().setText(Messages.noProcessVariableAvailable);
+			dataCombo.getTableCombo().setEnabled(false);
+		}else if(nodes != null){
+			dataCombo.setInput(nodes);
+			dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
+		}else{
+			dataCombo.setInput(groovyViewer.getFieldNodes());
+			dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
+		}
 
-        bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context,null));
-        bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
+		bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context,null));
+		bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 
-        dataBindingContext.bindValue(SWTObservables.observeText(sourceViewer.getTextWidget(),SWT.Modify), contentModelObservable,new UpdateValueStrategy().setAfterGetValidator(new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH)), null) ;
-        sourceViewer.addTextListener(new ITextListener() {
-            @Override
-            public void textChanged(TextEvent event) {
-                sourceViewer.getTextWidget().notifyListeners(SWT.Modify, new Event()) ;
-            }
-        }) ;
-    }
+		dataBindingContext.bindValue(SWTObservables.observeText(sourceViewer.getTextWidget(),SWT.Modify), contentModelObservable,new UpdateValueStrategy().setAfterGetValidator(new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH)), null) ;
+		sourceViewer.addTextListener(new ITextListener() {
+			@Override
+			public void textChanged(TextEvent event) {
+				sourceViewer.getTextWidget().notifyListeners(SWT.Modify, new Event()) ;
+			}
+		}) ;
+	}
 
 }
