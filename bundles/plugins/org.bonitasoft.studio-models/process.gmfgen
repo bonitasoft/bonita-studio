@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gmfgen:GenEditorGenerator xmi:version="2.0"
+<gmfgen:GenEditorGenerator
+    xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:gmfgen="http://www.eclipse.org/gmf/2009/GenModel" packageNamePrefix="org.bonitasoft.studio.model.process.diagram"
+    xmlns:gmfgen="http://www.eclipse.org/gmf/2009/GenModel"
+    packageNamePrefix="org.bonitasoft.studio.model.process.diagram"
     sameFileForDiagramAndModel="true"
     diagramFileExtension="proc"
     domainFileExtension="proc"
@@ -6788,7 +6790,7 @@
             genNodes="//@diagram/@childNodes.37 //@diagram/@topLevelNodes.29"/>
       </groups>
       <groups
-          title="Intermediate Events"
+          title="Int. Events"
           stack="true"
           collapse="true">
         <entries

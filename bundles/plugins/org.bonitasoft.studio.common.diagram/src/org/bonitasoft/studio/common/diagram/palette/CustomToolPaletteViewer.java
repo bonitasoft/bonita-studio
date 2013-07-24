@@ -16,13 +16,10 @@
  */
 package org.bonitasoft.studio.common.diagram.palette;
 
-import java.beans.PropertyChangeListener;
-
+import org.eclipse.gef.editparts.SimpleRootEditPart;
 import org.eclipse.gef.internal.ui.palette.editparts.ToolEntryEditPart;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.ui.palette.DefaultPaletteViewerPreferences;
-import org.eclipse.gef.ui.palette.PaletteViewerPreferences;
-import org.eclipse.swt.graphics.FontData;
 
 /**
  * @author Romain Bioteau
@@ -38,14 +35,18 @@ public class CustomToolPaletteViewer extends CustomMainPaletteViewer {
 			
 			@Override
 			public boolean useLargeIcons(int layout) {
-				return true;
+				return false;
 			}
 			
 			@Override
 			public boolean useLargeIcons() {
-				return true;
+				return false;
 			}
 		});
+	}
+	
+	protected void createDefaultRoot() {
+		setRootEditPart(new SimpleRootEditPart());
 	}
 	
 	public void setActiveTool(ToolEntry newMode) {
