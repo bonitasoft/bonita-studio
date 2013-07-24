@@ -101,7 +101,7 @@ public class TestSave extends SWTBotGefTestCase {
         // test menu
         bot.waitUntil(saveMenuEnabled,5000,500);
 
-        bot.saveAllEditors();
+        bot.toolbarButton(SAVE_BUTTON_TEXT).click();
 
         // test button
         isSaveButtonEnable=  bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled();
@@ -137,7 +137,7 @@ public class TestSave extends SWTBotGefTestCase {
         // test menu
         bot.waitUntil(saveMenuEnabled,5000,500);
 
-        bot.saveAllEditors();
+        bot.toolbarButton(SAVE_BUTTON_TEXT).click();
         
        // test button
         isSaveButtonEnable=  bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled();

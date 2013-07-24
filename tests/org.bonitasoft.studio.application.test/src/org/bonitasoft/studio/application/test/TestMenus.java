@@ -39,7 +39,7 @@ public class TestMenus extends TestCase {
                 nbRunMenus++;
             }
         }
-        assertEquals("Run menu should not appears", 0, nbRunMenus);
+        assertEquals("Run menu should not appears", 1, nbRunMenus);
         if(Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product")){
             assertEquals("Menu bar polluted by third-party menus.\n available menu:"+menus,12, shell.getMenuBar().getItemCount());
         } else if(Platform.getProduct().getId().equals("org.bonitasoft.studio.product")){

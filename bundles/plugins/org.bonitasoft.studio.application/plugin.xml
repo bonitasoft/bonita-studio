@@ -256,6 +256,7 @@
                id="org.bonitasoft.studio.menu.view"
                label="%viewMenu_label">
             <menu
+                  id="org.bonitasoft.studio.menu.view.coolbar"
                   label="%CoolBarLabel">
                <command
                      commandId="org.bonitasoft.studio.application.smallCoolbar"
@@ -311,7 +312,7 @@
             <command
                   commandId="org.bonitasoft.studio.application.openIntroCommand"
                   hoverIcon="icons/menuIcons/bonita_hover.png"
-                  icon="icons/welcome.png"
+                  icon="icons/bonitasoft-icon-16-16-transparent.png"
                   id="org.bonitasoft.studio.helpMenu.welcomeMenu"
                   label="%openWelcomePage_label"
                   style="push">
@@ -322,7 +323,7 @@
                   disabledIcon="icons/menuIcons/help_disabled.png"
                   hoverIcon="icons/menuIcons/help_hover.png"
                   icon="icons/menuIcons/help.png"
-                  label="%help_label"
+                  label="%online_documentation"
                   style="push">
             </command>
             <separator
@@ -347,7 +348,6 @@
             </separator>
             <command
                   commandId="org.eclipse.ui.help.aboutAction"
-                  icon="icons/bonitasoft-icon-16-16-transparent.png"
                   style="push">
             </command>
             <visibleWhen

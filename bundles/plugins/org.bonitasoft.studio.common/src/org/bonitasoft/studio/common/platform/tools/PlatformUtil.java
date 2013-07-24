@@ -52,6 +52,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.intro.impl.IntroPlugin;
+import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
 import org.eclipse.ui.intro.IIntroManager;
 import org.osgi.framework.Bundle;
 
@@ -148,6 +150,10 @@ public class PlatformUtil {
 			public void run() {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
+				final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
+				if(model != null) {
+					model.getPresentation().navigateHome();
+				}
 				introManager.showIntro(
 						window,
 						false);
