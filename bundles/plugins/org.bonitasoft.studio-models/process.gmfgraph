@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gmfgraph:Canvas xmi:version="2.0"
+<gmfgraph:Canvas
+    xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:gmfgraph="http://www.eclipse.org/gmf/2006/GraphicalDefinition" name="BPMN">
+    xmlns:gmfgraph="http://www.eclipse.org/gmf/2006/GraphicalDefinition"
+    name="BPMN">
   <figures
       name="BPMN Figures">
     <descriptors
@@ -324,6 +326,9 @@
         <preferredSize
             dx="100"
             dy="50"/>
+        <attributes
+            name="URI"
+            value="&quot;platform:/plugin/org.bonitasoft.studio.pics/icons/figures/Activity.svgz&quot;"/>
         <children
             xsi:type="gmfgraph:Label"
             name="ActivityNameFigure">
@@ -334,9 +339,6 @@
               verticalAlignment="FILL"
               horizontalAlignment="FILL"/>
         </children>
-        <attributes
-            name="URI"
-            value="&quot;platform:/plugin/org.bonitasoft.studio.pics/icons/figures/Activity.svgz&quot;"/>
       </actualFigure>
       <accessors
           figure="//@figures.0/@descriptors.8/@actualFigure/@children.0"/>
@@ -355,6 +357,9 @@
         <preferredSize
             dx="100"
             dy="50"/>
+        <attributes
+            name="URI"
+            value="&quot;platform:/plugin/org.bonitasoft.studio.pics/icons/figures/EventSubProcess.svgz&quot;"/>
         <children
             xsi:type="gmfgraph:Label"
             name="SubProcessNameFigure">
@@ -363,9 +368,6 @@
               grabExcessHorizontalSpace="true"
               grabExcessVerticalSpace="true"/>
         </children>
-        <attributes
-            name="URI"
-            value="&quot;platform:/plugin/org.bonitasoft.studio.pics/icons/figures/EventSubProcess.svgz&quot;"/>
       </actualFigure>
       <accessors
           accessor="getFigureSubprocessLabel"
@@ -930,6 +932,9 @@
         <preferredSize
             dx="100"
             dy="50"/>
+        <attributes
+            name="URI"
+            value="&quot;platform:/plugin/org.bonitasoft.studio.pics/icons/figures/SubProcess.svgz&quot;"/>
         <children
             xsi:type="gmfgraph:Label"
             name="ActivityNameFigure">
@@ -940,9 +945,6 @@
               verticalAlignment="FILL"
               horizontalAlignment="FILL"/>
         </children>
-        <attributes
-            name="URI"
-            value="&quot;platform:/plugin/org.bonitasoft.studio.pics/icons/figures/SubProcess.svgz&quot;"/>
       </actualFigure>
       <accessors
           figure="//@figures.0/@descriptors.39/@actualFigure/@children.0"/>
@@ -965,13 +967,6 @@
         <preferredSize
             dx="100"
             dy="50"/>
-        <children
-            xsi:type="gmfgraph:Label"
-            name="EventSubProcessNameFigure">
-          <layoutData
-              xsi:type="gmfgraph:GridLayoutData"
-              grabExcessHorizontalSpace="true"/>
-        </children>
         <attributes
             name="LineCap"
             value="org.eclipse.swt.SWT.CAP_ROUND"/>
@@ -990,6 +985,13 @@
         <attributes
             name="CornerDimensions"
             value="new org.eclipse.draw2d.geometry.Dimension(15, 15)"/>
+        <children
+            xsi:type="gmfgraph:Label"
+            name="EventSubProcessNameFigure">
+          <layoutData
+              xsi:type="gmfgraph:GridLayoutData"
+              grabExcessHorizontalSpace="true"/>
+        </children>
       </actualFigure>
       <accessors
           figure="//@figures.0/@descriptors.40/@actualFigure/@children.0"/>

@@ -52,8 +52,7 @@
     </tools>
     <tools
         xsi:type="gmftool:ToolGroup"
-        title="Activities"
-        description=""
+        title="Tasks"
         collapsible="true"
         stack="true">
       <tools
@@ -62,15 +61,8 @@
           description="Create a new Service Task"/>
       <tools
           xsi:type="gmftool:CreationTool"
-          title="Call Activity"
-          description="Create a new Call Activity"/>
-      <tools
-          xsi:type="gmftool:CreationTool"
           title="Human"
           description="Create a new Human Step"/>
-      <tools
-          xsi:type="gmftool:CreationTool"
-          title="Evenemential SubProcess"/>
       <tools
           xsi:type="gmftool:CreationTool"
           title="Script Task"
@@ -87,6 +79,20 @@
           xsi:type="gmftool:CreationTool"
           title="Step"
           description="Create a new automatic Step"/>
+    </tools>
+    <tools
+        xsi:type="gmftool:ToolGroup"
+        title="Activities"
+        description=""
+        collapsible="true"
+        stack="true">
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Call Activity"
+          description="Create a new Call Activity"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Evenemential SubProcess"/>
     </tools>
     <tools
         xsi:type="gmftool:ToolGroup"
