@@ -205,7 +205,7 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
             confWizard.setProcess(process) ;
         }
 
-        confWizard.updatePages() ;
+      //  confWizard.updatePages() ;
 
         showPage(getWizard().getStartingPage()) ;
         pageChooserViewer.setSelection(new StructuredSelection(getCurrentPage())) ;
@@ -412,6 +412,8 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
         super.showPage(page);
         page.setPreviousPage(null) ;
         setControlEnabled(page.getControl(),((ConfigurationWizard) getWizard()).getProcess() != null) ;
+        ConfigurationWizard confWizard = (ConfigurationWizard) getWizard() ;
+        confWizard.updatePages() ;
         page.setVisible(true);
         pageChooserViewer.setSelection(new StructuredSelection(getCurrentPage())) ;
         group.setText(page.getTitle());
