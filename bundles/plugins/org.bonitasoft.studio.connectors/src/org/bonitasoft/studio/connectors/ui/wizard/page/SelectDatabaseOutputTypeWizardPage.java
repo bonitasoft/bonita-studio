@@ -85,8 +85,7 @@ public class SelectDatabaseOutputTypeWizardPage extends AbstractConnectorConfigu
 	@Override
 	protected Control doCreateControl(Composite parent,	EMFDataBindingContext context) {
 		final Composite mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(10, 10, 5, -50).create());
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).extendedMargins(10, 10, 5, 0).create());
 
 		createSelectModeLabelControl(mainComposite);
 
