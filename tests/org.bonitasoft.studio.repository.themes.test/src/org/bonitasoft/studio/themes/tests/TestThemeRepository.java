@@ -46,6 +46,7 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -391,6 +392,12 @@ public class TestThemeRepository extends TestCase{
         assertNotNull(previewImage);
         theme.delete();
         PlatformUtil.delete(tmpFolder.getLocation().toFile(),new NullProgressMonitor());
+    }
+    
+    @Override
+    protected void tearDown() throws Exception {
+    	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+    	super.tearDown();
     }
 
 }

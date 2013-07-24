@@ -149,7 +149,9 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 		editGroovyEditor(0, "Request", String.class.getName(), "sqlQuery", GROOVY_SQL_QUERY);
 		bot.sleep(1000);
 		bot.button(IDialogConstants.NEXT_LABEL).click();
-		bot.button(IDialogConstants.NEXT_LABEL).click();
+		if(bot.button(IDialogConstants.NEXT_LABEL).isEnabled()){
+			bot.button(IDialogConstants.NEXT_LABEL).click();
+		}
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),5000);
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 		bot.sleep(1000);
