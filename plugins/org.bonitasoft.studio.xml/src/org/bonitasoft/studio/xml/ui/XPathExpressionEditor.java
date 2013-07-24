@@ -205,7 +205,7 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
 
 		IObservableValue nameObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME) ;
 		IObservableValue contentObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT) ;
-		IObservableValue returnTypeObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
+		final IObservableValue returnTypeObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
 		IObservableValue referenceObservable = EMFObservables.observeValue( inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS) ;
 
 		UpdateValueStrategy selectionToName = new UpdateValueStrategy() ;
@@ -267,7 +267,12 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
 
 			@Override
 			public Object convert(Object element) {
-				return XPathReturnType.getType(element);
+				if(editorInputExpression.isReturnTypeFixed()){
+					return returnTypeObservable.getValue();
+				}else{
+					return XPathReturnType.getType(element);
+				}
+				
 			}
 
 		}) ;

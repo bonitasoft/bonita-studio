@@ -316,7 +316,7 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 
 		IObservableValue contentObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__CONTENT) ;
 		IObservableValue nameObservable = EMFObservables.observeValue( inputExpression, ExpressionPackage.Literals.EXPRESSION__NAME) ;
-		IObservableValue returnTypeObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
+		final IObservableValue returnTypeObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
 		IObservableValue referenceObservable = EMFObservables.observeValue( inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS) ;
 
 		UpdateValueStrategy selectionToName = new UpdateValueStrategy() ;
@@ -383,35 +383,39 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 
 			@Override
 			public Object convert(Object iType) {
-				if(iType instanceof IMethod){
-					String qualifiedType = Object.class.getName();
-					try {
-						qualifiedType = JavaModelUtil.getResolvedTypeName(Signature.getTypeErasure(((IMethod)iType).getReturnType()), ((IMethod)iType).getDeclaringType());
-						if("int".equals(qualifiedType)){
-							qualifiedType = Integer.class.getName();
-						}else if("boolean".equals(qualifiedType)){
-							qualifiedType = Boolean.class.getName();
-						}else if("long".equals(qualifiedType)){
-							qualifiedType = Long.class.getName();
-						}else if("float".equals(qualifiedType)){
-							qualifiedType = Float.class.getName();
-						}else if("double".equals(qualifiedType)){
-							qualifiedType = Double.class.getName();
-						}else if("short".equals(qualifiedType)){
-							qualifiedType = Short.class.getName();
-						}else if("byte".equals(qualifiedType)){
-							qualifiedType = Byte.class.getName();
-						}else if("E".equals(qualifiedType)){
-							qualifiedType = Object.class.getName();
-						}else if("V".equals(qualifiedType)){
-							qualifiedType = Object.class.getName();
+				if(!editorInputExpression.isReturnTypeFixed()){
+					if(iType instanceof IMethod){
+						String qualifiedType = Object.class.getName();
+						try {
+							qualifiedType = JavaModelUtil.getResolvedTypeName(Signature.getTypeErasure(((IMethod)iType).getReturnType()), ((IMethod)iType).getDeclaringType());
+							if("int".equals(qualifiedType)){
+								qualifiedType = Integer.class.getName();
+							}else if("boolean".equals(qualifiedType)){
+								qualifiedType = Boolean.class.getName();
+							}else if("long".equals(qualifiedType)){
+								qualifiedType = Long.class.getName();
+							}else if("float".equals(qualifiedType)){
+								qualifiedType = Float.class.getName();
+							}else if("double".equals(qualifiedType)){
+								qualifiedType = Double.class.getName();
+							}else if("short".equals(qualifiedType)){
+								qualifiedType = Short.class.getName();
+							}else if("byte".equals(qualifiedType)){
+								qualifiedType = Byte.class.getName();
+							}else if("E".equals(qualifiedType)){
+								qualifiedType = Object.class.getName();
+							}else if("V".equals(qualifiedType)){
+								qualifiedType = Object.class.getName();
+							}
+						} catch (Exception e) {
+							BonitaStudioLog.error(e) ;
 						}
-					} catch (Exception e) {
-						BonitaStudioLog.error(e) ;
+						return qualifiedType;
+					}else if( iType instanceof IType){
+						return ((IType) iType).getFullyQualifiedName() ;
 					}
-					return qualifiedType;
-				}else if( iType instanceof IType){
-					return ((IType) iType).getFullyQualifiedName() ;
+				}else{
+					return returnTypeObservable.getValue();
 				}
 				return null  ;
 			}
