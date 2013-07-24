@@ -78,7 +78,7 @@ public class DebugProcessCommand extends AbstractHandler {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public boolean isEnabled() {
 		MainProcess process =  (MainProcess) getProcessInEditor() ;
@@ -86,14 +86,15 @@ public class DebugProcessCommand extends AbstractHandler {
 	}
 
 	protected MainProcess getProcessInEditor() {
-		IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor() ;
-		boolean isADiagram = editor != null && editor instanceof DiagramEditor;
-		if(isADiagram){
-			EObject root = ((DiagramEditor)editor).getDiagramEditPart().resolveSemanticElement() ;
-			MainProcess mainProc = ModelHelper.getMainProcess(root) ;
-			return mainProc ;
+		if( PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
+			IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+			boolean isADiagram = editor != null && editor instanceof DiagramEditor;
+			if(isADiagram){
+				EObject root = ((DiagramEditor)editor).getDiagramEditPart().resolveSemanticElement() ;
+				MainProcess mainProc = ModelHelper.getMainProcess(root) ;
+				return mainProc ;
+			}
 		}
-
 		return null;
 	}
 }

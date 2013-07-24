@@ -53,7 +53,6 @@ public class PreviewFormHandler extends AbstractHandler {
 		this.form = form;
 	}
 
-
 	/**
 	 * Default constructor used in the menu bar
 	 */

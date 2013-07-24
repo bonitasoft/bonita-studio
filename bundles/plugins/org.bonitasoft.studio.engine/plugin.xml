@@ -74,17 +74,18 @@
               id="org.bonitasoft.studio.menu.run"
               label="%serverMenuLabel">
            <command
-                 commandId="org.bonitasoft.studio.engine.resetEngineCommand"
-                 icon="icons/clean_run_history.png"
+                 commandId="org.bonitasoft.studio.engine.runCommand"
+                 icon="icons/run.png"
                  style="push">
            </command>
            <command
-                 commandId="org.bonitasoft.studio.engine.resetServerCommand"
-                 icon="icons/reset_server.png"
+                 commandId="org.bonitasoft.studio.application.openConsole"
+                 disabledIcon="icons/user_xp_disabled.png"
+                 icon="icons/user_xp.png"
                  style="push">
            </command>
            <separator
-                 name="org.bonitasoft.studio.application.separator2"
+                 name="org.bonitasoft.studio.engine.separator1"
                  visible="true">
            </separator>
            <command
@@ -94,13 +95,17 @@
                  style="push">
            </command>
            <separator
-                 name="org.bonitasoft.studio.application.separator1"
+                 name="org.bonitasoft.studio.engine.separator2"
                  visible="true">
            </separator>
            <command
-                 commandId="org.bonitasoft.studio.application.openConsole"
-                 disabledIcon="icons/user_xp_disabled.png"
-                 icon="icons/user_xp.png"
+                 commandId="org.bonitasoft.studio.engine.resetEngineCommand"
+                 icon="icons/clean_run_history.png"
+                 style="push">
+           </command>
+           <command
+                 commandId="org.bonitasoft.studio.engine.resetServerCommand"
+                 icon="icons/reset_server.png"
                  style="push">
            </command>
            <visibleWhen
