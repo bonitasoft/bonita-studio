@@ -300,8 +300,13 @@ public class ConfigurationWizardDialog extends WizardDialog implements ISelectio
 
         createAdvancedCheckBox(composite);
 
-        getButton(IDialogConstants.CANCEL_ID).moveBelow(null) ;
         getButton(IDialogConstants.FINISH_ID).moveBelow(null) ;
+        getButton(IDialogConstants.CANCEL_ID).moveBelow(null) ;
+        
+        if(parent.getDisplay().getDismissalAlignment() == SWT.RIGHT){
+        	getButton(IDialogConstants.FINISH_ID).moveBelow(null) ;
+        }
+        
         layout.numColumns++;
     }
 
