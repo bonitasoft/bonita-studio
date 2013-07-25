@@ -117,7 +117,7 @@ public class StringToExpressionConverter {
 			}
 			if(dataInstance != null){
 				String dataReturnType = getDataReturnType(dataInstance);
-				leftOperand = parse("${"+varName+"}", dataReturnType, true);
+				leftOperand = parse("${"+varName+"}", dataReturnType, false);
 				if(!isJavaSetter){
 					actionExpression.set("returnType", dataReturnType);
 				}
