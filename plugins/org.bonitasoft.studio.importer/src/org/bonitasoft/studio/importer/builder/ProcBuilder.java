@@ -824,7 +824,7 @@ public class ProcBuilder implements IProcBuilder {
                     Node node = (Node) ((IGraphicalEditPart) targetEp).getNotationView() ;
                     if(loc != null){
                         commandStack.append(SetCommand.create(editingDomain, node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_X(), loc.getX() + 60)) ;
-                        commandStack.append(SetCommand.create(editingDomain,  node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_Y(), loc.getY() )) ;
+                        commandStack.append(SetCommand.create(editingDomain,  node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_Y(), loc.getY() - 50)) ;
                     }
                 }
             }
