@@ -38,6 +38,7 @@ Export-Package: org.bonitasoft.studio.importer.bar.custom.migration,
  org.bonitasoft.studio.importer.bar.exception,
  org.bonitasoft.studio.importer.bar.factory
 Import-Package: org.bonitasoft.engine.bpm.connector,
+ org.bonitasoft.engine.bpm.document,
  org.bonitasoft.engine.connector,
  org.bonitasoft.studio.exporter
 Bundle-ClassPath: .,
