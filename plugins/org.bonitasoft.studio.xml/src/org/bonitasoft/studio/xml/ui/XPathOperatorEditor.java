@@ -72,7 +72,9 @@ public class XPathOperatorEditor implements IOperatorEditor {
         return expression != null 
         		&& expression.getContent() != null
         		&& !expression.getContent().isEmpty() 
-        		&& ExpressionConstants.JAVA_METHOD_OPERATOR.equals(expression.getType());
+        		&& ExpressionConstants.VARIABLE_TYPE.equals(expression.getType())
+        		&& !expression.getReferencedElements().isEmpty()
+        		&& expression.getReferencedElements().get(0) instanceof XMLData;
     }
     
     /* (non-Javadoc)
