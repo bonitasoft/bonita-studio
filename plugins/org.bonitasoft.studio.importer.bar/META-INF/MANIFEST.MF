@@ -32,4 +32,6 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer.bar.custom.migration,
  org.bonitasoft.studio.importer.bar.exception,
  org.bonitasoft.studio.importer.bar.factory
-Import-Package: org.bonitasoft.studio.exporter
+Import-Package: org.bonitasoft.studio.exporter,
+ org.bonitasoft.engine.bpm.document
+ 
