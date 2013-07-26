@@ -27,7 +27,6 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.groovy.ui;bundle-version="1.0.0",
  org.bonitasoft.studio.connectors.model;bundle-version="1.0.0",
  org.bonitasoft.studio.connectors.model.edit;bundle-version="1.0.0",
- org.junit4;bundle-version="4.8.1",
  org.eclipse.swtbot.junit4_x;bundle-version="2.0.5",
  org.bonitasoft.studio.preferences;bundle-version="1.0.0",
  org.bonitasoft.studio.test.swtbot.util;bundle-version="1.0.0"

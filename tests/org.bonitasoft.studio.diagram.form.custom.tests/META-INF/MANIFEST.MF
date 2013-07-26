@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.bonitasoft.studio.diagram.form.custom.tests
 Bundle-Version: 6.1.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.junit;bundle-version="3.8.2",
+Require-Bundle: org.junit,
  org.bonitasoft.studio.util.tests;bundle-version="1.0.0",
  org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.bonitasoft.studio.diagram.form.custom;bundle-version="1.0.0",
@@ -18,7 +18,6 @@ Require-Bundle: org.junit;bundle-version="3.8.2",
  org.eclipse.gmf.runtime.diagram.ui.resources.editor;bundle-version="1.2.0",
  org.eclipse.emf.common.ui;bundle-version="2.5.0",
  org.bonitasoft.studio.application;bundle-version="1.0.0",
- org.junit4,
  org.eclipse.swtbot.eclipse.finder;bundle-version="2.0.0",
  org.eclipse.swtbot.eclipse.gef.finder;bundle-version="2.0.0",
  org.eclipse.swtbot.junit4_x;bundle-version="2.0.0",
