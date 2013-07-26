@@ -8276,6 +8276,7 @@
       provider="BonitaSoft S.A."
       version="6.1.0.qualifier"
       activatorClassName="FormDiagramEditorPlugin">
+    <requiredPlugins>org.eclipse.gmf.tooling.runtime</requiredPlugins>
     <requiredPlugins>org.eclipse.draw2d</requiredPlugins>
     <requiredPlugins>org.eclipse.gmf.runtime.lite.svg</requiredPlugins>
     <requiredPlugins>org.bonitasoft.studio.common</requiredPlugins>

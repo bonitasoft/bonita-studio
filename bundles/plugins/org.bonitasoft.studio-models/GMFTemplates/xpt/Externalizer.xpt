@@ -31,14 +31,14 @@ public class «getExternalizerClassName()» extends org.eclipse.osgi.util.NLS {
 	}
 
 	«EXPAND Fields»
-    //TODO: put accessor fields manually	
+    //TODO: put accessor fields manually
     «REM»Custom bonita label«ENDREM»
 	public static String cannotSaveTitle;
 	public static String cannotSaveMessage;
 	public static String ConfirmReplaceProcessDesc;
 	public static String ConfirmReplaceProcessTitle;
 	public static String saveDidNotChangeFileTitle;
-	public static String saveDidNotChangeFileDescription;
+	public static String saveDidNotChangeFileDescription;	
 }
 «ENDDEFINE»
 
@@ -63,20 +63,12 @@ public class «getExternalizerClassName()» extends org.eclipse.osgi.util.NLS {
     «EXPAND xpt::diagram::editpolicies::OpenDiagram::i18nAccessors FOR diagram-»
     «EXPAND xpt::navigator::NavigatorContentProvider::i18nAccessors FOR navigator-»
     «EXPAND xpt::navigator::NavigatorActionProvider::i18nAccessors FOR navigator-»
-    «EXPAND impl::parsers::AbstractParser::i18nAccessors FOR labelParsers-»
 	«EXPAND parsers::PredefinedParser::i18nAccessors FOR labelParsers-»
 	«EXPAND xpt::providers::ModelingAssistantProvider::i18nAccessors FOR diagram-»
 «ENDDEFINE»
 
 «DEFINE Values FOR gmfgen::GenEditorGenerator»
 # TODO: manually put keys and values
-«REM»Custom bonita label«ENDREM»
-cannotSaveTitle=Cannot save file
-cannotSaveMessage=This probably means that specified name and version are already used by another process
-ConfirmReplaceProcessDesc=A file with the same name already exists. Do you want to replace it ?
-ConfirmReplaceProcessTitle=Replace selected file?
-saveDidNotChangeFileTitle=Save did not change file
-saveDidNotChangeFileDescription=Current File was not modified while performing "Save". Please close and re-open your process.
 «EXPAND impl::actions::CreateShortcutAction::i18nValues FOR diagram-»
 «EXPAND xpt::editor::CreationWizard::i18nValues FOR diagram-»
 «EXPAND xpt::editor::CreationWizardPage::i18nValues FOR diagram-»
@@ -97,7 +89,6 @@ saveDidNotChangeFileDescription=Current File was not modified while performing "
 «EXPAND xpt::diagram::editpolicies::OpenDiagram::i18nValues FOR diagram-»
 «EXPAND xpt::navigator::NavigatorContentProvider::i18nValues FOR navigator-»
 «EXPAND xpt::navigator::NavigatorActionProvider::i18nValues FOR navigator-»
-«EXPAND impl::parsers::AbstractParser::i18nValues FOR labelParsers-»
 «EXPAND parsers::PredefinedParser::i18nValues FOR labelParsers-»
 «EXPAND xpt::providers::ModelingAssistantProvider::i18nValues FOR diagram-»
 «ENDDEFINE»
