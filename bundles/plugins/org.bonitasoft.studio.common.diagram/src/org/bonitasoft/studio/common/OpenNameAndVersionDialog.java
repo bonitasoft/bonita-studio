@@ -19,6 +19,7 @@ package org.bonitasoft.studio.common;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -52,10 +53,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-
 /**
  * @author Romain Bioteau
- *
+ * 
  */
 public class OpenNameAndVersionDialog extends Dialog {
 
@@ -66,37 +66,49 @@ public class OpenNameAndVersionDialog extends Dialog {
 	private final IRepositoryStore diagramStore;
 	private final String typeLabel;
 	private boolean isDiagram = false;
-	private MainProcess diagram;
-	private boolean diagramNameOrVersionChangeMandatory=false;
+	private boolean diagramNameOrVersionChangeMandatory = false;
 	private HashSet<String> existingFileNames;
+	private List<AbstractProcess> processes;
 
-
-	protected OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram,IRepositoryStore diagramStore) {
+	protected OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram, IRepositoryStore diagramStore) {
 		super(parentShell);
-		isDiagram  = true;
+		isDiagram = true;
 		diagramName = diagram.getName();
 		diagramVersion = diagram.getVersion();
 		srcName = diagram.getName();
 		srcVersion = diagram.getVersion();
-		this.diagramStore = diagramStore ;
+		this.diagramStore = diagramStore;
 		typeLabel = Messages.diagram.toLowerCase();
-		this.diagram = diagram;
 		listExistingFileNames(diagramStore);
+		listExistingAbstractProcess();
 	}
 
-
-	public OpenNameAndVersionDialog(Shell parentShell,MainProcess diagram, String poolName, String versionName,IRepositoryStore diagramStore) {
+	public OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram, String poolName, String versionName, IRepositoryStore diagramStore) {
 		super(parentShell);
 		diagramName = poolName;
 		diagramVersion = versionName;
 		srcName = poolName;
 		srcVersion = versionName;
-		this.diagramStore = diagramStore ;
+		this.diagramStore = diagramStore;
 		typeLabel = Messages.Pool_title.toLowerCase();
-		this.diagram=diagram;
 		listExistingFileNames(diagramStore);
+		listExistingAbstractProcess();
 	}
 
+	public OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram, IRepositoryStore diagramStore, boolean diagramNameOrVersionChangeMandatory) {
+		super(parentShell);
+		isDiagram = true;
+		isDiagram = true;
+		diagramName = diagram.getName();
+		diagramVersion = diagram.getVersion();
+		srcName = diagram.getName();
+		srcVersion = diagram.getVersion();
+		this.diagramStore = diagramStore;
+		typeLabel = Messages.Pool_title.toLowerCase();
+		this.diagramNameOrVersionChangeMandatory = diagramNameOrVersionChangeMandatory;
+		listExistingFileNames(diagramStore);
+		listExistingAbstractProcess();
+	}
 
 	protected void listExistingFileNames(IRepositoryStore diagramStore) {
 		existingFileNames = new HashSet<String>();
@@ -107,24 +119,18 @@ public class OpenNameAndVersionDialog extends Dialog {
 				return arg1.endsWith(".proc");
 			}
 		});
-		for(String f : files){
+		for (String f : files) {
 			existingFileNames.add(f.toLowerCase());
 		}
 	}
 
-	public OpenNameAndVersionDialog(Shell parentShell,MainProcess diagram,IRepositoryStore diagramStore,boolean diagramNameOrVersionChangeMandatory) {
-		super(parentShell);
-		isDiagram  = true;
-		isDiagram  = true;
-		diagramName = diagram.getName();
-		diagramVersion = diagram.getVersion();
-		srcName = diagram.getName();
-		srcVersion = diagram.getVersion();
-		this.diagramStore = diagramStore ;
-		typeLabel = Messages.Pool_title.toLowerCase();
-		this.diagram=diagram;
-		this.diagramNameOrVersionChangeMandatory = diagramNameOrVersionChangeMandatory;
-		listExistingFileNames(diagramStore);
+	private void listExistingAbstractProcess() {
+		processes = new ArrayList<AbstractProcess>();
+		final List<IRepositoryFileStore> l = diagramStore.getChildren();
+		for (IRepositoryFileStore irepStore : l) {
+			final MainProcess m = (MainProcess) irepStore.getContent();
+			processes.addAll(ModelHelper.getAllProcesses(m));
+		}
 	}
 
 	@Override
@@ -132,7 +138,6 @@ public class OpenNameAndVersionDialog extends Dialog {
 		super.configureShell(newShell);
 		newShell.setText(Messages.openNameAndVersionDialogTitle);
 	}
-
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
@@ -162,8 +167,8 @@ public class OpenNameAndVersionDialog extends Dialog {
 		final Text versionText = new Text(res, SWT.BORDER);
 		versionText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-		final ISWTObservableValue observeNameText = SWTObservables.observeText(nameText,SWT.Modify);
-		final ISWTObservableValue observeVersionText =  SWTObservables.observeText(versionText,SWT.Modify);
+		final ISWTObservableValue observeNameText = SWTObservables.observeText(nameText, SWT.Modify);
+		final ISWTObservableValue observeVersionText = SWTObservables.observeText(versionText, SWT.Modify);
 		final MultiValidator caseValidator = new MultiValidator() {
 
 			@Override
@@ -171,30 +176,30 @@ public class OpenNameAndVersionDialog extends Dialog {
 				final String name = observeNameText.getValue().toString();
 				final String version = observeVersionText.getValue().toString();
 
-				if(isDiagram){
+				if (isDiagram) {
 					final String newDiagramFilename = NamingUtils.toDiagramFilename(name, version);
 					IRepositoryFileStore fileStore = diagramStore.getChild(newDiagramFilename);
-					if (diagramNameOrVersionChangeMandatory && srcName.equals(name) && srcVersion.equals(version)){
+					if (diagramNameOrVersionChangeMandatory && srcName.equals(name) && srcVersion.equals(version)) {
 						return ValidationStatus.error(Messages.diagramNameOrVersionMustBeChanged);
 					}
-					if(fileStore != null && !srcName.equals(name) && !srcVersion.equals(version)){
-						return ValidationStatus.error(Messages.bind(Messages.diagramAlreadyExists,typeLabel));
+					if (fileStore != null && !srcName.equals(name) && !srcVersion.equals(version)) {
+						return ValidationStatus.error(Messages.bind(Messages.diagramAlreadyExists, typeLabel));
 					}
 
-					for(String existingFileName : existingFileNames){
-						if(!NamingUtils.toDiagramFilename(srcName,srcVersion).equals(newDiagramFilename)  && existingFileName.equals(newDiagramFilename.toLowerCase())){
-							return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError,typeLabel));
+					for (String existingFileName : existingFileNames) {
+						if (!NamingUtils.toDiagramFilename(srcName, srcVersion).equals(newDiagramFilename)
+								&& existingFileName.equals(newDiagramFilename.toLowerCase())) {
+							return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
 						}
 					}
 
 				} else {
-					if(name.equals(srcName) && version.equals(srcVersion)){
+					if (name.equals(srcName) && version.equals(srcVersion)) {
 						return ValidationStatus.ok();
 					}
-					List<AbstractProcess> diagramPools = ModelHelper.getAllProcesses(diagram);
-					for (AbstractProcess process:diagramPools){
-						if (name.equals(process.getName())&& version.equals(process.getVersion())){
-							return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError,typeLabel));
+					for (AbstractProcess process : processes) {
+						if (name.equals(process.getName()) && version.equals(process.getVersion())) {
+							return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
 						}
 					}
 				}
@@ -207,15 +212,15 @@ public class OpenNameAndVersionDialog extends Dialog {
 		ControlDecorationSupport.create(caseValidator, SWT.LEFT);
 		final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
 		final EmptyInputValidator emptyValidator = new EmptyInputValidator(Messages.name);
-		final InputLengthValidator lenghtValidator = new InputLengthValidator(Messages.name,50);
+		final InputLengthValidator lenghtValidator = new InputLengthValidator(Messages.name, 50);
 		final SpecialCharactersValidator specialCharValidator = new SpecialCharactersValidator();
 		targetToModel.setAfterGetValidator(new IValidator() {
 
 			public IStatus validate(Object value) {
 				IStatus status = emptyValidator.validate(value);
-				if(status.isOK()){
+				if (status.isOK()) {
 					status = lenghtValidator.validate(value);
-					if (status.isOK()){
+					if (status.isOK()) {
 						status = specialCharValidator.validate(value);
 					}
 				}
@@ -224,26 +229,28 @@ public class OpenNameAndVersionDialog extends Dialog {
 		});
 
 		targetToModel.setBeforeSetValidator(new UTF8InputValidator(Messages.name));
-		ControlDecorationSupport.create(dbc.bindValue(observeNameText, PojoProperties.value("diagramName").observe(this),targetToModel,null), SWT.LEFT);
+		ControlDecorationSupport.create(
+				dbc.bindValue(observeNameText, PojoProperties.value("diagramName").observe(this), targetToModel, null),
+				SWT.LEFT);
 
 		final UpdateValueStrategy versionTargetToModel = new UpdateValueStrategy();
 		final EmptyInputValidator verisonEmptyValidator = new EmptyInputValidator(Messages.version);
-		final InputLengthValidator versionLenghtValidator = new InputLengthValidator(Messages.version,50);
+		final InputLengthValidator versionLenghtValidator = new InputLengthValidator(Messages.version, 50);
 		versionTargetToModel.setAfterGetValidator(new IValidator() {
 
 			public IStatus validate(Object value) {
 				IStatus status = verisonEmptyValidator.validate(value);
-				if(status.isOK()){
+				if (status.isOK()) {
 					status = versionLenghtValidator.validate(value);
 				}
 				return status;
 			}
 		});
 		versionTargetToModel.setBeforeSetValidator(new UTF8InputValidator(Messages.version));
-		ControlDecorationSupport.create(dbc.bindValue(observeVersionText, PojoProperties.value("diagramVersion").observe(this),versionTargetToModel,null), SWT.LEFT);
+		ControlDecorationSupport.create(dbc.bindValue(observeVersionText,
+				PojoProperties.value("diagramVersion").observe(this), versionTargetToModel, null), SWT.LEFT);
 
 	}
-
 
 	public String getDiagramName() {
 		return diagramName;
@@ -252,7 +259,6 @@ public class OpenNameAndVersionDialog extends Dialog {
 	public void setDiagramName(String diagramName) {
 		this.diagramName = diagramName;
 	}
-
 
 	public String getDiagramVersion() {
 		return diagramVersion;
