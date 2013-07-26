@@ -15,9 +15,9 @@
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>6.0.2-SNAPSHOT</bundle.version>
 		<engine.version>6.0.2-SNAPSHOT</engine.version>
-		<connector.version>6.0.2-rc-03</connector.version>
+		<connector.version>6.0.2-SNAPSHOT</connector.version>
 		<simulation.version>6.0.0</simulation.version>
-		<filters.version>6.0.1</filters.version>
+		<filters.version>6.0.2-SNAPSHOT</filters.version>
 		<theme.builder.version>6.0.0</theme.builder.version>
 		<watchdog.version>6.0.1</watchdog.version>
 		<p2MirrorUrl>http://192.168.1.227/p2_repository/</p2MirrorUrl>
