@@ -1728,7 +1728,7 @@ public class BPMNToProc extends ToProcProcessor {
                     TExpression to = assignment.getTo();
                     if (to != null) {
                         FeatureMap toMixed = to.getMixed();
-                        if (toMixed != null) {
+                        if (toMixed != null && !toMixed.isEmpty()) {
                             Entry entry = toMixed.get(0);
                             if (entry != null) {
                                 String entryValue = ((String) entry.getValue());// .replaceFirst(Matcher.quoteReplacement("getDataInput('"),
@@ -1745,7 +1745,7 @@ public class BPMNToProc extends ToProcProcessor {
                                                 .getFrom();
                                         FeatureMap fromMixed = fromExpression
                                                 .getMixed();
-                                        if (fromMixed != null) {
+                                        if (fromMixed != null && !fromMixed.isEmpty()) {
                                             Entry fromEntry = fromMixed.get(0);
                                             if (fromEntry != null) {
                                                 defaultValueContent = (String) fromEntry
