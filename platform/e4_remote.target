@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+
+<target name="e4_remote" sequenceNumber="32">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.birt.feature.group" version="4.3.0.v201306051647-DTDN7DGjtEqcbHuY3YHRG7D26DT4"/>
+<unit id="org.eclipse.net4j.sdk.feature.group" version="4.2.0.v20130612-0849"/>
+<unit id="org.eclipse.emf.compare.feature.group" version="2.1.0.201306101322"/>
+<unit id="org.eclipse.xsd.sdk.feature.group" version="2.9.0.v20130610-0406"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.9.0.v20130610-0406"/>
+<unit id="org.eclipse.team.svn.feature.group" version="1.1.0.I20130527-1700"/>
+<unit id="org.eclipse.emf.compare.diagram.gmf.feature.group" version="2.1.0.201306101322"/>
+<unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.11.0.v201302211047-7I9v-FE9JgQGiXyVBMyG1XWskAK0"/>
+<unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.7.0.201306111432"/>
+<unit id="org.eclipse.gmf.runtime.notation.sdk.feature.group" version="1.7.0.201306101425"/>
+<unit id="org.eclipse.ocl.all.sdk.feature.group" version="4.1.0.v20130611-1511"/>
+<unit id="org.eclipse.emf.compare.source.feature.group" version="2.1.0.201306101322"/>
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.4.2.v201306120542"/>
+<unit id="org.eclipse.gmf.sdk.feature.group" version="3.1.0.201306121424"/>
+<unit id="org.eclipse.m2m.qvt.oml.sdk.feature.group" version="3.3.0.v20130611-0213"/>
+<unit id="org.eclipse.datatools.sdk.feature.feature.group" version="1.11.0.v201302211047-7PAi1FEpPZFKYstHw29WUuTdipv3"/>
+<unit id="org.eclipse.gef.sdk.feature.group" version="3.9.0.201305060205"/>
+<repository location="http://download.eclipse.org/releases/kepler/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.polarion.eclipse.team.svn.connector.svnkit16.feature.group" version="3.0.1.I20130301-1700"/>
+<unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="3.0.1.I20130507-1700"/>
+<unit id="org.polarion.eclipse.team.svn.connector.svnkit17.feature.group" version="3.0.1.I20130507-1700"/>
+<repository location="http://community.polarion.com/projects/subversive/download/eclipse/3.0/kepler-site/"/>
+</location>
+</locations>
+</target>
