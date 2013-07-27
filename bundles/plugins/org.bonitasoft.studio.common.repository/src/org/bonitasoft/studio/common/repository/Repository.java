@@ -75,6 +75,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
@@ -249,6 +250,13 @@ public class Repository implements IRepository {
 	public void disableBuild() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceDescription desc = workspace.getDescription();
+		try {
+			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,NULL_PROGRESS_MONITOR);
+		} catch (OperationCanceledException e1) {
+			BonitaStudioLog.error(e1);
+		} catch (InterruptedException e1) {
+			BonitaStudioLog.error(e1);
+		}
 		if(desc.isAutoBuilding()){
 			desc.setAutoBuilding(false);
 			try {
@@ -266,12 +274,13 @@ public class Repository implements IRepository {
 		createJavaProject(project);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void createJavaProject(IProject project) {
-		final IJavaProject javaProject = JavaCore.create(project);
-		javaProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
-		javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
-		javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
-		javaProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
+		JavaCore.getOptions().put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+		JavaCore.getOptions().put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+		JavaCore.getOptions().put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
+		JavaCore.getOptions().put(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
+		JavaCore.create(project);
 	}
 
 	protected void createProjectDescriptor(IProject project) throws CoreException {
