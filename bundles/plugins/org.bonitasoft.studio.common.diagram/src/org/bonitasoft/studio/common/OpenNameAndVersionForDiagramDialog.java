@@ -24,8 +24,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.SpecialCharactersValidator;
-import org.bonitasoft.studio.common.jface.databinding.validator.URLEncodableInputValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -34,8 +32,11 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.MultiValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -145,7 +146,7 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
         UpdateValueStrategy nameTargetToModel = new UpdateValueStrategy();
         final EmptyInputValidator emptyValidator = new EmptyInputValidator(Messages.name);
         final InputLengthValidator lenghtValidator = new InputLengthValidator(Messages.name,50);
-        
+       
         nameTargetToModel.setAfterGetValidator(new IValidator() {
 
             public IStatus validate(Object value) {
@@ -168,7 +169,6 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
         final EmptyInputValidator verisonEmptyValidator = new EmptyInputValidator(Messages.version);
         final InputLengthValidator versionLenghtValidator = new InputLengthValidator(Messages.version,50);
         versionTargetToModel.setAfterGetValidator(new IValidator() {
-
             public IStatus validate(Object value) {
                 IStatus status = verisonEmptyValidator.validate(value);
                 if(status.isOK()){
@@ -177,6 +177,27 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
                 return status;
             }
         });
+        final ISWTObservableValue observeNameText = SWTObservables.observeText(nameText, SWT.Modify);
+		final ISWTObservableValue observeVersionText = SWTObservables.observeText(versionText, SWT.Modify);
+		final MultiValidator caseValidator = new MultiValidator() {
+			@Override
+			protected IStatus validate() {
+				final String name = observeNameText.getValue().toString();
+				final String version = observeVersionText.getValue().toString();
+				if (name.equals(srcName) && version.equals(srcVersion)) {
+					return ValidationStatus.ok();
+				}
+				for (AbstractProcess process : processes) {
+					if (name.equals(process.getName()) && version.equals(process.getVersion())) {
+						return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
+					}
+				}
+			return ValidationStatus.ok();
+			}
+		};
+		dbc.addValidationStatusProvider(caseValidator);
+		ControlDecorationSupport.create(caseValidator, SWT.LEFT);
+		
         versionTargetToModel.setBeforeSetValidator(new UTF8InputValidator(Messages.version));
         ControlDecorationSupport.create(dbc.bindValue(SWTObservables.observeText(versionText, SWT.Modify), PojoProperties.value("newVersion").observe(pnv),versionTargetToModel,null), SWT.LEFT);
     }
@@ -190,7 +211,6 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
         for(ProcessesNameVersion pnv : pools){
             createPNVComposite(parent, pnv, dbc);
         }
-
     }
 
     public List<ProcessesNameVersion> getPools() {

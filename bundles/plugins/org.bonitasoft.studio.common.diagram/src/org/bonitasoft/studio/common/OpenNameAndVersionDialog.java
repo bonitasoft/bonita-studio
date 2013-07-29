@@ -64,11 +64,11 @@ public class OpenNameAndVersionDialog extends Dialog {
 	protected String srcName;
 	protected String srcVersion;
 	private final IRepositoryStore diagramStore;
-	private final String typeLabel;
+	protected final String typeLabel;
 	private boolean isDiagram = false;
 	private boolean diagramNameOrVersionChangeMandatory = false;
 	private HashSet<String> existingFileNames;
-	private List<AbstractProcess> processes;
+	protected List<AbstractProcess> processes;
 
 	protected OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram, IRepositoryStore diagramStore) {
 		super(parentShell);
