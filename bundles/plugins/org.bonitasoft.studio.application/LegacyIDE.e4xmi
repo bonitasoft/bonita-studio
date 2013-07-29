@@ -64,28 +64,6 @@
       <tags>ViewMenu</tags>
     </menus>
   </descriptors>
-  <descriptors xmi:id="_uUXgMPgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.migration.view" label="%importStatusReport" iconURI="platform:/plugin/org.bonitasoft.studio.migration/icons/Report.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
-    <menus xmi:id="_uUXgMfgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.migration.view">
-      <tags>ViewMenu</tags>
-    </menus>
-    <toolbar xmi:id="_uUXgMvgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.migration.view"/>
-  </descriptors>
-  <descriptors xmi:id="_xli9EPgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.simulation" label="%SimulationView" iconURI="platform:/plugin/org.bonitasoft.studio.simulation/icons/simulation.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
-    <menus xmi:id="_xljkIPgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.simulation">
-      <tags>ViewMenu</tags>
-    </menus>
-  </descriptors>
-  <descriptors xmi:id="_zXKrsPgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.validation.view" label="%ValidationView" iconURI="platform:/plugin/org.bonitasoft.studio.validation/icons/Accept-icon.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
-    <menus xmi:id="_zXKrsfgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.validation.view">
-      <tags>ViewMenu</tags>
-    </menus>
-  </descriptors>
-  <descriptors xmi:id="_4xdKIPgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.themes.theme.resources" label="%themeResources" iconURI="platform:/plugin/org.bonitasoft.studio.themes/icons/content.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
-    <menus xmi:id="_4xdKIfgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.themes.theme.resources">
-      <tags>ViewMenu</tags>
-    </menus>
-    <toolbar xmi:id="_4xdKIvgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.themes.theme.resources"/>
-  </descriptors>
   <commands xmi:id="e4.exit" elementId="e4.exit" commandName="%command.name.exit" description=""/>
   <commands xmi:id="e4.show.view" elementId="e4.show.view" commandName="%command.name.showView">
     <parameters xmi:id="_oRr6EAFSEd-Z8rQksLwRYz" elementId="org.eclipse.ui.views.showView.viewId" name="View"/>

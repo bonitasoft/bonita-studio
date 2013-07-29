@@ -40,6 +40,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.e4.ui.model.application.ui.SideValue;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -78,6 +84,7 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.internal.handlers.DirtyStateTracker;
 import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
@@ -383,8 +390,21 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor i
 	 */
 	@Override
 	public void postWindowOpen() {
-		super.postWindowOpen();
 		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		
+		if (activeWorkbenchWindow instanceof WorkbenchWindow) {
+			MWindow model = ((WorkbenchWindow) activeWorkbenchWindow).getModel();
+			EModelService modelService = model.getContext().get(EModelService.class);
+			MToolControl searchField = (MToolControl) modelService.find(
+					"SearchField", model);
+			if (searchField != null) {
+				searchField.setToBeRendered(false);
+				MTrimBar trimBar = modelService.getTrim((MTrimmedWindow) model,
+						SideValue.TOP);
+				trimBar.getChildren().clear();
+			}
+		}
+		
 		activeWorkbenchWindow.getSelectionService().addSelectionListener(this) ;
 		activeWorkbenchWindow.getActivePage().addPartListener(new AutomaticSwitchPerspectivePartListener());
 		activeWorkbenchWindow.getActivePage().addPartListener(new IPartListener(){
