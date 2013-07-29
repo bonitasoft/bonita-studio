@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveRegistry;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -125,30 +126,27 @@ public class BonitaPerspectivesUtils {
 				final IPerspectiveDescriptor activePerspective = activePage.getPerspective();
 				final String activePerspectiveID = activePerspective.getId();
 				if (!activePerspectiveID.equals(perspectiveID)) {
-					try {
-						workbench.showPerspective(perspectiveID, window);
-						UIJob job = new UIJob("changePerspective") {
-							@Override
-							public IStatus runInUIThread(IProgressMonitor monitor) {
-								Display.getDefault().syncExec(new Runnable() {
-									public void run() {
-										if(activePage.getEditorReferences().length == 0){
-											PlatformUtil.openIntro();
-										}else{
-											PlatformUtil.closeIntro();
-										}
-
+					IPerspectiveRegistry registry = workbench.getPerspectiveRegistry();
+					IWorkbenchPage page = window.getActivePage();
+					page.setPerspective(registry.findPerspectiveWithId(perspectiveID));
+					UIJob job = new UIJob("changePerspective") {
+						@Override
+						public IStatus runInUIThread(IProgressMonitor monitor) {
+							Display.getDefault().syncExec(new Runnable() {
+								public void run() {
+									if(activePage.getEditorReferences().length == 0){
+										PlatformUtil.openIntro();
+									}else{
+										PlatformUtil.closeIntro();
 									}
-								});
-								return Status.OK_STATUS;
-							}
-						};
-						job.setSystem(true);
-						job.schedule();
 
-					} catch (WorkbenchException e) {
-						BonitaStudioLog.error(e);
-					}
+								}
+							});
+							return Status.OK_STATUS;
+						}
+					};
+					job.setSystem(true);
+					job.schedule();
 				}
 			}
 		}
