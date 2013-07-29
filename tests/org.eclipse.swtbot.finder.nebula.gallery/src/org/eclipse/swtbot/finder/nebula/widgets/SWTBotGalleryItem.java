@@ -19,7 +19,7 @@ import java.util.List;
 import org.eclipse.nebula.widgets.gallery.Gallery;
 import org.eclipse.nebula.widgets.gallery.GalleryItem;
 import org.eclipse.swt.SWT;
-import org.eclipse.swtbot.finder.nebula.SWTNebulaBot;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.results.IntResult;
 import org.eclipse.swtbot.swt.finder.results.ListResult;
@@ -89,7 +89,7 @@ public class SWTBotGalleryItem extends AbstractSWTBot<GalleryItem> {
 	 */
 	public SWTBotGalleryItem getGalleryItem(final int index){
 		try {
-			new SWTNebulaBot().waitUntil(new DefaultCondition() {
+			new SWTBot().waitUntil(new DefaultCondition() {
 				public String getFailureMessage() {
 					return "Could not find gallery item for index " + index; //$NON-NLS-1$
 				}
@@ -122,7 +122,7 @@ public class SWTBotGalleryItem extends AbstractSWTBot<GalleryItem> {
 	 */
 	public SWTBotGalleryItem getGalleryItem(final String itemText) throws WidgetNotFoundException {
 		try {
-			new SWTNebulaBot().waitUntil(new DefaultCondition() {
+			new SWTBot().waitUntil(new DefaultCondition() {
 				public String getFailureMessage() {
 					return "Could not find node with text " + itemText; //$NON-NLS-1$
 				}
@@ -167,7 +167,7 @@ public class SWTBotGalleryItem extends AbstractSWTBot<GalleryItem> {
 	 */
 	public SWTBotGalleryItem getGalleryItem(final String itemText, final int textIndex) throws WidgetNotFoundException {
 		try {
-			new SWTNebulaBot().waitUntil(new DefaultCondition() {
+			new SWTBot().waitUntil(new DefaultCondition() {
 				public String getFailureMessage() {
 					return "Could not find node with text " + itemText; //$NON-NLS-1$
 				}

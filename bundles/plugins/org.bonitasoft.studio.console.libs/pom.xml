@@ -101,7 +101,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.bonitasoft.console</groupId>
-			<artifactId>console-server-impl</artifactId>
+			<artifactId>console-server</artifactId>
 			<version>${bundle.version}</version>
 			<exclusions>
 				<exclusion>
