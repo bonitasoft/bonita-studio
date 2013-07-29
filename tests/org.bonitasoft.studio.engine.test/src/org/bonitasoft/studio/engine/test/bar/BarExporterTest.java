@@ -86,10 +86,10 @@ public class BarExporterTest extends SWTBotGefTestCase {
         bot.menu("Diagram").menu("Save").click();
 
         //System.out.println(editorTitle);
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Runtime")));
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Server")));
 
         // Menu Server > Build...
-        bot.menu("Runtime").menu("Build...").click();
+        bot.menu("Server").menu("Build...").click();
 
         // shell 'Build'
         final SWTBotShell shell = bot.shell(Messages.buildTitle);
