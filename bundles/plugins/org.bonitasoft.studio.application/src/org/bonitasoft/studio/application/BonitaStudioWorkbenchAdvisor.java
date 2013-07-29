@@ -67,6 +67,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
@@ -80,7 +81,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.eclipse.ui.internal.splash.SplashHandlerFactory;
 
-public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
+public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IStartup {
 
 
 	protected static final String PRIORITY = "priority";
@@ -209,18 +210,18 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 				monitor.worked(1) ;
 				FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
 				monitor.worked(1) ;
-				IRepository repository = RepositoryManager.getInstance().getCurrentRepository() ;
+				IRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository() ;
 				monitor.worked(1) ;
-				if(!repository.getProject().exists()){
-					repository.create() ;
+				if(!currentRepository.getProject().exists()){
+					currentRepository.create() ;
 				}
-				repository.open() ;
-				repository.getAllStores();
+				currentRepository.open() ;
+				currentRepository.getAllStores();
 				monitor.worked(5) ;
 			}
 		};
 		try {
-			workspaceOperation.run(monitor) ;
+			workspaceOperation.run(Repository.NULL_PROGRESS_MONITOR) ;
 		} catch (CoreException e3) {
 			BonitaStudioLog.error(e3) ;
 		}
@@ -229,19 +230,19 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 		/*Look if there are contribution to launch,
 		 * typically add repo team listener
 		 * */
-		 IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.repository.postinitrepository"); //$NON-NLS-1$
-		 IPostInitRepositoryJobContribution contrib = null;
-		 for (IConfigurationElement elem : elements){
-			 try {
-				 contrib = (IPostInitRepositoryJobContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-			 } catch (CoreException e) {
-				 BonitaStudioLog.error(e);
-			 }
-			 contrib.execute();
-		 }
+		IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.repository.postinitrepository"); //$NON-NLS-1$
+		IPostInitRepositoryJobContribution contrib = null;
+		for (IConfigurationElement elem : elements){
+			try {
+				contrib = (IPostInitRepositoryJobContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e);
+			}
+			contrib.execute();
+		}
 	}
 
-	
+
 	/**
 	 * Disconnect from the core workspace.
 	 */
@@ -261,8 +262,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 				public void run(IProgressMonitor monitor) {
 					try {
 						if (applyPolicy)
-						status.merge(((Workspace) ResourcesPlugin
-								.getWorkspace()).save(true, true, monitor));
+							status.merge(((Workspace) ResourcesPlugin
+									.getWorkspace()).save(true, true, monitor));
 					} catch (CoreException e) {
 						status.merge(e.getStatus());
 					}
@@ -272,10 +273,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 			p.run(true, false, runnable);
 		} catch (InvocationTargetException e) {
 			status
-					.merge(new Status(IStatus.ERROR,
-							IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
-							IDEWorkbenchMessages.InternalError, e
-									.getTargetException()));
+			.merge(new Status(IStatus.ERROR,
+					IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
+					IDEWorkbenchMessages.InternalError, e
+					.getTargetException()));
 		} catch (InterruptedException e) {
 			status.merge(new Status(IStatus.ERROR,
 					IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
@@ -308,43 +309,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 		job.schedule();
 	}
 
-
-	@Override
-	public void postStartup() {
-		try {
-			IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
-			IPostStartupContribution contrib = null;
-			for (IConfigurationElement elem : elements){
-				try {
-					contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-				} catch (CoreException e) {
-					BonitaStudioLog.error(e);
-				}
-				contrib.execute();
-			}
-
-
-			if (PlatformUI.isWorkbenchRunning()) {
-				IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				PlatformUI.getWorkbench().showPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID, activeWorkbenchWindow);
-
-				if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective() != null) {
-					PlatformUI.getWorkbench().getIntroManager().showIntro(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), false);
-				}
-			}
-
-			long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME ;
-			BonitaStudioLog.info("Startup duration : "+DateUtil.getDisplayDuration(startupDuration),ApplicationPlugin.PLUGIN_ID) ;
-
-			if (PlatformUI.isWorkbenchRunning()) {
-				sendUserInfo();
-				openStartupDialog() ;
-			}
-		} catch (WorkbenchException ex) {
-			BonitaStudioLog.error(ex);
-		}
-	}
-
 	private void openStartupDialog() {
 		String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
 		if (noRegister == null || !noRegister.equals("1")) { //$NON-NLS-1$
@@ -369,7 +333,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 		PlatformUtil.closeIntro();
 		disconnectFromWorkspace(Repository.NULL_PROGRESS_MONITOR);
 	}
-	
+
 	@Override
 	public boolean preShutdown() {
 		Job.getJobManager().cancel(StartEngineJob.FAMILY);
@@ -450,6 +414,40 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 
 				}
 			}
+		}
+	}
+
+
+	@Override
+	public void earlyStartup() {
+		IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
+		IPostStartupContribution contrib = null;
+		for (IConfigurationElement elem : elements){
+			try {
+				contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e);
+			}
+			contrib.execute();
+		}
+
+
+		if (PlatformUI.isWorkbenchRunning()) {
+			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			if(activeWorkbenchWindow != null){
+				BonitaPerspectivesUtils.switchToPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID);
+				if(activeWorkbenchWindow.getActivePage() != null && activeWorkbenchWindow.getActivePage().getPerspective() != null) {
+					PlatformUI.getWorkbench().getIntroManager().showIntro(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), false);
+				}
+			}
+		}
+
+		long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME ;
+		BonitaStudioLog.info("Startup duration : "+DateUtil.getDisplayDuration(startupDuration),ApplicationPlugin.PLUGIN_ID) ;
+
+		if (PlatformUI.isWorkbenchRunning()) {
+			sendUserInfo();
+			openStartupDialog() ;
 		}
 	}
 

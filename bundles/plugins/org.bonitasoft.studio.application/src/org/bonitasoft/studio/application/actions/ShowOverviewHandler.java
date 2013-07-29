@@ -41,34 +41,34 @@ public class ShowOverviewHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        try {
-            final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-            IEditorPart editor = workbenchWindow.getActivePage().getActiveEditor() ;
-
-            BonitaContentOutlineView view  = (BonitaContentOutlineView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(BonitaContentOutlineView.VIEW_ID);
-            if (editor != null && editor instanceof ProcessDiagramEditor ) {
-                IAction action =((ProcessDiagramEditor)editor).getShowOverivewAction();
-                if(action != null){
-                    action.run();
-                }
-            }else if(editor != null && editor instanceof FormDiagramEditor){
-                IAction action =((FormDiagramEditor)editor).getShowOverivewAction();
-                if(action != null){
-                    action.run();
-                }
-            }
-            for (Control control : ((PageBook)view.getCurrentPage().getControl()).getTabList()) {
-                if (control instanceof FilteredTree) {
-                    final Text filterText = ((FilteredTree)control).getFilterControl();
-                    filterText.setFocus();
-                    if (filterText.getText() != null) {
-                        filterText.setSelection(0, filterText.getText().length());
-                    }
-                }
-            }
-        } catch (PartInitException ex) {
-            return new ExecutionException("Could not load overview view", ex);
-        }
+//        try {
+//            final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+//            IEditorPart editor = workbenchWindow.getActivePage().getActiveEditor() ;
+//
+//            BonitaContentOutlineView view  = (BonitaContentOutlineView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(BonitaContentOutlineView.VIEW_ID);
+//            if (editor != null && editor instanceof ProcessDiagramEditor ) {
+//                IAction action =((ProcessDiagramEditor)editor).getShowOverivewAction();
+//                if(action != null){
+//                    action.run();
+//                }
+//            }else if(editor != null && editor instanceof FormDiagramEditor){
+//                IAction action =((FormDiagramEditor)editor).getShowOverivewAction();
+//                if(action != null){
+//                    action.run();
+//                }
+//            }
+//            for (Control control : ((PageBook)view.getCurrentPage().getControl()).getTabList()) {
+//                if (control instanceof FilteredTree) {
+//                    final Text filterText = ((FilteredTree)control).getFilterControl();
+//                    filterText.setFocus();
+//                    if (filterText.getText() != null) {
+//                        filterText.setSelection(0, filterText.getText().length());
+//                    }
+//                }
+//            }
+//        } catch (PartInitException ex) {
+//            return new ExecutionException("Could not load overview view", ex);
+//        }
         return null;
     }
 

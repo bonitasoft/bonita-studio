@@ -3,9 +3,20 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Main UI plugin
 Bundle-SymbolicName: org.bonitasoft.studio.application;singleton:=true
 Bundle-Version: 6.1.0.qualifier
-Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.application.ApplicationPlugin
 Bundle-Vendor: BonitaSoft S.A.
+Bundle-Localization: plugin
+Export-Package: org.bonitasoft.studio.application,
+ org.bonitasoft.studio.application.actions,
+ org.bonitasoft.studio.application.actions.coolbar,
+ org.bonitasoft.studio.application.actions.wizards,
+ org.bonitasoft.studio.application.contribution,
+ org.bonitasoft.studio.application.i18n;x-friends:="org.bonitasoft.studio.tests,org.bonitasoft.studio.application.test,org.bonitasoft.studio.diagram.test",
+ org.bonitasoft.studio.application.job,
+ org.bonitasoft.studio.application.splash,
+ org.bonitasoft.studio.application.views,
+ org.bonitasoft.studio.application.views.form,
+ org.bonitasoft.studio.application.views.process
 Require-Bundle: org.bonitasoft.studio.diagram,
  org.eclipse.ui.ide,
  org.eclipse.core.filesystem;bundle-version="1.2.0",
@@ -45,18 +56,6 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.bonitasoft.studio.debug
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.bonitasoft.studio.application,
- org.bonitasoft.studio.application.actions,
- org.bonitasoft.studio.application.actions.coolbar,
- org.bonitasoft.studio.application.actions.wizards,
- org.bonitasoft.studio.application.contribution,
- org.bonitasoft.studio.application.i18n;x-friends:="org.bonitasoft.studio.tests,org.bonitasoft.studio.application.test,org.bonitasoft.studio.diagram.test",
- org.bonitasoft.studio.application.job,
- org.bonitasoft.studio.application.splash,
- org.bonitasoft.studio.application.views,
- org.bonitasoft.studio.application.views.form,
- org.bonitasoft.studio.application.views.process
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.exception
-
