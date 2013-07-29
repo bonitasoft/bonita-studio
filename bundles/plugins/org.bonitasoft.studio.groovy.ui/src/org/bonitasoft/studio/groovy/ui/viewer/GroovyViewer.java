@@ -320,7 +320,6 @@ public class GroovyViewer {
 
 		disableContextAssitShortcut();
 		if( editor.getViewer() != null &&  editor.getViewer().getTextWidget() != null){
-			editor.getViewer().getTextWidget().dispose();
 			editor.dispose();
 		}
 	}
