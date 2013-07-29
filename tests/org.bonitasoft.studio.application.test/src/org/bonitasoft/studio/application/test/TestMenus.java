@@ -35,7 +35,7 @@ public class TestMenus extends TestCase {
         int nbRunMenus = 0;
         for (MenuItem item : shell.getMenuBar().getItems()) {
             menus += "\n"+item.getText();
-            if (item.getText().toLowerCase().contains("run")) {
+            if (item.getText().toLowerCase().trim().equals("run")) {
                 nbRunMenus++;
             }
         }

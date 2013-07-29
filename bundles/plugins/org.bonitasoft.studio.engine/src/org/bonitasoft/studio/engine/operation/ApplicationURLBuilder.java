@@ -45,7 +45,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class ApplicationURLBuilder {
 
-    public static final String APPLI_PATH = "/bonita/console/homepage?"; //$NON-NLS-1$
+    public static final String APPLI_PATH = "/bonita/portal/homepage?"; //$NON-NLS-1$
     public static final String MODE_APP ="app";
     public static final String MODE_FORM="form";
 

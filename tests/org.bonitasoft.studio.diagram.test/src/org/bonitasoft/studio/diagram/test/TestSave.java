@@ -39,7 +39,7 @@ public class TestSave extends SWTBotGefTestCase {
 	private ICondition saveMenuDisabled = new ICondition() {
 		
 		public boolean test() throws Exception {
-			return !bot.menu("Diagram").menu("Save").isEnabled();
+			return !bot.menu("Diagram").click().menu("Save").isEnabled();
 		}
 		
 		public void init(SWTBot bot) {
@@ -107,7 +107,7 @@ public class TestSave extends SWTBotGefTestCase {
         isSaveButtonEnable=  bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled();
         Assert.assertFalse("Error: Save button must be disabled when creating a new diagram.", isSaveButtonEnable);
 
-        bot.waitUntil(saveMenuDisabled,5000,500);
+        bot.waitUntil(saveMenuDisabled,5000,100);
  
 
     }
@@ -144,7 +144,7 @@ public class TestSave extends SWTBotGefTestCase {
         Assert.assertFalse("Error: Save button must be disabled just after saving a new diagram..", isSaveButtonEnable);
 
         // test menu
-        bot.waitUntil(saveMenuDisabled,5000,500);
+        bot.waitUntil(saveMenuDisabled,5000,1000);
     }
 
 }

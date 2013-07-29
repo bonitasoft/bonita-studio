@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gmftool:ToolRegistry xmi:version="2.0"
+<gmftool:ToolRegistry
+    xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:gmftool="http://www.eclipse.org/gmf/2005/ToolDefinition">
@@ -51,8 +52,7 @@
     </tools>
     <tools
         xsi:type="gmftool:ToolGroup"
-        title="Activities"
-        description=""
+        title="Tasks"
         collapsible="true"
         stack="true">
       <tools
@@ -61,15 +61,8 @@
           description="Create a new Service Task"/>
       <tools
           xsi:type="gmftool:CreationTool"
-          title="Call Activity"
-          description="Create a new Call Activity"/>
-      <tools
-          xsi:type="gmftool:CreationTool"
           title="Human"
           description="Create a new Human Step"/>
-      <tools
-          xsi:type="gmftool:CreationTool"
-          title="Evenemential SubProcess"/>
       <tools
           xsi:type="gmftool:CreationTool"
           title="Script Task"
@@ -86,6 +79,20 @@
           xsi:type="gmftool:CreationTool"
           title="Step"
           description="Create a new automatic Step"/>
+    </tools>
+    <tools
+        xsi:type="gmftool:ToolGroup"
+        title="Activities"
+        description=""
+        collapsible="true"
+        stack="true">
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Call Activity"
+          description="Create a new Call Activity"/>
+      <tools
+          xsi:type="gmftool:CreationTool"
+          title="Evenemential SubProcess"/>
     </tools>
     <tools
         xsi:type="gmftool:ToolGroup"
@@ -114,7 +121,7 @@
     </tools>
     <tools
         xsi:type="gmftool:ToolGroup"
-        title="Intermediate Events"
+        title="Int. Events"
         collapsible="true"
         stack="true">
       <tools

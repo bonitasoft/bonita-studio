@@ -16,18 +16,23 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
 import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.migrator.ReportCustomMigration;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
 import org.bonitasoft.studio.model.form.FormFactory;
+import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.Widget;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
 import org.eclipse.emf.edapt.migration.MigrationException;
@@ -123,16 +128,27 @@ public class WidgetMigration extends ReportCustomMigration {
 		return sb.toString();
 	}
 
-	private String getDefaultReturnTypeForWidget(Instance widget) {
-		if(widget.instanceOf("form.CheckBoxMultipleFormField")
-				|| widget.instanceOf("form.DynamicTable")){
-			return List.class.getName();
-		}
-		if(widget.instanceOf("form.CheckBoxSingleFormField")){
-			return Boolean.class.getName();
-		}
-		if(widget.instanceOf("form.DateFormField")){
-			return Date.class.getName();
+	private String getDefaultReturnTypeForWidget(Instance actionExp) {
+		List<Instance> refs = actionExp.get("referencedElements");
+		if(refs != null && !refs.isEmpty()){
+			Instance widgetDependency = refs.get(0);
+			if(widgetDependency.instanceOf("form.Duplicable") 
+					&& (Boolean)widgetDependency.get("duplicate")){
+				return List.class.getName();
+			}else{
+				if(widgetDependency.instanceOf("form.FileWidget")){
+					return DocumentValue.class.getName();
+				}else{
+					EClassifier eClassifier = FormPackage.eINSTANCE.getEClassifier(widgetDependency.getEClass().getName());
+					if(eClassifier instanceof EClass){
+						EObject widgetInstance = FormFactory.eINSTANCE.create((EClass) eClassifier);
+						if(widgetInstance instanceof Widget){
+							return ((Widget) widgetInstance).getAssociatedReturnType();
+						}
+					}
+					return String.class.getName();
+				}
+			}
 		}
 		return String.class.getName();
 	}
@@ -452,7 +468,7 @@ public class WidgetMigration extends ReportCustomMigration {
 			Instance actionExp = action.get("rightOperand");
 			if(actionExp != null){
 				if(ExpressionConstants.FORM_FIELD_TYPE.equals(actionExp.get("type"))){
-					actionExp.set("returnType", getDefaultReturnTypeForWidget(widget));
+					actionExp.set("returnType", getDefaultReturnTypeForWidget(actionExp));
 				}else if(ExpressionConstants.SCRIPT_TYPE.equals(actionExp.get("type"))){
 					Instance leftExp = action.get("leftOperand");
 					if(leftExp!= null){

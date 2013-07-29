@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.actors.ui.wizard.page;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +41,6 @@ import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.jface.databinding.WizardPageSupportWithoutMessages;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -50,11 +50,12 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.ECollections;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.databinding.EObjectObservableValue;
 import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.Dialog;
@@ -75,7 +76,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -583,12 +583,23 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 				final Combo groupNameCombo = new Combo(detailsInfoComposite, SWT.BORDER | SWT.READ_ONLY) ;
 				groupNameCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).minSize(100, SWT.DEFAULT).create()) ;
 
-
 				groupNameCombo.add("") ;
+				if (groupList.size() > 0) {
+					ECollections.sort((EList<org.bonitasoft.studio.actors.model.organization.Group>)groupList, new Comparator<org.bonitasoft.studio.actors.model.organization.Group>() {
+						@Override
+						public int compare(org.bonitasoft.studio.actors.model.organization.Group group1, org.bonitasoft.studio.actors.model.organization.Group group2) {
+							if(GroupContentProvider.getGroupPath(group1).compareTo(GroupContentProvider.getGroupPath(group2)) >0){
+								return 1;
+							}
+							else {
+								return -1;
+							}
+						}
+					});
+				}
 				for(org.bonitasoft.studio.actors.model.organization.Group g : groupList){
 					groupNameCombo.add(GroupContentProvider.getGroupPath(g)) ;
 				}
-
 
 				Label roleName = new Label(detailsInfoComposite, SWT.NONE) ;
 				roleName.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END,SWT.CENTER).create()) ;

@@ -17,9 +17,14 @@
 package org.bonitasoft.studio.common.diagram.palette;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.internal.ui.palette.editparts.ToolbarEditPart;
+import org.eclipse.gef.internal.ui.palette.editparts.SliderPaletteEditPart;
+import org.eclipse.gef.palette.PaletteDrawer;
+import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.ui.palette.PaletteEditPartFactory;
+import org.eclipse.gef.ui.palette.editparts.PaletteEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 
 /**
@@ -32,10 +37,31 @@ public class CustomPaletteEditPartFactory extends PaletteEditPartFactory{
 	@Override
 	protected EditPart createToolbarEditPart(EditPart parentEditPart,
 			Object model) {
-		ToolbarEditPart ep = (ToolbarEditPart) super.createToolbarEditPart(parentEditPart, model);
+		PaletteEditPart ep = (PaletteEditPart) super.createToolbarEditPart(parentEditPart, model);
 		ep.getFigure().setBackgroundColor(FigureUtilities.lighter(ColorConstants.lightGray));
 		ep.getFigure().setOpaque(true);
 		return ep;
+	}
+	
+	@Override
+	protected EditPart createDrawerEditPart(EditPart parentEditPart,
+			Object model) {
+		return new CustomDrawerEditPart((PaletteDrawer) model);
+	}
+	
+	@Override
+	protected EditPart createMainPaletteEditPart(EditPart parentEditPart,
+			Object model) {
+		return new SliderPaletteEditPart((PaletteRoot) model){
+			@Override
+			public IFigure createFigure() {
+				Figure figure = new Figure();
+				figure.setOpaque(true);
+				figure.setForegroundColor(ColorConstants.listForeground);
+				figure.setBackgroundColor(ColorConstants.white);
+				return figure;
+			}
+		};
 	}
 	
 }

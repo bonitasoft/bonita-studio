@@ -21,6 +21,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.StackLayout;
+import org.eclipse.gef.RootEditPart;
+import org.eclipse.gef.editparts.SimpleRootEditPart;
 import org.eclipse.gef.internal.ui.palette.editparts.ToolEntryEditPart;
 import org.eclipse.gef.palette.PaletteDrawer;
 import org.eclipse.gef.palette.PaletteEntry;
@@ -45,7 +50,19 @@ public class CustomMainPaletteViewer extends PaletteViewerEx {
 	public CustomMainPaletteViewer(){
 		setEditPartFactory(new CustomPaletteEditPartFactory());
 	}
-	
+
+	protected void createDefaultRoot() {
+		setRootEditPart(new SimpleRootEditPart(){
+			@Override
+			protected IFigure createFigure() {
+				Figure figure = new Figure();
+				figure.setLayoutManager(new StackLayout());
+				return figure;
+			}
+		});
+	}
+
+
 	public void hidePaletteEntry(String id){
 		filters.add(id);
 	}
@@ -59,7 +76,7 @@ public class CustomMainPaletteViewer extends PaletteViewerEx {
 	public void removePaletteListener(PaletteListener paletteListener) {
 		paletteListeners.remove(paletteListener);
 	}
-	
+
 	@Override
 	public void setPaletteRoot(PaletteRoot root) {
 		if (root == getPaletteRoot())
@@ -79,14 +96,19 @@ public class CustomMainPaletteViewer extends PaletteViewerEx {
 	}
 
 	@Override
+	public void setRootEditPart(RootEditPart editpart) {
+		super.setRootEditPart(editpart);
+	}
+
+	@Override
 	public void setContextMenu(MenuManager contextMenu) {
-		
+
 	}
 
 	public void setActiveTool(ToolEntry newMode) {
 		if (newMode == null)
 			newMode = getPaletteRoot().getDefaultEntry();
-		
+
 		if(newMode.equals(activeEntry) ){
 			fireModeChanged();
 			return;
@@ -145,6 +167,7 @@ public class CustomMainPaletteViewer extends PaletteViewerEx {
 				}
 			}
 		}
+
 		return newRoot;
 	}
 
