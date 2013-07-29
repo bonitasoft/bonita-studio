@@ -16,7 +16,9 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>org.eclipse.swtbot.finder.nebula</module>
 		<module>org.eclipse.swtbot.finder.nebula.gallery</module>
+		<module>org.eclipse.swtbot.finder.nebula.tableCombo</module>
 		<module>org.bonitasoft.studio.jre.extension</module>
 		<module>org.bonitasoft.studio.actors.tests</module>
 		<module>org.bonitasoft.studio.application.test</module>
