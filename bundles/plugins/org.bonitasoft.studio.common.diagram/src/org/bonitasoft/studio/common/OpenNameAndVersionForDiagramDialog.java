@@ -177,6 +177,11 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
                 return status;
             }
         });
+		
+        versionTargetToModel.setBeforeSetValidator(new UTF8InputValidator(Messages.version));
+        ControlDecorationSupport.create(dbc.bindValue(SWTObservables.observeText(versionText, SWT.Modify), PojoProperties.value("newVersion").observe(pnv),versionTargetToModel,null), SWT.LEFT);
+   
+        
         final ISWTObservableValue observeNameText = SWTObservables.observeText(nameText, SWT.Modify);
 		final ISWTObservableValue observeVersionText = SWTObservables.observeText(versionText, SWT.Modify);
 		final MultiValidator caseValidator = new MultiValidator() {
@@ -184,7 +189,22 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
 			protected IStatus validate() {
 				final String name = observeNameText.getValue().toString();
 				final String version = observeVersionText.getValue().toString();
-				if (name.equals(srcName) && version.equals(srcVersion)) {
+				int countNewProcessWithSameName = 0;
+				for (ProcessesNameVersion pool : pools){
+					if (name.equals(pool.newName) && version.equals(pool.newVersion)) {
+						countNewProcessWithSameName ++;
+					}
+				}
+				if(countNewProcessWithSameName>1){
+					return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
+				}
+				int countOldProcessWithSameName = 0;
+				for (ProcessesNameVersion pool : pools){
+					if (name.equals(pool.getAbstractProcess().getName()) && version.equals(pool.getAbstractProcess().getVersion())) {
+						countOldProcessWithSameName ++;
+					}
+				}
+				if(countOldProcessWithSameName==1){
 					return ValidationStatus.ok();
 				}
 				for (AbstractProcess process : processes) {
@@ -194,13 +214,11 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
 				}
 			return ValidationStatus.ok();
 			}
+			
 		};
 		dbc.addValidationStatusProvider(caseValidator);
 		ControlDecorationSupport.create(caseValidator, SWT.LEFT);
-		
-        versionTargetToModel.setBeforeSetValidator(new UTF8InputValidator(Messages.version));
-        ControlDecorationSupport.create(dbc.bindValue(SWTObservables.observeText(versionText, SWT.Modify), PojoProperties.value("newVersion").observe(pnv),versionTargetToModel,null), SWT.LEFT);
-    }
+ }
 
     protected void createProcessesNameAndVersion(Composite res, final DataBindingContext dbc) {
         Group parent = new Group(res, SWT.NONE);
