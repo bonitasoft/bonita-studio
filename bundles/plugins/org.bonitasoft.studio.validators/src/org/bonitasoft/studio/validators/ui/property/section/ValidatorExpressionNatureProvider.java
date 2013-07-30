@@ -24,6 +24,7 @@ import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.formfield.FormFieldExpressionProvider;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionComparator;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
+import org.bonitasoft.studio.expression.editor.provider.ICustomExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -32,7 +33,7 @@ import org.bonitasoft.studio.model.expression.Expression;
  * @author Romain Bioteau
  *
  */
-public class ValidatorExpressionNatureProvider extends ExpressionContentProvider implements IExpressionNatureProvider {
+public class ValidatorExpressionNatureProvider extends ExpressionContentProvider implements IExpressionNatureProvider,ICustomExpressionNatureProvider {
 
 	private FormFieldExpressionProvider customFormFieldExpressionProvider;
 

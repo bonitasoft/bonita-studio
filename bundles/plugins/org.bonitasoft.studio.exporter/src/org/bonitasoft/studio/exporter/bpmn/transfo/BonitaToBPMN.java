@@ -239,7 +239,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
 	public BonitaToBPMN() {
 		errors = new ArrayList<String>();
-		errors.add(Messages.connectorsNotExported);
+		errors.add(Messages.formsNotExported);
 	}
 
 	/**

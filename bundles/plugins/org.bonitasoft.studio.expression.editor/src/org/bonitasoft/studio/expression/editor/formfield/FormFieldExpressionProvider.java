@@ -203,7 +203,9 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 				}
 			}
 		}
-		exp.getReferencedElements().add(EcoreUtil.copy(w)) ;
+		Widget copy = EcoreUtil.copy(w);
+		copy.getDependOn().clear();
+		exp.getReferencedElements().add(copy) ;
 		return exp;
 	}
 

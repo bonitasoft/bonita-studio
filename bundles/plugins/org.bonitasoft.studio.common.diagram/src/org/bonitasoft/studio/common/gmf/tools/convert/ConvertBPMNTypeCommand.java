@@ -381,7 +381,7 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
         Form f = ModelHelper.getForm(sourceElement) ;
         List<WidgetDependency> widgetsDependencies = ModelHelper.getAllItemsOfType(f, FormPackage.eINSTANCE.getWidgetDependency()) ;
         for(WidgetDependency w : widgetsDependencies){
-            if(w.getWidget().equals(sourceElement)){
+            if(w.getWidget() != null && w.getWidget().equals(sourceElement)){
                 editingDomain.getCommandStack().execute(new SetCommand(editingDomain, w, FormPackage.eINSTANCE.getWidgetDependency_Widget(), targetElement)) ;
             }
         }
