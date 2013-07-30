@@ -22,6 +22,7 @@ public class Messages extends NLS{
 
 	public static String incompatibleTypes;
 	public static String notBooleanType;
+	public static String equalityError;
 
 	static{
 		NLS.initializeMessages("messages", Messages.class) ;
