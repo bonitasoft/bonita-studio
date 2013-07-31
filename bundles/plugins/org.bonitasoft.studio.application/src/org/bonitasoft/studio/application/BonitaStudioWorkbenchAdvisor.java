@@ -68,9 +68,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
@@ -429,17 +427,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 				BonitaStudioLog.error(e);
 			}
 			contrib.execute();
-		}
-
-
-		if (PlatformUI.isWorkbenchRunning()) {
-			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			if(activeWorkbenchWindow != null){
-				BonitaPerspectivesUtils.switchToPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID);
-				if(activeWorkbenchWindow.getActivePage() != null && activeWorkbenchWindow.getActivePage().getPerspective() != null) {
-					PlatformUI.getWorkbench().getIntroManager().showIntro(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), false);
-				}
-			}
 		}
 
 		long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME ;

@@ -274,13 +274,12 @@ public class Repository implements IRepository {
 		createJavaProject(project);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected void createJavaProject(IProject project) {
-		JavaCore.getOptions().put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
-		JavaCore.getOptions().put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
-		JavaCore.getOptions().put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
-		JavaCore.getOptions().put(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
-		JavaCore.create(project);
+		final IJavaProject jProject = JavaCore.create(project);
+		jProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+		jProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+		jProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
+		jProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
 	}
 
 	protected void createProjectDescriptor(IProject project) throws CoreException {
