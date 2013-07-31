@@ -1,13 +1,17 @@
 package org.bonitasoft.studio.condition.validation;
 
+import org.bonitasoft.studio.condition.conditionModel.ConditionModelFactory;
 import org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage;
 import org.bonitasoft.studio.condition.conditionModel.Expression;
 import org.bonitasoft.studio.condition.conditionModel.Expression_Boolean;
 import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
+import org.bonitasoft.studio.condition.conditionModel.Unary_Operation;
+import org.bonitasoft.studio.condition.conditionModel.impl.ConditionModelPackageImpl;
 import org.bonitasoft.studio.condition.conditionModel.util.ConditionModelSwitch;
 import org.bonitasoft.studio.condition.i18n.Messages;
+import org.bonitasoft.studio.condition.services.ConditionModelGrammarAccess.Operation_CompareElements;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.Data;
@@ -20,7 +24,9 @@ import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -36,6 +42,7 @@ import org.eclipse.xtext.validation.Check;
 public class ConditionModelJavaValidator extends AbstractConditionModelJavaValidator {
 
 	private ResourceSet rSet;
+	public static final String INVALID_EQUALITY_SIGN = "org.bonitasoft.studio.condition.quickfix.InvalidEqualitySign";
 
 	@Check
 	public void checkCompatibleTypes(Operation_Compare operation) {
@@ -56,7 +63,6 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
 	@Check
 	public void checkComparatorSign(Operation_Compare operation) {
 		if (operation != null) {
-			System.out.println(operation.getClass().getName());
 			for (Adapter adapter : operation.eAdapters()) {
 				if (adapter instanceof RootNode) {
 					final RootNode r = (RootNode) adapter;
@@ -64,7 +70,7 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
 						if (iNode.getText().equals("=")) {
 							if (!(!iNode.getNextSibling().getText().equals("=") && iNode.getPreviousSibling().getText().equals("="))
 									|| (iNode.getNextSibling().getText().equals("=") && !iNode.getPreviousSibling().getText().equals("="))) {
-								error(Messages.equalityError,operation.eContainingFeature());
+								error(Messages.equalityError,  operation, operation.eContainingFeature() ,ConditionModelJavaValidator.INVALID_EQUALITY_SIGN, r.getCompleteContent());	
 							}
 						}
 					}

@@ -64,6 +64,9 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
+import org.eclipse.jface.text.presentation.PresentationReconciler;
+import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
+import org.eclipse.jface.text.source.LineNumberRulerColumn;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -81,10 +84,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.internal.ide.model.ResourceFactory;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.resource.XtextResourceFactory;
+import org.eclipse.xtext.ui.editor.XtextSourceViewerConfiguration;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
 import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory.Builder;
 import org.eclipse.xtext.ui.editor.embedded.IEditedResourceProvider;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
 import org.eclipse.xtext.validation.CheckMode;
@@ -92,6 +99,7 @@ import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Injector;
+import com.google.inject.Provider;
 
 /**
  * @author Aurelie Zara
@@ -161,7 +169,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 					final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
 					final ResourceSet resourceSet = xtextResourceSetProvider.get(RepositoryManager.getInstance().getCurrentRepository().getProject());
 					resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
-
+					resource.setValidationDisabled(false);
 					final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
 					final List<String> accessibleObjects = new ArrayList<String>();
 					for(Data d : ModelHelper.getAccessibleData(context)){
@@ -177,20 +185,26 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 					return null;
 				}
 			}
+			
 		};
 		ConditionModelActivator activator = ConditionModelActivator.getInstance();
 		Injector injector =  activator.getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
 		EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
-		comparisonEditor = factory.newEditor(resourceProvider).withParent(parent);
-		comparisonEditor.createPartialEditor(false);
+		
+		final Builder buildEditor = factory.newEditor(resourceProvider);
+		
+		comparisonEditor = buildEditor.withParent(parent);
+		comparisonEditor.createPartialEditor(true);
+		
 		comparisonEditor.getViewer().getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		comparisonEditor.getViewer().addTextListener(new ITextListener() {
-
+	
 			@Override
 			public void textChanged(TextEvent event) {
 				comparisonEditor.getViewer().getControl().notifyListeners(SWT.Modify, new Event());
 			}
 		});
+		comparisonEditor.createPartialEditor(true);
 	}
 
 	protected void createDependanciesResolutionComposite(Composite parent){
