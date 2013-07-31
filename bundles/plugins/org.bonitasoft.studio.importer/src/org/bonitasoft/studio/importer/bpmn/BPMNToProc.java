@@ -1132,8 +1132,8 @@ public class BPMNToProc extends ToProcProcessor {
 							String id = flowNode.getId();
 							if (flowNode instanceof TSubProcess) {
 								subProcessesId.add(id);
-								id = NamingUtils.convertToId(/*"subProc_" +*/ id);
-								name = id;
+//								id = NamingUtils.convertToId(/*"subProc_" +*/ id);
+//								name = id;
 							}
 
 							builder.addTask(id, name, location, null, taskType);

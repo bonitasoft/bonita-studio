@@ -184,7 +184,7 @@ public class TestImportBPMN2 extends TestCase {
 
         checkContent(mainProcess, 2, 0, 0, 0, 0, "proc");
 
-        CallActivity subprocTask = (CallActivity)ModelHelper.findElement(mainProcess, "sid_8C74FAF1_AFEE_4C3A_B66E_1190133DB509", true);
+        CallActivity subprocTask = (CallActivity)ModelHelper.findElement(mainProcess, "subproc", true);
 
 
         final Pool subProcPool = (Pool)ModelHelper.findElement(mainProcess,subprocTask.getCalledActivityName().getContent(), true);
