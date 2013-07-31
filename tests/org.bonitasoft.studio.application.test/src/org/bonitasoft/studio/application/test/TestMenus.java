@@ -35,11 +35,11 @@ public class TestMenus extends TestCase {
         int nbRunMenus = 0;
         for (MenuItem item : shell.getMenuBar().getItems()) {
             menus += "\n"+item.getText();
-            if (item.getText().toLowerCase().contains("run")) {
+            if (item.getText().toLowerCase().trim().equals("run")) {
                 nbRunMenus++;
             }
         }
-        assertEquals("Run menu should not appears", 1, nbRunMenus);
+        assertEquals("Run menu should not appears", 0, nbRunMenus);
         if(Platform.getProduct().getId().equals("org.bonitasoft.studioEx.product")){
             assertEquals("Menu bar polluted by third-party menus.\n available menu:"+menus,12, shell.getMenuBar().getItemCount());
         } else if(Platform.getProduct().getId().equals("org.bonitasoft.studio.product")){

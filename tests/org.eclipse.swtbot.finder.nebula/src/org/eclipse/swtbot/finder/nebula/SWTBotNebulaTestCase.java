@@ -13,6 +13,7 @@
 package org.eclipse.swtbot.finder.nebula;
 
 import org.eclipse.swtbot.eclipse.finder.SWTBotEclipseTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 
 
 /**
@@ -21,6 +22,6 @@ import org.eclipse.swtbot.eclipse.finder.SWTBotEclipseTestCase;
  * 
  * @author Aurelien Pupier
  */
-public class SWTBotNebulaTestCase extends SWTBotEclipseTestCase {
+public class SWTBotNebulaTestCase extends SWTBotGefTestCase {
 	protected SWTNebulaBot bot = new SWTNebulaBot();
 }
