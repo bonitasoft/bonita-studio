@@ -257,7 +257,7 @@ public class TestFullScenario extends TestCase {
      */
     public void execute() throws ExecutionException, Exception, InterruptedException, IOException {
         BOSEngineManager.getInstance().start();
-        RunProcessCommand deployProcessCommand = new RunProcessCommand(true);
+        RunProcessCommand deployProcessCommand = new RunProcessCommand(null,true);
 
         deployProcessCommand.execute(new ExecutionEvent());
         BufferedReader reader = new BufferedReader(new InputStreamReader((InputStream) deployProcessCommand.getUrl().getContent()));

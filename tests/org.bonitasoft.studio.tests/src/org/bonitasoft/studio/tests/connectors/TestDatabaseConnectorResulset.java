@@ -23,9 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.flownode.ActivityInstanceCriterion;
@@ -43,11 +41,11 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.util.test.EngineAPIUtil;
 import org.bonitasoft.studio.util.test.async.TestAsyncThread;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.PlatformUI;
@@ -89,11 +87,8 @@ public class TestDatabaseConnectorResulset {
 	         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
 	         final List<HumanTaskInstance> tasks =processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
 
-	         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-	         Map<String,Object> param = new HashMap<String, Object>();
-	         param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-	         ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
-	         runProcessCommand.execute(ee);
+	         final RunProcessCommand runProcessCommand = new RunProcessCommand((AbstractProcess) mainProcess.getElements().get(0),true);
+	         runProcessCommand.execute(null);
 	         
 	         long processId=processApi.getProcessDefinitionId("testDatabaseResultSet", "2.0");
 	         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);

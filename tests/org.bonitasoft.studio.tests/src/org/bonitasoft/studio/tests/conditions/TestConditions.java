@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 
+
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.flownode.ActivityInstanceCriterion;
 import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
@@ -44,6 +45,7 @@ import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.util.test.EngineAPIUtil;
@@ -88,11 +90,8 @@ public class TestConditions {
 	         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
 	         final List<HumanTaskInstance> tasks =processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
 
-	         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-	         Map<String,Object> param = new HashMap<String, Object>();
-	         param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-	         ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
-	         runProcessCommand.execute(ee);
+	         final RunProcessCommand runProcessCommand = new RunProcessCommand((AbstractProcess) mainProcess.getElements().get(0),true);
+	         runProcessCommand.execute(null);
 	         
 	         long processId=processApi.getProcessDefinitionId("Pool3", "1.0");
 	         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);

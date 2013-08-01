@@ -156,7 +156,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		});
 		Assert.assertFalse(runnableEPs.isEmpty());
 		gmfEditor.select(runnableEPs.get(0));
-		RunProcessCommand cmd =  new RunProcessCommand(true);
+		RunProcessCommand cmd =  new RunProcessCommand(null,true);
 		return (IStatus) cmd.execute(null);
 	}
 

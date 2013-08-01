@@ -55,9 +55,12 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.activities.ActivityManagerEvent;
+import org.eclipse.ui.activities.IActivityManager;
 import org.eclipse.ui.activities.IActivityManagerListener;
+import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.internal.handlers.DirtyStateTracker;
 
 /**
@@ -81,8 +84,12 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 	private Image image;
 	private Composite toolbarContainer;
 
+	public Map<Integer, IBonitaContributionItem> getContributions() {
+		return contributions;
+	}
+
 	@PostConstruct
-	public void createControls(Composite parent) {
+	public void createControls(Composite parent,IWorkbenchPage workbenchPage,IWorkbenchActivitySupport activitySupport) {
 		initCoolBarPreferredSize() ;
 		Composite parentShell = parent.getParent();
 		TrimmedPartLayout layout = (TrimmedPartLayout) parentShell.getLayout();
@@ -91,10 +98,9 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 		toolbarContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).margins(0, 0).create()) ;
 		layout.top = toolbarContainer;
 		createToolbar(toolbarContainer);
-		PlatformUI.getWorkbench().getActivitySupport().getActivityManager().addActivityManagerListener(this);
-		final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		activePage.addSelectionListener(this);
-		activePage.addPartListener(new IPartListener(){
+		activitySupport.getActivityManager().addActivityManagerListener(this);
+		workbenchPage.addSelectionListener(this);
+		workbenchPage.addPartListener(new IPartListener(){
 
 			@Override
 			public void partOpened(IWorkbenchPart wp) {
@@ -168,8 +174,8 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 			 * @param bcItem
 			 * @return
 			 */
-			 public DirtyStateTracker getDirtyStateTracker(
-					 IBonitaContributionItem bcItem) {
+			public DirtyStateTracker getDirtyStateTracker(
+					IBonitaContributionItem bcItem) {
 				DirtyStateTracker dirtyStateTracker = ((SaveCoolbarItem) bcItem).getDirtyStateTracker();
 				if(dirtyStateTracker == null){
 					((SaveCoolbarItem) bcItem).createDirtyStateTracker();
@@ -265,9 +271,6 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 				}
 			}
 		}
-
-		refreshCoolBarButtons();
-
 	}
 
 	public void maximizeCoolbar() {
@@ -297,7 +300,7 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 		}
 	}
 
-	private void refreshCoolBarButtons() {
+	public void refreshCoolBarButtons() {
 		if(toolbar !=null && !toolbar.isDisposed()){
 			for(ToolItem item : toolbar.getItems()){
 				if(!item.isDisposed()){
@@ -367,7 +370,7 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 		}
 		toolbar.getParent().layout(true,true) ;
 	}
-	
+
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		refreshCoolBarButtons();

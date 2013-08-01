@@ -44,7 +44,7 @@ public class TestRunWithDocument extends SWTBotGefTestCase {
     }
 
     protected void runAndCheckResult() throws Exception {
-        new RunProcessCommand(true).execute(new ExecutionEvent());
+        new RunProcessCommand(null,true).execute(new ExecutionEvent());
         APISession session = BOSEngineManager.getInstance().loginDefaultTenant(new NullProgressMonitor());
         ProcessAPI processAPI = BOSEngineManager.getInstance().getProcessAPI(session) ;
         long processDefinitionId = processAPI.getProcessDefinitionId("ProcessWithAttachment", "1.0");

@@ -99,7 +99,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	@Override
 	public void postWindowOpen() {
 		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		
 		if (activeWorkbenchWindow instanceof WorkbenchWindow) {
 			MWindow model = ((WorkbenchWindow) activeWorkbenchWindow).getModel();
 			EModelService modelService = model.getContext().get(EModelService.class);
@@ -120,9 +119,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				trimBar.getChildren().remove(searchField);
 			}
 		}
-		
 		activeWorkbenchWindow.getActivePage().addPartListener(new AutomaticSwitchPerspectivePartListener());
-	
 	}
 
 

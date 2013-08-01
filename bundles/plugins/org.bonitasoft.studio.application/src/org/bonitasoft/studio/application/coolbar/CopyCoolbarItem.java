@@ -196,6 +196,7 @@ public class CopyCoolbarItem implements IBonitaContributionItem,ISelectionChange
 			item.setImage(Pics.getImage(PicsConstants.coolbar_copy_16)) ;
 			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_copy_disabled_16));
 		}
+		item.setEnabled(false);
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

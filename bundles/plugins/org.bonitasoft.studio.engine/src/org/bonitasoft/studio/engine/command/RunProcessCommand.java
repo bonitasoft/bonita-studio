@@ -76,7 +76,6 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
 	public static final Object FORCE_OVERRITE = null;
 	protected static final String APPLI_PATH = "/bonita?"; //$NON-NLS-1$;
-	public static final String PROCESS = "process";
 
 	protected boolean runSynchronously;
 	protected AbstractProcess selectedProcess;
@@ -86,23 +85,19 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 	private URL url;
 
 	public RunProcessCommand() {
-		this(false);
+		this(null,false);
 	}
 
-
-	public RunProcessCommand(boolean runSynchronously) {
-		this.runSynchronously = runSynchronously;
-		excludedObject = new HashSet<EObject>();
-	}
 
 	public RunProcessCommand(AbstractProcess proc,boolean runSynchronously) {
-		this(runSynchronously);
+		this.runSynchronously = runSynchronously;
+		excludedObject = new HashSet<EObject>();
 		selectedProcess = proc ;
 	}
 
 
 	public RunProcessCommand(Set<EObject> excludedObject) {
-		this(false);
+		this(null,false);
 		this.excludedObject = excludedObject ;
 	}
 
@@ -219,7 +214,13 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 					return ;
 				}
 
-				AbstractProcess p = getProcessToRun(event) ;
+				AbstractProcess p = null;
+				try {
+					p = getProcessToRun(event);
+				} catch (ExecutionException e1) {
+					status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,e1.getMessage(),e1);
+					BonitaStudioLog.error(e1) ;
+				}
 				if(p!= null){
 					try{
 						url = operation.getUrlFor(p,monitor) ;
@@ -285,9 +286,9 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 	}
 
 
-	protected AbstractProcess getProcessToRun(ExecutionEvent event) {
-		if(event !=null && event.getParameters().get(PROCESS) != null){
-			return (AbstractProcess) event.getParameters().get(PROCESS) ;
+	protected AbstractProcess getProcessToRun(ExecutionEvent event) throws ExecutionException {
+		if(selectedProcess !=null){
+			return selectedProcess;
 		}else{
 			IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor() ;
 			boolean isADiagram = editor != null && editor instanceof DiagramEditor;
@@ -319,8 +320,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 		return configurationId;
 	}
 
-	protected Set<AbstractProcess> getProcessesToDeploy(ExecutionEvent event){
-
+	protected Set<AbstractProcess> getProcessesToDeploy(ExecutionEvent event) throws ExecutionException{
 		Set<AbstractProcess> result = new TreeSet<AbstractProcess>(new Comparator<AbstractProcess>() {
 
 			@Override
@@ -330,8 +330,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 				return  s1.compareTo(s2) ;
 			}
 		});
-		if(event != null && event.getParameters().get(PROCESS) != null){
-			selectedProcess = (AbstractProcess) event.getParameters().get(PROCESS) ;
+		if(selectedProcess != null){
 			Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
 			findCalledProcesses(selectedProcess,calledProcesses);
 			if(!calledProcesses.isEmpty()){
