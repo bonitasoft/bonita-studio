@@ -120,15 +120,7 @@ public class TestConnectorMigrationUseCase {
 
 	@Test
 	public void testJDBCConnectorMigration() throws Exception {
-		final URL url = TestConnectorMigrationUseCase.class
-				.getResource("GenericJDBCConnectorMigration--1.0.bar");
-		final File migratedProc = BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil
-				.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil
-				.getMainProcess(resource);
+		final MainProcess mainProc = importBar("GenericJDBCConnectorMigration--1.0.bar");
 
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
@@ -146,15 +138,7 @@ public class TestConnectorMigrationUseCase {
 
 	@Test
 	public void testTalendConnectorsMigration() throws Exception {
-		final URL url = TestConnectorMigrationUseCase.class
-				.getResource("talend_connectors.bar");
-		final File migratedProc = BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil
-				.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil
-				.getMainProcess(resource);
+		final MainProcess mainProc = importBar("talend_connectors.bar");
 
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
@@ -201,15 +185,7 @@ public class TestConnectorMigrationUseCase {
 	@Test
 	public void testSalesForceDeleteObjectsConnectorMigration()
 			throws Exception {
-		final URL url = TestConnectorMigrationUseCase.class
-				.getResource("SalesforceDeleteObjectsMigrationUseCase--1.0.bar");
-		final File migratedProc = BarImporterTestUtil.migrateBar(url);
-		assertNotNull("Fail to migrate bar file", migratedProc);
-		assertNotNull("Fail to migrate bar file", migratedProc.exists());
-		final Resource resource = BarImporterTestUtil
-				.assertIsLoadable(migratedProc);
-		final MainProcess mainProc = BarImporterTestUtil
-				.getMainProcess(resource);
+		final MainProcess mainProc =importBar("SalesforceDeleteObjectsMigrationUseCase--1.0.bar");
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
