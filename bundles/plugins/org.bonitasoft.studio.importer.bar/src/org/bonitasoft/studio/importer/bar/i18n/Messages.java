@@ -26,6 +26,7 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 
   
+	public static String connectorMigrationSetVarConnectorOnEnterOrOnStartDescription;
 	public static String callActivityTargetNameMigrationDescription;
 	public static String callActivityTargetNameProperty;
 	public static String callActivityTargetVersionMigrationDescription;
@@ -134,6 +135,7 @@ public class Messages extends NLS {
 	public static String development;
 	public static String customConnectorMigrationDescription;
 	public static String customConnector;
+	public static String connectorMigrationSetVarConnectorOnFinishDescription;
 	
 
     static {

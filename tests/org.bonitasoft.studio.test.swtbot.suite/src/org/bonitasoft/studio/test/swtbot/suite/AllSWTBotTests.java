@@ -8,6 +8,8 @@ import org.bonitasoft.studio.actors.tests.SWTbot.ActorFilterEditionTest;
 import org.bonitasoft.studio.actors.tests.SWTbot.ActorFilterImplementationTest;
 import org.bonitasoft.studio.actors.tests.exporter.SWTBotActorFilterExportTests;
 import org.bonitasoft.studio.actors.tests.organization.OrganizationCreationTest;
+import org.bonitasoft.studio.common.diagram.test.OpenNameAndVersionDiagramForDiagramTest;
+import org.bonitasoft.studio.common.diagram.test.OpenNameAndVersionDiagramTest;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -102,6 +104,8 @@ import org.junit.runners.Suite;
     TestOpenDiagram.class,
     TestDeleteTaskWithForm.class,
     TestDebugFeature.class,
+    OpenNameAndVersionDiagramTest.class,
+    OpenNameAndVersionDiagramForDiagramTest.class,
     //WORKAROUND: put at the end otherwise when doing a new run after, it fails
     ConnectorDefinitionTranslationsTest.class
 })

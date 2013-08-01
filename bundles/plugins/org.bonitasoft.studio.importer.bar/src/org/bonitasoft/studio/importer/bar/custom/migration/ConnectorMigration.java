@@ -60,8 +60,27 @@ public class ConnectorMigration extends ReportCustomMigration {
 		for(Instance connector : model.getAllInstances("process.Connector")){
 			for(Connector5Descriptor descriptor : descriptors){
 				if(descriptor.appliesTo(connector)){
+					final String connectorName = (String) connector.get("name");
+					final String connectorTypeName = connector.getType().getEClass().getName();
+					final String connectorContainerUUID = connector.getContainer().getUuid();
 					descriptor.migrate(model, connector, getConverter(model, getScope(connector)));
-					addReportChange((String) connector.get("name"),connector.getType().getEClass().getName(), connector.getContainer().getUuid(), Messages.connectorMigrationDescription, Messages.connectorProperty, IStatus.WARNING);
+					if(descriptor.isBonitaSetVarConnector()){
+						addReportChange(
+								connectorName,
+								connectorTypeName,
+								connectorContainerUUID,
+								descriptor.getReportChangeMessage(),
+								Messages.connectorProperty,
+								IStatus.WARNING);
+					} else {					
+						addReportChange(
+								connectorName,
+								connectorTypeName,
+								connectorContainerUUID,
+								descriptor.getReportChangeMessage(),
+								Messages.connectorProperty,
+								IStatus.WARNING);
+					}
 				}
 			}
 		}

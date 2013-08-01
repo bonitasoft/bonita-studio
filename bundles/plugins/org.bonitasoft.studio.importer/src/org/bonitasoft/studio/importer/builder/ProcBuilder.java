@@ -159,7 +159,7 @@ public class ProcBuilder implements IProcBuilder {
 
     private final TransactionalEditingDomain editingDomain;
     private final IProgressMonitor monitor;
-    private final HashMap<String, Resource> diagramResources;
+    private final Map<String, Resource> diagramResources;
     private MainProcessEditPart diagramPart;
     private Diagram diagram;
     private EObject currentContainer;
@@ -178,9 +178,10 @@ public class ProcBuilder implements IProcBuilder {
     private final Map<AbstractProcess, String> processIds;
     private final List<MessageFlowData> messageFlows;
     private final List<Pair<String,String>> createdSequenceFlows;
-    private final HashMap<String, AbstractProcess> processes;
-    private final HashMap<String, Lane> lanes;
+    private final Map<String, AbstractProcess> processes;
+    private final Map<String, Lane> lanes;
     private Shell shell;
+    private Map<Element, String> elementToReplaceName;
 
     public ProcBuilder(){
         this(new NullProgressMonitor()) ;
@@ -204,6 +205,7 @@ public class ProcBuilder implements IProcBuilder {
         createdSequenceFlows = new ArrayList<Pair<String,String>>();
         processes = new HashMap<String, AbstractProcess>();
         lanes = new HashMap<String, Lane>();
+        elementToReplaceName = new HashMap<Element, String>();
     }
 
 
@@ -606,6 +608,7 @@ public class ProcBuilder implements IProcBuilder {
         currentElement = createdElement ;
 
         steps.put(id, createdElement) ;
+        elementToReplaceName.put(createdElement, name);
     }
 
 
@@ -637,7 +640,7 @@ public class ProcBuilder implements IProcBuilder {
         Element createdElement = createShape(id,currentContainer,location,size,type);
 
         commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getElement_Name(),name)) ;
-
+        
         currentStep = createdElement ;
         currentElement = createdElement ;
 
@@ -992,11 +995,11 @@ public class ProcBuilder implements IProcBuilder {
 
         processLinkEvents() ;
 
-        editingDomain.getCommandStack().execute(commandStack) ;
-
         processMessageFlows() ;
 
         processExpressionDataReferences();
+        
+        processElementIDNameConversion();
 
         /*Need to release DiagramEventBroker because the OffscreenEditpart create on, and don't release it itself*/
         DiagramEventBroker.stopListening(editingDomain);
@@ -1016,7 +1019,15 @@ public class ProcBuilder implements IProcBuilder {
         }
     }
 
-    private void processExpressionDataReferences() {
+    private void processElementIDNameConversion() {
+    	for (Entry<Element, String> entry : elementToReplaceName.entrySet()) {
+			//commandStack.append(SetCommand.create(editingDomain, entry.getKey(), ProcessPackage.eINSTANCE.getElement_Name(), entry.getValue()));
+		}
+    	execute();
+	}
+
+
+	private void processExpressionDataReferences() {
         // TODO Auto-generated method stub
 
     }
@@ -1032,6 +1043,7 @@ public class ProcBuilder implements IProcBuilder {
                 commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), tle, ProcessPackage.eINSTANCE.getThrowLinkEvent_To(), cathLinkEvent)) ;
             }
         }
+        execute();
     }
 
     private void processMessageFlows() throws ProcBuilderException {
@@ -1079,7 +1091,7 @@ public class ProcBuilder implements IProcBuilder {
             commandStack.append(SetCommand.create(editingDomain,  edge.getStyle(NotationPackage.eINSTANCE.getLineStyle()), NotationPackage.eINSTANCE.getLineStyle_LineColor(), FigureUtilities.colorToInteger(ColorConstants.lightGray))) ;
         }
 
-        editingDomain.getCommandStack().execute(commandStack) ;
+        execute();
     }
 
 
