@@ -68,7 +68,7 @@ public class OpenNameAndVersionDialog extends Dialog {
 	private boolean isDiagram = false;
 	private boolean diagramNameOrVersionChangeMandatory = false;
 	private HashSet<String> existingFileNames;
-	protected List<AbstractProcess> processes;
+	public List<AbstractProcess> processes;
 
 	protected OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram, IRepositoryStore diagramStore) {
 		super(parentShell);
@@ -80,7 +80,7 @@ public class OpenNameAndVersionDialog extends Dialog {
 		this.diagramStore = diagramStore;
 		typeLabel = Messages.diagram.toLowerCase();
 		listExistingFileNames(diagramStore);
-		listExistingAbstractProcess();
+		listExistingAbstractProcess(diagramStore);
 	}
 
 	public OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram, String poolName, String versionName, IRepositoryStore diagramStore) {
@@ -92,7 +92,7 @@ public class OpenNameAndVersionDialog extends Dialog {
 		this.diagramStore = diagramStore;
 		typeLabel = Messages.Pool_title.toLowerCase();
 		listExistingFileNames(diagramStore);
-		listExistingAbstractProcess();
+		listExistingAbstractProcess(diagramStore);
 	}
 
 	public OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram, IRepositoryStore diagramStore, boolean diagramNameOrVersionChangeMandatory) {
@@ -107,7 +107,7 @@ public class OpenNameAndVersionDialog extends Dialog {
 		typeLabel = Messages.Pool_title.toLowerCase();
 		this.diagramNameOrVersionChangeMandatory = diagramNameOrVersionChangeMandatory;
 		listExistingFileNames(diagramStore);
-		listExistingAbstractProcess();
+		listExistingAbstractProcess(diagramStore);
 	}
 
 	protected void listExistingFileNames(IRepositoryStore diagramStore) {
@@ -124,7 +124,7 @@ public class OpenNameAndVersionDialog extends Dialog {
 		}
 	}
 
-	private void listExistingAbstractProcess() {
+	public void listExistingAbstractProcess(IRepositoryStore diagramStore) {
 		processes = new ArrayList<AbstractProcess>();
 		final List<IRepositoryFileStore> l = diagramStore.getChildren();
 		for (IRepositoryFileStore irepStore : l) {
@@ -175,36 +175,8 @@ public class OpenNameAndVersionDialog extends Dialog {
 			protected IStatus validate() {
 				final String name = observeNameText.getValue().toString();
 				final String version = observeVersionText.getValue().toString();
-
-				if (isDiagram) {
-					final String newDiagramFilename = NamingUtils.toDiagramFilename(name, version);
-					IRepositoryFileStore fileStore = diagramStore.getChild(newDiagramFilename);
-					if (diagramNameOrVersionChangeMandatory && srcName.equals(name) && srcVersion.equals(version)) {
-						return ValidationStatus.error(Messages.diagramNameOrVersionMustBeChanged);
-					}
-					if (fileStore != null && !srcName.equals(name) && !srcVersion.equals(version)) {
-						return ValidationStatus.error(Messages.bind(Messages.diagramAlreadyExists, typeLabel));
-					}
-
-					for (String existingFileName : existingFileNames) {
-						if (!NamingUtils.toDiagramFilename(srcName, srcVersion).equals(newDiagramFilename)
-								&& existingFileName.equals(newDiagramFilename.toLowerCase())) {
-							return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
-						}
-					}
-
-				} else {
-					if (name.equals(srcName) && version.equals(srcVersion)) {
-						return ValidationStatus.ok();
-					}
-					for (AbstractProcess process : processes) {
-						if (name.equals(process.getName()) && version.equals(process.getVersion())) {
-							return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
-						}
-					}
-				}
-
-				return ValidationStatus.ok();
+				
+				return validateModification(name, version);				
 			}
 		};
 
@@ -250,6 +222,38 @@ public class OpenNameAndVersionDialog extends Dialog {
 		ControlDecorationSupport.create(dbc.bindValue(observeVersionText,
 				PojoProperties.value("diagramVersion").observe(this), versionTargetToModel, null), SWT.LEFT);
 
+	}
+	
+	public IStatus validateModification(String name, String version){
+		if (isDiagram) {
+			final String newDiagramFilename = NamingUtils.toDiagramFilename(name, version);
+			IRepositoryFileStore fileStore = diagramStore.getChild(newDiagramFilename);
+			if (diagramNameOrVersionChangeMandatory && srcName.equals(name) && srcVersion.equals(version)) {
+				return ValidationStatus.error(Messages.diagramNameOrVersionMustBeChanged);
+			}
+			if (fileStore != null && !srcName.equals(name) && !srcVersion.equals(version)) {
+				return ValidationStatus.error(Messages.bind(Messages.diagramAlreadyExists, typeLabel));
+			}
+
+			for (String existingFileName : existingFileNames) {
+				if (!NamingUtils.toDiagramFilename(srcName, srcVersion).equals(newDiagramFilename)
+						&& existingFileName.equals(newDiagramFilename.toLowerCase())) {
+					return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
+				}
+			}
+
+		} else {
+			if (name.equals(srcName) && version.equals(srcVersion)) {
+				return ValidationStatus.ok();
+			}
+			for (AbstractProcess process : processes) {
+				if (name.equals(process.getName()) && version.equals(process.getVersion())) {
+					return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
+				}
+			}
+		}
+
+		return ValidationStatus.ok();
 	}
 
 	public String getDiagramName() {
