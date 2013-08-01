@@ -147,6 +147,8 @@ public class BackwardConverter {
                         }
                     }
                 } else {
+                	//Fix NPE With e4
+                	eObject.eSetDeliver(false);
                     eObject.eSet(targetFeature, element.get(sourceFeature));
                 }
             } else {
