@@ -337,12 +337,21 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 		CompoundCommand cc = new CompoundCommand();
 		AbstractProcess pool = (AbstractProcess) req.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class) ;
 		
-		final List<AbstractProcess> l = getAllProcess();
-		int i = Integer.parseInt(diagramIdentifier);
-		String newProcessName = Messages.newProcessPrefix + i;
-		while(processExist(l, newProcessName)){
-			i++;
-			 newProcessName = Messages.newProcessPrefix + i;
+		
+		String newProcessName = Messages.newProcessPrefix;
+		if(diagramIdentifier!=null && !diagramIdentifier.isEmpty()){
+			Integer i = null;
+			try{
+				i = Integer.parseInt(diagramIdentifier);		
+			} catch (NumberFormatException e){
+				i = 1;
+			}
+			newProcessName = Messages.newProcessPrefix + i;
+			final List<AbstractProcess> allProcess = getAllProcess();
+			while(processExist(allProcess, newProcessName)){
+				i++;
+				newProcessName = Messages.newProcessPrefix + i;
+			}
 		}
 		
 		SetCommand setPoolNameCommand = new SetCommand(
