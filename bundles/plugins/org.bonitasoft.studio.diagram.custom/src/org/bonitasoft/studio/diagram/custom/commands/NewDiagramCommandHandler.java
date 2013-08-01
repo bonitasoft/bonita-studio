@@ -307,6 +307,23 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 		editingDomain.dispose() ;
 	}
 
+	private Boolean processExist(List<AbstractProcess> l, String newProcessName){
+		for (AbstractProcess abstractProcess : l) {
+			if(abstractProcess.getName().equals(newProcessName) && abstractProcess.getVersion().equals("1.0")){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private List<AbstractProcess> getAllProcess(){
+		final List<AbstractProcess> l = new ArrayList<AbstractProcess>();
+		for (DiagramFileStore diagramFileStore : diagramStore.getChildren()) {
+			final MainProcess m = diagramFileStore.getContent();
+			l.addAll(ModelHelper.getAllProcesses(m));
+		}
+		return l;
+	}
 
 	protected List<Actor> createPool(DiagramEditPart diagramEp) {
 		ViewAndElementDescriptor viewDescriptor = new ViewAndElementDescriptor(
@@ -319,11 +336,20 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 		diagramEp.getDiagramEditDomain().getDiagramCommandStack().execute(diagramEp.getCommand(req));
 		CompoundCommand cc = new CompoundCommand();
 		AbstractProcess pool = (AbstractProcess) req.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class) ;
+		
+		final List<AbstractProcess> l = getAllProcess();
+		int i = Integer.parseInt(diagramIdentifier);
+		String newProcessName = Messages.newProcessPrefix + i;
+		while(processExist(l, newProcessName)){
+			i++;
+			 newProcessName = Messages.newProcessPrefix + i;
+		}
+		
 		SetCommand setPoolNameCommand = new SetCommand(
 				diagramEp.getEditingDomain(),
 				pool ,
 				ProcessPackage.Literals.ELEMENT__NAME,
-				Messages.newProcessPrefix + diagramIdentifier);
+				newProcessName);
 		cc.append(setPoolNameCommand);
 		SetCommand setPoolVersionCommand = new SetCommand(
 				diagramEp.getEditingDomain(),
@@ -461,6 +487,5 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 	public boolean isEnabled() {
 		return true;
 	}
-
 
 }
