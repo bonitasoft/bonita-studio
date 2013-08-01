@@ -16,18 +16,25 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration.connector;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
 import org.bonitasoft.studio.importer.bar.BarImporterPlugin;
+import org.bonitasoft.studio.importer.bar.i18n.Messages;
 import org.bonitasoft.studio.migration.utils.StringToExpressionConverter;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Model;
 
@@ -69,6 +76,7 @@ public class Connector5Descriptor {
 	private Map<String, Object> inputs = new HashMap<String,Object>();
 	private Map<String, Object> outputs = new HashMap<String,Object>();
 	private IConnectorDefinitionMapper definitionMapper;
+	private EClass containerType;
 
 
 	public Connector5Descriptor(Instance connectorInstance) {
@@ -86,31 +94,72 @@ public class Connector5Descriptor {
 		}
 		final List<Instance> outputMapping =  connectorInstance.get(OUTPUTS);
 		for(Instance output : outputMapping){
-			Instance data = output.get(OUTPUT_DATA);
-			String value = output.get(OUTPUT_EXPRESSION);
-			if(data != null){
-				outputs.put((String) data.get("name"), value);
-			}else{
-				Instance container = connectorInstance.getContainer();
-				if(container.instanceOf("form.Widget")){
-					String id = "field_"+container.get("name");
-					outputs.put(id, value);
+			try{
+				Instance data = output.get(OUTPUT_DATA);
+				String value = output.get(OUTPUT_EXPRESSION);
+				if(data != null){
+					outputs.put((String) data.get("name"), value);
+				}else{
+					Instance container = connectorInstance.getContainer();
+					if(container.instanceOf("form.Widget")){
+						String id = "field_"+container.get("name");
+						outputs.put(id, value);
+					}
 				}
+			} catch(IllegalArgumentException e){
+				BonitaStudioLog.warning("The connector "+ connectorId+"/"+name+" doesn't provide the expected feature for outputs.", BarImporterPlugin.PLUGIN_ID);
 			}
 		}
 		definitionMapper = ConnectorIdToDefinitionMapping.getInstance().getDefinitionMapper(connectorId);
+		
+		this.containerType = connectorInstance.getContainer().getType().getEClass();
 	}
 
 	public boolean canBeMigrated(){
-		return definitionMapper != null;
+		return definitionMapper != null
+				|| isBonitaSetVarConnector() && isOnActivity() && onEnterStartOrFinish();
+	}
+	
+	private final static Set<String> eventAllowedForBonitaSetVariable = new HashSet<String>(Arrays.asList(
+		"taskOnReady",
+		"taskOnStart",
+		"taskOnFinish",
+		"automaticOnExit",
+		"automaticOnEnter"));
+	
+	private boolean onEnterStartOrFinish() {
+		return eventAllowedForBonitaSetVariable.contains(event);
+	}
+
+	private boolean isOnActivity() {
+		//we can't use the isSuperTypeOF directly on EClass because they belong of different model version.
+		//So compare only the name
+		final String activityEclassName = ProcessPackage.Literals.ACTIVITY.getName();
+		if(activityEclassName.equals(containerType.getName())){
+			return true;
+		}
+		for(EClass superType : containerType.getEAllSuperTypes()){
+			if(activityEclassName.equals(superType.getName())){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean appliesTo(Instance connectorInstance){
-		return uuid.equals(connectorInstance.getUuid());
+		return uuid != null && uuid.equals(connectorInstance.getUuid());
 	}
 
 	public void migrate(Model model,Instance connectorInstance,StringToExpressionConverter converter){
 		Assert.isTrue(canBeMigrated());
+		if(isBonitaSetVarConnector()){
+			convertToAnOperation(model, connectorInstance, converter);
+		} else {
+			populateNewConnectorInstance(model, connectorInstance, converter);
+		}		
+	}
+
+	private void populateNewConnectorInstance(Model model, Instance connectorInstance, StringToExpressionConverter converter) {
 		connectorInstance.set(NAME, name);
 		connectorInstance.set(DOCUMENTATION, documentation);
 		connectorInstance.set(DEFINITION_ID, getDefinitionId());
@@ -119,6 +168,42 @@ public class Connector5Descriptor {
 		connectorInstance.set(EVENT, toConnectorEvent(event));
 		connectorInstance.set(CONNECTOR_CONFIGURATION,getConnectorConfiguration(model,converter));
 		addOutputs(model,connectorInstance,converter);
+	}
+
+	private void convertToAnOperation(Model model, Instance connectorInstance, StringToExpressionConverter converter) {
+		if("SetVariable".equals(connectorId)){
+			final String variableToSet = (String)inputs.get("setVariableName");
+			final String varValue = (String)inputs.get("setValue");				
+			createOperation(model, connectorInstance, converter, variableToSet,	varValue);			
+		} else if("SetVariables".equals(connectorId)){
+			final List<List<String>> inputToParse = (List<List<String>>) inputs.get("setVariables");
+			for (List<String> line : inputToParse) {
+				final String variableToSet = line.get(0);
+				final String varValue = line.get(1);
+				createOperation(model, connectorInstance, converter, variableToSet,	varValue);
+			}
+		}
+		
+		model.delete(connectorInstance);
+	}
+
+	private void createOperation(Model model, Instance connectorInstance,
+			StringToExpressionConverter converter, final String variableToSet,
+			final String varValue) {
+		Instance operationContainerInstance = connectorInstance.getContainer();
+		Instance leftOperand = StringToExpressionConverter.createExpressionInstance(model, variableToSet, variableToSet, "java.lang.Object", ExpressionConstants.VARIABLE_TYPE, true);
+		Instance rightOperand = converter.parse(varValue, "java.lang.Object", false);
+		Instance operatorInstance = model.newInstance("expression.Operator");
+		operatorInstance.set("type", ExpressionConstants.ASSIGNMENT_OPERATOR);
+		Instance operationInstance = model.newInstance("expression.Operation");
+		operationInstance.set("leftOperand", leftOperand);
+		operationInstance.set("rightOperand", rightOperand);
+		operationInstance.set("operator", operatorInstance);
+		operationContainerInstance.add("operations", operationInstance);
+	}
+
+	public boolean isBonitaSetVarConnector() {
+		return connectorId != null && ("SetVariable".equals(connectorId) || "SetVariables".equals(connectorId));
 	}
 
 	private void addOutputs(Model model, Instance connectorInstance, StringToExpressionConverter converter) {
@@ -226,6 +311,14 @@ public class Connector5Descriptor {
 			return ConnectorEvent.ON_ENTER.name();
 		}
 		return ConnectorEvent.ON_FINISH.name();
+	}
+	
+	public String getReportChangeMessage(){
+		if(isBonitaSetVarConnector()){
+				return "The connector has been converted to an operation.";
+		} else {
+			return Messages.connectorMigrationDescription;
+		}
 	}
 
 
