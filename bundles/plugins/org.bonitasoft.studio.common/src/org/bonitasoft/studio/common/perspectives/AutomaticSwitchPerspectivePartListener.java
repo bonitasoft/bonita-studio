@@ -25,13 +25,18 @@ import org.eclipse.ui.IWorkbenchPartReference;
 
 public final class AutomaticSwitchPerspectivePartListener implements IPartListener2 {
 
+	
+	
+	private String lastPerspective;
+
 	@Override
 	public void partActivated(IWorkbenchPartReference partRef) {
 		IWorkbenchPart part = partRef.getPart(false);
 		if (part instanceof IEditorPart) {
 			final String id = BonitaPerspectivesUtils.getPerspectiveId((IEditorPart) part);
-			if (id != null) {
+			if (id != null && !id.equals(lastPerspective)) {
 				BonitaPerspectivesUtils.switchToPerspective(id);
+				lastPerspective = id;
 			}
 		}
 	}

@@ -127,7 +127,8 @@ public class BonitaPerspectivesUtils {
 				if (!activePerspectiveID.equals(perspectiveID)) {
 					IPerspectiveRegistry registry = workbench.getPerspectiveRegistry();
 					IWorkbenchPage page = window.getActivePage();
-					page.setPerspective(registry.findPerspectiveWithId(perspectiveID));
+					IPerspectiveDescriptor desc = registry.findPerspectiveWithId(perspectiveID);
+					page.setPerspective(desc);
 					UIJob job = new UIJob("changePerspective") {
 						@Override
 						public IStatus runInUIThread(IProgressMonitor monitor) {

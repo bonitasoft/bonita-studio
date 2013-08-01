@@ -123,7 +123,7 @@ public class PlatformUtil {
 	 * open the intro
 	 */
 	public static void openIntroIfNoOtherEditorOpen(){
-		if(PlatformUI.isWorkbenchRunning()){
+		if(PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null){
 			final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if(activePage != null){
 				/*Open intro if there is no other editor opened*/
