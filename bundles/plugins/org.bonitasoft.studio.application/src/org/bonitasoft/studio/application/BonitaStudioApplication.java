@@ -64,7 +64,7 @@ public class BonitaStudioApplication implements IApplication {
      */
     @Override
     public Object start(IApplicationContext context) {
-
+    	ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ResourcesPlugin.PREF_AUTO_BUILDING, false);
         START_TIME = System.currentTimeMillis() ;
 
         if (display == null) {

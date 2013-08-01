@@ -17,13 +17,27 @@
  */
 package org.bonitasoft.studio.application;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
+import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.application.job.StartEngineJob;
+import org.bonitasoft.studio.common.FileUtil;
+import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.perspectives.PerspectiveIDRegistry;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProduct;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.ui.model.application.ui.SideValue;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
 import org.eclipse.e4.ui.model.application.ui.basic.MTrimElement;
@@ -33,6 +47,7 @@ import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
@@ -52,10 +67,12 @@ import org.eclipse.ui.internal.util.PrefUtil;
 
 public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
+	private IWorkbenchWindow window;
 
 	public BonitaStudioWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
 		super(configurer);
 		configurer.setShowProgressIndicator(true);
+		window = configurer.getWindow();
 	}
 
 	@Override
@@ -85,7 +102,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
 		PrefUtil.saveAPIPrefs();
 		BonitaPerspectivesUtils.switchToPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID);
-		if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective() != null) {
+		if(window.getActivePage().getPerspective() != null) {
 			super.openIntro();
 			PlatformUtil.openIntro();
 		}
@@ -98,9 +115,8 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	 */
 	@Override
 	public void postWindowOpen() {
-		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (activeWorkbenchWindow instanceof WorkbenchWindow) {
-			MWindow model = ((WorkbenchWindow) activeWorkbenchWindow).getModel();
+		if (window instanceof WorkbenchWindow) {
+			MWindow model = ((WorkbenchWindow) window).getModel();
 			EModelService modelService = model.getContext().get(EModelService.class);
 			MToolControl searchField = (MToolControl) modelService.find(
 					"SearchField", model);
@@ -119,7 +135,8 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				trimBar.getChildren().remove(searchField);
 			}
 		}
-		activeWorkbenchWindow.getActivePage().addPartListener(new AutomaticSwitchPerspectivePartListener());
+		final MWindow model = ((WorkbenchWindow) window).getModel();
+		window.getActivePage().addPartListener(new AutomaticSwitchPerspectivePartListener());
 	}
 
 
@@ -130,10 +147,50 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		}
 		// the user has asked to close the last window, while will cause the
 		// workbench to close in due course - prompt the user for confirmation
-		return promptOnExit(getWindowConfigurer().getWindow().getShell());
+		if( promptOnExit(getWindowConfigurer().getWindow().getShell())){
+			Job.getJobManager().cancel(StartEngineJob.FAMILY);
+			try {
+				if(PlatformUI.isWorkbenchRunning() && window != null && window.getActivePage() != null){
+					boolean closeEditor = window.getActivePage().closeAllEditors(true) ;
+					if(closeEditor){
+						PlatformUI.getWorkbench().getProgressService().run(true, false, new IRunnableWithProgress() {
+
+							@Override
+							public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
+								monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN) ;
+								IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.application.preshutdown"); //$NON-NLS-1$
+								IPreShutdownContribution contrib = null;
+								for (IConfigurationElement elem : elements){
+									try {
+										contrib = (IPreShutdownContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
+									} catch (CoreException e) {
+										BonitaStudioLog.error(e);
+									}
+									contrib.execute();
+								}
+								if(BOSEngineManager.getInstance().isRunning()){
+									BOSEngineManager.getInstance().stop() ;
+								}
+								FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
+								monitor.done() ;
+							}
+						}) ;
+						PlatformUtil.closeIntro();
+						window.getActivePage().closeAllPerspectives(false, true);
+					}else{
+						return true;
+					}
+				}else{
+					return true;
+				}
+			} catch (Exception e){
+				BonitaStudioLog.error(e) ;
+			}
+		}
+		return false;
 	}
 
-	static boolean promptOnExit(Shell parentShell) {
+	private boolean promptOnExit(Shell parentShell) {
 		IPreferenceStore store = IDEWorkbenchPlugin.getDefault()
 				.getPreferenceStore();
 		boolean promptOnExit = store
@@ -141,7 +198,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 		if (promptOnExit) {
 			if (parentShell == null) {
-				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				IWorkbenchWindow workbenchWindow = window;
 				if (workbenchWindow != null) {
 					parentShell = workbenchWindow.getShell();
 				}

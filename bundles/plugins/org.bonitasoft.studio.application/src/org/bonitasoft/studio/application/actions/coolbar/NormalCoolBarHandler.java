@@ -38,8 +38,10 @@ public class NormalCoolBarHandler extends AbstractHandler {
 		EModelService modelService = model.getContext().get(EModelService.class);
 		MToolControl bonitaCoolBar = (MToolControl) modelService.find(
 				"BonitaCoolbar", model);
-		CoolbarToolControl coolbarControl = (CoolbarToolControl) bonitaCoolBar.getObject();
-		coolbarControl.maximizeCoolbar();
+		if(bonitaCoolBar != null){
+			CoolbarToolControl coolbarControl = (CoolbarToolControl) bonitaCoolBar.getObject();
+			coolbarControl.maximizeCoolbar();
+		}
 		return null;
 	}
 

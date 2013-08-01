@@ -83,4 +83,5 @@
   <addons xmi:id="_bqcWME2EEd-DfN2vYY4Lew" elementId="DnD Addon" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.dndaddon.DnDAddon"/>
   <addons xmi:id="_7GC6sGp-Ed-QyNZjH9g15Q" elementId="MinMax Addon" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.MinMaxAddon"/>
   <addons xmi:id="_00yosOXqEeGugqEu_OWUGQ" elementId="org.eclipse.ui.workbench.addon.0" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
+  <addons xmi:id="_FPKi0PqwEeKepeNadfEMVA" elementId="org.bonitasoft.studio.application.openintro.addon" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.OpenIntroAddon"/>
 </application:Application>

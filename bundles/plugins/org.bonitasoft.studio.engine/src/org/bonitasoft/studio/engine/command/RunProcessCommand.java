@@ -46,6 +46,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -287,7 +288,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
 
 	protected AbstractProcess getProcessToRun(ExecutionEvent event) throws ExecutionException {
-		if(selectedProcess !=null){
+		if(selectedProcess !=null && selectedProcess instanceof Pool){
 			return selectedProcess;
 		}else{
 			IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor() ;
@@ -330,7 +331,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 				return  s1.compareTo(s2) ;
 			}
 		});
-		if(selectedProcess != null){
+		if(selectedProcess != null && selectedProcess instanceof Pool){
 			Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
 			findCalledProcesses(selectedProcess,calledProcesses);
 			if(!calledProcesses.isEmpty()){

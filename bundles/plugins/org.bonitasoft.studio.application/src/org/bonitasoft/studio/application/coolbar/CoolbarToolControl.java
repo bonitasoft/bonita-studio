@@ -35,6 +35,7 @@ import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.e4.ui.workbench.renderers.swt.TrimmedPartLayout;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -89,7 +90,7 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 	}
 
 	@PostConstruct
-	public void createControls(Composite parent,IWorkbenchPage workbenchPage,IWorkbenchActivitySupport activitySupport) {
+	public void createControls(Composite parent,org.eclipse.ui.IWorkbenchWindow workbenchWindow,IWorkbenchActivitySupport activitySupport) {
 		initCoolBarPreferredSize() ;
 		Composite parentShell = parent.getParent();
 		TrimmedPartLayout layout = (TrimmedPartLayout) parentShell.getLayout();
@@ -99,8 +100,8 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 		layout.top = toolbarContainer;
 		createToolbar(toolbarContainer);
 		activitySupport.getActivityManager().addActivityManagerListener(this);
-		workbenchPage.addSelectionListener(this);
-		workbenchPage.addPartListener(new IPartListener(){
+		workbenchWindow.getActivePage().addSelectionListener(this);
+		workbenchWindow.getActivePage().addPartListener(new IPartListener(){
 
 			@Override
 			public void partOpened(IWorkbenchPart wp) {
