@@ -22,9 +22,8 @@ public class ConditionModelQuickfixProvider extends DefaultQuickfixProvider {
 		acceptor.accept(issue, "Replace \"=\" by \"==\"", "", PicsConstants.edit, new IModification() {
 			@Override
 			public void apply(IModificationContext context) throws Exception {
-				//Only test
 				IXtextDocument d = context.getXtextDocument();
-				System.out.println("Document : " + d);
+				//Modification go here
 			}
 		});
 	}

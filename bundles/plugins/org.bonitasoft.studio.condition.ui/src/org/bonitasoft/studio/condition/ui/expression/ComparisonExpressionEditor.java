@@ -185,26 +185,22 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 					return null;
 				}
 			}
-			
 		};
 		ConditionModelActivator activator = ConditionModelActivator.getInstance();
 		Injector injector =  activator.getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
 		EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
 		
 		final Builder buildEditor = factory.newEditor(resourceProvider);
-		
 		comparisonEditor = buildEditor.withParent(parent);
 		comparisonEditor.createPartialEditor(true);
-		
 		comparisonEditor.getViewer().getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		comparisonEditor.getViewer().addTextListener(new ITextListener() {
-	
+
 			@Override
 			public void textChanged(TextEvent event) {
 				comparisonEditor.getViewer().getControl().notifyListeners(SWT.Modify, new Event());
 			}
 		});
-		comparisonEditor.createPartialEditor(true);
 	}
 
 	protected void createDependanciesResolutionComposite(Composite parent){
