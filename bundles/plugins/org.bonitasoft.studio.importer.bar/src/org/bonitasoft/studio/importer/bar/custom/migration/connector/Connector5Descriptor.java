@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,12 +37,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Model;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Romain Bioteau
  *
  */
 public class Connector5Descriptor {
+
+	
 
 	private static final String NAME ="name"; //String
 	private static final String DOCUMENTATION ="documentation"; //String
@@ -59,11 +62,14 @@ public class Connector5Descriptor {
 
 	private static final String DEFINITION_ID = "definitionId";
 	private static final String DEFINITION_VERSION = "definitionVersion";
-
+	
+	//legacy connector event
 	private static final String INSTANCE_ON_FINISH = "instanceOnFinish";
 	private static final String AUTOMATIC_ON_EXIT = "automaticOnExit";
 	private static final String TASK_ON_FINISH = "taskOnFinish";
-
+	private static final String TASK_ON_READY = "taskOnReady";
+	private static final String AUTOMATIC_ON_ENTER = "automaticOnEnter";
+	private static final String TASK_ON_START = "taskOnStart";
 	
 	private static final String CONNECTOR_CONFIGURATION = "configuration";
 
@@ -121,11 +127,11 @@ public class Connector5Descriptor {
 	}
 	
 	private final static Set<String> eventAllowedForBonitaSetVariable = new HashSet<String>(Arrays.asList(
-		"taskOnReady",
-		"taskOnStart",
-		"taskOnFinish",
-		"automaticOnExit",
-		"automaticOnEnter"));
+		TASK_ON_READY,
+		TASK_ON_START,
+		TASK_ON_FINISH,
+		AUTOMATIC_ON_EXIT,
+		AUTOMATIC_ON_ENTER));
 	
 	private boolean onEnterStartOrFinish() {
 		return eventAllowedForBonitaSetVariable.contains(event);
@@ -315,7 +321,13 @@ public class Connector5Descriptor {
 	
 	public String getReportChangeMessage(){
 		if(isBonitaSetVarConnector()){
-				return "The connector has been converted to an operation.";
+				if(TASK_ON_READY.equals(event)
+						|| TASK_ON_START.equals(event)
+						|| AUTOMATIC_ON_ENTER.equals(event)){
+					return NLS.bind(Messages.connectorMigrationSetVarConnectorOnEnterOrOnStartDescription, name);
+				} else {
+					return NLS.bind(Messages.connectorMigrationSetVarConnectorOnFinishDescription,name);
+				}
 		} else {
 			return Messages.connectorMigrationDescription;
 		}

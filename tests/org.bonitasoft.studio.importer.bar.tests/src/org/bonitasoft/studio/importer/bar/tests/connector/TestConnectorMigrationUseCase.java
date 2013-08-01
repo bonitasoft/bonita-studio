@@ -278,6 +278,17 @@ public class TestConnectorMigrationUseCase {
 		Activity activity = (Activity) ModelHelper.findElement(mainProc, "Step1", true);
 		final EList<Operation> operations = activity.getOperations();
 		assertEquals("No operations has been created", 1, operations.size());
+		
+		final Operation operation = operations.get(0);
+		assertEquals("The Operator should be Assignment.", ExpressionConstants.ASSIGNMENT_OPERATOR, operation.getOperator().getType());
+		Expression dataUpdated = operation.getLeftOperand();
+		assertEquals("The type is not correct.", ExpressionConstants.VARIABLE_TYPE, dataUpdated.getType());
+		assertEquals("The name of the data is not correct", "poolData",dataUpdated.getName());
+		
+		Expression value = operation.getRightOperand();
+		assertEquals("The type is not correct.", ExpressionConstants.VARIABLE_TYPE, value.getType());
+		assertEquals("The name of the data is not correct", "stepData",value.getName());
+		
 	}
 	
 	@Test
