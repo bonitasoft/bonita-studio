@@ -308,7 +308,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 	private void openStartupDialog() {
 		String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
 		if (noRegister == null || !noRegister.equals("1")) { //$NON-NLS-1$
-
 			IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.startupDialog"); //$NON-NLS-1$
 			IPostStartupContribution contrib = null;
 			for (IConfigurationElement elem : elements){
@@ -320,7 +319,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 				contrib.execute();
 			}
 		}
-
 	}
 
 	@Override
@@ -329,47 +327,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 		disconnectFromWorkspace(Repository.NULL_PROGRESS_MONITOR);
 	}
 
-	@Override
-	public boolean preShutdown() {
-//		Job.getJobManager().cancel(StartEngineJob.FAMILY);
-//		boolean returnValue =  super.preShutdown();
-//		if(returnValue){
-//			try {
-//				if(PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
-//					boolean closeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true) ;
-//					if(closeEditor){
-//						PlatformUI.getWorkbench().getProgressService().run(true, false, new IRunnableWithProgress() {
-//
-//							@Override
-//							public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
-//								monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN) ;
-//								IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.application.preshutdown"); //$NON-NLS-1$
-//								IPreShutdownContribution contrib = null;
-//								for (IConfigurationElement elem : elements){
-//									try {
-//										contrib = (IPreShutdownContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-//									} catch (CoreException e) {
-//										BonitaStudioLog.error(e);
-//									}
-//									contrib.execute();
-//								}
-//								if(BOSEngineManager.getInstance().isRunning()){
-//									BOSEngineManager.getInstance().stop() ;
-//								}
-//								FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
-//								monitor.done() ;
-//							}
-//						}) ;
-//						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllPerspectives(false, true);
-//					}
-//					return closeEditor ;
-//				}
-//			} catch (Exception e){
-//				BonitaStudioLog.error(e) ;
-//			}
-//		}
-		return super.preShutdown() ;
-	}
 
 	private void sendUserInfo() {
 		String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
