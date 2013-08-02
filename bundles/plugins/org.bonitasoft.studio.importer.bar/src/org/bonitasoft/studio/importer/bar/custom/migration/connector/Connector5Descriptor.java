@@ -120,6 +120,10 @@ public class Connector5Descriptor {
 		
 		this.containerType = connectorInstance.getContainer().getType().getEClass();
 	}
+	
+	public String getLegacyConnectorID(){
+		return connectorId;
+	}
 
 	public boolean canBeMigrated(){
 		return definitionMapper != null
