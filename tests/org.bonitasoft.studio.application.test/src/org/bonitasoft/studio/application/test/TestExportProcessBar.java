@@ -29,9 +29,11 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -52,7 +54,11 @@ public class TestExportProcessBar extends TestCase {
         op.run(Repository.NULL_PROGRESS_MONITOR);
         /*Retrieve the AbstractProcess*/
         DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final AbstractProcess proc = (AbstractProcess) store.getDiagram("TestExportProcessBarWithDocument","1.0").getContent().getElements().get(0);
+        DiagramFileStore diagram = store.getDiagram("TestExportProcessBarWithDocument","1.0");
+        assertNotNull(diagram);
+        MainProcess diagramElement = diagram.getContent();
+		assertNotNull(diagramElement);
+		final AbstractProcess proc = (AbstractProcess) diagramElement.getElements().get(0);
 
         /*Export to the specified folder*/
         File targetFolder = new File(System.getProperty("java.io.tmpdir")+File.separator+"testExportBar");
@@ -89,9 +95,14 @@ public class TestExportProcessBar extends TestCase {
         ImportBosArchiveOperation op = new ImportBosArchiveOperation();
         op.setArchiveFile(barToImport.getAbsolutePath());
         op.run(Repository.NULL_PROGRESS_MONITOR);
+        assertTrue(op.getStatus().isOK());
         /*Retrieve the AbstractProcess*/
         DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final AbstractProcess proc = (AbstractProcess) store.getDiagram("TestExportBarWithApplicationResources","1.0").getContent().getElements().get(0);
+        DiagramFileStore diagram = store.getDiagram("TestExportBarWithApplicationResources","1.0");
+        assertNotNull(diagram);
+        MainProcess diagramElement = diagram.getContent();
+		assertNotNull(diagramElement);
+		final AbstractProcess proc = (AbstractProcess) diagramElement.getElements().get(0);
 
         /*Export to the specified folder*/
         File targetFolder = new File(System.getProperty("java.io.tmpdir")+File.separator+"testExportBar");

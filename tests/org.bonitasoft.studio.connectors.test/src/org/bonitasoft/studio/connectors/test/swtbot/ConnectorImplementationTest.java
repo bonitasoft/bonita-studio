@@ -328,17 +328,14 @@ public class ConnectorImplementationTest extends SWTBotGefTestCase implements SW
         bot.waitUntil(new ICondition(){
 
 			public boolean test() throws Exception {
-				
 				return bot.editors().isEmpty();
 			}
 
 			public void init(SWTBot bot) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			public String getFailureMessage() {
-				// TODO Auto-generated method stub
 				return null;
 			}
         	

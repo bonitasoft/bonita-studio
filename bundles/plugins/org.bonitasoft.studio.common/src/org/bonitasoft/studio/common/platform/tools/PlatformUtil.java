@@ -89,7 +89,7 @@ public class PlatformUtil {
 	}
 
 	public static void closeIntro() {
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 
 			@Override
 			public void run() {
@@ -144,7 +144,7 @@ public class PlatformUtil {
 	 * Open the intro
 	 */
 	public static void openIntro(){
-		Display.getDefault().asyncExec(new Runnable() {
+		Display.getDefault().syncExec(new Runnable() {
 
 			@Override
 			public void run() {

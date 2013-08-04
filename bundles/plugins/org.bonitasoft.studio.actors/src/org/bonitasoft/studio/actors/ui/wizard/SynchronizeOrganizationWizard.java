@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.preference.ActorsPreferenceConstants;
 import org.bonitasoft.studio.actors.ui.wizard.page.DefaultUserOrganizationWizardPage;
 import org.bonitasoft.studio.actors.ui.wizard.page.SynchronizeOrganizationWizardPage;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -102,6 +103,7 @@ public class SynchronizeOrganizationWizard extends Wizard {
     				try {
     					Parameterization p = new Parameterization(cmd.getParameter("artifact"), artifact.getName());
     					handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[]{p}), null);
+    					 prefStore.setValue(ActorsPreferenceConstants.DEFAULT_ORGANIZATION, artifact.getDisplayName()) ;
     				} catch (Exception e) {
     					BonitaStudioLog.error(e);
     				}

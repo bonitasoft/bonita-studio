@@ -57,11 +57,6 @@
     </menus>
     <toolbar xmi:id="_70O0EvgrEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.overview.tree"/>
   </descriptors>
-  <descriptors xmi:id="_-2wJ4PgrEeKQjpqZyIOY1Q" elementId="org.eclipse.gef.ui.palette_view" label="BPMN Palette" iconURI="platform:/plugin/org.eclipse.gef/icons/palette_view.gif" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
-    <menus xmi:id="_-2wJ4fgrEeKQjpqZyIOY1Q" elementId="org.eclipse.gef.ui.palette_view">
-      <tags>ViewMenu</tags>
-    </menus>
-  </descriptors>
   <descriptors xmi:id="_rxX_APgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.form.preview" label="%Preview" iconURI="platform:/plugin/org.bonitasoft.studio.form.preview/icons/Preview-icon.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
     <menus xmi:id="_rxX_AfgsEeKQjpqZyIOY1Q" elementId="org.bonitasoft.studio.views.properties.form.preview">
       <tags>ViewMenu</tags>
@@ -83,5 +78,5 @@
   <addons xmi:id="_bqcWME2EEd-DfN2vYY4Lew" elementId="DnD Addon" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.dndaddon.DnDAddon"/>
   <addons xmi:id="_7GC6sGp-Ed-QyNZjH9g15Q" elementId="MinMax Addon" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.addons.swt/org.eclipse.e4.ui.workbench.addons.minmax.MinMaxAddon"/>
   <addons xmi:id="_00yosOXqEeGugqEu_OWUGQ" elementId="org.eclipse.ui.workbench.addon.0" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
-  <addons xmi:id="_FPKi0PqwEeKepeNadfEMVA" elementId="org.bonitasoft.studio.application.openintro.addon" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.OpenIntroAddon"/>
+  <addons xmi:id="_s8MBsPtgEeKy1qSE7bOrWA" elementId="org.bonitasoft.studio.application.addon.0" contributionURI="bundleclass://org.bonitasoft.studio.application/org.bonitasoft.studio.application.OpenIntroAddon"/>
 </application:Application>

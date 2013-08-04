@@ -304,7 +304,7 @@ public class OperationsComposite extends Composite {
 
 
 	public void refresh() {
-		Shell shell = mainComposite.getShell();
+		Composite shell = mainComposite.getParent();
 		Point compositesize = mainComposite.getSize();
 		Point newcompositesize = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
 		Point defaultSize = shell.getSize();

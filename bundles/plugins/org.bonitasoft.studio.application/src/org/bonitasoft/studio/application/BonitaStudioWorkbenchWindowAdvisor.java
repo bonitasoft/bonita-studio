@@ -38,18 +38,14 @@ import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.e4.ui.model.application.ui.SideValue;
-import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
-import org.eclipse.e4.ui.model.application.ui.basic.MTrimElement;
-import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
-import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -59,7 +55,7 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
-import org.eclipse.ui.internal.WorkbenchWindow;
+import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
@@ -115,28 +111,17 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	 */
 	@Override
 	public void postWindowOpen() {
-		if (window instanceof WorkbenchWindow) {
-			MWindow model = ((WorkbenchWindow) window).getModel();
-			EModelService modelService = model.getContext().get(EModelService.class);
-			MToolControl searchField = (MToolControl) modelService.find(
-					"SearchField", model);
-			MToolControl bonitaCoolBar = (MToolControl) modelService.find(
-					"BonitaCoolbar", model);
-			if (searchField != null) {
-				searchField.setToBeRendered(false);
-				MTrimBar trimBar = modelService.getTrim((MTrimmedWindow) model,
-						SideValue.TOP);
-				for(MTrimElement element : trimBar.getChildren()){
-					if(!element.equals(bonitaCoolBar)){
-						element.setToBeRendered(false);
-						element.setVisible(false);
-					}
-				}
-				trimBar.getChildren().remove(searchField);
-			}
+		if(window.getShell().getShells().length > 0){
+			Shell shell = window.getShell().getShells()[0];
+			shell.removeListener(SWT.Activate, shell.getListeners(SWT.Activate)[0]);
+			shell.removeListener(SWT.Close,shell.getListeners(SWT.Close)[0]);
+			shell.removeListener(SWT.Deactivate,shell.getListeners(SWT.Deactivate)[0]);
+			shell.removeListener(SWT.Iconify,shell.getListeners(SWT.Iconify)[0]);
+			shell.removeListener(SWT.Deiconify,shell.getListeners(SWT.Deiconify)[0]);
 		}
-		final MWindow model = ((WorkbenchWindow) window).getModel();
-		window.getActivePage().addPartListener(new AutomaticSwitchPerspectivePartListener());
+		final MWindow model = ((WorkbenchPage)window.getActivePage()).getWindowModel();
+		model.getContext().get(EPartService.class).addPartListener(new AutomaticSwitchPerspectivePartListener());
+
 	}
 
 
@@ -177,6 +162,7 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 						}) ;
 						PlatformUtil.closeIntro();
 						window.getActivePage().closeAllPerspectives(false, true);
+						return true;
 					}else{
 						return true;
 					}

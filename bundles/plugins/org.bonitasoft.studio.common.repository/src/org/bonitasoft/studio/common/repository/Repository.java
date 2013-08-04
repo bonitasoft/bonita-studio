@@ -75,7 +75,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
@@ -99,6 +98,7 @@ import org.xml.sax.InputSource;
  */
 public class Repository implements IRepository {
 
+	private static final String GROOVY_NATURE = "org.eclipse.jdt.groovy.core.groovyNature";
 	private static final String REPOSITORY_STORE_EXTENSION_POINT_ID = "org.bonitasoft.studio.repositoryStore";
 	public static final IProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor() ;
 	private static final String CLASS = "class";
@@ -125,12 +125,19 @@ public class Repository implements IRepository {
 			if(!project.exists()){
 				project.create(NULL_PROGRESS_MONITOR);
 			}
-			disableBuild();
+			
 			open() ;
 			initializeProject(project);
+			try {
+				getProject().build(IncrementalProjectBuilder.FULL_BUILD,NULL_PROGRESS_MONITOR);
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+			}
+			disableBuild();
 			initRepositoryStores() ;
 			initClasspath(project) ;
 			enableBuild();
+			addNature(GROOVY_NATURE, project);
 			try {
 				getProject().build(IncrementalProjectBuilder.FULL_BUILD,NULL_PROGRESS_MONITOR);
 			} catch (CoreException e) {
@@ -250,13 +257,10 @@ public class Repository implements IRepository {
 	public void disableBuild() {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceDescription desc = workspace.getDescription();
-		try {
-			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,NULL_PROGRESS_MONITOR);
-		} catch (OperationCanceledException e1) {
-			BonitaStudioLog.error(e1);
-		} catch (InterruptedException e1) {
-			BonitaStudioLog.error(e1);
-		}
+//		Job[] jobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD);
+//		for(Job j : jobs){
+//			j.cancel();
+//		}
 		if(desc.isAutoBuilding()){
 			desc.setAutoBuilding(false);
 			try {
@@ -275,30 +279,33 @@ public class Repository implements IRepository {
 	}
 
 	protected void createJavaProject(IProject project) {
-		final IJavaProject jProject = JavaCore.create(project);
-		jProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
-		jProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
-		jProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
-		jProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
+		IJavaProject javaProject = JavaCore.create(project);
+		javaProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+		javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+		javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
+		javaProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
 	}
 
 	protected void createProjectDescriptor(IProject project) throws CoreException {
 		IProjectDescription descriptor = project.getDescription();
 		descriptor.setComment(ProductVersion.CURRENT_VERSION) ;
-		String[] natures = descriptor.getNatureIds();
 		Set<String> additionalNatures = getNatures() ;
-		Set<String> notExistingNature = new HashSet<String>();
 		for(String natureId : additionalNatures){
-			@SuppressWarnings("restriction")
-			Object naturDesc = ((Workspace) ResourcesPlugin.getWorkspace()).getNatureManager().getNatureDescriptor(natureId);
-			if(naturDesc == null){
-				notExistingNature.add(natureId);
-				BonitaStudioLog.log("Project nature "+natureId+" not found");
-			}
+			addNature(natureId, project);
 		}
-		additionalNatures.removeAll(notExistingNature);
+	}
 
-		String[] arryOfNatures = additionalNatures.toArray(new String[]{});
+	
+	protected void addNature(String natureId,IProject project) throws CoreException{
+		Object naturDesc = ((Workspace) ResourcesPlugin.getWorkspace()).getNatureManager().getNatureDescriptor(natureId);
+		if(naturDesc == null){
+			BonitaStudioLog.log("Project nature "+natureId+" not found");
+			return;
+		}
+		
+		IProjectDescription descriptor = project.getDescription();
+		String[] natures = descriptor.getNatureIds();
+		String[] arryOfNatures = new String[]{natureId};
 		String[] newNatures = new String[natures.length + arryOfNatures.length];
 		System.arraycopy(natures, 0, newNatures, 0, natures.length);
 		for(int i = natures.length ; i< natures.length+arryOfNatures.length; i++){
@@ -307,14 +314,12 @@ public class Repository implements IRepository {
 		descriptor.setNatureIds(newNatures);
 		project.setDescription(descriptor, null);
 	}
-
 	protected Set<String> getNatures() {
 		final Set<String> result = new HashSet<String>() ;
 		result.add("org.eclipse.xtext.ui.shared.xtextNature") ;
 		result.add("org.bonitasoft.studio.common.repository.bonitaNature");
 		result.add(JavaCore.NATURE_ID);
 		result.add("org.eclipse.pde.PluginNature");
-		result.add("org.eclipse.jdt.groovy.core.groovyNature") ;
 		return result;
 	}
 

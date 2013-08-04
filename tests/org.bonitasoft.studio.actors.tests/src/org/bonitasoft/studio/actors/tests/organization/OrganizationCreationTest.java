@@ -115,7 +115,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
 
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),10000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
-
+       
         bot.waitUntil(Conditions.shellCloses(shell));
 
         OrganizationRepositoryStore store = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);

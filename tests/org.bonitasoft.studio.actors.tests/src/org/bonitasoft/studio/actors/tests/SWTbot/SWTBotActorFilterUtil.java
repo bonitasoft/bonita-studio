@@ -210,7 +210,6 @@ bot.waitUntil(new ICondition() {
 	 */
 	public static void addCategory(SWTBot bot) {
 		SWTBotShell shell = bot.activeShell();
-		shell.activate();
 		Assert.assertFalse("ok button should be desabled",
 				bot.button(IDialogConstants.OK_LABEL).isEnabled());
 		bot.table().select(0);

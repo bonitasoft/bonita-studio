@@ -18,22 +18,18 @@
 package org.bonitasoft.studio.common.perspectives;
 
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.IPartListener;
+import org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor;
 
-public final class AutomaticSwitchPerspectivePartListener implements IPartListener2 {
+public final class AutomaticSwitchPerspectivePartListener implements IPartListener {
 
-	
-	
 	private String lastPerspective;
 
 	@Override
-	public void partActivated(IWorkbenchPartReference partRef) {
-		IWorkbenchPart part = partRef.getPart(false);
-		if (part instanceof IEditorPart) {
-			final String id = BonitaPerspectivesUtils.getPerspectiveId((IEditorPart) part);
+	public void partActivated(MPart part) {
+		if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
+			final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
 			if (id != null && !id.equals(lastPerspective)) {
 				BonitaPerspectivesUtils.switchToPerspective(id);
 				lastPerspective = id;
@@ -42,46 +38,30 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 	}
 
 	@Override
-	public void partBroughtToTop(IWorkbenchPartReference partRef) {
-
+	public void partBroughtToTop(MPart part) {
+		
 	}
 
 	@Override
-	public void partClosed(IWorkbenchPartReference partRef) {
-
+	public void partDeactivated(MPart part) {
+		
 	}
 
 	@Override
-	public void partDeactivated(IWorkbenchPartReference partRef) {
-
+	public void partHidden(MPart part) {
+		
 	}
 
 	@Override
-	public void partOpened(IWorkbenchPartReference partRef) {
-		IWorkbenchPart part = partRef.getPart(false);
-		if (part instanceof IEditorPart) {
+	public void partVisible(MPart part) {
+		if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
 			if(PlatformUtil.isIntroOpen()){
 				PlatformUtil.closeIntro();
 			}
-			final String id = BonitaPerspectivesUtils.getPerspectiveId((IEditorPart) part);
+			final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
 			if (id != null) {
 				BonitaPerspectivesUtils.switchToPerspective(id);
 			}
 		}
-	}
-
-	@Override
-	public void partHidden(IWorkbenchPartReference partRef) {
-		
-	}
-
-	@Override
-	public void partVisible(IWorkbenchPartReference partRef) {
-		
-	}
-
-	@Override
-	public void partInputChanged(IWorkbenchPartReference partRef) {
-
 	}
 }
