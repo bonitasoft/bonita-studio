@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -133,6 +134,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -146,10 +148,17 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
+import org.eclipse.gmf.runtime.notation.FillStyle;
+import org.eclipse.gmf.runtime.notation.FontStyle;
+import org.eclipse.gmf.runtime.notation.LineStyle;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.omg.spec.bpmn.di.BPMNDiagram;
 import org.omg.spec.bpmn.di.BPMNEdge;
+import org.omg.spec.bpmn.di.BPMNLabel;
+import org.omg.spec.bpmn.di.BPMNLabelStyle;
 import org.omg.spec.bpmn.di.BPMNPlane;
 import org.omg.spec.bpmn.di.BPMNShape;
 import org.omg.spec.bpmn.di.DiFactory;
@@ -214,6 +223,8 @@ import org.omg.spec.bpmn.model.TUserTask;
 import org.omg.spec.bpmn.model.util.ModelResourceFactoryImpl;
 import org.omg.spec.dd.dc.Bounds;
 import org.omg.spec.dd.dc.DcFactory;
+import org.omg.spec.dd.dc.DcPackage;
+import org.omg.spec.dd.dc.Font;
 import org.omg.spec.dd.di.Shape;
 
 
@@ -236,6 +247,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 	private final Map<Data, TItemDefinition> dataMap = new HashMap<Data, TItemDefinition>();
 	private DocumentRoot root;
 	private File destBpmnFile;
+	private BPMNDiagram bpmnDiagram;
 
 	public BonitaToBPMN() {
 		errors = new ArrayList<String>();
@@ -262,7 +274,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 		collaboration = ModelFactory.eINSTANCE.createTCollaboration();
 		setCommonAttributes(mainProcess, collaboration);
 		definitions.getRootElement().add(collaboration);
-		BPMNDiagram bpmnDiagram = DiFactory.eINSTANCE.createBPMNDiagram();
+		bpmnDiagram = DiFactory.eINSTANCE.createBPMNDiagram();
 		bpmnDiagram.setName(mainProcess.getName());
 		bpmnPlane = DiFactory.eINSTANCE.createBPMNPlane();
 		bpmnDiagram.setBPMNPlane(bpmnPlane);
@@ -499,7 +511,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 		}
 
 		//create graphic process
-		BPMNShape processShape = DiFactory.eINSTANCE.createBPMNShape();
+		BPMNShape processShape = createBPMNShape(childPart);
 		processShape.setBpmnElement(QName.valueOf(bpmnProcess.getId()));
 		final IFigure bonitaPoolFigure = childPart.getFigure();
 		final Rectangle bounds = bonitaPoolFigure.getBounds().getCopy();
@@ -863,7 +875,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 				setCommonAttributes(bonitaLane, bpmnLane); 
 				laneSet.getLane().add(bpmnLane);
 				// graphic
-				BPMNShape laneShape = DiFactory.eINSTANCE.createBPMNShape();
+				BPMNShape laneShape = createBPMNShape(bonitaLanePart);
 				laneShape.setBpmnElement(QName.valueOf(bpmnLane.getId()));
 				final IFigure bonitaLaneFigure = bonitaLanePart.getFigure();
 				final Rectangle bounds = bonitaLaneFigure.getBounds().getCopy();
@@ -923,7 +935,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
 				// graphic
 				boolean isExpanded = ((ShapeCompartmentEditPart)((SubProcessEvent2EditPart)child).getChildren().get(0)).getCompartmentFigure().isExpanded();
-				BPMNShape elementShape = DiFactory.eINSTANCE.createBPMNShape();
+				BPMNShape elementShape = createBPMNShape(bonitaElementPart);
 				elementShape.setIsExpanded(isExpanded);
 				elementShape.setBpmnElement(QName.valueOf(bpmnSubProcess.getId()));
 				final IFigure bonitaElementFigure = bonitaElementPart.getFigure();
@@ -993,7 +1005,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
 						break;
 					}
 				}
-				BPMNShape elementShape = DiFactory.eINSTANCE.createBPMNShape();
+		
+				BPMNShape elementShape = createBPMNShape(bonitaElementPart);
 				elementShape.setIsExpanded(isExpanded);
 				elementShape.setBpmnElement(QName.valueOf(bpmnSubProcess.getId()));
 				final IFigure bonitaElementFigure = bonitaElementPart.getFigure();
@@ -1014,7 +1027,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
 	}
 
 	protected void createGraphicForFlowElement(ShapeNodeEditPart bonitaElementPart, TFlowElement bpmnElement) {
-		BPMNShape elementShape = DiFactory.eINSTANCE.createBPMNShape();
+		final BPMNShape elementShape = createBPMNShape(bonitaElementPart);
+
 		elementShape.setBpmnElement(QName.valueOf(bpmnElement.getId()));
 		final IFigure bonitaElementFigure = bonitaElementPart.getFigure();
 		final Rectangle bounds = bonitaElementFigure.getBounds().getCopy();
@@ -1026,7 +1040,83 @@ public class BonitaToBPMN implements IBonitaTransformer {
 		elementBounds.setY(bounds.preciseY());
 		elementShape.setBounds(elementBounds);
 		elementShape.setId(ModelHelper.getEObjectID(bonitaElementPart.getNotationView()));
+
 		bpmnPlane.getDiagramElement().add(elementShape);
+	}
+
+	protected BPMNShape createBPMNShape(ShapeNodeEditPart bonitaElementPart) {
+		final BPMNShape elementShape = DiFactory.eINSTANCE.createBPMNShape();
+		final Font font = createFont(bonitaElementPart);
+		if(font != null){
+			final BPMNLabel label = DiFactory.eINSTANCE.createBPMNLabel();
+			final BPMNLabelStyle labelStyle = getLabelStyle(font);
+			label.setId(EcoreUtil.generateUUID());
+			label.setLabelStyle(QName.valueOf(labelStyle.getId()));
+			elementShape.setBPMNLabel(label);
+		}
+	
+		Map<String, String> colors = getShapeColors(bonitaElementPart);
+		//TODO add an extension for colors
+
+		return elementShape;
+	}
+
+	private Map<String, String> getShapeColors(ShapeNodeEditPart bonitaElementPart) {
+		Map<String, String> colorsMap = new HashMap<String, String>();
+		View shape = bonitaElementPart.getNotationView();
+		FontStyle fontStyle = (FontStyle) shape.getStyle(NotationPackage.Literals.FONT_STYLE);
+		if(fontStyle != null){
+			colorsMap.put("fontColor",String.valueOf(fontStyle.getFontColor()));
+		}
+		FillStyle fillStyle = (FillStyle) shape.getStyle(NotationPackage.Literals.FILL_STYLE);
+		if(fillStyle != null){
+			colorsMap.put("fillColor",String.valueOf(fillStyle.getFillColor()));
+		}
+		LineStyle lineStyle = (LineStyle) shape.getStyle(NotationPackage.Literals.LINE_STYLE);
+		if(lineStyle != null){
+			colorsMap.put("lineColor",String.valueOf(lineStyle.getLineColor()));
+		}
+		return colorsMap;
+	}
+
+	private BPMNLabelStyle getLabelStyle(Font font) {
+		Comparator<Font> fontComparator = new Comparator<Font>() {
+			@Override
+			public int compare(Font font1, Font font2) {
+				for(EStructuralFeature f : DcPackage.Literals.FONT.getEStructuralFeatures()){
+					if(!font1.eGet(f).equals(font2.eGet(f))){
+						return 1;
+					}
+				}
+				return 0;
+			}
+		};
+		for(BPMNLabelStyle style : bpmnDiagram.getBPMNLabelStyle()){
+			if(fontComparator.compare(style.getFont(),font) == 0){
+				return style;
+			}
+		}
+		final BPMNLabelStyle labelStyle = DiFactory.eINSTANCE.createBPMNLabelStyle();
+		labelStyle.setFont(font);
+		labelStyle.setId(EcoreUtil.generateUUID());
+		bpmnDiagram.getBPMNLabelStyle().add(labelStyle);
+		return labelStyle;
+	}
+
+	protected Font createFont(ShapeNodeEditPart bonitaElementPart) {
+		View shape = bonitaElementPart.getNotationView();
+		FontStyle fontStyle = (FontStyle) shape.getStyle(NotationPackage.Literals.FONT_STYLE);
+		if(fontStyle != null){
+			final Font font = DcFactory.eINSTANCE.createFont();
+			font.setIsBold(fontStyle.isBold());
+			font.setIsItalic(fontStyle.isItalic());
+			font.setIsStrikeThrough(fontStyle.isStrikeThrough());
+			font.setIsUnderline(fontStyle.isUnderline());
+			font.setName(fontStyle.getFontName());
+			font.setSize(fontStyle.getFontHeight());
+			return font;
+		}
+		return null;
 	}
 
 	protected void populateDataOnActivity(TProcess bpmnProcess,
@@ -1109,7 +1199,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 				mapping.put(boundaryEvent, bpmnBoundary);
 
 				//graphic
-				BPMNShape boundaryShape = DiFactory.eINSTANCE.createBPMNShape();
+				BPMNShape boundaryShape = createBPMNShape(bonitaElementPart);
 				boundaryShape.setBpmnElement(QName.valueOf(bpmnBoundary.getId()));
 				IGraphicalEditPart boundaryElementPart = GMFTools.findEditPart(bonitaElementPart, boundaryEvent);
 				final IFigure bonitaBoundaryFigure = boundaryElementPart.getFigure();
@@ -1617,7 +1707,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 				role.setResourceRef(QName.valueOf(ModelHelper.getEObjectID(actor)));
 				role.setId(EcoreUtil.generateUUID());
 				resourceRoles.add(role);
-				//TODO: cjeck that a performer is teh well thinsg to use search in teh whole inheritance of ResourceRole
+				//TODO: check that a performer is the well thing to use search in the whole inheritance of ResourceRole
 				//TODO: use assignment if specifying a name
 				//TODO: 
 			}

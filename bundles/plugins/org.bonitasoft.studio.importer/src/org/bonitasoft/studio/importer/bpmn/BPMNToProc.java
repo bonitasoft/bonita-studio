@@ -82,6 +82,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.omg.spec.bpmn.di.BPMNDiagram;
 import org.omg.spec.bpmn.di.BPMNEdge;
+import org.omg.spec.bpmn.di.BPMNLabelStyle;
 import org.omg.spec.bpmn.di.BPMNPlane;
 import org.omg.spec.bpmn.di.BPMNShape;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
@@ -146,6 +147,7 @@ import org.omg.spec.bpmn.model.TTimerEventDefinition;
 import org.omg.spec.bpmn.model.TTransaction;
 import org.omg.spec.bpmn.model.TUserTask;
 import org.omg.spec.dd.dc.Bounds;
+import org.omg.spec.dd.dc.Font;
 import org.omg.spec.dd.di.DiagramElement;
 import org.omg.spec.dd.di.Shape;
 import org.w3c.dom.Document;
@@ -474,6 +476,7 @@ public class BPMNToProc extends ToProcProcessor {
 					laneName = tLane.getId();
 				}
 				builder.addLane(tLane.getId(), laneName, sizeFor);
+				addFontStyle(tLane.getId());
 				/* Put Documentation */
 				StringBuilder sb = new StringBuilder();
 				for (TDocumentation doc : tLane.getDocumentation()) {
@@ -512,6 +515,30 @@ public class BPMNToProc extends ToProcProcessor {
 		processBoundaries(flowElements);
 
 		return location;
+	}
+
+	protected void addFontStyle(String bpmnId) throws ProcBuilderException {
+		BPMNShape bpmnShape = getBPMNShapeForBpmnID(bpmnId);
+		if(bpmnShape != null 
+				&& bpmnShape.getBPMNLabel() != null
+				&& bpmnShape.getBPMNLabel().getLabelStyle() != null){
+			BPMNLabelStyle style = getLabelStyle(bpmnShape.getBPMNLabel().getLabelStyle());
+			if(style != null && style.getFont() != null){
+				Font font = style.getFont();
+				builder.setFontStyle(font.getName(),(int)font.getSize(),font.isIsBold(),font.isIsItalic());
+			}
+		}
+	}
+
+	private BPMNLabelStyle getLabelStyle(QName labelStyle) {
+		for(BPMNDiagram diagram : bpmnDiagrams){
+			for(BPMNLabelStyle style : diagram.getBPMNLabelStyle()){
+				if(style.getId().equals(labelStyle.getLocalPart())){
+					return style;
+				}
+			}
+		}
+		return null;
 	}
 
 	private List<TLane> getAllTLanes(List<TLaneSet> laneSets) {
@@ -856,6 +883,7 @@ public class BPMNToProc extends ToProcProcessor {
 		}
 
 		builder.addPool(id, name, "1.0", location, poolSize);
+		addFontStyle(id);
 	}
 
 	private Point findMax(String subProcBpmnIdlocalPart,
@@ -1245,7 +1273,7 @@ public class BPMNToProc extends ToProcProcessor {
 						errorElements.add(flowNode.eClass().getName() + ": "
 								+ flowNode.getName());
 					}
-
+					addFontStyle(flowNode.getId());
 				}
 			}
 		}
