@@ -25,7 +25,6 @@ import org.bonitasoft.studio.groovy.library.IFunction;
 import org.bonitasoft.studio.groovy.library.IFunctionCategory;
 import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.jface.dialogs.DialogTray;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -41,10 +40,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.DragDetectEvent;
+import org.eclipse.swt.events.DragDetectListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -68,7 +69,8 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
 
     private static final String GROOVY_DOC_LINK = "<a href=\"http://groovy.codehaus.org/Getting+Started+Guide\">"+Messages.groovyDocumentationLink+"</a>"; //$NON-NLS-1$ //$NON-NLS-2$
     protected static final String GROOVY_BROWSER_ID = "org.bonitasoft.studio.groovy.browser"; //$NON-NLS-1$
-
+    private static final int SASH_LIMIT = 40;
+    
     private ListViewer categoriesList;
     private FilteredTree functionsList;
     private StyledText documenationText;
@@ -86,14 +88,23 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
      * @see org.eclipse.jface.dialogs.DialogTray#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected Control createContents(Composite parent) {
-        final Composite mainComposite = new Composite(parent, SWT.NONE);
+    protected Control createContents(final Composite parent) {    	
+    	
+    	final Composite mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
         createFunctionCategories(mainComposite);
-        createFunctionsList(mainComposite);
-        createFunctionDocumentaion(mainComposite);
+        
+        final SashForm sashForm = new SashForm(mainComposite, SWT.VERTICAL);
+        sashForm.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(250, SWT.DEFAULT).minSize(100, SWT.DEFAULT).create());
+        GridLayout gridLaout = GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 2).create();
+        sashForm.setLayout(gridLaout);
+        createFunctionsList(sashForm);
+        createFunctionDocumentaion(sashForm);  
+        
+        sashForm.setWeights(new int[]{1, 1});
+        
         return mainComposite;
     }
 
@@ -127,8 +138,8 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
 
         Label catTitle = new Label(catComposite, SWT.NONE);
         catTitle.setText(Messages.categoriesTitle);
-
         categoriesList = new ListViewer(catComposite, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE);
+        
         categoriesList.getList().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT,90).create());
 
         categoriesList.setLabelProvider(new CategoryLabelProvider());
@@ -146,7 +157,7 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
     }
 
     private void createFunctionsList(Composite parent) {
-        Composite funcComposite = new Composite(parent, SWT.NONE);
+        Composite funcComposite = new Composite(parent, SWT.BORDER | SWT.CENTER);
         funcComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(210, SWT.DEFAULT).create());
         funcComposite.setLayout(new GridLayout(1, true));
 
@@ -244,17 +255,16 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
         }
 	}
 
-
     private void createFunctionDocumentaion(Composite parent) {
-        Composite docComposite = new Composite(parent, SWT.NONE);
-        docComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+        Composite docComposite = new Composite(parent, SWT.BORDER | SWT.CENTER);
+        docComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         docComposite.setLayout(new GridLayout(1, true));
 
         Label docTitle = new Label(docComposite, SWT.NONE);
         docTitle.setText(Messages.functionDocTitle);
         
         documenationText = new StyledText(docComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-        documenationText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 90).create());
+        documenationText.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 90).create());
         documenationText.setEditable(false);
 		fPresenter= new HTMLTextPresenter(false);
     }
