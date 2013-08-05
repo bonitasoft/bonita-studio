@@ -388,4 +388,6 @@ public interface IProcBuilder {
 
     public void addJavaData(String id, String name, String defaultValueContent, String defaultValueReturnType, String defaultValueInterpreter, String javaQualifiedName, boolean isMultiple, boolean isTransient, String expressionType) throws ProcBuilderException;
 
+	public void setFontStyle(String name, int height, boolean isBold,boolean isItalic) throws ProcBuilderException;
+
 }

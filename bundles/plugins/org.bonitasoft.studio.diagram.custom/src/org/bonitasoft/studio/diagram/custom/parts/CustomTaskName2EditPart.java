@@ -70,13 +70,6 @@ public class CustomTaskName2EditPart extends TaskName2EditPart {
 		this.manager = manager;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart#isSelectable()
-	 */
-	@Override
-	public boolean isSelectable() {
-		return false;
-	}
 
 
 	@Override

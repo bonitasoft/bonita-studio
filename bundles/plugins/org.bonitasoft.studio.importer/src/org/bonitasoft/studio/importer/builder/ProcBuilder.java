@@ -109,6 +109,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.EditPart;
@@ -141,6 +142,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -182,6 +184,7 @@ public class ProcBuilder implements IProcBuilder {
     private final Map<String, Lane> lanes;
     private Shell shell;
     private Map<Element, String> elementToReplaceName;
+	private Node currentView;
 
     public ProcBuilder(){
         this(new NullProgressMonitor()) ;
@@ -296,6 +299,7 @@ public class ProcBuilder implements IProcBuilder {
         currentContainer = pool ;
         currentStep = pool ;
         currentElement = pool ;
+        currentView =  newNode;
         execute() ;
     }
 
@@ -360,6 +364,7 @@ public class ProcBuilder implements IProcBuilder {
         currentStep = lane ;
         currentElement = lane ;
         currentAssignable = lane;
+        currentView =  newNode;
 
         execute() ;
 
@@ -729,7 +734,7 @@ public class ProcBuilder implements IProcBuilder {
         if(newNode == null){
             throw new ProcBuilderException("New elment not created") ;
         }
-
+        currentView =  newNode;
         Element createdElement = (Element) newNode.getElement();
         ShapeNodeEditPart nodeEditPart = (ShapeNodeEditPart) GMFTools.findEditPart(diagramPart, createdElement ) ;
 
@@ -804,6 +809,7 @@ public class ProcBuilder implements IProcBuilder {
         if(newNode == null){
             throw new ProcBuilderException("New elment not created") ;
         }
+        currentView =  newNode;
         TextAnnotation createdElement = (TextAnnotation) newNode.getElement();
 
         commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getTextAnnotation_Text(), text))  ;
@@ -1560,6 +1566,21 @@ public class ProcBuilder implements IProcBuilder {
 
 
     }
+
+	public void setFontStyle(String name, int height, boolean isBold,boolean isItalic) throws ProcBuilderException {
+		if(currentView == null){
+			 throw new ProcBuilderException("Impossible to set font style property. There is no view set") ;
+		}
+		FontStyle fontStyle = (FontStyle) currentView.getStyle(NotationPackage.Literals.FONT_STYLE);
+		if(fontStyle == null){
+			fontStyle = NotationFactory.eINSTANCE.createFontStyle();
+		}
+		 commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__BOLD, isBold)) ;
+         commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__ITALIC,isItalic)) ;
+         commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__FONT_NAME,name)) ;
+         commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__FONT_HEIGHT,height)) ;
+		execute();
+	}
 
 
 
