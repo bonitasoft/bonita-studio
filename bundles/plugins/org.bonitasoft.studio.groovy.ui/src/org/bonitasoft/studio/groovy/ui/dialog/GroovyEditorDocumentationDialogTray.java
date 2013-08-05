@@ -44,8 +44,6 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.events.DragDetectEvent;
-import org.eclipse.swt.events.DragDetectListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -97,7 +95,7 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
         createFunctionCategories(mainComposite);
         
         final SashForm sashForm = new SashForm(mainComposite, SWT.VERTICAL);
-        sashForm.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(250, SWT.DEFAULT).minSize(100, SWT.DEFAULT).create());
+        sashForm.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(250, 250).minSize(100, SWT.DEFAULT).create());
         GridLayout gridLaout = GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 2).create();
         sashForm.setLayout(gridLaout);
         createFunctionsList(sashForm);
@@ -138,14 +136,14 @@ public class GroovyEditorDocumentationDialogTray extends DialogTray {
 
         Label catTitle = new Label(catComposite, SWT.NONE);
         catTitle.setText(Messages.categoriesTitle);
-        categoriesList = new ListViewer(catComposite, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE);
         
-        categoriesList.getList().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT,90).create());
-
+        categoriesList = new ListViewer(catComposite, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE);
         categoriesList.setLabelProvider(new CategoryLabelProvider());
         categoriesList.setContentProvider(new FunctionCategoriesProvider());
         categoriesList.setInput(FunctionsRepositoryFactory.getFunctionCatgories());
         categoriesList.getList().setSelection(0);
+        final int categorieMinheight = categoriesList.getList().getItemHeight()*categoriesList.getList().getItemCount();
+        categoriesList.getList().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT,categorieMinheight).create());
         categoriesList.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
