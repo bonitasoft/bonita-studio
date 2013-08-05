@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -154,29 +155,33 @@ public class ImportBosArchiveOperation {
 							final String filename = child.getName();
 							final boolean openAfterImport = (resourceToOpen != null && resourceToOpen.contains(filename))
 									|| resourceToOpen == null;
-							IRepositoryFileStore fileStore = repository.importIResource(filename, child);
-							
-							final ArrayList<AbstractProcess> processes = getAllProcesseRepository(fileStore.getParentStore().getChildren(), fileStore.getName());
-							final ArrayList<AbstractProcess> importedProcess = getProcess(fileStore);
-							final ArrayList<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
-							for (AbstractProcess p : importedProcess) {
-								if (processExistInList(p, processes)) {
-									duplicateProcess.add(p);
-								}
-							}
-							if (!duplicateProcess.isEmpty()) {
-								Display.getDefault().syncExec(new Runnable() {
-
-									@Override
-									public void run() {
-										WarningDuplicateProcessDialog dialog = new WarningDuplicateProcessDialog(Display.getDefault().getActiveShell(), duplicateProcess);
-										dialog.open();
+							final IRepositoryFileStore fileStore = repository.importIResource(filename, child);
+							if(fileStore != null){
+								final ArrayList<AbstractProcess> processes = getAllProcesseRepository(fileStore.getParentStore().getChildren(), fileStore.getName());
+								final ArrayList<AbstractProcess> importedProcess = getProcess(fileStore);
+								final ArrayList<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
+								for (AbstractProcess p : importedProcess) {
+									if (processExistInList(p, processes)) {
+										duplicateProcess.add(p);
 									}
-								});
-							}
-							
-							if (fileStore != null && openAfterImport) {
-								fileStore.open();
+								}
+								if (!duplicateProcess.isEmpty() && !FileActionDialog.getDisablePopup()) {
+									Display.getDefault().syncExec(new Runnable() {
+
+										@Override
+										public void run() {
+											StringBuilder sb = new StringBuilder();
+											for (AbstractProcess p : duplicateProcess) {
+												sb.append(SWT.CR);
+												sb.append(p.getName()+" "+"("+p.getVersion()+")");
+											}
+											MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.warningDuplicateDialogTitle, Messages.bind(Messages.poolAlreadyExistWarningMessage,sb.toString()));
+										}
+									});
+								}
+								if (fileStore != null && openAfterImport) {
+									fileStore.open();
+								}
 							}
 						}
 					}
