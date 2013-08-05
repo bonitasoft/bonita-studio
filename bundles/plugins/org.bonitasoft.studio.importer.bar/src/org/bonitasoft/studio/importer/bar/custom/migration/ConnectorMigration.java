@@ -48,10 +48,59 @@ public class ConnectorMigration extends ReportCustomMigration {
 			if(connectorDescriptor.canBeMigrated()){
 				descriptors.add(connectorDescriptor);
 			}else{
-				addReportChange((String) connector.get("name"),connector.getType().getEClass().getName(), connector.getContainer().getUuid(), Messages.removeConnectorMigrationDescription, Messages.connectorProperty, IStatus.ERROR);
+				final String legacyConnectorID = connectorDescriptor.getLegacyConnectorID();
+				String removeConnectorMigrationDescription = getMigrationReportMessageForNonMigratedConnector(legacyConnectorID);
+				
+				
+				addReportChange((String) connector.get("name"),
+						connector.getType().getEClass().getName(),
+						connector.getContainer().getUuid(),
+						removeConnectorMigrationDescription,
+						Messages.connectorProperty,
+						IStatus.ERROR);
 				model.delete(connector);
 			}
 		}
+	}
+
+	private String getMigrationReportMessageForNonMigratedConnector(final String legacyConnectorID) {
+		String removeConnectorMigrationDescription = Messages.removeConnectorMigrationDescription;
+		if("StartTask".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("FinishTask".equals(legacyConnectorID)){
+			removeConnectorMigrationDescription += "\n"+Messages.connectorMigrationFinishTaskDescription;
+		} else if("ExecuteTask".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("startInstanceConnector".equals(legacyConnectorID)){
+			removeConnectorMigrationDescription += "\n"+Messages.connectorMigrationStartInstanceDescription;
+		} else if("getUser".equals(legacyConnectorID)){
+			removeConnectorMigrationDescription += "\n"+Messages.connectorMigrationUseScriptAndApiDescription;
+		} else if("getTaskAuthor".equals(legacyConnectorID)){
+			removeConnectorMigrationDescription += "\n"+Messages.connectorMigrationUseScriptAndApiDescription;
+		} else if("getProcessInstanceInitiator".equals(legacyConnectorID)){
+			removeConnectorMigrationDescription += "\n"+Messages.connectorMigrationUseScriptAndApiDescription;
+		} else if("DeleteDocuments".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("DeleteDocument".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("AddDocumentVersion".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("AddDocuments".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("BS-AddAttachments".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("GetDocumentVersions".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("GetDocuments".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("GetDocumentContent".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("GetDocument".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("AddComment".equals(legacyConnectorID)){
+			//No specific message known
+		}
+		return removeConnectorMigrationDescription;
 	}
 	
 	@Override
