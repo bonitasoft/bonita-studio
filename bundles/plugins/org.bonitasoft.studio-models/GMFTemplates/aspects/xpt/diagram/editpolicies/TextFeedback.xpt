@@ -1,0 +1,224 @@
+/*
+ * Copyright (c) 2006, 2009 Borland Software Corporation
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Dmitry Stadnik (Borland) - initial API and implementation
+ */
+
+«IMPORT 'http://www.eclipse.org/gmf/2009/GenModel'»
+
+«DEFINE TextSelectionEditPolicy FOR gmfgen::GenDiagram-»
+«EXPAND xpt::Common::copyright FOR editorGen-»
+package «editPoliciesPackageName»;
+
+«EXPAND xpt::Common::generatedClassComment»
+public class «textSelectionEditPolicyClassName» extends org.eclipse.gef.editpolicies.SelectionEditPolicy {
+
+	«EXPAND textFeedback FOR self-»
+}
+«ENDDEFINE»
+
+«DEFINE TextNonResizableEditPolicy FOR gmfgen::GenDiagram-»
+«EXPAND xpt::Common::copyright FOR editorGen-»
+package «editPoliciesPackageName»;
+
+«EXPAND xpt::Common::generatedClassComment»
+public class «textNonResizableEditPolicyClassName» extends org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx {
+
+	«EXPAND textFeedback FOR self-»
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected java.util.List createSelectionHandles() {
+		org.eclipse.gef.handles.MoveHandle moveHandle =
+			new org.eclipse.gef.handles.MoveHandle((org.eclipse.gef.GraphicalEditPart) getHost());
+		moveHandle.setBorder(null);
+		moveHandle.setDragTracker(new org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx(getHost()));
+		return java.util.Collections.singletonList(moveHandle);
+	}
+}
+«ENDDEFINE»
+
+«DEFINE textFeedback FOR gmfgen::GenDiagram»
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.eclipse.draw2d.IFigure selectionFeedbackFigure;
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.eclipse.draw2d.IFigure focusFeedbackFigure;
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.eclipse.draw2d.FigureListener hostPositionListener;
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected void showPrimarySelection() {
+		if (getHostFigure() instanceof org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) {
+			final org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart ep = (org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart) getHost();
+			if(ep.resolveSemanticElement() instanceof org.bonitasoft.studio.model.process.Activity){
+				final org.bonitasoft.studio.common.diagram.tools.CustomTextDirectEditManager manager = new org.bonitasoft.studio.common.diagram.tools.CustomTextDirectEditManager(ep, CustomTextDirectEditManager
+					.getTextCellEditorClass(ep), org.bonitasoft.studio.model.process.diagram.edit.parts.ProcessEditPartFactory
+					.getTextCellEditorLocator((org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart) ep));
+				manager.show();
+				manager.getCellEditor().addListener(new org.eclipse.jface.viewers.ICellEditorListener() {
+					
+					@Override
+					public void editorValueChanged(boolean oldValidState, boolean newValidState) {	}
+					
+					@Override
+					public void cancelEditor() {
+						ep.getViewer().select(getHost().getParent());
+					}
+					
+					@Override
+					public void applyEditorValue() {
+						ep.getViewer().select(getHost().getParent());
+					}
+				});
+			}else{
+				((org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) getHostFigure()).setSelected(true);
+			}
+		} else {
+			showSelection();
+			showFocus();
+		}
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected void showSelection() {
+		if (getHostFigure() instanceof org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) {
+			((org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) getHostFigure()).setSelected(true);
+			((org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) getHostFigure()).setFocus(false);
+		} else {
+			hideSelection();
+			addFeedback(selectionFeedbackFigure = createSelectionFeedbackFigure());
+			getHostFigure().addFigureListener(getHostPositionListener());
+			refreshSelectionFeedback();
+			hideFocus();
+		}
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected void hideSelection() {
+		if (getHostFigure() instanceof org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) {
+			((org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) getHostFigure()).setSelected(false);
+			((org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) getHostFigure()).setFocus(false);
+		} else {
+			if (selectionFeedbackFigure != null) {
+				removeFeedback(selectionFeedbackFigure);
+				getHostFigure().removeFigureListener(getHostPositionListener());
+				selectionFeedbackFigure = null;
+			}
+			hideFocus();
+		}
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected void showFocus() {
+		if (getHostFigure() instanceof org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) {
+			((org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) getHostFigure()).setFocus(true);
+		} else {
+			hideFocus();
+			addFeedback(focusFeedbackFigure = createFocusFeedbackFigure());
+			refreshFocusFeedback();
+		}
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected void hideFocus() {
+		if (getHostFigure() instanceof org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) {
+			((org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel) getHostFigure()).setFocus(false);
+		} else {
+			if (focusFeedbackFigure != null) {
+				removeFeedback(focusFeedbackFigure);
+				focusFeedbackFigure = null;
+			}
+		}
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected org.eclipse.draw2d.geometry.Rectangle getFeedbackBounds() {
+		org.eclipse.draw2d.geometry.Rectangle bounds;
+		if (getHostFigure() instanceof org.eclipse.draw2d.Label) {
+			bounds = ((org.eclipse.draw2d.Label) getHostFigure()).getTextBounds();
+			bounds.intersect(getHostFigure().getBounds());
+		} else {
+			bounds = getHostFigure().getBounds().getCopy();
+		}
+		getHostFigure().getParent().translateToAbsolute(bounds);
+		getFeedbackLayer().translateToRelative(bounds);
+		return bounds;
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected org.eclipse.draw2d.IFigure createSelectionFeedbackFigure() {
+		if (getHostFigure() instanceof org.eclipse.draw2d.Label) {
+			org.eclipse.draw2d.Label feedbackFigure = new org.eclipse.draw2d.Label();
+			feedbackFigure.setOpaque(true);
+			feedbackFigure.setBackgroundColor(org.eclipse.draw2d.ColorConstants.menuBackgroundSelected);
+			feedbackFigure.setForegroundColor(org.eclipse.draw2d.ColorConstants.menuForegroundSelected);
+			return feedbackFigure;
+		} else {
+			org.eclipse.draw2d.RectangleFigure feedbackFigure = new org.eclipse.draw2d.RectangleFigure();
+			feedbackFigure.setFill(false);
+			return feedbackFigure;
+		}
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected org.eclipse.draw2d.IFigure createFocusFeedbackFigure() {
+		return new org.eclipse.draw2d.Figure() {
+
+			protected void paintFigure(org.eclipse.draw2d.Graphics graphics) {
+				graphics.drawFocus(getBounds().getResized(-1, -1));
+			}
+		};
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected void updateLabel(org.eclipse.draw2d.Label target) {
+		org.eclipse.draw2d.Label source = (org.eclipse.draw2d.Label) getHostFigure();
+		target.setText(source.getText());
+		target.setTextAlignment(source.getTextAlignment());
+		target.setFont(source.getFont());
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected void refreshSelectionFeedback() {
+		if (selectionFeedbackFigure != null) {
+			if (selectionFeedbackFigure instanceof org.eclipse.draw2d.Label) {
+				updateLabel((org.eclipse.draw2d.Label) selectionFeedbackFigure);
+				selectionFeedbackFigure.setBounds(getFeedbackBounds());
+			} else {
+				selectionFeedbackFigure.setBounds(getFeedbackBounds().expand(5, 5));
+			}
+		}
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	protected void refreshFocusFeedback() {
+		if (focusFeedbackFigure != null) {
+			focusFeedbackFigure.setBounds(getFeedbackBounds());
+		}
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	public void refreshFeedback() {
+		refreshSelectionFeedback();
+		refreshFocusFeedback();
+	}
+
+	«EXPAND xpt::Common::generatedMemberComment»
+	private org.eclipse.draw2d.FigureListener getHostPositionListener() {
+		if (hostPositionListener == null) {
+			hostPositionListener = new org.eclipse.draw2d.FigureListener() {
+				public void figureMoved(org.eclipse.draw2d.IFigure source) {
+					refreshFeedback();
+				}
+			};
+		}
+		return hostPositionListener;
+	}
+«ENDDEFINE»
