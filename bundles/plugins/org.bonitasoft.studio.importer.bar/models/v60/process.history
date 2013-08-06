@@ -11881,6 +11881,7 @@
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.UpdateModelVersion"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.AutoLoginMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.StartTimerCustomMigration"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.ResourceFolderMigration"/>
   </releases>
   <releases/>
 </history:History>
