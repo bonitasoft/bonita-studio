@@ -506,7 +506,6 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				expressionNatureProvider.setContext(context);
 			}
 		}
-		Set<Expression> filteredExpressions = getFilteredExpressions();
 		if (selectedExpression != null && ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
 			setProposalsFiltering(false);
 			autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_INSERT);
@@ -514,9 +513,19 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			autoCompletion.getContentProposalAdapter().setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 		}
 		autoCompletion.setContext(expressionNatureProvider.getContext());
+		final Set<Expression> filteredExpressions = getFilteredExpressions();
 		autoCompletion.setProposals(filteredExpressions.toArray(new Expression[filteredExpressions.size()]));
-		autoCompletion.setFilteredExpressionType(getFilteredExpressionType());
 		
+		final ArrayList<String> filteredExpressionType = getFilteredExpressionType();
+		autoCompletion.setFilteredExpressionType(filteredExpressionType);
+		if((filteredExpressionType.contains(ExpressionConstants.VARIABLE_TYPE) 
+				&& filteredExpressionType.contains(ExpressionConstants.PARAMETER_TYPE) 
+				&& filteredExpressions.isEmpty()) || (context == null || context.eResource() == null)){
+			contentAssistText.setProposalEnabled(false);
+		}
+		else {
+			contentAssistText.setProposalEnabled(true);
+		}
 	}
 
 	private ArrayList<String> getFilteredExpressionType() {
@@ -525,7 +534,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		final EObject input = expressionNatureProvider.getContext();
 		
 		Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-		if (filters != null && expressionNatureProvider != null) {
+		if (filters != null && expressionNatureProvider != null && input!=null) {
 			for (ViewerFilter viewerFilter : fitlers) {
 				exp.setType(ExpressionConstants.VARIABLE_TYPE);
 				if(!viewerFilter.select(this, input, exp)){
