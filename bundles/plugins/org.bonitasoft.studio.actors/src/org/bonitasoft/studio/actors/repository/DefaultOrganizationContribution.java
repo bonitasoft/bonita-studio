@@ -120,34 +120,37 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
     protected Users createUsers() {
         Users users = OrganizationFactory.eINSTANCE.createUsers() ;
         final EList<User> userList = users.getUser();
-        userList.add(createUser("Mr","william.jobs","William","Jobs","bpm","WilliamJobs@acme.com",null,"Chief Executive Officer")) ;
+        final String mr = "Mr";
+        final String mrs = "Mrs";
+        
+		userList.add(createUser(mr,"william.jobs","William","Jobs","bpm","WilliamJobs@acme.com",null,"Chief Executive Officer")) ;
+       
+		userList.add(createUser(mrs,"april.sanchez","April","Sanchez","bpm","AprilGSanchez@acme.com","helen.kelly","Compensation specialist")) ;
+        userList.add(createUser(mrs,"helen.kelly","Helen","Kelly","bpm","HelenKelly@acme.com","william.jobs","Human resource manager")) ;
+        userList.add(createUser(mr,"walter.bates","Walter","Bates","bpm","WalterRBates@acme.com","helen.kelly","Human resources benefits")) ;
 
-        userList.add(createUser("Mrs","april.sanchez","April","Sanchez","bpm","AprilGSanchez@acme.com","helen.kelly","Compensation specialist")) ;
-        userList.add(createUser("Mrs","helen.kelly","Helen","Kelly","bpm","HelenKelly@acme.com","william.jobs","Human resource manager")) ;
-        userList.add(createUser("Mr","walter.bates","Walter","Bates","bpm","WalterRBates@acme.com","helen.kelly","Human resources benefits")) ;
+        userList.add(createUser(mr,"zachary.williamson","Zachary","Williamson","bpm","ZacharyWilliamson@acme.com","william.jobs","Chief Financial Officer")) ;
+        userList.add(createUser(mr,"patrick.gardenier","Patrick","Gardenier","bpm","PatrickGardenier@acme.com","zachary.williamson","Financial controller")) ;
+        userList.add(createUser(mrs,"virginie.jomphe","Virgine","Jomphe","bpm","VirginieJomphe@acme.com","zachary.williamson","Accountant")) ;
+        userList.add(createUser(mr,"thorsten.hartmann","Thorsten","Hartmann","bpm","ThorstenHartmann@acme.com","zachary.williamson","Financial planning manager")) ;
 
-        userList.add(createUser("Mr","zachary.williamson","Zachary","Williamson","bpm","ZacharyWilliamson@acme.com","william.jobs","Chief Financial Officer")) ;
-        userList.add(createUser("Mr","patrick.gardenier","Patrick","Gardenier","bpm","PatrickGardenier@acme.com","zachary.williamson","Financial controller")) ;
-        userList.add(createUser("Mrs","virginie.jomphe","Virgine","Jomphe","bpm","VirginieJomphe@acme.com","zachary.williamson","Accountant")) ;
-        userList.add(createUser("Mr","thorsten.hartmann","Thorsten","Hartmann","bpm","ThorstenHartmann@acme.com","zachary.williamson","Financial planning manager")) ;
+        userList.add(createUser(mr,"jan.fisher","Jan","Fisher","bpm","JanFisher@acme.com","favio.riviera","Infrastucture specialist")) ;
 
-        userList.add(createUser("Mr","jan.fisher","Jan","Fisher","bpm","JanFisher@acme.com","favio.riviera","Infrastucture specialist")) ;
+        userList.add(createUser(mrs,"isabel.bleasdale","Isabel","Bleasdale","bpm","IsabelBleasdale@acme.com","favio.riviera","Product marketing manager")) ;
+        userList.add(createUser(mr,"favio.riviera","Favio","Rivera","bpm","FavioRivera@acme.com","william.jobs","Vice President of Marketing")) ;
 
-        userList.add(createUser("Mrs","isabel.bleasdale","Isabel","Bleasdale","bpm","IsabelBleasdale@acme.com","favio.riviera","Product marketing manager")) ;
-        userList.add(createUser("Mr","favio.riviera","Favio","Rivera","bpm","FavioRivera@acme.com","william.jobs","Vice President of Marketing")) ;
+        userList.add(createUser(mr,"michael.morrison","Michael","Morrison","bpm","MichaelMorrison@acme.com","william.jobs","Chief Technical Officer")) ;
+        userList.add(createUser(mr,"marc.marseau","Marc","Marseau","bpm","MarcMarseau@acme.com","michael.morrison","Engineer")) ;
+        userList.add(createUser(mr,"joseph.hovell","Joseph","Hovell","bpm","JosephHovell@acme.com","michael.morrison","Engineer")) ;
 
-        userList.add(createUser("Mr","michael.morrison","Michael","Morrison","bpm","MichaelMorrison@acme.com","william.jobs","Chief Technical Officer")) ;
-        userList.add(createUser("Mr","marc.marseau","Marc","Marseau","bpm","MarcMarseau@acme.com","michael.morrison","Engineer")) ;
-        userList.add(createUser("Mr","joseph.hovell","Joseph","Hovell","bpm","JosephHovell@acme.com","michael.morrison","Engineer")) ;
+        userList.add(createUser(mr,"mauro.zetticci","Mauro","Zetticci","bpm","MauroZetticci@acme.com","michael.morrison","Consultant")) ;
+        userList.add(createUser(mr,"thomas.wallis","Thomas","Wallis","bpm","ThomasWallis@acme.com","michael.morrison","Consultant")) ;
 
-        userList.add(createUser("Mr","mauro.zetticci","Mauro","Zetticci","bpm","MauroZetticci@acme.com","michael.morrison","Consultant")) ;
-        userList.add(createUser("Mr","thomas.wallis","Thomas","Wallis","bpm","ThomasWallis@acme.com","michael.morrison","Consultant")) ;
-
-        userList.add(createUser("Mrs","daniela.angelo","Daniela","Angelo","bpm","DanielaAngelo@acme.com","william.jobs","Vice President of Sales")) ;
-        userList.add(createUser("Mr","anthony.nichols","Anthony","Nichols","bpm","AnthonyNicholls@acme.com","daniela.angelo","Account manager")) ;
-        userList.add(createUser("Mrs","misa.kumagai","Misa","Kumagai","bpm","MisaKumagai@acme.com","daniela.angelo","Account manager")) ;
-        userList.add(createUser("Mr","norio.yamazaki","Norio","Yamazaki","bpm","NorioYamazaki@acme.com","daniela.angelo","Account manager")) ;
-        userList.add(createUser("Mrs","giovanna.almeida","Giovanna","Almeida","bpm","GiovannaRochaAlmeida@acme.com","daniela.angelo","Account manager")) ;
+        userList.add(createUser(mrs,"daniela.angelo","Daniela","Angelo","bpm","DanielaAngelo@acme.com","william.jobs","Vice President of Sales")) ;
+        userList.add(createUser(mr,"anthony.nichols","Anthony","Nichols","bpm","AnthonyNicholls@acme.com","daniela.angelo","Account manager")) ;
+        userList.add(createUser(mrs,"misa.kumagai","Misa","Kumagai","bpm","MisaKumagai@acme.com","daniela.angelo","Account manager")) ;
+        userList.add(createUser(mr,"norio.yamazaki","Norio","Yamazaki","bpm","NorioYamazaki@acme.com","daniela.angelo","Account manager")) ;
+        userList.add(createUser(mrs,"giovanna.almeida","Giovanna","Almeida","bpm","GiovannaRochaAlmeida@acme.com","daniela.angelo","Account manager")) ;
         return users;
     }
 
@@ -206,6 +209,7 @@ public class DefaultOrganizationContribution implements IFileStoreContribution {
         user.setPassword(createPassword(password)) ;
         user.setManager(manager);
         user.setJobTitle(jobTitle);
+        user.setEnabled(true);
         ContactData data = OrganizationFactory.eINSTANCE.createContactData();
         data.setEmail(username+"@acme.com");
         data.setAddress("Renwick Drive");

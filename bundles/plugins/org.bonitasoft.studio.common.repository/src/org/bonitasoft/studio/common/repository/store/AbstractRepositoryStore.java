@@ -95,6 +95,8 @@ public abstract class AbstractRepositoryStore<T extends IRepositoryFileStore> im
 
 	@Override
 	public final T importInputStream(String fileName,InputStream inputStream) {
+		Assert.isNotNull(inputStream);
+		Assert.isNotNull(fileName);
 		InputStream newIs = null;
 		try {
 			newIs = handlePreImport(fileName,inputStream);

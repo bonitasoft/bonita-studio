@@ -99,4 +99,9 @@ public class CustomTextDirectEditManager extends TextDirectEditManager {
             BonitaStudioLog.error(ex);
         }
     }
+    
+
+    public CellEditor getCellEditor() {
+    	return super.getCellEditor();
+    }
 }

@@ -28,7 +28,7 @@ public class SpecialCharactersValidator implements IValidator{
 	public IStatus validate(Object value) {
 		if (value!=null && value instanceof String){
 			String s = (String)value;
-			if (s.contains("'")|| s.contains("&") || s.contains("%") || s.contains("#") || s.contains("$")){
+			if (s.contains("&") || s.contains("%") || s.contains("#") || s.contains("$")){
 				return  ValidationStatus.error(Messages.InvalidCharacterError);
 			}
 		}

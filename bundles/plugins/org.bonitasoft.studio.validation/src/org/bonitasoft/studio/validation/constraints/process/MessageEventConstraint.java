@@ -108,14 +108,14 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
 											String eventKeyName = listExpression.getExpressions().get(0).getContent();
 											eventKeyList.add(eventKeyName);
 											if(!targetKeyList.contains(eventKeyName)){
-												String [] messageArgs = {eventKeyName,event.getName(),targetElemName};
+												final String [] messageArgs = {eventKeyName,event.getSource().getName(),targetElemName};
 												multi.add(ctx.createFailureStatus(Messages.bind(Messages.Validation_CorrelationKeyNotUsed, messageArgs)));
 											}
 										}
 									}
 									for (String eventKey : targetKeyList) {
 										if(!eventKeyList.contains(eventKey)){
-											String [] messageArgs = {eventKey,targetElemName,event.getName()};
+											final String [] messageArgs = {eventKey,targetElemName,event.getSource().getName()};
 											multi.add(ctx.createFailureStatus(Messages.bind(Messages.Validation_CorrelationKeyNotDefine, messageArgs)));
 										}
 									}

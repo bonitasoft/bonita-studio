@@ -677,7 +677,7 @@ public class DefinitionResourceProvider {
 			} else {
 				f = store.getResource().getLocation().toFile();
 			}
-			if (f != null && f.exists() && definition.getIcon() != null) {
+			if (f != null && f.exists() && definition.getIcon() != null && !definition.getIcon().isEmpty()) {
 				File iconFile = new File(f, definition.getIcon());
 				if (iconFile.exists()) {
 					try {

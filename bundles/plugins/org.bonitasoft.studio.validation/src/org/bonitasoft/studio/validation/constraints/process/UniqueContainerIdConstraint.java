@@ -17,6 +17,10 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
+import java.util.List;
+
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Element;
@@ -50,7 +54,18 @@ public class UniqueContainerIdConstraint extends AbstractLiveValidationMarkerCon
 					return ctx.createFailureStatus(new Object[] { Messages.Validation_Element_SameName + ": " + el.getName() });
 				}
 			}
+			
+			Pool p = (Pool) eObj;
+			final DiagramRepositoryStore diagramStore =  (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+			final List<AbstractProcess> allProcesses = diagramStore.getAllProcesses();
+			for (AbstractProcess other_p : allProcesses) {
+				if(!p.equals(other_p) && p.getName().equals(other_p.getName()) && p.getVersion().equals(other_p.getVersion())){
+					return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.Validation_Duplicate_Process , p.getName(), p.getVersion())});
+				}
+			}
 		}
+		
+		
 		return ctx.createSuccessStatus();
 	}
 
