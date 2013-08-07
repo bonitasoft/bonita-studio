@@ -58,9 +58,11 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	private ToolBar tb;
 	private boolean isReadOnly = false;
 	private List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<IBonitaContentProposalListener2>();
-
+	private boolean proposalEnabled;
+	
 	public ContentAssistText(Composite parent, IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
 		super(parent, SWT.NONE);
+		proposalEnabled = true;
 		Point margins = new Point(3, 3);
 		if ((style & SWT.BORDER) == 0){
 			drawBorder = false;
@@ -78,7 +80,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(margins).spacing(indent, 0).create());
 		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 
-
+		
 		textControl = new Text(this,style | SWT.SINGLE);
 		textControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		textControl.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
@@ -126,6 +128,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		tb = new ToolBar(this, SWT.FLAT | SWT.NO_FOCUS);
 		tb.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		tb.setLayoutData(GridDataFactory.swtDefaults().create());
+		tb.setEnabled(true);
 		final ToolItem ti = new ToolItem(tb, SWT.FLAT | SWT.NO_FOCUS);
 		ti.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_DROPDOWN);
 		ti.setImage(Pics.getImage("resize_S.gif"));
@@ -146,7 +149,6 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 				});
 			}
 		});
-
 		addPaintListener(new PaintListener() {
 
 			@Override
@@ -158,14 +160,21 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		});
 		autoCompletion = new AutoCompletionField(textControl, new TextContentAdapter(), contentProposalLabelProvider) ;
 	}
-
-
+	
+	public void setProposalEnabled(Boolean proposalEnabled){
+		this.proposalEnabled = proposalEnabled;
+		if(!proposalEnabled){
+			tb.setEnabled(false);
+		} else {
+			tb.setEnabled(true);
+		}
+	}
+	
 	protected void fireOpenProposalEvent() {
 		for(IBonitaContentProposalListener2 listener : contentAssistListerners){
 			listener.proposalPopupOpened(autoCompletion.getContentProposalAdapter());
 		}
 	}
-
 
 	protected void paintControlBorder(PaintEvent e) {
 		GC gc = e.gc;
@@ -185,7 +194,6 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 		}
 	}
 
-
 	public Text getTextControl() {
 		return textControl;
 	}
@@ -197,7 +205,6 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	public ToolBar getToolbar() {
 		return tb;
 	}
-
 
 	public void addContentAssistListener(IBonitaContentProposalListener2 listener) {
 		contentAssistListerners.add(listener);
