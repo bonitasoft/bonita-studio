@@ -13,7 +13,6 @@ package org.bonitasoft.studio.expression.editor.autocompletion;
 
 import java.util.ArrayList;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;

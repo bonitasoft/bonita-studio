@@ -525,7 +525,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		final EObject input = expressionNatureProvider.getContext();
 		
 		Expression exp = ExpressionFactory.eINSTANCE.createExpression();
-		if (filters != null && expressionNatureProvider != null) {
+		if (filters != null && expressionNatureProvider != null && input!=null) {
 			for (ViewerFilter viewerFilter : fitlers) {
 				exp.setType(ExpressionConstants.VARIABLE_TYPE);
 				if(!viewerFilter.select(this, input, exp)){
