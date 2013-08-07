@@ -273,7 +273,7 @@ public class GroovyUtil {
 		if(context instanceof Expression){
 			context = context.eContainer();
 		}
-		
+
 		if (context instanceof Activity) {
 			if (((Activity) context).isIsMultiInstance()) {
 				if(engineFilter != null){
@@ -572,18 +572,51 @@ public class GroovyUtil {
 	}
 
 
-	public static ScriptVariable createScriptVariable(final Expression e) {
+	public static ScriptVariable createScriptVariable(final Expression e, EObject context) {
 		if (org.bonitasoft.studio.common.ExpressionConstants.FORM_FIELD_TYPE
 				.equals(e.getType())) {
 			final Widget widget = (Widget) e.getReferencedElements().get(0);
 			ScriptVariable scriptVariable=createScriptVariable(widget);
 			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.FORM_FIELD_TYPE);
 			return scriptVariable;
-		} else if (org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE
-				.equals(e.getType())) {
+		} else if (org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE.equals(e.getType())) {
 			final Data data = (Data) e.getReferencedElements().get(0);
-			ScriptVariable scriptVariable=createScriptVariable(data);
-			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+			ScriptVariable scriptVariable= createScriptVariable(data);
+			AbstractProcess parentProcess = ModelHelper.getParentProcess(context);
+			boolean isProcessData = false;
+			if(parentProcess != null){
+				for(Data d : parentProcess.getData()){
+					if(d.getName().equals(data.getName())){
+						isProcessData = true;
+						break;
+					}
+				}
+				if(isProcessData){
+					scriptVariable.setCategory("process"+org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+				}else{
+					boolean isAPageflowData = false;
+					Form f = ModelHelper.getParentForm(context);
+					if(f != null && f.eContainer() instanceof PageFlow){
+						PageFlow flow =	(PageFlow) f.eContainer();
+						
+						for(Data d : flow.getTransientData()){
+							if(d.getName().equals(data.getName())){
+								isAPageflowData = true;
+								break;
+							}
+						}
+					}
+					if(isAPageflowData){
+						scriptVariable.setCategory("form"+org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+					}else{
+						scriptVariable.setCategory("step"+org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+					}
+				}
+			}else{
+				scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.VARIABLE_TYPE);
+			}
+			
+			
 			return scriptVariable;
 		} else if (org.bonitasoft.studio.common.ExpressionConstants.PARAMETER_TYPE
 				.equals(e.getType())) {
@@ -613,6 +646,10 @@ public class GroovyUtil {
 		}else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())) {
 			ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
 			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_TYPE);
+			return scriptVariable;
+		}else if (org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE.equals(e.getType())) {
+			ScriptVariable scriptVariable = new ScriptVariable(e.getContent(), e.getReturnType());
+			scriptVariable.setCategory(org.bonitasoft.studio.common.ExpressionConstants.DOCUMENT_REF_TYPE);
 			return scriptVariable;
 		}
 		return null;

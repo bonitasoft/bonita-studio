@@ -138,8 +138,12 @@ public class GroovyScriptExpressionEditor extends
 			return compareScriptVariableAndLabel(e1, e2);
 		} else if (e1 instanceof String && e2 instanceof String) {
 			return (e1.toString()).compareTo(e2.toString());
-		} else {
+		} else if(e1.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
+			return -1;
+		}else if(e2.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
 			return 1;
+		}else{
+			return 0;
 		}
 	}
 
@@ -180,8 +184,7 @@ public class GroovyScriptExpressionEditor extends
 			if (e1sv.getCategory().equals(e2sv.getCategory())) {
 				return e1sv.getName().compareToIgnoreCase(e2sv.getName());
 			} else {
-				return e1sv.getCategory().compareToIgnoreCase(
-						e2sv.getCategory());
+				return compareScriptVariableAndLabel(e1, e2sv.getCategory());
 			}
 		}
 	}

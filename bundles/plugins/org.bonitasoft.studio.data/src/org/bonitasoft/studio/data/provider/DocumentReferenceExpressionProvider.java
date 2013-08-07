@@ -90,7 +90,7 @@ public class DocumentReferenceExpressionProvider implements IExpressionProvider 
 
 	@Override
 	public boolean isRelevantFor(EObject context) {
-		return true;
+		return !getExpressions(context).isEmpty() ;
 	}
 
 	@Override
