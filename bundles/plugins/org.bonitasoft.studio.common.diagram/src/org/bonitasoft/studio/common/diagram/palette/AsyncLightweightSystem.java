@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.common.diagram.palette;
 
 import org.eclipse.draw2d.LightweightSystem;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -26,16 +27,27 @@ import org.eclipse.swt.widgets.Display;
 public class AsyncLightweightSystem extends LightweightSystem {
 
 
+	private Canvas canvas;
+
 	@Override
 	protected void controlResized() {
 		Display.getDefault().asyncExec(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				AsyncLightweightSystem.super.controlResized();
+				if(canvas != null && !canvas.isDisposed()){
+					AsyncLightweightSystem.super.controlResized();
+				}
 			}
+
 		});
-		
+
 	}
-	
+
+	@Override
+	public void setControl(Canvas c) {
+		super.setControl(c);
+		this.canvas = c;
+	}
+
 }
