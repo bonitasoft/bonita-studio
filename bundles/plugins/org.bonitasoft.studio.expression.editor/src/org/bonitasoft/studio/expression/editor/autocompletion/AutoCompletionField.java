@@ -3,6 +3,8 @@
  */
 package org.bonitasoft.studio.expression.editor.autocompletion;
 
+import java.util.ArrayList;
+
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
@@ -16,15 +18,12 @@ public class AutoCompletionField {
 	private final ExpressionProposalProvider contentProposalProvider;
 	private final BonitaContentProposalAdapter contentProposalAdapter;
 
-	public AutoCompletionField(final Control control,
-			final IControlContentAdapter controlContentAdapter,
+	public AutoCompletionField(final Control control, final IControlContentAdapter controlContentAdapter,
 			final IExpressionProposalLabelProvider proposalLabelProvider) {
 
-		contentProposalProvider = new ExpressionProposalProvider(
-				proposalLabelProvider);
+		contentProposalProvider = new ExpressionProposalProvider(proposalLabelProvider);
 		contentProposalProvider.setFiltering(true);
-		contentProposalAdapter = new BonitaContentProposalAdapter(control,
-				controlContentAdapter, contentProposalProvider, null, null);
+		contentProposalAdapter = new BonitaContentProposalAdapter(control, controlContentAdapter, contentProposalProvider,null, null);
 		contentProposalAdapter.setLabelProvider(new ExpressionLabelProvider() {
 			@Override
 			public String getText(Object expression) {
@@ -32,13 +31,10 @@ public class AutoCompletionField {
 			}
 		});
 		contentProposalAdapter.setPropagateKeys(true);
-		contentProposalAdapter
-				.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
-
+		contentProposalAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 	}
 
-	public void setExpressionProposalLabelProvider(
-			IExpressionProposalLabelProvider labelProvider) {
+	public void setExpressionProposalLabelProvider(IExpressionProposalLabelProvider labelProvider) {
 		contentProposalProvider.setLabelProvider(labelProvider);
 		// contentProposalAdapter.setContentProposalProvider(contentProposalProvider);
 	}
@@ -61,6 +57,10 @@ public class AutoCompletionField {
 
 	public void setContext(EObject context) {
 		contentProposalAdapter.setContext(context);
+	}
+
+	public void setFilteredExpressionType(ArrayList<String> filteredExpressionType) {
+		contentProposalAdapter.setFilteredExpressionType(filteredExpressionType);
 	}
 
 }
