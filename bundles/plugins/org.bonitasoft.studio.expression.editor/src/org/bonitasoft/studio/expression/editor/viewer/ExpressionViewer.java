@@ -520,7 +520,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		autoCompletion.setFilteredExpressionType(filteredExpressionType);
 		if((filteredExpressionType.contains(ExpressionConstants.VARIABLE_TYPE) 
 				&& filteredExpressionType.contains(ExpressionConstants.PARAMETER_TYPE) 
-				&& filteredExpressions.isEmpty()) || (context == null || context.eResource() == null)){
+				&& filteredExpressions.isEmpty())){
 			contentAssistText.setProposalEnabled(false);
 		}
 		else {
