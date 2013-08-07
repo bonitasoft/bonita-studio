@@ -344,7 +344,7 @@ public class TestConnectorMigrationUseCase {
 	
 	@Test
 	public void testSetBonitaVariableOnStartConnectorMigration() throws Exception {
-		final MainProcess mainProc = importBar("SetVariableOnStart--1.0.bar");
+		final MainProcess mainProc = importBar("SetVariableOnstart--1.0.bar");
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 0, connectors.size());
 
