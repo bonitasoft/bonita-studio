@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
@@ -36,14 +37,25 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils.WidgetEnum;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jdt.core.JavaConventions;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
+import org.eclipse.jface.databinding.swt.ISWTObservableValue;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardSelectionPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -65,305 +77,297 @@ import org.eclipse.swt.widgets.Text;
  */
 public class FormWizardPageVars extends WizardSelectionPage {
 
-    private HashMap<Button, WidgetEnum> checkBoxes;
-    private HashMap<Data, Button> dataToCheckBoxes;
-    private Text nameField;
-    private Text descField;
-    private Label idLabel;
-    private List<Data> datas;
-    private final Element pageFlow;
-    private final EStructuralFeature feature;
-    private List<Document> documents = null;
-    private HashMap<Document, Button> documentToCheckboxes;
+	private HashMap<Button, WidgetEnum> checkBoxes;
+	private HashMap<Data, Button> dataToCheckBoxes;
+	private Text nameField;
+	private Text descField;
+	private List<Data> datas;
+	private final Element pageFlow;
+	private final EStructuralFeature feature;
+	private List<Document> documents = null;
+	private HashMap<Document, Button> documentToCheckboxes;
+	private DataBindingContext databindingContext;
+	private String formName;
 
 
-    /**
-     * create a new instance of FormWizardPageVars with it's linked FormsSection
-     * 
-     * @param wizard
-     */
-    public FormWizardPageVars(Element pageFlow2, EStructuralFeature feature) {
-        super("vars"); //$NON-NLS-1$
-        pageFlow = pageFlow2;
-        this.feature = feature;
-        setTitle(Messages.createForm_title);
-        setDescription(Messages.createForm_desc);
-        setImageDescriptor(Pics.getWizban());
-        datas = getDatas();
-        final AbstractProcess parentProcess = ModelHelper.getParentProcess(pageFlow2);
-        if(parentProcess instanceof Pool){
-            documents = ((Pool) parentProcess).getDocuments();
-        }
-        setPageComplete(true);
-    }
 
-    @Override
-    public void createControl(Composite parent) {
-        // main composite
-        Composite composite = new Composite(parent, SWT.NONE);
-        composite.setLayout(new GridLayout(1, false));
 
-        // ----- TOP
-        Composite topComposite = new Composite(composite, SWT.NONE);
-        topComposite.setLayout(new GridLayout(2, false));
-        topComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+	/**
+	 * create a new instance of FormWizardPageVars with it's linked FormsSection
+	 * 
+	 * @param wizard
+	 */
+	public FormWizardPageVars(Element pageFlow2, EStructuralFeature feature) {
+		super("vars"); //$NON-NLS-1$
+		pageFlow = pageFlow2;
+		this.feature = feature;
+		setTitle(Messages.createForm_title);
+		setDescription(Messages.createForm_desc);
+		setImageDescriptor(Pics.getWizban());
+		datas = getDatas();
+		final AbstractProcess parentProcess = ModelHelper.getParentProcess(pageFlow2);
+		if(parentProcess instanceof Pool){
+			documents = ((Pool) parentProcess).getDocuments();
+		}
+	}
 
-        GridData labelLayoutData = new GridData(SWT.LEFT, SWT.CENTER, false, false);
-        GridData textWidgetData = new GridData(SWT.FILL, SWT.TOP, true, false);
-        // ----------- name
+	@Override
+	public void createControl(Composite parent) {
+		databindingContext = new DataBindingContext();
+		// main composite
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout(1, false));
 
-        Label nameLabel = new Label(topComposite, SWT.LEFT);
-        nameLabel.setLayoutData(labelLayoutData);
-        nameLabel.setText(Messages.GeneralSection_Name);
+		// ----- TOP
+		Composite topComposite = new Composite(composite, SWT.NONE);
+		topComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(10, 5).create());
+		topComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-        Composite nameAndId = new Composite(topComposite, SWT.NONE);
-        nameAndId.setLayout(new GridLayout(2, false));
-        nameAndId.setLayoutData(textWidgetData);
+		Label nameLabel = new Label(topComposite, SWT.LEFT);
+		nameLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create());
+		nameLabel.setText(Messages.GeneralSection_Name);
 
-        nameField = new Text(nameAndId, SWT.BORDER);
-        nameField.setText(generateDefaultFormName());
-        GridData rd = new GridData(SWT.NONE, SWT.CENTER, false, false);
-        rd.widthHint = 150;
-        rd.grabExcessVerticalSpace = true;
-        rd.horizontalIndent = -5;
-        nameField.setLayoutData(rd);
 
-        GridData rd1 = new GridData(SWT.NONE, SWT.CENTER, false, false);
-        rd1.grabExcessVerticalSpace = false;
-        rd1.widthHint = 200;
+		nameField = new Text(topComposite, SWT.BORDER);
+		formName = generateDefaultFormName();
+		nameField.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		UpdateValueStrategy stratetgy = new UpdateValueStrategy();
+		stratetgy.setAfterGetValidator(new IValidator() {
 
-        idLabel = new Label(nameAndId, SWT.LEFT);
-        idLabel.setText("(" + NamingUtils.convertToId(nameField.getText(), null) + ")"); //$NON-NLS-1$//$NON-NLS-2$
-        idLabel.setLayoutData(rd1);
-        nameField.addModifyListener(new ModifyListener() {
+			public IStatus validate(Object value) {
+				return JavaConventions.validateFieldName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
+			}
+		}) ;
+		stratetgy.setBeforeSetValidator(new InputLengthValidator(Messages.name, 50)) ;
+		ISWTObservableValue observeText = SWTObservables.observeText(nameField, SWT.Modify);
+		observeText.addValueChangeListener(new IValueChangeListener() {
+			
+			@Override
+			public void handleValueChange(ValueChangeEvent event) {
+				getContainer().updateButtons();
+			}
+		});
+		ControlDecorationSupport.create(databindingContext.bindValue(observeText, PojoProperties.value("formName").observe(this),stratetgy,null), SWT.LEFT,topComposite);
+		
+		// ------------ Description
+		Label descLabel = new Label(topComposite, SWT.LEFT);
+		descLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.TOP).create());
+		descLabel.setText(Messages.GeneralSection_Description);
+		descField = new Text(topComposite, SWT.MULTI + SWT.BORDER);
+		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		gd.heightHint = 45;
+		descField.setLayoutData(gd);
+		descField.setText(""); //$NON-NLS-1$
 
-            @Override
-            public void modifyText(ModifyEvent e) {
-                idLabel.setText("(" + NamingUtils.convertToId(nameField.getText(), null) + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (datas.size() + documents.size() > 0) {
+			Group datasGrp = new Group(composite, SWT.NONE);
+			datasGrp.setText(Messages.FormsSection_wizardVarsGroup_Title);
+			datasGrp.setToolTipText(Messages.FormsSection_wizardVarsGroup_Tooltip);
+			datasGrp.setLayout(new GridLayout(1, false));
+			datasGrp.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
+			datasGrp.setSize(datasGrp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+			// --------------select unselect
+			Composite selectUnselect = new Composite(datasGrp, SWT.NONE);
+			selectUnselect.setLayout(new GridLayout(2, false));
+			selectUnselect.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+			// ------------------select
+			Button selectB = new Button(selectUnselect, SWT.FLAT);
+			selectB.setText(Messages.selectAll);
+			selectB.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
 
-            }
-        });
+					for (Button button : checkBoxes.keySet()) {
+						button.setSelection(true);
+					}
+				}
+			});
+			// ------------------unselect
+			Button unSelectB = new Button(selectUnselect, SWT.FLAT);
+			unSelectB.setText(Messages.unselectAll);
+			unSelectB.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
 
-        // ------------ Description
-        Label descLabel = new Label(topComposite, SWT.LEFT);
-        descLabel.setLayoutData(labelLayoutData);
-        descLabel.setText(Messages.GeneralSection_Description);
-        descField = new Text(topComposite, SWT.MULTI + SWT.BORDER);
-        GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-        gd.heightHint = 45;
-        descField.setLayoutData(gd);
-        descField.setText(""); //$NON-NLS-1$
+					for (Button button : checkBoxes.keySet()) {
+						button.setSelection(false);
+					}
+				}
+			});
 
-        if (datas.size() + documents.size() > 0) {
+			// --------- FIELD Section
+			ScrolledComposite scrolledCompo = new ScrolledComposite(datasGrp,SWT.H_SCROLL | SWT.V_SCROLL);
+			scrolledCompo.setLayout(new FillLayout());
+			/*Need to limit the layout data height of the scrolledcomposite otherwise it will be grab all spaces that it need
+			 * and will be higher than the containing shell*/
+			scrolledCompo.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(SWT.DEFAULT, 150).create());
 
-            Group datasGrp = new Group(composite, SWT.NONE);
-            datasGrp.setText(Messages.FormsSection_wizardVarsGroup_Title);
-            datasGrp.setToolTipText(Messages.FormsSection_wizardVarsGroup_Tooltip);
-            datasGrp.setLayout(new GridLayout(1, false));
-            datasGrp.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
-            datasGrp.setSize(datasGrp.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-            // --------------select unselect
-            Composite selectUnselect = new Composite(datasGrp, SWT.NONE);
-            selectUnselect.setLayout(new GridLayout(2, false));
-            selectUnselect.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
-            // ------------------select
-            Button selectB = new Button(selectUnselect, SWT.FLAT);
-            selectB.setText(Messages.selectAll);
-            selectB.addListener(SWT.Selection, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
+			Composite scrollable = new Composite(scrolledCompo, SWT.NONE);
+			scrollable.setLayout(new GridLayout(2, false));
+			scrollable.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+			// --------------- fields
+			checkBoxes = new HashMap<Button, WidgetEnum>();
+			dataToCheckBoxes = new HashMap<Data, Button>();
+			for (Data data : datas) {
+				Button checkbox = new Button(scrollable, SWT.CHECK);
+				checkbox.setText(data.getName());
+				dataToCheckBoxes.put(data, checkbox);
+				EClass dataEClass = data.getDataType().eClass();
+				Label label = new Label(scrollable, SWT.LEFT);
+				StringBuilder labelText = new StringBuilder();
+				labelText.append("-> ");
+				if (data.isMultiple()) {
+					labelText.append(Messages.multipleWidget);
+				}
+				// TODO type should not be hard coded
+				if (dataEClass.equals(ProcessPackage.Literals.STRING_TYPE) ) {
+					labelText.append(Messages.FormsSection_widgetTypeText);
+					checkBoxes.put(checkbox, WidgetEnum.TEXT);
+				} else if (dataEClass.equals(ProcessPackage.Literals.BOOLEAN_TYPE)) {
+					labelText.append(Messages.FormsSection_widgetTypeCheckBox);
+					checkBoxes.put(checkbox, WidgetEnum.CHECKBOX);
+				} else if (dataEClass.equals(ProcessPackage.Literals.INTEGER_TYPE)) {
+					labelText.append(Messages.FormsSection_widgetTypeText);
+					checkBoxes.put(checkbox, WidgetEnum.TEXT);
+				} else if (dataEClass.equals(ProcessPackage.Literals.DATE_TYPE)) {
+					labelText.append(Messages.FormsSection_widgetTypeDate);
+					checkBoxes.put(checkbox, WidgetEnum.DATE);
+				} else if (dataEClass.equals(ProcessPackage.Literals.FLOAT_TYPE)) {
+					labelText.append(Messages.FormsSection_widgetTypeText);
+					checkBoxes.put(checkbox, WidgetEnum.TEXT);
+				} else if (dataEClass.equals(ProcessPackage.Literals.ENUM_TYPE)) {
+					labelText.append(Messages.FormsSection_widgetTypeRadio);
+					checkBoxes.put(checkbox, WidgetEnum.RADIO);
+				} else {
+					labelText.append(Messages.FormsSection_widgetTypeText);
+					checkBoxes.put(checkbox, WidgetEnum.TEXT);
+				}
 
-                    for (Button button : checkBoxes.keySet()) {
-                        button.setSelection(true);
-                    }
-                }
-            });
-            // ------------------unselect
-            Button unSelectB = new Button(selectUnselect, SWT.FLAT);
-            unSelectB.setText(Messages.unselectAll);
-            unSelectB.addListener(SWT.Selection, new Listener() {
-                @Override
-                public void handleEvent(Event event) {
+				if (data.isMultiple()) {
+					if (dataEClass.equals(ProcessPackage.Literals.BOOLEAN_TYPE)) {
+						checkBoxes.put(checkbox, WidgetEnum.CHECKBOX_LIST);
+					} else {
+						checkBoxes.put(checkbox, WidgetEnum.LIST);
+					}
+				}
 
-                    for (Button button : checkBoxes.keySet()) {
-                        button.setSelection(false);
-                    }
-                }
-            });
+				label.setText(labelText.toString());
 
-            // --------- FIELD Section
-            ScrolledComposite scrolledCompo = new ScrolledComposite(datasGrp,SWT.H_SCROLL | SWT.V_SCROLL);
-            scrolledCompo.setLayout(new FillLayout());
-            /*Need to limit the layout data height of the scrolledcomposite otherwise it will be grab all spaces that it need
-             * and will be higher than the containing shell*/
-            scrolledCompo.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).hint(SWT.DEFAULT, 150).create());
+			}
+			documentToCheckboxes = new HashMap<Document, Button>();
+			if(documents != null){
+				for (Document document : documents) {
+					Button checkbox = new Button(scrollable, SWT.CHECK);
+					checkbox.setText(NamingUtils.convertToId(document.getName()));
+					documentToCheckboxes.put(document, checkbox);
+					Label label = new Label(scrollable, SWT.LEFT);
+					StringBuilder labelText = new StringBuilder();
+					labelText.append("-> ");
+					labelText.append(Messages.FormsSection_widgetTypeFile);
+					label.setText(labelText.toString());
+					checkBoxes.put(checkbox, WidgetEnum.FILE);
+				}
+			}
 
-            Composite scrollable = new Composite(scrolledCompo, SWT.NONE);
-            scrollable.setLayout(new GridLayout(2, false));
-            scrollable.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-            // --------------- fields
-            checkBoxes = new HashMap<Button, WidgetEnum>();
-            dataToCheckBoxes = new HashMap<Data, Button>();
-            for (Data data : datas) {
-                Button checkbox = new Button(scrollable, SWT.CHECK);
-                checkbox.setText(data.getName());
-                dataToCheckBoxes.put(data, checkbox);
-                EClass dataEClass = data.getDataType().eClass();
-                Label label = new Label(scrollable, SWT.LEFT);
-                StringBuilder labelText = new StringBuilder();
-                labelText.append("-> ");
-                if (data.isMultiple()) {
-                    labelText.append(Messages.multipleWidget);
-                }
-                // TODO type should not be hard coded
-                if (dataEClass.equals(ProcessPackage.Literals.STRING_TYPE) ) {
-                    labelText.append(Messages.FormsSection_widgetTypeText);
-                    checkBoxes.put(checkbox, WidgetEnum.TEXT);
-                } else if (dataEClass.equals(ProcessPackage.Literals.BOOLEAN_TYPE)) {
-                    labelText.append(Messages.FormsSection_widgetTypeCheckBox);
-                    checkBoxes.put(checkbox, WidgetEnum.CHECKBOX);
-                } else if (dataEClass.equals(ProcessPackage.Literals.INTEGER_TYPE)) {
-                    labelText.append(Messages.FormsSection_widgetTypeText);
-                    checkBoxes.put(checkbox, WidgetEnum.TEXT);
-                } else if (dataEClass.equals(ProcessPackage.Literals.DATE_TYPE)) {
-                    labelText.append(Messages.FormsSection_widgetTypeDate);
-                    checkBoxes.put(checkbox, WidgetEnum.DATE);
-                } else if (dataEClass.equals(ProcessPackage.Literals.FLOAT_TYPE)) {
-                    labelText.append(Messages.FormsSection_widgetTypeText);
-                    checkBoxes.put(checkbox, WidgetEnum.TEXT);
-                } else if (dataEClass.equals(ProcessPackage.Literals.ENUM_TYPE)) {
-                    labelText.append(Messages.FormsSection_widgetTypeRadio);
-                    checkBoxes.put(checkbox, WidgetEnum.RADIO);
-                } else {
-                    labelText.append(Messages.FormsSection_widgetTypeText);
-                    checkBoxes.put(checkbox, WidgetEnum.TEXT);
-                }
+			// TODO add choices between more widget types (combo boxes)
+			for (Button button : checkBoxes.keySet()) {
+				button.setSelection(true);
+			}
 
-                if (data.isMultiple()) {
-                    if (dataEClass.equals(ProcessPackage.Literals.BOOLEAN_TYPE)) {
-                        checkBoxes.put(checkbox, WidgetEnum.CHECKBOX_LIST);
-                    } else {
-                        checkBoxes.put(checkbox, WidgetEnum.LIST);
-                    }
-                }
+			/*Add settings of the scrolled composite*/
+			scrolledCompo.setMinSize(scrollable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+			scrolledCompo.setAlwaysShowScrollBars(false);
+			scrolledCompo.setExpandHorizontal(true);
+			scrolledCompo.setExpandVertical(true);
+			scrolledCompo.setContent(scrollable);
+		} else {
+			Label title = new Label(composite, SWT.CENTER);
+			title.setText(Messages.createForm_noData);
+		}
 
-                label.setText(labelText.toString());
+		setControl(composite);
 
-            }
-            documentToCheckboxes = new HashMap<Document, Button>();
-            if(documents != null){
-                for (Document document : documents) {
-                    Button checkbox = new Button(scrollable, SWT.CHECK);
-                    checkbox.setText(NamingUtils.convertToId(document.getName()));
-                    documentToCheckboxes.put(document, checkbox);
-                    Label label = new Label(scrollable, SWT.LEFT);
-                    StringBuilder labelText = new StringBuilder();
-                    labelText.append("-> ");
-                    labelText.append(Messages.FormsSection_widgetTypeFile);
-                    label.setText(labelText.toString());
-                    checkBoxes.put(checkbox, WidgetEnum.FILE);
-                }
-            }
+	}
 
-            // TODO add choices between more widget types (combo boxes)
-            for (Button button : checkBoxes.keySet()) {
-                button.setSelection(true);
-            }
+	private String generateDefaultFormName() {
+		String baseName = pageFlow.getName();
 
-            /*Add settings of the scrolled composite*/
-            scrolledCompo.setMinSize(scrollable.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-            scrolledCompo.setAlwaysShowScrollBars(false);
-            scrolledCompo.setExpandHorizontal(true);
-            scrolledCompo.setExpandVertical(true);
-            scrolledCompo.setContent(scrollable);
-        } else {
-            Label title = new Label(composite, SWT.CENTER);
-            title.setText(Messages.createForm_noData);
-        }
+		int i = ((List<?>) pageFlow.eGet(feature)).size();
+		for (Iterator<?> iterator = ((List<?>) pageFlow.eGet(feature)).iterator(); iterator.hasNext();) {
+			Form form = (Form) iterator.next();
+			if(! form.getName().equals(baseName+i)){
+				return baseName+(i<=0?"":"_"+i);
+			}
 
-        setControl(composite);
+		}
+		return baseName+(i<=0?"":"_"+i);
+	}
 
-    }
+	/**
+	 * get all datas in the process and the current task
+	 * 
+	 * @return
+	 */
+	private List<Data> getDatas() {
+		datas = new ArrayList<Data>();
+		if(pageFlow instanceof PageFlow){
+			List<Data> allData = ModelHelper.getAccessibleDataInFormsWithNoRestriction(pageFlow, feature);
+			for (Data data : allData) {
+				EClass eClassData = data.getDataType().eClass();
+				if(!ProcessPackage.eINSTANCE.getJavaType().isSuperTypeOf(eClassData)
+						&& !ProcessPackage.eINSTANCE.getXMLType().isSuperTypeOf(eClassData)) {
+					datas.add(data);
+				}
+			}
+		}
+		return datas;
+	}
 
-    private String generateDefaultFormName() {
-        String baseName = pageFlow.getName();
+	/**
+	 * @return the list of vars with a widget type to create a form with
+	 */
+	public Map<Element, FormsUtils.WidgetEnum> getFormFields() {
+		Map<Element, FormsUtils.WidgetEnum> result = new HashMap<Element, FormsUtils.WidgetEnum>();
+		for (Data data : getDatas()) {
+			if (dataToCheckBoxes.get(data) != null && dataToCheckBoxes.get(data).getSelection()) {// check
+				// if
+				// the
+				// data
+				// is selected
+				result.put(data, checkBoxes.get(dataToCheckBoxes.get(data)));
+				// put in the result the data
+				// + the widget type
+			}
+		}
+		if(documents != null){
+			for(Document document : documents){
+				if (documentToCheckboxes.get(document) != null && documentToCheckboxes.get(document).getSelection()) {// check
+					result.put(document, checkBoxes.get(documentToCheckboxes.get(document)));
+				}
+			}
+		}
+		return result;
+	}
 
-        int i = ((List<?>) pageFlow.eGet(feature)).size();
-        for (Iterator<?> iterator = ((List<?>) pageFlow.eGet(feature)).iterator(); iterator.hasNext();) {
-            Form form = (Form) iterator.next();
-            if(! form.getName().equals(baseName+i)){
-                return baseName+(i<=0?"":"_"+i);
-            }
+	@Override
+	public boolean isPageComplete() {
+		return JavaConventions.validateFieldName(nameField.getText(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6).isOK()
+				&& new InputLengthValidator(Messages.name, 50).validate(nameField.getText()).isOK();
+	}
 
-        }
-        return baseName+(i<=0?"":"_"+i);
-    }
+	/**
+	 * @return
+	 */
+	public String getdescField() {
+		return descField.getText();
+	}
 
-    /**
-     * get all datas in the process and the current task
-     * 
-     * @return
-     */
-    private List<Data> getDatas() {
-        datas = new ArrayList<Data>();
-        if(pageFlow instanceof PageFlow){
-            List<Data> allData = ModelHelper.getAccessibleDataInFormsWithNoRestriction(pageFlow, feature);
-            for (Data data : allData) {
-                EClass eClassData = data.getDataType().eClass();
-                if(!ProcessPackage.eINSTANCE.getJavaType().isSuperTypeOf(eClassData)
-                        && !ProcessPackage.eINSTANCE.getXMLType().isSuperTypeOf(eClassData)) {
-                    datas.add(data);
-                }
-            }
-        }
-        return datas;
-    }
+	public String getFormName() {
+		return formName;
+	}
 
-    /**
-     * @return the list of vars with a widget type to create a form with
-     */
-    public Map<Element, FormsUtils.WidgetEnum> getFormFields() {
-        Map<Element, FormsUtils.WidgetEnum> result = new HashMap<Element, FormsUtils.WidgetEnum>();
-        for (Data data : getDatas()) {
-            if (dataToCheckBoxes.get(data) != null && dataToCheckBoxes.get(data).getSelection()) {// check
-                // if
-                // the
-                // data
-                // is selected
-                result.put(data, checkBoxes.get(dataToCheckBoxes.get(data)));
-                // put in the result the data
-                // + the widget type
-            }
-        }
-        if(documents != null){
-            for(Document document : documents){
-                if (documentToCheckboxes.get(document) != null && documentToCheckboxes.get(document).getSelection()) {// check
-                    result.put(document, checkBoxes.get(documentToCheckboxes.get(document)));
-                }
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public boolean isPageComplete() {
-
-        return super.isPageComplete();
-    }
-
-    /**
-     * @return
-     */
-    public String getNameField() {
-        return nameField.getText();
-    }
-
-    /**
-     * @return
-     */
-    public String getdescField() {
-        return descField.getText();
-    }
-
+	public void setFormName(String name) {
+		this.formName = name;
+	}
 
 }

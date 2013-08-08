@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.data.provider.DataExpressionNatureProviderForFormOutput;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
+import org.bonitasoft.studio.expression.editor.operation.PropertyOperationsComposite;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -69,7 +70,7 @@ public class FormActionsPropertySection extends AbstractBonitaDescriptionSection
 				ExpressionConstants.DOCUMENT_REF_TYPE
 		}) ;
 
-		final OperationsComposite operationsComposite = new OperationsComposite(tabbedPropertySheetPage, mainComposite, actionFilter, storageFilter);
+		final OperationsComposite operationsComposite = new PropertyOperationsComposite(tabbedPropertySheetPage, mainComposite, actionFilter, storageFilter);
 		operationsComposite.setStorageExpressionNatureContentProvider(new DataExpressionNatureProviderForFormOutput());
 		return operationsComposite;
 	}
