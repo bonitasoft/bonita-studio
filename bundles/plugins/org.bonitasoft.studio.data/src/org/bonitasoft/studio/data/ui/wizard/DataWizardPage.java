@@ -214,8 +214,7 @@ public class DataWizardPage extends WizardPage {
 
 			updateMoreSection(newType);
 			updateBrowseXMLButton(newType);
-			//final Shell s = getShell();
-			if(mainComposite != null){
+			if(mainComposite != null && !mainComposite.isDisposed()){
 				final Composite parent = mainComposite.getParent();
 				final Point defaultSize = parent.getSize();
 				final Point size = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
