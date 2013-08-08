@@ -62,7 +62,7 @@ public class SelectFormWizard extends Wizard {
      * 
      */
     protected boolean createForm() {
-        String name = pageVars.getNameField();
+        String name = pageVars.getFormName();
         pageVars.setMessage(null);
         boolean allreadyExists = false;
         for (Iterator<?> iterator = ((List<?>)pageFlow.eGet(feature)).iterator(); iterator.hasNext();) {
