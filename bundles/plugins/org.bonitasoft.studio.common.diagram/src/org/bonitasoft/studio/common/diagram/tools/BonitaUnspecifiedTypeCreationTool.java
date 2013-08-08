@@ -547,5 +547,10 @@ public class BonitaUnspecifiedTypeCreationTool extends UnspecifiedTypeCreationTo
 			}
 		}
 	}
+	
+	@Override
+	protected boolean handleDoubleClick(int button) {
+		return false;
+	}
 
 }
