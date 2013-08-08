@@ -23,6 +23,7 @@ import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditorPlugin;
 import org.bonitasoft.studio.preferences.extension.IPreferenceFieldEditorContribution;
 import org.eclipse.gmf.runtime.common.ui.preferences.ComboFieldEditor;
@@ -151,12 +152,12 @@ private class DoubleFieldEditor extends StringFieldEditor {
 	private String RULER_UNITS_CM_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerUnits_cm_label;
 	private String RULER_UNITS_PIXEL_LABEL = DiagramUIMessages.GridRulerPreferencePage_rulerUnits_pixel_label;
 
-	private String GRID_GROUP_LABEL = DiagramUIMessages.GridRulerPreferencePage_gridGroup_label;
-	private String SHOW_GRID_LABEL = DiagramUIMessages.GridRulerPreferencePage_showGrid_label;
-	private String SNAP_TO_GRID_LABEL = DiagramUIMessages.GridRulerPreferencePage_snapToGrid_label;
-	private String SNAP_TO_GEOMETRY_LABEL = DiagramUIMessages.GridRulerPreferencePage_snapToGeometry_label;
+	private String GRID_GROUP_LABEL = Messages.GridRulerPreferencePage_gridGroup_label;
+	private String SHOW_GRID_LABEL = Messages.GridRulerPreferencePage_showGrid_label;
+	private String SNAP_TO_GRID_LABEL = Messages.GridRulerPreferencePage_snapToGrid_label;
+	private String SNAP_TO_GEOMETRY_LABEL = Messages.GridRulerPreferencePage_snapToGeometry_label;
 	private String GRID_SPACING_LABEL_INCHES = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label_inches;
-    private String GRID_SPACING_LABEL_CM = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label_cm;
+    private String GRID_SPACING_LABEL_CM = Messages.GridRulerPreferencePage_gridSpacing_label_cm;
     private String GRID_SPACING_LABEL_PIXELS = DiagramUIMessages.GridRulerPreferencePage_gridSpacing_label_pixels;
     
 	
