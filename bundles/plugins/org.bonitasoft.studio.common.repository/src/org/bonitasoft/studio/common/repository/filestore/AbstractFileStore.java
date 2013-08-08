@@ -151,7 +151,7 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     final public IWorkbenchPart open() {
         fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_OPEN, this)) ;
         activePart = doOpen() ;
-        if(activePart != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && 	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
+        if(activePart != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null && PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(this) ;
         }
         fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_OPEN, this)) ;
