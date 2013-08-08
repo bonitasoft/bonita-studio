@@ -52,17 +52,9 @@ public class OpenSpecificProcessAction implements IIntroAction {
 			fileName = params.getProperty("file");
 		}
 		
-		final IEditorReference openEditor = getOpenEditor(fileName);
+		final IEditorReference openEditor = PlatformUtil.getOpenEditor(fileName);
 		if(openEditor!=null){
-			if(PlatformUtil.isIntroOpen()){
-				PlatformUtil.closeIntro();
-			}
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().setActivePage(openEditor.getPage());	
-			try {
-				openEditor.getPage().openEditor(openEditor.getEditorInput(), openEditor.getId());
-			} catch (PartInitException e) {
-				e.printStackTrace();
-			}			
+			PlatformUtil.swtichToOpenedEditor(openEditor);
 		} else {
 			DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager
 					.getInstance().getCurrentRepository()
@@ -72,21 +64,6 @@ public class OpenSpecificProcessAction implements IIntroAction {
 		}
 	}
 	
-	private IEditorReference getOpenEditor(String editorName){
-		IEditorReference openEditor = null;
-		if(PlatformUI.isWorkbenchRunning()){
-			final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if(activePage != null){
-				final IEditorReference[] editors = activePage.getEditorReferences();
-				for (IEditorReference iEditorReference : editors) {
-					if(iEditorReference.getName().equals(editorName)){
-						openEditor = iEditorReference;
-						break;
-					}
-				}
-			}
-		}
-		return openEditor;
-	}
+	
 
 }
