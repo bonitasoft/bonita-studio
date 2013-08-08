@@ -17,11 +17,20 @@
  */
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.wizard.Wizard;
 
@@ -32,37 +41,75 @@ import org.eclipse.jface.wizard.Wizard;
 public class SelectConnectorConfigurationWizard extends Wizard  {
 
 
-    private final ConnectorConfiguration currentConfiguraiton;
-    private SelectConnectorConfigurationWizardPage page;
-    private final IRepositoryStore<? extends IRepositoryFileStore> configurationStore;
+	private final ConnectorConfiguration currentConfiguraiton;
+	private SelectConnectorConfigurationWizardPage page;
+	private final IRepositoryStore<? extends IRepositoryFileStore> configurationStore;
 
-    public SelectConnectorConfigurationWizard(ConnectorConfiguration currentConfiguraiton,IRepositoryStore<? extends IRepositoryFileStore> configurationStore) {
-        setDefaultPageImageDescriptor(Pics.getWizban()) ;
-        this.currentConfiguraiton = currentConfiguraiton ;
-        this.configurationStore = configurationStore ;
-    }
-
-
-    @Override
-    public void addPages() {
-        page = new SelectConnectorConfigurationWizardPage(currentConfiguraiton,configurationStore);
-        addPage(page);
-    }
+	public SelectConnectorConfigurationWizard(ConnectorConfiguration currentConfiguraiton,IRepositoryStore<? extends IRepositoryFileStore> configurationStore) {
+		setDefaultPageImageDescriptor(Pics.getWizban()) ;
+		this.currentConfiguraiton = currentConfiguraiton ;
+		this.configurationStore = configurationStore ;
+	}
 
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
-    @Override
-    public boolean performFinish() {
-        ConnectorConfiguration selectedConfiguration =  page.getSelectedConfiguration() ;
-        currentConfiguraiton.getParameters().clear() ;
-        for(ConnectorParameter parameter : selectedConfiguration.getParameters()){
-            currentConfiguraiton.getParameters().add(EcoreUtil.copy(parameter)) ;
-        }
-        return true;
-    }
+	@Override
+	public void addPages() {
+		page = new SelectConnectorConfigurationWizardPage(currentConfiguraiton,configurationStore);
+		addPage(page);
+	}
 
 
-
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
+	 */
+	@Override
+	public boolean performFinish() {
+		ConnectorConfiguration selectedConfiguration =  page.getSelectedConfiguration() ;
+		currentConfiguraiton.getParameters().clear() ;
+		for(ConnectorParameter parameter : selectedConfiguration.getParameters()){
+			ConnectorParameter newParam = EcoreUtil.copy(parameter);
+			for(EObject exp : ModelHelper.getAllItemsOfType(newParam, ExpressionPackage.Literals.EXPRESSION)){
+				Expression expression = (Expression) exp;
+				if(!expression.getReferencedElements().isEmpty()){
+					expression.getReferencedElements().clear();
+				}
+				if(ExpressionConstants.VARIABLE_TYPE.equals(expression.getType())){
+					for(Data d : ModelHelper.getAccessibleData(currentConfiguraiton)){
+						if(d.getName().equals(expression.getContent())){
+							expression.getReferencedElements().add(EcoreUtil.copy(d));
+							break;
+						}
+					}
+					if(expression.getReferencedElements().isEmpty()){
+						expression.setType(ExpressionConstants.CONSTANT_TYPE);
+					}
+				}else if(ExpressionConstants.PARAMETER_TYPE.equals(expression.getType())){
+					for(Parameter p : ModelHelper.getParentProcess(currentConfiguraiton).getParameters()){
+						if(p.getName().equals(expression.getContent())){
+							expression.getReferencedElements().add(EcoreUtil.copy(p));
+							break;
+						}
+					}
+					if(expression.getReferencedElements().isEmpty()){
+						expression.setType(ExpressionConstants.CONSTANT_TYPE);
+					}
+				}else if(ExpressionConstants.FORM_FIELD_TYPE.equals(expression.getType())){
+					Form parentForm = ModelHelper.getParentForm(currentConfiguraiton);
+					if(parentForm != null){
+						for(Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(parentForm)){
+							if(("field_"+w.getName()).equals(expression.getContent())){
+								expression.getReferencedElements().add(EcoreUtil.copy(w));
+								break;
+							}
+						}
+					}
+					if(expression.getReferencedElements().isEmpty()){
+						expression.setType(ExpressionConstants.CONSTANT_TYPE);
+					}
+				}
+			}
+			currentConfiguraiton.getParameters().add(newParam) ;
+		}
+		return true;
+	}
 }
