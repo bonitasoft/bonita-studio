@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
+import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -34,7 +35,7 @@ public class ProposalListener implements IProposalListener {
 	@Override
 	public String handleEvent(EObject context) {
 		Assert.isNotNull(context);
-		while (!(context instanceof DataAware)) {
+		while (!(context instanceof DataAware) || context instanceof Form) {
 			context = context.eContainer();
 		}
 		EStructuralFeature feat = ProcessPackage.Literals.DATA_AWARE__DATA;
