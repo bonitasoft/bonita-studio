@@ -153,9 +153,11 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		connectorWorkingCopy = EcoreUtil.copy(connector) ;
 		editMode = true ;
 		this.featureToCheckForUniqueID = featureToCheckForUniqueID ;
-		setWindowTitle(Messages.connectors);
 		setNeedsProgressMonitor(false);
 		initialize() ;
+		ConnectorDefinition def = getDefinition();
+		DefinitionResourceProvider resourceProvider = initMessageProvider();
+		setWindowTitle(resourceProvider.getConnectorDefinitionLabel(def) +" ("+def.getVersion()+")");
 	}
 
 
