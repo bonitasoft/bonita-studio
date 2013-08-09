@@ -281,24 +281,27 @@ public class EngineExpressionUtil {
 
 	protected static Expression buildSimpleEngineExpression(final org.bonitasoft.studio.model.expression.AbstractExpression expression) {
 		final org.bonitasoft.studio.model.expression.Expression simpleExpression = (org.bonitasoft.studio.model.expression.Expression) expression;
-		if (simpleExpression.getContent() != null && !simpleExpression.getContent().isEmpty()) {
+		String content = simpleExpression.getContent();
+		if (content != null && !content.isEmpty()) {
 			final ExpressionBuilder exp = new ExpressionBuilder();
 			String interpreter = simpleExpression.getInterpreter();
 			String name = simpleExpression.getName();
 			if(name == null || name.isEmpty()){
 				name = "<empty-name>";
 			}
-			if(ExpressionConstants.CONDITION_TYPE.equals(simpleExpression.getType())){
+			String type = simpleExpression.getType();
+			if(ExpressionConstants.CONDITION_TYPE.equals(type)){
 				return createComparisonExpression(exp, simpleExpression);
-			}if(ExpressionConstants.PATTERN_TYPE.equals(simpleExpression.getType())){
+			}if(ExpressionConstants.PATTERN_TYPE.equals(type)){
 				return createPatternExpression(exp, simpleExpression);
-			}if(ExpressionConstants.DOCUMENT_TYPE.equals(simpleExpression.getType())){
+			}if(ExpressionConstants.DOCUMENT_TYPE.equals(type)){
 				return createDocumentExpression(exp, simpleExpression);
-			} if (ExpressionConstants.XPATH_TYPE.equals(simpleExpression.getType())){
+			} if (ExpressionConstants.XPATH_TYPE.equals(type)){
 				return createXPATHExpression(exp,simpleExpression);
 			}else{
 				exp.createNewInstance(name);
-				exp.setContent(simpleExpression.getContent());
+				content = content.replace("\r", "\n");
+				exp.setContent(content);
 				final String engineExpressionType = toEngineExpressionType(simpleExpression);
 				exp.setExpressionType(engineExpressionType);
 				if(ExpressionConstants.SCRIPT_TYPE.equals(engineExpressionType)){
