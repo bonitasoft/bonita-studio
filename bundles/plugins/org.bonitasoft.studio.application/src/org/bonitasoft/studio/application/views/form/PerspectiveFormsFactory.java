@@ -63,6 +63,7 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 			bottomRight.addView(viewId);
 		}
 		bottomRight.setProperty(VIEW_KIND, BONITA_TABS);
+		 layout.setFixed(true);
 	}
 
 	/* (non-Javadoc)
