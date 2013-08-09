@@ -1339,7 +1339,7 @@ public class ProcBuilder implements IProcBuilder {
     protected Expression createExpression(final String defaultValueContent, final String defaultValueReturnType, final String defaultValueInterpreter, final String expressionType) {
         Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
         if(ExpressionConstants.GROOVY.equals(defaultValueInterpreter)){
-            exp.setName(defaultValueContent.substring(0, Math.min(10,defaultValueContent.length())));
+            exp.setName("groovyExpression");
             exp.setContent(defaultValueContent) ;
         } else {
             exp.setName(defaultValueContent);
