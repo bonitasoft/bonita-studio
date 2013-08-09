@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.Element;
@@ -67,7 +68,7 @@ public class SelectFormWizard extends Wizard {
         boolean allreadyExists = false;
         for (Iterator<?> iterator = ((List<?>)pageFlow.eGet(feature)).iterator(); iterator.hasNext();) {
             Form form = (Form) iterator.next();
-            allreadyExists = form.getName().equals(name);
+            allreadyExists = form.getName().equals(NamingUtils.toJavaIdentifier(name,true));
             if (allreadyExists) {
                 pageVars.setMessage(Messages.error_allreadyExists, IMessageProvider.ERROR);
                 return false;

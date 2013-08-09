@@ -42,12 +42,8 @@ import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jdt.core.JavaConventions;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -132,12 +128,6 @@ public class FormWizardPageVars extends WizardSelectionPage {
 		formName = generateDefaultFormName();
 		nameField.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		UpdateValueStrategy stratetgy = new UpdateValueStrategy();
-		stratetgy.setAfterGetValidator(new IValidator() {
-
-			public IStatus validate(Object value) {
-				return JavaConventions.validateFieldName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
-			}
-		}) ;
 		stratetgy.setBeforeSetValidator(new InputLengthValidator(Messages.name, 50)) ;
 		ISWTObservableValue observeText = SWTObservables.observeText(nameField, SWT.Modify);
 		observeText.addValueChangeListener(new IValueChangeListener() {
@@ -351,8 +341,7 @@ public class FormWizardPageVars extends WizardSelectionPage {
 
 	@Override
 	public boolean isPageComplete() {
-		return JavaConventions.validateFieldName(nameField.getText(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6).isOK()
-				&& new InputLengthValidator(Messages.name, 50).validate(nameField.getText()).isOK();
+		return  new InputLengthValidator("", 50).validate(nameField.getText()).isOK();
 	}
 
 	/**
