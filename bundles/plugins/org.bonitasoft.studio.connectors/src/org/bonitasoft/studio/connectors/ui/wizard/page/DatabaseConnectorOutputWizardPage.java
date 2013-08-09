@@ -16,6 +16,7 @@ import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.ui.wizard.page.sqlutil.SQLQueryUtil;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
+import org.bonitasoft.studio.expression.editor.operation.WizardPageOperationsComposite;
 import org.bonitasoft.studio.expression.editor.viewer.ReadOnlyExpressionViewer;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
@@ -347,7 +348,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
 
-		lineComposite = new OperationsComposite(null, mainComposite, rightFilter, leftFilter) ;
+		lineComposite = new WizardPageOperationsComposite(null, mainComposite, rightFilter, leftFilter) ;
 		lineComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
 		lineComposite.setContext(context) ;
 		lineComposite.setContext(getElementContainer());

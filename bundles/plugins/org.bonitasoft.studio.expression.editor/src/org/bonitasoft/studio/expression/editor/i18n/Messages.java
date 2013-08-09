@@ -87,6 +87,11 @@ public class Messages extends NLS {
 	public static String name;
 
 
+	public static String processVariable;
+	public static String stepVariable;
+	public static String formVariable;
+
+
     private Messages() {
         // Do not instantiate
     }

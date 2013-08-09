@@ -20,14 +20,11 @@ package org.bonitasoft.studio.groovy.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.groovy.ui.Messages;
-import org.eclipse.core.internal.dtree.IComparator;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -54,7 +51,6 @@ public class ProcessVariableContentProvider implements IStructuredContentProvide
 				inputElements.add(key);
 			}
 			List<Object> scriptVariables = map.get(key);
-			//List<Object> scriptVariables = sortList(map.get(key));
 			inputElements.addAll(scriptVariables);
 		}
 		return inputElements.toArray();
@@ -69,32 +65,6 @@ public class ProcessVariableContentProvider implements IStructuredContentProvide
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
 	}
-	
-	private List<Object> sortList(List<Object> list){
-		List<Object> sortedList = new ArrayList<Object>();
-		if (!list.isEmpty() && list.get(0) instanceof ScriptVariable){
-			List<ScriptVariable> scriptVariables = new ArrayList<ScriptVariable>();
-			for (Object object : list){
-				scriptVariables.add((ScriptVariable)object);
-			}
-			Collections.sort(scriptVariables, new Comparator<ScriptVariable>() {
-				
-
-				@Override
-				public int compare(ScriptVariable arg0, ScriptVariable arg1) {
-					return arg0.getName().compareTo(arg1.getName());
-				}
-			});
-			
-			sortedList.addAll(scriptVariables);
-			
-		} else {
-			if (!list.isEmpty()){
-				sortedList.addAll(list);
-			}
-		}
-		return sortedList;
-	}
 
 	private TreeMap getClassifiedVariables(List<Object> res){
 		TreeMap<String,List<Object>> map = new TreeMap<String,List<Object>>();
@@ -105,17 +75,19 @@ public class ProcessVariableContentProvider implements IStructuredContentProvide
 			if (object instanceof ScriptVariable){
 				ScriptVariable scriptVariable = (ScriptVariable)object;
 				String key=scriptVariable.getCategory();
-				if (key==null){ key="";}
-					if (map.containsKey(key)){
-						List<Object> scriptVariables = map.get(key);
-						scriptVariables.add(scriptVariable);
-					} else {
-						List<Object> scriptVariables = new ArrayList<Object>();
-						scriptVariables.add(scriptVariable);
-						map.put(key, scriptVariables);
-					}
+				if (key==null){ 
+					key="";
 				}
-			
+				if (map.containsKey(key)){
+					List<Object> scriptVariables = map.get(key);
+					scriptVariables.add(scriptVariable);
+				} else {
+					List<Object> scriptVariables = new ArrayList<Object>();
+					scriptVariables.add(scriptVariable);
+					map.put(key, scriptVariables);
+				}
+			}
+
 		}
 		return map;
 	}

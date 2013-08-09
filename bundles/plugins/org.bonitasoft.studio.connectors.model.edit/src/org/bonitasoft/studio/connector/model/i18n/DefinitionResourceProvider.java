@@ -94,6 +94,7 @@ public class DefinitionResourceProvider {
 	private StoreControl storeControl;
 	private ArrayList<Category> categories;
 	private Category uncategorized;
+	private Map<String, ResourceBundle> resourceBundleCache = new WeakHashMap<String, ResourceBundle>();
 	private final static Map<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider> INSTANCES_MAP;
 
 	static {
@@ -153,6 +154,11 @@ public class DefinitionResourceProvider {
 		if (definition == null || definition.eResource() == null) {
 			return null;
 		}
+		String cacheKey = getCacheKey(definition, locale);
+		ResourceBundle resourceBundle = resourceBundleCache.get(cacheKey);
+		if(resourceBundle != null){
+			return resourceBundle;
+		}
 		IRepositoryFileStore fileStore = store.getChild(URI.decode(definition.eResource().getURI().lastSegment()));
 		if(fileStore == null){
 			return null;
@@ -182,8 +188,12 @@ public class DefinitionResourceProvider {
 				return null;
 			}
 		}
-
+		resourceBundleCache.put(cacheKey,bundle);
 		return bundle;
+	}
+
+	private String getCacheKey(ConnectorDefinition definition, Locale locale) {
+		return NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), false)+locale.toString();
 	}
 
 	private String getMessage(ConnectorDefinition definition, String key) {
@@ -305,6 +315,7 @@ public class DefinitionResourceProvider {
 				}
 			}
 		}
+		resourceBundleCache.clear();
 	}
 
 	public Set<Locale> getExistingLocale(ConnectorDefinition definition) {
@@ -521,7 +532,7 @@ public class DefinitionResourceProvider {
 		unloadable.setId(Messages.unloadable);
 		return unloadable;
 	}
-	
+
 
 	public Category getUncategorizedCategory() {
 		return uncategorized;
@@ -573,12 +584,12 @@ public class DefinitionResourceProvider {
 		if (category.getId().equals(label)) {// Try to find a provided category
 			// label
 			List<ConnectorDefinition> definitions = getAllDefinitionWithCategotyId(category.getId());
-		for (ConnectorDefinition def : definitions) {
-			label = getCategoryLabel(def, category.getId());
-			if (!category.getId().equals(label)) {
-				return label;
+			for (ConnectorDefinition def : definitions) {
+				label = getCategoryLabel(def, category.getId());
+				if (!category.getId().equals(label)) {
+					return label;
+				}
 			}
-		}
 		}
 		return label;
 	}

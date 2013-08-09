@@ -19,15 +19,17 @@ package org.bonitasoft.studio.intro.actions;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 
@@ -49,11 +51,19 @@ public class OpenSpecificProcessAction implements IIntroAction {
 		} catch (UnsupportedEncodingException e) {
 			fileName = params.getProperty("file");
 		}
-		DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager
-				.getInstance().getCurrentRepository()
-				.getRepositoryStore(DiagramRepositoryStore.class);
-		IRepositoryFileStore store = diagramSotre.getChild(fileName);
-		store.open();
+		
+		final IEditorReference openEditor = PlatformUtil.getOpenEditor(fileName);
+		if(openEditor!=null){
+			PlatformUtil.swtichToOpenedEditor(openEditor);
+		} else {
+			DiagramRepositoryStore diagramSotre = (DiagramRepositoryStore) RepositoryManager
+					.getInstance().getCurrentRepository()
+					.getRepositoryStore(DiagramRepositoryStore.class);
+			IRepositoryFileStore store = diagramSotre.getChild(fileName);
+			store.open();
+		}
 	}
+	
+	
 
 }

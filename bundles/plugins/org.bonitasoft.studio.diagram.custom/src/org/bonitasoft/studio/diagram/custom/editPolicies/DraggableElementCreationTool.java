@@ -47,6 +47,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest.ConnectionViewAndElementDescriptor;
@@ -357,7 +358,15 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
 				IGraphicalEditPart targetEditPart = (IGraphicalEditPart) editPart.getViewer().getEditPartRegistry().get(targetAdapter.getAdapter(View.class));
 				Location loc = (Location) ((Node)((IGraphicalEditPart) targetEditPart).getNotationView()).getLayoutConstraint() ;
 				Point newLoc = FiguresHelper.handleCompartmentMargin((IGraphicalEditPart) targetEditPart, loc.getX(), loc.getY(),(((IGraphicalEditPart) targetEditPart).resolveSemanticElement() instanceof SubProcessEvent)) ;
-
+				if(((IGraphicalEditPart) targetEditPart).getParent() instanceof ShapeCompartmentEditPart){
+					ShapeCompartmentEditPart compartment = (ShapeCompartmentEditPart) ((IGraphicalEditPart) targetEditPart).getParent();
+					while(newLoc.y + 65 > compartment.getFigure().getBounds().height){
+						newLoc.y = newLoc.y -10;
+					}
+					while(newLoc.x + 100 > compartment.getFigure().getBounds().width){
+						newLoc.x = newLoc.x -10;
+					}
+				}
 				executeCommand(new ICommandProxy(new SetBoundsCommand(((IGraphicalEditPart) targetEditPart).getEditingDomain(), "Check Overlap", new EObjectAdapter(((IGraphicalEditPart) targetEditPart).getNotationView()),newLoc))) ;
 
 				if(connectionRequest != null){
