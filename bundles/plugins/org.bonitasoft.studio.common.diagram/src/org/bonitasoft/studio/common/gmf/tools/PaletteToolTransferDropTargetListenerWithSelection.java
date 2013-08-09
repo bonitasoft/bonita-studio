@@ -154,8 +154,16 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 
 						if(connectionEP != null){
 							SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(connectionEP.getEditingDomain());
-							setConnectionBendPointsCommand.setEdgeAdapter(connectionDescriptor);	
-							PointList bendpoints = new PointList() ;
+							setConnectionBendPointsCommand.setEdgeAdapter(new EObjectAdapter(edge));	
+							PointList bendpoints =  new PointList() ;
+							bendpoints.addPoint(0, 0) ;
+							bendpoints.addPoint(0, 0) ;
+							setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(), bendpoints.getLastPoint());
+							viewer.getEditDomain().getCommandStack().execute(new ICommandProxy(setConnectionBendPointsCommand));
+							
+							setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(((IGraphicalEditPart) targetEditPart).getEditingDomain());
+							setConnectionBendPointsCommand.setEdgeAdapter(new EObjectAdapter(((IGraphicalEditPart) targetEditPart).getNotationView()));	
+							bendpoints = new PointList() ;
 							bendpoints.addPoint(0, 0) ;
 							bendpoints.addPoint(0, 0) ;
 							setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(), bendpoints.getLastPoint());
