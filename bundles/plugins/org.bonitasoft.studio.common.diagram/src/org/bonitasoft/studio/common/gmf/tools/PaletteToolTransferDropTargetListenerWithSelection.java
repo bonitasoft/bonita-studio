@@ -102,6 +102,19 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 		}
 
 	}
+	
+	
+	protected void handleDragOver() {
+		updateTargetEditPart();
+		updateTargetRequest();
+		if(getCommand() != null && getCommand().canExecute()){
+			getCurrentEvent().detail = DND.DROP_COPY;
+		}else{
+			getCurrentEvent().detail = DND.DROP_NONE;
+		}
+		
+		getCurrentEvent().feedback = DND.FEEDBACK_SCROLL | DND.FEEDBACK_EXPAND;
+	}
 
 	@Override
 	protected Point getDropLocation() {
