@@ -224,7 +224,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 	protected void createBinding(EMFDataBindingContext context) {
 		labelTargetToModelUpdate = new UpdateValueStrategy();
 		labelTargetToModelUpdate.setAfterGetValidator(new UTF8InputValidator(Messages.name)) ;
-		labelTargetToModelUpdate.setBeforeSetValidator(new InputLengthValidator(Messages.name, 50)) ;
+		labelTargetToModelUpdate.setBeforeSetValidator(new InputLengthValidator(Messages.name,0, 50)) ;
 		labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());
 
 		observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));

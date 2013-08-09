@@ -17,7 +17,6 @@
  */
 package org.bonitasoft.studio.validation.constraints.process;
 
-import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
 import org.bonitasoft.studio.model.process.SequenceFlow;
@@ -69,13 +68,10 @@ public class EmptyNameConstraint extends AbstractLiveValidationMarkerConstraint{
     protected IStatus performBatchValidation(IValidationContext ctx) {
         final EObject eObj = ctx.getTarget();
         final String name = ((Element) eObj).getName();
-        if (eObj instanceof Element &&
-                !(
-                        eObj instanceof SequenceFlow ||
-                        eObj instanceof TextAnnotation ||
-                        eObj instanceof MultiInstantiation ||
-                        (eObj instanceof Activity && !((Activity)eObj).isIsMultiInstance()) // disabled multi
-                        )) {
+        if (eObj instanceof Element){
+        	if(eObj instanceof SequenceFlow ||  eObj instanceof TextAnnotation ||  eObj instanceof MultiInstantiation) {
+        		 return ctx.createSuccessStatus();
+        	}
             if (name == null || name.trim().isEmpty()){
                 return ctx.createFailureStatus(new Object[] { eObj.eClass().getName() });
             }

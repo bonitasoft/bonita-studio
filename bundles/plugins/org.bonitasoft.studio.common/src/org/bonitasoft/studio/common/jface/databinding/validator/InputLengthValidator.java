@@ -30,10 +30,15 @@ public class InputLengthValidator implements IValidator {
 
     private final int maxChar;
     private final String inputName;
+	private int minChar;
 
     public InputLengthValidator(String inputName,int maxChar){
+        this(inputName,0,maxChar);
+    }
+    public InputLengthValidator(String inputName,int minChar,int maxChar){
         this.maxChar = maxChar ;
         this.inputName = inputName ;
+        this.minChar = minChar;
     }
 
     /* (non-Javadoc)
@@ -41,6 +46,9 @@ public class InputLengthValidator implements IValidator {
      */
     @Override
     public IStatus validate(Object input) {
+    	 if(input != null && input.toString().length() < minChar){
+             return ValidationStatus.error(Messages.bind(Messages.fieldIsTooShort,inputName,minChar)) ;
+         }
         if(input != null && input.toString().length() >= maxChar){
             return ValidationStatus.error(Messages.bind(Messages.fieldIsTooLong,inputName,maxChar)) ;
         }
