@@ -160,7 +160,7 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
             assertEquals("Operator is not the right one", ExpressionConstants.ASSIGNMENT_OPERATOR, operation.getOperator().getType());
             Expression rightOperand = operation.getRightOperand();
             if(rightOperand != null){
-                if("\"groovyScr".equals(rightOperand.getName())){
+                if("groovyExpression".equals(rightOperand.getName())){
                     assertEquals(ExpressionConstants.SCRIPT_TYPE, rightOperand.getType());
                     assertEquals("Wrong return type for Groovy connector output", String.class.getName(), rightOperand.getReturnType());
                     Expression leftOperand = operation.getLeftOperand();

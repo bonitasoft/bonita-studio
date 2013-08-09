@@ -74,7 +74,7 @@ public class DebugProcessCommand extends AbstractHandler {
 		CustomWizardDialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(),wizard , Messages.DebugProcessButtonLabel) ;
 		if(dialog.open() == Dialog.OK){
 			Set<EObject> exludedObject = wizard.getExcludedObjects() ;
-			new RunProcessCommand(exludedObject).execute(event) ;
+			new RunProcessCommand(exludedObject, true).execute(event) ;
 		}
 		return null;
 	}

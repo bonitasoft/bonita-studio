@@ -60,9 +60,9 @@ public class TestData extends SWTBotGefTestCase {
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
         bot.button("Add...").click();
 
-        bot.textWithLabel("Name").setText("MyName");
+        bot.textWithLabel("Name *").setText("MyName");
         assertFalse("We shouldn't be able to create a data with an Uppercase as first charater", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-        bot.textWithLabel("Name").setText("myName");
+        bot.textWithLabel("Name *").setText("myName");
         String text270 = "";
         for (int i = 0; i < 270; i++) {
             text270 += "a";
@@ -103,7 +103,7 @@ public class TestData extends SWTBotGefTestCase {
 		bot.button("Add...").click();
 		
         bot.waitUntil(Conditions.shellIsActive("New variable"));
-        bot.textWithLabel(org.bonitasoft.studio.properties.i18n.Messages.name).setText("my_collec");
+        bot.textWithLabel(org.bonitasoft.studio.properties.i18n.Messages.name +" *").setText("my_collec");
         bot.comboBoxWithLabel(org.bonitasoft.studio.properties.i18n.Messages.datatypeLabel).setSelection("Java Object");
 
         bot.waitUntil(Conditions.widgetIsEnabled(bot.textWithLabel("Class")));

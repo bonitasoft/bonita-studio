@@ -767,6 +767,12 @@ public class NamingUtils {
 			} else {
 				return Messages.CatchError_title;
 			}
+		case ProcessPackage.NON_INTERRUPTING_BOUNDARY_TIMER_EVENT:
+			if (isDescription) {
+				return Messages.nonInterruptingTimerEvent_desc;
+			} else {
+				return Messages.nonInterruptingTimerEvent_title;
+			}
 		case ProcessPackage.EVENT:
 			if (isDescription) {
 				return Messages.Event_desc;
