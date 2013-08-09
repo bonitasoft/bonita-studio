@@ -42,6 +42,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectionViewA
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.PaletteToolTransferDropTargetListener;
@@ -101,6 +102,19 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 		}
 
 	}
+	
+	
+	protected void handleDragOver() {
+		updateTargetEditPart();
+		updateTargetRequest();
+		if(getCommand() != null && getCommand().canExecute()){
+			getCurrentEvent().detail = DND.DROP_COPY;
+		}else{
+			getCurrentEvent().detail = DND.DROP_NONE;
+		}
+		
+		getCurrentEvent().feedback = DND.FEEDBACK_SCROLL | DND.FEEDBACK_EXPAND;
+	}
 
 	@Override
 	protected Point getDropLocation() {
@@ -150,31 +164,39 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 					}
 				}
 			}
-
-			for (Iterator i = objects.iterator(); i.hasNext();) {
-				Object object = i.next();
-				if (object instanceof IAdaptable) {
-					if (viewer != null) {
-						Object editPart = viewer.getEditPartRegistry().get(((IAdaptable) object).getAdapter(View.class));
-						if (editPart != null) {
-							editparts.add(editPart);
-						}
+		}
+		for (Iterator i = objects.iterator(); i.hasNext();) {
+			Object object = i.next();
+			if (object instanceof IAdaptable) {
+				if (viewer != null) {
+					Object editPart = viewer.getEditPartRegistry().get(((IAdaptable) object).getAdapter(View.class));
+					if (editPart != null) {
+						editparts.add(editPart);
 					}
 				}
 			}
+		}
 
-			for(Object ep :editparts){
-				if(ep instanceof IGraphicalEditPart){
-					Location loc = (Location) ((Node)((IGraphicalEditPart) ep).getNotationView()).getLayoutConstraint() ;
-					Point newLoc = FiguresHelper.handleCompartmentMargin((IGraphicalEditPart) ep, loc.getX(), loc.getY(),(((IGraphicalEditPart) ep).resolveSemanticElement() instanceof SubProcessEvent)) ;
-					cc.add(new ICommandProxy(new SetBoundsCommand(((IGraphicalEditPart) ep).getEditingDomain(), "Check Overlap", new EObjectAdapter(((IGraphicalEditPart) ep).getNotationView()),newLoc))) ;
+		for(Object ep :editparts){
+			if(ep instanceof IGraphicalEditPart){
+				Location loc = (Location) ((Node)((IGraphicalEditPart) ep).getNotationView()).getLayoutConstraint() ;
+				Point newLoc = FiguresHelper.handleCompartmentMargin((IGraphicalEditPart) ep, loc.getX(), loc.getY(),(((IGraphicalEditPart) ep).resolveSemanticElement() instanceof SubProcessEvent)) ;
+				if(((IGraphicalEditPart) ep).getParent() instanceof ShapeCompartmentEditPart){
+					ShapeCompartmentEditPart compartment = (ShapeCompartmentEditPart) ((IGraphicalEditPart) ep).getParent();
+					while(newLoc.y + 65 > compartment.getFigure().getBounds().height){
+						newLoc.y = newLoc.y -10;
+					}
+					while(newLoc.x + 100 > compartment.getFigure().getBounds().width){
+						newLoc.x = newLoc.x -10;
+					}
 				}
+				cc.add(new ICommandProxy(new SetBoundsCommand(((IGraphicalEditPart) ep).getEditingDomain(), "Check Overlap", new EObjectAdapter(((IGraphicalEditPart) ep).getNotationView()),newLoc))) ;
 			}
+		}
 
 
-			if(!cc.isEmpty()){
-				viewer.getEditDomain().getCommandStack().execute(cc) ;
-			}
+		if(!cc.isEmpty()){
+			viewer.getEditDomain().getCommandStack().execute(cc) ;
 		}
 	}
 

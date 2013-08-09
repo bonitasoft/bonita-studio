@@ -988,7 +988,7 @@ public class DataWizardPage extends WizardPage {
 
 	protected void createNameAndDescription(final Composite parent) {
 		final Label nameLabel = new Label(parent, SWT.NONE);
-		nameLabel.setText(Messages.name);
+		nameLabel.setText(Messages.name +" *");
 		nameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
 		nameText = new Text(parent, SWT.BORDER);

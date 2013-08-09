@@ -60,7 +60,8 @@ import org.junit.Test;
  */
 public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotConstants {
 
-    private static final String PAGEFLOW_LABEL = "Pageflow";
+    private static final String DATA_NAME_LABEL = name +" *";
+	private static final String PAGEFLOW_LABEL = "Pageflow";
 	private static boolean disablePopup;
 
     @BeforeClass
@@ -559,7 +560,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         bot.shell(newVariable);
 
         // set global value
-        bot.textWithLabel(name).setText(dataName);
+        bot.textWithLabel(DATA_NAME_LABEL).setText(dataName);
         bot.comboBoxWithLabel(datatypeLabel).setSelection("Java Object");
         bot.textWithLabel(classLabel).setText(classType);
     }
@@ -583,7 +584,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         bot.shell(newVariable);
 
         // set global value
-        bot.textWithLabel(name).setText(dataName);
+        bot.textWithLabel(DATA_NAME_LABEL).setText(dataName);
         bot.comboBoxWithLabel(datatypeLabel).setSelection(dataType);
         bot.textWithLabel(defaultValueLabel).setText(defaultValue);
 
