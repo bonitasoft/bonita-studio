@@ -157,6 +157,7 @@ public class ImportBosArchiveOperation {
 									|| resourceToOpen == null;
 							final IRepositoryFileStore fileStore = repository.importIResource(filename, child);
 							if(fileStore != null){
+								if(!FileActionDialog.getDisablePopup()){
 								final ArrayList<AbstractProcess> processes = getAllProcesseRepository(fileStore.getParentStore().getChildren(), fileStore.getName());
 								final ArrayList<AbstractProcess> importedProcess = getProcess(fileStore);
 								final ArrayList<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
@@ -165,7 +166,7 @@ public class ImportBosArchiveOperation {
 										duplicateProcess.add(p);
 									}
 								}
-								if (!duplicateProcess.isEmpty() && !FileActionDialog.getDisablePopup()) {
+									if (!duplicateProcess.isEmpty()) {
 									Display.getDefault().syncExec(new Runnable() {
 
 										@Override
@@ -178,6 +179,7 @@ public class ImportBosArchiveOperation {
 											MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.warningDuplicateDialogTitle, Messages.bind(Messages.poolAlreadyExistWarningMessage,sb.toString()));
 										}
 									});
+									}
 								}
 								if (fileStore != null && openAfterImport) {
 									fileStore.open();
