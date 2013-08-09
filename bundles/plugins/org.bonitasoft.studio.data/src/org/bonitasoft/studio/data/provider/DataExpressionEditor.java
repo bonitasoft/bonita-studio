@@ -37,6 +37,8 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.DateFormField;
+import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.impl.FormImpl;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -174,7 +176,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 			ViewerFilter[] filters) {
 		EObject container = context;
 
-		while (!(container instanceof DataAware)) {
+		while (!(container instanceof DataAware) || container instanceof Form) {
 			container = container.eContainer();
 		}
 		EStructuralFeature feat = ProcessPackage.Literals.DATA_AWARE__DATA;

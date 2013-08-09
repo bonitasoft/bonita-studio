@@ -23,8 +23,8 @@ import java.util.Set;
 
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LightweightSystem;
 import org.eclipse.draw2d.StackLayout;
-import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.editparts.SimpleRootEditPart;
 import org.eclipse.gef.internal.ui.palette.editparts.ToolEntryEditPart;
 import org.eclipse.gef.palette.PaletteDrawer;
@@ -62,7 +62,11 @@ public class CustomMainPaletteViewer extends PaletteViewerEx {
 		});
 	}
 
-
+	@Override
+	protected LightweightSystem createLightweightSystem() {
+		return new AsyncLightweightSystem();
+	}
+	
 	public void hidePaletteEntry(String id){
 		filters.add(id);
 	}
@@ -95,14 +99,10 @@ public class CustomMainPaletteViewer extends PaletteViewerEx {
 		}
 	}
 
-	@Override
-	public void setRootEditPart(RootEditPart editpart) {
-		super.setRootEditPart(editpart);
-	}
 
 	@Override
 	public void setContextMenu(MenuManager contextMenu) {
-
+	
 	}
 
 	public void setActiveTool(ToolEntry newMode) {

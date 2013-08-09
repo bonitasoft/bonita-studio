@@ -22,14 +22,40 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bonitasoft.studio.common.diagram.tools.BonitaConnectionTypes;
+import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
+import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gef.requests.ReconnectRequest;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectionViewAndElementCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.PaletteToolTransferDropTargetListener;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest.ConnectionViewAndElementDescriptor;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest.ViewAndElementDescriptor;
+import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
+import org.eclipse.gmf.runtime.notation.Connector;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Location;
+import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.DND;
@@ -45,7 +71,7 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 	public PaletteToolTransferDropTargetListenerWithSelection(EditPartViewer viewer) {
 		super(viewer);
 	}
-	
+
 	/**
 	 * Overridden to select the created object.
 	 * 
@@ -56,13 +82,17 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 	 * Please note that intermediate class are also trying to 
 	 */
 	protected void handleDrop() {
-		updateTargetRequest();
+		CreateRequest request = getCreateRequest();
+		Point loc = super.getDropLocation().getCopy();
+		loc.translate(0, -25);
+		request.setLocation(loc);
 		updateTargetEditPart();
 
 		if (getTargetEditPart() != null) {
 			Command command = getCommand();
 			if (command != null && command.canExecute()){
 				getViewer().getEditDomain().getCommandStack().execute(command);
+				insertOnSequenceFlow(command,getTargetEditPart(),getViewer());
 				selectAddedObject(getViewer(),DiagramCommandStack.getReturnValues(command));
 			} else {
 				getCurrentEvent().detail = DND.DROP_NONE;
@@ -70,7 +100,104 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 		} else {
 			getCurrentEvent().detail = DND.DROP_NONE;
 		}
+
+	}
+	
+	
+	protected void handleDragOver() {
+		updateTargetEditPart();
+		updateTargetRequest();
+		if(getCommand() != null && getCommand().canExecute()){
+			getCurrentEvent().detail = DND.DROP_COPY;
+		}else{
+			getCurrentEvent().detail = DND.DROP_NONE;
+		}
 		
+		getCurrentEvent().feedback = DND.FEEDBACK_SCROLL | DND.FEEDBACK_EXPAND;
+	}
+
+	@Override
+	protected Point getDropLocation() {
+		Point loc = super.getDropLocation().getCopy();
+		return loc;
+	}
+
+
+	public static void insertOnSequenceFlow(Command command,final EditPart targetEditPart,EditPartViewer viewer) {
+		Collection objects = DiagramCommandStack.getReturnValues(command) ;
+		CompoundCommand cc = new CompoundCommand("Check Overlap") ;
+		final List editparts = new ArrayList();
+		if(targetEditPart instanceof ConnectionEditPart){
+			for (Iterator i = objects.iterator(); i.hasNext();) {
+				Object object = i.next();
+				if (object instanceof ViewAndElementDescriptor) {
+					final ViewAndElementDescriptor descriptor = (ViewAndElementDescriptor) object; 
+					final ShapeEditPart editPart = (ShapeEditPart) viewer.getEditPartRegistry().get(descriptor.getAdapter(View.class));
+					final ReconnectRequest reconnect = new ReconnectRequest(RequestConstants.REQ_RECONNECT_TARGET);
+					reconnect.setConnectionEditPart((ConnectionEditPart) targetEditPart);
+					reconnect.setTargetEditPart(editPart);
+					Command reconnectCommand = 	editPart.getCommand(reconnect);
+					CreateConnectionViewAndElementRequest connectionRequest = null;
+					DeferredCreateConnectionViewAndElementCommand connectionCommand = null;
+					connectionRequest = new CreateConnectionViewAndElementRequest(BonitaConnectionTypes.getElementType("org.bonitasoft.studio.diagram.SequenceFlow_4001"),
+							((IHintedType) BonitaConnectionTypes.getElementType("org.bonitasoft.studio.diagram.SequenceFlow_4001")).getSemanticHint(), new PreferencesHint("org.bonitasoft.studio.diagram"));
+
+					connectionCommand = new DeferredCreateConnectionViewAndElementCommand(connectionRequest, descriptor, ((ConnectionEditPart)targetEditPart).getTarget(), editPart.getViewer());
+					CompoundCommand coupound = 	new CompoundCommand();
+					coupound.add(reconnectCommand);
+					coupound.add(new ICommandProxy(connectionCommand));
+					viewer.getEditDomain().getCommandStack().execute(coupound);
+					if(connectionRequest != null){
+						ConnectionViewAndElementDescriptor connectionDescriptor = (ConnectionViewAndElementDescriptor) connectionRequest.getNewObject() ;
+						Connector edge = (Connector) connectionDescriptor.getAdapter(Edge.class) ;
+						org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart connectionEP =  (org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart) editPart.getViewer().getEditPartRegistry().get(edge);
+
+						if(connectionEP != null){
+							SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(connectionEP.getEditingDomain());
+							setConnectionBendPointsCommand.setEdgeAdapter(connectionDescriptor);	
+							PointList bendpoints = new PointList() ;
+							bendpoints.addPoint(0, 0) ;
+							bendpoints.addPoint(0, 0) ;
+							setConnectionBendPointsCommand.setNewPointList(bendpoints, bendpoints.getFirstPoint(), bendpoints.getLastPoint());
+							viewer.getEditDomain().getCommandStack().execute(new ICommandProxy(setConnectionBendPointsCommand));
+						}
+					}
+				}
+			}
+		}
+		for (Iterator i = objects.iterator(); i.hasNext();) {
+			Object object = i.next();
+			if (object instanceof IAdaptable) {
+				if (viewer != null) {
+					Object editPart = viewer.getEditPartRegistry().get(((IAdaptable) object).getAdapter(View.class));
+					if (editPart != null) {
+						editparts.add(editPart);
+					}
+				}
+			}
+		}
+
+		for(Object ep :editparts){
+			if(ep instanceof IGraphicalEditPart){
+				Location loc = (Location) ((Node)((IGraphicalEditPart) ep).getNotationView()).getLayoutConstraint() ;
+				Point newLoc = FiguresHelper.handleCompartmentMargin((IGraphicalEditPart) ep, loc.getX(), loc.getY(),(((IGraphicalEditPart) ep).resolveSemanticElement() instanceof SubProcessEvent)) ;
+				if(((IGraphicalEditPart) ep).getParent() instanceof ShapeCompartmentEditPart){
+					ShapeCompartmentEditPart compartment = (ShapeCompartmentEditPart) ((IGraphicalEditPart) ep).getParent();
+					while(newLoc.y + 65 > compartment.getFigure().getBounds().height){
+						newLoc.y = newLoc.y -10;
+					}
+					while(newLoc.x + 100 > compartment.getFigure().getBounds().width){
+						newLoc.x = newLoc.x -10;
+					}
+				}
+				cc.add(new ICommandProxy(new SetBoundsCommand(((IGraphicalEditPart) ep).getEditingDomain(), "Check Overlap", new EObjectAdapter(((IGraphicalEditPart) ep).getNotationView()),newLoc))) ;
+			}
+		}
+
+
+		if(!cc.isEmpty()){
+			viewer.getEditDomain().getCommandStack().execute(cc) ;
+		}
 	}
 
 	/**
@@ -86,8 +213,8 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 			Object object = i.next();
 			if (object instanceof IAdaptable) {
 				Object editPart =
-					viewer.getEditPartRegistry().get(
-						((IAdaptable)object).getAdapter(View.class));
+						viewer.getEditPartRegistry().get(
+								((IAdaptable)object).getAdapter(View.class));
 				if (editPart != null)
 					editparts.add(editPart);
 			}
@@ -95,7 +222,7 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 
 		if (!editparts.isEmpty()) {
 			viewer.setSelection(new StructuredSelection(editparts));
-		
+
 			// automatically put the first shape into edit-mode
 			Display.getCurrent().asyncExec(new Runnable() {
 				public void run(){
@@ -107,17 +234,17 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 					if ( editPart.isActive() ) {
 						//ISSUE WITH PROPERTIES PAGE AND EXCLUSIVE EDITING DOMAIN
 						//editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
-						
+
 						revealEditPart((EditPart)editparts.get(0));
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().setFocus();
 						editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
 					}
 				}
 			});
-			
+
 		}
 	}
-	
+
 	/**
 	 * Reveals the newly created editpart
 	 * @param editPart
@@ -126,7 +253,7 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 	protected void revealEditPart(EditPart editPart){
 		if ((editPart != null)&&
 				(editPart.getViewer() != null))
-				editPart.getViewer().reveal(editPart);
+			editPart.getViewer().reveal(editPart);
 	}
 
 }

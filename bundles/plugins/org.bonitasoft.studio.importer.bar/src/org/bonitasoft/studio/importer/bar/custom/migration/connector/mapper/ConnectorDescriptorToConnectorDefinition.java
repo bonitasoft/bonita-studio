@@ -154,9 +154,9 @@ public class ConnectorDescriptorToConnectorDefinition {
 		final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
 		ConnectorDefinition definition = ((IDefinitionRepositoryStore) defStore).getDefinition(connectorImplementation.getDefinitionId(),connectorImplementation.getDefinitionVersion()) ;
-		
+
 		ClassGenerator.generateConnectorImplementationAbstractClass(connectorImplementation,definition,AbstractConnector.class.getName(),sourceStore, Repository.NULL_PROGRESS_MONITOR) ;
-		
+
 		IType classType = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(connectorImplementation.getImplementationClassname()) ;
 		if(classType != null){
 			classType.getCompilationUnit().delete(true, Repository.NULL_PROGRESS_MONITOR);
@@ -487,19 +487,24 @@ public class ConnectorDescriptorToConnectorDefinition {
 		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final Category category = ConnectorDefinitionFactory.eINSTANCE.createCategory();
 		category.setId(c.getName());
-		if(c.getIconPath() != null){
+		if(c.getIconPath() != null && !c.getIconPath().isEmpty()){
 			category.setIcon(getIconName(c.getIconPath()));
-			store.importInputStream(category.getIcon(), c.getIcon());
+			InputStream iconInputstream = c.getIcon();
+			if(iconInputstream !=  null){
+				store.importInputStream(category.getIcon(), iconInputstream);
+			}
 		}
 		return category;
 	}
 
 	public void importConnectorDefinitionResources() throws ZipException, IOException {
 		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-		if(v5Descriptor.getIconPath() != null){
+		if(v5Descriptor.getIconPath() != null && !v5Descriptor.getIconPath().isEmpty() ){
 			final InputStream iconInputStream = v5Descriptor.getIcon();
 			final String iconName = getIconName(v5Descriptor.getIconPath());
-			store.importInputStream(iconName, iconInputStream);
+			if(iconInputStream != null){
+				store.importInputStream(iconName, iconInputStream);
+			}
 		}
 		importI18NFiles();
 	}

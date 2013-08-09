@@ -127,10 +127,10 @@ public class EditExpressionDialog extends TrayDialog {
 		setHelpAvailable(true);
 		if (isResizable()) {
 			setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE
-					| getDefaultOrientation() | SWT.SHEET);
+					| getDefaultOrientation());
 		} else {
 			setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL
-					| getDefaultOrientation() | SWT.SHEET);
+					| getDefaultOrientation());
 		}
 	}
 	

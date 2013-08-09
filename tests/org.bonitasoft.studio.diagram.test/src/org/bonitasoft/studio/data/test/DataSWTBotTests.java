@@ -223,7 +223,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         // Shell "New variable"
         bot.waitUntil(Conditions.shellIsActive(Messages.newVariable));
 
-        bot.textWithLabel(Messages.name).setText(dataName);
+        bot.textWithLabel(Messages.name+" *").setText(dataName);
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.menu("Diagram").menu("Save").click();
@@ -249,7 +249,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.shellIsActive(Messages.newVariable));
 
         final String dataName = "myDataName";
-        bot.textWithLabel(Messages.name).setText(dataName);
+        bot.textWithLabel(Messages.name +" *").setText(dataName);
 
         String defaultValue = "test return type";
         bot.textWithLabel(Messages.defaultValueLabel).setText(defaultValue);

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,6 +35,7 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -87,11 +89,9 @@ public class OpenDiagramWizard extends Wizard implements IWizard {
                             }
                         }
                     }
-
                     // case of dirty diagrams
                     if (!dirtyFiles.isEmpty() && !MessageDialog.openQuestion(page.getShell(), Messages.confirmProcessOverrideTitle,
                             NLS.bind(Messages.confirmProcessOverrideMessage,stringBuilder.toString()))) {
-
                         for(DiagramFileStore file : dirtyFiles){
                             filesToOpen.put(file, false);
                         }
@@ -100,7 +100,12 @@ public class OpenDiagramWizard extends Wizard implements IWizard {
                     // Open closed, already open, not dirty diagrams, for dirty ones, depending on openQuestion called before
                     for(DiagramFileStore file : files){
                         if(filesToOpen.get(file)){
-                            file.open() ;
+            				final IEditorReference openEditor = PlatformUtil.getOpenEditor(file.getName());
+            				if(openEditor!=null){
+            					PlatformUtil.swtichToOpenedEditor(openEditor);
+            				} else {
+            					file.open();
+            				}
                         }
                     }
 

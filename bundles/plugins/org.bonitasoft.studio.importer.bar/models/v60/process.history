@@ -41,10 +41,10 @@
             referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#//Element" referenceName="eStructuralFeatures"
-          element="#//@releases.1/@changes.0/@changes.0/@element">
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.0/@changes.0/@element"
+          element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element">
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element"
             featureName="name" dataValue="label"/>
-        <changes xsi:type="history:Set" element="#//@releases.1/@changes.0/@changes.0/@element"
+        <changes xsi:type="history:Set" element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
@@ -7014,15 +7014,17 @@
     </changes>
   </releases>
   <releases date="2012-12-07T11:56:27.366+0100" label="6.0 Alpha">
-    <changes xsi:type="history:OperationChange">
-      <changes xsi:type="history:Delete" target="process.ecore#//Element" referenceName="eStructuralFeatures">
-        <element xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.LabelMigration">
+      <changes xsi:type="history:OperationChange">
+        <changes xsi:type="history:Delete" target="process.ecore#//Element" referenceName="eStructuralFeatures">
+          <element xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </changes>
+        <operation name="deleteFeature2">
+          <parameters name="feature">
+            <referenceValue element="#//@releases.1/@changes.0/@changes.0/@changes.0/@element"/>
+          </parameters>
+        </operation>
       </changes>
-      <operation name="deleteFeature2">
-        <parameters name="feature">
-          <referenceValue element="#//@releases.1/@changes.0/@changes.0/@element"/>
-        </parameters>
-      </operation>
     </changes>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.RemoveGroupsMigration">
       <changes xsi:type="history:OperationChange">
@@ -11881,6 +11883,7 @@
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.UpdateModelVersion"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.AutoLoginMigration"/>
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.StartTimerCustomMigration"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.importer.bar.custom.migration.ResourceFolderMigration"/>
   </releases>
   <releases/>
 </history:History>

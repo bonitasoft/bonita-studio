@@ -104,7 +104,7 @@ public class AddFormCommand extends AbstractTransactionalCommand {
     public AddFormCommand(Element pageFlow2, EStructuralFeature feature, String formName, String description, Map<Element, WidgetEnum> vars,
             TransactionalEditingDomain editingDomain) {
         super(editingDomain, Messages.formAddFormCommandLabel, getWorkspaceFiles(pageFlow2));
-        this.formName = NamingUtils.convertToId(formName);
+        this.formName = NamingUtils.toJavaIdentifier(formName,true);
         Expression expr = ExpressionFactory.eINSTANCE.createExpression();
         expr.setName(formName);
         expr.setContent(formName);

@@ -51,7 +51,6 @@ public class FilterWizard extends ConnectorWizard implements IConnectorDefinitio
 
 	public FilterWizard(ActorFilter filter, EStructuralFeature connectorContainmentFeature, Set<EStructuralFeature> featureToCheckForUniqueID) {
 		super(filter, connectorContainmentFeature, featureToCheckForUniqueID);
-		setWindowTitle(Messages.actorFilters);
 	}
 
 	@Override

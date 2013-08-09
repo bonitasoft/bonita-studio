@@ -62,7 +62,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.ietf.jgss.Oid;
 
 /**
  * ContentProposalAdapter can be used to attach content proposal behavior to a
@@ -104,8 +103,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			public void handleEvent(final Event e) {
 
 				int width = getControl().getBounds().width;
-				if (e.x >= width - 18 && e.x <= width - 12 && e.y >= 8
-						&& e.y <= 12) {
+				if (e.x >= width - 18 && e.x <= width - 12 && e.y >= 8 && e.y <= 12) {
 					return;
 				}
 
@@ -131,9 +129,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 								// the popup shell on the Mac.
 								// Check the active shell.
 								Shell activeShell = e.display.getActiveShell();
-								if (activeShell == getShell()
-										|| (infoPopup != null && infoPopup
-												.getShell() == activeShell)) {
+								if (activeShell == getShell() || (infoPopup != null && infoPopup.getShell() == activeShell)) {
 									return;
 								}
 								/*
@@ -254,8 +250,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 				if (key == 0) {
 					int newSelection = proposalTable.getSelectionIndex();
-					int visibleRows = (proposalTable.getSize().y / proposalTable
-							.getItemHeight()) - 1;
+					int visibleRows = (proposalTable.getSize().y / proposalTable.getItemHeight()) - 1;
 					switch (e.keyCode) {
 					case SWT.ARROW_UP:
 						newSelection -= 1;
@@ -333,8 +328,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 							e.doit = false;
 						} else {
 							e.doit = true;
-							String contents = getControlContentAdapter()
-									.getControlContents(getControl());
+							String contents = getControlContentAdapter().getControlContents(getControl());
 							// If there are no contents, changes in cursor
 							// position have no effect. Note also that we do
 							// not affect the filter text on ARROW_LEFT as
@@ -349,12 +343,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 					// Modifier keys are explicitly checked and ignored because
 					// they are not complete yet (no character).
 					default:
-						if (e.keyCode != SWT.CAPS_LOCK
-								&& e.keyCode != SWT.NUM_LOCK
-								&& e.keyCode != SWT.MOD1
-								&& e.keyCode != SWT.MOD2
-								&& e.keyCode != SWT.MOD3
-								&& e.keyCode != SWT.MOD4) {
+						if (e.keyCode != SWT.CAPS_LOCK && e.keyCode != SWT.NUM_LOCK && e.keyCode != SWT.MOD1
+								&& e.keyCode != SWT.MOD2 && e.keyCode != SWT.MOD3 && e.keyCode != SWT.MOD4) {
 							close();
 						}
 						return;
@@ -401,8 +391,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 							return;
 						}
 						// There is filter to back out of
-						filterText = filterText.substring(0,
-								filterText.length() - 1);
+						filterText = filterText.substring(0, filterText.length() - 1);
 						asyncRecomputeProposals(filterText);
 						return;
 					}
@@ -410,8 +399,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 					// clients provide their own filtering based on content.
 					// Recompute the proposals if the cursor position
 					// will change (is not at 0).
-					int pos = getControlContentAdapter().getCursorPosition(
-							getControl());
+					int pos = getControlContentAdapter().getCursorPosition(getControl());
 					// We rely on the fact that the contents and pos do not yet
 					// reflect the result of the BS. If the contents were
 					// already empty, then BS should not cause
@@ -458,20 +446,17 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			 * Construct an info-popup with the specified parent.
 			 */
 			InfoPopupDialog(Shell parent) {
-				super(parent, PopupDialog.HOVER_SHELLSTYLE, false, false,
-						false, false, false, null, null);
+				super(parent, PopupDialog.HOVER_SHELLSTYLE, false, false, false, false, false, null, null);
 			}
 
 			/*
 			 * Create a text control for showing the info about a proposal.
 			 */
 			protected Control createDialogArea(Composite parent) {
-				text = new Text(parent, SWT.MULTI | SWT.READ_ONLY | SWT.WRAP
-						| SWT.NO_FOCUS);
+				text = new Text(parent, SWT.MULTI | SWT.READ_ONLY | SWT.WRAP | SWT.NO_FOCUS);
 
 				// Use the compact margins employed by PopupDialog.
-				GridData gd = new GridData(GridData.BEGINNING
-						| GridData.FILL_BOTH);
+				GridData gd = new GridData(GridData.BEGINNING | GridData.FILL_BOTH);
 				gd.horizontalIndent = PopupDialog.POPUP_HORIZONTALSPACING;
 				gd.verticalIndent = PopupDialog.POPUP_VERTICALSPACING;
 				text.setLayoutData(gd);
@@ -493,32 +478,24 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 				Rectangle parentBounds = getParentShell().getBounds();
 				Rectangle proposedBounds;
 				// Try placing the info popup to the right
-				Rectangle rightProposedBounds = new Rectangle(parentBounds.x
-						+ parentBounds.width
-						+ PopupDialog.POPUP_HORIZONTALSPACING, parentBounds.y
-						+ PopupDialog.POPUP_VERTICALSPACING,
+				Rectangle rightProposedBounds = new Rectangle(parentBounds.x + parentBounds.width
+						+ PopupDialog.POPUP_HORIZONTALSPACING, parentBounds.y + PopupDialog.POPUP_VERTICALSPACING,
 						parentBounds.width, parentBounds.height);
 				rightProposedBounds = getConstrainedShellBounds(rightProposedBounds);
 				// If it won't fit on the right, try the left
 				if (rightProposedBounds.intersects(parentBounds)) {
-					Rectangle leftProposedBounds = new Rectangle(parentBounds.x
-							- parentBounds.width - POPUP_HORIZONTALSPACING - 1,
-							parentBounds.y, parentBounds.width,
-							parentBounds.height);
+					Rectangle leftProposedBounds = new Rectangle(parentBounds.x - parentBounds.width
+							- POPUP_HORIZONTALSPACING - 1, parentBounds.y, parentBounds.width, parentBounds.height);
 					leftProposedBounds = getConstrainedShellBounds(leftProposedBounds);
 					// If it won't fit on the left, choose the proposed bounds
 					// that fits the best
 					if (leftProposedBounds.intersects(parentBounds)) {
-						if (rightProposedBounds.x - parentBounds.x >= parentBounds.x
-								- leftProposedBounds.x) {
-							rightProposedBounds.x = parentBounds.x
-									+ parentBounds.width
+						if (rightProposedBounds.x - parentBounds.x >= parentBounds.x - leftProposedBounds.x) {
+							rightProposedBounds.x = parentBounds.x + parentBounds.width
 									+ PopupDialog.POPUP_HORIZONTALSPACING;
 							proposedBounds = rightProposedBounds;
 						} else {
-							leftProposedBounds.width = parentBounds.x
-									- POPUP_HORIZONTALSPACING
-									- leftProposedBounds.x;
+							leftProposedBounds.width = parentBounds.x - POPUP_HORIZONTALSPACING - leftProposedBounds.x;
 							proposedBounds = leftProposedBounds;
 						}
 					} else {
@@ -538,8 +515,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			 * @see org.eclipse.jface.dialogs.PopupDialog#getForeground()
 			 */
 			protected Color getForeground() {
-				return control.getDisplay().getSystemColor(
-						SWT.COLOR_INFO_FOREGROUND);
+				return control.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND);
 			}
 
 			/*
@@ -548,8 +524,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			 * @see org.eclipse.jface.dialogs.PopupDialog#getBackground()
 			 */
 			protected Color getBackground() {
-				return control.getDisplay().getSystemColor(
-						SWT.COLOR_INFO_BACKGROUND);
+				return control.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND);
 			}
 
 			/*
@@ -572,8 +547,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 				if (text == null || text.isDisposed()) {
 					return false;
 				}
-				return text.getShell().isFocusControl()
-						|| text.isFocusControl();
+				return text.getShell().isFocusControl() || text.isFocusControl();
 			}
 		}
 
@@ -633,16 +607,14 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			// On platforms where SWT.ON_TOP overrides SWT.RESIZE, we will live
 			// with this.
 			// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=126138
-			super(control.getShell(), SWT.RESIZE | SWT.ON_TOP, false, false,
-					false, false, false, null, infoText);
+			super(control.getShell(), SWT.RESIZE | SWT.ON_TOP, false, false, false, false, false, null, infoText);
 			this.proposals = proposals;
 		}
 
 		@Override
 		protected void configureShell(Shell shell) {
 			super.configureShell(shell);
-			shell.setData(SWTBOT_WIDGET_ID_KEY,
-					SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_SHELL);
+			shell.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_SHELL);
 		}
 
 		/*
@@ -651,8 +623,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		 * @see org.eclipse.jface.dialogs.PopupDialog#getForeground()
 		 */
 		protected Color getForeground() {
-			return JFaceResources.getColorRegistry().get(
-					JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR);
+			return JFaceResources.getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_FOREGROUND_COLOR);
 		}
 
 		/*
@@ -661,8 +632,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		 * @see org.eclipse.jface.dialogs.PopupDialog#getBackground()
 		 */
 		protected Color getBackground() {
-			return JFaceResources.getColorRegistry().get(
-					JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
+			return JFaceResources.getColorRegistry().get(JFacePreferences.CONTENT_ASSIST_BACKGROUND_COLOR);
 		}
 
 		/*
@@ -681,15 +651,11 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 		private void createProposalTable(final Composite parent) {
 			// Use virtual where appropriate (see flag definition).
-			final Composite proposalTableComposite = new Composite(parent,
-					SWT.NONE);
-			proposalTableComposite.setLayout(GridLayoutFactory.fillDefaults()
-					.create());
-			proposalTableComposite.setLayoutData(GridDataFactory.fillDefaults()
-					.grab(true, true).create());
+			final Composite proposalTableComposite = new Composite(parent, SWT.NONE);
+			proposalTableComposite.setLayout(GridLayoutFactory.fillDefaults().create());
+			proposalTableComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 			if (USE_VIRTUAL) {
-				proposalTable = new Table(proposalTableComposite, SWT.H_SCROLL
-						| SWT.V_SCROLL | SWT.VIRTUAL);
+				proposalTable = new Table(proposalTableComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
 				Listener listener = new Listener() {
 					public void handleEvent(Event event) {
 						handleSetData(event);
@@ -697,11 +663,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 				};
 				proposalTable.addListener(SWT.SetData, listener);
 			} else {
-				proposalTable = new Table(proposalTableComposite, SWT.H_SCROLL
-						| SWT.V_SCROLL);
+				proposalTable = new Table(proposalTableComposite, SWT.H_SCROLL | SWT.V_SCROLL);
 			}
-			proposalTable.setData(SWTBOT_WIDGET_ID_KEY,
-					SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_TABLE);
+			proposalTable.setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPRESSIONVIEWER_PROPOSAL_TABLE);
 			// set the proposals to force population of the table.
 			setProposals(filterProposals(proposals, filterText));
 
@@ -728,57 +692,61 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 		private void createVariableCreationZone(final Composite parent) {
 			if (context != null && context.eResource() != null) {
-				final Composite creationZoneComposite = new Composite(parent,
-						SWT.NONE);
-				creationZoneComposite.setLayout(GridLayoutFactory
-						.fillDefaults().margins(10, 10).create());
-				creationZoneComposite.setLayoutData(GridDataFactory
-						.fillDefaults().grab(true, false).create());
+				final Composite creationZoneComposite = new Composite(parent, SWT.NONE);
+				creationZoneComposite.setLayout(GridLayoutFactory.fillDefaults().margins(10, 10).create());
+				creationZoneComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 				Link createDataLink;
-				for (IConfigurationElement element : BonitaStudioExtensionRegistryManager
-						.getInstance()
+				
+				for (IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance()
 						.getConfigurationElements("org.bonitasoft.studio.expression.proposalListener")) {
-					createDataLink = new Link(creationZoneComposite, SWT.NONE);
-					final String name = element.getAttribute("name");
-					createDataLink.setText(name);
-					try {
-						final IProposalListener listener = (IProposalListener) element.createExecutableExtension("providerClass");
-						createDataLink.addSelectionListener(new SelectionAdapter() {
-							@Override
-							public void widgetSelected(SelectionEvent e) {
-								final String newObjectLabel = listener.handleEvent(context);
-								updateExpressionField(newObjectLabel);
-							}
-						});
-					} catch (CoreException e) {
-						BonitaStudioLog.error(e);
+					final String expressionTypeLink = element.getAttribute("type");
+					if(!filteredExpressionType.contains(expressionTypeLink)){
+						createDataLink = new Link(creationZoneComposite, SWT.NONE);
+						final String name = element.getAttribute("name");
+						createDataLink.setText(name);
+						try {
+							final IProposalListener listener = (IProposalListener) element
+									.createExecutableExtension("providerClass");
+							createDataLink.addSelectionListener(new SelectionAdapter() {
+								@Override
+								public void widgetSelected(SelectionEvent e) {
+									final String newObjectLabel = listener.handleEvent(context);
+									updateExpressionField(newObjectLabel);
+								}
+							});
+						} catch (CoreException e) {
+							BonitaStudioLog.error(e);
+						}
+						linkList.add(createDataLink);
 					}
-					linkList.add(createDataLink);
 				}
 				creationZoneComposite.getParent().layout(true, true);
 			}
 		}
 
-		private void updateExpressionField(String newObjectLabel){
+		private void updateExpressionField(String newObjectLabel) {
 			if (newObjectLabel != null) {
 				final Object[] listenerArray = proposalListeners.getListeners();
 				for (int i = 0; i < listenerArray.length; i++) {
-					IContentProposalListener listener =  (IContentProposalListener) listenerArray[i];
-					if(listener instanceof ExpressionViewer){
-						((ExpressionViewer)listener).manageNatureProviderAndAutocompletionProposal(((ExpressionViewer)listener).getInput());
+					IContentProposalListener listener = (IContentProposalListener) listenerArray[i];
+					if (listener instanceof ExpressionViewer) {
+						((ExpressionViewer) listener)
+								.manageNatureProviderAndAutocompletionProposal(((ExpressionViewer) listener).getInput());
 					}
 				}
-				IContentProposal[] newProposals = getProposals();
-				setProposals(newProposals);
-				for(int i=0; i<newProposals.length;i++){
-					if(newProposals[i].getContent().equals(newObjectLabel)){
-						proposalAccepted(newProposals[i]);
-						break;
+				if(proposalProvider!=null){
+					IContentProposal[] newProposals = proposalProvider.getProposals("", 0);
+					setProposals(newProposals);
+					for (int i = 0; i < newProposals.length; i++) {
+						if (newProposals[i].getContent().equals(newObjectLabel)) {
+							proposalAccepted(newProposals[i]);
+							break;
+						}
 					}
-				}
+				}				
 			}
 		}
-		
+
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -786,45 +754,38 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		 */
 		protected void adjustBounds() {
 			// Get our control's location in display coordinates.
-			Point location = control.getDisplay().map(control.getParent(),
-					null, control.getLocation());
+			Point location = control.getDisplay().map(control.getParent(), null, control.getLocation());
 			int initialX = location.x + POPUP_OFFSET;
 			int initialY = location.y + control.getSize().y + POPUP_OFFSET;
 			// If we are inserting content, use the cursor position to
 			// position the control.
 			if (getProposalAcceptanceStyle() == PROPOSAL_INSERT) {
-				Rectangle insertionBounds = controlContentAdapter
-						.getInsertionBounds(control);
+				Rectangle insertionBounds = controlContentAdapter.getInsertionBounds(control);
 				initialX = initialX + insertionBounds.x;
-				initialY = location.y + insertionBounds.y
-						+ insertionBounds.height;
+				initialY = location.y + insertionBounds.y + insertionBounds.height;
 			}
 
 			// If there is no specified size, force it by setting
 			// up a layout on the table.
 			if (popupSize == null) {
 				GridData data = new GridData(GridData.FILL_BOTH);
-				data.heightHint = proposalTable.getItemHeight()
-						* POPUP_CHAR_HEIGHT;
-				data.widthHint = Math.max(control.getSize().x + TB_OFFSET,
-						POPUP_MINIMUM_WIDTH);
+				data.heightHint = proposalTable.getItemHeight() * POPUP_CHAR_HEIGHT;
+				data.widthHint = Math.max(control.getSize().x + TB_OFFSET, POPUP_MINIMUM_WIDTH);
 				proposalTable.setLayoutData(data);
 				getShell().pack();
 				popupSize = getShell().getSize();
 			}
 
 			// Constrain to the display
-			Rectangle constrainedBounds = getConstrainedShellBounds(new Rectangle(
-					initialX, initialY, popupSize.x, popupSize.y));
+			Rectangle constrainedBounds = getConstrainedShellBounds(new Rectangle(initialX, initialY, popupSize.x,
+					popupSize.y));
 
 			// If there has been an adjustment causing the popup to overlap
 			// with the control, then put the popup above the control.
 			if (constrainedBounds.y < initialY)
-				getShell().setBounds(initialX, location.y - popupSize.y,
-						popupSize.x, popupSize.y);
+				getShell().setBounds(initialX, location.y - popupSize.y, popupSize.x, popupSize.y);
 			else
-				getShell().setBounds(initialX, initialY, popupSize.x,
-						popupSize.y);
+				getShell().setBounds(initialX, initialY, popupSize.x, popupSize.y);
 
 			// Now set up a listener to monitor any changes in size.
 			getShell().addListener(SWT.Resize, new Listener() {
@@ -893,16 +854,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 				// proposalTable.getParent().layout(true);
 				if (proposalTable.getItemCount() == 0) {
 					proposalTable.getParent().setLayoutData(
-							GridDataFactory.swtDefaults().grab(true, false)
-									.hint(SWT.DEFAULT, 0).create());
+							GridDataFactory.swtDefaults().grab(true, false).hint(SWT.DEFAULT, 0).create());
 				} else {
 					setPopupSize(null);
 					adjustBounds();
-					proposalTable.getParent().setLayoutData(
-							GridDataFactory.fillDefaults().grab(true, true)
-									.create());
-					proposalTable.setLayoutData(GridDataFactory.fillDefaults()
-							.grab(true, true).create());
+					proposalTable.getParent().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+					proposalTable.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 				}
 				proposalTable.getParent().layout(true, true);
 
@@ -928,8 +885,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 				return EMPTY;
 			}
 			if (labelProvider == null) {
-				return proposal.getLabel() == null ? proposal.getContent()
-						: proposal.getLabel();
+				return proposal.getLabel() == null ? proposal.getContent() : proposal.getLabel();
 			}
 			return labelProvider.getText(proposal);
 		}
@@ -1081,21 +1037,15 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 									String description = p.getDescription();
 									if (description != null) {
 										if (infoPopup == null) {
-											infoPopup = new InfoPopupDialog(
-													getShell());
+											infoPopup = new InfoPopupDialog(getShell());
 											infoPopup.open();
-											infoPopup
-													.getShell()
-													.addDisposeListener(
-															new DisposeListener() {
-																public void widgetDisposed(
-																		DisposeEvent event) {
-																	infoPopup = null;
-																}
-															});
+											infoPopup.getShell().addDisposeListener(new DisposeListener() {
+												public void widgetDisposed(DisposeEvent event) {
+													infoPopup = null;
+												}
+											});
 										}
-										infoPopup.setContents(p
-												.getDescription());
+										infoPopup.setContents(p.getDescription());
 									} else if (infoPopup != null) {
 										infoPopup.close();
 									}
@@ -1167,8 +1117,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		 * Filter the provided list of content proposals according to the filter
 		 * text.
 		 */
-		private IContentProposal[] filterProposals(
-				IContentProposal[] proposals, String filterString) {
+		private IContentProposal[] filterProposals(IContentProposal[] proposals, String filterString) {
 			if (filterString.length() == 0) {
 				return proposals;
 			}
@@ -1179,14 +1128,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			for (int i = 0; i < proposals.length; i++) {
 				String string = getString(proposals[i]);
 				if (string.length() >= filterString.length()
-						&& string.substring(0, filterString.length())
-								.equalsIgnoreCase(filterString)) {
+						&& string.substring(0, filterString.length()).equalsIgnoreCase(filterString)) {
 					list.add(proposals[i]);
 				}
 
 			}
-			return (IContentProposal[]) list.toArray(new IContentProposal[list
-					.size()]);
+			return (IContentProposal[]) list.toArray(new IContentProposal[list.size()]);
 		}
 
 		Listener getTargetControlListener() {
@@ -1394,6 +1341,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	private boolean watchModify = false;
 
 	protected EObject context;
+	
+	protected ArrayList<String> filteredExpressionType;
 
 	/**
 	 * Construct a content proposal adapter that can assist the user with
@@ -1426,10 +1375,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 *            <code>null</code>, then all alphanumeric characters will
 	 *            auto-activate content proposal.
 	 */
-	public BonitaContentProposalAdapter(Control control,
-			IControlContentAdapter controlContentAdapter,
-			IContentProposalProvider proposalProvider, KeyStroke keyStroke,
-			char[] autoActivationCharacters) {
+	public BonitaContentProposalAdapter(Control control, IControlContentAdapter controlContentAdapter,
+			IContentProposalProvider proposalProvider, KeyStroke keyStroke, char[] autoActivationCharacters) {
 		super();
 		// We always assume the control and content adapter are valid.
 		Assert.isNotNull(control);
@@ -1444,6 +1391,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			this.autoActivateString = new String(autoActivationCharacters);
 		}
 		addControlListener(control);
+		filteredExpressionType = new ArrayList<String>();
 	}
 
 	public void setContext(EObject context) {
@@ -1509,8 +1457,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 * @param proposalProvider
 	 *            the {@link IContentProposalProvider} used to show proposals
 	 */
-	public void setContentProposalProvider(
-			IContentProposalProvider proposalProvider) {
+	public void setContentProposalProvider(IContentProposalProvider proposalProvider) {
 		this.proposalProvider = proposalProvider;
 	}
 
@@ -1782,8 +1729,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 * @since 3.3
 	 * @see org.eclipse.jface.fieldassist.IContentProposalListener2
 	 */
-	public void addContentProposalListener(
-			IBonitaContentProposalListener2 listener) {
+	public void addContentProposalListener(IBonitaContentProposalListener2 listener) {
 		proposalListeners2.add(listener);
 	}
 
@@ -1809,8 +1755,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 */
 	private void addControlListener(Control control) {
 		if (DEBUG) {
-			System.out
-					.println("ContentProposalListener#installControlListener()"); //$NON-NLS-1$
+			System.out.println("ContentProposalListener#installControlListener()"); //$NON-NLS-1$
 		}
 
 		if (controlListener != null) {
@@ -1870,12 +1815,11 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 					if (triggerKeyStroke != null) {
 						// Either there are no modifiers for the trigger and we
 						// check the character field...
-						if ((triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY && triggerKeyStroke
-								.getNaturalKey() == e.character) ||
-						// ...or there are modifiers, in which case the
-						// keycode and state must match
-								(triggerKeyStroke.getNaturalKey() == e.keyCode && ((triggerKeyStroke
-										.getModifierKeys() & e.stateMask) == triggerKeyStroke
+						if ((triggerKeyStroke.getModifierKeys() == KeyStroke.NO_KEY && triggerKeyStroke.getNaturalKey() == e.character)
+								||
+								// ...or there are modifiers, in which case the
+								// keycode and state must match
+								(triggerKeyStroke.getNaturalKey() == e.keyCode && ((triggerKeyStroke.getModifierKeys() & e.stateMask) == triggerKeyStroke
 										.getModifierKeys()))) {
 							// We never propagate the keystroke for an explicit
 							// keystroke invocation of the popup
@@ -1981,8 +1925,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			 *            the event
 			 */
 			private void dump(String who, Event e) {
-				StringBuffer sb = new StringBuffer(
-						"--- [ContentProposalAdapter]\n"); //$NON-NLS-1$
+				StringBuffer sb = new StringBuffer("--- [ContentProposalAdapter]\n"); //$NON-NLS-1$
 				sb.append(who);
 				sb.append(" - e: keyCode=" + e.keyCode + hex(e.keyCode)); //$NON-NLS-1$
 				sb.append("; character=" + e.character + hex(e.character)); //$NON-NLS-1$
@@ -2002,8 +1945,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		control.addListener(SWT.Modify, controlListener);
 
 		if (DEBUG) {
-			System.out
-					.println("ContentProposalAdapter#installControlListener() - installed"); //$NON-NLS-1$
+			System.out.println("ContentProposalAdapter#installControlListener() - installed"); //$NON-NLS-1$
 		}
 	}
 
@@ -2078,12 +2020,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	private void proposalAccepted(IContentProposal proposal) {
 		switch (proposalAcceptanceStyle) {
 		case (PROPOSAL_REPLACE):
-			setControlContent(proposal.getContent(),
-					proposal.getCursorPosition());
+			setControlContent(proposal.getContent(), proposal.getCursorPosition());
 			break;
 		case (PROPOSAL_INSERT):
-			insertControlContent(proposal.getContent(),
-					proposal.getCursorPosition());
+			insertControlContent(proposal.getContent(), proposal.getCursorPosition());
 			break;
 		default:
 			// do nothing. Typically a listener is installed to handle this in
@@ -2103,8 +2043,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		if (isValid()) {
 			// should already be false, but just in case.
 			watchModify = false;
-			controlContentAdapter.setControlContents(control, text,
-					cursorPosition);
+			controlContentAdapter.setControlContents(control, text, cursorPosition);
 		}
 	}
 
@@ -2121,15 +2060,12 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			// the popup opened.
 			// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=127108
 			// See https://bugs.eclipse.org/bugs/show_bug.cgi?id=139063
-			if (controlContentAdapter instanceof IControlContentAdapter2
-					&& selectionRange.x != -1) {
-				((IControlContentAdapter2) controlContentAdapter).setSelection(
-						control, selectionRange);
+			if (controlContentAdapter instanceof IControlContentAdapter2 && selectionRange.x != -1) {
+				((IControlContentAdapter2) controlContentAdapter).setSelection(control, selectionRange);
 			} else if (insertionPos != -1) {
 				controlContentAdapter.setCursorPosition(control, insertionPos);
 			}
-			controlContentAdapter.insertControlContents(control, text,
-					cursorPosition);
+			controlContentAdapter.insertControlContents(control, text, cursorPosition);
 		}
 	}
 
@@ -2137,8 +2073,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 * Check that the control and content adapter are valid.
 	 */
 	private boolean isValid() {
-		return control != null && !control.isDisposed()
-				&& controlContentAdapter != null;
+		return control != null && !control.isDisposed() && controlContentAdapter != null;
 	}
 
 	/*
@@ -2150,8 +2085,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 			insertionPos = adapter.getCursorPosition(control);
 			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=139063
 			if (adapter instanceof IControlContentAdapter2) {
-				selectionRange = ((IControlContentAdapter2) adapter)
-						.getSelection(control);
+				selectionRange = ((IControlContentAdapter2) adapter).getSelection(control);
 			}
 
 		}
@@ -2170,13 +2104,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		}
 		int position = insertionPos;
 		if (position == -1) {
-			position = getControlContentAdapter().getCursorPosition(
-					getControl());
+			position = getControlContentAdapter().getCursorPosition(getControl());
 		}
-		String contents = getControlContentAdapter().getControlContents(
-				getControl());
-		IContentProposal[] proposals = proposalProvider.getProposals(contents,
-				position);
+		String contents = getControlContentAdapter().getControlContents(getControl());
+		IContentProposal[] proposals = proposalProvider.getProposals(contents, position);
 		return proposals;
 	}
 
@@ -2231,8 +2162,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		}
 		final Object[] listenerArray = proposalListeners.getListeners();
 		for (int i = 0; i < listenerArray.length; i++) {
-			((IContentProposalListener) listenerArray[i])
-					.proposalAccepted(proposal);
+			((IContentProposalListener) listenerArray[i]).proposalAccepted(proposal);
 		}
 	}
 
@@ -2245,8 +2175,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		}
 		final Object[] listenerArray = proposalListeners2.getListeners();
 		for (int i = 0; i < listenerArray.length; i++) {
-			((IBonitaContentProposalListener2) listenerArray[i])
-					.proposalPopupOpened(this);
+			((IBonitaContentProposalListener2) listenerArray[i]).proposalPopupOpened(this);
 		}
 	}
 
@@ -2259,8 +2188,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		}
 		final Object[] listenerArray = proposalListeners2.getListeners();
 		for (int i = 0; i < listenerArray.length; i++) {
-			((IBonitaContentProposalListener2) listenerArray[i])
-					.proposalPopupClosed(this);
+			((IBonitaContentProposalListener2) listenerArray[i]).proposalPopupClosed(this);
 		}
 	}
 
@@ -2280,8 +2208,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	 * Return whether the control content is empty
 	 */
 	private boolean isControlContentEmpty() {
-		return getControlContentAdapter().getControlContents(getControl())
-				.length() == 0;
+		return getControlContentAdapter().getControlContents(getControl()).length() == 0;
 	}
 
 	/*
@@ -2307,8 +2234,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		// open
 		if (autoActivateString == null || autoActivateString.length() == 0)
 			return true;
-		String content = getControlContentAdapter().getControlContents(
-				getControl());
+		String content = getControlContentAdapter().getControlContents(getControl());
 		for (int i = 0; i < autoActivateString.length(); i++) {
 			if (content.indexOf(autoActivateString.charAt(i)) >= 0)
 				return true;
@@ -2361,5 +2287,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 
 	public void showProposalPopup() {
 		openProposalPopup(false);
+	}
+
+	public void setFilteredExpressionType(ArrayList<String> filteredExpressionType) {
+		this.filteredExpressionType = filteredExpressionType;
 	}
 }

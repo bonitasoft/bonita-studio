@@ -24,6 +24,7 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
+import org.bonitasoft.studio.expression.editor.operation.PropertyOperationsComposite;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ListExpression;
@@ -75,12 +76,9 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		createAutoFillButton(aTabbedPropertySheetPage);
 		validator= new MessageContentExpressionValidator();
-		alc = new OperationsComposite(aTabbedPropertySheetPage,mainComposite,new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.MESSAGE_ID_TYPE}), new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE}));
+		alc = new PropertyOperationsComposite(aTabbedPropertySheetPage,mainComposite,new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.MESSAGE_ID_TYPE}), new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE}));
 		alc.addActionExpressionValidator(ExpressionConstants.MESSAGE_ID_TYPE, validator);
 		alc.addActionExpressionValidator(ExpressionConstants.CONSTANT_TYPE, validator);
-		//        ActionExpressionNatureProvider actionExprNatureProvider = new ActionExpressionNatureProvider();
-		//        actionExprNatureProvider.setContext(getEObject());
-		//        alc.setActionExpressionNatureContentProvider(actionExprNatureProvider);
 		alc.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 	}
 

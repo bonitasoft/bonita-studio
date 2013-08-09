@@ -37,7 +37,9 @@ public class WebServiceConnectorMapper extends AbstractConnectorDefinitionMapper
 	private static final String LEGACY_ENVELOPPE = "setEnveloppe";
 	private static final String ENVELOPPE = "envelope";
 	private static final String WEBSERVICE_CONNECTOR_DEFINITION_ID = "webservice";
-	private static final Object LEGACY_REQUEST = "setRequest";
+	private static final String LEGACY_REQUEST = "setRequest";
+	private static final String LEGACY_TARGET_NS = "setTargetNS" ;
+	private static final String TARGET_NS = "serviceNS";
 
 	@Override
 	public boolean appliesTo(String legacyConnectorId) {
@@ -68,6 +70,9 @@ public class WebServiceConnectorMapper extends AbstractConnectorDefinitionMapper
 		}
 		if(LEGACY_ENVELOPPE.equals(legacyParameterKey)){
 			return ENVELOPPE;
+		}
+		if(LEGACY_TARGET_NS.equals(legacyParameterKey)){
+			return TARGET_NS;
 		}
 		return super.getParameterKeyFor(legacyParameterKey);
 	}

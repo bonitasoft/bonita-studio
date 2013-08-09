@@ -161,6 +161,10 @@ public class Messages extends NLS {
 	public static String nRowsNColsOutputHint;
 
 	public static String alwaysUseScriptingModeOutputPref;
+	public static String unsuportedExpressionTypeForTesting;
+
+	public static String unresolvedPatternOrScriptExpression;
+	public static String unresolvedExpression;
     /**
      * @param event
      * @return
