@@ -30,6 +30,7 @@ import org.eclipse.ui.intro.config.IIntroContentProviderSite;
 import org.eclipse.ui.intro.config.IIntroXHTMLContentProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 /**
@@ -73,20 +74,24 @@ public class OpenActionContentProvider implements IIntroXHTMLContentProvider {
 
 		Document dom = parent.getOwnerDocument();
 		Element ul = (Element) dom.getElementsByTagName("ul").item(0);
-		Element li = dom.createElement("li");
-		ul.insertBefore(li, ul.getElementsByTagName("li").item(1));
-		Element link = dom.createElement("a");
-		li.appendChild(link);
-		if(open.isEnabled()){
-			link.setAttribute("href", "http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&class=org.bonitasoft.studio.intro.actions.OpenProcess");
-		}		
-		Text t = dom.createTextNode(Messages.getMessage("openAProcess"));
-		link.appendChild(t);
-	
-		if(open.isEnabled()){
-			li.setAttribute("id", id);
-		}else{
-			li.setAttribute("id", id+"-disabled");
+
+		NodeList liList = ul.getElementsByTagName("li");
+		if(liList.getLength() == 2){
+			Element li = dom.createElement("li");
+			ul.insertBefore(li, liList.item(1));
+			Element link = dom.createElement("a");
+			li.appendChild(link);
+			if(open.isEnabled()){
+				link.setAttribute("href", "http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&class=org.bonitasoft.studio.intro.actions.OpenProcess");
+			}		
+			Text t = dom.createTextNode(Messages.getMessage("openAProcess"));
+			link.appendChild(t);
+
+			if(open.isEnabled()){
+				li.setAttribute("id", id);
+			}else{
+				li.setAttribute("id", id+"-disabled");
+			}
 		}
 	}
 
