@@ -341,7 +341,7 @@ public class BPMNToProc extends ToProcProcessor {
 					|| docRootDefinitions.getName().isEmpty()) {
 				name = resourceName.substring(0, resourceName.lastIndexOf("."));
 			} else {
-				name = id;
+				name = docRootDefinitions.getName();
 			}
 			result = File.createTempFile(id, ".proc");
 			builder.createDiagram(id, name, "1.0", result);
