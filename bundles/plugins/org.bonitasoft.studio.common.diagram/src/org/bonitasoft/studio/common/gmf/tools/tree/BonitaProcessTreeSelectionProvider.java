@@ -30,6 +30,7 @@ import org.bonitasoft.studio.model.process.AssociatedFile;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
@@ -123,7 +124,7 @@ public class BonitaProcessTreeSelectionProvider {
                     return "tab.forms.entry" ;
                 }
             }else{
-                return "tab.datas" ;
+                return "tab.data" ;
             }
         }else if(element instanceof AbstractKPIBinding){
             return "tab.kpi" ;
@@ -143,6 +144,8 @@ public class BonitaProcessTreeSelectionProvider {
             }else if(element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getPageFlowTransition())){
                 return "tab.forms" ;
             }
+        } else if(element instanceof Document){
+        	return "tab.document";
         }
         return "tab.general";
     }
