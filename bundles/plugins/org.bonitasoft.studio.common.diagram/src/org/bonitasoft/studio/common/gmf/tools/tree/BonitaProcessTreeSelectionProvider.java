@@ -24,6 +24,7 @@ import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.ViewForm;
 import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
+import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.AssociatedFile;
@@ -39,6 +40,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ResourceFile;
 import org.bonitasoft.studio.model.process.ResourceFolder;
+import org.bonitasoft.studio.model.process.SearchIndex;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -126,7 +128,9 @@ public class BonitaProcessTreeSelectionProvider {
             }else{
                 return "tab.data" ;
             }
-        }else if(element instanceof AbstractKPIBinding){
+        } else if(element instanceof Parameter){
+        	return "tab.parameter";
+        } else if(element instanceof AbstractKPIBinding){
             return "tab.kpi" ;
         }else if(element instanceof ViewForm){
             if(((ViewForm)element).eContainingFeature().equals(ProcessPackage.eINSTANCE.getViewPageFlow_ViewForm())){
@@ -146,6 +150,8 @@ public class BonitaProcessTreeSelectionProvider {
             }
         } else if(element instanceof Document){
         	return "tab.document";
+        } else if(element instanceof SearchIndex){
+        	return "tab.index";
         }
         return "tab.general";
     }
