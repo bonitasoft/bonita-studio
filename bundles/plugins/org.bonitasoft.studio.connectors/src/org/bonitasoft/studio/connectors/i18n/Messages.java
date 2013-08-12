@@ -165,6 +165,8 @@ public class Messages extends NLS {
 
 	public static String unresolvedPatternOrScriptExpression;
 	public static String unresolvedExpression;
+
+	public static String deleteConnectorDefinition;
     /**
      * @param event
      * @return

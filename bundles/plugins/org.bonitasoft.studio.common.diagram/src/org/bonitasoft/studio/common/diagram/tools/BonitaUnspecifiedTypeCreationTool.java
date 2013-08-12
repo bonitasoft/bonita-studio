@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import org.bonitasoft.studio.common.gmf.tools.PaletteToolTransferDropTargetListenerWithSelection;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -34,6 +35,7 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -126,7 +128,9 @@ public class BonitaUnspecifiedTypeCreationTool extends UnspecifiedTypeCreationTo
 				for(Object v : getCurrentViewer().getEditPartRegistry().keySet()){
 					if(v instanceof Connector){
 						ConnectionEditPart ep = (ConnectionEditPart) getCurrentViewer().getEditPartRegistry().get(v);
-						if(((PolylineConnectionEx)ep.getFigure()).getSimpleBounds().getCopy().expand(new Insets(((PolylineConnectionEx)ep.getFigure()).getLineWidth(), 0, 0, 0)).intersects(shrink)){
+						int lineWidth = ((PolylineConnectionEx)ep.getFigure()).getLineWidth();
+						Rectangle bound = ((PolylineConnectionEx)ep.getFigure()).getSimpleBounds().getCopy().expand(new Insets(lineWidth, lineWidth, 0, 0));
+						if(bound.intersects(shrink)){
 							editPart = ep;
 						}
 					}

@@ -206,7 +206,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 		bot.button("Add...").click();
 		assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
 				.button(IDialogConstants.FINISH_LABEL).isEnabled());
-		bot.textWithLabel("Name").setText(dataName);
+		bot.textWithLabel("Name *").setText(dataName);
 		assertTrue(IDialogConstants.FINISH_LABEL + " should be disabled", bot
 				.button(IDialogConstants.FINISH_LABEL).isEnabled());
 		bot.button(IDialogConstants.FINISH_LABEL).click();

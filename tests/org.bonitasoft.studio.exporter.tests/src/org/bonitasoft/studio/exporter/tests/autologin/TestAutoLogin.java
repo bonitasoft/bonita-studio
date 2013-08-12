@@ -64,6 +64,11 @@ public class TestAutoLogin extends TestCase {
         
 	}
 	
+	@Override
+	protected void tearDown() throws Exception {
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+		super.tearDown();
+	}
 	
     @Test
     public void testGenerateSecurityConfigFile() throws Exception {
