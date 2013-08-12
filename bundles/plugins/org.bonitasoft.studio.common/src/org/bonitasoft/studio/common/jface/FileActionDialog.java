@@ -110,6 +110,43 @@ public class FileActionDialog {
         }
 
     }
+    
+    public static boolean confirmDeletionQuestionWithCustomMessage(final String message){
+    	  if (DISABLE_POPUP && NO_TO_ALL) {
+              return false;
+          } else if(DISABLE_POPUP){
+              return true;
+          }else {
+              if(YES_NO_TO_ALL){
+                  if(YES_TO_ALL){
+                      return true;
+                  }
+                  if (NO_TO_ALL) {
+                      return false;
+                  }
+                  final int returnCode = new YesNoToAllDialog(Display.getDefault().getActiveShell(),  Messages.deleteConfirmationTitle,
+                         message).open();
+                  if (returnCode == YesNoToAllDialog.YES_TO_ALL) {
+                      YES_TO_ALL = true;
+                  }
+                  if (returnCode == YesNoToAllDialog.NO_TO_ALL) {
+                      NO_TO_ALL = true;
+                  }
+                  return returnCode == YesNoToAllDialog.YES || returnCode == YesNoToAllDialog.YES_TO_ALL;
+              }else{
+                  Display.getDefault().syncExec(new Runnable() {
+
+                      @Override
+                      public void run() {
+                          answer = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteConfirmationTitle,
+                                  message);
+                      }
+                  }) ;
+                  return answer ;
+              }
+          }
+    	
+    }
 
     public static void activateYesNoToAll(){
         YES_NO_TO_ALL = true ;
