@@ -226,7 +226,9 @@ public class Messages extends NLS {
 	public static String actorDescriptionLane;
 	public static String actorDescriptionTask;
 	public static String exportActorFilterTitle;
-
-
+	public static String addActor;
+	public static String initiator;
+	public static String newActor;
+	public static String actorWizardPageTitle;
 
 }
