@@ -121,7 +121,7 @@
 									<layout>p2</layout>
 								</repository>
 								<repository>
-									<url>http://download.eclipse.org/modeling/emf/compare/updates/releases</url>
+									<url>http://download.eclipse.org/modeling/emf/compare/updates/releases/</url>
 									<layout>p2</layout>
 								</repository>
 							</source>
@@ -133,7 +133,10 @@
 							<!-- List of IUs to mirror. If omitted, allIUs will be mirrored. -->
 							<!-- Omitted IU version element means latest version of the IU -->
 							<ius>
-		
+								<iu>
+									<id>org.eclipse.swtbot.eclipse.gef.feature.group</id>
+									<version>2.1.1.201307101628</version>
+								</iu>
 								<iu>
 									<id>org.eclipse.swtbot.forms.feature.group</id>
 									<version>2.1.1.201307101628</version>
@@ -156,11 +159,11 @@
 								</iu>
 								<iu>
 									<id>org.polarion.eclipse.team.svn.connector.feature.group</id>
-									<version>3.0.1.I20130301-1700</version>
+									<version>3.0.1.I20130507-1700</version>
 								</iu>
 								<iu>
 									<id>org.polarion.eclipse.team.svn.connector.svnkit17.feature.group</id>
-									<version>3.0.1.I20130301-1700</version>
+									<version>3.0.1.I20130507-1700</version>
 								</iu>
 								<iu>
 									<id>org.codehaus.groovy.jdt.patch.feature.group</id>
@@ -313,14 +316,14 @@
 								</iu>
 								<iu>
 									<id>org.eclipse.gef.sdk.feature.group</id>
-									<version>3.9.0.v20130605-2000</version>
+									<version>3.9.0.201305060205</version>
 								</iu>	
 							</ius>
 							<!-- The destination directory to mirror to. -->
 							<destination>${project.build.directory}/repository</destination>
 							<!-- Whether only strict dependencies should be followed. -->
 							<!-- "strict" means perfect version match -->
-							<followStrictOnly>false</followStrictOnly>
+							<followStrictOnly>true</followStrictOnly>
 							<!-- Whether or not to follow optional requirements. -->
 							<includeOptional>true</includeOptional>
 							<!-- Whether or not to follow non-greedy requirements. -->
