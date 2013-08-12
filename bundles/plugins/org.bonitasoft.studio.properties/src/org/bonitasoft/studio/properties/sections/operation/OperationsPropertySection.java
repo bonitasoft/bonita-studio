@@ -20,6 +20,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
+import org.bonitasoft.studio.expression.editor.operation.PropertyOperationsComposite;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -68,7 +69,7 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
 				ExpressionConstants.DOCUMENT_REF_TYPE
 		}) ;
 
-		return new OperationsComposite(tabbedPropertySheetPage, parent, actionFilter, dataFilter);
+		return new PropertyOperationsComposite(tabbedPropertySheetPage, parent, actionFilter, dataFilter);
 	}
 
 	@Override

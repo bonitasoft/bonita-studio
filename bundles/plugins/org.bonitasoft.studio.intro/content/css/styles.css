@@ -382,21 +382,28 @@ div.caption p {
 	text-align:center;
 }
 
-#actions li a {
-	padding-top: 80px;
-	color: #1B465F;
-}
-
 #new-process a {
 	background-image: url(../images/new.png);
+	color: #1B465F;
 }
 	
 #open-process a {
 	background-image: url(../images/open.png);
+	color: #1B465F;
+ }
+ 
+ #open-process-disabled a, #open-process-disabled a:link, #open-process-disabled a:active, #open-process-disabled a:visited, #open-process-disabled a:hover {
+	background-image: url(../images/open_disabled.png);
+	color: #D5D5D5;
  }
 	
 #import-process a {
 	background-image: url(../images/import.png);
+	color: #1B465F;
+}
+
+#actions li a {
+	padding-top: 80px;
 }
 
 

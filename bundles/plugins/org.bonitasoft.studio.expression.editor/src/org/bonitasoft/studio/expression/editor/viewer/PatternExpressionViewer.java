@@ -111,6 +111,7 @@ public class PatternExpressionViewer extends Composite {
 	private void createEditorSwitch() {
 		final Link switchControl = new Link(mc, SWT.NONE);
 		switchControl.setText(Messages.switchEditor);
+		switchControl.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create());
 		switchControl.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

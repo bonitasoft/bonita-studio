@@ -114,7 +114,7 @@ public class BonitaLanguagePreferencePage extends AbstractBonitaPreferencePage i
 		}
 		if (newLocale != null && newLocale.length() != 0) {
 			changeLocale(newLocale);
-			if (MessageDialog.openQuestion(getShell(), Messages.restartQuestion_title, Messages.bind(Messages.restartQuestion_msg, new Object[]{bonitaStudioModuleName}))){
+			if (MessageDialog.openQuestion(getShell(), Messages.bind(Messages.restartQuestion_title, new Object[]{bonitaStudioModuleName}), Messages.bind(Messages.restartQuestion_msg, new Object[]{bonitaStudioModuleName}))){
 				PlatformUI.getWorkbench().restart();
 			}
 		}

@@ -109,6 +109,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gef.EditPart;
@@ -141,6 +142,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -159,7 +161,7 @@ public class ProcBuilder implements IProcBuilder {
 
     private final TransactionalEditingDomain editingDomain;
     private final IProgressMonitor monitor;
-    private final HashMap<String, Resource> diagramResources;
+    private final Map<String, Resource> diagramResources;
     private MainProcessEditPart diagramPart;
     private Diagram diagram;
     private EObject currentContainer;
@@ -178,9 +180,11 @@ public class ProcBuilder implements IProcBuilder {
     private final Map<AbstractProcess, String> processIds;
     private final List<MessageFlowData> messageFlows;
     private final List<Pair<String,String>> createdSequenceFlows;
-    private final HashMap<String, AbstractProcess> processes;
-    private final HashMap<String, Lane> lanes;
+    private final Map<String, AbstractProcess> processes;
+    private final Map<String, Lane> lanes;
     private Shell shell;
+    private Map<Element, String> elementToReplaceName;
+	private Node currentView;
 
     public ProcBuilder(){
         this(new NullProgressMonitor()) ;
@@ -204,6 +208,7 @@ public class ProcBuilder implements IProcBuilder {
         createdSequenceFlows = new ArrayList<Pair<String,String>>();
         processes = new HashMap<String, AbstractProcess>();
         lanes = new HashMap<String, Lane>();
+        elementToReplaceName = new HashMap<Element, String>();
     }
 
 
@@ -294,6 +299,7 @@ public class ProcBuilder implements IProcBuilder {
         currentContainer = pool ;
         currentStep = pool ;
         currentElement = pool ;
+        currentView =  newNode;
         execute() ;
     }
 
@@ -358,6 +364,7 @@ public class ProcBuilder implements IProcBuilder {
         currentStep = lane ;
         currentElement = lane ;
         currentAssignable = lane;
+        currentView =  newNode;
 
         execute() ;
 
@@ -606,6 +613,7 @@ public class ProcBuilder implements IProcBuilder {
         currentElement = createdElement ;
 
         steps.put(id, createdElement) ;
+        elementToReplaceName.put(createdElement, name);
     }
 
 
@@ -637,7 +645,7 @@ public class ProcBuilder implements IProcBuilder {
         Element createdElement = createShape(id,currentContainer,location,size,type);
 
         commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getElement_Name(),name)) ;
-
+        
         currentStep = createdElement ;
         currentElement = createdElement ;
 
@@ -726,7 +734,7 @@ public class ProcBuilder implements IProcBuilder {
         if(newNode == null){
             throw new ProcBuilderException("New elment not created") ;
         }
-
+        currentView =  newNode;
         Element createdElement = (Element) newNode.getElement();
         ShapeNodeEditPart nodeEditPart = (ShapeNodeEditPart) GMFTools.findEditPart(diagramPart, createdElement ) ;
 
@@ -801,6 +809,7 @@ public class ProcBuilder implements IProcBuilder {
         if(newNode == null){
             throw new ProcBuilderException("New elment not created") ;
         }
+        currentView =  newNode;
         TextAnnotation createdElement = (TextAnnotation) newNode.getElement();
 
         commandStack.append(SetCommand.create(editingDomain, createdElement, ProcessPackage.eINSTANCE.getTextAnnotation_Text(), text))  ;
@@ -824,7 +833,7 @@ public class ProcBuilder implements IProcBuilder {
                     Node node = (Node) ((IGraphicalEditPart) targetEp).getNotationView() ;
                     if(loc != null){
                         commandStack.append(SetCommand.create(editingDomain, node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_X(), loc.getX() + 60)) ;
-                        commandStack.append(SetCommand.create(editingDomain,  node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_Y(), loc.getY() )) ;
+                        commandStack.append(SetCommand.create(editingDomain,  node.getLayoutConstraint(), NotationPackage.eINSTANCE.getLocation_Y(), loc.getY() - 50)) ;
                     }
                 }
             }
@@ -992,11 +1001,11 @@ public class ProcBuilder implements IProcBuilder {
 
         processLinkEvents() ;
 
-        editingDomain.getCommandStack().execute(commandStack) ;
-
         processMessageFlows() ;
 
         processExpressionDataReferences();
+        
+        processElementIDNameConversion();
 
         /*Need to release DiagramEventBroker because the OffscreenEditpart create on, and don't release it itself*/
         DiagramEventBroker.stopListening(editingDomain);
@@ -1016,7 +1025,15 @@ public class ProcBuilder implements IProcBuilder {
         }
     }
 
-    private void processExpressionDataReferences() {
+    private void processElementIDNameConversion() {
+    	for (Entry<Element, String> entry : elementToReplaceName.entrySet()) {
+			//commandStack.append(SetCommand.create(editingDomain, entry.getKey(), ProcessPackage.eINSTANCE.getElement_Name(), entry.getValue()));
+		}
+    	execute();
+	}
+
+
+	private void processExpressionDataReferences() {
         // TODO Auto-generated method stub
 
     }
@@ -1032,6 +1049,7 @@ public class ProcBuilder implements IProcBuilder {
                 commandStack.append(SetCommand.create(diagramPart.getEditingDomain(), tle, ProcessPackage.eINSTANCE.getThrowLinkEvent_To(), cathLinkEvent)) ;
             }
         }
+        execute();
     }
 
     private void processMessageFlows() throws ProcBuilderException {
@@ -1079,7 +1097,7 @@ public class ProcBuilder implements IProcBuilder {
             commandStack.append(SetCommand.create(editingDomain,  edge.getStyle(NotationPackage.eINSTANCE.getLineStyle()), NotationPackage.eINSTANCE.getLineStyle_LineColor(), FigureUtilities.colorToInteger(ColorConstants.lightGray))) ;
         }
 
-        editingDomain.getCommandStack().execute(commandStack) ;
+        execute();
     }
 
 
@@ -1321,7 +1339,7 @@ public class ProcBuilder implements IProcBuilder {
     protected Expression createExpression(final String defaultValueContent, final String defaultValueReturnType, final String defaultValueInterpreter, final String expressionType) {
         Expression exp = ExpressionFactory.eINSTANCE.createExpression() ;
         if(ExpressionConstants.GROOVY.equals(defaultValueInterpreter)){
-            exp.setName(defaultValueContent.substring(0, Math.min(10,defaultValueContent.length())));
+            exp.setName("groovyExpression");
             exp.setContent(defaultValueContent) ;
         } else {
             exp.setName(defaultValueContent);
@@ -1548,6 +1566,21 @@ public class ProcBuilder implements IProcBuilder {
 
 
     }
+
+	public void setFontStyle(String name, int height, boolean isBold,boolean isItalic) throws ProcBuilderException {
+		if(currentView == null){
+			 throw new ProcBuilderException("Impossible to set font style property. There is no view set") ;
+		}
+		FontStyle fontStyle = (FontStyle) currentView.getStyle(NotationPackage.Literals.FONT_STYLE);
+		if(fontStyle == null){
+			fontStyle = NotationFactory.eINSTANCE.createFontStyle();
+		}
+		 commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__BOLD, isBold)) ;
+         commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__ITALIC,isItalic)) ;
+         commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__FONT_NAME,name)) ;
+         commandStack.append(SetCommand.create(editingDomain, fontStyle, NotationPackage.Literals.FONT_STYLE__FONT_HEIGHT,height)) ;
+		execute();
+	}
 
 
 

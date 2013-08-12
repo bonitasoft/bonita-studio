@@ -100,7 +100,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 	public RunProcessCommand(Set<EObject> excludedObject) {
 		this(null,false);
 		this.excludedObject = excludedObject ;
-	}
+ 	}
 
 
 	/* (non-Javadoc)

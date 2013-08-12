@@ -30,32 +30,33 @@ public class OperatorLabelProvider extends LabelProvider {
     @Override
     public String getText(Object element) {
         if(element instanceof String){
-            if(element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR)){
+            if(ExpressionConstants.ASSIGNMENT_OPERATOR.equals(element)){
                 return Messages.assignment ;
-            }else if(element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR)){
+            }else if(ExpressionConstants.JAVA_METHOD_OPERATOR.equals(element)){
                 return Messages.javaMethodOperator ;
-            }else if(element.equals(ExpressionConstants.XPATH_UPDATE_OPERATOR)){
+            }else if(ExpressionConstants.XPATH_UPDATE_OPERATOR.equals(element)){
                 return Messages.xpathUpdateOperator ;
-            }else if(element.equals(ExpressionConstants.SET_DOCUMENT_OPERATOR)){
+            }else if(ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(element)){
                 return Messages.setDocumentOperator ;
             }
         }else if(element instanceof Operator){
             Operator op = (Operator) element ;
-            if(op.getType().equals(ExpressionConstants.ASSIGNMENT_OPERATOR)){
+            final String operatorType = op.getType();
+			if(ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operatorType)){
                 return Messages.assignment ;
-            }else if(op.getType().equals(ExpressionConstants.JAVA_METHOD_OPERATOR)){
+            }else if(ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operatorType)){
                 String methodName = op.getExpression() ;
                 if(methodName.length() > 40){
                     methodName = methodName.substring(0,35) + "..." ;
                 }
                 return methodName ;
-            }else if(op.getType().equals(ExpressionConstants.XPATH_UPDATE_OPERATOR)){
+            }else if(ExpressionConstants.XPATH_UPDATE_OPERATOR.equals(operatorType)){
                 String xpathExpression = op.getExpression() ;
                 if(xpathExpression.length() > 40){
                     xpathExpression = xpathExpression.substring(0,35) + "..." ;
                 }
                 return xpathExpression ;
-            }else if(op.getType().equals(ExpressionConstants.SET_DOCUMENT_OPERATOR)){
+            }else if(ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(operatorType)){
                 return Messages.setDocumentOperator ;
             }
         }

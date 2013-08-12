@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.bonitasoft.studio.actors;singleton:=true
-Bundle-Version: 6.1.0.qualifier
+Bundle-Version: 6.2.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -42,8 +42,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.edapt.history;bundle-version="0.3.0"
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,
- org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.bpm,
+ org.bonitasoft.engine.bpm.bar,
+ org.bonitasoft.engine.bpm.process,
  org.bonitasoft.engine.filter,
  org.bonitasoft.engine.identity,
  org.bonitasoft.engine.profile,

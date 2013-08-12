@@ -21,6 +21,7 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.connectors.expression.DataExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
+import org.bonitasoft.studio.expression.editor.operation.WizardPageOperationsComposite;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -55,7 +56,7 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
                 ExpressionConstants.DOCUMENT_TYPE
         }) ;
 
-        lineComposite = new OperationsComposite(null, mainComposite, rightFilter, leftFilter) ;
+        lineComposite = new WizardPageOperationsComposite(null, mainComposite, rightFilter, leftFilter) ;
         lineComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         lineComposite.setContext(context) ;
         lineComposite.setContext(getElementContainer());

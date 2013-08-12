@@ -2,7 +2,7 @@
 <feature
       id="tests-common-feature"
       label="Feature for BonitaStudio tests"
-      version="6.1.0.qualifier"
+      version="6.2.0.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
@@ -446,6 +446,27 @@
 
    <plugin
          id="org.bonitasoft.studio.validation.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.finder.nebula.tableCombo"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.finder.nebula"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.common.diagram.test"
          download-size="0"
          install-size="0"
          version="0.0.0"

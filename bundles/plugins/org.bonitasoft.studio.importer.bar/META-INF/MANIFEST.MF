@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
 Bundle-Name: V5 Bar Importer Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.importer.bar;singleton:=true
-Bundle-Version: 6.1.0.qualifier
+Bundle-Version: 6.2.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.importer.bar.BarImporterPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.core.runtime,
@@ -38,6 +38,7 @@ Export-Package: org.bonitasoft.studio.importer.bar.custom.migration,
  org.bonitasoft.studio.importer.bar.exception,
  org.bonitasoft.studio.importer.bar.factory
 Import-Package: org.bonitasoft.engine.bpm.connector,
+ org.bonitasoft.engine.bpm.document,
  org.bonitasoft.engine.connector,
  org.bonitasoft.studio.exporter
 Bundle-ClassPath: .,

@@ -66,14 +66,7 @@ public class CustomScriptTaskLabel2EditPart extends ScriptTaskLabel2EditPart {
 	protected void setManager(DirectEditManager manager) {
 		this.manager = manager;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart#isSelectable()
-	 */
-	@Override
-	public boolean isSelectable() {
-		return false;
-	}
+
 	
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.model.process.diagram.edit.parts.ActivityName2EditPart#refreshLabel()

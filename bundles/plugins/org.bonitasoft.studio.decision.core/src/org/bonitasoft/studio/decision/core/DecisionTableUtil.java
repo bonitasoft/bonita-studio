@@ -23,6 +23,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.decision.DecisionTable;
 import org.bonitasoft.studio.model.process.decision.DecisionTableAction;
@@ -75,7 +76,7 @@ public class DecisionTableUtil {
         
         // parsed existing elements referenced to do not have only once each reference
         for(Object ref : listReferencedElements){
-        	if( ref instanceof Data ){
+        	if(ref instanceof Data){
         		Data data = (Data) ref;
         		String dataName = data.getName();
         		boolean addRef = true;
@@ -87,11 +88,41 @@ public class DecisionTableUtil {
         					addRef = false;
         				}
         			}
+        			if(obj instanceof Parameter){
+        				Parameter parameterObj = (Parameter)obj;
+        				String parameterObjName = parameterObj.getName();
+        				if(parameterObjName.equals(dataName)){
+        					addRef = false;
+        				}
+        			}
         		}
         		if(addRef){
         			exp.getReferencedElements().add((EObject)ref);
         		}
-        	}else{
+        	} else if(ref instanceof Parameter){
+        		Parameter parameter = (Parameter) ref;
+        		String parameterName = parameter.getName();
+        		boolean addRef = true;
+        		for(Object obj : exp.getReferencedElements()){
+        			if(obj instanceof Data){
+        				Data dataObj = (Data)obj;
+        				String dataObjName = dataObj.getName();
+        				if(dataObjName.equals(parameterName)){
+        					addRef = false;
+        				}
+        			}
+        			if(obj instanceof Parameter){
+        				Parameter parameterObj = (Parameter)obj;
+        				String parameterObjName = parameterObj.getName();
+        				if(parameterObjName.equals(parameterName)){
+        					addRef = false;
+        				}
+        			}
+        		}
+        		if(addRef){
+        			exp.getReferencedElements().add((EObject)ref);
+        		}
+        	} else{
         		throw new RuntimeException();
         	}
         }

@@ -44,7 +44,8 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 				editorArea);//$NON-NLS-1$
 		bottomLeft.addView("org.bonitasoft.studio.views.overview.tree");
 		bottomLeft.addView("org.bonitasoft.studio.views.overview");
-	
+
+		
 		bottomLeft.setProperty(VIEW_KIND, BONITA_OVERVIEW);
 
 		// Bottom right.
@@ -65,6 +66,7 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 
 		createLeftViewFolder(layout, editorArea);
 		bottomRight.addView("org.bonitasoft.studio.validation.view");
+		layout.setFixed(true);
 	}
 
 	protected void configureIntroView(IPageLayout layout) {

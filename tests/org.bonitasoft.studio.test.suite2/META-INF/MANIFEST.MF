@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test Suite 2 Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.test.suite2
-Bundle-Version: 6.1.0.qualifier
+Bundle-Version: 6.2.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.test.suite2.Activator
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.core.runtime,

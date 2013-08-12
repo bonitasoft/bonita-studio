@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bonitasoft.engine.api.ProcessAPI;
@@ -44,6 +45,7 @@ import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.engine.session.InvalidSessionException;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.FragmentTypes;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -73,10 +75,15 @@ import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
+import org.bonitasoft.studio.model.form.FormField;
+import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
+import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -87,8 +94,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -116,7 +126,8 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 	private static final ConnectorsConfigurationSynchronizer CONNECTORS_CONFIGURATION_SYNCHRONIZER = new ConnectorsConfigurationSynchronizer();
 	private Set<IRepositoryFileStore> additionalJars;
 	private List<org.bonitasoft.engine.operation.Operation> outputOperations = new ArrayList<org.bonitasoft.engine.operation.Operation>();
-
+	private Map<String,org.bonitasoft.studio.model.expression.Expression> invalidExpressionForTest = new HashMap<String,org.bonitasoft.studio.model.expression.Expression>();
+	private IStatus status;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -127,7 +138,21 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 
 		monitor.beginTask(Messages.testConnector, IProgressMonitor.UNKNOWN);
 		checkImplementationDependencies(implementation, monitor);
-
+		
+		if(!invalidExpressionForTest.isEmpty()){
+			StringBuilder sb = new StringBuilder(Messages.unsuportedExpressionTypeForTesting);
+			for(Entry<String, org.bonitasoft.studio.model.expression.Expression> e : invalidExpressionForTest.entrySet()){
+				sb.append("\n");
+				if(ExpressionConstants.PATTERN_TYPE.equals(e.getValue().getType()) || ExpressionConstants.SCRIPT_TYPE.equals(e.getValue().getType())){
+					sb.append("-"+Messages.bind(Messages.unresolvedPatternOrScriptExpression,"'"+e.getKey()+"'"));
+				}else{
+					sb.append("-"+Messages.bind(Messages.unresolvedExpression,"'"+e.getKey()+"'"));
+				}
+			}
+			status = new Status(IStatus.WARNING,ConnectorPlugin.PLUGIN_ID,sb.toString());
+			return;
+		}
+		
 		APISession session = null;
 		ProcessAPI processApi = null;
 		long procId = -1;
@@ -151,8 +176,10 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 
 			Thread.currentThread().setContextClassLoader(RepositoryManager.getInstance().getCurrentRepository().createProjectClassloader());
 			result = processApi.executeConnectorOnProcessDefinition(implementation.getDefinitionId(), implementation.getDefinitionVersion(), inputParameters, inputValues, outputOperations,outputValues, procId);
+			status = Status.OK_STATUS;
 		}catch (Exception e) {
 			BonitaStudioLog.error(e);
+			status = new Status(IStatus.ERROR,ConnectorPlugin.PLUGIN_ID,e.getMessage(),e);
 			throw new InvocationTargetException(e);
 		}finally{
 			if(cl != null){
@@ -367,9 +394,41 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 
 	public void setConnectorConfiguration(ConnectorConfiguration configuration) {
 		connectorConfiguration = configuration ;
-
+		invalidExpressionForTest .clear();
 		for(ConnectorParameter parameter : configuration.getParameters()){
+			detectInvalidExpressions(parameter);
 			addInputParameters(parameter.getKey(), parameter.getExpression()) ;
+		}
+	}
+
+	protected void detectInvalidExpressions(ConnectorParameter parameter) {
+		List<org.bonitasoft.studio.model.expression.Expression> expressions = ModelHelper.getAllItemsOfType(parameter, ExpressionPackage.Literals.EXPRESSION);
+		for(org.bonitasoft.studio.model.expression.Expression e : expressions){
+			if(ExpressionConstants.VARIABLE_TYPE.equals(e.getType())){
+				invalidExpressionForTest.put(parameter.getKey(),e);
+			}else if(ExpressionConstants.PARAMETER_TYPE.equals(e.getType())){
+				invalidExpressionForTest.put(parameter.getKey(),e);
+			}else if(ExpressionConstants.FORM_FIELD_TYPE.equals(e.getType())){
+				invalidExpressionForTest.put(parameter.getKey(),e);
+			}else if(ExpressionConstants.PATTERN_TYPE.equals(e.getType()) && !e.getReferencedElements().isEmpty()){
+				invalidExpressionForTest.put(parameter.getKey(),e);
+			}else if(ExpressionConstants.DOCUMENT_REF_TYPE.equals(e.getType())){
+				invalidExpressionForTest.put(parameter.getKey(),e);
+			}else if(ExpressionConstants.DOCUMENT_TYPE.equals(e.getType())){
+				invalidExpressionForTest.put(parameter.getKey(),e);
+			}else if(ExpressionConstants.SCRIPT_TYPE.equals(e.getType())  && !e.getReferencedElements().isEmpty()){
+				for(EObject dep : e.getReferencedElements() ){
+					if(dep instanceof Data){
+						invalidExpressionForTest.put(parameter.getKey(),e);
+					}else if(dep instanceof Parameter){
+						invalidExpressionForTest.put(parameter.getKey(),e);
+					}else if(dep instanceof FormField){
+						invalidExpressionForTest.put(parameter.getKey(),e);
+					}else if(dep instanceof Document){
+						invalidExpressionForTest.put(parameter.getKey(),e);
+					}
+				}
+			}
 		}
 	}
 
@@ -380,5 +439,10 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 	public void setAdditionalJars(Set<IRepositoryFileStore> additionalJars) {
 		this.additionalJars = additionalJars;
 	}
+
+	public IStatus getStatus() {
+		return status;
+	}
+
 
 }

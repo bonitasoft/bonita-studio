@@ -19,6 +19,7 @@ package org.bonitasoft.studio.diagram.custom.actions;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.diagram.custom.Messages;
@@ -34,6 +35,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorReference;
@@ -45,84 +48,89 @@ import org.eclipse.ui.PlatformUI;
  */
 public class OpenLatestSubprocessCommand extends AbstractHandler {
 
-    private DiagramRepositoryStore diagramSotre;
+	private DiagramRepositoryStore diagramSotre;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
-     * ExecutionEvent)
-     */
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        IRepository repository = RepositoryManager.getInstance().getCurrentRepository() ;
-        diagramSotre = (DiagramRepositoryStore) repository.getRepositoryStore(DiagramRepositoryStore.class) ;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+	 * ExecutionEvent)
+	 */
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		IRepository repository = RepositoryManager.getInstance().getCurrentRepository() ;
+		diagramSotre = (DiagramRepositoryStore) repository.getRepositoryStore(DiagramRepositoryStore.class) ;
 
-        try {
-            IStructuredSelection selection = (IStructuredSelection) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
-            Object item = selection.getFirstElement();
-            CallActivity subProcess = (CallActivity) ((GraphicalEditPart) item).resolveSemanticElement();
-            final Expression calledProcessName = subProcess.getCalledActivityName();
-            String subprocessName = null ;
-            if(calledProcessName != null
-                    && calledProcessName.getContent() != null
-                    && calledProcessName.getType().equals(ExpressionConstants.CONSTANT_TYPE)){
-                subprocessName = calledProcessName.getContent() ;
-            }
-            final Expression calledProcessVersion = subProcess.getCalledActivityVersion();
-            String subprocessVersion = null ;
-            if(calledProcessVersion != null
-                    && calledProcessVersion.getContent() != null
-                    && calledProcessVersion.getType().equals(ExpressionConstants.CONSTANT_TYPE)){
-                subprocessVersion = calledProcessVersion.getContent() ;
-            }
-            if(subprocessName != null){
-                AbstractProcess subProcessParent = ModelHelper.findProcess(subprocessName,subprocessVersion, diagramSotre.getAllProcesses());
+		try {
+			IStructuredSelection selection = (IStructuredSelection) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
+			Object item = selection.getFirstElement();
+			CallActivity subProcess = (CallActivity) ((GraphicalEditPart) item).resolveSemanticElement();
+			final Expression calledProcessName = subProcess.getCalledActivityName();
+			String subprocessName = null ;
+			if(calledProcessName != null
+					&& calledProcessName.getContent() != null
+					&& calledProcessName.getType().equals(ExpressionConstants.CONSTANT_TYPE)){
+				subprocessName = calledProcessName.getContent() ;
+			}
+			final Expression calledProcessVersion = subProcess.getCalledActivityVersion();
+			String subprocessVersion = null ;
+			if(calledProcessVersion != null
+					&& calledProcessVersion.getContent() != null
+					&& calledProcessVersion.getType().equals(ExpressionConstants.CONSTANT_TYPE)){
+				subprocessVersion = calledProcessVersion.getContent() ;
+			}
+			if(subprocessName != null){
+				AbstractProcess subProcessParent = ModelHelper.findProcess(subprocessName,subprocessVersion, diagramSotre.getAllProcesses());
 
-                if (subProcessParent == null) {
-                    /* we don't find the process so we can't open it */
-                    return null;
-                }
+				if (subProcessParent == null) {
+					/* we don't find the process so we can't open it */
+					return null;
+				}
 
-                Resource r = subProcessParent.eResource() ;
-                if(r != null){
-                    String fileName = r.getURI().lastSegment() ;
-                    DiagramFileStore store = diagramSotre.getChild(URI.decode(fileName)) ;
-                    // if the diagram is already opened
-                    if(store.getOpenedEditor()!=null){
-                    	for(IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()){
-                    		if(ref.getEditorInput().getName().equals(store.getName())){
-                             	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(ref.getPart(true));
-                              	break;
-                    		}
-                    	} 
-                    }else{ //if the diagram referenced is not opened
-                    	store.open() ;
-                    }
-                } else {
-                    MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.errorSubprocessNotFound,
-                    		Messages.errorSubprocessDoesNotExist);
-                    throw new ExecutionException("Could not open specified subprocess, it probably doesn't exist");
-                }
-            }
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        return null;
+				Resource r = subProcessParent.eResource() ;
+				if(r != null){
+					String fileName = r.getURI().lastSegment() ;
+					DiagramFileStore store = diagramSotre.getChild(URI.decode(fileName)) ;
+					// if the diagram is already opened
+					if(store.getOpenedEditor()!=null){
+						for(IEditorReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()){
+							if(ref.getEditorInput().getName().equals(store.getName())){
+								PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(ref.getPart(true));
+								break;
+							}
+						} 
+					}else{ //if the diagram referenced is not opened
+						store.open() ;
+					}
+					final DiagramEditor editor =  (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+					final IGraphicalEditPart findEditPart = GMFTools.findEditPart(editor.getDiagramEditPart(), subProcessParent);
+					if(findEditPart != null){
+						editor.getDiagramGraphicalViewer().select(findEditPart);
+					}
+				} else {
+					MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.errorSubprocessNotFound,
+							Messages.errorSubprocessDoesNotExist);
+					throw new ExecutionException("Could not open specified subprocess, it probably doesn't exist");
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
 
-    }
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
-    @Override
-    public boolean isEnabled() {
-        IStructuredSelection selection = (IStructuredSelection) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
-        Object item = selection.getFirstElement();
-        EObject element = ((GraphicalEditPart) item).resolveSemanticElement();
-        return element instanceof CallActivity && ((CallActivity) element).getCalledActivityName() != null;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
+	 */
+	@Override
+	public boolean isEnabled() {
+		IStructuredSelection selection = (IStructuredSelection) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
+		Object item = selection.getFirstElement();
+		EObject element = ((GraphicalEditPart) item).resolveSemanticElement();
+		return element instanceof CallActivity && ((CallActivity) element).getCalledActivityName() != null;
+	}
 
 }

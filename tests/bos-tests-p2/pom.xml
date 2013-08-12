@@ -5,12 +5,12 @@
   <parent>
     <groupId>org.bonitasoft.studio.tests</groupId>
     <artifactId>tests</artifactId>
-    <version>6.1.0-SNAPSHOT</version>
+    <version>6.2.0-SNAPSHOT</version>
   </parent>
   <groupId>org.bonitasoft.studio.tests</groupId>
   <artifactId>bos-tests-p2</artifactId>
   <packaging>eclipse-repository</packaging>
-  <version>6.1.0-SNAPSHOT</version>
+  <version>6.2.0-SNAPSHOT</version>
   <build>
     <plugins>
       <plugin>

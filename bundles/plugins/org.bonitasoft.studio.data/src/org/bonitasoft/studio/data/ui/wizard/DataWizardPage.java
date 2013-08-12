@@ -49,9 +49,11 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.DoubleType;
@@ -60,10 +62,13 @@ import org.bonitasoft.studio.model.process.FloatType;
 import org.bonitasoft.studio.model.process.IntegerType;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.JavaType;
+import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.LongType;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.StringType;
+import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.XMLType;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
@@ -214,8 +219,7 @@ public class DataWizardPage extends WizardPage {
 
 			updateMoreSection(newType);
 			updateBrowseXMLButton(newType);
-			//final Shell s = getShell();
-			if(mainComposite != null){
+			if(mainComposite != null && !mainComposite.isDisposed()){
 				final Composite parent = mainComposite.getParent();
 				final Point defaultSize = parent.getSize();
 				final Point size = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
@@ -239,15 +243,31 @@ public class DataWizardPage extends WizardPage {
 	public DataWizardPage(final Data data, final EObject container, final boolean allowXML, final boolean allowEnum, final boolean showIsTransient,
 			final boolean showAutoGenerateform, final Set<EStructuralFeature> featureToCheckForUniqueID) {
 		super(DataWizardPage.class.getName());
-		setTitle(Messages.addDataWizardTitle);
+		this.container = container;
+		setTitle(Messages.bind(Messages.addDataWizardTitle, getCurrentDataAwareContextName()));
 		setDescription(Messages.addDataWizardDescription);
 		this.data = data;
-		this.container = container;
 		this.featureToCheckForUniqueID = featureToCheckForUniqueID;
 		this.allowXML = allowXML;
 		this.allowEnum = allowEnum;
 		this.showIsTransient = showIsTransient;
 		this.showAutoGenerateform = showAutoGenerateform;
+	}
+	
+	private String getCurrentDataAwareContextName(){
+		String name = "---";
+		EObject context = container;
+		while (!(context instanceof DataAware) || context instanceof Form) {
+			context = context.eContainer();
+		}
+		if(context instanceof Lane){
+			name = ((Lane) context).getName();
+		} else if(context instanceof Pool){
+			name = ((Pool) context).getName();
+		} else if(context instanceof Task){
+			name = ((Task) context).getName();
+		}
+		return name;
 	}
 
 	protected String getHintFor(final DataType newType) {
@@ -968,7 +988,7 @@ public class DataWizardPage extends WizardPage {
 
 	protected void createNameAndDescription(final Composite parent) {
 		final Label nameLabel = new Label(parent, SWT.NONE);
-		nameLabel.setText(Messages.name);
+		nameLabel.setText(Messages.name +" *");
 		nameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create());
 
 		nameText = new Text(parent, SWT.BORDER);

@@ -66,6 +66,8 @@ import org.bonitasoft.studio.model.process.BoundarySignalEvent;
 import org.bonitasoft.studio.model.process.BoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.Connection;
+import org.bonitasoft.studio.model.process.Correlation;
+import org.bonitasoft.studio.model.process.CorrelationTypeActive;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EndErrorEvent;
@@ -278,7 +280,8 @@ public class FlowElementSwitch extends AbstractSwitch {
 			if(message.getMessageContent() != null){
 				addThrowMessageContent(message, triggerBuilder);
 			}
-			if(message.getCorrelation() != null){
+			final Correlation correlation = message.getCorrelation();
+			if(correlation != null && correlation.getCorrelationType()!=CorrelationTypeActive.INACTIVE){
 				addThrowMessageCorrelation(message, triggerBuilder);
 			}
 		}
@@ -341,8 +344,8 @@ public class FlowElementSwitch extends AbstractSwitch {
 					}
 				}
 			}
-
-			if(message.getCorrelation() != null){
+			final Correlation correlation = message.getCorrelation();
+			if(correlation != null && correlation.getCorrelationType()!=CorrelationTypeActive.INACTIVE){
 				addThrowMessageCorrelation(message, triggerBuilder);
 			}
 		}

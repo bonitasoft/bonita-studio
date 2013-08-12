@@ -175,14 +175,6 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 		};
 	}
 
-	@Override
-	public boolean canFinish() {
-		if(getContainer().getCurrentPage() instanceof AbstractDefinitionSelectionImpementationWizardPage){
-			return false;
-		}
-
-		return super.canFinish();
-	}
 
 	protected String getPageDescription() {
 		return Messages.connectorImplementationDesc;
@@ -266,6 +258,13 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 		return true;
 	}
 
+    @Override
+    public boolean canFinish() {
+    	if(getContainer().getCurrentPage() instanceof AbstractDefinitionSelectionImpementationWizardPage){
+    		return false;
+    	}
+    	return super.canFinish();
+    }
 
 	protected String getAbstractClassName() {
 		return AbstractConnector.class.getName();

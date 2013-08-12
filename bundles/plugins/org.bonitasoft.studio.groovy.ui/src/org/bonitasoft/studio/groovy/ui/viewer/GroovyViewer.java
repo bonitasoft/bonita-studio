@@ -33,6 +33,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
+import org.bonitasoft.studio.expression.editor.provider.ICustomExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
@@ -249,7 +250,7 @@ public class GroovyViewer {
 		nodes = new ArrayList<ScriptVariable>();
 
 		IExpressionNatureProvider provider = expressionProvider;
-		if(provider == null){
+		if(!(provider instanceof ICustomExpressionNatureProvider)){
 			 provider = new ExpressionContentProvider();
 		}
 		provider.setContext(context);
@@ -271,7 +272,7 @@ public class GroovyViewer {
 		}
 
 		for (final Expression e : filteredExpressions) {
-			final ScriptVariable v = GroovyUtil.createScriptVariable(e);
+			final ScriptVariable v = GroovyUtil.createScriptVariable(e,context);
 			if (context != null && ExpressionConstants.PARAMETER_TYPE.equals(e.getType())) {
 				final AbstractProcess proc = ModelHelper.getParentProcess(context);
 				final ProcessConfigurationRepositoryStore store = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(

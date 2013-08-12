@@ -28,7 +28,6 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -45,6 +44,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -74,12 +74,14 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 		additionalComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
 		final Composite content = new Composite(this, SWT.BORDER | SWT.FLAT);
-		content.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).spacing(0, 0).margins(0, 0).create());
+		content.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).equalWidth(false).spacing(0, 0).margins(0, 0).create());
 		content.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
 
-		leftTree = new TreeViewer(content, SWT.V_SCROLL);
+		leftTree = new TreeViewer(content, SWT.V_SCROLL );
 		leftTree.getTree().setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPLORER_LEFT_TREE);
 		leftTree.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		final Label vSeparator = new Label(content, SWT.SEPARATOR | SWT.VERTICAL);
+		vSeparator.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
 		rightTable = new TableViewer(content, SWT.NONE);
 		rightTable.getTable().setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPLORER_RIGHT_TABLE);
 		rightTable.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());

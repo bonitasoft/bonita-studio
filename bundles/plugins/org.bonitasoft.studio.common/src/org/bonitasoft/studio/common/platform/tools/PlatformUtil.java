@@ -51,6 +51,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
 import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
@@ -500,5 +501,33 @@ public class PlatformUtil {
 		}
 		return false;
 	}
+	
+	public static IEditorReference getOpenEditor(String editorName){
+		IEditorReference openEditor = null;
+		if(PlatformUI.isWorkbenchRunning()){
+			final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			if(activePage != null){
+				final IEditorReference[] editors = activePage.getEditorReferences();
+				for (IEditorReference iEditorReference : editors) {
+					if(iEditorReference.getName().equals(editorName)){
+						openEditor = iEditorReference;
+						break;
+					}
+				}
+			}
+		}
+		return openEditor;
+	}
 
+	public static void swtichToOpenedEditor(IEditorReference openEditor){
+		if(isIntroOpen()){
+			closeIntro();
+		}
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().setActivePage(openEditor.getPage());	
+		try {
+			openEditor.getPage().openEditor(openEditor.getEditorInput(), openEditor.getId());
+		} catch (PartInitException e) {
+			e.printStackTrace();
+		}			
+	}
 }

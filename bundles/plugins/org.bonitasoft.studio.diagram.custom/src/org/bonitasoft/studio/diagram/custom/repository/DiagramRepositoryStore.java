@@ -191,8 +191,10 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 	public DiagramFileStore getDiagram(String name, String version) {
 		for(DiagramFileStore diagram : getChildren()){
 			MainProcess diagramModel = diagram.getContent() ;
-			if(diagramModel.getName().equals(name) && diagramModel.getVersion().equals(version)){
-				return diagram ;
+			if(diagramModel != null){
+				if(diagramModel.getName().equals(name) && diagramModel.getVersion().equals(version)){
+					return diagram ;
+				}
 			}
 		}
 
@@ -324,7 +326,7 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 						});
 						return null;
 					}
-					
+
 					if(!ProductVersion.CURRENT_VERSION.equals(pVersion)){
 						diagram.setBonitaVersion(ProductVersion.CURRENT_VERSION);
 					}
