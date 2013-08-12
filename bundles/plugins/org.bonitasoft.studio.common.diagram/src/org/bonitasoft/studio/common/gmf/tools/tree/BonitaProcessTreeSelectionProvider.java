@@ -112,7 +112,7 @@ public class BonitaProcessTreeSelectionProvider {
         }else if(element instanceof Actor || element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())){
             return "tab.actors" ;
         }else if(element instanceof MultiInstantiation || (element instanceof Connector && element.eContainer() instanceof MultiInstantiation)){
-            return "tab.advanced" ;
+            return "tab.loop" ;
         }else if(element instanceof Data){
             if(isTransientData(element)){
                 if(element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getRecapFlow_RecapTransientData())){
