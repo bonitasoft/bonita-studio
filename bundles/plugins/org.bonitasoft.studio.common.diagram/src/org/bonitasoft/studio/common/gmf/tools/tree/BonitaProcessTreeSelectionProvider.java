@@ -25,11 +25,11 @@ import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.ViewForm;
 import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.AssociatedFile;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Data;
-
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
@@ -109,7 +109,7 @@ public class BonitaProcessTreeSelectionProvider {
             return "tab.resource" ;
         }else if((element instanceof Connector || element instanceof ConnectorParameter) && !(element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())) &&  !(element instanceof MultiInstantiation) && !(element.eContainer() instanceof MultiInstantiation)){
             return "tab.connectors" ;
-        }else if(element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())){
+        }else if(element instanceof Actor || element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())){
             return "tab.actors" ;
         }else if(element instanceof MultiInstantiation || (element instanceof Connector && element.eContainer() instanceof MultiInstantiation)){
             return "tab.advanced" ;
