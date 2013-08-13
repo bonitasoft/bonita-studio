@@ -97,8 +97,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 	}
 
 
-	public RunProcessCommand(Set<EObject> excludedObject) {
-		this(null,false);
+	public RunProcessCommand(AbstractProcess proc,Set<EObject> excludedObject,boolean runSynchronously) {
+		this(proc,runSynchronously);
 		this.excludedObject = excludedObject ;
  	}
 
