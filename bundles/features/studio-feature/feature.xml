@@ -24,13 +24,6 @@
    </requires>
 
    <plugin
-         id="org.eclipse.jdt.core"
-         download-size="0"
-         install-size="0"
-         version="3.7.4.xx-20120921-2000-e37RELEASE"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.emf.edapt.migration"
          download-size="0"
          install-size="0"
@@ -88,13 +81,6 @@
 
    <plugin
          id="org.bonitasoft.studio.engine"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.presentation"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -439,6 +425,13 @@
          install-size="0"
          version="0.0.0"
          fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ui.workbench"
+         download-size="0"
+         install-size="0"
+         version="3.105.1"
          unpack="false"/>
 
 </feature>
