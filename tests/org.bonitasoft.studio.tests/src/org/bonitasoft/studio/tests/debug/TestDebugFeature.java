@@ -41,17 +41,19 @@ public class TestDebugFeature extends SWTBotGefTestCase {
 	@Test
 	public void testSimpleDebug() throws Exception{
 		SWTBotTestUtil.createNewDiagram(bot);
+		long previousNbProc = getNBProcessDefinitions();
 		launchDebugWizard();
 		bot.button(Messages.DebugProcessButtonLabel).click();
-		checkNbOfProcDefInEngine("Simple debug is not working", getNBProcessDefinitions() +1);
+		checkNbOfProcDefInEngine("Simple debug is not working", previousNbProc +1);
 	}
 
 	@Test
 	public void testDebugWithConnectorOnCallActivity() throws Exception{
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "DiagramToTestDebugWitghCallActivityWithConnector-1.0.bos", "Bonita 6.x", "DiagramToTestDebugWitghCallActivityWithConnector", TestDebugFeature.class, false);
+		long previousNbProc = getNBProcessDefinitions();
 		launchDebugWizard();
 		bot.button(Messages.DebugProcessButtonLabel).click();
-		checkNbOfProcDefInEngine("Debug with Connector on call activity is not working", getNBProcessDefinitions() +1);
+		checkNbOfProcDefInEngine("Debug with Connector on call activity is not working", previousNbProc +1);
 	}
 	
 	private long getNBProcessDefinitions() throws Exception{
@@ -93,7 +95,7 @@ public class TestDebugFeature extends SWTBotGefTestCase {
 			
 			public void run() {
 				try {
-					new DebugProcessCommand().execute(null);
+					new DebugProcessCommand(true).execute(null);
 				} catch (ExecutionException e) {
 					BonitaStudioLog.error(e);
 				}
