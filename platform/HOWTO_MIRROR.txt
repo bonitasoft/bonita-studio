@@ -1,0 +1,5 @@
+How to create a mirror from a .target
+
+- Set your .target based on online repositories as target platform.
+- Click Export target platform
+- Upload the resulting p2 repository to a web server (e.g apache server)
