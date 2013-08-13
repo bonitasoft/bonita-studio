@@ -24,7 +24,10 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.dialog.DefinitionCategoryContentProvider;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
@@ -38,31 +41,39 @@ import org.osgi.framework.Bundle;
  *
  */
 public class ConnectorConfigurationContentProvider implements
-		ITreeContentProvider {
+ITreeContentProvider {
 
-	
+
 	private final List<ConnectorDefinition> connectorDefList;
-	 private final DefinitionResourceProvider messageProvider;
-	 private final ConnectorConfRepositoryStore connectorConfStore;
-	
+	private final DefinitionResourceProvider messageProvider;
+	private final ConnectorConfRepositoryStore connectorConfStore;
+	protected final String unloadableCategoryName;
+	protected DefinitionCategoryContentProvider definitionCategoryContentProvider;
+	private Category unCategorizedCategory;
+
+
 	public ConnectorConfigurationContentProvider(){
-		 final AbstractDefinitionRepositoryStore<?> connectorDefStore = (AbstractDefinitionRepositoryStore<?>) RepositoryManager
-	                .getInstance().getRepositoryStore(
-	                		ConnectorDefRepositoryStore.class);
-	        connectorDefList = connectorDefStore.getDefinitions();
-	        connectorConfStore = (ConnectorConfRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
-	    
-	     final Bundle bundle = getBundle();
-	        messageProvider = DefinitionResourceProvider.getInstance(
-	                connectorDefStore, bundle);
+		final AbstractDefinitionRepositoryStore<?> connectorDefStore = (AbstractDefinitionRepositoryStore<?>) RepositoryManager
+				.getInstance().getRepositoryStore(
+						ConnectorDefRepositoryStore.class);
+		connectorDefList = connectorDefStore.getDefinitions();
+		connectorConfStore = (ConnectorConfRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
+
+		final Bundle bundle = getBundle();
+		messageProvider = DefinitionResourceProvider.getInstance(
+				connectorDefStore, bundle);
+		definitionCategoryContentProvider = new DefinitionCategoryContentProvider(messageProvider.getAllCategories());
+		unloadableCategoryName = messageProvider.getUnloadableCategory().getId();
+		unCategorizedCategory = messageProvider.getUncategorizedCategory();
 
 	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
 	 */
 	@Override
 	public void dispose() {
-		
+
 
 	}
 
@@ -71,7 +82,7 @@ public class ConnectorConfigurationContentProvider implements
 	 */
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		  
+
 
 	}
 
@@ -80,8 +91,13 @@ public class ConnectorConfigurationContentProvider implements
 	 */
 	@Override
 	public Object[] getElements(Object inputElement) {
-		List<Category> categories = messageProvider.getAllCategories();
-        return categories.toArray();
+		List<Category> categories = new ArrayList<Category>();
+		for(Category c : messageProvider.getAllCategories()){
+			if(c.getParentCategoryId() == null || c.getParentCategoryId().isEmpty()){
+				categories.add(c);
+			}
+		}
+		return categories.toArray();
 	}
 
 	/* (non-Javadoc)
@@ -90,22 +106,36 @@ public class ConnectorConfigurationContentProvider implements
 	@Override
 	public Object[] getChildren(Object parentElement) {
 		final List<Object> result = new ArrayList<Object>();
-		if (parentElement instanceof Category){
-			Category category = (Category) parentElement;
-			for (ConnectorDefinition def: connectorDefList){
-				for (Category cat : def.getCategory()){
-					if (cat.getId().equals(category.getId())){
-						result.add(def);
+		if (parentElement instanceof Category) {
+			Category cat = (Category) parentElement;
+			String parentId = cat.getId();
+			for(Category c : messageProvider.getAllCategories()){
+				if(parentId.equals(c.getParentCategoryId())){
+					result.add(c);
+				}
+			}
+			for (ConnectorDefinition def : connectorDefList) {
+				if (def instanceof UnloadableConnectorDefinition) {
+					if(cat.getId().equals(unloadableCategoryName)){
+						result.addAll(connectorConfStore.getFilterConfigurationsFor(def.getId(),def.getVersion()));
+					}
+				} else {
+					if (def.getCategory().isEmpty()
+							&& cat.getId().equals(Messages.uncategorized)) {//FIXME category id is nls string????
+						result.addAll(connectorConfStore.getFilterConfigurationsFor(def.getId(), def.getVersion()));
+					}
+					for (Category c : def.getCategory()) {
+						if (c.getId().equals(((Category) parentElement).getId())) {
+							if(definitionCategoryContentProvider.isLeafCategory(def, c)){
+								result.addAll(connectorConfStore.getFilterConfigurationsFor(def.getId(),def.getVersion()));
+							}else if(def.getCategory().size() == 1){
+								result.addAll(connectorConfStore.getFilterConfigurationsFor(def.getId(),def.getVersion()));
+							}
+						}
 					}
 				}
 			}
 			return result.toArray();
-		} else {
-			if (parentElement instanceof ConnectorDefinition){
-				ConnectorDefinition connectorDef = (ConnectorDefinition)parentElement;
-				result.addAll(connectorConfStore.getFilterConfigurationsFor(connectorDef.getId(), connectorDef.getVersion()));
-				return result.toArray();
-			}
 		}
 		return null;
 	}
@@ -115,6 +145,24 @@ public class ConnectorConfigurationContentProvider implements
 	 */
 	@Override
 	public Object getParent(Object element) {
+		if(element instanceof ConnectorDefinition){
+			ConnectorDefinition def = (ConnectorDefinition) element ;
+			if(def.getCategory().isEmpty()){
+				return unCategorizedCategory;
+			}
+			for(Category c : def.getCategory()){
+				if(definitionCategoryContentProvider.isLeafCategory(def, c)){
+					return c;
+				}
+			}
+		}else if(element instanceof Category){
+			Category category = (Category) element ;
+			for(Category c : messageProvider.getAllCategories()){
+				if(c.getId().equals(category.getParentCategoryId())){
+					return c;
+				}
+			}
+		}
 		return null;
 	}
 
@@ -123,25 +171,16 @@ public class ConnectorConfigurationContentProvider implements
 	 */
 	@Override
 	public boolean hasChildren(Object element) {
-		if (element instanceof Category){
-			return true;
-		}
-		if (element instanceof ConnectorDefinition){
-			Object[] children = getChildren(element);
-			if (children!=null && children.length>0){
-				return true;
-			}
-		}
-		return false;
-			
+		Object[] children =  getChildren(element);
+		return children!= null && children.length > 0;
 	}
-	
-	
+
+
 	protected Bundle getBundle() {
 		return ConnectorPlugin.getDefault().getBundle();
 	}
 
-	
+
 	protected Class<?> getDefStoreClass() {
 		return ConnectorDefRepositoryStore.class;
 	}

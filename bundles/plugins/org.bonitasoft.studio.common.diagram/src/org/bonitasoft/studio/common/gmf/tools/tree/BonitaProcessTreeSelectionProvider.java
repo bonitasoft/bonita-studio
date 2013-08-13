@@ -24,12 +24,14 @@ import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.ViewForm;
 import org.bonitasoft.studio.model.kpi.AbstractKPIBinding;
+import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.AssociatedFile;
 import org.bonitasoft.studio.model.process.Connection;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Data;
-
+import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
@@ -38,6 +40,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.ResourceFile;
 import org.bonitasoft.studio.model.process.ResourceFolder;
+import org.bonitasoft.studio.model.process.SearchIndex;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -109,10 +112,10 @@ public class BonitaProcessTreeSelectionProvider {
             return "tab.resource" ;
         }else if((element instanceof Connector || element instanceof ConnectorParameter) && !(element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())) &&  !(element instanceof MultiInstantiation) && !(element.eContainer() instanceof MultiInstantiation)){
             return "tab.connectors" ;
-        }else if(element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())){
+        }else if(element instanceof Actor || element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getAssignable_Filters())){
             return "tab.actors" ;
         }else if(element instanceof MultiInstantiation || (element instanceof Connector && element.eContainer() instanceof MultiInstantiation)){
-            return "tab.advanced" ;
+            return "tab.loop" ;
         }else if(element instanceof Data){
             if(isTransientData(element)){
                 if(element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getRecapFlow_RecapTransientData())){
@@ -123,9 +126,11 @@ public class BonitaProcessTreeSelectionProvider {
                     return "tab.forms.entry" ;
                 }
             }else{
-                return "tab.datas" ;
+                return "tab.data" ;
             }
-        }else if(element instanceof AbstractKPIBinding){
+        } else if(element instanceof Parameter){
+        	return "tab.parameter";
+        } else if(element instanceof AbstractKPIBinding){
             return "tab.kpi" ;
         }else if(element instanceof ViewForm){
             if(((ViewForm)element).eContainingFeature().equals(ProcessPackage.eINSTANCE.getViewPageFlow_ViewForm())){
@@ -143,6 +148,10 @@ public class BonitaProcessTreeSelectionProvider {
             }else if(element.eContainingFeature().equals(ProcessPackage.eINSTANCE.getPageFlowTransition())){
                 return "tab.forms" ;
             }
+        } else if(element instanceof Document){
+        	return "tab.document";
+        } else if(element instanceof SearchIndex){
+        	return "tab.index";
         }
         return "tab.general";
     }

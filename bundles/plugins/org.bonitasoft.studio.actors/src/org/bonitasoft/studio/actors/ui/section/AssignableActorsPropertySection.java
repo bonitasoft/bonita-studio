@@ -82,7 +82,7 @@ public class AssignableActorsPropertySection extends AbstractActorsPropertySecti
 	@Override
 	protected void createRadioComposite(TabbedPropertySheetWidgetFactory widgetFactory,Composite mainComposite) {
 		radioComposite = widgetFactory.createComposite(mainComposite, SWT.NONE) ;
-		radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(2, 1).create()) ;
+		radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(3, 1).create()) ;
 		radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create()) ;
 
 		taskActorButton = widgetFactory.createButton(radioComposite, Messages.useTaskActors, SWT.RADIO) ;
