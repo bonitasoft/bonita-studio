@@ -24,7 +24,6 @@
 <repository location="http://dist.springsource.org/release/GRECLIPSE/e4.3/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.texo.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.runtime.core.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/modeling/emft/texo/updates/interim"/>
@@ -34,9 +33,7 @@
 <repository location="http://download.eclipse.org/modeling/emf/compare/updates/releases"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.edapt.recorder.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.edapt.recorder.sdk.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.emf.edapt.runtime.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.edapt.runtime.sdk.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/edapt/update-site/"/>
 </location>
@@ -82,10 +79,6 @@
 <unit id="org.eclipse.pde.feature.group" version="3.9.0.v20130605-2000"/>
 <unit id="org.eclipse.gef.sdk.feature.group" version="3.9.0.201305060205"/>
 <repository location="http://download.eclipse.org/releases/kepler/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.jetty.bundles.f.feature.group" version="8.1.12.201307280000"/>
-<repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-8.x/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>

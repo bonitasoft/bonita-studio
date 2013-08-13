@@ -59,10 +59,15 @@
 									<type>eclipse-plugin</type>
 								</dependency>
 								<dependency>
+									<artifactId>org.eclipse.emf.ant</artifactId>
+									<type>eclipse-plugin</type>
+								</dependency>
+								<dependency>
 									<artifactId>org.eclipse.equinox.ds</artifactId>
 									<type>eclipse-plugin</type>
 								</dependency>
 							</dependencies>
+							<forkedProcessTimeoutInSeconds>5</forkedProcessTimeoutInSeconds>
 						</configuration>
 						<executions>
 							<execution>

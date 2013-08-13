@@ -3,7 +3,7 @@
 
 <target includeMode="feature" name="mirrored" sequenceNumber="43">
 <locations>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <repository location="XXX_REPOSITORY_URL_XXX"/>
 <unit id="org.eclipse.swtbot.forms.feature.group" version="2.1.1.201307101628"/>
 <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="2.1.1.201307101628"/>
@@ -16,13 +16,10 @@
 <unit id="org.codehaus.groovy.jdt.patch.feature.group" version="2.8.0.xx-20130703-1600-e43-RELEASE"/>
 <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.8.0.xx-20130703-1600-e43-RELEASE"/>
 <unit id="org.codehaus.groovy18.feature.feature.group" version="2.8.0.xx-20130703-1600-e43-RELEASE"/>
-<unit id="org.eclipse.emf.texo.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.runtime.core.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.compare.all.feature.group" version="1.2.2.v20120214-0915"/>
-<unit id="org.eclipse.emf.edapt.recorder.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.edapt.recorder.sdk.feature.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.emf.edapt.runtime.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.edapt.runtime.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="org.uguess.tribix.feature.group" version="2.5.2.201107181644"/>
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
