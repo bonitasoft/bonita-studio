@@ -327,6 +327,13 @@ public class BOSSplashHandler extends AbstractSplashHandler {
             });
 
         }
+        
+        @Override
+        public void subTask(String name) {
+        	if(Messages.initializingCurrentRepository.equals(name) || Messages.openingStudio.equals(name)){
+        		super.subTask(name);
+        	}
+        }
 
         /*
          * (non-Javadoc)
@@ -343,8 +350,7 @@ public class BOSSplashHandler extends AbstractSplashHandler {
                     if (isDisposed()) {
                         return;
                     }
-                    CustomAbsolutePositionProgressMonitorPart.super
-                    .internalWorked(work);
+                    CustomAbsolutePositionProgressMonitorPart.super.internalWorked(work);
                 }
             });
 

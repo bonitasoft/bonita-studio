@@ -131,7 +131,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 		} catch (CoreException e3) {
 			BonitaStudioLog.error(e3) ;
 		}
-		monitor.beginTask(BOSSplashHandler.BONITA_TASK, workload+30) ;
+		monitor.beginTask(BOSSplashHandler.BONITA_TASK, workload+50) ;
 		monitor.subTask(Messages.initializingCurrentRepository);
 
 
