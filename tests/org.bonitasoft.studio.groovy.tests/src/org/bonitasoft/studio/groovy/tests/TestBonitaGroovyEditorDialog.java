@@ -62,7 +62,7 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
         bot.button("Evaluate").click();
         bot.waitUntil(Conditions.shellIsActive(selectMissingJarTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(Conditions.shellIsActive("Evaluation results"));
+        bot.waitUntil(Conditions.shellIsActive("Evaluation results"), 10000);
         assertEquals("test me", bot.text().getText()) ;
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.button(IDialogConstants.OK_LABEL).click();
