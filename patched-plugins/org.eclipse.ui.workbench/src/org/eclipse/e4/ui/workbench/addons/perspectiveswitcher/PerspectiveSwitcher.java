@@ -1,0 +1,816 @@
+/*******************************************************************************
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ ******************************************************************************/
+
+package org.eclipse.e4.ui.workbench.addons.perspectiveswitcher;
+
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.commands.EHandlerService;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.SideValue;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspectiveStack;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
+import org.eclipse.e4.ui.workbench.UIEvents;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.events.MenuEvent;
+import org.eclipse.swt.events.MenuListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Region;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveRegistry;
+import org.eclipse.ui.IWorkbenchCommandConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPreferenceConstants;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.internal.IPreferenceConstants;
+import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
+import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
+import org.eclipse.ui.internal.WorkbenchImages;
+import org.eclipse.ui.internal.WorkbenchMessages;
+import org.eclipse.ui.internal.WorkbenchPage;
+import org.eclipse.ui.internal.e4.compatibility.E4Util;
+import org.eclipse.ui.internal.registry.PerspectiveRegistry;
+import org.eclipse.ui.internal.util.PrefUtil;
+import org.eclipse.ui.statushandlers.StatusManager;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
+
+public class PerspectiveSwitcher {
+	public static final String PERSPECTIVE_SWITCHER_ID = "org.eclipse.e4.ui.PerspectiveSwitcher"; //$NON-NLS-1$
+	@Inject
+	protected IEventBroker eventBroker;
+
+	@Inject
+	EModelService modelService;
+
+	@Inject
+	private EHandlerService handlerService;
+
+	@Inject
+	private ECommandService commandService;
+
+	@Inject
+	private MWindow window;
+
+	private MToolControl psME;
+	private ToolBar psTB;
+	private Composite comp;
+	private Image backgroundImage;
+	private Image perspectiveImage;
+
+	Color borderColor, curveColor;
+	Control toolParent;
+	IPropertyChangeListener propertyChangeListener;
+
+	private EventHandler selectionHandler = new EventHandler() {
+		public void handleEvent(Event event) {
+			if (psTB.isDisposed()) {
+				return;
+			}
+
+			MUIElement changedElement = (MUIElement) event.getProperty(UIEvents.EventTags.ELEMENT);
+
+			if (psME == null || !(changedElement instanceof MPerspectiveStack))
+				return;
+
+			MWindow perspWin = modelService.getTopLevelWindowFor(changedElement);
+			MWindow switcherWin = modelService.getTopLevelWindowFor(psME);
+			if (perspWin != switcherWin)
+				return;
+
+			MPerspectiveStack perspStack = (MPerspectiveStack) changedElement;
+			if (!perspStack.isToBeRendered())
+				return;
+
+			MPerspective selElement = perspStack.getSelectedElement();
+			for (ToolItem ti : psTB.getItems()) {
+				ti.setSelection(ti.getData() == selElement);
+			}
+		}
+	};
+
+	private EventHandler toBeRenderedHandler = new EventHandler() {
+		public void handleEvent(Event event) {
+			if (psTB.isDisposed()) {
+				return;
+			}
+
+			MUIElement changedElement = (MUIElement) event.getProperty(UIEvents.EventTags.ELEMENT);
+
+			if (psME == null || !(changedElement instanceof MPerspective))
+				return;
+
+			MWindow perspWin = modelService.getTopLevelWindowFor(changedElement);
+			MWindow switcherWin = modelService.getTopLevelWindowFor(psME);
+			if (perspWin != switcherWin)
+				return;
+
+			MPerspective persp = (MPerspective) changedElement;
+			if (!persp.getParent().isToBeRendered())
+				return;
+
+			if (changedElement.isToBeRendered()) {
+				addPerspectiveItem(persp);
+			} else {
+				removePerspectiveItem(persp);
+			}
+		}
+	};
+
+	private EventHandler labelHandler = new EventHandler() {
+		public void handleEvent(Event event) {
+			if (psTB.isDisposed()) {
+				return;
+			}
+
+			MUIElement changedElement = (MUIElement) event.getProperty(UIEvents.EventTags.ELEMENT);
+
+			if (psME == null || !(changedElement instanceof MPerspective))
+				return;
+
+			String attName = (String) event.getProperty(UIEvents.EventTags.ATTNAME);
+			Object newValue = event.getProperty(UIEvents.EventTags.NEW_VALUE);
+
+			MWindow perspWin = modelService.getTopLevelWindowFor(changedElement);
+			MWindow switcherWin = modelService.getTopLevelWindowFor(psME);
+			if (perspWin != switcherWin)
+				return;
+
+			MPerspective perspective = (MPerspective) changedElement;
+			if (!perspective.isToBeRendered())
+				return;
+
+			for (ToolItem ti : psTB.getItems()) {
+				if (ti.getData() == perspective) {
+					updateToolItem(ti, attName, newValue);
+				}
+			}
+
+			// update the size
+			fixSize();
+		}
+
+		private void updateToolItem(ToolItem ti, String attName, Object newValue) {
+			boolean showText = PrefUtil.getAPIPreferenceStore().getBoolean(
+					IWorkbenchPreferenceConstants.SHOW_TEXT_ON_PERSPECTIVE_BAR);
+			if (showText && UIEvents.UILabel.LABEL.equals(attName)) {
+				String newName = (String) newValue;
+				ti.setText(newName);
+			} else if (UIEvents.UILabel.TOOLTIP.equals(attName)) {
+				String newTTip = (String) newValue;
+				ti.setToolTipText(newTTip);
+			}
+		}
+	};
+
+	private EventHandler childrenHandler = new EventHandler() {
+		public void handleEvent(Event event) {
+			if (psTB.isDisposed()) {
+				return;
+			}
+
+			Object changedObj = event.getProperty(UIEvents.EventTags.ELEMENT);
+
+			if (psME == null || !(changedObj instanceof MPerspectiveStack))
+				return;
+
+			MWindow perspWin = modelService.getTopLevelWindowFor((MUIElement) changedObj);
+			MWindow switcherWin = modelService.getTopLevelWindowFor(psME);
+			if (perspWin != switcherWin)
+				return;
+
+			if (UIEvents.isADD(event)) {
+				for (Object o : UIEvents.asIterable(event, UIEvents.EventTags.NEW_VALUE)) {
+					MPerspective added = (MPerspective) o;
+					// Adding invisible elements is a NO-OP
+					if (!added.isToBeRendered())
+						continue;
+
+					addPerspectiveItem(added);
+				}
+			} else if (UIEvents.isREMOVE(event)) {
+				for (Object o : UIEvents.asIterable(event, UIEvents.EventTags.OLD_VALUE)) {
+					MPerspective removed = (MPerspective) o;
+					// Removing invisible elements is a NO-OP
+					if (!removed.isToBeRendered())
+						continue;
+
+					removePerspectiveItem(removed);
+				}
+			}
+		}
+	};
+
+	@PostConstruct
+	void init() {
+		eventBroker.subscribe(UIEvents.ElementContainer.TOPIC_CHILDREN, childrenHandler);
+		eventBroker.subscribe(UIEvents.UIElement.TOPIC_TOBERENDERED,
+				toBeRenderedHandler);
+		eventBroker.subscribe(UIEvents.ElementContainer.TOPIC_SELECTEDELEMENT, selectionHandler);
+		eventBroker.subscribe(UIEvents.UILabel.TOPIC_ALL,
+				labelHandler);
+
+		setPropertyChangeListener();
+
+	}
+
+	@PreDestroy
+	void cleanUp() {
+		if (perspectiveImage != null) {
+			perspectiveImage.dispose();
+			perspectiveImage = null;
+		}
+
+		eventBroker.unsubscribe(toBeRenderedHandler);
+		eventBroker.unsubscribe(childrenHandler);
+		eventBroker.unsubscribe(selectionHandler);
+		eventBroker.unsubscribe(labelHandler);
+
+		PrefUtil.getAPIPreferenceStore().removePropertyChangeListener(propertyChangeListener);
+	}
+
+	@PostConstruct
+	void createWidget(Composite parent, MToolControl toolControl) {
+		psME = toolControl;
+		MUIElement meParent = psME.getParent();
+		int orientation = SWT.HORIZONTAL;
+		if (meParent instanceof MTrimBar) {
+			MTrimBar bar = (MTrimBar) meParent;
+			if (bar.getSide() == SideValue.RIGHT || bar.getSide() == SideValue.LEFT)
+				orientation = SWT.VERTICAL;
+		}
+		comp = new Composite(parent, SWT.NONE);
+		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
+		layout.marginLeft = layout.marginRight = 8;
+		layout.marginBottom = 4;
+		layout.marginTop = 6;
+		comp.setLayout(layout);
+		psTB = new ToolBar(comp, SWT.FLAT | SWT.WRAP | SWT.RIGHT + orientation);
+		comp.addPaintListener(new PaintListener() {
+
+			public void paintControl(PaintEvent e) {
+				paint(e);
+			}
+		});
+		toolParent = ((Control) toolControl.getParent().getWidget());
+		toolParent.addPaintListener(new PaintListener() {
+
+			public void paintControl(PaintEvent e) {
+				if (borderColor == null)
+					borderColor = e.display.getSystemColor(SWT.COLOR_BLACK);
+				e.gc.setForeground(borderColor);
+				Rectangle bounds = ((Control) e.widget).getBounds();
+				e.gc.drawLine(0, bounds.height - 1, bounds.width, bounds.height - 1);
+			}
+		});
+
+		comp.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				dispose();
+			}
+
+		});
+
+		psTB.addMenuDetectListener(new MenuDetectListener() {
+			public void menuDetected(MenuDetectEvent e) {
+				ToolBar tb = (ToolBar) e.widget;
+				Point p = new Point(e.x, e.y);
+				p = psTB.getDisplay().map(null, psTB, p);
+				ToolItem item = tb.getItem(p);
+				if (item == null)
+					E4Util.message("  ToolBar menu"); //$NON-NLS-1$
+				else {
+					MPerspective persp = (MPerspective) item.getData();
+					if (persp == null)
+						E4Util.message("  Add button Menu"); //$NON-NLS-1$
+					else
+						openMenuFor(item, persp);
+				}
+			}
+		});
+
+		psTB.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				disposeTBImages();
+			}
+
+		});
+
+		psTB.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			public void getName(AccessibleEvent e) {
+				if (0 <= e.childID && e.childID < psTB.getItemCount()) {
+					ToolItem item = psTB.getItem(e.childID);
+					if (item != null) {
+						e.result = item.getToolTipText();
+					}
+				}
+			}
+		});
+
+		final ToolItem createItem = new ToolItem(psTB, SWT.PUSH);
+		createItem.setImage(getOpenPerspectiveImage());
+		createItem.setToolTipText(WorkbenchMessages.OpenPerspectiveDialogAction_tooltip);
+		createItem.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				selectPerspective();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				selectPerspective();
+			}
+		});
+		new ToolItem(psTB, SWT.SEPARATOR);
+
+		MPerspectiveStack stack = getPerspectiveStack();
+		if (stack != null) {
+			// Create an item for each perspective that should show up
+			for (MPerspective persp : stack.getChildren()) {
+				if (persp.isToBeRendered()) {
+					addPerspectiveItem(persp);
+				}
+			}
+		}
+	}
+
+	private Image getOpenPerspectiveImage() {
+		if (perspectiveImage == null || perspectiveImage.isDisposed()) {
+			ImageDescriptor desc = WorkbenchImages
+					.getImageDescriptor(IWorkbenchGraphicConstants.IMG_ETOOL_NEW_PAGE);
+			perspectiveImage = desc.createImage();
+		}
+		return perspectiveImage;
+	}
+
+	MPerspectiveStack getPerspectiveStack() {
+		List<MPerspectiveStack> psList = modelService.findElements(window, null,
+				MPerspectiveStack.class, null);
+		if (psList.size() > 0)
+			return psList.get(0);
+		return null;
+	}
+
+	private ToolItem addPerspectiveItem(MPerspective persp) {
+		final ToolItem psItem = new ToolItem(psTB, SWT.RADIO);
+		psItem.setData(persp);
+		IPerspectiveDescriptor descriptor = getDescriptorFor(persp.getElementId());
+		boolean foundImage = false;
+		if (descriptor != null) {
+			ImageDescriptor desc = descriptor.getImageDescriptor();
+			if (desc != null) {
+				final Image image = desc.createImage(false);
+				if (image != null) {
+					psItem.setImage(image);
+
+					psItem.addListener(SWT.Dispose, new Listener() {
+						public void handleEvent(org.eclipse.swt.widgets.Event event) {
+							image.dispose();
+						}
+					});
+					foundImage = true;
+					psItem.setToolTipText(persp.getLocalizedLabel());
+				}
+			}
+		}
+		if (!foundImage
+				|| PrefUtil.getAPIPreferenceStore().getBoolean(
+						IWorkbenchPreferenceConstants.SHOW_TEXT_ON_PERSPECTIVE_BAR)) {
+			psItem.setText(persp.getLocalizedLabel());
+			psItem.setToolTipText(persp.getLocalizedTooltip());
+		}
+
+		psItem.setSelection(persp == persp.getParent().getSelectedElement());
+
+		psItem.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				MPerspective persp = (MPerspective) e.widget.getData();
+				persp.getParent().setSelectedElement(persp);
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				MPerspective persp = (MPerspective) e.widget.getData();
+				persp.getParent().setSelectedElement(persp);
+			}
+		});
+
+		psItem.addListener(SWT.MenuDetect, new Listener() {
+			public void handleEvent(org.eclipse.swt.widgets.Event event) {
+				MPerspective persp = (MPerspective) event.widget.getData();
+				openMenuFor(psItem, persp);
+			}
+		});
+
+		// update the size
+		fixSize();
+
+		return psItem;
+	}
+
+	// FIXME see https://bugs.eclipse.org/bugs/show_bug.cgi?id=313771
+	private IPerspectiveDescriptor getDescriptorFor(String id) {
+		IPerspectiveRegistry perspectiveRegistry = PlatformUI.getWorkbench()
+				.getPerspectiveRegistry();
+		if (perspectiveRegistry instanceof PerspectiveRegistry) {
+			return ((PerspectiveRegistry) perspectiveRegistry).findPerspectiveWithId(id, false);
+		}
+
+		return perspectiveRegistry.findPerspectiveWithId(id);
+	}
+
+	private void selectPerspective() {
+		// let the handler perform the work to consolidate all the code
+		ParameterizedCommand command = commandService.createCommand(
+				IWorkbenchCommandConstants.PERSPECTIVES_SHOW_PERSPECTIVE, Collections.EMPTY_MAP);
+		handlerService.executeHandler(command);
+	}
+
+	private void openMenuFor(ToolItem item, MPerspective persp) {
+		final Menu menu = new Menu(psTB);
+		menu.setData(persp);
+		if (persp.getParent().getSelectedElement() == persp) {
+			addSaveAsItem(menu);
+			addResetItem(menu);
+		}
+
+		if (persp.isVisible()) {
+			addCloseItem(menu);
+		}
+
+		new MenuItem(menu, SWT.SEPARATOR);
+		// addDockOnSubMenu(menu);
+		addShowTextItem(menu);
+
+		Rectangle bounds = item.getBounds();
+		Point point = psTB.toDisplay(bounds.x, bounds.y + bounds.height);
+		menu.setLocation(point.x, point.y);
+		menu.setVisible(true);
+		menu.addMenuListener(new MenuListener() {
+
+			public void menuHidden(MenuEvent e) {
+				psTB.getDisplay().asyncExec(new Runnable() {
+
+					public void run() {
+						menu.dispose();
+					}
+
+				});
+			}
+
+			public void menuShown(MenuEvent e) {
+				// Nothing to do
+			}
+
+		});
+	}
+
+	private void addCloseItem(final Menu menu) {
+		MenuItem menuItem = new MenuItem(menu, SWT.NONE);
+		menuItem.setText(WorkbenchMessages.WorkbenchWindow_close);
+		menuItem.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				MPerspective persp = (MPerspective) menu.getData();
+				if (persp != null)
+					closePerspective(persp);
+			}
+		});
+	}
+
+	private void closePerspective(MPerspective persp) {
+		MWindow win = modelService.getTopLevelWindowFor(persp);
+		WorkbenchPage page = (WorkbenchPage) win.getContext().get(IWorkbenchPage.class);
+		String perspectiveId = persp.getElementId();
+		IPerspectiveDescriptor desc = getDescriptorFor(perspectiveId);
+		page.closePerspective(desc, perspectiveId, true, false);
+
+		// removePerspectiveItem(persp);
+	}
+
+	private void addSaveAsItem(final Menu menu) {
+		final MenuItem saveAsMenuItem = new MenuItem(menu, SWT.Activate);
+		saveAsMenuItem.setText(WorkbenchMessages.PerspectiveBar_saveAs);
+		final IWorkbenchWindow workbenchWindow = window.getContext().get(IWorkbenchWindow.class);
+		workbenchWindow.getWorkbench().getHelpSystem()
+				.setHelp(saveAsMenuItem, IWorkbenchHelpContextIds.SAVE_PERSPECTIVE_ACTION);
+		saveAsMenuItem.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				if (psTB.isDisposed())
+					return;
+				IHandlerService handlerService = (IHandlerService) workbenchWindow
+						.getService(IHandlerService.class);
+				IStatus status = Status.OK_STATUS;
+				try {
+					handlerService.executeCommand(
+							IWorkbenchCommandConstants.WINDOW_SAVE_PERSPECTIVE_AS, null);
+				} catch (ExecutionException e) {
+					status = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, e.getMessage(), e);
+				} catch (NotDefinedException e) {
+					status = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, e.getMessage(), e);
+				} catch (NotEnabledException e) {
+					status = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, e.getMessage(), e);
+				} catch (NotHandledException e) {
+				}
+				if (!status.isOK())
+					StatusManager.getManager().handle(status,
+							StatusManager.SHOW | StatusManager.LOG);
+			}
+		});
+	}
+
+	private void addResetItem(final Menu menu) {
+		final MenuItem resetMenuItem = new MenuItem(menu, SWT.Activate);
+		resetMenuItem.setText(WorkbenchMessages.PerspectiveBar_reset);
+		final IWorkbenchWindow workbenchWindow = window.getContext().get(IWorkbenchWindow.class);
+		workbenchWindow.getWorkbench().getHelpSystem()
+				.setHelp(resetMenuItem, IWorkbenchHelpContextIds.RESET_PERSPECTIVE_ACTION);
+		resetMenuItem.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				if (psTB.isDisposed())
+					return;
+				IHandlerService handlerService = (IHandlerService) workbenchWindow
+						.getService(IHandlerService.class);
+				IStatus status = Status.OK_STATUS;
+				try {
+					handlerService.executeCommand(
+							IWorkbenchCommandConstants.WINDOW_RESET_PERSPECTIVE, null);
+				} catch (ExecutionException e) {
+					status = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, e.getMessage(), e);
+				} catch (NotDefinedException e) {
+					status = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, e.getMessage(), e);
+				} catch (NotEnabledException e) {
+					status = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, e.getMessage(), e);
+				} catch (NotHandledException e) {
+				}
+				if (!status.isOK())
+					StatusManager.getManager().handle(status,
+							StatusManager.SHOW | StatusManager.LOG);
+			}
+		});
+	}
+
+	private void addShowTextItem(final Menu menu) {
+		final MenuItem showtextMenuItem = new MenuItem(menu, SWT.CHECK);
+		showtextMenuItem.setText(WorkbenchMessages.PerspectiveBar_showText);
+		showtextMenuItem.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				boolean preference = showtextMenuItem.getSelection();
+				if (preference != PrefUtil.getAPIPreferenceStore().getDefaultBoolean(
+						IWorkbenchPreferenceConstants.SHOW_TEXT_ON_PERSPECTIVE_BAR)) {
+					PrefUtil.getInternalPreferenceStore().setValue(
+							IPreferenceConstants.OVERRIDE_PRESENTATION, true);
+				}
+				PrefUtil.getAPIPreferenceStore().setValue(
+						IWorkbenchPreferenceConstants.SHOW_TEXT_ON_PERSPECTIVE_BAR, preference);
+				changeShowText(preference);
+			}
+		});
+		showtextMenuItem.setSelection(PrefUtil.getAPIPreferenceStore().getBoolean(
+				IWorkbenchPreferenceConstants.SHOW_TEXT_ON_PERSPECTIVE_BAR));
+	}
+
+	private void setPropertyChangeListener() {
+		propertyChangeListener = new IPropertyChangeListener() {
+
+			public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+				if (IWorkbenchPreferenceConstants.SHOW_TEXT_ON_PERSPECTIVE_BAR
+						.equals(propertyChangeEvent.getProperty())) {
+					Object newValue = propertyChangeEvent.getNewValue();
+					boolean showText = true; // default
+					if (newValue instanceof Boolean)
+						showText = ((Boolean) newValue).booleanValue();
+					else if ("false".equals(newValue)) //$NON-NLS-1$
+						showText = false;
+					changeShowText(showText);
+				}
+			}
+		};
+		PrefUtil.getAPIPreferenceStore().addPropertyChangeListener(propertyChangeListener);
+	}
+
+	private void changeShowText(boolean showText) {
+		ToolItem[] items = psTB.getItems();
+		for (int i = 0; i < items.length; i++) {
+			MPerspective persp = (MPerspective) items[i].getData();
+			if (persp != null)
+				if (showText) {
+					if (persp.getLabel() != null)
+						items[i].setText(persp.getLocalizedLabel());
+					items[i].setToolTipText(persp.getLocalizedTooltip());
+				} else {
+					Image image = items[i].getImage();
+					if (image != null) {
+						items[i].setText(""); //$NON-NLS-1$
+						items[i].setToolTipText(persp.getLocalizedLabel());
+					}
+				}
+		}
+
+		// update the size
+		fixSize();
+	}
+
+	private void fixSize() {
+		psTB.getParent().pack();
+		psTB.getShell().layout(new Control[] { psTB }, SWT.DEFER);
+	}
+
+	private void removePerspectiveItem(MPerspective toRemove) {
+		ToolItem psItem = getItemFor(toRemove);
+		if (psItem != null) {
+			psItem.dispose();
+		}
+
+		// update the size
+		fixSize();
+	}
+
+	protected ToolItem getItemFor(MPerspective persp) {
+		if (psTB == null)
+			return null;
+
+		for (ToolItem ti : psTB.getItems()) {
+			if (ti.getData() == persp)
+				return ti;
+		}
+
+		return null;
+	}
+
+	void paint(PaintEvent e) {
+		GC gc = e.gc;
+		Point size = comp.getSize();
+		if (curveColor == null)
+			curveColor = e.display.getSystemColor(SWT.COLOR_BLACK);
+		int h = size.y;
+		int[] simpleCurve = new int[] { 0, h - 1, 1, h - 1, 2, h - 2, 2, 1, 3, 0 };
+		// draw border
+		gc.setForeground(curveColor);
+		gc.setAdvanced(true);
+		if (gc.getAdvanced()) {
+			gc.setAntialias(SWT.ON);
+		}
+		gc.drawPolyline(simpleCurve);
+
+		Rectangle bounds = ((Control) e.widget).getBounds();
+		bounds.x = bounds.y = 0;
+		Region r = new Region();
+		r.add(bounds);
+		int[] simpleCurveClose = new int[simpleCurve.length + 4];
+		System.arraycopy(simpleCurve, 0, simpleCurveClose, 0, simpleCurve.length);
+		int index = simpleCurve.length;
+		simpleCurveClose[index++] = bounds.width;
+		simpleCurveClose[index++] = 0;
+		simpleCurveClose[index++] = bounds.width;
+		simpleCurveClose[index++] = bounds.height;
+		r.subtract(simpleCurveClose);
+		Region clipping = new Region();
+		gc.getClipping(clipping);
+		r.intersect(clipping);
+		gc.setClipping(r);
+		Image b = toolParent.getBackgroundImage();
+		if (b != null && !b.isDisposed())
+			gc.drawImage(b, 0, 0);
+
+		r.dispose();
+		clipping.dispose();
+		// // gc.fillRectangle(bounds);
+		// Rectangle mappedBounds = e.display.map(comp, comp.getParent(),
+		// bounds);
+		// ((Composite) toolParent).drawBackground(gc, bounds.x, bounds.y,
+		// bounds.width,
+		// bounds.height, mappedBounds.x, mappedBounds.y);
+
+	}
+
+	void resize() {
+		Point size = comp.getSize();
+		Image oldBackgroundImage = backgroundImage;
+		backgroundImage = new Image(comp.getDisplay(), size.x, size.y);
+		GC gc = new GC(backgroundImage);
+		comp.getParent().drawBackground(gc, 0, 0, size.x, size.y, 0, 0);
+		Color background = comp.getBackground();
+		Color border = comp.getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
+		RGB backgroundRGB = background.getRGB();
+		// TODO naive and hard coded, doesn't deal with high contrast, etc.
+		Color gradientTop = new Color(comp.getDisplay(), backgroundRGB.red + 12,
+				backgroundRGB.green + 10, backgroundRGB.blue + 10);
+		int h = size.y;
+		int curveStart = 0;
+		int curve_width = 5;
+
+		int[] curve = new int[] { 0, h, 1, h, 2, h - 1, 3, h - 2, 3, 2, 4, 1, 5, 0, };
+		int[] line1 = new int[curve.length + 4];
+		int index = 0;
+		int x = curveStart;
+		line1[index++] = x + 1;
+		line1[index++] = h;
+		for (int i = 0; i < curve.length / 2; i++) {
+			line1[index++] = x + curve[2 * i];
+			line1[index++] = curve[2 * i + 1];
+		}
+		line1[index++] = x + curve_width;
+		line1[index++] = 0;
+
+		int[] line2 = new int[line1.length];
+		index = 0;
+		for (int i = 0; i < line1.length / 2; i++) {
+			line2[index] = line1[index++] - 1;
+			line2[index] = line1[index++];
+		}
+
+		// custom gradient
+		gc.setForeground(gradientTop);
+		gc.setBackground(background);
+		gc.drawLine(4, 0, size.x, 0);
+		gc.drawLine(3, 1, size.x, 1);
+		gc.fillGradientRectangle(2, 2, size.x - 2, size.y - 3, true);
+		gc.setForeground(background);
+		gc.drawLine(2, size.y - 1, size.x, size.y - 1);
+		gradientTop.dispose();
+
+		gc.setForeground(border);
+		gc.drawPolyline(line2);
+		gc.dispose();
+		comp.setBackgroundImage(backgroundImage);
+		if (oldBackgroundImage != null)
+			oldBackgroundImage.dispose();
+
+	}
+
+	void dispose() {
+		cleanUp();
+
+		if (backgroundImage != null) {
+			comp.setBackgroundImage(null);
+			backgroundImage.dispose();
+			backgroundImage = null;
+		}
+	}
+
+	void disposeTBImages() {
+		ToolItem[] items = psTB.getItems();
+		for (int i = 0; i < items.length; i++) {
+			Image image = items[i].getImage();
+			if (image != null) {
+				items[i].setImage(null);
+				image.dispose();
+			}
+		}
+	}
+
+	public void setKeylineColor(Color borderColor, Color curveColor) {
+		this.borderColor = borderColor;
+		this.curveColor = curveColor;
+	}
+}
