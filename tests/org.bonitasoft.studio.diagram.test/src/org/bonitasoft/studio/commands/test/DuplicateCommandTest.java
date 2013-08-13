@@ -78,10 +78,10 @@ public class DuplicateCommandTest extends SWTBotGefTestCase {
             alterDiagram(botEditor);
         }
 
-
         bot.menu("Diagram").menu("Duplicate...").click();
         bot.text(0).setText(processName);
         bot.text(1).setText(processVersion);
+        bot.text(2).setText("Pool" + System.currentTimeMillis());
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(new ICondition() {
 
