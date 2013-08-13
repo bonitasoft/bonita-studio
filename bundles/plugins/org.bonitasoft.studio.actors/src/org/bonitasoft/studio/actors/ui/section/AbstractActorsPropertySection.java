@@ -49,9 +49,11 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -116,7 +118,9 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 				AddActorWizard actorWizard = new AddActorWizard(getEObject(), getEditingDomain());
 				WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), actorWizard);
 				if(wizardDialog.open() == Dialog.OK){
-					//Todo : select the actor in the combo !
+					if(actorWizard.getNewActor()!=null){
+						actorComboViewer.setSelection((ISelection) new StructuredSelection(actorWizard.getNewActor()));
+					}
 				}
 			}
 		});

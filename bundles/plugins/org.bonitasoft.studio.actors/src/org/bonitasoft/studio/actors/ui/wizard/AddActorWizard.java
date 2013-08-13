@@ -25,6 +25,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.wizard.Wizard;
 
@@ -37,6 +38,7 @@ public class AddActorWizard extends Wizard {
 	private AddActorWizardPage page;
 	private AbstractProcess process;
 	private TransactionalEditingDomain editingDomain;
+	private Actor newActor;
 
 	public AddActorWizard(EObject eObject, TransactionalEditingDomain editingDomain) {
 		super();
@@ -47,6 +49,11 @@ public class AddActorWizard extends Wizard {
 		}
 		this.process = (AbstractProcess)eObject;
 		this.editingDomain = editingDomain;
+		newActor = null;
+	}
+	
+	public Actor getNewActor(){
+		return newActor;
 	}
 
 	@Override
@@ -57,13 +64,13 @@ public class AddActorWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-		final Actor newActor = ProcessFactory.eINSTANCE.createActor();
+		newActor = ProcessFactory.eINSTANCE.createActor();	
 		newActor.setName(page.getActorName());
 		newActor.setDocumentation(page.getActorDocumentation());
 		if(page.isSetAsInitiator()){
 			for (Actor a : process.getActors()) {
 				if(a.isInitiator()){
-					a.setInitiator(false);
+					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, a, ProcessPackage.Literals.ACTOR__INITIATOR, false));
 					break;
 				}
 			}
@@ -71,7 +78,6 @@ public class AddActorWizard extends Wizard {
 		} else {
 			newActor.setInitiator(false);
 		}
-		
 		editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS, newActor));
 		return true;
 	}
