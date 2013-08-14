@@ -426,4 +426,11 @@
          version="3.105.1"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.ui.views.properties.tabbed"
+         download-size="0"
+         install-size="0"
+         version="3.5.201"
+         unpack="false"/>
+
 </feature>

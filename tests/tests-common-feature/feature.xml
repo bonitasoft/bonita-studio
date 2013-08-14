@@ -57,7 +57,7 @@
       <import plugin="org.hamcrest.library" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.hamcrest.integration" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.hamcrest.text" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.views.properties.tabbed" version="3.5.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.views.properties.tabbed" version="3.5.201" match="greaterOrEqual"/>
       <import plugin="org.eclipse.xsd" version="2.6.0" match="greaterOrEqual"/>
    </requires>
 
