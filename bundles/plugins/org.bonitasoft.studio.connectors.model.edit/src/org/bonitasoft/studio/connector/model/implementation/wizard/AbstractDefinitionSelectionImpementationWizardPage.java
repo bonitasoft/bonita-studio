@@ -246,10 +246,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 			}
 
 		}) ;
-
-
-
-
+		
 		final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(explorer.getRightTableViewer());
 		context.bindValue(observeSingleSelection, EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_ID),defIdStrategy,defModelStrategy) ;
 

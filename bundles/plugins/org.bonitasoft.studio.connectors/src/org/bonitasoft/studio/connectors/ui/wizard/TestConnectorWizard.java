@@ -134,10 +134,13 @@ public class TestConnectorWizard extends ConnectorWizard {
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if(page.equals(selectionPage)){
-			final ConnectorDefinition definition = selectionPage.getSelectedDefinition() ;
-			checkDefinitionDependencies(definition) ;
-			extension = findCustomWizardExtension(definition) ;
-			recreateConnectorConfigurationPages(definition,false);
+//			final ConnectorImplementation impl = selectionPage.getSelectedImplementation() ;
+//			ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+//			ConnectorDefinition definition = defStore.getDefinition(impl.getDefinitionId(), impl.getDefinitionVersion());
+			
+//			checkDefinitionDependencies(definition) ;
+//			extension = findCustomWizardExtension(definition) ;
+//			recreateConnectorConfigurationPages(definition,false);
 		}
 
 		List<IWizardPage> pages = getAllPageList() ;

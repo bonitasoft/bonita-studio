@@ -47,10 +47,15 @@ import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnector
 import org.bonitasoft.studio.connector.model.definition.wizard.GeneratedConnectorWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.extension.CustomWizardExtension;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.ConnectorImplFileStore;
+import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
+import org.bonitasoft.studio.connectors.ui.provider.UniqueConnectorDefinitionContentProvider;
 import org.bonitasoft.studio.connectors.ui.wizard.page.AbstractConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.ConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorConstants;
@@ -91,6 +96,7 @@ import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.wizard.IWizardPage;
 
 /**
@@ -109,7 +115,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	protected Connector originalConnector;
 	protected final Set<EStructuralFeature> featureToCheckForUniqueID ;
 	protected final EStructuralFeature connectorContainmentFeature;
-	protected SelectConnectorDefinitionWizardPage selectionPage;
+	protected AbstractDefinitionSelectionImpementationWizardPage selectionPage;
 	private SelectNameAndDescWizardPage namePage;
 	protected DefinitionResourceProvider messageProvider;
 	protected CustomWizardExtension extension;
@@ -212,7 +218,8 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	@Override
 	public void addPages() {
 		if(!editMode){
-			selectionPage = getSelectionPage(connectorWorkingCopy,messageProvider) ;
+			//selectionPage = getSelectionPage(connectorWorkingCopy,messageProvider) ;
+			selectionPage = getNewSelectionPage(connectorWorkingCopy,messageProvider) ;
 			addPage(selectionPage) ;
 		}
 		addNameAndDescriptionPage();
@@ -229,6 +236,33 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	}
 
+	protected AbstractDefinitionSelectionImpementationWizardPage  getNewSelectionPage(Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
+		
+		final List<ConnectorImplementation> existingImplementation = new ArrayList<ConnectorImplementation>();
+		final ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+		
+		for (ConnectorImplFileStore connectorImplFileStore : store.getChildren()) {
+			existingImplementation.add(connectorImplFileStore.getContent());
+		}
+		ConnectorImplementation currentImplementation = store.getImplementation(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion());
+		
+		//TODO : Contournement inccorect à modifier
+		if(currentImplementation==null){
+			currentImplementation = existingImplementation.get(0);
+		}		
+		return new AbstractDefinitionSelectionImpementationWizardPage(currentImplementation, existingImplementation, definitions, Messages.selectConnectorDefinitionTitle, Messages.selectConnectorDefinitionDesc, resourceProvider) {
+			@Override
+			protected ITreeContentProvider getContentProvider() {
+				return new UniqueConnectorDefinitionContentProvider();
+			}
+			
+			@Override
+			protected ITreeContentProvider getCustomContentProvider() {
+				return new UniqueConnectorDefinitionContentProvider(true);
+			}
+		};
+	}
+	
 	protected void addNameAndDescriptionPage() {
 		if(useEvents ){
 			namePage = new SelectEventConnectorNameAndDescWizardPage(container, connectorWorkingCopy,originalConnector, featureToCheckForUniqueID) ;
@@ -317,7 +351,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if(page.equals(selectionPage)){
-			final ConnectorDefinition definition = selectionPage.getSelectedDefinition() ;
+			final ConnectorDefinition definition = null;//selectionPage.getSelectedDefinition() ;
 
 			checkDefinitionDependencies(definition) ;
 
