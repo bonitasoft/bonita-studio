@@ -53,7 +53,6 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.extension.CustomWizardExtension;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
-import org.bonitasoft.studio.connectors.repository.ConnectorImplFileStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.provider.UniqueConnectorDefinitionContentProvider;
 import org.bonitasoft.studio.connectors.ui.wizard.page.AbstractConnectorOutputWizardPage;
@@ -68,6 +67,7 @@ import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
+import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -82,12 +82,21 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessFactory;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -95,6 +104,8 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -218,7 +229,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	@Override
 	public void addPages() {
 		if(!editMode){
-			//selectionPage = getSelectionPage(connectorWorkingCopy,messageProvider) ;
 			selectionPage = getNewSelectionPage(connectorWorkingCopy,messageProvider) ;
 			addPage(selectionPage) ;
 		}
@@ -236,21 +246,11 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	}
 
-	protected AbstractDefinitionSelectionImpementationWizardPage  getNewSelectionPage(Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
+	protected AbstractDefinitionSelectionImpementationWizardPage getNewSelectionPage(final Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
 		
 		final List<ConnectorImplementation> existingImplementation = new ArrayList<ConnectorImplementation>();
 		final ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
-		
-		for (ConnectorImplFileStore connectorImplFileStore : store.getChildren()) {
-			existingImplementation.add(connectorImplFileStore.getContent());
-		}
-		ConnectorImplementation currentImplementation = store.getImplementation(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion());
-		
-		//TODO : Contournement inccorect à modifier
-		if(currentImplementation==null){
-			currentImplementation = existingImplementation.get(0);
-		}		
-		return new AbstractDefinitionSelectionImpementationWizardPage(currentImplementation, existingImplementation, definitions, Messages.selectConnectorDefinitionTitle, Messages.selectConnectorDefinitionDesc, resourceProvider) {
+		return new AbstractDefinitionSelectionImpementationWizardPage(existingImplementation, definitions, Messages.selectConnectorDefinitionTitle, Messages.selectConnectorDefinitionDesc, resourceProvider) {
 			@Override
 			protected ITreeContentProvider getContentProvider() {
 				return new UniqueConnectorDefinitionContentProvider();
@@ -259,6 +259,61 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 			@Override
 			protected ITreeContentProvider getCustomContentProvider() {
 				return new UniqueConnectorDefinitionContentProvider(true);
+			}
+
+			@Override
+			protected void bindValue() {
+				final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(explorer.getRightTableViewer());
+				final AbstractDefinitionSelectionImpementationWizardPage thisPage = this;
+				observeSingleSelection.addValueChangeListener(new IValueChangeListener() {
+					@Override
+					public void handleValueChange(ValueChangeEvent event) {
+						final Object o = event.getObservableValue().getValue();
+						if(o instanceof ConnectorDefinition){
+							thisPage.setSelectedConnectorDefinition((ConnectorDefinition) o);
+							setPageComplete(true);
+						}
+					}
+				});
+				
+				IValidator selectionValidator = new IValidator() {
+		            @Override
+		            public IStatus validate(Object value) {
+		                if(value == null || value instanceof Category){
+		                    return new Status(IStatus.ERROR,ConnectorPlugin.PLUGIN_ID, Messages.selectAConnectorDefWarning);
+		                }
+		                return Status.OK_STATUS;
+		            }
+		        } ;
+				
+				UpdateValueStrategy idStrategy = new UpdateValueStrategy() ;
+		        idStrategy.setBeforeSetValidator(selectionValidator) ;
+		        idStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class) {
+
+		            @Override
+		            public Object convert(Object from) {
+		                if(from instanceof ConnectorDefinition){
+		                    return ((ConnectorDefinition) from).getId() ;
+		                }
+		                return null;
+		            }
+		        }) ;
+
+		        UpdateValueStrategy versionStrategy = new UpdateValueStrategy() ;
+		        versionStrategy.setBeforeSetValidator(selectionValidator) ;
+		        versionStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class) {
+
+		            @Override
+		            public Object convert(Object from) {
+		                if(from instanceof ConnectorDefinition){
+		                    return ((ConnectorDefinition) from).getVersion() ;
+		                }
+		                return null;
+		            }
+		        }) ;
+				final Connector c = connectorWorkingCopy;
+		        context.bindValue(ViewersObservables.observeSingleSelection(explorer.getRightTableViewer()), EMFObservables.observeValue(c.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__DEFINITION_ID),idStrategy,null)  ;
+		        context.bindValue(ViewersObservables.observeSingleSelection(explorer.getRightTableViewer()), EMFObservables.observeValue(c.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__VERSION),versionStrategy,null)  ;
 			}
 		};
 	}
@@ -351,13 +406,12 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if(page.equals(selectionPage)){
-			final ConnectorDefinition definition = null;//selectionPage.getSelectedDefinition() ;
-
-			checkDefinitionDependencies(definition) ;
-
-
-			extension = findCustomWizardExtension(definition) ;
-			recreateConnectorConfigurationPages(definition,true);
+			final ConnectorDefinition definition = selectionPage.getSelectedConnectorDefinition();
+			if(definition!=null){
+				checkDefinitionDependencies(definition) ;
+				extension = findCustomWizardExtension(definition) ;
+				recreateConnectorConfigurationPages(definition,true);
+			}
 		}
 		return super.getNextPage(page);
 	}

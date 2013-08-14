@@ -35,6 +35,7 @@ import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositorySto
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationFactory;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractImplementationWizardPage;
@@ -48,7 +49,10 @@ import org.bonitasoft.studio.connectors.ui.provider.UniqueConnectorDefinitionCon
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -147,6 +151,13 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 			protected ITreeContentProvider getCustomContentProvider() {
 				return new UniqueConnectorDefinitionContentProvider(true);
 			}
+
+			@Override
+			protected void bindValue() {
+				final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(explorer.getRightTableViewer());
+				context.bindValue(observeSingleSelection, EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_ID),defIdStrategy,defModelStrategy) ;
+				context.bindValue(ViewersObservables.observeSingleSelection(versionCombo), EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_VERSION));
+			}
 			
 		};
 	}
@@ -155,13 +166,9 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 		return Messages.selectConnectorDefinitionForImplDesc;
 	}
 
-
-
 	protected String getSelectionPageTitle() {
 		return Messages.selectConnectorDefinitionTitle;
 	}
-
-
 
 	protected IWizardPage getImplementationPage(
 			List<ConnectorImplementation> existingImplementation) {
@@ -174,8 +181,6 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 			
 		};
 	}
-
-
 
     protected String getPageDescription() {
         return Messages.connectorImplementationDesc;
@@ -193,10 +198,6 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
     	return super.canFinish();
     }
 
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#performFinish()
-     */
     @Override
     public boolean performFinish() {
         try {
@@ -265,7 +266,6 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 
         return true;
     }
-
 
     protected String getAbstractClassName() {
         return AbstractConnector.class.getName();

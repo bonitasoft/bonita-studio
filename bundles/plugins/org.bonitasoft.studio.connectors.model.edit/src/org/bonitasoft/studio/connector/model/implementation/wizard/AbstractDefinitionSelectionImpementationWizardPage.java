@@ -74,9 +74,16 @@ import org.eclipse.swt.widgets.Label;
  */
 public abstract class AbstractDefinitionSelectionImpementationWizardPage extends NewTypeWizardPage implements ISelectionChangedListener {
 
-	private final ConnectorImplementation implementation;
-	private EMFDataBindingContext context;
+	protected ConnectorImplementation implementation;
+	protected ConnectorDefinition selectedDefinition;
+	protected EMFDataBindingContext context;
+	protected UpdateValueStrategy defIdStrategy;
+	protected UpdateValueStrategy defModelStrategy;
+	protected ComboViewer versionCombo;
+	protected TreeExplorer explorer;
 	private WizardPageSupport pageSupport;
+	private Boolean checkOnlyCustom;
+	private Button onlyCustomCheckbox;
 	private final DefinitionResourceProvider messageProvider;
 	private final List<ConnectorDefinition> definitions;
 	private ViewerFilter customConnectorFilter = new ViewerFilter() {
@@ -102,8 +109,17 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		this.implementation = implementation;
 		this.messageProvider = messageProvider ;
 		this.definitions = definitions ;
+		checkOnlyCustom = true;
 	}
-
+	
+	public AbstractDefinitionSelectionImpementationWizardPage(List<ConnectorImplementation> existingImpl,List<ConnectorDefinition> definitions,String pageTitle,String pageDescription,DefinitionResourceProvider messageProvider) {
+		super(true,AbstractDefinitionSelectionImpementationWizardPage.class.getName());
+		setTitle(pageTitle);
+		setDescription(pageDescription);
+		this.messageProvider = messageProvider ;
+		this.definitions = definitions ;
+		checkOnlyCustom = false;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
@@ -116,13 +132,13 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).create());
 
-		final TreeExplorer explorer = createTreeExplorer(mainComposite);
+		explorer = createTreeExplorer(mainComposite);
 
 		final Label definitionVersionLabel = new Label(mainComposite, SWT.NONE);
 		definitionVersionLabel.setText(Messages.definitionVersion);
 		definitionVersionLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
 
-		final ComboViewer versionCombo = new ComboViewer(mainComposite, SWT.READ_ONLY | SWT.BORDER);
+		versionCombo = new ComboViewer(mainComposite, SWT.READ_ONLY | SWT.BORDER);
 		versionCombo.getCombo().setLayoutData(GridDataFactory.fillDefaults().create()) ;
 		versionCombo.setContentProvider(new ArrayContentProvider());
 		versionCombo.setLabelProvider(new LabelProvider());
@@ -152,7 +168,10 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 						}
 					}
 					versionCombo.setInput(versions);
-					String version = implementation.getDefinitionVersion() ;
+					String version = null;
+					if(implementation!=null){
+						version = implementation.getDefinitionVersion() ;
+					}
 					if(version != null && versions.contains(version)){
 						versionCombo.setSelection(new StructuredSelection(version));
 					}else{
@@ -203,9 +222,8 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 				}
 			}
 		});
-
-
-		final UpdateValueStrategy defIdStrategy = new UpdateValueStrategy() ;
+		
+		defIdStrategy = new UpdateValueStrategy() ;
 		defIdStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class){
 
 			@Override
@@ -229,7 +247,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		}) ;
 
 
-		final UpdateValueStrategy defModelStrategy = new UpdateValueStrategy() ;
+		defModelStrategy = new UpdateValueStrategy() ;
 		defModelStrategy.setConverter(new Converter(String.class,ConnectorDefinition.class){
 
 			@Override
@@ -246,15 +264,12 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 			}
 
 		}) ;
+
+		bindValue();
+		updateOnlyCustomCheckbox();
 		
-		final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(explorer.getRightTableViewer());
-		context.bindValue(observeSingleSelection, EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_ID),defIdStrategy,defModelStrategy) ;
-
-		context.bindValue(ViewersObservables.observeSingleSelection(versionCombo), EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_VERSION));
-
 		setControl(mainComposite);
 	}
-
 
 	protected TreeExplorer createTreeExplorer(Composite mainComposite) {
 		final TreeExplorer explorer = new TreeExplorer(mainComposite, SWT.NONE);
@@ -262,10 +277,10 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
 		final Composite additionalComposite = explorer.getAdditionalComposite();
 		additionalComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
-		final Button onlyCustomCheckbox = new Button(additionalComposite,SWT.CHECK);
+		onlyCustomCheckbox = new Button(additionalComposite,SWT.CHECK);
 		onlyCustomCheckbox.setText(Messages.onlyCustomConnector);
 		onlyCustomCheckbox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-		onlyCustomCheckbox.setSelection(true);
+		onlyCustomCheckbox.setSelection(checkOnlyCustom);
 
 		final ITreeContentProvider contentProvider = getContentProvider();
 		final ITreeContentProvider customContentProvider = getCustomContentProvider();
@@ -312,30 +327,31 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		explorer.setInput(new Object());
 		explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
 		onlyCustomCheckbox.addSelectionListener(new SelectionAdapter() {
-
-
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if(onlyCustomCheckbox.getSelection()){
-					explorer.setContentProvider(customContentProvider);
-					explorer.addRightTreeFilter(customConnectorFilter);
-				}else{
-					explorer.setContentProvider(contentProvider);
-					explorer.removeTreeFilter(customConnectorFilter);
-				}
-				explorer.setInput(new Object());
-				explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
+				updateOnlyCustomCheckbox();
 			}
 		});
-
 		Object[] rootElement = contentProvider.getElements(new Object());
 		List<Object> flattenTree = new ArrayList<Object>();
 		getFlattenTree(flattenTree,rootElement,contentProvider);
 		explorer.getRightTableViewer().setInput(flattenTree);
-
 		return explorer;
 	}
-
+	
+	private void updateOnlyCustomCheckbox(){
+			final ITreeContentProvider customContentProvider = getCustomContentProvider();
+			final ITreeContentProvider contentProvider = getContentProvider();
+		if(onlyCustomCheckbox.getSelection()){
+			explorer.setContentProvider(customContentProvider);
+			explorer.addRightTreeFilter(customConnectorFilter);
+		}else{
+			explorer.setContentProvider(contentProvider);
+			explorer.removeTreeFilter(customConnectorFilter);
+		}
+		explorer.setInput(new Object());
+		explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
+	}
 
 	private void getFlattenTree(List<Object> flattenTree, Object[] rootElement,ITreeContentProvider contentProvider) {
 		for(Object element : rootElement){
@@ -347,7 +363,6 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
 	}
 
-
 	private void getChildrenFlattenTree(List<Object> flattenTree,Object parentElement, ITreeContentProvider contentProvider) {
 		for(Object element : contentProvider.getChildren(parentElement)){
 			flattenTree.add(element);
@@ -356,7 +371,6 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 			}
 		}
 	}
-
 
 	protected abstract ITreeContentProvider getContentProvider();
 
@@ -379,14 +393,20 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		}
 	}
 
-
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
-
+		
 	}
 
+	protected abstract ITreeContentProvider getCustomContentProvider();
 
-	protected abstract ITreeContentProvider getCustomContentProvider() ;
+	protected abstract void bindValue();
 
-
+	public void setSelectedConnectorDefinition(ConnectorDefinition selectedDefinition){
+		this.selectedDefinition = selectedDefinition;
+	}
+	
+	public ConnectorDefinition getSelectedConnectorDefinition(){
+		return selectedDefinition;
+	}
 }
