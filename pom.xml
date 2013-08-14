@@ -201,7 +201,13 @@
 							<id>org.bonitasoft.studioEx.console.libs</id>
 							<removeAll />
 						</filter>
-						
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.eclipse.ui.workbench</id>
+							<restrictTo>
+								<version>3.105.1</version>
+							</restrictTo>
+						</filter>
 					</filters>
 				</configuration>
 			</plugin>
