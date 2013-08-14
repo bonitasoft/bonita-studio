@@ -19,8 +19,7 @@
 
    <requires>
       <import feature="org.eclipse.rcp" version="3.7.1.r37x_v20110729-9DB5FmNFnFLSFCtLxnRfMqt15A4A" match="greaterOrEqual"/>
-      <import feature="org.eclipse.wst.web_ui.feature"/>
-      <import feature="platform-specific-feature" version="6.1.0" match="equivalent"/>
+      <import feature="platform-specific-feature" version="6.2.0" match="equivalent"/>
    </requires>
 
    <plugin
@@ -394,6 +393,13 @@
          install-size="0"
          version="0.0.0"
          fragment="true"/>
+
+   <plugin
+         id="javax.servlet"
+         download-size="0"
+         install-size="0"
+         version="2.5.0.v201103041518"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.ui.net"
