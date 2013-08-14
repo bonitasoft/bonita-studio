@@ -179,7 +179,7 @@ public class ImportBosArchiveOperation {
 											MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.warningDuplicateDialogTitle, Messages.bind(Messages.poolAlreadyExistWarningMessage,sb.toString()));
 										}
 									});
-									}
+								}
 								}
 								if (fileStore != null && openAfterImport) {
 									fileStore.open();
