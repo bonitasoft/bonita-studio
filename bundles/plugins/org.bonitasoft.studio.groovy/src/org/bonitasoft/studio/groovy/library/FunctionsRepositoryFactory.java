@@ -54,14 +54,13 @@ public class FunctionsRepositoryFactory {
     private static ArrayList<String> funcName;
 
     private synchronized static void createFunctionCatgories(){
-
         try {
             IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
             IPackageFragmentRoot[] packages = project.getAllPackageFragmentRoots();
             IPackageFragmentRoot groovyAll = null ;
 
             for(IPackageFragmentRoot f : packages){
-                if(f.toString().indexOf("org.codehaus.groovy_") != -1){
+                if(f.toString().indexOf("org.codehaus.groovy_") != -1 && f.isOpen()){
                     String searchString =  f.toString().substring(f.toString().indexOf("org.codehaus.groovy_")) ;
                     if(searchString.contains("lib"+File.separatorChar+"groovy-all-") && searchString.contains(".jar")){ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         groovyAll = f;
@@ -117,7 +116,6 @@ public class FunctionsRepositoryFactory {
     }
 
     public synchronized static IFunctionsCategories getFunctionCatgories(){
-
         if(categories == null){
             createFunctionCatgories();
         }
