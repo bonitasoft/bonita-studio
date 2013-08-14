@@ -185,6 +185,13 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
         return Messages.connectorImplementationTitle;
     }
 
+    @Override
+    public boolean canFinish() {
+    	if(getContainer().getCurrentPage() instanceof AbstractDefinitionSelectionImpementationWizardPage){
+    		return false;
+    	}
+    	return super.canFinish();
+    }
 
 
     /* (non-Javadoc)

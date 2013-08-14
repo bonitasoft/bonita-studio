@@ -23,7 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.engine.api.IdentityAPI;
+import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.ProfileAPI;
+import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
 import org.bonitasoft.engine.identity.User;
 import org.bonitasoft.engine.identity.UserCriterion;
 import org.bonitasoft.engine.profile.Profile;
@@ -91,6 +93,12 @@ public class InstallOrganizationHandler extends AbstractHandler {
 			try{
 				session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR) ;
 				IdentityAPI identityAPI = BOSEngineManager.getInstance().getIdentityAPI(session) ;
+				ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
+				SearchResult<ProcessDeploymentInfo> result = processApi.searchProcessDeploymentInfos(new SearchOptionsBuilder(0,Integer.MAX_VALUE).done());
+				for(ProcessDeploymentInfo info : result.getResult()){
+					processApi.deleteProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
+					processApi.deleteArchivedProcessInstances(info.getProcessId(), 0, Integer.MAX_VALUE);
+				}
 				identityAPI.deleteOrganization() ;
 				String content = export((OrganizationFileStore) file);
 				identityAPI.importOrganization(content) ;

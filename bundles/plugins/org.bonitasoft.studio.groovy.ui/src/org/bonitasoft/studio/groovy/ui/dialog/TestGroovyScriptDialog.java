@@ -35,6 +35,7 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.window.Window;
@@ -71,7 +72,6 @@ public class TestGroovyScriptDialog extends Dialog {
 		this.returnType = returnType;
 		widgetMap = new HashMap<Label, Control>();
 		this.variables = variables;
-
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class TestGroovyScriptDialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 		final Composite mainComposite = (Composite) super.createDialogArea(parent);
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().hint(400, SWT.DEFAULT).create());
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().margins(15,20).spacing(0,15).create());
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().extendedMargins(15, 15, 10, 0).spacing(0,15).create());
 		final Label descriptionLabel=new Label(mainComposite, SWT.WRAP);
 		descriptionLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create());
 		descriptionLabel.setText(Messages.testGroovyScriptDialogDescription);
@@ -98,9 +98,23 @@ public class TestGroovyScriptDialog extends Dialog {
 		if(!unknownVariables.isEmpty()){
 			createVariableGroup(mainComposite,Messages.unknownVariableLabel,unknownVariables);
 		}
-
-		final Button testButton =	new Button(mainComposite, SWT.PUSH) ;
-		testButton.setLayoutData(GridDataFactory.fillDefaults().grab(false,false).align(SWT.END, SWT.FILL).span(2,1).create()) ;
+		
+		final Composite buttonComposite = new Composite(mainComposite, SWT.NONE);
+		buttonComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false,false).align(SWT.END, SWT.FILL).create());
+		buttonComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
+		
+		final Button closeButton = new Button(buttonComposite, SWT.PUSH) ;
+		closeButton.setLayoutData(GridDataFactory.fillDefaults().hint(100, SWT.DEFAULT).create());
+		closeButton.setText(IDialogConstants.CLOSE_LABEL);
+		closeButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				close();
+			}
+		});
+		
+		final Button testButton = new Button(buttonComposite, SWT.PUSH) ;
+		testButton.setLayoutData(GridDataFactory.fillDefaults().hint(100, SWT.DEFAULT).create());
 		testButton.setText(Messages.testButtonLabel) ;
 		testButton.addSelectionListener(new SelectionAdapter() {
 			@Override

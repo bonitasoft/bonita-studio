@@ -426,7 +426,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 	 */
 	public static void addNewData(SWTBot bot,String name, String type, boolean multiplicity,String defaultValue){
 		bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.data.i18n.Messages.newVariable));
-		bot.textWithLabel(org.bonitasoft.studio.data.i18n.Messages.name).setText(name);
+		bot.textWithLabel(org.bonitasoft.studio.data.i18n.Messages.name+" *").setText(name);
 		bot.comboBoxWithLabel(org.bonitasoft.studio.data.i18n.Messages.datatypeLabel).setSelection(type);
 		if (multiplicity){
 			bot.checkBox(org.bonitasoft.studio.data.i18n.Messages.isMultiple).select();

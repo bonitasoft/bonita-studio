@@ -261,7 +261,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
 	protected TreeExplorer createTreeExplorer(Composite mainComposite) {
 		final TreeExplorer explorer = new TreeExplorer(mainComposite, SWT.NONE);
-		explorer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 270).span(2, 1).create());
+		explorer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 290).span(2, 1).create());
 
 		final Composite additionalComposite = explorer.getAdditionalComposite();
 		additionalComposite.setLayoutData(GridDataFactory.fillDefaults().grab(false, false).create());
@@ -271,7 +271,8 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		onlyCustomCheckbox.setSelection(true);
 
 		final ITreeContentProvider contentProvider = getContentProvider();
-		explorer.setContentProvider(getCustomContentProvider());
+		final ITreeContentProvider customContentProvider = getCustomContentProvider();
+		explorer.setContentProvider(customContentProvider);
 		explorer.setLabelProvider(new ConnectorDefinitionExplorerLabelProvider(messageProvider));
 		explorer.addRightTreeFilter(customConnectorFilter);
 		explorer.addLeftTreeFilter(new ViewerFilter() {
@@ -319,10 +320,10 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(onlyCustomCheckbox.getSelection()){
-					explorer.setContentProvider(getCustomContentProvider());
+					explorer.setContentProvider(customContentProvider);
 					explorer.addRightTreeFilter(customConnectorFilter);
 				}else{
-					explorer.setContentProvider(getContentProvider());
+					explorer.setContentProvider(contentProvider);
 					explorer.removeTreeFilter(customConnectorFilter);
 				}
 				explorer.setInput(new Object());

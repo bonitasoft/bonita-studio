@@ -77,5 +77,10 @@ public class Messages extends NLS {
 	public static String updatingReferences;
 	public static String updateReferencesTitle;
 	public static String updateReferencesMsg;
+	public static String GridRulerPreferencePage_showGrid_label;
+	public static String GridRulerPreferencePage_gridGroup_label;
+	public static String GridRulerPreferencePage_snapToGrid_label;
+	public static String GridRulerPreferencePage_snapToGeometry_label;
+	public static String GridRulerPreferencePage_gridSpacing_label_cm;
 
 }
