@@ -281,7 +281,8 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		onlyCustomCheckbox.setText(Messages.onlyCustomConnector);
 		onlyCustomCheckbox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		onlyCustomCheckbox.setSelection(checkOnlyCustom);
-
+		
+		explorer.geLeftTreeViewer().getTree().setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
 		final ITreeContentProvider contentProvider = getContentProvider();
 		final ITreeContentProvider customContentProvider = getCustomContentProvider();
 		explorer.setContentProvider(customContentProvider);

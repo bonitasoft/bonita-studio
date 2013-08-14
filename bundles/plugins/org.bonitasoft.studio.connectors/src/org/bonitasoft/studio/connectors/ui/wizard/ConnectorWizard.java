@@ -631,10 +631,12 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	protected boolean supportsDatabaseOutputMode(ConnectorDefinition def) {
 		boolean containsOutputModeInput = false;
-		for (Input input : def.getInput()){
-			if(DatabaseConnectorConstants.OUTPUT_TYPE_KEY.equals(input.getName())){
-				containsOutputModeInput = true;
-				break;
+		if(def!=null){
+			for (Input input : def.getInput()){
+				if(DatabaseConnectorConstants.OUTPUT_TYPE_KEY.equals(input.getName())){
+					containsOutputModeInput = true;
+					break;
+				}
 			}
 		}
 		if(containsOutputModeInput){
