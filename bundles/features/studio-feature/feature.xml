@@ -396,13 +396,6 @@
          fragment="true"/>
 
    <plugin
-         id="javax.servlet"
-         download-size="0"
-         install-size="0"
-         version="2.5.0.v201103041518"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.ui.net"
          download-size="0"
          install-size="0"
