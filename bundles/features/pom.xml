@@ -7,6 +7,7 @@
   <packaging>pom</packaging>
  
   <modules>
+  	 <module>org.eclipse.rcp</module>
      <module>rootfiles-feature</module>
      <module>platform-specific-feature</module>
      <module>studio-feature</module>
