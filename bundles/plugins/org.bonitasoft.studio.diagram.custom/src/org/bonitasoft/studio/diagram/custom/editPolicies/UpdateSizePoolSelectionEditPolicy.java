@@ -186,10 +186,10 @@ public class UpdateSizePoolSelectionEditPolicy extends SelectionEditPolicy imple
             showSelectionForAddRight(zoomManager.getZoom());
             showSelectionForRemoveRight(zoomManager.getZoom());
 
-            if(!haveLanes){
+//            if(!haveLanes){
                 showSelectionForAddBottom(zoomManager.getZoom());
                 showSelectionForRemoveBottom(zoomManager.getZoom());
-            }
+  //          }
         }
     }
 

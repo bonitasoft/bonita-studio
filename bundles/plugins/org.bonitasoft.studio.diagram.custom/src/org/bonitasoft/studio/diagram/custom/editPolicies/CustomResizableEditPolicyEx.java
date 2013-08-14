@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.figures.CustomSVGFigure;
 import org.bonitasoft.studio.common.figures.EventSubprocessFigureWrapper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
 import org.bonitasoft.studio.diagram.custom.parts.CustomLaneEditPart;
+import org.bonitasoft.studio.diagram.custom.parts.CustomPoolCompartmentEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomPoolEditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubProcessEvent2EditPart;
 import org.bonitasoft.studio.diagram.custom.parts.CustomSubprocessEventCompartmentEditPart;
@@ -185,7 +186,7 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 		}
 
 		feedback.translateToRelative(rect);
-	
+
 		feedback.setBounds(rect);
 
 
@@ -204,10 +205,8 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 				ResizableHandleKit.addHandle((GraphicalEditPart) getHost(),
 						list, PositionConstants.EAST);
 				Container container = (Container) (((IGraphicalEditPart) getHost()).resolveSemanticElement()) ; 
-				if(container.getElements().isEmpty() || !(container.getElements().get(0) instanceof Lane)){
-					ResizableHandleKit.addHandle((GraphicalEditPart) getHost(),
-							list, PositionConstants.SOUTH);
-				}
+				//if(container.getElements().isEmpty() || !(container.getElements().get(0) instanceof Lane)){
+					ResizableHandleKit.addHandle((GraphicalEditPart) getHost(),list, PositionConstants.SOUTH);
 			}else{
 				ResizableHandleKit.addHandle((GraphicalEditPart) getHost(),
 						list, PositionConstants.SOUTH);
@@ -401,7 +400,7 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 		if(!request.getEditParts().isEmpty() && request.getEditParts().get(0) instanceof CustomSubProcessEvent2EditPart && checkOverlapOtherFigures(request) && request.getEditParts() != null ){
 			return null ; // DON'T MOVE A SUBPROCESS EVENT IF LOCATION NOT VALID
 		}
-		
+
 		CompoundCommand cc = new CompoundCommand("Move");
 		cc.add(super.getMoveCommand(request)) ;
 		if(request.getEditParts() != null && !request.getEditParts().isEmpty()){
