@@ -52,13 +52,6 @@ public class OpenDetailsOrGoToSubProcessEditPolicy extends OpenEditPolicy {
 						if(semanticElement instanceof CallActivity){
 							/*select it if in the same diagram or open a the diagram in editor that contains it*/
 							new OpenLatestSubprocessCommand().execute(new ExecutionEvent());
-						} else {
-							//TODO: remove show details command and call another view, keep to have the trace in log for reminder
-							ICommandService commandService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-							org.eclipse.core.commands.Command platformCommand = commandService.getCommand("org.bonitasoft.studio.diagram.custom.command.showitemdetails");
-
-							//platformCommand.executeWithChecks(new ExecutionEvent());
-
 						}
 					}
 				} catch (Exception ex) {

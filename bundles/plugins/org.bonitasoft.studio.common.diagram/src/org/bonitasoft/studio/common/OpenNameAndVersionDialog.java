@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.SpecialCharactersValidator;
 import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidator;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -40,12 +41,14 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.MultiValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.gmf.runtime.diagram.core.view.factories.DiagramFactory;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.osgi.storagemanager.StorageManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -66,9 +69,10 @@ public class OpenNameAndVersionDialog extends Dialog {
 	private final IRepositoryStore diagramStore;
 	protected final String typeLabel;
 	private boolean isDiagram = false;
-	private boolean diagramNameOrVersionChangeMandatory = false;
+	protected boolean diagramNameOrVersionChangeMandatory = false;
 	private HashSet<String> existingFileNames;
 	public List<AbstractProcess> processes;
+	
 
 	protected OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram, IRepositoryStore diagramStore) {
 		super(parentShell);
@@ -97,7 +101,6 @@ public class OpenNameAndVersionDialog extends Dialog {
 
 	public OpenNameAndVersionDialog(Shell parentShell, MainProcess diagram, IRepositoryStore diagramStore, boolean diagramNameOrVersionChangeMandatory) {
 		super(parentShell);
-		isDiagram = true;
 		isDiagram = true;
 		diagramName = diagram.getName();
 		diagramVersion = diagram.getVersion();
@@ -130,7 +133,7 @@ public class OpenNameAndVersionDialog extends Dialog {
 		for (IRepositoryFileStore irepStore : l) {
 			final MainProcess m = (MainProcess) irepStore.getContent();
 			processes.addAll(ModelHelper.getAllProcesses(m));
-		}
+		}		
 	}
 
 	@Override
@@ -240,8 +243,7 @@ public class OpenNameAndVersionDialog extends Dialog {
 						&& existingFileName.equals(newDiagramFilename.toLowerCase())) {
 					return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
 				}
-			}
-
+			}		
 		} else {
 			if (name.equals(srcName) && version.equals(srcVersion)) {
 				return ValidationStatus.ok();

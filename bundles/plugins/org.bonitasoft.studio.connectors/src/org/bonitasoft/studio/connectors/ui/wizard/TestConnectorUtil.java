@@ -18,6 +18,7 @@ import org.bonitasoft.studio.connectors.ui.TestConnectorResultDialog;
 import org.bonitasoft.studio.dependencies.ui.dialog.ManageConnectorJarDialog;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.process.Connector;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
@@ -83,7 +84,16 @@ public class TestConnectorUtil {
 			Object result = null ;
 			try {
 				wd.run(true, false, operation) ;
-				result = operation.getResult() ;
+				if(operation.getStatus().isOK()){
+					result = operation.getResult() ;
+				}else{
+					if(operation.getStatus().getSeverity() == IStatus.WARNING){
+						MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.testConnectorTitle, operation.getStatus().getMessage());
+					}else{
+						MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.testConnectorTitle, operation.getStatus().getMessage());
+					}
+					
+				}
 			} catch (InvocationTargetException e) {
 				result = e ;
 				BonitaStudioLog.error(e) ;

@@ -197,7 +197,7 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
 				}
 				if(countNewProcessWithSameName>1){
 					return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
-				}
+				} 
 				int countOldProcessWithSameName = 0;
 				for (ProcessesNameVersion pool : pools){
 					if (name.equals(pool.getAbstractProcess().getName()) && version.equals(pool.getAbstractProcess().getVersion())) {
@@ -205,7 +205,11 @@ public class OpenNameAndVersionForDiagramDialog extends OpenNameAndVersionDialog
 					}
 				}
 				if(countOldProcessWithSameName==1){
-					return ValidationStatus.ok();
+					if(diagramNameOrVersionChangeMandatory){
+						return ValidationStatus.error(Messages.bind(Messages.differentCaseSameNameError, typeLabel));
+					} else {
+						return ValidationStatus.ok();
+					}
 				}
 				for (AbstractProcess process : processes) {
 					if (name.equals(process.getName()) && version.equals(process.getVersion())) {

@@ -18,6 +18,7 @@ package org.bonitasoft.studio.properties.sections.forms.commands;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.CopyEObjectFeaturesCommand;
 import org.bonitasoft.studio.model.form.Form;
@@ -54,7 +55,7 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
         super(editingDomain, "Duplicate form", getWorkspaceFiles(pageFlow2));
         pageFlow = pageFlow2;
         this.baseForm = baseForm;
-        this.formName = id;
+        this.formName = NamingUtils.toJavaIdentifier(id, true);
         this.formDesc = formDesc;
         this.feature = feature;
     }

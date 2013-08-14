@@ -272,7 +272,7 @@ public class GroovyViewer {
 		}
 
 		for (final Expression e : filteredExpressions) {
-			final ScriptVariable v = GroovyUtil.createScriptVariable(e);
+			final ScriptVariable v = GroovyUtil.createScriptVariable(e,context);
 			if (context != null && ExpressionConstants.PARAMETER_TYPE.equals(e.getType())) {
 				final AbstractProcess proc = ModelHelper.getParentProcess(context);
 				final ProcessConfigurationRepositoryStore store = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(

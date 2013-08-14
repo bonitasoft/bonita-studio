@@ -18,6 +18,7 @@
 
 package org.bonitasoft.studio.groovy.ui.wizard;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeLabelProvider;
@@ -64,7 +65,11 @@ public class ProcessVariableLabelProvider extends LabelProvider implements ITabl
 	public Image getColumnImage(Object element, int columnIndex) {
 		if (element instanceof ScriptVariable){
 			ScriptVariable variable = (ScriptVariable)element;
-			IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(variable.getCategory());
+			String category = variable.getCategory();
+			if(category.endsWith(ExpressionConstants.VARIABLE_TYPE)){
+				category = ExpressionConstants.VARIABLE_TYPE;
+			}
+			IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(category);
 			return labelProvider.getImage(provider);
 		}
 		return null;
@@ -72,12 +77,18 @@ public class ProcessVariableLabelProvider extends LabelProvider implements ITabl
 
 	@Override
 	public String getColumnText(Object element, int columnIndex) {
-		  if (element.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
+
+		if (element.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
 	            return Messages.SelectProcessVariableLabel;
 	        }
 	        if (element instanceof String){
 	        	IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider((String)element);
-	        	return labelProvider.getText(provider);
+	        	String text = labelProvider.getText(provider);
+	        	if(text != null && !text.isEmpty()){
+	        		return text;
+	        	}else{
+	        		return labelProvider.getText(element.toString());
+	        	}
 	        }
 	        if(element instanceof ScriptVariable){
 	            final ScriptVariable node = (ScriptVariable) element;

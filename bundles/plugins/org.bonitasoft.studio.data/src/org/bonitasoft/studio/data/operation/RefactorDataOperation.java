@@ -68,10 +68,17 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 		if(newData !=null){
 			//TODO : find an intelligent way to search references to the oldData and replace them with the new one instead of writing specific code for each usecase
 			updateDataReferenceInVariableExpressions(cc);
+			domain.getCommandStack().execute(cc) ;
+			cc =  new CompoundCommand("Refactor Data Command") ;
 			updateDataReferenceInExpressions(cc);
+			domain.getCommandStack().execute(cc) ;
 			if(updateDataReferences ){
+				cc =  new CompoundCommand("Refactor Data Command") ;
 				updateDataInListsOfData(cc);
+				domain.getCommandStack().execute(cc) ;
+				cc =  new CompoundCommand("Refactor Data Command") ;
 				updateDataReferenceInMultinstanciation(cc);
+				domain.getCommandStack().execute(cc) ;
 			}
 		}else{
 			removeAllDataReferences(cc);
