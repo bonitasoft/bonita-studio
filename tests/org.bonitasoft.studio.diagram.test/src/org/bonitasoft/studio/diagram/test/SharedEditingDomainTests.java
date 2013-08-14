@@ -96,7 +96,7 @@ public class SharedEditingDomainTests extends SWTBotGefTestCase {
         String text2 = nameText.getText() ;
         nameText.setText(text2 + "modifiedName");
         bot.button(IDialogConstants.OK_LABEL).click() ;
-        Thread.sleep(500);
+        Thread.sleep(1500);
 
 
         assertTrue("Process editor dirty", !bot.activeEditor().isDirty());
@@ -122,8 +122,8 @@ public class SharedEditingDomainTests extends SWTBotGefTestCase {
         SWTBotText nameText = bot.text(0) ;
         String text2 = nameText.getText() ;
         nameText.setText(text2 + "modifiedName2");
-        bot.button("OK").click() ;
-        Thread.sleep(500);
+        bot.button(IDialogConstants.OK_LABEL).click() ;
+        Thread.sleep(1500);
 
         assertTrue("Process editor dirty", !botEditor.isDirty());
         assertTrue("Form editor dirty", !form1Editor.isDirty());

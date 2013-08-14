@@ -66,7 +66,6 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 
 		createLeftViewFolder(layout, editorArea);
 		bottomRight.addView("org.bonitasoft.studio.validation.view");
-		layout.setFixed(true);
 	}
 
 	protected void configureIntroView(IPageLayout layout) {
@@ -81,8 +80,8 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 				(float) 0.1,
 				editorArea);
 		left.addView(PaletteView.ID);
-		layout.getViewLayout(PaletteView.ID).setCloseable(false);
-		layout.getViewLayout(PaletteView.ID).setMoveable(false);
+//		layout.getViewLayout(PaletteView.ID).setCloseable(false);
+//		layout.getViewLayout(PaletteView.ID).setMoveable(false);
 		left.addPlaceholder("org.bonitasoft.studio.migration.view");
 	}
 

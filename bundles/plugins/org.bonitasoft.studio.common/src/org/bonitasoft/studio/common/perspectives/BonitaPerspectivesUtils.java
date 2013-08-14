@@ -123,8 +123,7 @@ public class BonitaPerspectivesUtils {
 			final IWorkbenchPage activePage = window.getActivePage();
 			if (activePage != null) {
 				final IPerspectiveDescriptor activePerspective = activePage.getPerspective();
-				final String activePerspectiveID = activePerspective.getId();
-				if (!activePerspectiveID.equals(perspectiveID)) {
+				if (activePerspective ==  null || !activePerspective.getId().equals(perspectiveID)) {
 					IPerspectiveRegistry registry = workbench.getPerspectiveRegistry();
 					IWorkbenchPage page = window.getActivePage();
 					IPerspectiveDescriptor desc = registry.findPerspectiveWithId(perspectiveID);

@@ -20,6 +20,7 @@ package org.bonitasoft.studio.application;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
+import org.bonitasoft.studio.application.coolbar.CoolbarToolControl;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.job.StartEngineJob;
 import org.bonitasoft.studio.common.FileUtil;
@@ -38,7 +39,10 @@ import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -56,6 +60,7 @@ import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.WorkbenchPage;
+import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.internal.ide.IDEInternalPreferences;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
@@ -91,13 +96,32 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		BonitaProfilesManager.getInstance().setActiveProfile(BonitaProfilesManager.getInstance().getActiveProfile(),false) ;
 	}
 
+	@Override
+	public void postWindowCreate() {
+		final MWindow model = ((WorkbenchWindow)window).getModel();
+		EModelService modelService =  model.getContext().get(EModelService.class);
+		MToolControl bonitaCoolbar = (MToolControl) modelService.find("BonitaCoolbar", model);
+		MUIElement leftTrimBar = modelService.find("org.eclipse.ui.trim.vertical1", model);
+		MUIElement rightTrimBar = modelService.find("org.eclipse.ui.trim.vertical2", model);
+		MUIElement statusBar = modelService.find("org.eclipse.ui.trim.status", model);
+		if(statusBar != null){
+			statusBar.setVisible(false);
+		}
+		if(leftTrimBar != null){
+			leftTrimBar.setVisible(false);
+		}
+		if(rightTrimBar != null){
+			rightTrimBar.setVisible(false);
+		}
+		((CoolbarToolControl)bonitaCoolbar.getObject()).registerHandlers(((WorkbenchWindow)window));
+	}
 
 	@SuppressWarnings("restriction")
 	@Override
 	public void openIntro() {
 		PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
 		PrefUtil.saveAPIPrefs();
-		BonitaPerspectivesUtils.switchToPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID);
+		//BonitaPerspectivesUtils.switchToPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID);
 		if(window.getActivePage().getPerspective() != null) {
 			super.openIntro();
 			PlatformUtil.openIntro();
@@ -121,7 +145,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		}
 		final MWindow model = ((WorkbenchPage)window.getActivePage()).getWindowModel();
 		model.getContext().get(EPartService.class).addPartListener(new AutomaticSwitchPerspectivePartListener());
-
 	}
 
 

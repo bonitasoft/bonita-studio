@@ -150,7 +150,7 @@ public class SaveCommandHandler extends SaveHandler {
 								FormsUtils.openDiagram((Form)form, null);
 							}
 						}
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(newEditorOfDiagram);
+					//	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(newEditorOfDiagram);
 					}else{
 						EObject root = ((DiagramEditor)editorPart).getDiagramEditPart().resolveSemanticElement();
 						Resource res = root.eResource();

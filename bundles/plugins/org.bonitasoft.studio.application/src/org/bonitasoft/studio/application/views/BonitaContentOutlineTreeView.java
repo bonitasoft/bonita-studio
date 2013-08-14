@@ -34,16 +34,5 @@ public class BonitaContentOutlineTreeView extends ContentOutline{
         // There is no content outline
         return null;
     }
-    
-    @Override
-    public void createPartControl(Composite parent) {
-    	parent.addDisposeListener(new DisposeListener() {
-			
-			@Override
-			public void widgetDisposed(DisposeEvent e) {
-				System.out.println("i'm disposed");
-			}
-		});
-    	super.createPartControl(parent);
-    }
+   
 }

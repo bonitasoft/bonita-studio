@@ -196,8 +196,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 		}
 
 		doStartEngine();
-		ElementInitializers.getInstance().init_Pool_2007(ProcessFactory.eINSTANCE.createPool());
-		BonitaPerspectivesUtils.initializePerspectives();
+	//	ElementInitializers.getInstance().init_Pool_2007(ProcessFactory.eINSTANCE.createPool());
+	//	BonitaPerspectivesUtils.initializePerspectives();
 
 		IWorkspaceRunnable workspaceOperation = new IWorkspaceRunnable() {
 

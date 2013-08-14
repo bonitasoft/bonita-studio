@@ -27,10 +27,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,18 +40,6 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestBug1640 extends SWTBotGefTestCase {
 
-	//    @Override
-	//    @Before
-	//    public void setUp() {
-	//        Display.getDefault().syncExec(new Runnable() {
-	//            public void run() {
-	//                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
-	//                boolean closed = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
-	//                assertTrue("all editors were not closed",closed);
-	//                PlatformUtil.closeIntro();
-	//            }
-	//        });
-	//    }
 
 	@Test
 	public void testBug1640() throws Exception {
@@ -63,23 +48,8 @@ public class TestBug1640 extends SWTBotGefTestCase {
 		bot.closeAllEditors();
 
 		// Create first process
-		SWTBotMenu saveMenu = bot.menu("Diagram").menu("Save");
 		SWTBotTestUtil.createNewDiagram(bot);
-		bot.waitUntil(new ICondition() {
-
-			public boolean test() throws Exception {
-				return bot.toolbarButton("Save").isEnabled();
-			}
-
-			public void init(SWTBot bot) {
-				
-			}
-
-			public String getFailureMessage() {
-				return "Save menu not enabled";
-			}
-		});
-		bot.toolbarButton("Save").click();
+		bot.menu("Diagram").click().menu("Save").click();
 		SWTBotGefEditor editor = bot.gefEditor(bot.editors().get(0).getTitle());
 		assertTrue(!editor.isDirty());
 
@@ -97,7 +67,7 @@ public class TestBug1640 extends SWTBotGefTestCase {
 			}
 		});
 		assertTrue(editor.isDirty());
-		saveMenu.click();
+		bot.menu("Diagram").click().menu("Save").click();
 		int tries = 5;
 		do {
 			Thread.sleep(5000);
@@ -109,14 +79,14 @@ public class TestBug1640 extends SWTBotGefTestCase {
 
 		// Create 2nd process
 		SWTBotTestUtil.createNewDiagram(bot);
-		saveMenu.click();
+		bot.menu("Diagram").click().menu("Save").click();
 		editor = bot.gefEditor(bot.editors().get(0).getTitle());
 		assertTrue(!editor.isDirty());
 		//TODO: use the avsolute coordinate
 		Point center = ((IGraphicalEditPart)editor.getEditPart("Step1").part()).getFigure().getBounds().getCenter();
 		editor.drag(center.x+20, center.y+20, center.x + 200, center.y + 200);
 		Assert.assertTrue(editor.isDirty());
-		saveMenu.click();
+		bot.menu("Diagram").click().menu("Save").click();
 		// Check that editor is not closed
 		Assert.assertEquals(1, bot.editors().size());
 	}
