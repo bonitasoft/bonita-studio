@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
@@ -54,6 +55,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
@@ -139,7 +141,15 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
             }
         }catch (Exception e) {
             BonitaStudioLog.error(e) ;
-            return null ;
+            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.looknfeelimportErrorTitle,Messages.looknfeelImportErrorMessage , e).open() ;
+            try {
+				parentFolder.delete(true, Repository.NULL_PROGRESS_MONITOR);
+			} catch (CoreException e1) {
+				BonitaStudioLog.error(e1);
+				return null;
+			}
+				return null ;
+			
         }finally{
         	if(inputStream != null){
         		try {
@@ -153,16 +163,14 @@ public class LookNFeelRepositoryStore extends AbstractRepositoryStore<LookNFeelF
     }
 
 
-    private void extractThemeFromInputStream(final IFolder parentFolder, final InputStream is) throws IOException, CoreException {
+    private void extractThemeFromInputStream(final IFolder parentFolder, final InputStream is) throws Exception {
         final File tmpZipFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), "themeTmpFile.zip");
         tmpZipFile.createNewFile();
         final FileOutputStream out = new FileOutputStream(tmpZipFile);
         FileUtil.copy(is, out);
-        try {
-			PlatformUtil.unzipZipFiles(tmpZipFile, parentFolder.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
-		} catch (Exception e) {
-			BonitaStudioLog.error(e);
-		}
+       
+		PlatformUtil.unzipZipFiles(tmpZipFile, parentFolder.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
+	
         out.close() ;
         parentFolder.refreshLocal(IResource.DEPTH_INFINITE, Repository.NULL_PROGRESS_MONITOR);
         tmpZipFile.delete();
