@@ -53,7 +53,6 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.extension.CustomWizardExtension;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
-import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.provider.UniqueConnectorDefinitionContentProvider;
 import org.bonitasoft.studio.connectors.ui.wizard.page.AbstractConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.ConnectorOutputWizardPage;
@@ -225,7 +224,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		return DefinitionResourceProvider.getInstance(store, ConnectorPlugin.getDefault().getBundle()) ;
 	}
 
-
 	@Override
 	public void addPages() {
 		if(!editMode){
@@ -249,7 +247,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	protected AbstractDefinitionSelectionImpementationWizardPage getNewSelectionPage(final Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
 		
 		final List<ConnectorImplementation> existingImplementation = new ArrayList<ConnectorImplementation>();
-		final ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
 		return new AbstractDefinitionSelectionImpementationWizardPage(existingImplementation, definitions, Messages.selectConnectorDefinitionTitle, Messages.selectConnectorDefinitionDesc, resourceProvider) {
 			@Override
 			protected ITreeContentProvider getContentProvider() {
@@ -311,9 +308,10 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		                return null;
 		            }
 		        }) ;
-				final Connector c = connectorWorkingCopy;
-		        context.bindValue(ViewersObservables.observeSingleSelection(explorer.getRightTableViewer()), EMFObservables.observeValue(c.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__DEFINITION_ID),idStrategy,null)  ;
-		        context.bindValue(ViewersObservables.observeSingleSelection(explorer.getRightTableViewer()), EMFObservables.observeValue(c.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__VERSION),versionStrategy,null)  ;
+		        context.bindValue(observeSingleSelection, EMFObservables.observeValue(connectorWorkingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_ID),idStrategy,null)  ;
+		        context.bindValue(observeSingleSelection, EMFObservables.observeValue(connectorWorkingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_VERSION),versionStrategy,null)  ;
+		        context.bindValue(observeSingleSelection, EMFObservables.observeValue(connectorWorkingCopy.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__DEFINITION_ID),idStrategy,null)  ;
+		        context.bindValue(observeSingleSelection, EMFObservables.observeValue(connectorWorkingCopy.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__VERSION),versionStrategy,null)  ;
 			}
 		};
 	}
@@ -373,8 +371,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		}
 		return outputPage;
 	}
-
-
 
 	protected boolean hasOutputPage(){
 		return (extension != null && !extension.useDefaultOutputPage() && extension.getOutputPage() != null) || (!getDefinition().getOutput().isEmpty());
@@ -531,7 +527,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 				return extension.canFinish(connectorWorkingCopy.getConfiguration()) ;
 			}
 		}
-
 		if(!isConfigurationValid(getDefinition(),connectorWorkingCopy.getConfiguration())){
 			return false;
 		}
