@@ -79,12 +79,12 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 
 		leftTree = new TreeViewer(content, SWT.V_SCROLL );
 		leftTree.getTree().setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPLORER_LEFT_TREE);
-		leftTree.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		leftTree.getTree().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(180, SWT.DEFAULT).create());
 		final Label vSeparator = new Label(content, SWT.SEPARATOR | SWT.VERTICAL);
 		vSeparator.setLayoutData(GridDataFactory.fillDefaults().grab(false, true).create());
 		rightTable = new TableViewer(content, SWT.NONE);
 		rightTable.getTable().setData(SWTBOT_WIDGET_ID_KEY, SWTBOT_ID_EXPLORER_RIGHT_TABLE);
-		rightTable.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		rightTable.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(180,SWT.DEFAULT).create());
 		rightTable.setSorter(new ViewerSorter());
 		rightTable.addFilter(new ViewerFilter() {
 			
