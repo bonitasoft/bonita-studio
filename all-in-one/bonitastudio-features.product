@@ -62,7 +62,7 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
    <features>
       <feature id="studio-feature"/>
-      <feature id="org.eclipse.rcp"/>
+      <feature id="org.eclipse.rcp" version="4.3.1"/>
       <feature id="studio-bos-specific-feature"/>
       <feature id="bos-branding-feature"/>
       <feature id="rootfiles-feature"/>
