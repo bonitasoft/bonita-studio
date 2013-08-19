@@ -113,6 +113,12 @@
 		</setInstallerVariable>
 	</preInstallationActionList>
 	<postInstallationActionList>
+		<setInstallerVariable name="ini_file" value="${installdir}/configuration/config.ini" persist="1"/>
+		<iniFileSet>
+			<file>${ini_file}</file>
+			<key>osgi.nl</key>
+			<value>${installation_language_code}</value>
+		</iniFileSet>
 		<createSymLink>
 			<explanation>@shortcut.comment@</explanation>
 			<linkName>~/Desktop/@product.short.name@-${product_version}</linkName>
@@ -123,6 +129,8 @@
 				</platformTest>
 			</ruleList>
 		</createSymLink>
+		
+		
 	</postInstallationActionList>
 		<postBuildActionList>
 	<actionGroup>
