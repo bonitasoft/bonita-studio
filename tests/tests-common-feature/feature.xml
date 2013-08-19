@@ -17,6 +17,26 @@
       [Enter License Description here.]
    </license>
 
+   <includes
+         id="org.eclipse.swtbot"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.eclipse"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.eclipse.gef"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.eclipse.test.junit"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.forms"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.equinox.app"/>
@@ -31,18 +51,14 @@
       <import plugin="org.eclipse.gmf.runtime.diagram.ui.resources.editor"/>
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.ui.browser" version="3.2.300" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.swtbot.eclipse.finder" version="2.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.swtbot.swt.finder" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.common"/>
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.commands" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.swtbot.junit4_x" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.transaction" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.commands" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.hamcrest.core" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.common.ui" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.swtbot.eclipse.gef.finder" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.ecore" version="2.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.gmf.runtime.emf.commands.core" version="1.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.gmf.runtime.diagram.core" version="1.2.1" match="greaterOrEqual"/>
@@ -142,41 +158,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.swtbot.eclipse.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.eclipse.finder"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.eclipse.gef.finder"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.junit4_x"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.swt.finder"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.diagram.test"
          download-size="0"
          install-size="0"
@@ -261,13 +242,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.swtbot.finder.nebula.gallery"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.configuration.test"
          download-size="0"
          install-size="0"
@@ -297,13 +271,6 @@
 
    <plugin
          id="org.bonitasoft.studio.test.swtbot.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.forms.finder"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -400,39 +367,10 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.swtbot.finder.nebula.tableCombo"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.finder.nebula"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.common.diagram.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.eclipse.junit.headless"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.ant.junit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
          unpack="false"/>
 
 </feature>
