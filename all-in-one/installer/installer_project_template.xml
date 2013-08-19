@@ -116,6 +116,7 @@
 		<setInstallerVariable name="ini_file" value="${installdir}/configuration/config.ini" persist="1"/>
 		<iniFileSet>
 			<file>${ini_file}</file>
+			<section></section>
 			<key>osgi.nl</key>
 			<value>${installation_language_code}</value>
 		</iniFileSet>
