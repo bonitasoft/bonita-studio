@@ -268,7 +268,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 						final Object o = event.getObservableValue().getValue();
 						if(o instanceof ConnectorDefinition){
 							thisPage.setSelectedConnectorDefinition((ConnectorDefinition) o);
-							setPageComplete(true);
 						}
 					}
 				});
