@@ -212,7 +212,9 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), new ConnectorWizard(getEObject(), getConnectorFeature(), getConnectorFeatureToCheckUniqueID()));
+            	final ConnectorWizard connectorWizard = new ConnectorWizard(getEObject(), getConnectorFeature(), getConnectorFeatureToCheckUniqueID());
+            	connectorWizard.setWindowTitle(Messages.connectorsTitle);
+                WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), connectorWizard);
                 if(wizardDialog.open() == Dialog.OK){
                     tableViewer.refresh();
                 }

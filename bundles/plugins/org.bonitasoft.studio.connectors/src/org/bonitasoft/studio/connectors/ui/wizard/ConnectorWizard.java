@@ -726,9 +726,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	@Override
 	public IWizardPage getPreviousPage(IWizardPage page) {
 		IWizardPage previousPage = super.getPreviousPage(page);
-		if(previousPage != null && previousPage.equals(selectionPage)){
-			return null;
-		}
 		return previousPage;
 	}
 
