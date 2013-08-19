@@ -63,7 +63,12 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.shellIsActive(selectMissingJarTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive("Evaluation results"), 30000);
-        assertEquals("test me", bot.text().getText()) ;
+        boolean groovyEvaluateOK = "test me".equals(bot.text().getText());
+        if(!groovyEvaluateOK){
+        	bot.button(IDialogConstants.CANCEL_LABEL).click();
+            bot.button(IDialogConstants.OK_LABEL).click();
+        }
+        assertTrue("Error while evaluating groovy script", groovyEvaluateOK);
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.button(IDialogConstants.OK_LABEL).click();
         if(!FileActionDialog.getDisablePopup()){
