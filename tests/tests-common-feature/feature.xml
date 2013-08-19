@@ -194,21 +194,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.junit4"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.workspace.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.hamcrest"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -251,20 +237,6 @@
 
    <plugin
          id="org.hamcrest.library"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.hamcrest.integration"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.hamcrest.text"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -334,21 +306,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.swtbot.ant.optional.junit4"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.eclipse.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.swtbot.forms.finder"
          download-size="0"
          install-size="0"
@@ -361,12 +318,6 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.eclipse.junit4.headless"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.pde.launching"
@@ -470,6 +421,21 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.eclipse.junit.headless"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.swtbot.ant.junit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>
