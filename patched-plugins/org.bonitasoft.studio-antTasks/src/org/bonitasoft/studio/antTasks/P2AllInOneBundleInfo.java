@@ -17,13 +17,6 @@ public class P2AllInOneBundleInfo extends Task {
 
 	private String installLocation;
 
-
-	public static void main(String[] args) {
-		P2AllInOneBundleInfo instance = new P2AllInOneBundleInfo();
-		instance.setInstallLocation("/Users/Romain/Downloads/BonitaBPMCommunity-6.2.0-SNAPSHOT");
-		instance.execute();
-	}
-
 	@Override
 	public void execute() throws BuildException {
 		final File outputFile = new File(installLocation,"configuration"+File.separator+SimpleConfiguratorConstants.CONFIGURATOR_FOLDER+File.separator+SimpleConfiguratorConstants.CONFIG_LIST);
