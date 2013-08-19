@@ -433,4 +433,11 @@
          version="3.5.201"
          unpack="false"/>
 
+   <plugin
+         id="org.objectweb.asm"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
