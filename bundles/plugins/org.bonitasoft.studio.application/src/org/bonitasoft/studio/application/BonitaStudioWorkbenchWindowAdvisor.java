@@ -17,32 +17,19 @@
  */
 package org.bonitasoft.studio.application;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
-import org.bonitasoft.studio.application.i18n.Messages;
-import org.bonitasoft.studio.application.job.StartEngineJob;
-import org.bonitasoft.studio.common.FileUtil;
-import org.bonitasoft.studio.common.ProjectUtil;
-import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
+import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
+import org.bonitasoft.studio.common.perspectives.PerspectiveIDRegistry;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProduct;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -96,26 +83,19 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	public void postWindowCreate() {
 		final MWindow model = ((WorkbenchWindow)window).getModel();
 		EModelService modelService =  model.getContext().get(EModelService.class);
-		MUIElement leftTrimBar = modelService.find("org.eclipse.ui.trim.vertical1", model);
-		MUIElement rightTrimBar = modelService.find("org.eclipse.ui.trim.vertical2", model);
 		MUIElement statusBar = modelService.find("org.eclipse.ui.trim.status", model);
 		if(statusBar != null){
 			statusBar.setVisible(false);
-		}
-		if(leftTrimBar != null){
-			leftTrimBar.setVisible(false);
-		}
-		if(rightTrimBar != null){
-			rightTrimBar.setVisible(false);
 		}
 	}
 
 	@SuppressWarnings("restriction")
 	@Override
 	public void openIntro() {
+		PlatformUtil.closeIntro();
 		PrefUtil.getAPIPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_INTRO, true);
 		PrefUtil.saveAPIPrefs();
-		//BonitaPerspectivesUtils.switchToPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID);
+		BonitaPerspectivesUtils.switchToPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID);
 		if(window.getActivePage().getPerspective() != null) {
 			super.openIntro();
 			PlatformUtil.openIntro();
@@ -150,45 +130,11 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		// the user has asked to close the last window, while will cause the
 		// workbench to close in due course - prompt the user for confirmation
 		if( promptOnExit(getWindowConfigurer().getWindow().getShell())){
-			Job.getJobManager().cancel(StartEngineJob.FAMILY);
-			try {
-				if(PlatformUI.isWorkbenchRunning() && window != null && window.getActivePage() != null){
-					boolean closeEditor = window.getActivePage().closeAllEditors(true) ;
-					if(closeEditor){
-						PlatformUI.getWorkbench().getProgressService().run(true, false, new IRunnableWithProgress() {
-
-							@Override
-							public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
-								monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN) ;
-								IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.application.preshutdown"); //$NON-NLS-1$
-								IPreShutdownContribution contrib = null;
-								for (IConfigurationElement elem : elements){
-									try {
-										contrib = (IPreShutdownContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-									} catch (CoreException e) {
-										BonitaStudioLog.error(e);
-									}
-									contrib.execute();
-								}
-								if(BOSEngineManager.getInstance().isRunning()){
-									BOSEngineManager.getInstance().stop() ;
-								}
-								FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
-								monitor.done() ;
-							}
-						}) ;
-						PlatformUtil.closeIntro();
-						window.getActivePage().closeAllPerspectives(false, true);
-						return true;
-					}else{
-						return true;
-					}
-				}else{
-					return true;
-				}
-			} catch (Exception e){
-				BonitaStudioLog.error(e) ;
+			if(PlatformUI.isWorkbenchRunning() && window != null && window.getActivePage() != null){
+				window.getActivePage().closeAllEditors(true) ;
 			}
+			return true;
+
 		}
 		return false;
 	}

@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
 import org.bonitasoft.studio.application.contribution.IPreStartupContribution;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.job.StartEngineJob;
@@ -37,7 +38,6 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IPostStartupContribution;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.perspectives.PerspectiveIDRegistry;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -46,8 +46,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobContribution;
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
-import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.diagram.providers.ElementInitializers;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -265,7 +264,30 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 					}
 				}
 			};
+			
+			 p.run(true, false, new IRunnableWithProgress() {
 
+					@Override
+					public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
+						monitor.beginTask(Messages.shuttingDown, IProgressMonitor.UNKNOWN) ;
+						Job.getJobManager().cancel(StartEngineJob.FAMILY);
+						IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.application.preshutdown"); //$NON-NLS-1$
+						IPreShutdownContribution contrib = null;
+						for (IConfigurationElement elem : elements){
+							try {
+								contrib = (IPreShutdownContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
+							} catch (CoreException e) {
+								BonitaStudioLog.error(e);
+							}
+							contrib.execute();
+						}
+						if(BOSEngineManager.getInstance().isRunning()){
+							BOSEngineManager.getInstance().stop() ;
+						}
+						FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
+						monitor.done() ;
+					}
+				});
 			p.run(true, false, runnable);
 		} catch (InvocationTargetException e) {
 			status

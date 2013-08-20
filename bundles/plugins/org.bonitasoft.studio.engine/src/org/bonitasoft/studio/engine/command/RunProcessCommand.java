@@ -20,10 +20,8 @@ package org.bonitasoft.studio.engine.command;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -55,14 +53,16 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.Parameterization;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -71,6 +71,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.progress.IProgressService;
 
 public class RunProcessCommand extends AbstractHandler implements IHandler {
@@ -100,7 +101,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 	public RunProcessCommand(AbstractProcess proc,Set<EObject> excludedObject,boolean runSynchronously) {
 		this(proc,runSynchronously);
 		this.excludedObject = excludedObject ;
- 	}
+	}
 
 
 	/* (non-Javadoc)
@@ -117,27 +118,22 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 		}
 
 		final Set<AbstractProcess> executableProcesses = getProcessesToDeploy(event) ;
-
 		if(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN)){
 			//Validate before run
 			final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 			Command cmd = cmdService.getCommand("org.bonitasoft.studio.validation.batchValidation");
-			Map<String, Object> parameters = new HashMap<String,Object>();
-			parameters.put("showReport", false);
-			Set<Diagram> diagrams = new HashSet<Diagram>();
+			final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class) ;
+			Set<String> procFiles = new HashSet<String>();
 			for(AbstractProcess p : executableProcesses){
 				Resource eResource = p.eResource();
 				if(eResource!=null){
-					for(EObject e : eResource.getContents()){
-						if(e instanceof Diagram){
-							diagrams.add((Diagram) e);
-						}
-					}
+					procFiles.add(URI.decode(eResource.getURI().lastSegment()));
 				}
 			}
-			parameters.put("diagrams", diagrams);
 			try {
-				final IStatus status = (IStatus) cmd.executeWithChecks(new ExecutionEvent(cmd,parameters,null,null));
+				Parameterization showReportParam = new Parameterization(cmd.getParameter("showReport"), Boolean.FALSE.toString());
+				Parameterization filesParam = new Parameterization(cmd.getParameter("diagrams"),procFiles.toString());
+				final IStatus status = (IStatus) handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[]{showReportParam,filesParam}), null);
 				if(statusContainsError(status)){
 					if(!FileActionDialog.getDisablePopup()){
 						String errorMessage = Messages.errorValidationMessage +PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle()+Messages.errorValidationContinueAnywayMessage ;
