@@ -27,6 +27,7 @@ import java.util.Properties;
 import org.bonitasoft.studio.common.editingdomain.BonitaOperationHistory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -120,6 +121,7 @@ public class BonitaStudioApplication implements IApplication {
                 }
             }
         }
+        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ResourcesPlugin.PREF_AUTO_BUILDING, false);
     }
 
 
