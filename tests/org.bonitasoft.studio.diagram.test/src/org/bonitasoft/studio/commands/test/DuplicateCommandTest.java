@@ -30,6 +30,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
@@ -78,10 +79,12 @@ public class DuplicateCommandTest extends SWTBotGefTestCase {
             alterDiagram(botEditor);
         }
 
-
         bot.menu("Diagram").menu("Duplicate...").click();
+		bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         bot.text(0).setText(processName);
         bot.text(1).setText(processVersion);
+        bot.text(2).setText("Pool" + System.currentTimeMillis());
+        assertTrue("OK button should be active", bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(new ICondition() {
 
