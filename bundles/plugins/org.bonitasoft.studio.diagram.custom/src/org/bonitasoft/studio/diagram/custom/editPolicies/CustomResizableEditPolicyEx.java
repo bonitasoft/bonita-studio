@@ -206,7 +206,8 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 						list, PositionConstants.EAST);
 				Container container = (Container) (((IGraphicalEditPart) getHost()).resolveSemanticElement()) ; 
 				//if(container.getElements().isEmpty() || !(container.getElements().get(0) instanceof Lane)){
-					ResizableHandleKit.addHandle((GraphicalEditPart) getHost(),list, PositionConstants.SOUTH);
+				list.add(new CustomPoolResizeHandle((GraphicalEditPart)getHost(),PositionConstants.SOUTH ));
+				//	ResizableHandleKit.addHandle((GraphicalEditPart) getHost(),list, PositionConstants.SOUTH);
 			}else{
 				ResizableHandleKit.addHandle((GraphicalEditPart) getHost(),
 						list, PositionConstants.SOUTH);
