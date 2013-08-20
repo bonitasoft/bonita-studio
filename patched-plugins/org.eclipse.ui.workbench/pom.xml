@@ -9,6 +9,6 @@
     </parent>
   <groupId>org.bonitasoft.studio.patched-plugins</groupId>
   <artifactId>org.eclipse.ui.workbench</artifactId>
-  <version>3.105.1</version>
+  <version>3.105.0.v20130529-1406</version>
   <packaging>eclipse-plugin</packaging>
 </project>

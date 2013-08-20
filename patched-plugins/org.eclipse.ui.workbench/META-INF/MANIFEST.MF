@@ -24,7 +24,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.6.0,4.0.0)
  rsion="0.12.0";visibility:=reexport,org.eclipse.e4.ui.workbench.addon
  s.swt;bundle-version="0.10.0",org.eclipse.emf.ecore;bundle-version="2
  .7.0"
-Bundle-Version: 3.105.1
+Bundle-Version: 3.105.0.v20130529-1406
 Export-Package: org.eclipse.ui;ui.workbench=split;mandatory:="ui.workb
  ench",org.eclipse.ui.about,org.eclipse.ui.actions;ui.workbench=split;
  mandatory:="ui.workbench",org.eclipse.ui.activities,org.eclipse.ui.ap
