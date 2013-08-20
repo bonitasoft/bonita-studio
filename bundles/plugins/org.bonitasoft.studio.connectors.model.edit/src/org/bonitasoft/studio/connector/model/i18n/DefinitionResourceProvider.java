@@ -543,12 +543,13 @@ public class DefinitionResourceProvider {
 			return Pics.getImage(PicsConstants.error);
 		}
 		Image icon = categoryImageRegistry.get(category.getId());
-		try {
+
+		if (icon == null) {
+			try {
 			FileLocator.toFileURL(bundle.getResource(store.getName()));
 		} catch (IOException e1) {
 			BonitaStudioLog.error(e1);
 		}
-		if (icon == null) {
 			Resource resource = category.eResource();
 			File f = null;
 			if (resource != null) {
@@ -672,13 +673,14 @@ public class DefinitionResourceProvider {
 		}
 		String definitionId = definition.getId() + "_" + definition.getVersion();
 		Image icon = definitionImageRegistry.get(definitionId);
-		//Load icons
-		try {
-			FileLocator.toFileURL(bundle.getResource(store.getName()));
-		} catch (IOException e1) {
-			BonitaStudioLog.error(e1);
-		}
+
 		if (icon == null || icon.isDisposed()) {
+			//Load icons
+			try {
+				FileLocator.toFileURL(bundle.getResource(store.getName()));
+			} catch (IOException e1) {
+				BonitaStudioLog.error(e1);
+			}
 			Resource resource = definition.eResource();
 			File f = null;
 			if (resource != null) {
