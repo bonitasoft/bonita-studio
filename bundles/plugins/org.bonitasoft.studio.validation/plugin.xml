@@ -1121,6 +1121,16 @@
             defaultHandler="org.bonitasoft.studio.validation.BatchValidationHandler"
             id="org.bonitasoft.studio.validation.batchValidation"
             name="%batchValidationAction_Label">
+               <commandParameter
+                     id="diagrams"
+                     name="diagrams"
+                     optional="true">
+               </commandParameter>
+               <commandParameter
+                     id="showReport"
+                     name="showReport"
+                     optional="true">
+               </commandParameter>
       </command>
       </extension>
       <extension
