@@ -47,6 +47,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.PaletteToolTransferDropTargetListener;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest.ConnectionViewAndElementDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest.ViewAndElementDescriptor;
@@ -94,6 +95,7 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 				getViewer().getEditDomain().getCommandStack().execute(command);
 				insertOnSequenceFlow(command,getTargetEditPart(),getViewer());
 				selectAddedObject(getViewer(),DiagramCommandStack.getReturnValues(command));
+				getViewer().getEditDomain().loadDefaultTool();
 			} else {
 				getCurrentEvent().detail = DND.DROP_NONE;
 			}
@@ -215,44 +217,35 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 	 * 
 	 * Copied from CreationTool
 	 */
-	protected void selectAddedObject(EditPartViewer viewer, Collection objects) {
+	protected void selectAddedObject(final EditPartViewer viewer, Collection objects) {
 		final List editparts = new ArrayList();
 		for (Iterator i = objects.iterator(); i.hasNext();) {
 			Object object = i.next();
 			if (object instanceof IAdaptable) {
 				Object editPart =
-						viewer.getEditPartRegistry().get(
-								((IAdaptable)object).getAdapter(View.class));
+					viewer.getEditPartRegistry().get(
+						((IAdaptable)object).getAdapter(View.class));
 				if (editPart != null)
 					editparts.add(editPart);
 			}
 		}
 
 		if (!editparts.isEmpty()) {
-			viewer.setSelection(new StructuredSelection(editparts));
-
 			// automatically put the first shape into edit-mode
 			Display.getCurrent().asyncExec(new Runnable() {
 				public void run(){
 					EditPart editPart = (EditPart) editparts.get(0);
-					//
-					// add active test since test scripts are failing on this
-					// basically, the editpart has been deleted when this 
-					// code is being executed. (see RATLC00527114)
+					viewer.setSelection(new StructuredSelection(editPart));
 					if ( editPart.isActive() ) {
-						//ISSUE WITH PROPERTIES PAGE AND EXCLUSIVE EDITING DOMAIN
-						//editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
-
-						revealEditPart((EditPart)editparts.get(0));
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().setFocus();
 						editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
+						revealEditPart(editPart);
 					}
 				}
 			});
-
 		}
 	}
 
+	
 	/**
 	 * Reveals the newly created editpart
 	 * @param editPart
