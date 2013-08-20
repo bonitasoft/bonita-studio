@@ -35,7 +35,7 @@ public class DefaultScriptsContribution implements IFileStoreContribution {
      * @see org.bonitasoft.studio.common.repository.model.IFileStoreContribution#appliesTo(org.bonitasoft.studio.common.repository.model.IRepositoryStore)
      */
     @Override
-    public boolean appliesTo(IRepositoryStore repository) {
+    public boolean appliesTo(IRepositoryStore<?> repository) {
         return repository instanceof ProvidedGroovyRepositoryStore;
     }
 
@@ -43,7 +43,7 @@ public class DefaultScriptsContribution implements IFileStoreContribution {
      * @see org.bonitasoft.studio.common.repository.model.IFileStoreContribution#execute(org.bonitasoft.studio.common.repository.model.IRepositoryStore)
      */
     @Override
-    public void execute(IRepositoryStore repository) {
+    public void execute(IRepositoryStore<?> repository) {
         Enumeration<URL> scripts = GroovyPlugin.getDefault().getBundle().findEntries("scripts", "*.groovy", false) ;
         while(scripts.hasMoreElements()){
             URL url = scripts.nextElement() ;
