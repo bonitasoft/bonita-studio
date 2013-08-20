@@ -20,7 +20,6 @@ package org.bonitasoft.studio.application;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.application.contribution.IPreShutdownContribution;
-import org.bonitasoft.studio.application.coolbar.CoolbarToolControl;
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.application.job.StartEngineJob;
 import org.bonitasoft.studio.common.FileUtil;
@@ -28,8 +27,6 @@ import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartListener;
-import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
-import org.bonitasoft.studio.common.perspectives.PerspectiveIDRegistry;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
@@ -41,7 +38,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
-import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -100,7 +96,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	public void postWindowCreate() {
 		final MWindow model = ((WorkbenchWindow)window).getModel();
 		EModelService modelService =  model.getContext().get(EModelService.class);
-		MToolControl bonitaCoolbar = (MToolControl) modelService.find("BonitaCoolbar", model);
 		MUIElement leftTrimBar = modelService.find("org.eclipse.ui.trim.vertical1", model);
 		MUIElement rightTrimBar = modelService.find("org.eclipse.ui.trim.vertical2", model);
 		MUIElement statusBar = modelService.find("org.eclipse.ui.trim.status", model);
@@ -113,7 +108,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		if(rightTrimBar != null){
 			rightTrimBar.setVisible(false);
 		}
-		((CoolbarToolControl)bonitaCoolbar.getObject()).registerHandlers(((WorkbenchWindow)window));
 	}
 
 	@SuppressWarnings("restriction")

@@ -123,6 +123,7 @@ public class BonitaStudioApplication implements IApplication {
                 }
             }
         }
+        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ResourcesPlugin.PREF_AUTO_BUILDING, false);
     }
 
 

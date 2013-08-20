@@ -37,7 +37,10 @@ import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.UIEvents.UIElement;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.renderers.swt.TrimmedPartLayout;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -58,11 +61,14 @@ import org.eclipse.ui.INullSelectionListener;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.activities.ActivityManagerEvent;
 import org.eclipse.ui.activities.IActivityManagerListener;
 import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.eclipse.ui.internal.WorkbenchWindow;
 import org.eclipse.ui.internal.handlers.DirtyStateTracker;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventHandler;
 
 /**
  * @author Romain Bioteau
@@ -84,9 +90,10 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 	private ToolBar toolbar;
 	private Image image;
 	private Composite toolbarContainer;
+	private boolean isRegistered;
 
 	@PostConstruct
-	public void createControls(Composite parent,IWorkbenchActivitySupport activitySupport) {
+	public void createControls(Composite parent,final IEclipseContext context,IWorkbenchActivitySupport activitySupport) {
 		initCoolBarPreferredSize() ;
 		Composite parentShell = parent.getParent();
 		TrimmedPartLayout layout = (TrimmedPartLayout) parentShell.getLayout();
@@ -107,10 +114,22 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 		}
 		createToolbar(toolbarContainer);
 		activitySupport.getActivityManager().addActivityManagerListener(this);
+		IEventBroker eventBroker = context.get(IEventBroker.class);
+		eventBroker.subscribe(UIElement.TOPIC_ALL, new EventHandler() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
+				IWorkbenchWindow window = context.get(IWorkbenchWindow.class);
+				if(window != null){
+					registerHandlers(((WorkbenchWindow)window));
+				}
+			}
+		});
 	}
 
 	@PreDestroy
 	public void dispose(IWorkbenchActivitySupport activitySupport){
+		isRegistered = false;
 		if(toolbarContainer != null){
 			toolbarContainer.dispose();
 			activitySupport.getActivityManager().removeActivityManagerListener(this);
@@ -307,92 +326,95 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 	}
 
 	public void registerHandlers(WorkbenchWindow workbenchWindow) {
-		workbenchWindow.getModel().getContext().get(EPartService.class).addPartListener(CoolbarToolControl.this);
-		workbenchWindow.getActivePage().addSelectionListener(CoolbarToolControl.this);
-		workbenchWindow.getActivePage().addPartListener(new IPartListener(){
+		if(!isRegistered){
+			workbenchWindow.getModel().getContext().get(EPartService.class).addPartListener(CoolbarToolControl.this);
+			workbenchWindow.getActivePage().addSelectionListener(CoolbarToolControl.this);
+			workbenchWindow.getActivePage().addPartListener(new IPartListener(){
 
-			@Override
-			public void partOpened(IWorkbenchPart wp) {
-				if(wp instanceof ISaveablePart){
-					for(IBonitaContributionItem bcItem : contributions.values()){
-						if(bcItem instanceof SaveCoolbarItem){
-							final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
-							dirtyStateTracker.partOpened(wp);
+				@Override
+				public void partOpened(IWorkbenchPart wp) {
+					if(wp instanceof ISaveablePart){
+						for(IBonitaContributionItem bcItem : contributions.values()){
+							if(bcItem instanceof SaveCoolbarItem){
+								final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
+								dirtyStateTracker.partOpened(wp);
+							}
 						}
 					}
 				}
-			}
 
-			@Override
-			public void partDeactivated(IWorkbenchPart wp) {
-				if(wp instanceof ISaveablePart){
-					for(IBonitaContributionItem bcItem : contributions.values()){
-						if(bcItem instanceof SaveCoolbarItem){
-							final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
-							dirtyStateTracker.partDeactivated(wp);
+				@Override
+				public void partDeactivated(IWorkbenchPart wp) {
+					if(wp instanceof ISaveablePart){
+						for(IBonitaContributionItem bcItem : contributions.values()){
+							if(bcItem instanceof SaveCoolbarItem){
+								final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
+								dirtyStateTracker.partDeactivated(wp);
 
+							}
 						}
 					}
 				}
-			}
 
-			@Override
-			public void partClosed(IWorkbenchPart wp) {
-				if(wp instanceof ISaveablePart){
-					for(IBonitaContributionItem bcItem : contributions.values()){
-						if(bcItem instanceof SaveCoolbarItem){
-							final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
-							dirtyStateTracker.partClosed(wp);
+				@Override
+				public void partClosed(IWorkbenchPart wp) {
+					if(wp instanceof ISaveablePart){
+						for(IBonitaContributionItem bcItem : contributions.values()){
+							if(bcItem instanceof SaveCoolbarItem){
+								final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
+								dirtyStateTracker.partClosed(wp);
+							}
 						}
 					}
 				}
-			}
 
-			@Override
-			public void partBroughtToTop(IWorkbenchPart wp) {
-				if(wp instanceof ISaveablePart){
-					for(IBonitaContributionItem bcItem : contributions.values()){
-						if(bcItem instanceof SaveCoolbarItem){
-							final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
-							dirtyStateTracker.partBroughtToTop(wp);
+				@Override
+				public void partBroughtToTop(IWorkbenchPart wp) {
+					if(wp instanceof ISaveablePart){
+						for(IBonitaContributionItem bcItem : contributions.values()){
+							if(bcItem instanceof SaveCoolbarItem){
+								final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
+								dirtyStateTracker.partBroughtToTop(wp);
+							}
 						}
 					}
 				}
-			}
 
-			@Override
-			public void partActivated(IWorkbenchPart wp) {
-				if(wp instanceof ISaveablePart){
-					for(IBonitaContributionItem bcItem : contributions.values()){
-						if(bcItem instanceof SaveCoolbarItem){
-							final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
-							dirtyStateTracker.partActivated(wp);
+				@Override
+				public void partActivated(IWorkbenchPart wp) {
+					if(wp instanceof ISaveablePart){
+						for(IBonitaContributionItem bcItem : contributions.values()){
+							if(bcItem instanceof SaveCoolbarItem){
+								final DirtyStateTracker dirtyStateTracker = getDirtyStateTracker(bcItem);
+								dirtyStateTracker.partActivated(wp);
+							}
+						}
+					}
+					if(wp instanceof DiagramEditor){
+						for(IBonitaContributionItem bcItem : contributions.values()){
+							if(bcItem instanceof ISelectionChangedListener){
+								((DiagramEditor) wp).getDiagramGraphicalViewer().addSelectionChangedListener((ISelectionChangedListener)bcItem);
+							}
 						}
 					}
 				}
-				if(wp instanceof DiagramEditor){
-					for(IBonitaContributionItem bcItem : contributions.values()){
-						if(bcItem instanceof ISelectionChangedListener){
-							((DiagramEditor) wp).getDiagramGraphicalViewer().addSelectionChangedListener((ISelectionChangedListener)bcItem);
-						}
-					}
-				}
-			}
 
-			/**
-			 * @param bcItem
-			 * @return
-			 */
-			public DirtyStateTracker getDirtyStateTracker(
-					IBonitaContributionItem bcItem) {
-				DirtyStateTracker dirtyStateTracker = ((SaveCoolbarItem) bcItem).getDirtyStateTracker();
-				if(dirtyStateTracker == null){
-					((SaveCoolbarItem) bcItem).createDirtyStateTracker();
-					dirtyStateTracker = ((SaveCoolbarItem) bcItem).getDirtyStateTracker();
+				/**
+				 * @param bcItem
+				 * @return
+				 */
+				public DirtyStateTracker getDirtyStateTracker(
+						IBonitaContributionItem bcItem) {
+					DirtyStateTracker dirtyStateTracker = ((SaveCoolbarItem) bcItem).getDirtyStateTracker();
+					if(dirtyStateTracker == null){
+						((SaveCoolbarItem) bcItem).createDirtyStateTracker();
+						dirtyStateTracker = ((SaveCoolbarItem) bcItem).getDirtyStateTracker();
+					}
+					return dirtyStateTracker;
 				}
-				return dirtyStateTracker;
-			}
-		});
+			});
+			isRegistered = true;
+		}
 	}
 
 	@Override
