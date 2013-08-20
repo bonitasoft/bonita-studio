@@ -38,7 +38,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -58,7 +57,9 @@ public class BatchValidationHandler extends AbstractHandler {
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		if(PlatformUI.isWorkbenchRunning()){
+		if(PlatformUI.isWorkbenchRunning()
+				&& PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null 
+				&& PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
 			Map<?,?> parameters = event.getParameters();
 			Set<Diagram> toValidate = new HashSet<Diagram>();
 			if(parameters != null && !parameters.isEmpty()){
