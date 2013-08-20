@@ -315,7 +315,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 		bot.waitUntil(Conditions.shellIsActive(newVariable));
 		
 		// "Name"
-		bot.textWithLabel(name).setText(varName);
+		bot.textWithLabel(name+" *").setText(varName);
 		
 		// "Data type"
 		bot.comboBoxWithLabel(datatypeLabel).setSelection(varType);
