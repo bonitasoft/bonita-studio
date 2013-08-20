@@ -268,7 +268,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 						final Object o = event.getObservableValue().getValue();
 						if(o instanceof ConnectorDefinition){
 							thisPage.setSelectedConnectorDefinition((ConnectorDefinition) o);
-							setPageComplete(true);
 						}
 					}
 				});
@@ -726,9 +725,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	@Override
 	public IWizardPage getPreviousPage(IWizardPage page) {
 		IWizardPage previousPage = super.getPreviousPage(page);
-		if(previousPage != null && previousPage.equals(selectionPage)){
-			return null;
-		}
 		return previousPage;
 	}
 

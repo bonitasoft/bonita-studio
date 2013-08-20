@@ -93,6 +93,7 @@ public class Messages extends NLS {
     public static String importingConnectorArchive;
     public static String exportSuccessfulMsg ;
     public static String connectors;
+    public static String connectorsTitle;
     public static String connectorsConfigurationDescription;
     public static String definition;
     public static String implementation;

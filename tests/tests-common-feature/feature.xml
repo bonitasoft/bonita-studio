@@ -17,6 +17,34 @@
       [Enter License Description here.]
    </license>
 
+   <includes
+         id="org.eclipse.swtbot"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.eclipse"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.eclipse.gef"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.eclipse.test.junit"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.swtbot.forms"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.xtext.sdk"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.rcp"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.equinox.app"/>
@@ -31,19 +59,14 @@
       <import plugin="org.eclipse.gmf.runtime.diagram.ui.resources.editor"/>
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.ui.browser" version="3.2.300" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.swtbot.eclipse.finder" version="2.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.swtbot.swt.finder" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.common"/>
       <import plugin="org.eclipse.jface"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.commands" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.swtbot.eclipse.junit4.headless" version="2.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.swtbot.junit4_x" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.transaction" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.commands" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.hamcrest.core" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.common.ui" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.swtbot.eclipse.gef.finder" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.ecore" version="2.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.gmf.runtime.emf.commands.core" version="1.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.gmf.runtime.diagram.core" version="1.2.1" match="greaterOrEqual"/>
@@ -55,8 +78,6 @@
       <import plugin="org.junit" version="4.8.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.jobs"/>
       <import plugin="org.hamcrest.library" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="org.hamcrest.integration" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="org.hamcrest.text" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.views.properties.tabbed" version="3.5.201" match="greaterOrEqual"/>
       <import plugin="org.eclipse.xsd" version="2.6.0" match="greaterOrEqual"/>
    </requires>
@@ -145,41 +166,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.swtbot.eclipse.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.eclipse.finder"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.eclipse.gef.finder"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.junit4_x"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.swt.finder"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.diagram.test"
          download-size="0"
          install-size="0"
@@ -194,21 +180,7 @@
          unpack="false"/>
 
    <plugin
-         id="org.junit4"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.workspace.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.hamcrest"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -257,20 +229,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.hamcrest.integration"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.hamcrest.text"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.decision.core.test"
          download-size="0"
          install-size="0"
@@ -286,13 +244,6 @@
 
    <plugin
          id="org.bonitasoft.studio.repository.themes.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.finder.nebula.gallery"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -334,39 +285,11 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.swtbot.ant.optional.junit4"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.eclipse.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.forms.finder"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.expressions.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.eclipse.junit4.headless"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.pde.launching"
@@ -452,24 +375,11 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.swtbot.finder.nebula.tableCombo"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.swtbot.finder.nebula"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.common.diagram.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+         
 
 </feature>
