@@ -315,6 +315,8 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		};
 	}
 	
+	
+	
 	protected void addNameAndDescriptionPage() {
 		if(useEvents ){
 			namePage = new SelectEventConnectorNameAndDescWizardPage(container, connectorWorkingCopy,originalConnector, featureToCheckForUniqueID) ;
@@ -400,14 +402,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
-		if(page.equals(selectionPage)){
-			final ConnectorDefinition definition = selectionPage.getSelectedConnectorDefinition();
-			if(definition!=null){
-				checkDefinitionDependencies(definition) ;
-				extension = findCustomWizardExtension(definition) ;
-				recreateConnectorConfigurationPages(definition,true);
-			}
-		}
 		return super.getNextPage(page);
 	}
 
@@ -740,5 +734,16 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void buildExtendedWizard() {
+		final ConnectorDefinition definition = selectionPage.getSelectedConnectorDefinition();
+		if(definition!=null){
+			checkDefinitionDependencies(definition) ;
+			extension = findCustomWizardExtension(definition) ;
+			recreateConnectorConfigurationPages(definition,true);
+		}
+		
 	}
 }

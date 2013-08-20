@@ -23,11 +23,13 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectConnectorConfigurationWizard;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connector.model.implementation.IImplementationRepositoryStore;
+import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.pics.Pics;
@@ -149,8 +151,18 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
         }
     }
 
-
+    
+    
     @Override
+	protected void nextPressed() {
+		final IWizard wizard = this.getWizard();
+		if(wizard instanceof IConnectorDefinitionContainer){
+			((IConnectorDefinitionContainer) wizard).buildExtendedWizard();
+		}
+		super.nextPressed();
+	}
+
+	@Override
     public void updateButtons() {
         super.updateButtons();
         IWizardPage page = getCurrentPage() ;

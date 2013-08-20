@@ -132,17 +132,16 @@ public class TestConnectorWizard extends ConnectorWizard {
 
 	
 	
+	
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if(page.equals(selectionPage)){
 			ConnectorDefinition definition = selectionPage.getSelectedConnectorDefinition();
 			if(definition !=null){
-				checkDefinitionDependencies(definition) ;
 				extension = findCustomWizardExtension(definition) ;
 				recreateConnectorConfigurationPages(definition,false);
 			}
 		}
-
 		List<IWizardPage> pages = getAllPageList() ;
 		int index = pages.indexOf(page);
 		if (index == pages.size() - 1 || index == -1) {
