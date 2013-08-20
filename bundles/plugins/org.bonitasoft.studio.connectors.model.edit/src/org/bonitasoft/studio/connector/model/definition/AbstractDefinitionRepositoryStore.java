@@ -34,7 +34,9 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.osgi.framework.Bundle;
 
 public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T> implements IDefinitionRepositoryStore {
-
+	
+	private List<T> cachedFileStore = new ArrayList<T>();
+		
     @Override
     public List<ConnectorDefinition> getDefinitions() {
         final List<ConnectorDefinition> result = new ArrayList<ConnectorDefinition>();
@@ -76,23 +78,32 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
         }
         return null;
     }
-
+    
+    
+    
+    
     @Override
     public List<T> getChildren() {
         final List<T> result = super.getChildren();
-        Enumeration<URL> connectorDefs = getBundle().findEntries(getName(), "*.def", false);
-        if( connectorDefs != null ){
-            while (connectorDefs.hasMoreElements()) {
-                URL url = connectorDefs.nextElement();
-                String[] segments = url.getFile().split("/") ;
-                String fileName = segments[segments.length-1] ;
-                if(fileName.lastIndexOf(".") != -1){
-                    String extension = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()) ;
-                    if(getCompatibleExtensions().contains(extension)){
-                        result.add(getDefFileStore(url)) ;
-                    }
-                }
-            }
+        if(cachedFileStore.isEmpty()){
+        	Enumeration<URL> connectorDefs = getBundle().findEntries(getName(), "*.def", false);
+        	if( connectorDefs != null ){
+        		while (connectorDefs.hasMoreElements()) {
+        			URL url = connectorDefs.nextElement();
+        			String[] segments = url.getFile().split("/") ;
+        			String fileName = segments[segments.length-1] ;
+        			if(fileName.lastIndexOf(".") != -1){
+        				String extension = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()) ;
+        				if(getCompatibleExtensions().contains(extension)){
+        					T defFileStore = getDefFileStore(url);
+							cachedFileStore.add(defFileStore);
+        					result.add(defFileStore) ;
+        				}
+        			}
+        		}
+        	}
+        } else {
+        	result.addAll(cachedFileStore);
         }
         return result ;
     }
