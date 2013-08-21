@@ -14,10 +14,10 @@
 		<tychoExtrasVersion>0.18.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>6.1.0-rc-15</bundle.version>
-		<engine.version>6.1.0-rc-11</engine.version>
-		<connector.version>6.1.0-rc-11</connector.version>
+		<engine.version>6.1.0-rc-12</engine.version>
+		<connector.version>6.1.0-SNAPSHOT</connector.version>
 		<simulation.version>6.1.0</simulation.version>
-		<filters.version>6.1.0-rc-11</filters.version>
+		<filters.version>6.1.0-SNAPSHOT</filters.version>
 		<theme.builder.version>6.0.0</theme.builder.version>
 		<watchdog.version>6.0.1</watchdog.version>
 		<p2MirrorUrl>http://192.168.1.227/6.1/repository/</p2MirrorUrl>
