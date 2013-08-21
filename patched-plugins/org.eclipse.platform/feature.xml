@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.platform"
       label="%featureName"
-      version="4.3.0.v20130605-2000"
+      version="4.3.0.v20130605-2100"
       provider-name="%providerName">
 
    <description>
