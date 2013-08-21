@@ -2,13 +2,13 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-    <parent>
+  <parent>
     <groupId>org.bonitasoft.studio</groupId>
-    <artifactId>patched-plugins</artifactId>
     <version>6.2.0-SNAPSHOT</version>
-    </parent>
+    <artifactId>patched-plugins</artifactId>
+  </parent>
   <groupId>org.bonitasoft.studio.patched-plugins</groupId>
-  <artifactId>org.eclipse.ui.workbench</artifactId>
-  <version>3.105.0.v20130529-1500</version>
-  <packaging>eclipse-plugin</packaging>
+  <artifactId>org.eclipse.rcp</artifactId>
+  <version>4.3.0.v20130605-2100</version>
+  <packaging>eclipse-feature</packaging>
 </project>

@@ -24,6 +24,7 @@
 		<module>org.eclipse.gmf.runtime.lite.svg</module>
 		<module>org.bonitasoft.studio-antTasks</module>
 		<module>org.eclipse.platform</module>
+		<module>org.eclipse.rcp</module>
 	</modules>
 
 

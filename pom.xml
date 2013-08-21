@@ -201,14 +201,6 @@
 							<id>org.bonitasoft.studioEx.console.libs</id>
 							<removeAll />
 						</filter>
-<!-- 						<filter> -->
-<!-- 							<type>p2-installable-unit</type> -->
-<!-- 							<id>org.eclipse.platform</id> -->
-<!-- 							<restrictTo> -->
-<!-- 								<version>4.3.0.v20130605-2100</version> -->
-<!-- 							</restrictTo> -->
-<!-- 						</filter> -->
-						
 					</filters>
 				</configuration>
 			</plugin>
