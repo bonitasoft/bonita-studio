@@ -17,6 +17,10 @@
       [Enter License Description here.]
    </license>
 
+   <includes
+         id="org.eclipse.platform"
+         version="4.3.0.v20130605-2000"/>
+
    <requires>
       <import feature="platform-specific-feature" version="6.2.0" match="equivalent"/>
    </requires>

@@ -23,6 +23,7 @@
 		<module>org.eclipse.ui.views.properties.tabbed</module>
 		<module>org.eclipse.gmf.runtime.lite.svg</module>
 		<module>org.bonitasoft.studio-antTasks</module>
+		<module>org.eclipse.platform</module>
 	</modules>
 
 
