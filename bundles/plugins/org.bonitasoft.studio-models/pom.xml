@@ -30,6 +30,12 @@
 							<appArgLine>${os-jvm-flags} -data ${workspacePath} -application org.eclipse.ant.core.antRunner -buildfile generateGenModels.xml -clean -noSplash -consoleLog</appArgLine>
 							<argLine>-Xmx512m -Xms256m -XX:MaxPermSize=512m -DworkspacePath=${workspacePath}</argLine>
 							<dependencies>
+								
+								<dependency>
+									<artifactId>org.eclipse.platform</artifactId>
+									<version>4.3.0.v20130605-2100</version>
+									<type>eclipse-feature</type>
+								</dependency>
 								<dependency>
 									<artifactId>org.eclipse.gmf.tooling</artifactId>
 									<type>eclipse-feature</type>
