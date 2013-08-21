@@ -43,6 +43,7 @@ public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implement
 	private static final String QUERY2 = "SELECT col1,col2,col3 from MyTable";
 	private static final String JDBC_DB_CONNECTOR_ID = "database-jdbc";
 	private static final String DB_CATEGORY_ID = "database";
+	private static final String GENERIC_DB_CATEGORY_ID = "generic";
 
 	@Test
     public void testPatternExpressionViewer(){
@@ -51,7 +52,7 @@ public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implement
 		createData(DATA_NAME_1);
 		String connectorLabel = getConnectorLabel(JDBC_DB_CONNECTOR_ID);
 		String connectorVersion = getConnectorVersion(JDBC_DB_CONNECTOR_ID);
-		String dbCategoryLabel = getCategoryLabel(DB_CATEGORY_ID);
+		String[] dbCategoryLabel = getCategoryLabels(new String[]{DB_CATEGORY_ID,GENERIC_DB_CATEGORY_ID});
 		addDBConnectorWithPatternExpression(connectorLabel, connectorVersion,dbCategoryLabel,"patternDBConnector");
 		bot.styledText().setText(QUERY1);
 		bot.button(IDialogConstants.NEXT_LABEL).click();
@@ -61,7 +62,7 @@ public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implement
 
 
 	private void addDBConnectorWithPatternExpression(String connectorLabel,
-			String connectorVersion, String dbCategoryLabel,String connectorName) {
+			String connectorVersion, String[] dbCategoryLabel,String connectorName) {
 		SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorLabel,connectorVersion,dbCategoryLabel, connectorName);
 		bot.button(IDialogConstants.NEXT_LABEL).click();
 		bot.button(IDialogConstants.NEXT_LABEL).click();
@@ -135,14 +136,19 @@ public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implement
 	}
 
 
-	private String getCategoryLabel(String categoryId) {
-		ConnectorDefRepositoryStore defSore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-		for(Category c : defSore.getResourceProvider().getAllCategories()){
-			if(c.getId().equals(categoryId)){
-				return defSore.getResourceProvider().getCategoryLabel(c);
+	private String[] getCategoryLabels(String[] categoryIds) {
+		String[] res = new String[categoryIds.length];
+		for(int i = 0; i < categoryIds.length; i++){
+			final String categoryIdToSearch = categoryIds[i];
+			ConnectorDefRepositoryStore defSore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+			for(Category c : defSore.getResourceProvider().getAllCategories()){
+				if(c.getId().equals(categoryIdToSearch)){
+					res[i] = defSore.getResourceProvider().getCategoryLabel(c);
+					continue;
+				}
 			}
 		}
-		return null;
+		return res;
 	}
 
 	private String getConnectorVersion(String connectorId) {
