@@ -19,7 +19,7 @@
 
    <includes
          id="org.eclipse.platform"
-         version="4.3.0.v20130605-2000"/>
+         version="4.3.0.v20130605-2100"/>
 
    <requires>
       <import feature="platform-specific-feature" version="6.2.0" match="equivalent"/>
