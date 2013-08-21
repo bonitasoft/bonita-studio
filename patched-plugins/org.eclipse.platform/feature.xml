@@ -19,7 +19,7 @@
 
    <includes
          id="org.eclipse.rcp"
-         version="4.3.0.v20130605-2000"/>
+         version="4.3.0.v20130605-2100"/>
 
    <includes
          id="org.eclipse.equinox.p2.user.ui"
