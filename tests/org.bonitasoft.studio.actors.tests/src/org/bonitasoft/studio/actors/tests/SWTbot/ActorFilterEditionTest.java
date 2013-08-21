@@ -60,7 +60,7 @@ public class ActorFilterEditionTest extends SWTBotGefTestCase {
                 .getNode(name + " (" + version + ")"));
         bot.tree().expandNode("Uncategorized")
         .select(name + " (" + version + ")");
-        bot.button("Remove").click();
+        bot.button("Delete").click();
         if (!FileActionDialog.getDisablePopup()) {
             bot.button(IDialogConstants.YES_LABEL).click();
         }
