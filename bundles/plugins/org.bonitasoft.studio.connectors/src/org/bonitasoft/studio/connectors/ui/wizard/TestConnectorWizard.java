@@ -129,9 +129,6 @@ public class TestConnectorWizard extends ConnectorWizard {
 		}
 		return null;
 	}
-
-	
-	
 	
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {

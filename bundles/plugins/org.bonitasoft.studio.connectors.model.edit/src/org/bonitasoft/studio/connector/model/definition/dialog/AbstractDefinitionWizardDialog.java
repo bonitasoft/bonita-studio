@@ -155,11 +155,14 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
     
     @Override
 	protected void nextPressed() {
+		if(this.getCurrentPage() instanceof AbstractDefinitionSelectionImpementationWizardPage){
 		final IWizard wizard = this.getWizard();
-		if(wizard instanceof IConnectorDefinitionContainer){
-			((IConnectorDefinitionContainer) wizard).buildExtendedWizard();
+			if(wizard instanceof IConnectorDefinitionContainer){
+				((IConnectorDefinitionContainer) wizard).buildExtendedWizard();
+			}
 		}
 		super.nextPressed();
+
 	}
 
 	@Override
