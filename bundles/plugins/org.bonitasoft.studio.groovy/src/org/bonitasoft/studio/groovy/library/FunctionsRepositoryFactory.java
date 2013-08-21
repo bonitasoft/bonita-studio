@@ -35,6 +35,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
+
 import static org.bonitasoft.studio.common.Messages.bonitaName;
 
 /**
@@ -71,6 +72,10 @@ public class FunctionsRepositoryFactory {
                 }
             }
 
+            if(groovyAll == null){
+            	throw new RuntimeException("groovy-all jar not found!");
+            }
+            
             IPackageFragment pack = groovyAll.getPackageFragment("org.codehaus.groovy.runtime"); //$NON-NLS-1$
             pack.open(null);
 
