@@ -79,9 +79,11 @@ public class DuplicateCommandTest extends SWTBotGefTestCase {
         }
 
         bot.menu("Diagram").menu("Duplicate...").click();
+		bot.waitUntil(Conditions.shellIsActive(org.bonitasoft.studio.common.Messages.openNameAndVersionDialogTitle));
         bot.text(0).setText(processName);
         bot.text(1).setText(processVersion);
         bot.text(2).setText("Pool" + System.currentTimeMillis());
+        assertTrue("OK button should be active", bot.button(IDialogConstants.OK_LABEL).isEnabled());
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.waitUntil(new ICondition() {
 

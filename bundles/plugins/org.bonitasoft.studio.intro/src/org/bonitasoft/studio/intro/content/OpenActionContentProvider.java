@@ -26,11 +26,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.intro.config.IIntroContentProviderSite;
 import org.eclipse.ui.intro.config.IIntroXHTMLContentProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 /**
@@ -94,6 +94,7 @@ public class OpenActionContentProvider implements IIntroXHTMLContentProvider {
 			}
 		}
 	}
+
 
 
 

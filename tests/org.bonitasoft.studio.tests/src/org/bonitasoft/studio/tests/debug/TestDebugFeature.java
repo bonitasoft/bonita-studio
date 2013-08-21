@@ -38,6 +38,9 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestDebugFeature extends SWTBotGefTestCase {
 	
+	
+	static long nbProcess=0;
+	
 	@Test
 	public void testSimpleDebug() throws Exception{
 		SWTBotTestUtil.createNewDiagram(bot);
@@ -77,6 +80,7 @@ public class TestDebugFeature extends SWTBotGefTestCase {
 		bot.waitUntil(new ICondition() {
 
             public boolean test() throws Exception {
+            	nbProcess=getNBProcessDefinitions();
                 return getNBProcessDefinitions() == nbProcDefToCheck ;
             }
 
@@ -85,7 +89,7 @@ public class TestDebugFeature extends SWTBotGefTestCase {
 
             public String getFailureMessage() {
                 
-				return failureMessage;
+				return failureMessage+" should be "+nbProcDefToCheck+" instead of "+nbProcess;
             }
         },10000,500);
 	}
