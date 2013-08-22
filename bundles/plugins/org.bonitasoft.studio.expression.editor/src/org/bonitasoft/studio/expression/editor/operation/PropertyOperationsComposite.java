@@ -17,8 +17,6 @@
 package org.bonitasoft.studio.expression.editor.operation;
 
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
@@ -41,16 +39,10 @@ public class PropertyOperationsComposite extends OperationsComposite {
 	 */
 	@Override
 	public void refresh() {
-		Composite shell = mainComposite.getParent();
-		Point compositesize = mainComposite.getSize();
-		Point newcompositesize = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		Point defaultSize = shell.getSize();
-		Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		if(compositesize.y < newcompositesize.y){
-			shell.setSize(defaultSize.x, size.y);
-		}
+		Composite shell = mainComposite.getParent().getParent().getParent().getParent();
 		shell.layout(true,true);
-
+		mainComposite.layout(true,true);
+		layout(true,true);
 		if (tabbedPropertySheetPage != null) {
 			tabbedPropertySheetPage.resizeScrolledComposite();
 		}
