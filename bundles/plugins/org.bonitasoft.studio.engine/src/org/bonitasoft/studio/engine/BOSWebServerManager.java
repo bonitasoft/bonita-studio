@@ -193,7 +193,7 @@ public class BOSWebServerManager {
 				copy.setLocation(Path.fromOSString(tomcatInstanceLocation));
 				File serverXmlFile = new File(tomcatInstanceLocation,"conf"+File.separatorChar+"server.xml");
 				//for Windows, we need to escape \
-				FileUtil.replaceStringInFile(serverXmlFile, oldLocaiton, tomcatInstanceLocation.replaceAll("\\", "\\\\"));
+				FileUtil.replaceStringInFile(serverXmlFile, oldLocaiton, tomcatInstanceLocation.replaceAll("\\\\", "\\\\\\\\"));
 				try {
 					copy.save(true, Repository.NULL_PROGRESS_MONITOR);
 				} catch (CoreException e) {
