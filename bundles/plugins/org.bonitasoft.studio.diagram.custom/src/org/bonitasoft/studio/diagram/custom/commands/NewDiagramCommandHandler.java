@@ -400,7 +400,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 				((IHintedType) ProcessElementTypes.Task_3005).getSemanticHint(),
 				diagramEp.getDiagramPreferencesHint());
 		CreateViewAndElementRequest taskReq = new CreateViewAndElementRequest(taskViewDescriptor);
-		taskReq.setLocation(new Point(150, 100 - FiguresHelper.ACTIVITY_HEIGHT / 2));
+		taskReq.setLocation(new Point(200, 100 - FiguresHelper.ACTIVITY_HEIGHT / 2));
 		laneCompartment.getDiagramEditDomain().getDiagramCommandStack().execute(laneCompartment.getCommand(taskReq));
 
 		Task task =  (Task) taskReq.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class) ;
@@ -422,7 +422,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 				((IHintedType) ProcessElementTypes.StartEvent_3002).getSemanticHint(),
 				diagramEp.getDiagramPreferencesHint());
 		CreateViewAndElementRequest startRequest = new CreateViewAndElementRequest(startViewDescriptor);
-		startRequest.setLocation(new Point(80, 100 - FiguresHelper.EVENT_WIDTH / 2));
+		startRequest.setLocation(new Point(100, 100 - FiguresHelper.EVENT_WIDTH / 2));
 		laneCompartment.getDiagramEditDomain().getDiagramCommandStack().execute(laneCompartment.getCommand(startRequest));
 
 		CreateConnectionViewAndElementRequest sequenceFlowRequest = new CreateConnectionViewAndElementRequest(

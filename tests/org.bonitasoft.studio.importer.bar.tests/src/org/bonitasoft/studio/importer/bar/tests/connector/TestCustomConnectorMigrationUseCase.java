@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,6 +75,33 @@ public class TestCustomConnectorMigrationUseCase {
 		
 		final ConnectorImplRepositoryStore implStore = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
 		ConnectorImplementation implementation = implStore.getImplementation("MyConnectorId-impl","1.0.0");
+		assertNotNull(implementation);
+		
+		final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
+		assertNotNull(sourceStore.getChild(implementation.getImplementationClassname()));
+		
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
+				mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
+	}
+	
+	@Test
+	public void testCustomonnectorMigrationWithGetterCustom() throws Exception {
+		final URL url = TestCustomConnectorMigrationUseCase.class
+				.getResource("fab--1.0.bar");
+		final File migratedProc = BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil
+				.assertIsLoadable(migratedProc);
+		final MainProcess mainProc = BarImporterTestUtil
+				.getMainProcess(resource);
+
+		final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+		assertNotNull(defStore.getDefinition("fabulous_connector","1.0.0"));
+		
+		final ConnectorImplRepositoryStore implStore = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+		ConnectorImplementation implementation = implStore.getImplementation("fabulous_connector-impl","1.0.0");
 		assertNotNull(implementation);
 		
 		final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);

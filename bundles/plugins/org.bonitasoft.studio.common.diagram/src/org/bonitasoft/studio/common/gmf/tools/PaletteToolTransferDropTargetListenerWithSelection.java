@@ -215,7 +215,7 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 	 * 
 	 * Copied from CreationTool
 	 */
-	protected void selectAddedObject(EditPartViewer viewer, Collection objects) {
+	protected void selectAddedObject(final EditPartViewer viewer, Collection objects) {
 		final List editparts = new ArrayList();
 		for (Iterator i = objects.iterator(); i.hasNext();) {
 			Object object = i.next();
@@ -229,21 +229,13 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 		}
 
 		if (!editparts.isEmpty()) {
-			viewer.setSelection(new StructuredSelection(editparts));
-
 			// automatically put the first shape into edit-mode
 			Display.getCurrent().asyncExec(new Runnable() {
 				public void run(){
 					EditPart editPart = (EditPart) editparts.get(0);
-					//
-					// add active test since test scripts are failing on this
-					// basically, the editpart has been deleted when this 
-					// code is being executed. (see RATLC00527114)
+					viewer.setSelection(new StructuredSelection(editPart));
 					if ( editPart.isActive() ) {
-						//ISSUE WITH PROPERTIES PAGE AND EXCLUSIVE EDITING DOMAIN
-						//editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
-
-						revealEditPart((EditPart)editparts.get(0));
+						revealEditPart(editPart);
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().setFocus();
 						editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
 					}
