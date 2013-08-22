@@ -309,7 +309,9 @@ public class ConnectorDescriptorToConnectorDefinition {
 
 	private String toInputName(Setter setter) {
 		String name = setter.getSetterName();
-		name = name.substring(3);
+		if(name.startsWith("set")){
+			name = name.substring(3);
+		}
 		name = name.substring(0, 1).toLowerCase() +name.substring(1);
 		return name;
 	}
@@ -423,13 +425,15 @@ public class ConnectorDescriptorToConnectorDefinition {
 	protected void addOutputs(final ConnectorDefinition connectorDefinition) {
 		for(Getter getter : v5Descriptor.getOutputs()){
 			String name = getter.getName();
-			name = name.substring(3);
+			if(name.startsWith("get")){
+				name = name.substring(3);
+			}
 			name = name.substring(0, 1).toLowerCase() +name.substring(1);
 			final Output connectorOutput = ConnectorDefinitionFactory.eINSTANCE.createOutput();
 			connectorOutput.setName(name);
 			final Type outputType = v5Descriptor.getOutputType(getter.getName());
 			if( outputType instanceof Class){
-				connectorOutput.setType(((Class)outputType).getName());
+				connectorOutput.setType(((Class<?>)outputType).getName());
 				connectorDefinition.getOutput().add(connectorOutput);
 			}else{
 				BonitaStudioLog.warning("Unknown connector output type "+outputType.toString(), BarImporterPlugin.PLUGIN_ID);
