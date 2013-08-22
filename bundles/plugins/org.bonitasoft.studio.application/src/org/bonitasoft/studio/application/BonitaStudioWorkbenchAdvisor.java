@@ -48,6 +48,7 @@ import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobC
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.engine.BOSEngineManager;
+import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.diagram.providers.ElementInitializers;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -239,6 +240,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 			 }
 			 contrib.execute();
 		 }
+		 FunctionsRepositoryFactory.getFunctionCatgories();
 	}
 
 	
