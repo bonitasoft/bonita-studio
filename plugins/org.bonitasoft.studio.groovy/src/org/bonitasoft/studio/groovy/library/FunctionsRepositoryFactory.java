@@ -18,7 +18,8 @@
 
 package org.bonitasoft.studio.groovy.library;
 
-import java.io.File;
+import static org.bonitasoft.studio.common.Messages.bonitaName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +33,7 @@ import org.bonitasoft.studio.groovy.repository.ProvidedGroovyRepositoryStore;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
-import static org.bonitasoft.studio.common.Messages.bonitaName;
 
 /**
  * @author Romain Bioteau
@@ -54,29 +52,9 @@ public class FunctionsRepositoryFactory {
     private static ArrayList<String> funcName;
 
     private synchronized static void createFunctionCatgories(){
-
         try {
             IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
-            IPackageFragmentRoot[] packages = project.getAllPackageFragmentRoots();
-            IPackageFragmentRoot groovyAll = null ;
-
-            for(IPackageFragmentRoot f : packages){
-                if(f.toString().indexOf("org.codehaus.groovy_") != -1){
-                    String searchString =  f.toString().substring(f.toString().indexOf("org.codehaus.groovy_")) ;
-                    if(searchString.contains("lib"+File.separatorChar+"groovy-all-") && searchString.contains(".jar")){ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                        groovyAll = f;
-                    }
-                }
-                if(groovyAll != null) {
-                    break ;
-                }
-            }
-
-            IPackageFragment pack = groovyAll.getPackageFragment("org.codehaus.groovy.runtime"); //$NON-NLS-1$
-            pack.open(null);
-
-            IType defaultType = pack.getClassFile("DefaultGroovyMethods.class").getType(); //$NON-NLS-1$
-
+            IType defaultType =project.findType("org.codehaus.groovy.runtime.DefaultGroovyMethods"); //$NON-NLS-1$
             if(defaultType != null){
                 for(IMethod m :defaultType.getMethods()){
                     if(m.getFlags() == (Flags.AccStatic | Flags.AccPublic) ) {
