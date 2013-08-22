@@ -89,9 +89,9 @@ public class SaveCommandHandler extends SaveHandler {
 			IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 			MainProcess proc = null ;
 			boolean changed = false;
+			String formName = null;
 			if(editorPart instanceof DiagramEditor){
 				DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
-
 				if(editorPart instanceof ProcessDiagramEditor){
 					DiagramEditPart diagram = ((ProcessDiagramEditor) editorPart).getDiagramEditPart();
 					proc = (MainProcess) diagram.resolveSemanticElement() ;
@@ -108,6 +108,11 @@ public class SaveCommandHandler extends SaveHandler {
 					editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
 					IEditorInput editorInput = editorPart.getEditorInput();
 					ResourceSet resourceSet = proc.eResource().getResourceSet();
+					IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+					if(editor instanceof FormDiagramEditor){
+						editorsWithSameResourceSet.add((DiagramDocumentEditor) editor);
+						formName = ((FormDiagramEditor)editor).getPartName();
+					}
 					for (IEditorReference editorRef : editorReferences) {
 						try {
 							IEditorInput currentEditorInput = editorRef.getEditorInput();
@@ -150,7 +155,15 @@ public class SaveCommandHandler extends SaveHandler {
 								FormsUtils.openDiagram((Form)form, null);
 							}
 						}
-					//	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(newEditorOfDiagram);
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(newEditorOfDiagram);
+						if(formName!=null){
+							for (EObject form:forms){
+								if(form instanceof Form && ((Form)form).getName().equals(formName)){
+									FormsUtils.openDiagram((Form)form, null);
+									break;
+								}
+							}
+						}
 					}else{
 						EObject root = ((DiagramEditor)editorPart).getDiagramEditPart().resolveSemanticElement();
 						Resource res = root.eResource();
