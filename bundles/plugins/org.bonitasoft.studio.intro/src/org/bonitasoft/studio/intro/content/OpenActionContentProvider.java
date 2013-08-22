@@ -22,7 +22,9 @@ import java.io.PrintWriter;
 import org.bonitasoft.studio.intro.Messages;
 import org.eclipse.core.commands.Command;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -68,30 +70,38 @@ public class OpenActionContentProvider implements IIntroXHTMLContentProvider {
 	 * @see org.eclipse.ui.intro.config.IIntroXHTMLContentProvider#createContent(java.lang.String, org.w3c.dom.Element)
 	 */
 	public void createContent(String id, Element parent) {
-		IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
-		ICommandService cmdService = (ICommandService)part.getSite().getService( ICommandService.class);
-		// Do not replace by static link since this command does not resolve to the same between BOS and SP
-		Command open = cmdService.getCommand("org.bonitasoft.studio.diagram.command.openDiagram");//$NON-NLS-1$
+		if(PlatformUI.isWorkbenchRunning()){
+			final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			if(activeWorkbenchWindow != null){
+				final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+				if(activePage != null){
+					IWorkbenchPart part = activePage.getActivePart();
+					ICommandService cmdService = (ICommandService)part.getSite().getService( ICommandService.class);
+					// Do not replace by static link since this command does not resolve to the same between BOS and SP
+					Command open = cmdService.getCommand("org.bonitasoft.studio.diagram.command.openDiagram");//$NON-NLS-1$
 
-		Document dom = parent.getOwnerDocument();
-		Element ul = (Element) dom.getElementsByTagName("ul").item(0);
+					Document dom = parent.getOwnerDocument();
+					Element ul = (Element) dom.getElementsByTagName("ul").item(0);
 
-		NodeList liList = ul.getElementsByTagName("li");
-		if(liList.getLength() == 2){
-			Element li = dom.createElement("li");
-			ul.insertBefore(li, liList.item(1));
-			Element link = dom.createElement("a");
-			li.appendChild(link);
-			if(open.isEnabled()){
-				link.setAttribute("href", "http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&class=org.bonitasoft.studio.intro.actions.OpenProcess");
-			}		
-			Text t = dom.createTextNode(Messages.getMessage("openAProcess"));
-			link.appendChild(t);
+					NodeList liList = ul.getElementsByTagName("li");
+					if(liList.getLength() == 2){
+						Element li = dom.createElement("li");
+						ul.insertBefore(li, liList.item(1));
+						Element link = dom.createElement("a");
+						li.appendChild(link);
+						if(open.isEnabled()){
+							link.setAttribute("href", "http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&class=org.bonitasoft.studio.intro.actions.OpenProcess");
+						}		
+						Text t = dom.createTextNode(Messages.getMessage("openAProcess"));
+						link.appendChild(t);
 
-			if(open.isEnabled()){
-				li.setAttribute("id", id);
-			}else{
-				li.setAttribute("id", id+"-disabled");
+						if(open.isEnabled()){
+							li.setAttribute("id", id);
+						}else{
+							li.setAttribute("id", id+"-disabled");
+						}
+					}
+				}
 			}
 		}
 	}
