@@ -42,8 +42,13 @@ public class ProductVersion {
     public static final String VERSION_6_0_0_BETA = "6.0.0-Beta";
     public static final String VERSION_6_0_0_GA = "6.0.0-GA";
     public static final String VERSION_6_0_1 = "6.0.1";
+    public static final String VERSION_6_0_2 = "6.0.2";
+    public static final String VERSION_6_0_3 = "6.0.3";
+    public static final String VERSION_6_0_4 = "6.0.4";
+    public static final String VERSION_6_0_5 = "6.0.5";
+    public static final String VERSION_6_0_6 = "6.0.6";
     public static final String VERSION_6_1_0 = "6.1.0";
-    //public static final String VERSION_6_0_0 = "6.0.0";
+
 
     public static final String CURRENT_VERSION = VERSION_6_1_0;
 
@@ -53,6 +58,10 @@ public class ProductVersion {
     	orderedVerions.add(VERSION_6_0_0_BETA);
     	orderedVerions.add(VERSION_6_0_0_GA);
     	orderedVerions.add(VERSION_6_0_1);
+    	orderedVerions.add(VERSION_6_0_2);
+    	orderedVerions.add(VERSION_6_0_3);
+    	orderedVerions.add(VERSION_6_0_4);
+    	orderedVerions.add(VERSION_6_0_5);
     	orderedVerions.add(VERSION_6_1_0);
     }
 
