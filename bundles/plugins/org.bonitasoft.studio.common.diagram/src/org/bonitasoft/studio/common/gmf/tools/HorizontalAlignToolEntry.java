@@ -55,7 +55,7 @@ public class HorizontalAlignToolEntry extends ToolEntry{
 	 * @see org.eclipse.gef.palette.PaletteEntry#getLargeIcon()
 	 */
 	public ImageDescriptor getLargeIcon() {
-		return Pics.getImageDescriptor("palette/align-horizontal.png");
+		return Pics.getImageDescriptor("palette/alignmid.gif");
 	}
 
 
