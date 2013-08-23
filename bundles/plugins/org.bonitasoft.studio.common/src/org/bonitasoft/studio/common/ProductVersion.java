@@ -62,6 +62,7 @@ public class ProductVersion {
     	orderedVerions.add(VERSION_6_0_3);
     	orderedVerions.add(VERSION_6_0_4);
     	orderedVerions.add(VERSION_6_0_5);
+      	orderedVerions.add(VERSION_6_0_6);
     	orderedVerions.add(VERSION_6_1_0);
     }
 
