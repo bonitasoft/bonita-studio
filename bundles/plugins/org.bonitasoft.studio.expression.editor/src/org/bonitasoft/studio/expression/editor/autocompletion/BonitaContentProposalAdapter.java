@@ -129,7 +129,7 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 								// the popup shell on the Mac.
 								// Check the active shell.
 								Shell activeShell = e.display.getActiveShell();
-								if (activeShell == getShell() || (infoPopup != null && infoPopup.getShell() == activeShell)) {
+								if (activeShell == getShell() || (infoPopup != null && infoPopup.getShell() == activeShell) || linkClicked) {
 									return;
 								}
 								/*
@@ -150,6 +150,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 				// processing.
 				if (e.type == SWT.Selection) {
 					scrollbarClicked = true;
+					return;
+				}
+				
+				if (e.type == SWT.Deactivate && linkClicked) {
 					return;
 				}
 
@@ -589,6 +593,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		 * filter
 		 */
 		private String filterText = EMPTY;
+		
+		
+		private boolean linkClicked;
 
 		/**
 		 * Constructs a new instance of this popup, specifying the control for
@@ -705,13 +712,16 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 						final String name = element.getAttribute("name");
 						createDataLink.setText(name);
 						try {
-							final IProposalListener listener = (IProposalListener) element
-									.createExecutableExtension("providerClass");
+							final IProposalListener listener = (IProposalListener) element.createExecutableExtension("providerClass");
 							createDataLink.addSelectionListener(new SelectionAdapter() {
+							
+
 								@Override
 								public void widgetSelected(SelectionEvent e) {
+									linkClicked = true;
 									final String newObjectLabel = listener.handleEvent(context);
 									updateExpressionField(newObjectLabel);
+									linkClicked=false;
 								}
 							});
 						} catch (CoreException e) {
