@@ -55,7 +55,7 @@ public class VerticalAlignToolEntry extends ToolEntry{
 	 * @see org.eclipse.gef.palette.PaletteEntry#getLargeIcon()
 	 */
 	public ImageDescriptor getLargeIcon() {
-		return Pics.getImageDescriptor("palette/align-vertical.png");
+		return Pics.getImageDescriptor("palette/aligncenter.gif");
 	}
 
 
