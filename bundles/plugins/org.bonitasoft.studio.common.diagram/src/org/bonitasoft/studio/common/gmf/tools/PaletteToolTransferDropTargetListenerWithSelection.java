@@ -114,6 +114,7 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 		}
 		
 		getCurrentEvent().feedback = DND.FEEDBACK_SCROLL | DND.FEEDBACK_EXPAND;
+		showTargetFeedback();
 	}
 
 	@Override
