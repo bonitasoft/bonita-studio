@@ -51,6 +51,15 @@ public class DebugProcessCommand extends AbstractHandler {
 
 
 	private MainProcess selectedProcess;
+	private boolean runSynchrnously;
+
+	public DebugProcessCommand(){
+		this(false);
+	}
+	
+	public DebugProcessCommand(boolean runSynchrnously) {
+		this.runSynchrnously = runSynchrnously;
+	}
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
@@ -74,7 +83,7 @@ public class DebugProcessCommand extends AbstractHandler {
 		CustomWizardDialog dialog = new CustomWizardDialog(Display.getDefault().getActiveShell(),wizard , Messages.DebugProcessButtonLabel) ;
 		if(dialog.open() == Dialog.OK){
 			Set<EObject> exludedObject = wizard.getExcludedObjects() ;
-			new RunProcessCommand(exludedObject, true).execute(event) ;
+			new RunProcessCommand(exludedObject, runSynchrnously).execute(event) ;
 		}
 		return null;
 	}
