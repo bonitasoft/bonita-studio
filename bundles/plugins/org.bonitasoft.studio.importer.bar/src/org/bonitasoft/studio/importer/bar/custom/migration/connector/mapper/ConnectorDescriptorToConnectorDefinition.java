@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +39,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import javax.imageio.ImageIO;
+
 import org.bonitasoft.engine.connector.AbstractConnector;
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -114,7 +118,7 @@ public class ConnectorDescriptorToConnectorDefinition {
 		this.tmpConnectorJarFile = tmpConnectorJarFile;
 	}
 
-	public void createConnectorDefinition(){
+	public void createConnectorDefinition() throws IOException{
 		final String connectorId = v5Descriptor.getId();
 		final String connectorVersion = BASE_VERSION;
 		final List<org.ow2.bonita.connector.core.desc.Category> v5Categories = v5Descriptor.getCategories();
@@ -464,7 +468,7 @@ public class ConnectorDescriptorToConnectorDefinition {
 	}
 
 	protected List<Category> createCategories(
-			final List<org.ow2.bonita.connector.core.desc.Category> v5Categories) {
+			final List<org.ow2.bonita.connector.core.desc.Category> v5Categories) throws IOException {
 		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final DefinitionResourceProvider resourceProvider = store.getResourceProvider();
 		final Set<String> allCategories = resourceProvider.getProvidedCategoriesIds();
@@ -487,7 +491,7 @@ public class ConnectorDescriptorToConnectorDefinition {
 	}
 
 	private Category createCategory(
-			org.ow2.bonita.connector.core.desc.Category c) {
+			org.ow2.bonita.connector.core.desc.Category c) throws IOException {
 		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final Category category = ConnectorDefinitionFactory.eINSTANCE.createCategory();
 		category.setId(c.getName());
@@ -495,7 +499,16 @@ public class ConnectorDescriptorToConnectorDefinition {
 			category.setIcon(getIconName(c.getIconPath()));
 			InputStream iconInputstream = c.getIcon();
 			if(iconInputstream !=  null){
+				BufferedImage image = ImageIO.read(iconInputstream) ;
+                image = FileUtil.resizeImage(image,16) ;
+                File createTempFile = File.createTempFile("icon", ".png");
+				FileOutputStream resizedStream = new FileOutputStream(createTempFile);
+                ImageIO.write(image, "PNG", resizedStream) ;
+                resizedStream.close();
+                iconInputstream.close();
+                iconInputstream = new FileInputStream(createTempFile);
 				store.importInputStream(category.getIcon(), iconInputstream);
+				createTempFile.delete();
 			}
 		}
 		return category;
@@ -504,10 +517,19 @@ public class ConnectorDescriptorToConnectorDefinition {
 	public void importConnectorDefinitionResources() throws ZipException, IOException {
 		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		if(v5Descriptor.getIconPath() != null && !v5Descriptor.getIconPath().isEmpty() ){
-			final InputStream iconInputStream = v5Descriptor.getIcon();
+			InputStream iconInputStream = v5Descriptor.getIcon();
 			final String iconName = getIconName(v5Descriptor.getIconPath());
 			if(iconInputStream != null){
+				BufferedImage image = ImageIO.read(iconInputStream) ;
+                image = FileUtil.resizeImage(image,16) ;
+                File createTempFile = File.createTempFile("icon", ".png");
+				FileOutputStream resizedStream = new FileOutputStream(createTempFile);
+                ImageIO.write(image, "PNG", resizedStream) ;
+                resizedStream.close();
+                iconInputStream.close();
+                iconInputStream = new FileInputStream(createTempFile);
 				store.importInputStream(iconName, iconInputStream);
+				createTempFile.delete();
 			}
 		}
 		importI18NFiles();
