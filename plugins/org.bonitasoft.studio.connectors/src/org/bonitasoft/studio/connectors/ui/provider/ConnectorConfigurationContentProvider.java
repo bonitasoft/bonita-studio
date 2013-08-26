@@ -24,7 +24,9 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
+import org.bonitasoft.studio.connector.model.definition.UnloadableConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
@@ -93,21 +95,30 @@ public class ConnectorConfigurationContentProvider implements
 		if (parentElement instanceof Category){
 			Category category = (Category) parentElement;
 			for (ConnectorDefinition def: connectorDefList){
-				for (Category cat : def.getCategory()){
-					if (cat.getId().equals(category.getId())){
+				if (def instanceof UnloadableConnectorDefinition){
+					if (category.equals(messageProvider.getUnloadableCategory().getId())){
 						result.add(def);
 					}
+				} else {
+					if (def.getCategory().isEmpty() && category.getId().equals(Messages.uncategorized)){
+						result.add(def);
+						
+					}
+					for (Category c : def.getCategory()) {
+                        if (c.getId().equals(((Category) parentElement).getId())) {
+                            result.add(def);
+                        }
 				}
+			}
 			}
 			return result.toArray();
 		} else {
 			if (parentElement instanceof ConnectorDefinition){
 				ConnectorDefinition connectorDef = (ConnectorDefinition)parentElement;
 				result.addAll(connectorConfStore.getFilterConfigurationsFor(connectorDef.getId(), connectorDef.getVersion()));
-				return result.toArray();
 			}
+			return result.toArray();
 		}
-		return null;
 	}
 
 	/* (non-Javadoc)

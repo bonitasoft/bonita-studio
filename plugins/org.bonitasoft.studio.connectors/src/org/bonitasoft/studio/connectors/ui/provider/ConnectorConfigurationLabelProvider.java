@@ -101,7 +101,11 @@ public class ConnectorConfigurationLabelProvider implements ILabelProvider {
 			return messageProvider.getCategoryLabel(((Category)element));
 		} else {
 			if (element instanceof ConnectorDefinition){
-				return messageProvider.getConnectorDefinitionLabel((ConnectorDefinition)element);
+				String label = messageProvider.getConnectorDefinitionLabel((ConnectorDefinition)element);
+				if (label ==null){
+					label = ((ConnectorDefinition) element).getId();
+				}
+				return label;
 			} else {
 				if (element instanceof ConnectorConfiguration){
 					return ((ConnectorConfiguration)element).getName();

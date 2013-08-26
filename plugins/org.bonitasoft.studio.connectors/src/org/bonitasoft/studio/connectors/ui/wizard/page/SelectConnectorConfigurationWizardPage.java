@@ -71,20 +71,19 @@ public class SelectConnectorConfigurationWizardPage extends WizardPage implement
 
             @Override
             public boolean select(Viewer arg0, Object arg1, Object element) {
-            	if (element instanceof Category){
-            		if(!((ITreeContentProvider)filterTree.getViewer().getContentProvider()).hasChildren(element)){
+            	ITreeContentProvider contentProvider = (ITreeContentProvider)filterTree.getViewer().getContentProvider();
+				if (element instanceof Category){
+					
+            		if(!contentProvider.hasChildren(element)){
             			return false;
             		}
-            		
-            		for(Object c : ((ITreeContentProvider)filterTree.getViewer().getContentProvider()).getChildren(element)){
-            			if(c instanceof ConnectorDefinition){
-            				return ((ITreeContentProvider)filterTree.getViewer().getContentProvider()).getChildren(c).length > 0;
-            			}else{
-            				return select(arg0, element, c);
-            			}
-            		}
+            		boolean hasElements=false;
+            		for(Object c : contentProvider.getChildren(element)){
+            					hasElements=hasElements || select(arg0,element,c);
+            				}
+            		return hasElements;
             	}else if(element instanceof ConnectorDefinition){
-            		return ((ITreeContentProvider)filterTree.getViewer().getContentProvider()).getChildren(element).length > 0;
+            		return contentProvider.getChildren(element).length > 0;
     
     			}
                 return element instanceof ConnectorConfiguration;
