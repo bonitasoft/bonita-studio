@@ -83,7 +83,10 @@ public class ClassGenerator {
 		final IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
 		IType classType = javaProject.findType(qualifiedAbstractClassName) ;
 		if(classType != null){
-			classType.getCompilationUnit().delete(true, monitor) ;
+			final ICompilationUnit compilationUnit = classType.getCompilationUnit();
+			if(compilationUnit != null){
+				compilationUnit.delete(true, monitor) ;
+			}
 		}
 		classType = generateAbstractClass(packageName,abstractClassName,superClassName,sourceStore, monitor);
 
