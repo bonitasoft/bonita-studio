@@ -18,14 +18,14 @@
 package org.bonitasoft.studio.expression.editor.viewer;
 
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
-import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
@@ -36,87 +36,47 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  *
  */
 public class CellExpressionViewer extends ExpressionViewer {
-	
-	private int colIndex;
-	private String fullText="";
-	
+
+	private ColumnViewer columnViewer;
+
 	public CellExpressionViewer(Composite composite, int style,
 			TabbedPropertySheetWidgetFactory widgetFactory,
-			EditingDomain editingDomain, EReference expressionReference,int colIndex) {
+			EditingDomain editingDomain, EReference expressionReference ) {
 		super(composite, style, widgetFactory, editingDomain, expressionReference);
-		this.colIndex = colIndex;
 	}
 
 	@Override
-	 protected void createToolbar(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
-		 final Link editControl = new Link(control, SWT.NO_FOCUS) ;
-         editControl.setText("<A>"+Messages.editAndContinue+"</A>") ;
-         editControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE)) ;
-         editControl.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
-         control.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE)) ;
-         editControl.setData(SWTBOT_WIDGET_ID_KEY,SWTBOT_ID_EDITBUTTON);
-         editControl.addDisposeListener(disposeListener) ;
-         editControl.addSelectionListener(new SelectionAdapter() {
-             @Override
-             public void widgetSelected(SelectionEvent e) {
-                 openEditDialog();
-             }
-         });
-	 }
-	
+	protected void createToolbar(int style, TabbedPropertySheetWidgetFactory widgetFactory) {
+		final Link editControl = new Link(control, SWT.NO_FOCUS) ;
+		editControl.setText("<A>"+Messages.editAndContinue+"</A>") ;
+		editControl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE)) ;
+		editControl.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(false, false).create());
+		control.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE)) ;
+		editControl.setData(SWTBOT_WIDGET_ID_KEY,SWTBOT_ID_EDITBUTTON);
+		editControl.addDisposeListener(disposeListener) ;
+		editControl.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				openEditDialog();
+			}
+		});
+	}
+
 	@Override
-	protected Converter getNameConverter(){
-		return super.getNameConverter();
-//		Converter nameConverter = new Converter(String.class,String.class){
-//
-//			@Override
-//			public Object convert(Object fromObject) {
-//				String input  = (String) fromObject ;
-//                Composite composite = getTextControl().getParent().getParent();
-//                int width = 150;
-//                if(composite instanceof Table){
-//                	  width=((Table)composite).getColumn(colIndex).getWidth();
-//                }else if(composite instanceof Tree){
-//                	  width=((Tree)composite).getColumn(colIndex).getWidth();
-//                }
-//                String troncatedLabel = getTroncatedLabel(input,width);
-//                if (input != null && !fullText.equals(input) && !input.equals(getTroncatedLabel(fullText, width))){
-//                		setFullText(input);
-//                }
-//                getTextControl().setText(troncatedLabel);
-//                getTextControl().setSelection(troncatedLabel.length());
-//                updateContentType(getContentTypeFromInput(fullText)) ;
-//                updateContent(getContentFromInput(fullText)) ;
-//                refresh() ;
-//
-//                return  fullText;
-//			}
-//    		
-//    	};
-//    	return nameConverter;
+	public void proposalAccepted(IContentProposal proposal) {
+		super.proposalAccepted(proposal);
+		columnViewer.refresh(null);
 	}
-	
-	
-	private int computeTextWidth(String text){
-		GC gc = new GC(getTextControl());
-		int width = gc.textExtent(text).x;
-		gc.dispose();
-		return width;
+
+	@Override
+	protected void openEditDialog() {
+		super.openEditDialog();
+		columnViewer.refresh(null);
 	}
-	
-	private String getTroncatedLabel(String label,int width){
-		String s = label+"... "+Messages.editAndContinue;
-		int index =label.length();
-		while (computeTextWidth(s)>width){
-			index--;
-			s =label.substring(0,index)+"... "+Messages.editAndContinue;
-		}
-		if (index<label.length()) {
-			return label.substring(0,index)+"...";
-		} else return label;
-	} 
-	
-	private void setFullText(String label){
-		fullText = label;
+
+
+	public void setColumnViewer(ColumnViewer columnViewer) {
+		this.columnViewer = columnViewer;
 	}
+
 }
