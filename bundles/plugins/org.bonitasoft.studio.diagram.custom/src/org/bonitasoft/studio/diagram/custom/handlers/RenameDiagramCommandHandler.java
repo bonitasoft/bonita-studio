@@ -26,6 +26,8 @@ import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -70,7 +72,10 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
 				ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
 				org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save") ;
 				if(c.isEnabled()){
+					final Boolean askForRename = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE);
+					BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
 					c.executeWithChecks(new ExecutionEvent()) ;
+					BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, askForRename);
 				}
 			}catch (Exception e) {
 				BonitaStudioLog.error(e) ;
