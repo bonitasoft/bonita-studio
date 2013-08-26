@@ -129,8 +129,13 @@ public class DataWizard extends Wizard {
 			op.setOldData(originalData) ;
 			final boolean switchingDataeClass = !originalData.eClass().equals(workingCopy.eClass());
 			op.setUpdateDataReferences(switchingDataeClass);
-			
-		
+			try {
+				getContainer().run(true, false, op) ;
+			} catch (InvocationTargetException e) {
+				BonitaStudioLog.error(e);
+			} catch (InterruptedException e) {
+				BonitaStudioLog.error(e);
+			}
 			CompoundCommand cc = new CompoundCommand();
 			if(switchingDataeClass){
 				List<?> dataList =  (List<?>) container.eGet(dataContainmentFeature) ;
@@ -142,15 +147,7 @@ public class DataWizard extends Wizard {
 					cc.append(SetCommand.create(editingDomain, originalData, feature, workingCopy.eGet(feature)));
 				}
 			}
-
 			editingDomain.getCommandStack().execute(cc) ;
-			try {
-				getContainer().run(true, false, op) ;
-			} catch (InvocationTargetException e) {
-				BonitaStudioLog.error(e);
-			} catch (InterruptedException e) {
-				BonitaStudioLog.error(e);
-			}
 		}else{
 			editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy)) ;
 		}
