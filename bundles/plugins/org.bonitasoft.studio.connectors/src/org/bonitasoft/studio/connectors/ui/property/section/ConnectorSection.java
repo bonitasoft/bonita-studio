@@ -17,9 +17,12 @@
 package org.bonitasoft.studio.connectors.ui.property.section;
 
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.swing.text.TabExpander;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
@@ -47,6 +50,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -60,7 +64,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+
 import static org.bonitasoft.studio.common.Messages.bosProductName;
 /**
  * 
@@ -196,8 +202,17 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 
             @Override
             public void handleEvent(Event event) {
-            	final WizardDialog dialog =  new WizardDialog(Display.getDefault().getActiveShell(),new ConnectorContainerSwitchWizard(getEditingDomain(),ModelHelper.getParentProcess(getEObject())));
-                if(dialog.open() == Dialog.OK){
+            	
+            	WizardDialog dialog = null;
+            	
+            	if(tableViewer.getTable().getSelectionCount()>0){
+            		final Connector selectedConnector = (Connector)tableViewer.getTable().getItem(tableViewer.getTable().getSelectionIndex()).getData();
+            		dialog =  new WizardDialog(Display.getDefault().getActiveShell(),new ConnectorContainerSwitchWizard(getEditingDomain(),ModelHelper.getParentProcess(getEObject()), selectedConnector));
+            	} else {
+            		dialog =  new WizardDialog(Display.getDefault().getActiveShell(),new ConnectorContainerSwitchWizard(getEditingDomain(),ModelHelper.getParentProcess(getEObject())));
+            	
+            	}
+            	if(dialog.open() == Dialog.OK){
                     tableViewer.refresh();
                 }
             }
