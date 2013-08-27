@@ -162,25 +162,52 @@
 				<setInstallerVariable name="desktop_path" value="${installdir}" />
 			</elseActionList>
 		</if>
-		<iniFileSet>
-			<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
-			<section>Desktop Entry</section>
-			<key>Name</key>
-			<value>@product.short.name@-${product_version}</value>
-			<key>Comment</key>
-			<value>@shortcut.comment@</value>
-			<key>Icon</key>
-			<value>${installdir}/bonitasoft-icon-128-128-transparent.png</value>
-			<key>Exec</key>
-			<value>${installdir}/@linux.shortcut.name@</value>
-			<key>Terminal</key>
-			<value>false</value>
-			<ruleList>
+
+		<if>
+			<actionList>
+				<iniFileSet>
+					<file>${desktop_path}/@product.short.name@-${product_version}.desktop
+					</file>
+					<section>Desktop Entry</section>
+					<key>Name</key>
+					<value>@product.short.name@-${product_version}</value>
+				</iniFileSet>
+				<iniFileSet>
+					<file>${desktop_path}/@product.short.name@-${product_version}.desktop
+					</file>
+					<section>Desktop Entry</section>
+					<key>Comment</key>
+					<value>@shortcut.comment@</value>
+				</iniFileSet>
+				<iniFileSet>
+					<file>${desktop_path}/@product.short.name@-${product_version}.desktop
+					</file>
+					<section>Desktop Entry</section>
+					<key>Icon</key>
+					<value>${installdir}/bonitasoft-icon-128-128-transparent.png</value>
+				</iniFileSet>
+				<iniFileSet>
+					<file>${desktop_path}/@product.short.name@-${product_version}.desktop
+					</file>
+					<section>Desktop Entry</section>
+					<key>Exec</key>
+					<value>${installdir}/@linux.shortcut.name@</value>
+				</iniFileSet>
+				<iniFileSet>
+					<file>${desktop_path}/@product.short.name@-${product_version}.desktop
+					</file>
+					<section>Desktop Entry</section>
+					<key>Terminal</key>
+					<value>false</value>
+				</iniFileSet>
+			</actionList>
+			<conditionRuleList>
 				<platformTest>
 					<type>linux</type>
 				</platformTest>
-			</ruleList>
-		</iniFileSet>
+			</conditionRuleList>
+		</if>
+		
 	</postInstallationActionList>
 		<postBuildActionList>
 	<actionGroup>
