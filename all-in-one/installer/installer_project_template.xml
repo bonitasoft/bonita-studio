@@ -139,17 +139,15 @@
 				</programTest>
 			</ruleList>
 		</setInstallerVariableFromScriptOutput>
-		
-
 		<if>
 			<actionList>
 				<setInstallerVariableFromScriptOutput>
-			<exec>xdg-user-dir</exec>
-			<execArgs>DESKTOP</execArgs>
-			<name>desktop_path</name>
-			<abortOnError>0</abortOnError>
-			<showMessageOnError>0</showMessageOnError>
-		</setInstallerVariableFromScriptOutput>
+					<exec>xdg-user-dir</exec>
+					<execArgs>DESKTOP</execArgs>
+					<name>desktop_path</name>
+					<abortOnError>0</abortOnError>
+					<showMessageOnError>0</showMessageOnError>
+				</setInstallerVariableFromScriptOutput>
 			</actionList>
 			<conditionRuleList>
 				<platformTest>
@@ -161,7 +159,7 @@
 				</programTest>
 			</conditionRuleList>
 			<elseActionList>
-				 <setInstallerVariable name="desktop_path" value="${installdir}"/>
+				<setInstallerVariable name="desktop_path" value="${installdir}" />
 			</elseActionList>
 		</if>
 		<iniFileSet>
