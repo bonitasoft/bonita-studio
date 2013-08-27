@@ -25,6 +25,9 @@ import java.util.List;
  */
 public class ProductVersion {
 
+	//OEM Variable to be use for redirect urls
+	public static final String REDIRECT_URL_PRODUCT_ID = "bos";
+	
     public static final String VERSION_5_0_PREVIEW = "5.0.preview";
     public static final String VERSION_5_0_M4 = "5.0.M4";
     public static final String VERSION_5_0_M5 = "5.0.M5";
@@ -53,6 +56,7 @@ public class ProductVersion {
     public static final String CURRENT_VERSION = VERSION_6_1_0;
 
     public static final List<String> orderedVerions = new ArrayList<String>();
+
     static{
     	orderedVerions.add(VERSION_6_0_0_ALPHA);
     	orderedVerions.add(VERSION_6_0_0_BETA);

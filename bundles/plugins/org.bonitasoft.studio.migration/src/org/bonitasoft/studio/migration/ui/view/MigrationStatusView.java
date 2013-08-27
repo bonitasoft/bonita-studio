@@ -197,7 +197,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);				
-				MessageDialogWithToggle mdwt = MessageDialogWithToggle.openYesNoQuestion(
+				MessageDialogWithToggle mdwt = MessageDialogWithToggle.openOkCancelConfirm(
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
 						Messages.completeImport,
 						Messages.completeImportMessage,

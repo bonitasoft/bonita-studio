@@ -18,6 +18,8 @@
 
 package org.bonitasoft.studio.connectors.ui.wizard;
 
+import java.util.ArrayList;
+
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.ui.wizard.command.ChangeConnectorContainerCommand;
 import org.bonitasoft.studio.connectors.ui.wizard.page.ConnectorContainerSwitchWizardPage;
@@ -41,13 +43,19 @@ public class ConnectorContainerSwitchWizard extends Wizard implements IWizard {
     private final TransactionalEditingDomain editingDomain;
 
     public ConnectorContainerSwitchWizard(TransactionalEditingDomain editingDomain,AbstractProcess parentProcess) {
-        sourceProcess = parentProcess ;
+        this.sourceProcess = parentProcess ;
         this.editingDomain = editingDomain ;
+        page = new ConnectorContainerSwitchWizardPage(sourceProcess);
     }
 
-    @Override
+    public ConnectorContainerSwitchWizard(TransactionalEditingDomain editingDomain, AbstractProcess parentProcess, Connector selectedConnector) {
+        this.sourceProcess = parentProcess ;
+        this.editingDomain = editingDomain ;
+        page = new ConnectorContainerSwitchWizardPage(sourceProcess, selectedConnector);
+	}
+
+	@Override
     public void addPages() {
-        page = new ConnectorContainerSwitchWizardPage(sourceProcess);
         addPage(page);
     }
 

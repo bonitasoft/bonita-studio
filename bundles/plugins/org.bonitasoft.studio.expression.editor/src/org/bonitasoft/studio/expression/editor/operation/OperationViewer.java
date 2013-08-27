@@ -112,9 +112,6 @@ public class OperationViewer extends Composite {
 			if(actionExpressionProvider != null){
 				actionExpression.setExpressionNatureProvider(actionExpressionProvider);
 			}
-//			if(eObjectContext!= null){
-//				actionExpression.setContext(eObjectContext);
-//			}
 			actionExpression.setInput(getEObject()) ;
 			if(storageExpressionProvider != null){
 				storageViewer.setExpressionNatureProvider(storageExpressionProvider);
@@ -299,6 +296,25 @@ public class OperationViewer extends Composite {
 		if(storageExpressionFilter != null){
 			storageViewer.addFilter(storageExpressionFilter) ;
 		}
+		storageViewer.getEraseControl().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Operation action = getOperation();
+				if(action != null){
+					final Operator op = action.getOperator();
+					if(op != null){
+						if(editingDomain !=null){
+							editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, op, ExpressionPackage.Literals.OPERATOR__TYPE, ExpressionConstants.ASSIGNMENT_OPERATOR));
+						}else{
+							op.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
+						}
+						operatorLink.setText("<A>"+labelProvider.getText(op)+"</A>") ;
+						actionExpression.validate();
+						operatorLink.getParent().layout(true, true) ;
+					}
+				}
+			}
+		});
 		return storageViewer;
 	}
 
