@@ -166,7 +166,7 @@
 		<if>
 			<actionList>
 			<writeFile>
-				<path>/usr/share/applications/@product.short.name@-${product_version}.desktop</path>
+				<path>~/.local/share/applications/@product.short.name@-${product_version}.desktop</path>
 				<encoding>utf-8</encoding>
 				<text>
 					[Desktop Entry]
@@ -182,7 +182,7 @@
 				</text>
 			</writeFile>
 			<copyFile>
-				<origin>/usr/share/applications/@product.short.name@-${product_version}.desktop</origin>
+				<origin>~/.local/share/applications/@product.short.name@-${product_version}.desktop</origin>
 				<destination>${desktop_path}/@product.short.name@-${product_version}.desktop</destination>
 			</copyFile>
 			</actionList>
