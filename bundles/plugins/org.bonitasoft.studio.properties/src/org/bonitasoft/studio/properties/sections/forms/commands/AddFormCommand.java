@@ -16,7 +16,11 @@
  */
 package org.bonitasoft.studio.properties.sections.forms.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,8 +162,19 @@ public class AddFormCommand extends AbstractTransactionalCommand {
 
 
         Widget tempWidget = null;
+        
         Set<Entry<Element,WidgetEnum>> entrySet = vars.entrySet();
-        for (Entry<Element, WidgetEnum> entry : entrySet) {
+        List<Entry<Element,WidgetEnum>> entryList = new ArrayList<Entry<Element,WidgetEnum>>(entrySet);
+        		//new ArrayList(vars.entrySet());
+        Collections.sort(entryList, new Comparator<Entry<Element,WidgetEnum>>() {
+			@Override
+			public int compare(Entry<Element, WidgetEnum> o1,
+					Entry<Element, WidgetEnum> o2) {
+				return o1.getKey().getName().compareTo(o2.getKey().getName());
+			}
+		});
+        
+        for (Entry<Element, WidgetEnum> entry : entryList) {
             final Element key = entry.getKey();
             switch (entry.getValue()) {
                 case TEXT_AREA:
