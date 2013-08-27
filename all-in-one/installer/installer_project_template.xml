@@ -165,42 +165,26 @@
 
 		<if>
 			<actionList>
-				<iniFileSet>
-					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
-					<section>Desktop Entry</section>
-					<key>Name</key>
-					<value>@product.short.name@-${product_version}</value>
-				</iniFileSet>
-				<iniFileSet>
-					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
-					<section>Desktop Entry</section>
-					<key>Comment</key>
-					<value>@shortcut.comment@</value>
-				</iniFileSet>
-				<iniFileSet>
-					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
-					<section>Desktop Entry</section>
-					<key>Icon</key>
-					<value>${installdir}/bonitasoft-icon-128-128-transparent.png</value>
-				</iniFileSet>
-				<iniFileSet>
-					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
-					<section>Desktop Entry</section>
-					<key>Exec</key>
-					<value>${installdir}/@linux.shortcut.name@</value>
-				</iniFileSet>
-				<iniFileSet>
-					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
-					<section>Desktop Entry</section>
-					<key>Terminal</key>
-					<value>false</value>
-				</iniFileSet>
-				<iniFileSet>
-					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
-					<section>Desktop Entry</section>
-					<key>Type</key>
-					<value>Application</value>
-				</iniFileSet>
+			<writeFile>
+				<path>/usr/share/applications/@product.short.name@-${product_version}.desktop</path>
+				<encoding>utf-8</encoding>
+				<text>
+					[Desktop Entry]
+					Version=1.0
+					Encoding=UTF-8
+					Name=@product.short.name@-${product_version}
+					GenericName=@product.short.name@-${product_version}
+					Comment=@shortcut.comment@
+					Exec=${installdir}/@linux.shortcut.name@
+					Icon=${installdir}/bonitasoft-icon-128-128-transparent.png
+					Terminal=false
+					Type=Application
+				</text>
+			</writeFile>
+			<copyFile>
+				<origin>/usr/share/applications/@product.short.name@-${product_version}.desktop</origin>
+				<destination>${desktop_path}/@product.short.name@-${product_version}.desktop</destination>
+			</copyFile>
 			</actionList>
 			<conditionRuleList>
 				<platformTest>
