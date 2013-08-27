@@ -166,39 +166,40 @@
 		<if>
 			<actionList>
 				<iniFileSet>
-					<file>${desktop_path}/@product.short.name@-${product_version}.desktop
-					</file>
+					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
 					<section>Desktop Entry</section>
 					<key>Name</key>
 					<value>@product.short.name@-${product_version}</value>
 				</iniFileSet>
 				<iniFileSet>
-					<file>${desktop_path}/@product.short.name@-${product_version}.desktop
-					</file>
+					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
 					<section>Desktop Entry</section>
 					<key>Comment</key>
 					<value>@shortcut.comment@</value>
 				</iniFileSet>
 				<iniFileSet>
-					<file>${desktop_path}/@product.short.name@-${product_version}.desktop
-					</file>
+					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
 					<section>Desktop Entry</section>
 					<key>Icon</key>
 					<value>${installdir}/bonitasoft-icon-128-128-transparent.png</value>
 				</iniFileSet>
 				<iniFileSet>
-					<file>${desktop_path}/@product.short.name@-${product_version}.desktop
-					</file>
+					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
 					<section>Desktop Entry</section>
 					<key>Exec</key>
 					<value>${installdir}/@linux.shortcut.name@</value>
 				</iniFileSet>
 				<iniFileSet>
-					<file>${desktop_path}/@product.short.name@-${product_version}.desktop
-					</file>
+					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
 					<section>Desktop Entry</section>
 					<key>Terminal</key>
 					<value>false</value>
+				</iniFileSet>
+				<iniFileSet>
+					<file>${desktop_path}/@product.short.name@-${product_version}.desktop</file>
+					<section>Desktop Entry</section>
+					<key>Type</key>
+					<value>Application</value>
 				</iniFileSet>
 			</actionList>
 			<conditionRuleList>
