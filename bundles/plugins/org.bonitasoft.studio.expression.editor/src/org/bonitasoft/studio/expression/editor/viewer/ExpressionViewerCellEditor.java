@@ -55,10 +55,9 @@ import org.eclipse.swt.widgets.Text;
 public class ExpressionViewerCellEditor extends CellEditor {
 
 	private final EditingDomain editingDomain;
-	private ExpressionViewer viewer;
+	private CellExpressionViewer viewer;
 	private Listener focusListener;
 	private final ColumnViewer columnViewer;
-	private final int colIndex;
 	private ControlDecoration deleteRow;
 	private SelectionListener removeRowListener;
 	private Composite parent;
@@ -69,7 +68,7 @@ public class ExpressionViewerCellEditor extends CellEditor {
 		this.editingDomain = editingDomain;
 		viewer.setEditingDomain(editingDomain);
 		this.columnViewer = columnViewer;
-		this.colIndex=colIndex;
+		viewer.setColumnViewer(columnViewer);
 		this.removeRowListener = null;
 		this.parent  = parent;
 	}
@@ -129,9 +128,7 @@ public class ExpressionViewerCellEditor extends CellEditor {
 			}
 		}
 
-		viewer = new CellExpressionViewer(parent, SWT.NONE, null, editingDomain,
-				null,colIndex);
-
+		viewer = new CellExpressionViewer(parent, SWT.NONE, null, editingDomain,null);
 
 		final Text text = viewer.getTextControl();
 		text.addSelectionListener(new SelectionAdapter() {

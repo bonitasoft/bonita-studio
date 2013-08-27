@@ -27,10 +27,16 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.ImageWidget;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -91,7 +97,7 @@ public class ImageWidgetInitialValueContribution extends InitialValueContributio
 				}
 			}
 		});
-	
+		
 	}
 
 	protected GridLayout getCompositeLayout() {
@@ -113,9 +119,26 @@ public class ImageWidgetInitialValueContribution extends InitialValueContributio
 			dataBindingContext.bindValue(
 					ViewersObservables.observeSingleSelection(expressionViewer),
 					EMFEditProperties.value(editingDomain, FormPackage.Literals.IMAGE_WIDGET__IMG_PATH).observe(input));
-
+			
+			UpdateValueStrategy updateValue = new UpdateValueStrategy(){
+				@Override
+				public Object convert(Object value) {
+					if(value instanceof Boolean){
+						return !Boolean.valueOf((Boolean) value) ;
+					}
+					return super.convert(value);
+				}
+			};	
+			
+			dataBindingContext.bindValue(
+					WidgetProperties.enabled().observe(browse), 
+					EMFEditObservables.observeValue(editingDomain,widget, FormPackage.Literals.IMAGE_WIDGET__IS_ADOCUMENT), 
+					updateValue,
+					updateValue);		
+			
 			expressionViewer.setSelection(new StructuredSelection(input)) ;
-		}
+			
+			}
 	}
 
 	@Override

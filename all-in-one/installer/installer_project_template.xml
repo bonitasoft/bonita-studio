@@ -130,7 +130,72 @@
 				</platformTest>
 			</ruleList>
 		</createSymLink>
-		
+		<setInstallerVariableFromScriptOutput>
+			<exec>xdg-user-dir</exec>
+			<execArgs>DESKTOP</execArgs>
+			<name>desktop_path</name>
+			<abortOnError>0</abortOnError>
+			<showMessageOnError>0</showMessageOnError>
+			<ruleList>
+				<platformTest>
+					<type>linux</type>
+				</platformTest>
+				<programTest>
+					<condition>is_in_path</condition>
+					<name>xdg-user-dir</name>
+				</programTest>
+			</ruleList>
+		</setInstallerVariableFromScriptOutput>
+		<if>
+			<actionList>
+				<setInstallerVariableFromScriptOutput>
+					<exec>xdg-user-dir</exec>
+					<execArgs>DESKTOP</execArgs>
+					<name>desktop_path</name>
+					<abortOnError>0</abortOnError>
+					<showMessageOnError>0</showMessageOnError>
+				</setInstallerVariableFromScriptOutput>
+			</actionList>
+			<conditionRuleList>
+				<platformTest>
+					<type>linux</type>
+				</platformTest>
+				<programTest>
+					<condition>is_in_path</condition>
+					<name>xdg-user-dir</name>
+				</programTest>
+			</conditionRuleList>
+			<elseActionList>
+				<setInstallerVariable name="desktop_path" value="${installdir}" />
+			</elseActionList>
+		</if>
+
+		<if>
+			<actionList>
+			<writeFile>
+				<path>${desktop_path}/@product.short.name@-${product_version}.desktop</path>
+				<encoding>utf-8</encoding>
+				<text>
+					[Desktop Entry]
+					Version=1.0
+					Encoding=UTF-8
+					Name=@product.short.name@-${product_version}
+					GenericName=@product.short.name@-${product_version}
+					Comment=@shortcut.comment@
+					Exec=${installdir}/@linux.shortcut.name@
+					Icon=${installdir}/bonitasoft-icon-128-128-transparent.png
+					Terminal=false
+					Type=Application
+				</text>
+			</writeFile>
+			<changePermissions permissions="0755" files="${desktop_path}/@product.short.name@-${product_version}.desktop"/>
+			</actionList>
+			<conditionRuleList>
+				<platformTest>
+					<type>linux</type>
+				</platformTest>
+			</conditionRuleList>
+		</if>
 		
 	</postInstallationActionList>
 		<postBuildActionList>
