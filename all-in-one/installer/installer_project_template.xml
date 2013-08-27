@@ -123,6 +123,25 @@
 				</platformTest>
 			</ruleList>
 		</createSymLink>
+		<iniFileSet>
+			<file>$HOME/Desktop/@product.short.name@-${product_version}.desktop</file>
+			<section>Desktop Entry</section>
+			<key>Name</key>
+			<value>@product.short.name@-${product_version}</value>
+			<key>Comment</key>
+			<value>@shortcut.comment@</value>
+			<key>Icon</key>
+			<value>${installdir}/bonitasoft-icon-128-128-transparent.png</value>
+			<key>Exec</key>
+			<value>${installdir}/@linux.shortcut.name@</value>
+			<key>Terminal</key>
+			<value>false</value>
+			<ruleList>
+				<platformTest>
+					<type>linux</type>
+				</platformTest>
+			</ruleList>
+		</iniFileSet>
 	</postInstallationActionList>
 		<postBuildActionList>
 	<actionGroup>
