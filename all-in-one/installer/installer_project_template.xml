@@ -166,7 +166,7 @@
 		<if>
 			<actionList>
 			<writeFile>
-				<path>~/.local/share/applications/@product.short.name@-${product_version}.desktop</path>
+				<path>${desktop_path}/@product.short.name@-${product_version}.desktop</path>
 				<encoding>utf-8</encoding>
 				<text>
 					[Desktop Entry]
@@ -181,10 +181,7 @@
 					Type=Application
 				</text>
 			</writeFile>
-			<copyFile>
-				<origin>~/.local/share/applications/@product.short.name@-${product_version}.desktop</origin>
-				<destination>${desktop_path}/@product.short.name@-${product_version}.desktop</destination>
-			</copyFile>
+			<changePermissions permissions="0755" files="${desktop_path}/@product.short.name@-${product_version}.desktop"/>
 			</actionList>
 			<conditionRuleList>
 				<platformTest>
