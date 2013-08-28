@@ -421,7 +421,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="HtmlWidget" eSuperTypes="#//Info #//Duplicable"/>
+  <eClassifiers xsi:type="ecore:EClass" name="HtmlWidget" eSuperTypes="#//Info"/>
   <eClassifiers xsi:type="ecore:EClass" name="SuggestBox" eSuperTypes="#//MultipleValuatedFormField">
     <eOperations name="getAssociatedReturnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
