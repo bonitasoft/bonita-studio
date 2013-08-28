@@ -205,7 +205,7 @@ public class MigrationStatusView extends ViewPart implements ISelectionListener,
 						true,
 						MigrationPlugin.getDefault().getPreferenceStore(),
 						"toggleStateForImportExportStatus");
-				if(IDialogConstants.YES_ID == mdwt.getReturnCode()){
+				if(IDialogConstants.OK_ID== mdwt.getReturnCode()){
 					if(mdwt.getToggleState()){
 						exportAction.run();
 					}
