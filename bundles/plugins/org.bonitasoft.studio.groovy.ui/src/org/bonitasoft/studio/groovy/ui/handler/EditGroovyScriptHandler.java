@@ -19,6 +19,7 @@ package org.bonitasoft.studio.groovy.ui.handler;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.groovy.GroovyDocumentUtil;
 import org.bonitasoft.studio.groovy.repository.GroovyFileStore;
@@ -68,12 +69,21 @@ public class EditGroovyScriptHandler extends AbstractHandler {
                     if(bonitaGroovyEditorDialog.open() == Dialog.OK){
                         try {
                             String expression = bonitaGroovyEditorDialog.getExpression().getContent();
+                            FileActionDialog.setDisablePopup(true);
                             groovyScriptArtifact.save(expression);
                             GroovyDocumentUtil.refreshUserLibrary();
                         } catch (Exception e) {
                             BonitaStudioLog.error(e);
+                        }finally{
+                        	FileActionDialog.setDisablePopup(false);
+                        	
                         }
                     }
+                    try {
+						new EditGroovyScriptHandler().execute(null);
+					} catch (ExecutionException e) {
+						BonitaStudioLog.error(e);
+					}
                 }
 
             });
