@@ -192,7 +192,7 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 			if(ep instanceof IGraphicalEditPart){
 				Location loc = (Location) ((Node)((IGraphicalEditPart) ep).getNotationView()).getLayoutConstraint() ;
 				Point newLoc = FiguresHelper.handleCompartmentMargin((IGraphicalEditPart) ep, loc.getX(), loc.getY(),(((IGraphicalEditPart) ep).resolveSemanticElement() instanceof SubProcessEvent)) ;
-				if(((IGraphicalEditPart) ep).getParent() instanceof ShapeCompartmentEditPart){
+				if(((IGraphicalEditPart) ep).getParent() instanceof ShapeCompartmentEditPart && !(((IGraphicalEditPart)((IGraphicalEditPart) ep).getParent()).resolveSemanticElement() instanceof SubProcessEvent)){
 					ShapeCompartmentEditPart compartment = (ShapeCompartmentEditPart) ((IGraphicalEditPart) ep).getParent();
 					while(newLoc.y + 65 > compartment.getFigure().getBounds().height){
 						newLoc.y = newLoc.y -10;
