@@ -18,6 +18,9 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.SearchIndex;
+import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -714,12 +717,29 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 						try {
 							final IProposalListener listener = (IProposalListener) element.createExecutableExtension("providerClass");
 							createDataLink.addSelectionListener(new SelectionAdapter() {
-							
-
 								@Override
 								public void widgetSelected(SelectionEvent e) {
 									linkClicked = true;
-									final String newObjectLabel = listener.handleEvent(context);
+									String fixedReturnType = null;
+									final Object[] listenerArray = proposalListeners.getListeners();
+									for (int i = 0; i < listenerArray.length; i++) {
+										IContentProposalListener listener = (IContentProposalListener) listenerArray[i];
+										if (listener instanceof ExpressionViewer) {
+											ExpressionViewer expViewer = (ExpressionViewer) listener;
+											Expression exp = null;
+											if(expViewer.getInput() instanceof Expression){
+												exp = (Expression) expViewer.getInput();
+											} else if(expViewer.getInput() instanceof SearchIndex){
+												exp = ((SearchIndex)expViewer.getInput()).getValue();
+											} else if(expViewer.getInput() instanceof SequenceFlow){
+												exp = ((SequenceFlow)expViewer.getInput()).getCondition();
+											}
+											if(exp !=null && exp.isReturnTypeFixed()){
+												fixedReturnType = exp.getReturnType();
+											}
+										}
+									}
+									final String newObjectLabel = listener.handleEvent(context, fixedReturnType);
 									updateExpressionField(newObjectLabel);
 									linkClicked=false;
 								}

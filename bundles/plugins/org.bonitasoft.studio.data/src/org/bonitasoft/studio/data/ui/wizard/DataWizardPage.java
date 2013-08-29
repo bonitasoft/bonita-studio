@@ -71,6 +71,8 @@ import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.XMLType;
+import org.bonitasoft.studio.model.process.impl.DataTypeImpl;
+import org.bonitasoft.studio.model.process.impl.StringTypeImpl;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -94,6 +96,7 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
@@ -178,6 +181,7 @@ public class DataWizardPage extends WizardPage {
 	private Button multiplicityButton;
 	private ControlDecoration typeDescriptionDecorator;
 	private WizardPageSupport pageSupport;
+	private String fixedReturnType;
 
 	private final ViewerFilter typeViewerFilter = new ViewerFilter() {
 
@@ -186,7 +190,6 @@ public class DataWizardPage extends WizardPage {
 			if (!allowXML && element instanceof XMLType) {
 				return false;
 			}
-
 			if (!allowEnum && element instanceof EnumType) {
 				return false;
 			}
@@ -231,17 +234,12 @@ public class DataWizardPage extends WizardPage {
 	};
 
 	private ToolItem separator;
-
 	private Composite defaultValueComposite;
-
 	private ToolBar xmlToolbar;
-
 	private Composite mainComposite;
 
-
-
 	public DataWizardPage(final Data data, final EObject container, final boolean allowXML, final boolean allowEnum, final boolean showIsTransient,
-			final boolean showAutoGenerateform, final Set<EStructuralFeature> featureToCheckForUniqueID) {
+			final boolean showAutoGenerateform, final Set<EStructuralFeature> featureToCheckForUniqueID, String fixedReturnType) {
 		super(DataWizardPage.class.getName());
 		this.container = container;
 		setTitle(Messages.bind(Messages.addDataWizardTitle, getCurrentDataAwareContextName()));
@@ -252,6 +250,7 @@ public class DataWizardPage extends WizardPage {
 		this.allowEnum = allowEnum;
 		this.showIsTransient = showIsTransient;
 		this.showAutoGenerateform = showAutoGenerateform;
+		this.fixedReturnType = fixedReturnType;
 	}
 	
 	private String getCurrentDataAwareContextName(){
@@ -346,6 +345,19 @@ public class DataWizardPage extends WizardPage {
 		createDataOptions(mainComposite);
 
 		updateDatabinding();
+		
+		if(fixedReturnType!=null){
+			for (Object object : (EObjectContainmentEList)typeCombo.getInput()) {
+				final DataType type = (DataType) object;
+				if(fixedReturnType.equals(String.class.getName()) && type.getName().equals("Text")){
+					typeCombo.setSelection(new StructuredSelection(type));
+					break;
+				} else if(fixedReturnType.equals(Boolean.class.getName()) && type.getName().equals("Boolean")){
+					typeCombo.setSelection(new StructuredSelection(type));
+					break;
+				}
+			}			
+		}		
 		setControl(mainComposite);
 	}
 
@@ -373,13 +385,13 @@ public class DataWizardPage extends WizardPage {
 
 			bindNameAndDescription();
 			bindGenerateDataCheckbox();
-			bindDataTypeCombo();
 			bindJavaClassText();
 			bindXSDCombo();
 			bindTransientButton();
 			bindDefaultValueViewer();
 			bindIsMultipleData();
-
+			bindDataTypeCombo();
+			
 			typeDescriptionDecorator.setDescriptionText(getHintFor(data.getDataType()));
 
 			MultiValidator returnTypeValidator = new MultiValidator() {

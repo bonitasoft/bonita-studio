@@ -38,7 +38,6 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.impl.FormImpl;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -184,9 +183,16 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 		Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
 		res.add(ProcessPackage.Literals.DATA_AWARE__DATA);
 
-		DataWizardDialog wizardDialog = new DataWizardDialog(Display
+		DataWizardDialog wizardDialog = null;
+		if (editorInputExpression.isReturnTypeFixed()) {
+		wizardDialog = new DataWizardDialog(Display
 				.getCurrent().getActiveShell(), new DataWizard(container, feat,
-				res, true), null);
+				res, true, editorInputExpression.getReturnType()), null);
+		} else {
+			wizardDialog = new DataWizardDialog(Display
+					.getCurrent().getActiveShell(), new DataWizard(container, feat,
+					res, true), null);
+		}
 		if (wizardDialog.open() == Dialog.OK) {
 			fillViewerData(context, filters);
 		}
