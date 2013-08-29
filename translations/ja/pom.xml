@@ -15,8 +15,6 @@
 
 
 	<modules>
-		<module>org.bonitasoft.studio-models.nl_ja</module>
-		<module>org.bonitasoft.studio-product.nl_ja</module>
 		<module>org.bonitasoft.studio.actors.nl_ja</module>
 		<module>org.bonitasoft.studio.application.nl_ja</module>
 		<module>org.bonitasoft.studio.common.nl_ja</module>
@@ -28,7 +26,6 @@
 		<module>org.bonitasoft.studio.connectors.nl_ja</module>
 		<module>org.bonitasoft.studio.connectors.model.nl_ja</module>
 		<module>org.bonitasoft.studio.connectors.model.edit.nl_ja</module>
-		<module>org.bonitasoft.studio.console.libs.nl_ja</module>
 		<module>org.bonitasoft.studio.data.nl_ja</module>
 		<module>org.bonitasoft.studio.debug.nl_ja</module>
 		<module>org.bonitasoft.studio.decision.core.nl_ja</module>
@@ -52,24 +49,19 @@
 		<module>org.bonitasoft.studio.intro.nl_ja</module>
 		<module>org.bonitasoft.studio.jpdl.nl_ja</module>
 		<module>org.bonitasoft.studio.migration.nl_ja</module>
-		<module>org.bonitasoft.studio.model.nl_ja</module>
 		<module>org.bonitasoft.studio.model.edit.nl_ja</module>
 		<module>org.bonitasoft.studio.model.edit.custom.nl_ja</module>
-		<module>org.bonitasoft.studio.pics.nl_ja</module>
 		<module>org.bonitasoft.studio.preferences.nl_ja</module>
 		<module>org.bonitasoft.studio.presentation.nl_ja</module>
 		<module>org.bonitasoft.studio.profiles.nl_ja</module>
 		<module>org.bonitasoft.studio.properties.nl_ja</module>
-		<module>org.bonitasoft.studio.properties.bos.nl_ja</module>
 		<module>org.bonitasoft.studio.registration.nl_ja</module>
 		<module>org.bonitasoft.studio.repository.themes.nl_ja</module>
 		<module>org.bonitasoft.studio.scripting.nl_ja</module>
 		<module>org.bonitasoft.studio.simulation.nl_ja</module>
-		<module>org.bonitasoft.studio.simulation.libs.nl_ja</module>
 		<module>org.bonitasoft.studio.validation.nl_ja</module>
 		<module>org.bonitasoft.studio.validators.nl_ja</module>
 		<module>org.bonitasoft.studio.xml.nl_ja</module>
-		<module>org.bonitasoft.studio.xpdl.nl_ja</module>
 		<module>org.omg.schema.spec.bpmn.nl_ja</module>
 	</modules>
 
