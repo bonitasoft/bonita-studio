@@ -23,7 +23,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
-import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.wizard.AbstractConnectorConfigurationWizardPage;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectConnectorConfigurationWizard;
 import org.bonitasoft.studio.connector.model.definition.wizard.SelectNameAndDescWizardPage;
@@ -59,100 +58,98 @@ import org.eclipse.swt.widgets.ToolItem;
  */
 public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
 
-    private ToolItem loadItem;
-    private ToolItem saveItem;
-    private ToolItem testItem;
-    private ToolBar toolbar;
-    private SaveConfigurationListener saveConfigurationListener;
-    private final IRepositoryStore<? extends IRepositoryFileStore> configurationStore;
-    private Listener testConfigurationListener;
-    private final IImplementationRepositoryStore implStore;
-    private final IDefinitionRepositoryStore definitionRepositoryStore;
+	private ToolItem loadItem;
+	private ToolItem saveItem;
+	private ToolItem testItem;
+	private ToolBar toolbar;
+	private SaveConfigurationListener saveConfigurationListener;
+	private final IRepositoryStore<? extends IRepositoryFileStore> configurationStore;
+	private Listener testConfigurationListener;
+	private final IImplementationRepositoryStore implStore;
+	private final IDefinitionRepositoryStore definitionRepositoryStore;
 	private List<ConnectorDefinition> existingDefinitions;
 
-    public AbstractDefinitionWizardDialog(Shell parentShell, IWizard newWizard,IRepositoryStore<? extends IRepositoryFileStore> configurationStore,IRepositoryStore definitionRepositoryStore, IImplementationRepositoryStore implStore) {
-        super(parentShell, newWizard);
-        this.configurationStore = configurationStore ;
-        this.definitionRepositoryStore = (IDefinitionRepositoryStore) definitionRepositoryStore;
-        this.implStore = implStore ;
-        this.existingDefinitions = this.definitionRepositoryStore.getDefinitions();
-    }
+	public AbstractDefinitionWizardDialog(Shell parentShell, IWizard newWizard,IRepositoryStore<? extends IRepositoryFileStore> configurationStore,IRepositoryStore definitionRepositoryStore, IImplementationRepositoryStore implStore) {
+		super(parentShell, newWizard);
+		this.configurationStore = configurationStore ;
+		this.definitionRepositoryStore = (IDefinitionRepositoryStore) definitionRepositoryStore;
+		this.implStore = implStore ;
+		this.existingDefinitions = this.definitionRepositoryStore.getDefinitions();
+	}
 
-    @Override
-    protected Control createButtonBar(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayout layout = new GridLayout();
-        layout.marginWidth = 0;
-        layout.marginHeight = 0;
-        layout.horizontalSpacing = 0;
-        layout.marginLeft = 5 ;
-        layout.numColumns ++ ;
-        composite.setLayout(layout);
-        composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-        composite.setFont(parent.getFont());
+	@Override
+	protected Control createButtonBar(Composite parent) {
+		Composite composite = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		layout.horizontalSpacing = 0;
+		layout.marginLeft = 5 ;
+		layout.numColumns ++ ;
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		composite.setFont(parent.getFont());
 
-        createToolbar(composite) ;
+		createToolbar(composite) ;
 
-        Control buttonSection = super.createButtonBar(composite);
-        ((GridData) buttonSection.getLayoutData()).grabExcessHorizontalSpace = true;
-        return composite;
-    }
+		Control buttonSection = super.createButtonBar(composite);
+		((GridData) buttonSection.getLayoutData()).grabExcessHorizontalSpace = true;
+		return composite;
+	}
 
 
 
-    protected void createToolbar(Composite parent) {
-        toolbar = new ToolBar(parent, SWT.FLAT) ;
-        toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(true, false).create());
+	protected void createToolbar(Composite parent) {
+		toolbar = new ToolBar(parent, SWT.FLAT) ;
+		toolbar.setLayoutData(GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).grab(true, false).create());
 
-        loadItem = new ToolItem(toolbar, SWT.NO_FOCUS | SWT.FLAT) ;
-        loadItem.setImage(Pics.getImage("load_conf.png")) ;
-        loadItem.setText(Messages.loadConfiguration) ;
-        loadItem.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                IWizardPage page = getCurrentPage() ;
-                if(page instanceof AbstractConnectorConfigurationWizardPage){
-                    AbstractConnectorConfigurationWizardPage connectorConfPage = (AbstractConnectorConfigurationWizardPage) page ;
-                    final ConnectorConfiguration connectorConfigurationToLoad = connectorConfPage.getConfiguration();
+		loadItem = new ToolItem(toolbar, SWT.NO_FOCUS | SWT.FLAT) ;
+		loadItem.setImage(Pics.getImage("load_conf.png")) ;
+		loadItem.setText(Messages.loadConfiguration) ;
+		loadItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IWizardPage page = getCurrentPage() ;
+				if(page instanceof AbstractConnectorConfigurationWizardPage){
+					AbstractConnectorConfigurationWizardPage connectorConfPage = (AbstractConnectorConfigurationWizardPage) page ;
+					final ConnectorConfiguration connectorConfigurationToLoad = connectorConfPage.getConfiguration();
 					SelectConnectorConfigurationWizard wizard = new SelectConnectorConfigurationWizard(connectorConfigurationToLoad,configurationStore) ;
-                    WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard) ;
-                    if(dialog.open() == Dialog.OK){
-                        IConnectorDefinitionContainer connectorWizard = (IConnectorDefinitionContainer) getWizard() ;
-                        ConnectorDefinition def = connectorWizard.getDefinition() ;
-                        IWizardPage namePage = getWizard().getPage(SelectNameAndDescWizardPage.class.getName()) ;
-                        if(namePage != null){
-                        	IWizardPage previousNamePage =  namePage.getPreviousPage() ;
-                        	showPage(namePage) ;
-                        	namePage.setPreviousPage(previousNamePage) ;
-                        	connectorWizard.recreateConnectorConfigurationPages(def,false) ;
-                        } else {
-                        	IWizardPage[] wizardPages = getWizard().getPages();
-                        	if(wizardPages.length > 1){
-                        		IWizardPage firstPage = wizardPages[0];
-                        		showPage(firstPage.getNextPage());
-                        	}
-                        }
-                        
-                        updateButtons() ;
-                    }
-                }
-            }
-        }) ;
+					WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard) ;
+					if(dialog.open() == Dialog.OK){
+						IConnectorDefinitionContainer connectorWizard = (IConnectorDefinitionContainer) getWizard() ;
+						ConnectorDefinition def = connectorWizard.getDefinition() ;
+						IWizardPage namePage = getWizard().getPage(SelectNameAndDescWizardPage.class.getName()) ;
+						if(namePage != null){
+							IWizardPage previousNamePage =  namePage.getPreviousPage() ;
+							showPage(namePage) ;
+							namePage.setPreviousPage(previousNamePage) ;
+							connectorWizard.recreateConnectorConfigurationPages(def,false) ;
+						} else {
+							IWizardPage[] wizardPages = getWizard().getPages();
+							if(wizardPages.length > 1){
+								IWizardPage firstPage = wizardPages[0];
+								showPage(firstPage.getNextPage());
+							}
+						}
 
-        saveItem = new ToolItem(toolbar, SWT.NO_FOCUS | SWT.FLAT) ;
-        saveItem.setImage(Pics.getImage("save_conf.png")) ;
-        saveItem.setText(Messages.saveConfiguration) ;
-        ITestConfigurationListener listener = getTestListener(null, (IWizard)null);
-        if(implStore != null && listener != null){
-            testItem = new ToolItem(toolbar, SWT.NO_FOCUS | SWT.FLAT) ;
-            testItem.setImage(Pics.getImage("test.png")) ;
-            testItem.setText(Messages.testConfiguration) ;
-            testItem.setEnabled(false);
-        }
-    }
+						updateButtons() ;
+					}
+				}
+			}
+		}) ;
 
-    
-    
+		saveItem = new ToolItem(toolbar, SWT.NO_FOCUS | SWT.FLAT) ;
+		saveItem.setImage(Pics.getImage("save_conf.png")) ;
+		saveItem.setText(Messages.saveConfiguration) ;
+		ITestConfigurationListener listener = getTestListener(null, (IWizard)null);
+		if(implStore != null && listener != null){
+			testItem = new ToolItem(toolbar, SWT.NO_FOCUS | SWT.FLAT) ;
+			testItem.setImage(Pics.getImage("test.png")) ;
+			testItem.setText(Messages.testConfiguration) ;
+			testItem.setEnabled(false);
+		}
+	}
+
     @Override
 	protected void nextPressed() {
 		if(this.getCurrentPage() instanceof AbstractDefinitionSelectionImpementationWizardPage){
@@ -177,55 +174,52 @@ public abstract class AbstractDefinitionWizardDialog extends WizardDialog {
             }
             saveConfigurationListener = new SaveConfigurationListener(this,connectorConfPage.getConfiguration(),configurationStore) ;
             saveItem.addListener(SWT.Selection,saveConfigurationListener) ;
+			if(implStore != null && testItem != null){
+				if(testConfigurationListener != null){
+					testItem.removeListener(SWT.Selection, testConfigurationListener) ;
+				}
 
-            if(implStore != null && testItem != null){
-                if(testConfigurationListener != null){
-                    testItem.removeListener(SWT.Selection, testConfigurationListener) ;
-                }
+				testConfigurationListener = getTestListener(connectorConfPage.getConfiguration(), getWizard()) ;
+				testItem.addListener(SWT.Selection,testConfigurationListener) ;
+				testItem.setEnabled(getButton(IDialogConstants.FINISH_ID).isEnabled());
+			}
+			String defId = connectorConfPage.getConfiguration().getDefinitionId() ;
+			String defVersion = connectorConfPage.getConfiguration().getVersion() ;
+			boolean confExists = false ;
+			for(IRepositoryFileStore file : configurationStore.getChildren()){
+				ConnectorConfiguration conf = (ConnectorConfiguration) file.getContent() ;
+				if(conf.getDefinitionId().equals(defId) && conf.getVersion().equals(defVersion)){
+					confExists = true ;
+					break ;
+				}
+			}
 
-                testConfigurationListener = getTestListener(connectorConfPage.getConfiguration(), getWizard()) ;
-                testItem.addListener(SWT.Selection,testConfigurationListener) ;
-                testItem.setEnabled(getButton(IDialogConstants.FINISH_ID).isEnabled());
-            }
-            String defId = connectorConfPage.getConfiguration().getDefinitionId() ;
-            String defVersion = connectorConfPage.getConfiguration().getVersion() ;
-            boolean confExists = false ;
-            for(IRepositoryFileStore file : configurationStore.getChildren()){
-                ConnectorConfiguration conf = (ConnectorConfiguration) file.getContent() ;
-                if(conf.getDefinitionId().equals(defId) && conf.getVersion().equals(defVersion)){
-                    confExists = true ;
-                    break ;
-                }
-            }
+			loadItem.setEnabled(confExists) ;
 
-            loadItem.setEnabled(confExists) ;
-
-        }else{
-            toolbar.setVisible(false) ;
-        }
-    }
+		}else{
+			toolbar.setVisible(false) ;
+		}
+	}
 
 
 
 	@Override
-    public void showPage(IWizardPage page) {
-        super.showPage(page);
-        if(page instanceof AbstractConnectorConfigurationWizardPage){
-            final AbstractConnectorConfigurationWizardPage connectorConfPage = (AbstractConnectorConfigurationWizardPage) page ;
-            final String defId = connectorConfPage.getConfiguration().getDefinitionId();
-            final String defVersion = connectorConfPage.getConfiguration().getVersion();
-            ConnectorDefinition defintion = definitionRepositoryStore.getDefinition(defId, defVersion, existingDefinitions);
-            IRepositoryFileStore def = ((IRepositoryStore<? extends IRepositoryFileStore>) definitionRepositoryStore).getChild(URI.decode(defintion.eResource().getURI().lastSegment()));
-            if(def != null){
-                final String displayName = def.getDisplayName();
-                if(!displayName.equals(getShell().getText())){
-                    getShell().setText(displayName);
-                }
-            }
-        }
-    }
+	public void showPage(IWizardPage page) {
+		super.showPage(page);
+		if(page instanceof AbstractConnectorConfigurationWizardPage || page instanceof SelectNameAndDescWizardPage){
+			final IConnectorDefinitionContainer wizard = (IConnectorDefinitionContainer) getWizard();
+			ConnectorDefinition defintion = wizard.getDefinition();
+			IRepositoryFileStore def = ((IRepositoryStore<? extends IRepositoryFileStore>) definitionRepositoryStore).getChild(URI.decode(defintion.eResource().getURI().lastSegment()));
+			if(def != null){
+				final String displayName = def.getDisplayName();
+				if(!displayName.equals(getShell().getText())){
+					getShell().setText(displayName);
+				}
+			}
+		}
+	}
 
 
-    protected abstract ITestConfigurationListener getTestListener(ConnectorConfiguration configuration, Connector connector) ;
-    protected abstract ITestConfigurationListener getTestListener(ConnectorConfiguration configuration,	IWizard wizard);
+	protected abstract ITestConfigurationListener getTestListener(ConnectorConfiguration configuration, Connector connector) ;
+	protected abstract ITestConfigurationListener getTestListener(ConnectorConfiguration configuration,	IWizard wizard);
 }
