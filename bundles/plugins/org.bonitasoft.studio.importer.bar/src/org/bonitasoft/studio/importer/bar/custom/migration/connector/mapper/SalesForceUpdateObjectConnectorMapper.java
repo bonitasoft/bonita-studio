@@ -60,6 +60,10 @@ public class SalesForceUpdateObjectConnectorMapper extends
 				map.put("password", password);
 				map.put("securityToken", securityToken);
 				return map;
+			} else {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("password", passwordAndSecurityToken);
+				return map;
 			}
 		}
 		return super.getAdditionalInputs(inputs);

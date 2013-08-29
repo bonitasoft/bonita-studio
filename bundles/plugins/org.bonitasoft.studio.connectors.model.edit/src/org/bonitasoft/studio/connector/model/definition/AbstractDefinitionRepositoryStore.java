@@ -1,3 +1,19 @@
+/**
+ * Copyright (C) 2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2.0 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.bonitasoft.studio.connector.model.definition;
 
 import java.io.File;
@@ -34,7 +50,9 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.osgi.framework.Bundle;
 
 public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T> implements IDefinitionRepositoryStore {
-
+	
+	private List<T> cachedFileStore = new ArrayList<T>();
+		
     @Override
     public List<ConnectorDefinition> getDefinitions() {
         final List<ConnectorDefinition> result = new ArrayList<ConnectorDefinition>();
@@ -76,23 +94,32 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
         }
         return null;
     }
-
+    
+    
+    
+    
     @Override
     public List<T> getChildren() {
         final List<T> result = super.getChildren();
-        Enumeration<URL> connectorDefs = getBundle().findEntries(getName(), "*.def", false);
-        if( connectorDefs != null ){
-            while (connectorDefs.hasMoreElements()) {
-                URL url = connectorDefs.nextElement();
-                String[] segments = url.getFile().split("/") ;
-                String fileName = segments[segments.length-1] ;
-                if(fileName.lastIndexOf(".") != -1){
-                    String extension = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()) ;
-                    if(getCompatibleExtensions().contains(extension)){
-                        result.add(getDefFileStore(url)) ;
-                    }
-                }
-            }
+        if(cachedFileStore.isEmpty()){
+        	Enumeration<URL> connectorDefs = getBundle().findEntries(getName(), "*.def", false);
+        	if( connectorDefs != null ){
+        		while (connectorDefs.hasMoreElements()) {
+        			URL url = connectorDefs.nextElement();
+        			String[] segments = url.getFile().split("/") ;
+        			String fileName = segments[segments.length-1] ;
+        			if(fileName.lastIndexOf(".") != -1){
+        				String extension = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()) ;
+        				if(getCompatibleExtensions().contains(extension)){
+        					T defFileStore = getDefFileStore(url);
+							cachedFileStore.add(defFileStore);
+        					result.add(defFileStore) ;
+        				}
+        			}
+        		}
+        	}
+        } else {
+        	result.addAll(cachedFileStore);
         }
         return result ;
     }

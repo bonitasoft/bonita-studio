@@ -240,7 +240,7 @@ public class «validationDecoratorProviderClassName»
 						 org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction.NORTH_WEST, margin, true));
 					}else{
 						setDecoration(getDecoratorTarget().addShapeDecoration(getImage(severity),
-						 org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction.NORTH_EAST, margin, true));	
+						 org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction.SOUTH_EAST, -3, true));	
 					}
 				}
 				getDecoration().setToolTip(toolTip);

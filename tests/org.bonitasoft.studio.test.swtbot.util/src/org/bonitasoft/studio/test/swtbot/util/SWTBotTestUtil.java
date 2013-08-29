@@ -463,7 +463,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 	 */
 	public static void addListOfOptionData(SWTBot bot,String name,String type,Map<String,List<String>> options,boolean isMultiple,String defaultValue){
 		bot.waitUntil(Conditions.shellIsActive("New variable"));
-		bot.textWithLabel(org.bonitasoft.studio.properties.i18n.Messages.name).setText(name);
+		bot.textWithLabel(org.bonitasoft.studio.properties.i18n.Messages.name+" *").setText(name);
 		bot.comboBoxWithLabel(org.bonitasoft.studio.properties.i18n.Messages.datatypeLabel).setSelection(type);
 		bot.button("List of options...").click();
 		bot.waitUntil(Conditions.shellIsActive("List of options"));

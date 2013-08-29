@@ -12,28 +12,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>Replace P2 Repository URL</id>
-						<phase>initialize</phase>
-						<configuration>
-							<tasks>
-								<echo>P2 Mirror Repository = ${p2MirrorUrl}</echo>
-								<copyfile dest="${basedir}/platform.target" src="${basedir}/mirrored.target.template"
-									forceoverwrite="true" />
-								<replace token="XXX_REPOSITORY_URL_XXX" value="${p2MirrorUrl}"
-									file="${basedir}/platform.target" />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>target-platform-validation-plugin</artifactId>
 				<version>${tychoExtrasVersion}</version>
@@ -61,6 +39,64 @@
 	</parent>
 
 	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>Generate target file</id>
+								<phase>initialize</phase>
+								<configuration>
+									<tasks>
+										<copy file="${basedir}/original_platform.target" tofile="${basedir}/platform.target"
+											overwrite="true" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>mirrored</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>Generate target file</id>
+								<phase>initialize</phase>
+								<configuration>
+									<tasks>
+										<echo>P2 Mirror Repository = ${p2MirrorUrl}</echo>
+										<copy file="${basedir}/mirrored.target.template" tofile="${basedir}/platform.target"
+											overwrite="true" />
+										<replace token="XXX_REPOSITORY_URL_XXX" value="${p2MirrorUrl}"
+											file="${basedir}/platform.target" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>mirror-tp</id>
 			<build>

@@ -191,19 +191,21 @@ public class ConnectorImplRepositoryStore extends AbstractEMFRepositoryStore<Con
 
 	@Override
 	public IRepositoryFileStore getImplementationFileStore(String implId,String implVersion) {
-		for(ConnectorImplFileStore implStore : getChildren()){
-			ConnectorImplementation impl = implStore.getContent();
-			if(impl != null && implId.equals(impl.getImplementationId())
-					&& implVersion.equals(impl.getImplementationVersion())){
-				return implStore;
+		if (implId!=null  && implVersion !=null){
+			for(ConnectorImplFileStore implStore : getChildren()){
+				ConnectorImplementation impl = implStore.getContent();
+				if(impl != null && implId.equals(impl.getImplementationId())
+						&& implVersion.equals(impl.getImplementationVersion())){
+					return implStore;
+				}
 			}
 		}
 		return null;
 	}
 
 	@Override
-    protected void performMigration(Migrator migrator, URI resourceURI,
-    		Release release) throws MigrationException {
+	protected void performMigration(Migrator migrator, URI resourceURI,
+			Release release) throws MigrationException {
 		migrator.setLevel(ValidationLevel.NONE);
 		ResourceSet rSet = migrator.migrateAndLoad(
 				Collections.singletonList(resourceURI), release,
@@ -236,6 +238,6 @@ public class ConnectorImplRepositoryStore extends AbstractEMFRepositoryStore<Con
 			}
 		}
 
-    }
+	}
 
 }

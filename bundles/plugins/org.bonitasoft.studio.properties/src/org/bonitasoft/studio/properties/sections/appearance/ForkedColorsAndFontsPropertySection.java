@@ -209,7 +209,8 @@ public class ForkedColorsAndFontsPropertySection
 
 		fontFamilyCombo = new Combo(familySize,
 			SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
-		fontFamilyCombo.setItems(FontHelper.getFontNames());
+		
+		fontFamilyCombo.setItems(getFontNames(FontHelper.getFontNames()));
 		fontFamilyCombo.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent event) {
@@ -766,5 +767,15 @@ public class ForkedColorsAndFontsPropertySection
     
     protected boolean digIntoGroups() {
         return true;
+    }
+    
+    private String[] getFontNames(String[] items){
+    	ArrayList<String> fontNames= new ArrayList<String>();
+    	for (String fontName:items){
+    		if (!fontName.startsWith("@")){
+    			fontNames.add(fontName);
+    		}
+    	}
+    	return (String[])fontNames.toArray(new String[fontNames.size()]);
     }
 }

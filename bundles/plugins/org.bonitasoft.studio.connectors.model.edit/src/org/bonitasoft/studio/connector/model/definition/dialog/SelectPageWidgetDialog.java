@@ -101,7 +101,6 @@ public class SelectPageWidgetDialog extends Dialog {
     private String displayName;
     private String description;
 
-    private boolean editMode;
     private Section section;
     private final Set<String> existingWidgetIds;
     private static List<EClass> widgetTypes;
@@ -130,9 +129,6 @@ public class SelectPageWidgetDialog extends Dialog {
             Component original, Component component) {
         super(parentShell);
         this.component = component;
-        if (component != null) {
-            editMode = true;
-        }
         List<Component> allComponents = ModelHelper.getAllItemsOfType(
                 definition, ConnectorDefinitionPackage.Literals.COMPONENT);
         allComponents.addAll((Collection<? extends Component>) ModelHelper
@@ -193,7 +189,6 @@ public class SelectPageWidgetDialog extends Dialog {
                 GridDataFactory.fillDefaults().grab(true, false).create());
         typeViewer.setContentProvider(new ArrayContentProvider());
         typeViewer.setLabelProvider(new WidgetLabelProvider());
-        typeViewer.getCombo().setEnabled(!editMode);
         typeViewer.setInput(widgetTypes);
 
         typeViewer.setSelection(new StructuredSelection(component.eClass()));

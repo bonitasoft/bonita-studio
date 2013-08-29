@@ -28,6 +28,8 @@ public class Messages {
 	public static String themeRepository;
 	public static String impossibleToOverwriteTitle;
 	public static String impossibleToOverwriteMsg;
+	public static String looknfeelimportErrorTitle;
+	public static String looknfeelImportErrorMessage;
 	
 	
 	
