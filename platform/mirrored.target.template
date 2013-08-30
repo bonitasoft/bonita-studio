@@ -29,6 +29,7 @@
 <unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.3.0.v20130724043401"/>
 <unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.3.0.v20130724043401"/>
 <unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.3.0.v20130724043401"/>
+<unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.3.0.v20130724043401"/>
 <unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="1.0.0.201307092147"/>
 <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.0.0.201307092147"/>
 <unit id="org.eclipse.xsd.sdk.feature.group" version="2.9.0.v20130610-0406"/>

@@ -48,6 +48,7 @@
 <unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.3.0.v20130724043401"/>
 <unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.3.0.v20130724043401"/>
 <unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="4.3.0.v20130724043401"/>
+<unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.3.0.v20130724043401"/>
 <repository location="http://download.eclipse.org/technology/babel/update-site/R0.11.0/kepler"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
