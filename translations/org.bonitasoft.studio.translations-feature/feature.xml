@@ -36,6 +36,9 @@
    <includes
          id="org.eclipse.babel.nls_eclipse_pt"
          version="0.0.0"/>
+    <includes
+         id="org.eclipse.babel.nls_eclipse_ja"
+         version="0.0.0"/>
 
    <includes
          id="org.eclipse.babel.nls_tools.gef_de"
@@ -56,6 +59,11 @@
    <includes
          id="org.eclipse.babel.nls_tools.gef_pt"
          version="0.0.0"/>
+         
+    <includes
+         id="org.eclipse.babel.nls_tools.gef_ja"
+         version="0.0.0"/>
+         
 
    <plugin
          id="org.bonitasoft.studio.application.nl_es"
