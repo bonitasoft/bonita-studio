@@ -18,7 +18,7 @@
 		<connector.version>6.1.0-SNAPSHOT</connector.version>
 		<simulation.version>6.1.0</simulation.version>
 		<filters.version>6.1.0-rc-12</filters.version>
-		<theme.builder.version>6.0.0</theme.builder.version>
+		<theme.builder.version>6.1.0</theme.builder.version>
 		<watchdog.version>6.0.1</watchdog.version>
 		<p2MirrorUrl>http://192.168.1.227/6.1/repository/</p2MirrorUrl>
 		<tycho.testArgLine></tycho.testArgLine>
