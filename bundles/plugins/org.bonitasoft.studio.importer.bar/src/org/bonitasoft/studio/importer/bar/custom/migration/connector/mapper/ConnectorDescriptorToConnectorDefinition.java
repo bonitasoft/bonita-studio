@@ -476,9 +476,9 @@ public class ConnectorDescriptorToConnectorDefinition {
 		List<Category> categories = new ArrayList<Category>();
 		for(org.ow2.bonita.connector.core.desc.Category c : v5Categories){
 			final String catId = c.getName();
-			if(allCategories.contains(catId)){
+			if(containsIgnoreCase(catId,allCategories)){
 				for(Category cat : resourceProvider.getAllCategories()){
-					if(cat.getId().equals(catId)){
+					if(cat.getId().equalsIgnoreCase(catId)){
 						categories.add(cat);
 						allCategories.add(catId);
 					}
@@ -490,6 +490,16 @@ public class ConnectorDescriptorToConnectorDefinition {
 		return categories;
 	}
 
+	
+	private boolean containsIgnoreCase(String id,Set<String> l){
+		for (String s:l){
+			if (s.equalsIgnoreCase(id)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private Category createCategory(
 			org.ow2.bonita.connector.core.desc.Category c) throws IOException {
 		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
