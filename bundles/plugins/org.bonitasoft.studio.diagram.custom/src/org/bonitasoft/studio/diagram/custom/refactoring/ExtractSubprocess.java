@@ -90,7 +90,7 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ExtractSubprocess extends AbstractHandler {
 
-	private static final String EXTRACTED_SUBPROCESS = "Extracted_Subprocess";
+	private static final String EXTRACTED_SUBPROCESS = Messages.extractAsSubprocessNewPoolName;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
