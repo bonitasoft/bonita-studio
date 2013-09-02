@@ -327,7 +327,6 @@ public class DefinitionInformationWizardPage extends WizardPage implements ISele
 				if(!((IStructuredSelection) event.getSelection()).isEmpty()){
 					Category selection = (Category) ((IStructuredSelection) event.getSelection()).getFirstElement();
 					definition.getCategory().clear();
-
 					definition.getCategory().add(selection);
 					List<Category> categories = (List<Category>) categoryViewer.getInput();
 					List<Category> parentCategories = new ArrayList<Category>();
