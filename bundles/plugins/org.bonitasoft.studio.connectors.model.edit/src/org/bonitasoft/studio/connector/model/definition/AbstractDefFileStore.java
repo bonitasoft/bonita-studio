@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
 import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
@@ -43,8 +42,12 @@ import org.osgi.framework.Bundle;
  */
 public abstract class AbstractDefFileStore extends EMFFileStore {
 
+	AbstractEMFRepositoryStore<? extends AbstractDefFileStore> store;
+	
     public AbstractDefFileStore(final String fileName, final AbstractEMFRepositoryStore<? extends AbstractDefFileStore> store) {
         super(fileName, store);
+        this.store = store;
+        
     }
 
     @Override
@@ -88,6 +91,15 @@ public abstract class AbstractDefFileStore extends EMFFileStore {
         return null;
     }
 
+  
+  @Override
+public void delete() {
+	
+	super.delete();
+	if (store instanceof AbstractDefinitionRepositoryStore<?>){
+		((AbstractDefinitionRepositoryStore<?>)store).clearCachedFileStore();
+	}
+}
 
     @Override
     public Image getIcon() {

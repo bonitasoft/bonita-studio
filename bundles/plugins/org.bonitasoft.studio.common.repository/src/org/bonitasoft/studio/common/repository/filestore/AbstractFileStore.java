@@ -48,7 +48,7 @@ import org.eclipse.ui.progress.IProgressService;
 public abstract class AbstractFileStore implements IRepositoryFileStore, IFileStoreChangeNotifier, IPartListener {
 
     private String name;
-    private final IRepositoryStore<? extends IRepositoryFileStore> store;
+    final IRepositoryStore<? extends IRepositoryFileStore> store;
     private IWorkbenchPart activePart;
 
     public AbstractFileStore(String fileName , IRepositoryStore<? extends IRepositoryFileStore> parentStore){
@@ -104,7 +104,7 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
     }
 
     @Override
-    final public void delete() {
+    public void delete() {
         if(!isReadOnly()){
             fireFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_DELETE, this)) ;
             doDelete();

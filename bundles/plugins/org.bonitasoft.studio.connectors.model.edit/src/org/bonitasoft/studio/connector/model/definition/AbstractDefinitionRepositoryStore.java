@@ -96,6 +96,7 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
     }
     
     
+ 
     
     
     @Override
@@ -140,6 +141,10 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
 
     }
 
+    public void clearCachedFileStore(){
+    	cachedFileStore.clear();
+    }
+    
     @Override
     protected void addAdapterFactory(ComposedAdapterFactory adapterFactory) {
         adapterFactory.addAdapterFactory(new ConnectorDefinitionAdapterFactory());
