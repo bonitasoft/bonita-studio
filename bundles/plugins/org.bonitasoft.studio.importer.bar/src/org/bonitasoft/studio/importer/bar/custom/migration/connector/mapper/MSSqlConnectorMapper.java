@@ -39,7 +39,7 @@ public class MSSqlConnectorMapper extends AbstractDatabaseConnectorDefinitionMap
 	}
 
 	protected String getUrlPrefix() {
-		return "jdbc:jtds:sqlserver://";
+		return "jdbc:sqlserver://";
 	}
 
 	@Override

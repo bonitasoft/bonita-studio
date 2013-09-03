@@ -22,9 +22,13 @@ import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.TextAnnotation;
+import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -44,6 +48,7 @@ public class TextAnnotationTextPropertySectionContribution implements IExtensibl
 	private Text text;
 	protected TextAnnotation textAnnotation;
 	protected TransactionalEditingDomain editingDomain;
+	private EMFDataBindingContext context;
 
 	public void createControl(Composite composite,
 			TabbedPropertySheetWidgetFactory widgetFactory,
@@ -54,17 +59,18 @@ public class TextAnnotationTextPropertySectionContribution implements IExtensibl
 		rd.width = 400;
 		rd.height = 150;
 		text.setLayoutData(rd);
-		if (textAnnotation != null && textAnnotation.getText() != null) {
-			text.setText(textAnnotation.getText());
-		}
-
-		text.addModifyListener(new ModifyListener() {
-
-			public void modifyText(ModifyEvent e) {
-				editingDomain.getCommandStack().execute(
-						new SetCommand(editingDomain, textAnnotation, ProcessPackage.Literals.TEXT_ANNOTATION__TEXT, text.getText()));
-			}
-		});
+		updateBindings();
+//		if (textAnnotation != null && textAnnotation.getText() != null) {
+//			text.setText(textAnnotation.getText());
+//		}
+//
+//		text.addModifyListener(new ModifyListener() {
+//
+//			public void modifyText(ModifyEvent e) {
+//				editingDomain.getCommandStack().execute(
+//						new SetCommand(editingDomain, textAnnotation, ProcessPackage.Literals.TEXT_ANNOTATION__TEXT, text.getText()));
+//			}
+//		});
 
 
 	}
@@ -81,11 +87,24 @@ public class TextAnnotationTextPropertySectionContribution implements IExtensibl
 	public void refresh() {
 		
 	}
+	
+	public void updateBindings(){
+		if (context !=null){
+			context.dispose();
+		}
+		context =  new EMFDataBindingContext();
+		context.bindValue(SWTObservables.observeText(text, SWT.Modify), EMFEditObservables.observeValue(editingDomain,textAnnotation,ProcessPackage.Literals.TEXT_ANNOTATION__TEXT));
+		
+	}
 
 	public void setEObject(EObject object) {
 		this.textAnnotation = (TextAnnotation) object;
+		if (text!=null){
+			updateBindings();
+		}
 
 	}
+	
 
 	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
 		this.editingDomain = editingDomain;		

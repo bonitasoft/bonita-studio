@@ -53,13 +53,11 @@ public class TestMoveBetweenLane extends SWTBotGefTestCase {
 
 
         gmfEditor.activateTool("Human");
-        gmfEditor.click(300, 100);
+        gmfEditor.click(200, 150);
 
         // Create lane
         gmfEditor.activateTool("Lane");
-        gmfEditor.click(200, 200);
-
-
+        gmfEditor.click(300, 50);
 
 
         final SWTBotGefEditPart lane = gmfEditor.getEditPart("Employee lane");
@@ -78,7 +76,7 @@ public class TestMoveBetweenLane extends SWTBotGefTestCase {
         IFigure figure = ((GraphicalEditPart)step.part()).getFigure();
         Rectangle dest = figure.getBounds().getCopy();
         figure.translateToAbsolute(dest);
-
+               
         gmfEditor.drag( step, dest.x  , dest.y+200);
 
         step = gmfEditor.getEditPart("Step2").parent();

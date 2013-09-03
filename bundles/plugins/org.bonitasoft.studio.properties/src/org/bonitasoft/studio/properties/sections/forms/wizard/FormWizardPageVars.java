@@ -17,6 +17,8 @@
 package org.bonitasoft.studio.properties.sections.forms.wizard;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -310,6 +312,13 @@ public class FormWizardPageVars extends WizardSelectionPage {
 				}
 			}
 		}
+		
+		Collections.sort(datas, new Comparator<Data>() {
+            public int compare(Data d1, Data d2) {
+                return d1.getName().compareTo(d2.getName());
+            }
+        });
+		
 		return datas;
 	}
 
