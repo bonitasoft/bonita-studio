@@ -545,11 +545,6 @@ public class DefinitionResourceProvider {
 		Image icon = categoryImageRegistry.get(category.getId());
 
 		if (icon == null) {
-			try {
-			FileLocator.toFileURL(bundle.getResource(store.getName()));
-		} catch (IOException e1) {
-			BonitaStudioLog.error(e1);
-		}
 			Resource resource = category.eResource();
 			File f = null;
 			if (resource != null) {
@@ -562,9 +557,19 @@ public class DefinitionResourceProvider {
 
 			if (f != null && f.exists() && category.getIcon() != null) {
 				File iconFile = new File(f, category.getIcon());
+				URL iconURL = null;
+				if(!iconFile.exists()){
+					try {
+						iconURL = FileLocator.toFileURL(bundle.getResource(store.getResource().getName()+"/"+category.getIcon()));
+					} catch (IOException e) {
+						BonitaStudioLog.error(e);
+					}
+				}
 				if (iconFile.exists()) {
 					try {
-						final URL iconURL = iconFile.toURI().toURL();
+						if(iconURL == null){
+							iconURL = iconFile.toURI().toURL();
+						}
 						icon = ImageDescriptor.createFromURL(iconURL)
 								.createImage();
 						categoryImageRegistry.put(category.getId(), icon);
@@ -675,12 +680,6 @@ public class DefinitionResourceProvider {
 		Image icon = definitionImageRegistry.get(definitionId);
 
 		if (icon == null || icon.isDisposed()) {
-			//Load icons
-			try {
-				FileLocator.toFileURL(bundle.getResource(store.getName()));
-			} catch (IOException e1) {
-				BonitaStudioLog.error(e1);
-			}
 			Resource resource = definition.eResource();
 			File f = null;
 			if (resource != null) {
@@ -692,9 +691,19 @@ public class DefinitionResourceProvider {
 			}
 			if (f != null && f.exists() && definition.getIcon() != null && !definition.getIcon().isEmpty()) {
 				File iconFile = new File(f, definition.getIcon());
+				URL iconURL = null;
+				if(!iconFile.exists()){
+					try {
+						iconURL = FileLocator.toFileURL(bundle.getResource(store.getResource().getName()+"/"+definition.getIcon()));
+					} catch (IOException e) {
+						BonitaStudioLog.error(e);
+					}
+				}
 				if (iconFile.exists()) {
 					try {
-						final URL iconURL = iconFile.toURI().toURL();
+						if(iconURL == null){
+							iconURL = iconFile.toURI().toURL();
+						}
 						icon = ImageDescriptor.createFromURL(iconURL).createImage();
 						if (definitionImageRegistry.get(definitionId) != null) {
 							definitionImageRegistry.remove(definitionId);
