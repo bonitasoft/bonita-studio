@@ -70,7 +70,6 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
         }
         assertTrue("Error while evaluating groovy script", groovyEvaluateOK);
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.button(IDialogConstants.OK_LABEL).click();
         if(!FileActionDialog.getDisablePopup()){
             bot.button(IDialogConstants.OK_LABEL).click();
         }
