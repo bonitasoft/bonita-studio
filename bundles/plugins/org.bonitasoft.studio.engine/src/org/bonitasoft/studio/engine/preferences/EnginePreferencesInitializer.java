@@ -20,6 +20,7 @@ package org.bonitasoft.studio.engine.preferences;
 
 import org.bonitasoft.studio.engine.EnginePlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
@@ -36,6 +37,7 @@ public class EnginePreferencesInitializer extends AbstractPreferenceInitializer 
         IPreferenceStore store = EnginePlugin.getDefault().getPreferenceStore();
         store.setDefault(EnginePreferenceConstants.CURRENT_CONFIG, EnginePreferenceConstants.DEFAULT_CONFIG);
         store.setDefault(EnginePreferenceConstants.REMOTE_DEPLOYMENT_CHOICE, EnginePreferenceConstants.STANDARD_MODE);
+        store.setDefault(EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR,MessageDialogWithToggle.NEVER);
     }
 
 }
