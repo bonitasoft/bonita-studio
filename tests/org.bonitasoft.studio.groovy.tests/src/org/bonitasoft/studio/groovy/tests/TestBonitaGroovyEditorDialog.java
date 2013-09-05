@@ -65,7 +65,6 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.shellIsActive("Evaluation results"));
         assertEquals("test me", bot.text().getText()) ;
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.button(IDialogConstants.OK_LABEL).click();
         if(!FileActionDialog.getDisablePopup()){
             bot.button(IDialogConstants.OK_LABEL).click();
         }
