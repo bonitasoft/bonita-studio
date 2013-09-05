@@ -565,7 +565,7 @@ public class DefinitionResourceProvider {
 						BonitaStudioLog.error(e);
 					}
 				}
-				if (iconFile.exists()) {
+				if (iconURL != null || iconFile.exists())  {
 					try {
 						if(iconURL == null){
 							iconURL = iconFile.toURI().toURL();
@@ -699,7 +699,7 @@ public class DefinitionResourceProvider {
 						BonitaStudioLog.error(e);
 					}
 				}
-				if (iconFile.exists()) {
+				if (iconURL != null || iconFile.exists())  {
 					try {
 						if(iconURL == null){
 							iconURL = iconFile.toURI().toURL();
