@@ -77,6 +77,7 @@ public class DataWizard extends Wizard {
 		editMode = false ;
 		this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
 		this.featureToCheckForUniqueID.add(dataContainmentFeature);
+		setWindowTitle(Messages.newVariable);
 	}
 	
 	public DataWizard(EObject container,EStructuralFeature dataContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID, boolean showAutogenerateForm, String fixedReturnType){
@@ -88,6 +89,7 @@ public class DataWizard extends Wizard {
 		this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
 		this.featureToCheckForUniqueID.add(dataContainmentFeature);
 		this.fixedReturnType = fixedReturnType;
+		setWindowTitle(Messages.newVariable);
 	}
 
 	public DataWizard(Data data, EStructuralFeature dataContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID, boolean showAutogenerateForm){
@@ -99,11 +101,11 @@ public class DataWizard extends Wizard {
 		dataWorkingCopy = EcoreUtil.copy(data) ;
 		editMode = true ;
 		this.featureToCheckForUniqueID = featureToCheckForUniqueID ;
+		setWindowTitle(Messages.editVariable);
 	}
 	
 	private void initDataWizard(EStructuralFeature dataContainmentFeature, boolean showAutogenerateForm){
 		setDefaultPageImageDescriptor(Pics.getWizban()) ;
-		setWindowTitle(Messages.editVariable);
 		this.dataContainmentFeature = dataContainmentFeature ;//the default add data on this feature
 		this.showAutogenerateForm = showAutogenerateForm;
 	}
