@@ -5,11 +5,11 @@
   <parent>
   <groupId>org.bonitasoft.studio</groupId>
   <artifactId>releng</artifactId>
-    <version>6.0.3</version>
+    <version>6.0.3-SNAPSHOT</version>
     <relativePath>../../releng/pom.xml</relativePath>
   </parent>
   <groupId>org.bonitasoft.studio.translations</groupId>
   <artifactId>org.bonitasoft.studio.translations</artifactId>
-  <version>6.0.3</version>
+  <version>6.0.3-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>

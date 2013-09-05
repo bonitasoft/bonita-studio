@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>releng</artifactId>
-		<version>6.0.3</version>
+		<version>6.0.3-SNAPSHOT</version>
 	</parent>
 
 	<groupId>org.bonitasoft.studio.releng</groupId>
 	<artifactId>studio-repository</artifactId>
-	<version>6.0.3</version>
+	<version>6.0.3-SNAPSHOT</version>
 	<packaging>eclipse-repository</packaging>
 
 	<build>

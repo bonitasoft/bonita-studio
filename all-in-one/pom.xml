@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>studio</artifactId>
-		<version>6.0.3</version>
+		<version>6.0.3-SNAPSHOT</version>
 	</parent>
 
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>all-in-one</artifactId>
-	<version>6.0.3</version>
+	<version>6.0.3-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 
 	<properties>
