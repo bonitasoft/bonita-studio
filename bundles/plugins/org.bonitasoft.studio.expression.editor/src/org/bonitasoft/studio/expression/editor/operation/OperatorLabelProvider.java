@@ -46,13 +46,13 @@ public class OperatorLabelProvider extends LabelProvider {
                 return Messages.assignment ;
             }else if(ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operatorType)){
                 String methodName = op.getExpression() ;
-                if(methodName.length() > 40){
+                if(methodName != null && methodName.length() > 40){
                     methodName = methodName.substring(0,35) + "..." ;
                 }
                 return methodName ;
             }else if(ExpressionConstants.XPATH_UPDATE_OPERATOR.equals(operatorType)){
                 String xpathExpression = op.getExpression() ;
-                if(xpathExpression.length() > 40){
+                if(xpathExpression != null && xpathExpression.length() > 40){
                     xpathExpression = xpathExpression.substring(0,35) + "..." ;
                 }
                 return xpathExpression ;
