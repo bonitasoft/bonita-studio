@@ -186,10 +186,10 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 		Expression exp = operation.getLeftOperand() ;
 		String operatorType = (String) ((IStructuredSelection) event.getSelection()).getFirstElement() ;
 		createOperatorEditorFor(section, operatorType, operator, exp) ;
-
+		if(ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operator.getType())){
+			enableOKButton(true);
+		}
 		relayout() ;
-		enableOKButton(true) ;
-
 	}
 
 	private void relayout() {
@@ -218,6 +218,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 						enableOKButton(editor.canFinish()) ;
 					}
 				}) ;
+				enableOKButton(editor.canFinish()) ;
 			}
 		}
 		if(client == null){

@@ -67,13 +67,13 @@ public class SequenceFlowSwitch extends ProcessSwitch<SequenceFlow> {
 			if(!(source instanceof ANDGateway)){
 				final SequenceFlowConditionType conditionType = sequenceFlow.getConditionType();
 				final Expression condition = sequenceFlow.getCondition();
-				final String conditionContent = condition.getContent();
+				
 				if(sequenceFlow.isIsDefault() && !(source instanceof BoundaryEvent)){
 					builder.addDefaultTransition(sourceId, targetId);
 				} else if(conditionType == SequenceFlowConditionType.EXPRESSION
 						&& condition != null
-						&& conditionContent != null
-						&& !conditionContent.isEmpty()){
+						&& condition.getContent() != null
+						&& !condition.getContent().isEmpty()){
 					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(condition));
 				}else if(conditionType == SequenceFlowConditionType.DECISION_TABLE){
 					builder.addTransition(sourceId, targetId, EngineExpressionUtil.createExpression(DecisionTableUtil.toGroovyScriptExpression(sequenceFlow.getDecisionTable())));
