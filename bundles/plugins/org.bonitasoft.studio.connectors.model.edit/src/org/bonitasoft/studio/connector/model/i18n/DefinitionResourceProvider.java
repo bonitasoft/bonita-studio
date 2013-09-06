@@ -694,7 +694,11 @@ public class DefinitionResourceProvider {
 				URL iconURL = null;
 				if(!iconFile.exists()){
 					try {
-						iconURL = FileLocator.toFileURL(bundle.getResource(store.getResource().getName()+"/"+definition.getIcon()));
+						String name = store.getResource().getName()+"/"+definition.getIcon();
+						URL resourceURL = bundle.getResource(name);
+						if(resourceURL != null){
+							iconURL = FileLocator.toFileURL(resourceURL);
+						}
 					} catch (IOException e) {
 						BonitaStudioLog.error(e);
 					}
