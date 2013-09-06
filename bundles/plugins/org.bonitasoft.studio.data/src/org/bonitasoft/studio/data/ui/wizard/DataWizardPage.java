@@ -357,7 +357,9 @@ public class DataWizardPage extends WizardPage {
 					break;
 				}
 			}			
-		}		
+		} else {
+			
+		}
 		setControl(mainComposite);
 	}
 
@@ -385,12 +387,12 @@ public class DataWizardPage extends WizardPage {
 
 			bindNameAndDescription();
 			bindGenerateDataCheckbox();
+			bindDataTypeCombo();
 			bindJavaClassText();
 			bindXSDCombo();
 			bindTransientButton();
 			bindDefaultValueViewer();
 			bindIsMultipleData();
-			bindDataTypeCombo();
 			
 			typeDescriptionDecorator.setDescriptionText(getHintFor(data.getDataType()));
 
