@@ -27,7 +27,7 @@ public class Messages extends NLS {
 
 
 
-    static {
+	static {
         NLS.initializeMessages("messages", Messages.class);
     }
 
@@ -74,5 +74,6 @@ public class Messages extends NLS {
 	public static String incompatibleVersionMsg;
 	public static String errorSubprocessDoesNotExist;
 	public static String errorSubprocessNotFound;
+    public static String extractAsSubprocessNewPoolName;
 
 }
