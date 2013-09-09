@@ -49,7 +49,7 @@ public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implement
     public void testPatternExpressionViewer(){
 		SWTBotTestUtil.createNewDiagram(bot);
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-		createData(DATA_NAME_1);
+		SWTBotTestUtil.addNewData(bot, DATA_NAME_1, "Text", false, null);
 		String connectorLabel = getConnectorLabel(JDBC_DB_CONNECTOR_ID);
 		String connectorVersion = getConnectorVersion(JDBC_DB_CONNECTOR_ID);
 		String[] dbCategoryLabel = getCategoryLabels(new String[]{DB_CATEGORY_ID,GENERIC_DB_CATEGORY_ID});
@@ -169,18 +169,6 @@ public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implement
 			}
 		}
 		return null;
-	}
-
-    
-    private void createData(String dataName) {
-		SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
-		bot.button("Add...").click();
-		assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
-				.button(IDialogConstants.FINISH_LABEL).isEnabled());
-		bot.textWithLabel("Name").setText(dataName);
-		assertTrue(IDialogConstants.FINISH_LABEL + " should be disabled", bot
-				.button(IDialogConstants.FINISH_LABEL).isEnabled());
-		bot.button(IDialogConstants.FINISH_LABEL).click();
 	}
 
 }
