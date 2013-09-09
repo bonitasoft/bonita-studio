@@ -54,7 +54,7 @@ public class TestDebugFeature extends SWTBotGefTestCase {
 		launchDebugWizard();
 		bot.button(Messages.DebugProcessButtonLabel).click();
 		
-		checkNbOfProcDefInEngine("Debug with Connector on call activity is not working", nbProcessDefinitions +1);
+		checkNbOfProcDefInEngine("Debug with Connector on call activity is not working", nbProcessDefinitions +2);
 	}
 	
 	private long getNBProcessDefinitions() throws Exception{
