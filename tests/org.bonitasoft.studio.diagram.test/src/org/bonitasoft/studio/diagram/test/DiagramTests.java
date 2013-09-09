@@ -217,7 +217,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 				bot.button(IDialogConstants.FINISH_LABEL).click();
 				
 				// add script to conver to an integer on "Step3"
-				if(nametask.equals("Step3")){
+				if(nametask.equals("Step2")){
 					SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
 					formEditor.getEditPart("varInteger").click();
 					bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
