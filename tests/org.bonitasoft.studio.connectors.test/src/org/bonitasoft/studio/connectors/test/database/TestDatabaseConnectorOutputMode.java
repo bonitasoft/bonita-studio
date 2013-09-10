@@ -23,6 +23,7 @@ import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
 import org.bonitasoft.studio.connectors.test.swtbot.SWTBotConnectorTestUtil;
+import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
@@ -48,6 +49,8 @@ public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implement
     public void testPatternExpressionViewer(){
 		SWTBotTestUtil.createNewDiagram(bot);
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+        SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
+        bot.button(Messages.Add).click();
 		SWTBotTestUtil.addNewData(bot, DATA_NAME_1, "Text", false, null);
 		String connectorLabel = getConnectorLabel(JDBC_DB_CONNECTOR_ID);
 		String connectorVersion = getConnectorVersion(JDBC_DB_CONNECTOR_ID);
