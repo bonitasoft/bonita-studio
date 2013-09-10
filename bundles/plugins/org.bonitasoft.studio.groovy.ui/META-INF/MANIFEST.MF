@@ -57,6 +57,7 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.expression,
  org.bonitasoft.engine.identity,
  org.bonitasoft.engine.session,
+ org.bonitasoft.forms.server.api,
  org.bonitasoft.forms.server.validator,
  org.bonitasoft.studio.dependencies.ui.dialog,
  org.eclipse.ui.part
