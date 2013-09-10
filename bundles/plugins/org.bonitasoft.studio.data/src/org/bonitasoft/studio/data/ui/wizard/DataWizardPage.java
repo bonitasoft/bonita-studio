@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -556,7 +557,8 @@ public class DataWizardPage extends WizardPage {
 				if( container instanceof AbstractProcess){
 					 allData = ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(container), ProcessPackage.Literals.DATA);
 				}else{
-					 allData = ModelHelper.getAccessibleData(container, true);
+				//	 allData = ModelHelper.getAccessibleData(container, true);
+					allData = getAllAccessibleDatas(container);
 				}
 				for (final Data object : allData) {
 					if (object instanceof Data && !(object.eContainer() instanceof Expression)) {
@@ -570,9 +572,22 @@ public class DataWizardPage extends WizardPage {
 
 				return new GroovyReferenceValidator(Messages.name).validate(value);
 			}
+			
+			private List<Data> getAllAccessibleDatas(EObject container){
+				List<Data> allDatas = ModelHelper.getAccessibleData(container, true);
+				for (Object o:ModelHelper.getAllItemsOfType(container, ProcessPackage.Literals.DATA)){
+					if (o instanceof Data){
+						if (!allDatas.contains(o)){
+							allDatas.add((Data)o);
+						}
+					}
+				}
+				
+				return allDatas;
+			}
 		});
 
-
+	
 
 		UpdateValueStrategy descTargetToModel = new UpdateValueStrategy();
 		descTargetToModel.setAfterGetValidator(new InputLengthValidator(Messages.dataDescriptionLabel, 255));

@@ -31,6 +31,7 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.runtime.Assert;
@@ -111,7 +112,12 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 	}
 
 	private void removeAllDataReferences(CompoundCommand cc) {
-		List<Expression> expressions = ModelHelper.getAllItemsOfType(parentProcess, ExpressionPackage.Literals.EXPRESSION) ;
+		List<Expression> expressions=null;
+		if (oldData.eContainer() instanceof Pool){
+			expressions = ModelHelper.getAllItemsOfType(parentProcess, ExpressionPackage.Literals.EXPRESSION) ;
+		} else {
+			expressions = ModelHelper.getAllItemsOfType(oldData.eContainer(), ExpressionPackage.Literals.EXPRESSION);
+		}
 		for(Expression exp : expressions){
 			if(ExpressionConstants.VARIABLE_TYPE.equals(exp.getType()) && exp.getName().equals(oldData.getName())){
 				//update name and content

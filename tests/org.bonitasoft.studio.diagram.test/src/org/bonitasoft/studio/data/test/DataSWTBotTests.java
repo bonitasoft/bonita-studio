@@ -36,6 +36,7 @@ import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -365,6 +366,45 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
 
     }
     
+    @Test
+    public void testCreateDataWithExistingId(){
+    	//Add the data myData on pool
+    	String dataName = "myData";
+    	String dataName1 = "myData1";
+    	
+    	SWTBotTestUtil.createNewDiagram(bot);
+        SWTBotEditor botEditor = bot.activeEditor();
+        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+        String diagramTitle=botEditor.getTitle();
+        getDataSection(bot);
+        bot.button(Messages.addData).click();
+        bot.textWithLabel(Messages.name+" *").setText(dataName);
+        assertTrue("finish button should be enabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        bot.button(IDialogConstants.FINISH_LABEL).click();
+        
+        //try to add a data myData on step
+        SWTBotTestUtil.selectEventOnProcess(bot, gmfEditor, "Step1");
+        getDataSection(bot);
+        bot.button(Messages.addData).click();
+        bot.textWithLabel(Messages.name+" *").setText(dataName);
+        assertFalse("finish button should be enabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        bot.textWithLabel(Messages.name+" *").setText(dataName1);
+        assertTrue("finish button should be enabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        bot.button(IDialogConstants.FINISH_LABEL).click();
+        
+      
+        
+        //add a second task and add a data named myData1
+        bot.editorByTitle(diagramTitle).show();
+        bot.editorByTitle(diagramTitle).setFocus();
+        SWTBotTestUtil.selectElementInContextualPaletteAndDragIt(gmfEditor, "Step1",SWTBotTestUtil.CONTEXTUALPALETTE_STEP,new Point(550,180));
+        getDataSection(bot);
+        bot.button(Messages.addData).click();
+        bot.textWithLabel(Messages.name+" *").setText(dataName1);
+        assertTrue("finish button should be enabled",bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        bot.button(IDialogConstants.FINISH_LABEL).click();
+        
+    }
     
     public static void getDataSection(SWTGefBot bot ){
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
