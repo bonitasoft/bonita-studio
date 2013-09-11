@@ -30,6 +30,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import static org.bonitasoft.studio.dependencies.i18n.Messages.selectMissingJarTitle;
 /**
  * @author Aurelien Pupier

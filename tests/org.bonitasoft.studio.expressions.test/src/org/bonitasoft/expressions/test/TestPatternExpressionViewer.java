@@ -163,8 +163,8 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 		String[] res = new String[categoryIds.length];
 		for(int i = 0; i < categoryIds.length; i++){
 			final String categoryIdToSearch = categoryIds[i];
-			ConnectorDefRepositoryStore defSore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-			for(Category c : defSore.getResourceProvider().getAllCategories()){
+		ConnectorDefRepositoryStore defSore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+		for(Category c : defSore.getResourceProvider().getAllCategories()){
 				if(c.getId().equals(categoryIdToSearch)){
 					res[i] = defSore.getResourceProvider().getCategoryLabel(c);
 					continue;
