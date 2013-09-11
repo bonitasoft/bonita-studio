@@ -63,10 +63,10 @@ public class ConnectorContainerSwitchWizardPage extends WizardPage implements IW
     private FilteredTree connectorsTree;
     private FilteredTree modelTree;
     private final ComposedAdapterFactory adapterFactory;
-    private Connector selectedConnector;
     private ConnectableElement selectedConnectableElement;
     private List<EObject> input;
     private boolean copy = false;
+    private Connector selectedConnector;
 
     public ConnectorContainerSwitchWizardPage(AbstractProcess sourceProcess) {
         super(Messages.switchContainerConnectorMessage, Messages.switchContainerConnectorTitle, Pics.getWizban());
@@ -75,6 +75,14 @@ public class ConnectorContainerSwitchWizardPage extends WizardPage implements IW
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
     }
 
+    public ConnectorContainerSwitchWizardPage(AbstractProcess sourceProcess, Connector selectedConnector) {
+    	 super(Messages.switchContainerConnectorMessage, Messages.switchContainerConnectorTitle, Pics.getWizban());
+    	 setDescription(Messages.switchContainerConnectorMessage);
+         this.sourceProcess = sourceProcess ;
+         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+         this.selectedConnector = selectedConnector;
+    }
+    
     /* (non-Javadoc)
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
@@ -125,36 +133,15 @@ public class ConnectorContainerSwitchWizardPage extends WizardPage implements IW
         ModelHelper.findAllConnectors(sourceProcess, input);
         connectorsTree.getViewer().setInput(input);
         connectorsTree.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-
+        	
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
-                if(((StructuredSelection) connectorsTree.getViewer().getSelection()).getFirstElement() instanceof Connector) {
-                    setSelectedConnector((Connector) ((StructuredSelection) connectorsTree.getViewer().getSelection()).getFirstElement());
-                }
-
-                if(getSelectedConnector() != null){
-                    ConnectableElement container = (ConnectableElement) getSelectedConnector().eContainer() ;
-
-                    if(!(container instanceof AbstractProcess)){
-                        modelTree.getViewer().setInput(sourceProcess.eContainer());
-                        modelTree.getViewer().expandAll() ;
-                        modelTree.getViewer().remove(container);
-
-                    }else{
-                        modelTree.getViewer().setInput(sourceProcess);
-                        modelTree.getViewer().expandAll() ;
-                    }
-                    //modelTree.getViewer().expandAll() ;
-
-                }
-                getContainer().updateButtons();
-
+                connectorsTreeSelectionChanged();
             }
         });
         GridData gd = new GridData(GridData.FILL_BOTH);
         gd.widthHint = 300 ;
         connectorsTree.setLayoutData(gd);
-
 
         modelTree = new FilteredTree(mainComposite, SWT.BORDER | SWT.SINGLE, new PatternFilter(), true);
         modelTree.getViewer().setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
@@ -186,11 +173,36 @@ public class ConnectorContainerSwitchWizardPage extends WizardPage implements IW
                 setCopy(copyButton.getSelection());
             }
         });
-
-        getContainer().updateButtons();
+        StructuredSelection s = new StructuredSelection(selectedConnector);
+        connectorsTree.getViewer().setSelection(s, true);
+        
+        getContainer().updateButtons();       
         setControl(mainComposite);
     }
 
+    private void connectorsTreeSelectionChanged() {
+		if(((StructuredSelection) connectorsTree.getViewer().getSelection()).getFirstElement() instanceof Connector) {
+            setSelectedConnector((Connector) ((StructuredSelection) connectorsTree.getViewer().getSelection()).getFirstElement());
+        }
+
+        if(getSelectedConnector() != null){
+            ConnectableElement container = (ConnectableElement) getSelectedConnector().eContainer() ;
+
+            if(!(container instanceof AbstractProcess)){
+                modelTree.getViewer().setInput(sourceProcess.eContainer());
+                modelTree.getViewer().expandAll() ;
+                modelTree.getViewer().remove(container);
+
+            }else{
+                modelTree.getViewer().setInput(sourceProcess);
+                modelTree.getViewer().expandAll() ;
+            }
+            //modelTree.getViewer().expandAll() ;
+
+        }
+        getContainer().updateButtons();
+	}
+    
     @Override
     public boolean isPageComplete() {
         if(getSelectedConnector() != null){

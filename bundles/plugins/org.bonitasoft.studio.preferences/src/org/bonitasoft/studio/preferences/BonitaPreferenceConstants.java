@@ -69,7 +69,8 @@ public class BonitaPreferenceConstants {
                 Locale.GERMAN,
                 Locale.ITALIAN,
                 //new Locale("pt"),
-                new Locale("pt","BR")//,
+                new Locale("pt","BR"),
+                Locale.JAPANESE//,
                 //new Locale("zh")
     };
 

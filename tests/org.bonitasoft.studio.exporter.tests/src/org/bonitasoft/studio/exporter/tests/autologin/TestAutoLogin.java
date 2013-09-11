@@ -64,6 +64,11 @@ public class TestAutoLogin extends TestCase {
         
 	}
 	
+	@Override
+	protected void tearDown() throws Exception {
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
+		super.tearDown();
+	}
 	
     @Test
     public void testGenerateSecurityConfigFile() throws Exception {
@@ -77,6 +82,8 @@ public class TestAutoLogin extends TestCase {
     			conf=tmpConf;
     		}
     	}
+    	
+    	Assert.assertNotNull("Configuration should not be null", conf);
 
     	if(conf!=null){
     		BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(pool, conf.getName(), Collections.EMPTY_SET);

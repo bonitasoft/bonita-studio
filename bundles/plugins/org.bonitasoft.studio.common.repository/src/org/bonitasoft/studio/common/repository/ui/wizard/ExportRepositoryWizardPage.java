@@ -309,7 +309,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
 			operation.setResources(resourcesToExport) ;
 
 			try {
-				getContainer().run(true, true, new IRunnableWithProgress() {
+				getContainer().run(false, true, new IRunnableWithProgress() {
 
 					@Override
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {

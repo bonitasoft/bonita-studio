@@ -95,8 +95,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Romain Bioteau
  * 
  */
-public class GroovyScriptExpressionEditor extends
-		SelectionAwareExpressionEditor implements IExpressionEditor {
+public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
 
 	protected Composite mainComposite;
 	protected Expression inputExpression;
@@ -124,8 +123,7 @@ public class GroovyScriptExpressionEditor extends
 	private Button testButton;
 
 	public GroovyScriptExpressionEditor() {
-		adapterFactory = new ComposedAdapterFactory(
-				ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		adapterLabelProvider = new AdapterFactoryLabelProvider(adapterFactory);
 	}
 
@@ -138,8 +136,12 @@ public class GroovyScriptExpressionEditor extends
 			return compareScriptVariableAndLabel(e1, e2);
 		} else if (e1 instanceof String && e2 instanceof String) {
 			return (e1.toString()).compareTo(e2.toString());
-		} else {
+		} else if (e1.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
+			return -1;
+		} else if (e2.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
 			return 1;
+		} else {
+			return 0;
 		}
 	}
 
@@ -180,8 +182,7 @@ public class GroovyScriptExpressionEditor extends
 			if (e1sv.getCategory().equals(e2sv.getCategory())) {
 				return e1sv.getName().compareToIgnoreCase(e2sv.getName());
 			} else {
-				return e1sv.getCategory().compareToIgnoreCase(
-						e2sv.getCategory());
+				return compareScriptVariableAndLabel(e1, e2sv.getCategory());
 			}
 		}
 	}
@@ -198,8 +199,7 @@ public class GroovyScriptExpressionEditor extends
 		createDataChooserArea(parent);
 
 		mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, true).hint(SWT.DEFAULT, 300).create());
+		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
 		mainComposite.setLayout(new FillLayout(SWT.VERTICAL));
 
 		createGroovyEditor(parent);
@@ -211,110 +211,87 @@ public class GroovyScriptExpressionEditor extends
 	protected void createDataChooserArea(Composite composite) {
 
 		final Composite combosComposite = new Composite(composite, SWT.NONE);
-		combosComposite.setLayout(GridLayoutFactory.fillDefaults()
-				.numColumns(2).equalWidth(true).create());
-		combosComposite.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, false).create());
+		combosComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).create());
+		combosComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
-		dataCombo = new TableComboViewer(combosComposite, SWT.READ_ONLY
-				| SWT.BORDER);
+		dataCombo = new TableComboViewer(combosComposite, SWT.READ_ONLY | SWT.BORDER);
 		dataCombo.getTableCombo().setLayoutData(
-				GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT,22).create());
+				GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 22).create());
 		dataCombo.getTableCombo().defineColumns(1);
 		dataCombo.setLabelProvider(new ProcessVariableLabelProvider());
 		dataCombo.setContentProvider(new ProcessVariableContentProvider());
 		dataCombo.setSorter(comboSorter);
 
-		bonitaDataCombo = new TableComboViewer(combosComposite, SWT.READ_ONLY
-				| SWT.BORDER);
+		bonitaDataCombo = new TableComboViewer(combosComposite, SWT.READ_ONLY | SWT.BORDER);
 		bonitaDataCombo.setLabelProvider(new BonitaVariableLabelProvider());
-		bonitaDataCombo
-				.setContentProvider(new ProcessVariableContentProvider());
+		bonitaDataCombo.setContentProvider(new ProcessVariableContentProvider());
 		bonitaDataCombo.setSorter(comboSorter);
 		bonitaDataCombo.getControl().setLayoutData(
-				GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT,22).create());
+				GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 22).create());
 
-		bonitaDataCombo
-				.addSelectionChangedListener(new ISelectionChangedListener() {
+		bonitaDataCombo.addSelectionChangedListener(new ISelectionChangedListener() {
 
-					@Override
-					public void selectionChanged(SelectionChangedEvent event) {
-						Object selected = ((IStructuredSelection) bonitaDataCombo
-								.getSelection()).getFirstElement();
-						if (selected == null
-								|| selected
-										.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
-							return;
-						}
-						ScriptVariable f = (ScriptVariable) selected;
-						StyledText control = groovyViewer.getSourceViewer()
-								.getTextWidget();
-						try {
-							int offset = control.getCaretOffset();
-							String before = document.get(0, offset);
-							if (offset == document.get().length()) {
-								document.set(before + f.getName());
-							} else {
-								String after = document.get().substring(offset,
-										document.get().length());
-								document.set(before + f.getName() + after);
-							}
-							control.setCaretOffset(offset
-									+ f.getName().length());
-							control.setFocus();
-							bonitaDataCombo
-									.setSelection(new StructuredSelection(
-											ProcessVariableContentProvider.SELECT_ENTRY));
-						} catch (Exception e1) {
-							GroovyPlugin.logError(e1);
-						}
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				Object selected = ((IStructuredSelection) bonitaDataCombo.getSelection()).getFirstElement();
+				if (selected == null || selected.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
+					return;
+				}
+				ScriptVariable f = (ScriptVariable) selected;
+				StyledText control = groovyViewer.getSourceViewer().getTextWidget();
+				try {
+					int offset = control.getCaretOffset();
+					String before = document.get(0, offset);
+					if (offset == document.get().length()) {
+						document.set(before + f.getName());
+					} else {
+						String after = document.get().substring(offset, document.get().length());
+						document.set(before + f.getName() + after);
 					}
-				});
+					control.setCaretOffset(offset + f.getName().length());
+					control.setFocus();
+					bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
+				} catch (Exception e1) {
+					GroovyPlugin.logError(e1);
+				}
+			}
+		});
 
 		dataCombo.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				Object selected = ((IStructuredSelection) dataCombo
-						.getSelection()).getFirstElement();
+				Object selected = ((IStructuredSelection) dataCombo.getSelection()).getFirstElement();
 				if (selected != null) {
-					if (selected
-							.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
+					if (selected.equals(ProcessVariableContentProvider.SELECT_ENTRY)) {
 						return;
 					}
 					if (!(selected instanceof String)) {
 
 						ScriptVariable f = (ScriptVariable) selected;
-						StyledText control = groovyViewer.getSourceViewer()
-								.getTextWidget();
+						StyledText control = groovyViewer.getSourceViewer().getTextWidget();
 						try {
 							int offset = control.getCaretOffset();
 							String before = document.get(0, offset);
 							if (offset == document.get().length()) {
 								document.set(before + f.getName());
 							} else {
-								String after = document.get().substring(offset,
-										document.get().length());
+								String after = document.get().substring(offset, document.get().length());
 								document.set(before + f.getName() + after);
 							}
 
-							control.setCaretOffset(offset
-									+ f.getName().length());
+							control.setCaretOffset(offset + f.getName().length());
 							control.setFocus();
 
 							dataCombo.getTableCombo().setText(""); //$NON-NLS-1$
-							dataCombo
-									.setSelection(new StructuredSelection(
-											ProcessVariableContentProvider.SELECT_ENTRY));
+							dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 						} catch (Exception e1) {
 							GroovyPlugin.logError(e1);
 						}
 					} else {
 						try {
 							dataCombo.getTableCombo().setText(""); //$NON-NLS-1$
-							dataCombo
-									.setSelection(new StructuredSelection(
-											ProcessVariableContentProvider.SELECT_ENTRY));
+							dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 						} catch (Exception e1) {
 							GroovyPlugin.logError(e1);
 						}
@@ -329,15 +306,12 @@ public class GroovyScriptExpressionEditor extends
 	protected void createDependencyViewer(Composite parent) {
 
 		final Composite mainComposite = new Composite(parent, SWT.NONE);
-		mainComposite.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, false).create());
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2)
-				.margins(0, 0).create());
+		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
 
 		automaticResolutionButton = new Button(mainComposite, SWT.CHECK);
 		automaticResolutionButton.setText(Messages.automaticResolution);
-		automaticResolutionButton.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, false).span(2, 1).create());
+		automaticResolutionButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create());
 		automaticResolutionButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -345,70 +319,54 @@ public class GroovyScriptExpressionEditor extends
 					removeDependencyButton.setEnabled(false);
 					dependencyJob.schedule();
 				}
-				depndencySection.setExpanded(!automaticResolutionButton
-						.getSelection());
+				depndencySection.setExpanded(!automaticResolutionButton.getSelection());
 			}
 		});
 
 		depndencySection = new Section(mainComposite, Section.NO_TITLE);
-		depndencySection.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, true).span(2, 1).create());
-		depndencySection.setLayout(GridLayoutFactory.fillDefaults()
-				.numColumns(2).create());
+		depndencySection.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(2, 1).create());
+		depndencySection.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
 
-		Composite dependenciesComposite = new Composite(depndencySection,
-				SWT.NONE);
-		dependenciesComposite.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, false).create());
-		dependenciesComposite.setLayout(GridLayoutFactory.fillDefaults()
-				.numColumns(2).margins(0, 0).create());
+		Composite dependenciesComposite = new Composite(depndencySection, SWT.NONE);
+		dependenciesComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		dependenciesComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create());
 
-		dependenciesViewer = new TableViewer(dependenciesComposite, SWT.BORDER
-				| SWT.V_SCROLL | SWT.MULTI);
+		dependenciesViewer = new TableViewer(dependenciesComposite, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 		dependenciesViewer.getControl().setLayoutData(
-				GridDataFactory.fillDefaults().grab(true, true)
-						.hint(SWT.DEFAULT, 40).create());
+				GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 40).create());
 		dependenciesViewer.setContentProvider(new ArrayContentProvider());
 		dependenciesViewer.setLabelProvider(adapterLabelProvider);
-		dependenciesViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
+		dependenciesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
-					@Override
-					public void selectionChanged(SelectionChangedEvent event) {
-						if (!event.getSelection().isEmpty()
-								&& !automaticResolutionButton.getSelection()) {
-							removeDependencyButton.setEnabled(true);
-						}
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (!event.getSelection().isEmpty() && !automaticResolutionButton.getSelection()) {
+					removeDependencyButton.setEnabled(true);
+				}
 
-					}
-				});
+			}
+		});
 
-		Composite addRemoveComposite = new Composite(dependenciesComposite,
-				SWT.NONE);
-		addRemoveComposite.setLayoutData(GridDataFactory.fillDefaults()
-				.create());
-		addRemoveComposite.setLayout(GridLayoutFactory.fillDefaults()
-				.numColumns(1).margins(0, 0).spacing(0, 0).create());
+		Composite addRemoveComposite = new Composite(dependenciesComposite, SWT.NONE);
+		addRemoveComposite.setLayoutData(GridDataFactory.fillDefaults().create());
+		addRemoveComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).spacing(0, 0).create());
 
 		addDependencyButton = new Button(addRemoveComposite, SWT.FLAT);
 		addDependencyButton.setText(Messages.add);
-		addDependencyButton.setLayoutData(GridDataFactory.fillDefaults()
-				.create());
+		addDependencyButton.setLayoutData(GridDataFactory.fillDefaults().create());
 
 		removeDependencyButton = new Button(addRemoveComposite, SWT.FLAT);
 		removeDependencyButton.setText(Messages.remove);
 		removeDependencyButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				for (Object sel : ((IStructuredSelection) dependenciesViewer
-						.getSelection()).toList()) {
+				for (Object sel : ((IStructuredSelection) dependenciesViewer.getSelection()).toList()) {
 					inputExpression.getReferencedElements().remove(sel);
 				}
 			}
 		});
 		removeDependencyButton.setEnabled(false);
-		removeDependencyButton.setLayoutData(GridDataFactory.fillDefaults()
-				.create());
+		removeDependencyButton.setLayoutData(GridDataFactory.fillDefaults().create());
 
 		depndencySection.setClient(dependenciesComposite);
 	}
@@ -416,49 +374,37 @@ public class GroovyScriptExpressionEditor extends
 	protected void createGroovyEditor(Composite parent) {
 
 		groovyViewer = new GroovyViewer(mainComposite);
-		groovyViewer.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, true).hint(SWT.DEFAULT, 300).create());
+		groovyViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
 		sourceViewer = groovyViewer.getSourceViewer();
 		document = groovyViewer.getDocument();
 
 		final Composite buttonBarComposite = new Composite(parent, SWT.NONE);
-		buttonBarComposite.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, false).create());
-		buttonBarComposite.setLayout(GridLayoutFactory.fillDefaults()
-				.numColumns(1).margins(0, 0).create());
+		buttonBarComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		buttonBarComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 
 		testButton = new Button(buttonBarComposite, SWT.PUSH);
 		testButton.setText(Messages.testButtonLabel);
-		testButton.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, false).align(SWT.END, SWT.FILL).create());
+		testButton.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.END, SWT.FILL).create());
 		testButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				final Map<String, Serializable> variables = TestGroovyScriptUtil
-						.createVariablesMap(
-								groovyViewer.getGroovyCompilationUnit(), nodes);
+				final Map<String, Serializable> variables = TestGroovyScriptUtil.createVariablesMap(
+						groovyViewer.getGroovyCompilationUnit(), nodes);
 
 				if (variables.isEmpty()) {
-					ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(
-							Display.getDefault().getActiveShell());
+					ManageConnectorJarDialog mcjd = new ManageConnectorJarDialog(Display.getDefault().getActiveShell());
 					int retCode = mcjd.open();
 					if (retCode == Window.OK) {
 						try {
-							TestGroovyScriptUtil.evaluateExpression(
-									groovyViewer.getGroovyCompilationUnit()
-											.getSource(), inputExpression
-											.getReturnType(),
-									Collections.EMPTY_MAP, mcjd
-											.getSelectedJars());
+							TestGroovyScriptUtil.evaluateExpression(groovyViewer.getGroovyCompilationUnit().getSource(),
+									inputExpression.getReturnType(), Collections.EMPTY_MAP, mcjd.getSelectedJars());
 						} catch (JavaModelException e1) {
 							BonitaStudioLog.error(e1);
 						}
 					}
 				} else {
-					new TestGroovyScriptDialog(Display.getDefault()
-							.getActiveShell(), nodes, groovyViewer
-							.getGroovyCompilationUnit(), inputExpression
-							.getReturnType(), variables).open();
+					new TestGroovyScriptDialog(Display.getDefault().getActiveShell(), nodes, groovyViewer
+							.getGroovyCompilationUnit(), inputExpression.getReturnType(), variables).open();
 				}
 
 			}
@@ -479,73 +425,44 @@ public class GroovyScriptExpressionEditor extends
 	}
 
 	@Override
-	public void bindExpression(EMFDataBindingContext dataBindingContext,
-			final EObject context, Expression inputExpression,
-			ViewerFilter[] filters,final ExpressionViewer viewer) {
+	public void bindExpression(EMFDataBindingContext dataBindingContext, final EObject context, Expression inputExpression,
+			ViewerFilter[] filters, final ExpressionViewer viewer) {
 		this.inputExpression = inputExpression;
 		this.context = context;
 
-		IObservableValue dependenciesModelObservable = EMFObservables
-				.observeValue(
-						inputExpression,
-						ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
-		IObservableValue autoDepsModelObservable = EMFObservables.observeValue(
-				inputExpression,
+		IObservableValue dependenciesModelObservable = EMFObservables.observeValue(inputExpression,
+				ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS);
+		IObservableValue autoDepsModelObservable = EMFObservables.observeValue(inputExpression,
 				ExpressionPackage.Literals.EXPRESSION__AUTOMATIC_DEPENDENCIES);
 
 		inputExpression.setType(ExpressionConstants.SCRIPT_TYPE);
 		inputExpression.setInterpreter(ExpressionConstants.GROOVY);
 
-		UpdateValueStrategy evaluateStrategy = new UpdateValueStrategy();
-		evaluateStrategy
-				.setConverter(new Converter(String.class, Boolean.class) {
-
-					@Override
-					public Object convert(Object fromObject) {
-						if (fromObject == null
-								|| fromObject.toString().isEmpty()) {
-							return false;
-						}
-						return true;
-					}
-
-				});
-
-		dataBindingContext.bindValue(SWTObservables.observeEnabled(testButton),
-				SWTObservables.observeText(groovyViewer.getSourceViewer()
-						.getTextWidget(), SWT.Modify), null, evaluateStrategy);
-		groovyViewer.setContext(context, filters,viewer.getExpressionNatureProvider());
+		groovyViewer.setContext(context, filters, viewer.getExpressionNatureProvider());
 		nodes = groovyViewer.getFieldNodes();
 
 		if (context == null && nodes == null) {
 			dataCombo.add(Messages.noProcessVariableAvailable);
-			dataCombo.getTableCombo().setText(
-					Messages.noProcessVariableAvailable);
+			dataCombo.getTableCombo().setText(Messages.noProcessVariableAvailable);
 			dataCombo.getTableCombo().setEnabled(false);
 		} else if (nodes != null) {
 			dataCombo.setInput(nodes);
-			dataCombo.setSelection(new StructuredSelection(
-					ProcessVariableContentProvider.SELECT_ENTRY));
+			dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 			if (nodes.isEmpty()) {
 				dataCombo.getTableCombo().setEnabled(false);
 			}
 		} else {
 			dataCombo.setInput(groovyViewer.getFieldNodes());
-			dataCombo.setSelection(new StructuredSelection(
-					ProcessVariableContentProvider.SELECT_ENTRY));
+			dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 			if (groovyViewer.getFieldNodes().isEmpty()) {
 				dataCombo.getTableCombo().setEnabled(false);
 			}
 		}
 
-		bonitaDataCombo.setInput(GroovyUtil
-				.getBonitaVariables(context, filters));
-		bonitaDataCombo.setSelection(new StructuredSelection(
-				ProcessVariableContentProvider.SELECT_ENTRY));
+		bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context, filters));
+		bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 
-		dataBindingContext.bindValue(
-				ViewersObservables.observeInput(dependenciesViewer),
-				dependenciesModelObservable);
+		dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
 
 		UpdateValueStrategy opposite = new UpdateValueStrategy();
 		opposite.setConverter(new Converter(Boolean.class, Boolean.class) {
@@ -556,26 +473,19 @@ public class GroovyScriptExpressionEditor extends
 			}
 		});
 
-		dataBindingContext.bindValue(
-				SWTObservables.observeSelection(automaticResolutionButton),
-				autoDepsModelObservable);
-		dataBindingContext.bindValue(
-				SWTObservables.observeSelection(automaticResolutionButton),
-				SWTObservables.observeEnabled(addDependencyButton), opposite,
-				new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
+		dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), autoDepsModelObservable);
+		dataBindingContext.bindValue(SWTObservables.observeSelection(automaticResolutionButton), SWTObservables
+				.observeEnabled(addDependencyButton), opposite, new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER));
 		depndencySection.setExpanded(!automaticResolutionButton.getSelection());
 
-		addDependencyButton.setEnabled(!inputExpression
-				.isAutomaticDependencies());
+		addDependencyButton.setEnabled(!inputExpression.isAutomaticDependencies());
 
-		dependencyJob = new ComputeScriptDependenciesJob(
-				sourceViewer.getDocument());
+		dependencyJob = new ComputeScriptDependenciesJob(sourceViewer.getDocument());
 		dependencyJob.setContext(context);
 		this.nodes.addAll(GroovyUtil.getBonitaVariables(context, filters));
 		dependencyJob.setNodes(nodes);
 
-		final InputLengthValidator lenghtValidator = new InputLengthValidator(
-				"", GroovyViewer.MAX_SCRIPT_LENGTH);
+		final InputLengthValidator lenghtValidator = new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH);
 		String content = inputExpression.getContent();
 		if (content == null) {
 			content = "";
@@ -587,8 +497,7 @@ public class GroovyScriptExpressionEditor extends
 			public void documentChanged(DocumentEvent event) {
 				final String text = event.getDocument().get();
 				if (lenghtValidator.validate(text).isOK()) {
-					GroovyScriptExpressionEditor.this.inputExpression
-							.setContent(text);
+					GroovyScriptExpressionEditor.this.inputExpression.setContent(text);
 				}
 				if (automaticResolutionButton.getSelection()) {
 					dependencyJob.schedule();
@@ -617,16 +526,11 @@ public class GroovyScriptExpressionEditor extends
 
 			@Override
 			public void done(IJobChangeEvent event) {
-				if (dependencyJob != null
-						&& GroovyScriptExpressionEditor.this.inputExpression
-								.isAutomaticDependencies()) {
-					List<EObject> deps = dependencyJob.getDependencies(document
-							.get());
-					GroovyScriptExpressionEditor.this.inputExpression
-							.getReferencedElements().clear();
+				if (dependencyJob != null && GroovyScriptExpressionEditor.this.inputExpression.isAutomaticDependencies()) {
+					List<EObject> deps = dependencyJob.getDependencies(document.get());
+					GroovyScriptExpressionEditor.this.inputExpression.getReferencedElements().clear();
 					if (deps != null && !deps.isEmpty()) {
-						GroovyScriptExpressionEditor.this.inputExpression
-								.getReferencedElements().addAll(deps);
+						GroovyScriptExpressionEditor.this.inputExpression.getReferencedElements().addAll(deps);
 					}
 				}
 			}
@@ -652,10 +556,7 @@ public class GroovyScriptExpressionEditor extends
 			if (input != null && filters != null) {
 				for (Expression exp : expressions) {
 					for (ViewerFilter filter : filters) {
-						if (filter != null
-								&& !filter.select(
-										groovyViewer.getSourceViewer(), input,
-										exp)) {
+						if (filter != null && !filter.select(groovyViewer.getSourceViewer(), input, exp)) {
 							filteredExpressions.remove(exp);
 						}
 					}
@@ -666,14 +567,26 @@ public class GroovyScriptExpressionEditor extends
 		addDependencyButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				SelectDependencyDialog dialog = new SelectDependencyDialog(
-						Display.getDefault().getActiveShell(),
-						filteredExpressions,
-						GroovyScriptExpressionEditor.this.inputExpression
-								.getReferencedElements());
+				SelectDependencyDialog dialog = new SelectDependencyDialog(Display.getDefault().getActiveShell(),
+						filteredExpressions, GroovyScriptExpressionEditor.this.inputExpression.getReferencedElements());
 				dialog.open();
 			}
 		});
+
+		final UpdateValueStrategy evaluateStrategy = new UpdateValueStrategy();
+		evaluateStrategy.setConverter(new Converter(String.class, Boolean.class) {
+
+			@Override
+			public Object convert(Object fromObject) {
+				if (fromObject == null || fromObject.toString().isEmpty()) {
+					return false;
+				}
+				return true;
+			}
+		});
+		dataBindingContext.bindValue(SWTObservables.observeEnabled(testButton),
+				SWTObservables.observeText(groovyViewer.getSourceViewer().getTextWidget(), SWT.Modify), null,
+				evaluateStrategy);
 	}
 
 	@Override

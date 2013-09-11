@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +39,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import javax.imageio.ImageIO;
+
 import org.bonitasoft.engine.connector.AbstractConnector;
+import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -114,7 +118,7 @@ public class ConnectorDescriptorToConnectorDefinition {
 		this.tmpConnectorJarFile = tmpConnectorJarFile;
 	}
 
-	public void createConnectorDefinition(){
+	public void createConnectorDefinition() throws IOException{
 		final String connectorId = v5Descriptor.getId();
 		final String connectorVersion = BASE_VERSION;
 		final List<org.ow2.bonita.connector.core.desc.Category> v5Categories = v5Descriptor.getCategories();
@@ -154,9 +158,9 @@ public class ConnectorDescriptorToConnectorDefinition {
 		final ConnectorDefRepositoryStore defStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final ConnectorSourceRepositoryStore sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class);
 		ConnectorDefinition definition = ((IDefinitionRepositoryStore) defStore).getDefinition(connectorImplementation.getDefinitionId(),connectorImplementation.getDefinitionVersion()) ;
-		
+
 		ClassGenerator.generateConnectorImplementationAbstractClass(connectorImplementation,definition,AbstractConnector.class.getName(),sourceStore, Repository.NULL_PROGRESS_MONITOR) ;
-		
+
 		IType classType = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(connectorImplementation.getImplementationClassname()) ;
 		if(classType != null){
 			classType.getCompilationUnit().delete(true, Repository.NULL_PROGRESS_MONITOR);
@@ -309,7 +313,9 @@ public class ConnectorDescriptorToConnectorDefinition {
 
 	private String toInputName(Setter setter) {
 		String name = setter.getSetterName();
-		name = name.substring(3);
+		if(name.startsWith("set")){
+			name = name.substring(3);
+		}
 		name = name.substring(0, 1).toLowerCase() +name.substring(1);
 		return name;
 	}
@@ -423,13 +429,15 @@ public class ConnectorDescriptorToConnectorDefinition {
 	protected void addOutputs(final ConnectorDefinition connectorDefinition) {
 		for(Getter getter : v5Descriptor.getOutputs()){
 			String name = getter.getName();
-			name = name.substring(3);
+			if(name.startsWith("get")){
+				name = name.substring(3);
+			}
 			name = name.substring(0, 1).toLowerCase() +name.substring(1);
 			final Output connectorOutput = ConnectorDefinitionFactory.eINSTANCE.createOutput();
 			connectorOutput.setName(name);
 			final Type outputType = v5Descriptor.getOutputType(getter.getName());
 			if( outputType instanceof Class){
-				connectorOutput.setType(((Class)outputType).getName());
+				connectorOutput.setType(((Class<?>)outputType).getName());
 				connectorDefinition.getOutput().add(connectorOutput);
 			}else{
 				BonitaStudioLog.warning("Unknown connector output type "+outputType.toString(), BarImporterPlugin.PLUGIN_ID);
@@ -460,7 +468,7 @@ public class ConnectorDescriptorToConnectorDefinition {
 	}
 
 	protected List<Category> createCategories(
-			final List<org.ow2.bonita.connector.core.desc.Category> v5Categories) {
+			final List<org.ow2.bonita.connector.core.desc.Category> v5Categories) throws IOException {
 		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final DefinitionResourceProvider resourceProvider = store.getResourceProvider();
 		final Set<String> allCategories = resourceProvider.getProvidedCategoriesIds();
@@ -483,23 +491,46 @@ public class ConnectorDescriptorToConnectorDefinition {
 	}
 
 	private Category createCategory(
-			org.ow2.bonita.connector.core.desc.Category c) {
+			org.ow2.bonita.connector.core.desc.Category c) throws IOException {
 		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final Category category = ConnectorDefinitionFactory.eINSTANCE.createCategory();
 		category.setId(c.getName());
-		if(c.getIconPath() != null){
+		if(c.getIconPath() != null && !c.getIconPath().isEmpty()){
 			category.setIcon(getIconName(c.getIconPath()));
-			store.importInputStream(category.getIcon(), c.getIcon());
+			InputStream iconInputstream = c.getIcon();
+			if(iconInputstream !=  null){
+				BufferedImage image = ImageIO.read(iconInputstream) ;
+                image = FileUtil.resizeImage(image,16) ;
+                File createTempFile = File.createTempFile("icon", ".png");
+				FileOutputStream resizedStream = new FileOutputStream(createTempFile);
+                ImageIO.write(image, "PNG", resizedStream) ;
+                resizedStream.close();
+                iconInputstream.close();
+                iconInputstream = new FileInputStream(createTempFile);
+				store.importInputStream(category.getIcon(), iconInputstream);
+				createTempFile.delete();
+			}
 		}
 		return category;
 	}
 
 	public void importConnectorDefinitionResources() throws ZipException, IOException {
 		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
-		if(v5Descriptor.getIconPath() != null){
-			final InputStream iconInputStream = v5Descriptor.getIcon();
+		if(v5Descriptor.getIconPath() != null && !v5Descriptor.getIconPath().isEmpty() ){
+			InputStream iconInputStream = v5Descriptor.getIcon();
 			final String iconName = getIconName(v5Descriptor.getIconPath());
-			store.importInputStream(iconName, iconInputStream);
+			if(iconInputStream != null){
+				BufferedImage image = ImageIO.read(iconInputStream) ;
+                image = FileUtil.resizeImage(image,16) ;
+                File createTempFile = File.createTempFile("icon", ".png");
+				FileOutputStream resizedStream = new FileOutputStream(createTempFile);
+                ImageIO.write(image, "PNG", resizedStream) ;
+                resizedStream.close();
+                iconInputStream.close();
+                iconInputStream = new FileInputStream(createTempFile);
+				store.importInputStream(iconName, iconInputStream);
+				createTempFile.delete();
+			}
 		}
 		importI18NFiles();
 	}

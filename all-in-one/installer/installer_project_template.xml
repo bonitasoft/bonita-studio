@@ -123,6 +123,73 @@
 				</platformTest>
 			</ruleList>
 		</createSymLink>
+		<setInstallerVariableFromScriptOutput>
+			<exec>xdg-user-dir</exec>
+			<execArgs>DESKTOP</execArgs>
+			<name>desktop_path</name>
+			<abortOnError>0</abortOnError>
+			<showMessageOnError>0</showMessageOnError>
+			<ruleList>
+				<platformTest>
+					<type>linux</type>
+				</platformTest>
+				<programTest>
+					<condition>is_in_path</condition>
+					<name>xdg-user-dir</name>
+				</programTest>
+			</ruleList>
+		</setInstallerVariableFromScriptOutput>
+		<if>
+			<actionList>
+				<setInstallerVariableFromScriptOutput>
+					<exec>xdg-user-dir</exec>
+					<execArgs>DESKTOP</execArgs>
+					<name>desktop_path</name>
+					<abortOnError>0</abortOnError>
+					<showMessageOnError>0</showMessageOnError>
+				</setInstallerVariableFromScriptOutput>
+			</actionList>
+			<conditionRuleList>
+				<platformTest>
+					<type>linux</type>
+				</platformTest>
+				<programTest>
+					<condition>is_in_path</condition>
+					<name>xdg-user-dir</name>
+				</programTest>
+			</conditionRuleList>
+			<elseActionList>
+				<setInstallerVariable name="desktop_path" value="${installdir}" />
+			</elseActionList>
+		</if>
+
+		<if>
+			<actionList>
+			<writeFile>
+				<path>${desktop_path}/@product.short.name@-${product_version}.desktop</path>
+				<encoding>utf-8</encoding>
+				<text>
+					[Desktop Entry]
+					Version=1.0
+					Encoding=UTF-8
+					Name=@product.short.name@-${product_version}
+					GenericName=@product.short.name@-${product_version}
+					Comment=@shortcut.comment@
+					Exec=${installdir}/@linux.shortcut.name@
+					Icon=${installdir}/bonitasoft-icon-128-128-transparent.png
+					Terminal=false
+					Type=Application
+				</text>
+			</writeFile>
+			<changePermissions permissions="0755" files="${desktop_path}/@product.short.name@-${product_version}.desktop"/>
+			</actionList>
+			<conditionRuleList>
+				<platformTest>
+					<type>linux</type>
+				</platformTest>
+			</conditionRuleList>
+		</if>
+		
 	</postInstallationActionList>
 		<postBuildActionList>
 	<actionGroup>
@@ -403,7 +470,7 @@
                     <actionList>
 		               <runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace"</programArguments>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace"</programArguments>
 							<progressText>${msg(workspace.recovery.progressMessage)}</progressText>
 							<ruleList>
 								<platformTest>
@@ -417,7 +484,7 @@
 						</runProgram>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace"</programArguments>
+							<programArguments>-Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace"</programArguments>
 							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
 							<ruleList>
 								<platformTest>
@@ -428,7 +495,7 @@
 						</runProgram>
 						<runProgram>
 							<program>${java_executable}</program>
-							<programArguments>-XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace"</programArguments>
+							<programArguments>-XstartOnFirstThread -Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -application org.bonitasoft.studio.application.WorkspaceRecovery -data "${Oldworkspace}/workspace/" -newWorkspaceLocation "${installdir}/workspace"</programArguments>
 							<progressText>${msg(workspace.recovery.progressMessage)}</progressText>
 							<ruleList>
 								<platformTest>
@@ -442,7 +509,7 @@
 						<runProgram>
 							<program>${java_executable}</program>
 							<!-- Change bundle version when Equinox version change -->
-							<programArguments>-XstartOnFirstThread -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -Xmx512m -XX:MaxPermSize=512m -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace"</programArguments>
+							<programArguments>-XstartOnFirstThread -Xmx512m -XX:MaxPermSize=512m -jar "${installdir}/plugins/org.eclipse.equinox.launcher_1.2.0.v20110502.jar" -application org.bonitasoft.studio.application.InitializerApplication -data "${installdir}/workspace"</programArguments>
 							<progressText>${msg(initializing.progressMessage)} ${product_fullname}...</progressText>
 							<ruleList>
 								<platformTest>

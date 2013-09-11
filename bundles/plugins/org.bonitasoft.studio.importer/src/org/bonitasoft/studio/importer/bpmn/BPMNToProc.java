@@ -82,6 +82,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.omg.spec.bpmn.di.BPMNDiagram;
 import org.omg.spec.bpmn.di.BPMNEdge;
+import org.omg.spec.bpmn.di.BPMNLabelStyle;
 import org.omg.spec.bpmn.di.BPMNPlane;
 import org.omg.spec.bpmn.di.BPMNShape;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
@@ -146,6 +147,7 @@ import org.omg.spec.bpmn.model.TTimerEventDefinition;
 import org.omg.spec.bpmn.model.TTransaction;
 import org.omg.spec.bpmn.model.TUserTask;
 import org.omg.spec.dd.dc.Bounds;
+import org.omg.spec.dd.dc.Font;
 import org.omg.spec.dd.di.DiagramElement;
 import org.omg.spec.dd.di.Shape;
 import org.w3c.dom.Document;
@@ -339,7 +341,7 @@ public class BPMNToProc extends ToProcProcessor {
 					|| docRootDefinitions.getName().isEmpty()) {
 				name = resourceName.substring(0, resourceName.lastIndexOf("."));
 			} else {
-				name = id;
+				name = docRootDefinitions.getName();
 			}
 			result = File.createTempFile(id, ".proc");
 			builder.createDiagram(id, name, "1.0", result);
@@ -474,6 +476,7 @@ public class BPMNToProc extends ToProcProcessor {
 					laneName = tLane.getId();
 				}
 				builder.addLane(tLane.getId(), laneName, sizeFor);
+				addFontStyle(tLane.getId());
 				/* Put Documentation */
 				StringBuilder sb = new StringBuilder();
 				for (TDocumentation doc : tLane.getDocumentation()) {
@@ -514,6 +517,30 @@ public class BPMNToProc extends ToProcProcessor {
 		return location;
 	}
 
+	protected void addFontStyle(String bpmnId) throws ProcBuilderException {
+		BPMNShape bpmnShape = getBPMNShapeForBpmnID(bpmnId);
+		if(bpmnShape != null 
+				&& bpmnShape.getBPMNLabel() != null
+				&& bpmnShape.getBPMNLabel().getLabelStyle() != null){
+			BPMNLabelStyle style = getLabelStyle(bpmnShape.getBPMNLabel().getLabelStyle());
+			if(style != null && style.getFont() != null){
+				Font font = style.getFont();
+				builder.setFontStyle(font.getName(),(int)font.getSize(),font.isIsBold(),font.isIsItalic());
+			}
+		}
+	}
+
+	private BPMNLabelStyle getLabelStyle(QName labelStyle) {
+		for(BPMNDiagram diagram : bpmnDiagrams){
+			for(BPMNLabelStyle style : diagram.getBPMNLabelStyle()){
+				if(style.getId().equals(labelStyle.getLocalPart())){
+					return style;
+				}
+			}
+		}
+		return null;
+	}
+
 	private List<TLane> getAllTLanes(List<TLaneSet> laneSets) {
 		List<TLane> res = new ArrayList<TLane>();
 		for (TLaneSet laneSet : laneSets) {
@@ -552,9 +579,9 @@ public class BPMNToProc extends ToProcProcessor {
 						// after
 						String idOfParent = ((TBoundaryEvent) flowNode)
 								.getAttachedToRef().getLocalPart();
-						if (subProcessesId.contains(idOfParent)) {
-							idOfParent = "subProc_" + idOfParent;
-						}
+//						if (subProcessesId.contains(idOfParent)) {
+//							idOfParent = "subProc_" + idOfParent;
+//						}
 						builder.setCurrentStep(idOfParent);
 
 						String name;
@@ -739,11 +766,11 @@ public class BPMNToProc extends ToProcProcessor {
 		// ProcessPackage.Literals.CALL_ACTIVITY));
 		// FIXME : we are loosing the name of the subprocess :'(
 		if (subProc != null) {
-			createPool(NamingUtils.convertToId(subProcess.getId()),
-					NamingUtils.convertToId(subProcess.getId()), location, true);
+			createPool("subProc_"+NamingUtils.convertToId(subProcess.getId()),
+					"subProc_"+NamingUtils.convertToId(subProcess.getId()), location, true);
 		} else {
-			createPool(NamingUtils.convertToId(subProcess.getId()),
-					NamingUtils.convertToId(subProcess.getId()), location,
+			createPool("subProc_"+NamingUtils.convertToId(subProcess.getId()),
+					"subProc_"+NamingUtils.convertToId(subProcess.getId()), location,
 					false);
 		}
 		location.x += 220; // next
@@ -856,6 +883,7 @@ public class BPMNToProc extends ToProcProcessor {
 		}
 
 		builder.addPool(id, name, "1.0", location, poolSize);
+		addFontStyle(id);
 	}
 
 	private Point findMax(String subProcBpmnIdlocalPart,
@@ -1025,13 +1053,7 @@ public class BPMNToProc extends ToProcProcessor {
 				}
 
 				String sourceId = sequenceFlow.getSourceRef();
-				if (subProcessesId.contains(sequenceFlow.getSourceRef())) {
-					sourceId = "subProc_" + sourceId;
-				}
 				String targetId = sequenceFlow.getTargetRef();
-				if (subProcessesId.contains(targetId)) {
-					targetId = "subProc_" + targetId;
-				}
 				builder.addSequenceFlow(sequenceFlow.getName(), sourceId,
 						targetId, isDefault, null, null, bendpoints);
 				if (sequenceFlow.getConditionExpression() != null) {
@@ -1043,7 +1065,6 @@ public class BPMNToProc extends ToProcProcessor {
 							basedExpression.getInterpreter(),
 							basedExpression.getType());
 				}
-
 			}
 		}
 	}
@@ -1139,8 +1160,8 @@ public class BPMNToProc extends ToProcProcessor {
 							String id = flowNode.getId();
 							if (flowNode instanceof TSubProcess) {
 								subProcessesId.add(id);
-								id = NamingUtils.convertToId("subProc_" + id);
-								name = id;
+//								id = NamingUtils.convertToId(/*"subProc_" +*/ id);
+//								name = id;
 							}
 
 							builder.addTask(id, name, location, null, taskType);
@@ -1171,7 +1192,7 @@ public class BPMNToProc extends ToProcProcessor {
 								if (flowNode instanceof TSubProcess) {
 									TSubProcess bpmnSubProcess = ((TSubProcess) flowNode);
 									builder.addCallActivityTargetProcess(
-											NamingUtils.convertToId(flowNode
+											"subProc_"+NamingUtils.convertToId(flowNode
 													.getId()), "1.0");
 
 									for (TDataInputAssociation input : bpmnSubProcess
@@ -1252,7 +1273,7 @@ public class BPMNToProc extends ToProcProcessor {
 						errorElements.add(flowNode.eClass().getName() + ": "
 								+ flowNode.getName());
 					}
-
+					addFontStyle(flowNode.getId());
 				}
 			}
 		}
@@ -1286,11 +1307,7 @@ public class BPMNToProc extends ToProcProcessor {
 			} else if("##WebService".equals(tServiceTask.getImplementation())){
 				// TODO: handle default implem for web services as Service tasks
 				builder.addConnector(id, name, "webservices", "1.0", ConnectorEvent.ON_FINISH, true);
-
-
 			}
-
-
 		}
 	}
 
@@ -1377,14 +1394,8 @@ public class BPMNToProc extends ToProcProcessor {
 			builder.addConnectorParameter(entry.getKey(),
 					bExpression.getContent(),
 					bExpression.getReturnType(),
-					bExpression.getInterpreter(), bExpression.getType());// TODO
-			// how
-			// to
-			// define
-			// the
-			// real
-			// expression
-			// type
+					bExpression.getInterpreter(),
+					bExpression.getType());// TODO how to define the real expression type
 		}
 		for (java.util.Map.Entry<String, TExpression> entry : connectorOuputs
 				.entrySet()) {

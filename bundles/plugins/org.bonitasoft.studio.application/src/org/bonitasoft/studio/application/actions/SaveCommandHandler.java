@@ -88,6 +88,7 @@ public class SaveCommandHandler extends SaveHandler {
 		if(isDirty()){
 			IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 			MainProcess proc = null ;
+			String formName = null;
 			boolean changed = false;
 			if(editorPart instanceof DiagramEditor){
 				DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
@@ -108,6 +109,11 @@ public class SaveCommandHandler extends SaveHandler {
 					editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
 					IEditorInput editorInput = editorPart.getEditorInput();
 					ResourceSet resourceSet = proc.eResource().getResourceSet();
+					IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+					if(editor instanceof FormDiagramEditor){
+						editorsWithSameResourceSet.add((DiagramDocumentEditor) editor);
+						formName = ((FormDiagramEditor)editor).getPartName();
+					}
 					for (IEditorReference editorRef : editorReferences) {
 						try {
 							IEditorInput currentEditorInput = editorRef.getEditorInput();
@@ -151,6 +157,14 @@ public class SaveCommandHandler extends SaveHandler {
 							}
 						}
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(newEditorOfDiagram);
+						if(formName!=null){
+							for (EObject form:forms){
+								if(form instanceof Form && ((Form)form).getName().equals(formName)){
+									FormsUtils.openDiagram((Form)form, null);
+									break;
+								}
+							}
+						}
 					}else{
 						EObject root = ((DiagramEditor)editorPart).getDiagramEditPart().resolveSemanticElement();
 						Resource res = root.eResource();

@@ -54,10 +54,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
@@ -66,7 +64,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * @author Aurelie Zara
  * @author Romain Bioteau
  */
-public class OperationsComposite extends Composite {
+public abstract class OperationsComposite extends Composite {
 
 	public static final String SWTBOT_ID_REMOVE_LINE = "actionLinesCompositeRemoveButton";
 	protected List<OperationViewer> operationViewers = new ArrayList<OperationViewer>();
@@ -76,14 +74,13 @@ public class OperationsComposite extends Composite {
 	protected ArrayList<List<Binding>> bindings = new ArrayList<List<Binding>>();
 	private TabbedPropertySheetWidgetFactory widgetFactory;
 	private EObject eObject;
-	private final Composite mainComposite;
+	protected final Composite mainComposite;
 	private EReference operationContainmentFeature;
 	private final ViewerFilter storageExpressionFilter;
 	private final ViewerFilter actionExpressionFilter;
 	private IExpressionNatureProvider storageExpressionNatureProvider;
 	private IExpressionNatureProvider actionExpressionNatureProvider;
 	private Map<String, IExpressionValidator> validatorMap = new HashMap<String, IExpressionValidator>();
-	private EObject eObjectContexteObjectContext;
 	private EObject eObjectContext;
 
 	public OperationsComposite(TabbedPropertySheetPage tabbedPropertySheetPage,
@@ -303,21 +300,7 @@ public class OperationsComposite extends Composite {
 	}
 
 
-	public void refresh() {
-		Shell shell = mainComposite.getShell();
-		Point compositesize = mainComposite.getSize();
-		Point newcompositesize = mainComposite.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		Point defaultSize = shell.getSize();
-		Point size = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-		if(compositesize.y < newcompositesize.y){
-			shell.setSize(defaultSize.x, size.y);
-		}
-		shell.layout(true,true);
-
-		if (tabbedPropertySheetPage != null) {
-			tabbedPropertySheetPage.resizeScrolledComposite();
-		}
-	}
+	public abstract void refresh() ;
 
 	protected EReference getActionTargetFeature() {
 		return operationContainmentFeature;

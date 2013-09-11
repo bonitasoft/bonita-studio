@@ -94,6 +94,7 @@ public class DefinitionResourceProvider {
 	private StoreControl storeControl;
 	private ArrayList<Category> categories;
 	private Category uncategorized;
+	private Map<String, ResourceBundle> resourceBundleCache = new WeakHashMap<String, ResourceBundle>();
 	private final static Map<IRepositoryStore<? extends IRepositoryFileStore>, DefinitionResourceProvider> INSTANCES_MAP;
 
 	static {
@@ -153,6 +154,11 @@ public class DefinitionResourceProvider {
 		if (definition == null || definition.eResource() == null) {
 			return null;
 		}
+		String cacheKey = getCacheKey(definition, locale);
+		ResourceBundle resourceBundle = resourceBundleCache.get(cacheKey);
+		if(resourceBundle != null){
+			return resourceBundle;
+		}
 		IRepositoryFileStore fileStore = store.getChild(URI.decode(definition.eResource().getURI().lastSegment()));
 		if(fileStore == null){
 			return null;
@@ -182,8 +188,12 @@ public class DefinitionResourceProvider {
 				return null;
 			}
 		}
-
+		resourceBundleCache.put(cacheKey,bundle);
 		return bundle;
+	}
+
+	private String getCacheKey(ConnectorDefinition definition, Locale locale) {
+		return NamingUtils.toConnectorDefinitionFilename(definition.getId(), definition.getVersion(), false)+locale.toString();
 	}
 
 	private String getMessage(ConnectorDefinition definition, String key) {
@@ -305,6 +315,7 @@ public class DefinitionResourceProvider {
 				}
 			}
 		}
+		resourceBundleCache.clear();
 	}
 
 	public Set<Locale> getExistingLocale(ConnectorDefinition definition) {
@@ -521,7 +532,7 @@ public class DefinitionResourceProvider {
 		unloadable.setId(Messages.unloadable);
 		return unloadable;
 	}
-	
+
 
 	public Category getUncategorizedCategory() {
 		return uncategorized;
@@ -532,12 +543,13 @@ public class DefinitionResourceProvider {
 			return Pics.getImage(PicsConstants.error);
 		}
 		Image icon = categoryImageRegistry.get(category.getId());
-		try {
+
+		if (icon == null) {
+			try {
 			FileLocator.toFileURL(bundle.getResource(store.getName()));
 		} catch (IOException e1) {
 			BonitaStudioLog.error(e1);
 		}
-		if (icon == null) {
 			Resource resource = category.eResource();
 			File f = null;
 			if (resource != null) {
@@ -573,12 +585,12 @@ public class DefinitionResourceProvider {
 		if (category.getId().equals(label)) {// Try to find a provided category
 			// label
 			List<ConnectorDefinition> definitions = getAllDefinitionWithCategotyId(category.getId());
-		for (ConnectorDefinition def : definitions) {
-			label = getCategoryLabel(def, category.getId());
-			if (!category.getId().equals(label)) {
-				return label;
+			for (ConnectorDefinition def : definitions) {
+				label = getCategoryLabel(def, category.getId());
+				if (!category.getId().equals(label)) {
+					return label;
+				}
 			}
-		}
 		}
 		return label;
 	}
@@ -661,13 +673,14 @@ public class DefinitionResourceProvider {
 		}
 		String definitionId = definition.getId() + "_" + definition.getVersion();
 		Image icon = definitionImageRegistry.get(definitionId);
-		//Load icons
-		try {
-			FileLocator.toFileURL(bundle.getResource(store.getName()));
-		} catch (IOException e1) {
-			BonitaStudioLog.error(e1);
-		}
+
 		if (icon == null || icon.isDisposed()) {
+			//Load icons
+			try {
+				FileLocator.toFileURL(bundle.getResource(store.getName()));
+			} catch (IOException e1) {
+				BonitaStudioLog.error(e1);
+			}
 			Resource resource = definition.eResource();
 			File f = null;
 			if (resource != null) {
@@ -677,7 +690,7 @@ public class DefinitionResourceProvider {
 			} else {
 				f = store.getResource().getLocation().toFile();
 			}
-			if (f != null && f.exists() && definition.getIcon() != null) {
+			if (f != null && f.exists() && definition.getIcon() != null && !definition.getIcon().isEmpty()) {
 				File iconFile = new File(f, definition.getIcon());
 				if (iconFile.exists()) {
 					try {

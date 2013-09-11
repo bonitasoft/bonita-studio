@@ -32,6 +32,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.eclipse.core.commands.Command;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -68,10 +69,16 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 		if(newData !=null){
 			//TODO : find an intelligent way to search references to the oldData and replace them with the new one instead of writing specific code for each usecase
 			updateDataReferenceInVariableExpressions(cc);
+			domain.getCommandStack().execute(cc) ;
+			cc =  new CompoundCommand("Refactor Data Command") ;
 			updateDataReferenceInExpressions(cc);
 			if(updateDataReferences ){
+				cc =  new CompoundCommand("Refactor Data Command") ;
 				updateDataInListsOfData(cc);
+				domain.getCommandStack().execute(cc) ;
+				cc =  new CompoundCommand("Refactor Data Command") ;
 				updateDataReferenceInMultinstanciation(cc);
+				domain.getCommandStack().execute(cc) ;
 			}
 		}else{
 			removeAllDataReferences(cc);
@@ -83,6 +90,7 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 	private void updateDataReferenceInExpressions(CompoundCommand cc) {
 		List<Expression> expressions = ModelHelper.getAllItemsOfType(parentProcess, ExpressionPackage.Literals.EXPRESSION) ;
 		for(Expression exp : expressions){
+			cc =  new CompoundCommand("Refactor Data Command") ;
 			for(EObject dependency : exp.getReferencedElements()){
 				if(dependency instanceof Data){
 					if(((Data)dependency).getName().equals(oldData.getName())){
@@ -91,6 +99,14 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 					}
 				}
 			}
+			if(!cc.isEmpty()){
+				for(org.eclipse.emf.common.command.Command c :cc.getCommandList()){
+					if(c.canExecute()){
+						domain.getCommandStack().execute(c) ;
+					}
+				}
+			}
+			cc.dispose();
 		}
 	}
 

@@ -19,6 +19,7 @@ package org.bonitasoft.studio.expression.editor.viewer;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
+import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionTypeContentProvider;
@@ -52,6 +53,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -91,6 +94,7 @@ public class EditExpressionDialog extends TrayDialog {
 					&& getTray() == null) {
 				final DialogTray tray = currentExpressionEditor.createDialogTray();
 				openTray(tray);
+				
 			}else{
 				closeTray();
 			}
@@ -99,6 +103,12 @@ public class EditExpressionDialog extends TrayDialog {
 	protected Control helpControl;
 	private ExpressionViewer expressionViewer;
 
+	@Override
+	public void openTray(DialogTray tray) throws IllegalStateException, UnsupportedOperationException {
+		super.openTray(tray);
+		getShell().removeListener(SWT.Move,getShell().getListeners(SWT.Move)[0]);
+		getShell().removeListener(SWT.Resize,getShell().getListeners(SWT.Resize)[0]);
+	}
 
 	protected EditExpressionDialog(Shell parentShell,boolean isPassword, Expression inputExpression,EObject context,EditingDomain domain, ViewerFilter[] viewerTypeFilters,ExpressionViewer expressionViewer) {
 		super(parentShell);
@@ -117,13 +127,13 @@ public class EditExpressionDialog extends TrayDialog {
 		setHelpAvailable(true);
 		if (isResizable()) {
 			setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.MAX | SWT.RESIZE
-					| getDefaultOrientation() | SWT.SHEET);
+					| getDefaultOrientation());
 		} else {
 			setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL
-					| getDefaultOrientation() | SWT.SHEET);
+					| getDefaultOrientation());
 		}
 	}
-
+	
 	@Override
 	public void create() {
 		super.create();
@@ -160,11 +170,10 @@ public class EditExpressionDialog extends TrayDialog {
 	protected Point getInitialSize() {
 		return new Point(600, 460);
 	}
-
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent) ;
-
 
 		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;

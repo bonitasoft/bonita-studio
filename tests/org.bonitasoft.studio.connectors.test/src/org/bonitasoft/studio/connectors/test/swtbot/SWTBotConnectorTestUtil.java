@@ -223,7 +223,7 @@ public class SWTBotConnectorTestUtil {
 	 * @param dataName
 	 * @param version
 	 */
-	public static void addConnectorToPool(final SWTBot bot,final String connectorDefinitionLabel,final String version,final String categoryLabel,final String connectorName) {
+	public static void addConnectorToPool(final SWTBot bot,final String connectorDefinitionLabel,final String version,final String[] categoryPathLabels,final String connectorName) {
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
 		bot.button("Add...").click();
 		Assert.assertFalse(IDialogConstants.NEXT_LABEL + " should be disabled", bot
@@ -232,28 +232,39 @@ public class SWTBotConnectorTestUtil {
 				.button(IDialogConstants.FINISH_LABEL).isEnabled());
 		categoryItem = null;
 		nodes = null;
-		bot.waitUntil(new ICondition() {
+		
+		for(int i = 0; i < categoryPathLabels.length; i++){
+			
+			final String categoryLabel = categoryPathLabels[i];
+			System.out.println("will try to open node: "+categoryLabel);
+			bot.waitUntil(new ICondition() {
 
-
-
-			public boolean test() throws Exception {
-				bot.tree().collapseNode(categoryLabel);
-				categoryItem = bot.tree().expandNode(categoryLabel,true);
-				nodes = categoryItem.getNodes();
-				if(!nodes.isEmpty() && nodes.get(0).isEmpty()){
-					return false;
+				public boolean test() throws Exception {
+					if(categoryItem == null){
+						bot.tree().collapseNode(categoryLabel);
+						categoryItem = bot.tree().expandNode(categoryLabel,true);
+					} else {
+						categoryItem.collapseNode(categoryLabel);
+						categoryItem = categoryItem.expandNode(categoryLabel);
+					}
+					
+					System.out.println("item expanded: "+categoryItem.getText());
+					nodes = categoryItem.getNodes();
+					if(!nodes.isEmpty() && nodes.get(0).isEmpty()){
+						return false;
+					}
+					return !nodes.isEmpty();
 				}
-				return !nodes.isEmpty();
-			}
 
-			public void init(SWTBot bot) {
+				public void init(SWTBot bot) {
 
-			}
+				}
 
-			public String getFailureMessage() {
-				return "Category "+categoryLabel +" has no children" ;
-			}
-		},10000,1000);
+				public String getFailureMessage() {
+					return "Category "+categoryLabel +" has no children\n"+"Current category item is "+categoryItem.getText() ;
+				}
+			},10000,1000);
+		}
 
 
 		String cNode = null;
@@ -263,7 +274,7 @@ public class SWTBotConnectorTestUtil {
 				break;
 			}
 		}
-		Assert.assertNotNull("Connector "+connectorDefinitionLabel + " (" + version + ") not found in category "+categoryLabel +" containing children:\n"+nodes ,cNode);
+		Assert.assertNotNull("Connector "+connectorDefinitionLabel + " (" + version + ") not found in category path "+categoryPathLabels.toString() +" containing children:\n"+nodes ,cNode);
 		final String nodeToSelect = cNode;
 		bot.waitUntil(new ICondition() {
 

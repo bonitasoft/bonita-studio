@@ -307,6 +307,23 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 		editingDomain.dispose() ;
 	}
 
+	private Boolean processExist(List<AbstractProcess> l, String newProcessName){
+		for (AbstractProcess abstractProcess : l) {
+			if(abstractProcess.getName().equals(newProcessName) && abstractProcess.getVersion().equals("1.0")){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private List<AbstractProcess> getAllProcess(){
+		final List<AbstractProcess> l = new ArrayList<AbstractProcess>();
+		for (DiagramFileStore diagramFileStore : diagramStore.getChildren()) {
+			final MainProcess m = diagramFileStore.getContent();
+			l.addAll(ModelHelper.getAllProcesses(m));
+		}
+		return l;
+	}
 
 	protected List<Actor> createPool(DiagramEditPart diagramEp) {
 		ViewAndElementDescriptor viewDescriptor = new ViewAndElementDescriptor(
@@ -319,11 +336,29 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 		diagramEp.getDiagramEditDomain().getDiagramCommandStack().execute(diagramEp.getCommand(req));
 		CompoundCommand cc = new CompoundCommand();
 		AbstractProcess pool = (AbstractProcess) req.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class) ;
+		
+		
+		String newProcessName = Messages.newProcessPrefix;
+		if(diagramIdentifier!=null && !diagramIdentifier.isEmpty()){
+			Integer i = null;
+			try{
+				i = Integer.parseInt(diagramIdentifier);		
+			} catch (NumberFormatException e){
+				i = 1;
+			}
+			newProcessName = Messages.newProcessPrefix + i;
+			final List<AbstractProcess> allProcess = getAllProcess();
+			while(processExist(allProcess, newProcessName)){
+				i++;
+				newProcessName = Messages.newProcessPrefix + i;
+			}
+		}
+		
 		SetCommand setPoolNameCommand = new SetCommand(
 				diagramEp.getEditingDomain(),
 				pool ,
 				ProcessPackage.Literals.ELEMENT__NAME,
-				Messages.newProcessPrefix + diagramIdentifier);
+				newProcessName);
 		cc.append(setPoolNameCommand);
 		SetCommand setPoolVersionCommand = new SetCommand(
 				diagramEp.getEditingDomain(),
@@ -365,7 +400,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 				((IHintedType) ProcessElementTypes.Task_3005).getSemanticHint(),
 				diagramEp.getDiagramPreferencesHint());
 		CreateViewAndElementRequest taskReq = new CreateViewAndElementRequest(taskViewDescriptor);
-		taskReq.setLocation(new Point(150, 100 - FiguresHelper.ACTIVITY_HEIGHT / 2));
+		taskReq.setLocation(new Point(200, 100 - FiguresHelper.ACTIVITY_HEIGHT / 2));
 		laneCompartment.getDiagramEditDomain().getDiagramCommandStack().execute(laneCompartment.getCommand(taskReq));
 
 		Task task =  (Task) taskReq.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class) ;
@@ -387,7 +422,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 				((IHintedType) ProcessElementTypes.StartEvent_3002).getSemanticHint(),
 				diagramEp.getDiagramPreferencesHint());
 		CreateViewAndElementRequest startRequest = new CreateViewAndElementRequest(startViewDescriptor);
-		startRequest.setLocation(new Point(80, 100 - FiguresHelper.EVENT_WIDTH / 2));
+		startRequest.setLocation(new Point(100, 100 - FiguresHelper.EVENT_WIDTH / 2));
 		laneCompartment.getDiagramEditDomain().getDiagramCommandStack().execute(laneCompartment.getCommand(startRequest));
 
 		CreateConnectionViewAndElementRequest sequenceFlowRequest = new CreateConnectionViewAndElementRequest(
@@ -461,6 +496,5 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 	public boolean isEnabled() {
 		return true;
 	}
-
 
 }

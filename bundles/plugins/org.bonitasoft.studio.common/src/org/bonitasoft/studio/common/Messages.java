@@ -324,4 +324,7 @@ public class Messages extends NLS {
 	public static String toolAlignHorizontalDesc;
 	public static String toolAlignVertical;
 	public static String toolAlignVerticalDesc;
+	public static String fieldIsTooShort;
+	public static String nonInterruptingTimerEvent_desc;
+	public static String nonInterruptingTimerEvent_title;
 }

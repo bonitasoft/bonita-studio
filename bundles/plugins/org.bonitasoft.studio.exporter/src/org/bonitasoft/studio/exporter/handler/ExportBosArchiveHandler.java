@@ -36,6 +36,7 @@ import org.bonitasoft.studio.common.repository.ui.wizard.ExportRepositoryWizard;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.ConfigurationSynchronizer;
 import org.bonitasoft.studio.configuration.preferences.ConfigurationPreferenceConstants;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.exporter.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
@@ -118,6 +119,11 @@ public class ExportBosArchiveHandler extends AbstractHandler {
                     result.addAll(provider.getFileStoreForConfiguration(p, config)) ;
                 }
             }
+        }
+        
+        if(processes.isEmpty()){
+        	DiagramRepositoryStore dStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+        	result.add(dStore.getDiagram(diagram.getName(), diagram.getVersion()));
         }
 
         return result;

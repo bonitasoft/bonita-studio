@@ -57,6 +57,8 @@ public final class Messages extends NLS {
 
 	public static String importedFileIsInvalidTitle;
 	public static String importedFileIsInvalid;
+	public static String poolAlreadyExistWarningMessage;
+	public static String warningDuplicateDialogTitle;
 
     private Messages() {
         // Do not instantiate

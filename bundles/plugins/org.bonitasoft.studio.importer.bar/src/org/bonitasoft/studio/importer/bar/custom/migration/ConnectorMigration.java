@@ -48,10 +48,59 @@ public class ConnectorMigration extends ReportCustomMigration {
 			if(connectorDescriptor.canBeMigrated()){
 				descriptors.add(connectorDescriptor);
 			}else{
-				addReportChange((String) connector.get("name"),connector.getType().getEClass().getName(), connector.getContainer().getUuid(), Messages.removeConnectorMigrationDescription, Messages.connectorProperty, IStatus.ERROR);
+				final String legacyConnectorID = connectorDescriptor.getLegacyConnectorID();
+				String removeConnectorMigrationDescription = getMigrationReportMessageForNonMigratedConnector(legacyConnectorID);
+				
+				
+				addReportChange((String) connector.get("name"),
+						connector.getType().getEClass().getName(),
+						connector.getContainer().getUuid(),
+						removeConnectorMigrationDescription,
+						Messages.connectorProperty,
+						IStatus.ERROR);
 				model.delete(connector);
 			}
 		}
+	}
+
+	private String getMigrationReportMessageForNonMigratedConnector(final String legacyConnectorID) {
+		String removeConnectorMigrationDescription = Messages.removeConnectorMigrationDescription;
+		if("StartTask".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("FinishTask".equals(legacyConnectorID)){
+			removeConnectorMigrationDescription += "\n"+Messages.connectorMigrationFinishTaskDescription;
+		} else if("ExecuteTask".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("startInstanceConnector".equals(legacyConnectorID)){
+			removeConnectorMigrationDescription += "\n"+Messages.connectorMigrationStartInstanceDescription;
+		} else if("getUser".equals(legacyConnectorID)){
+			removeConnectorMigrationDescription += "\n"+Messages.connectorMigrationUseScriptAndApiDescription;
+		} else if("getTaskAuthor".equals(legacyConnectorID)){
+			removeConnectorMigrationDescription += "\n"+Messages.connectorMigrationUseScriptAndApiDescription;
+		} else if("getProcessInstanceInitiator".equals(legacyConnectorID)){
+			removeConnectorMigrationDescription += "\n"+Messages.connectorMigrationUseScriptAndApiDescription;
+		} else if("DeleteDocuments".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("DeleteDocument".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("AddDocumentVersion".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("AddDocuments".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("BS-AddAttachments".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("GetDocumentVersions".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("GetDocuments".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("GetDocumentContent".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("GetDocument".equals(legacyConnectorID)){
+			//No specific message known
+		} else if("AddComment".equals(legacyConnectorID)){
+			//No specific message known
+		}
+		return removeConnectorMigrationDescription;
 	}
 	
 	@Override
@@ -60,8 +109,27 @@ public class ConnectorMigration extends ReportCustomMigration {
 		for(Instance connector : model.getAllInstances("process.Connector")){
 			for(Connector5Descriptor descriptor : descriptors){
 				if(descriptor.appliesTo(connector)){
+					final String connectorName = (String) connector.get("name");
+					final String connectorTypeName = connector.getType().getEClass().getName();
+					final String connectorContainerUUID = connector.getContainer().getUuid();
 					descriptor.migrate(model, connector, getConverter(model, getScope(connector)));
-					addReportChange((String) connector.get("name"),connector.getType().getEClass().getName(), connector.getContainer().getUuid(), Messages.connectorMigrationDescription, Messages.connectorProperty, IStatus.WARNING);
+					if(descriptor.isBonitaSetVarConnector()){
+						addReportChange(
+								connectorName,
+								connectorTypeName,
+								connectorContainerUUID,
+								descriptor.getReportChangeMessage(),
+								Messages.connectorProperty,
+								IStatus.WARNING);
+					} else {					
+						addReportChange(
+								connectorName,
+								connectorTypeName,
+								connectorContainerUUID,
+								descriptor.getReportChangeMessage(),
+								Messages.connectorProperty,
+								IStatus.WARNING);
+					}
 				}
 			}
 		}

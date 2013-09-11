@@ -68,6 +68,7 @@ import static org.bonitasoft.studio.form.properties.i18n.Messages.formFieldType;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class DiagramTests extends SWTBotGefTestCase {
 	
+	private static final String DATA_NAME_LABEL = name +" *";
 	private static final String PAGEFLOW_LABEL = "Pageflow";
 
 	//@Test TODO reactivate me
@@ -315,7 +316,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 		bot.waitUntil(Conditions.shellIsActive(newVariable));
 		
 		// "Name"
-		bot.textWithLabel(name).setText(varName);
+		bot.textWithLabel(DATA_NAME_LABEL).setText(varName);
 		
 		// "Data type"
 		bot.comboBoxWithLabel(datatypeLabel).setSelection(varType);
