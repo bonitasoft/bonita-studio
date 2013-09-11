@@ -423,7 +423,7 @@ public class EngineExpressionUtil {
 
 	private static String toEngineExpressionType(final org.bonitasoft.studio.model.expression.Expression expression) {
 		String type = expression.getType();
-		if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(type)) {
+		if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(type) || ExpressionConstants.URL_ATTRIBUTE_TYPE.equals(type)) {
 			return ExpressionType.TYPE_INPUT.name();
 		}
 		if(ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)){
