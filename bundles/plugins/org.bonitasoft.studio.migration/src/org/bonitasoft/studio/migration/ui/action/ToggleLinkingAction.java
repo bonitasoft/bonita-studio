@@ -27,6 +27,7 @@ import org.bonitasoft.studio.model.process.FlowElement;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.jdt.internal.ui.actions.AbstractToggleLinkingAction;
@@ -74,7 +75,9 @@ public class ToggleLinkingAction extends AbstractToggleLinkingAction {
 						if(element != null){
 							EditPart ep = findEditPart(editor.getDiagramEditPart(), element);
 							if( ep != null ){
-								editor.getDiagramEditPart().getViewer().select(ep);
+								final EditPartViewer viewerDiagram = editor.getDiagramEditPart().getViewer();
+								viewerDiagram.select(ep);
+								viewerDiagram.reveal(ep);
 								PropertySelectionProvider.getInstance().fireSelectionChanged((IGraphicalEditPart) ep, null);
 							}
 						}

@@ -42,8 +42,10 @@ import org.bonitasoft.studio.engine.EnginePlugin;
 import org.bonitasoft.studio.engine.i18n.Messages;
 import org.bonitasoft.studio.engine.operation.DeployProcessOperation;
 import org.bonitasoft.studio.engine.preferences.BonitaUserXpPreferencePage;
+import org.bonitasoft.studio.engine.preferences.EnginePreferenceConstants;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -62,7 +64,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -79,6 +83,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 	public static final String PROCESS = "process";
 
 	protected boolean runSynchronously;
+	private boolean hasInitiator;
 	protected AbstractProcess selectedProcess;
 	private Set<EObject> excludedObject;
 	private IStatus status;
@@ -103,8 +108,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
 	public RunProcessCommand(Set<EObject> excludedObject) {
 		new RunProcessCommand(excludedObject, false);
- 	}
- 
+	}
+
 	public RunProcessCommand(Set<EObject> excludedObject, boolean runSynchronously) {
 		this(runSynchronously);
 		this.excludedObject = excludedObject ;
@@ -223,13 +228,34 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 					return ;
 				}
 
-				AbstractProcess p = getProcessToRun(event) ;
+				final AbstractProcess p = getProcessToRun(event) ;
+				hasInitiator= hasInitiator(p);
+
 				if(p!= null){
 					try{
 						url = operation.getUrlFor(p,monitor) ;
 						if(!runSynchronously){
 							BOSWebServerManager.getInstance().startServer(monitor) ;
-							new OpenBrowserCommand(url, BonitaPreferenceConstants.APPLICATION_BROWSER_ID, "Bonita Application").execute(null) ;
+							if (hasInitiator){
+								new OpenBrowserCommand(url, BonitaPreferenceConstants.APPLICATION_BROWSER_ID, "Bonita Application").execute(null) ;
+							} else {
+								Display.getDefault().syncExec(new Runnable() {
+									@Override
+									public void run() {
+										IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
+										String pref =preferenceStore.getString(EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR);
+										if (MessageDialogWithToggle.NEVER.equals(pref)){
+											MessageDialogWithToggle mdwt = MessageDialogWithToggle.openWarning(Display.getDefault().getActiveShell(), Messages.noInitiatorDefinedTitle, Messages.bind(Messages.noInitiatorDefinedMessage,
+													p.getName()), 
+													Messages.dontaskagain, 
+													false, preferenceStore, EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR);
+										} 
+
+									}
+								});
+
+								status=openConsole();
+							}
 						}
 					}catch (Exception e) {
 						status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,e.getMessage(),e);
@@ -237,22 +263,27 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 					}
 				}else{
 					if(!runSynchronously){
-						ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
-						Command cmd = service.getCommand("org.bonitasoft.studio.application.openConsole") ;
-						try {
-							cmd.executeWithChecks(new ExecutionEvent());
-						} catch (Exception ex) {
-							status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,ex.getMessage(),ex);
-							BonitaStudioLog.error(ex);
-						}
+						status=openConsole();
 					}
 				}
+			}
+
+			private Status openConsole() {
+				Status status=null;
+				ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
+				Command cmd = service.getCommand("org.bonitasoft.studio.application.openConsole") ;
+				try {
+					cmd.executeWithChecks(new ExecutionEvent());
+				} catch (Exception ex) {
+					status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,ex.getMessage(),ex);
+					BonitaStudioLog.error(ex);
+				}
+				return status;
 			}
 
 		};
 
 		IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
-
 
 
 		try {
@@ -274,6 +305,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 				}) ;
 			}
 		}
+
 		return status;
 	}
 
@@ -288,6 +320,14 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 		return false;
 	}
 
+	private boolean hasInitiator(AbstractProcess p){
+		for (Actor a:p.getActors()){
+			if (a.isInitiator()){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	protected AbstractProcess getProcessToRun(ExecutionEvent event) {
 		if(event !=null && event.getParameters().get(PROCESS) != null){

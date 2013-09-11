@@ -165,7 +165,7 @@
 									<layout>p2</layout>
 								</repository>
 								<repository>
-									<url>http://download.eclipse.org/technology/babel/update-site/R0.10.1/indigo</url>
+									<url>http://download.eclipse.org/technology/babel/update-site/R0.11.0/indigo</url>
 									<layout>p2</layout>
 								</repository>
 							</source>
@@ -429,51 +429,59 @@
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_tools.gef_fr.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_fr.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_de.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_tools.gef_de.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_tools.gef_it.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_it.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_pt.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_tools.gef_pt.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_pt_BR.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_tools.gef_pt_BR.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_es.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_tools.gef_es.feature.group</id>
-									<version>3.7.0.v20121120090237</version>
+									<version>3.7.0.v20130724081219</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.babel.nls_eclipse_ja.feature.group</id>
+									<version>3.7.0.v20130724081219</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.babel.nls_tools.gef_ja.feature.group</id>
+									<version>3.7.0.v20130724081219</version>
 								</iu>
 							</ius>
 							<!-- The destination directory to mirror to. -->

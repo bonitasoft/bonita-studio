@@ -63,6 +63,7 @@ public class ConnectorDefRepositoryStore extends AbstractDefinitionRepositorySto
     @Override
     public ConnectorDefFileStore createRepositoryFileStore(String fileName) {
         if(fileName.endsWith(CONNECTOR_DEF_EXT)){
+        	clearCachedFileStore();
             return new ConnectorDefFileStore(fileName, this);
         }
         return null;

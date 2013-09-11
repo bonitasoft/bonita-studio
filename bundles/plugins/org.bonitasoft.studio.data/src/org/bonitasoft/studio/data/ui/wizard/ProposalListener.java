@@ -33,7 +33,7 @@ public class ProposalListener implements IProposalListener {
 	}
 
 	@Override
-	public String handleEvent(EObject context) {
+	public String handleEvent(EObject context, String fixedReturnType) {
 		Assert.isNotNull(context);
 		while (!(context instanceof DataAware) || context instanceof Form) {
 			context = context.eContainer();
@@ -41,7 +41,8 @@ public class ProposalListener implements IProposalListener {
 		EStructuralFeature feat = ProcessPackage.Literals.DATA_AWARE__DATA;
 		Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
 		res.add(ProcessPackage.Literals.DATA_AWARE__DATA);
-		final DataWizard newWizard = new DataWizard(context, feat, res, true);
+		
+		final DataWizard newWizard = new DataWizard(context, feat, res, true, fixedReturnType);
 		final DataWizardDialog wizardDialog = new DataWizardDialog(Display
 				.getCurrent().getActiveShell().getParent().getShell(),
 				newWizard, null);

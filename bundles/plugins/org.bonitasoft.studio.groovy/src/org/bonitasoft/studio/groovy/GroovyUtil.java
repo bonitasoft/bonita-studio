@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
 import org.bonitasoft.forms.server.validator.AbstractFormValidator;
+import org.bonitasoft.forms.server.api.*;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.exporter.ExporterTools;
@@ -322,6 +323,10 @@ public class GroovyUtil {
 		for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
 			result.add(expressionConstants.getEngineConstantName());
 		}
+		Form form = ModelHelper.getParentForm(context);
+		if (form!=null){
+			result.add(IFormExpressionsAPI.USER_LOCALE);
+		}
 		if (context!=null && context instanceof Validator){
 			result.add(AbstractFormValidator.CLICKED_BUTTON_VARNAME);
 		}
@@ -334,6 +339,11 @@ public class GroovyUtil {
 		for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
 			ScriptVariable scriptVariable =new ScriptVariable(expressionConstants.getEngineConstantName(),getEngineExpressionReturnType(expressionConstants.getEngineConstantName()));
 			result.add(scriptVariable);
+		}
+		Form form = ModelHelper.getParentForm(element);
+		
+		if (form!=null){
+			result.add(new ScriptVariable(IFormExpressionsAPI.USER_LOCALE, String.class.getName()));
 		}
 		if (element!=null && element instanceof Validator){
 			result.add(new ScriptVariable(AbstractFormValidator.CLICKED_BUTTON_VARNAME,

@@ -91,19 +91,21 @@
 <repository location="http://download.eclipse.org/releases/indigo"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.babel.nls_tools.gef_fr.feature.group" version="3.7.0.v20121120090237"/>
-<unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="3.7.0.v20121120090237"/>
-<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="3.7.0.v20121120090237"/>
-<unit id="org.eclipse.babel.nls_tools.gef_de.feature.group" version="3.7.0.v20121120090237"/>
-<unit id="org.eclipse.babel.nls_tools.gef_it.feature.group" version="3.7.0.v20121120090237"/>
-<unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="3.7.0.v20121120090237"/>
-<unit id="org.eclipse.babel.nls_eclipse_pt.feature.group" version="3.7.0.v20121120090237"/>
-<unit id="org.eclipse.babel.nls_tools.gef_pt.feature.group" version="3.7.0.v20121120090237"/>
-<unit id="org.eclipse.babel.nls_tools.gef_pt_BR.feature.group" version="3.7.0.v20121120090237"/>
-<unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="3.7.0.v20121120090237"/>
-<unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="3.7.0.v20121120090237"/>
-<unit id="org.eclipse.babel.nls_tools.gef_es.feature.group" version="3.7.0.v20121120090237"/>
-<repository location="http://download.eclipse.org/technology/babel/update-site/R0.10.1/indigo"/>
+<unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_tools.gef_fr.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_tools.gef_es.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_tools.gef_it.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_tools.gef_ja.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_tools.gef_de.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_eclipse_es.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_tools.gef_pt_BR.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_tools.gef_pt.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_eclipse_pt.feature.group" version="3.7.0.v20130724081219"/>
+<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="3.7.0.v20130724081219"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.11.0/indigo"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.xtext.xbase.feature.group" version="2.3.1.v201208210947"/>

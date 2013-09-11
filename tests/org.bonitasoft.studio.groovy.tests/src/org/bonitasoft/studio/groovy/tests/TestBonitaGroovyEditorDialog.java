@@ -28,7 +28,6 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -49,7 +48,6 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
         System.out.println(Messages.add);
     }
 
-    @Ignore
     @Test
     public void testOpenBonitaGroovyEditorDialog() throws ExecutionException, CoreException, IOException{
         bot.menu("Development").menu("Manage Groovy scripts...").click();
@@ -72,7 +70,6 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
             bot.button(IDialogConstants.OK_LABEL).click();
         }
         assertTrue("Error while evaluating groovy script", groovyEvaluateOK);
-        bot.button(IDialogConstants.OK_LABEL).click();
         bot.button(IDialogConstants.OK_LABEL).click();
         if(!FileActionDialog.getDisablePopup()){
             bot.button(IDialogConstants.OK_LABEL).click();

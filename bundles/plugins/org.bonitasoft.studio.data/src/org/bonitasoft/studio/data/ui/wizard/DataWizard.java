@@ -63,38 +63,52 @@ public class DataWizard extends Wizard {
 	private final Data dataWorkingCopy;
 	private boolean editMode = false;
 	private Data originalData;
-	private final Set<EStructuralFeature> featureToCheckForUniqueID ;
-	private final EStructuralFeature dataContainmentFeature;
-	private final boolean showAutogenerateForm;
+	private Set<EStructuralFeature> featureToCheckForUniqueID ;
+	private EStructuralFeature dataContainmentFeature;
+	private boolean showAutogenerateForm;
 	private DataWizardPage page;
+	private String fixedReturnType;
 
 	public DataWizard(EObject container,EStructuralFeature dataContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID, boolean showAutogenerateForm){
+		initDataWizard(dataContainmentFeature, showAutogenerateForm);
 		this.container = container ;
 		dataWorkingCopy = ProcessFactory.eINSTANCE.createData() ;
 		dataWorkingCopy.setDataType(ModelHelper.getDataTypeForID(container, DataTypeLabels.stringDataType)) ;
 		editMode = false ;
-		this.dataContainmentFeature = dataContainmentFeature ;//the default add data on this feature
 		this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
 		this.featureToCheckForUniqueID.add(dataContainmentFeature);
-		this.showAutogenerateForm = showAutogenerateForm;
-		setDefaultPageImageDescriptor(Pics.getWizban()) ;
+		setWindowTitle(Messages.newVariable);
+	}
+	
+	public DataWizard(EObject container,EStructuralFeature dataContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID, boolean showAutogenerateForm, String fixedReturnType){
+		initDataWizard(dataContainmentFeature, showAutogenerateForm);
+		this.container = container ;
+		dataWorkingCopy = ProcessFactory.eINSTANCE.createData() ;
+		dataWorkingCopy.setDataType(ModelHelper.getDataTypeForID(container, DataTypeLabels.stringDataType)) ;
+		editMode = false ;
+		this.featureToCheckForUniqueID = new HashSet<EStructuralFeature>();
+		this.featureToCheckForUniqueID.add(dataContainmentFeature);
+		this.fixedReturnType = fixedReturnType;
 		setWindowTitle(Messages.newVariable);
 	}
 
 	public DataWizard(Data data, EStructuralFeature dataContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID, boolean showAutogenerateForm){
+		initDataWizard(dataContainmentFeature, showAutogenerateForm);
 		Assert.isNotNull(data) ;
-		setDefaultPageImageDescriptor(Pics.getWizban()) ;
 		setNeedsProgressMonitor(true);
 		container = data.eContainer() ;
 		originalData = data ;
-		this.dataContainmentFeature = dataContainmentFeature ;
 		dataWorkingCopy = EcoreUtil.copy(data) ;
 		editMode = true ;
 		this.featureToCheckForUniqueID = featureToCheckForUniqueID ;
-		this.showAutogenerateForm = showAutogenerateForm;
 		setWindowTitle(Messages.editVariable);
 	}
-
+	
+	private void initDataWizard(EStructuralFeature dataContainmentFeature, boolean showAutogenerateForm){
+		setDefaultPageImageDescriptor(Pics.getWizban()) ;
+		this.dataContainmentFeature = dataContainmentFeature ;//the default add data on this feature
+		this.showAutogenerateForm = showAutogenerateForm;
+	}
 
 	@Override
 	public void addPages() {
@@ -104,10 +118,10 @@ public class DataWizard extends Wizard {
 
 	protected DataWizardPage getWizardPage() {
 		if(!dataContainmentFeature.equals(ProcessPackage.Literals.DATA_AWARE__DATA)){
-			return new DataWizardPage(dataWorkingCopy,container,false,false,false, showAutogenerateForm,featureToCheckForUniqueID) ;
+			return new DataWizardPage(dataWorkingCopy,container,false,false,false, showAutogenerateForm,featureToCheckForUniqueID, fixedReturnType) ;
 		}else{
 			boolean isOnActivity = container instanceof Activity;
-			return new DataWizardPage(dataWorkingCopy,container,true, true, isOnActivity, showAutogenerateForm, featureToCheckForUniqueID) ;
+			return new DataWizardPage(dataWorkingCopy,container,true, true, isOnActivity, showAutogenerateForm, featureToCheckForUniqueID, fixedReturnType) ;
 		}
 	}
 
