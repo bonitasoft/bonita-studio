@@ -116,6 +116,9 @@
       <connectorDefinitionMapper
             class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.CMISDeleteObjectConnectorMapper">
       </connectorDefinitionMapper>
+      <connectorDefinitionMapper
+            class="org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper.CMISDownloadDocumentConnectorMapper">
+      </connectorDefinitionMapper>
    </extension>
 
 </plugin>
