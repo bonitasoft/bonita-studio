@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>studio</artifactId>
-	<version>6.0.3-SNAPSHOT</version>
+	<version>6.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
@@ -185,7 +185,7 @@
 						<artifact>
 							<groupId>org.bonitasoft.studio</groupId>
 							<artifactId>platform</artifactId>
-							<version>6.0.3-SNAPSHOT</version>
+							<version>6.0.4-SNAPSHOT</version>
 						</artifact>
 					</target>
 					<filters>
