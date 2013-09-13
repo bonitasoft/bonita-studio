@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -280,7 +281,8 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
             if(getNextPage() != null){
                 getContainer().showPage(getNextPage());
             }else{
-                if(getWizard().performFinish()){
+                final IWizard wizard = getWizard();
+				if(wizard.canFinish() && wizard.performFinish()){
                     ((WizardDialog) getContainer()).close() ;
                 }
             }
