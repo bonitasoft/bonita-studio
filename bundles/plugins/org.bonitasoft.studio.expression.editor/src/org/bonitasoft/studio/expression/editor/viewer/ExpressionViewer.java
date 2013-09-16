@@ -549,6 +549,14 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				if(!viewerFilter.select(this, input, exp)){
 					filteredExpressions.add(ExpressionConstants.CONSTANT_TYPE);
 				}
+				exp.setType(ExpressionConstants.DOCUMENT_TYPE);
+				if (!viewerFilter.select(this, input, exp)){
+					filteredExpressions.add(ExpressionConstants.DOCUMENT_TYPE);
+				}
+				exp.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
+				if (!viewerFilter.select(this, input, exp)){
+					filteredExpressions.add(ExpressionConstants.DOCUMENT_REF_TYPE);
+				}
 			}
 		}
 		return filteredExpressions;
