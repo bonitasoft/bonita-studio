@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.bonitasoft.studio.expression.proposalListener">
+      <proposalListner
+            name="%createDocumentLabel"
+            providerClass="org.bonitasoft.studio.document.ui.DocumentProposalListener"
+            type="TYPE_DOCUMENT">
+      </proposalListner>
+      <proposalListner
+            name="%createDocumentLabel"
+            providerClass="org.bonitasoft.studio.document.ui.DocumentProposalListener"
+            type="DOCUMENT_REF_TYPE">
+      </proposalListner>
+   </extension>
+
+</plugin>
