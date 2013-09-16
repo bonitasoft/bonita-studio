@@ -23,13 +23,19 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bonitasoft.engine.bpm.connector.ConnectorEvent;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.importer.bar.tests.BarImporterTestUtil;
+import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
+import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
@@ -245,6 +251,13 @@ public class TestConnectorMigrationUseCase {
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
+		Map<String,AbstractExpression> expectedParameterCOnfiguration = new HashMap<String, AbstractExpression>();
+		expectedParameterCOnfiguration.put("username", ExpressionHelper.createConstantExpression("admin", String.class.getName()));
+		expectedParameterCOnfiguration.put("url", ExpressionHelper.createConstantExpression("http://cmis.alfresco.com/service/cmis", String.class.getName()));
+		expectedParameterCOnfiguration.put("repository", ExpressionHelper.createConstantExpression("Main Repository", String.class.getName()));
+		expectedParameterCOnfiguration.put("folder_path", ExpressionHelper.createConstantExpression("/", String.class.getName()));
+		expectedParameterCOnfiguration.put("subfolder_name", ExpressionHelper.createConstantExpression("Bonita", String.class.getName()));
+		checkParameters(connectors, expectedParameterCOnfiguration);
 	}
 	
 	@Test
@@ -253,6 +266,13 @@ public class TestConnectorMigrationUseCase {
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(
 				mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
+		Map<String,AbstractExpression> expectedParameterCOnfiguration = new HashMap<String, AbstractExpression>();
+		expectedParameterCOnfiguration.put("username", ExpressionHelper.createConstantExpression("admin", String.class.getName()));
+		expectedParameterCOnfiguration.put("url", ExpressionHelper.createConstantExpression("http://cmis.alfresco.com/service/cmis", String.class.getName()));
+		expectedParameterCOnfiguration.put("repository", ExpressionHelper.createConstantExpression("Main Repository", String.class.getName()));
+		expectedParameterCOnfiguration.put("folder_path", ExpressionHelper.createConstantExpression("/Bonita", String.class.getName()));
+		expectedParameterCOnfiguration.put("binding_type", ExpressionHelper.createConstantExpression("ATOM", String.class.getName()));
+		checkParameters(connectors, expectedParameterCOnfiguration);
 	}
 	
 	@Test
@@ -260,6 +280,15 @@ public class TestConnectorMigrationUseCase {
 		final MainProcess mainProc = importBar("CMISUploadDocumentMigrationUseCase--1.0.bar");
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
+		Map<String,AbstractExpression> expectedParameterCOnfiguration = new HashMap<String, AbstractExpression>();
+		expectedParameterCOnfiguration.put("username", ExpressionHelper.createConstantExpression("admin", String.class.getName()));
+		expectedParameterCOnfiguration.put("url", ExpressionHelper.createConstantExpression("http://cmis.alfresco.com/service/cmis", String.class.getName()));
+		expectedParameterCOnfiguration.put("repository", ExpressionHelper.createConstantExpression("Main Repository", String.class.getName()));
+		expectedParameterCOnfiguration.put("folder_path", ExpressionHelper.createConstantExpression("/Bonita/", String.class.getName()));
+		expectedParameterCOnfiguration.put("binding_type", ExpressionHelper.createConstantExpression("ATOM", String.class.getName()));
+		expectedParameterCOnfiguration.put("document", ExpressionHelper.createConstantExpression("newFile", String.class.getName()));
+		expectedParameterCOnfiguration.put("destinationName", ExpressionHelper.createConstantExpression("document.txt", String.class.getName()));
+		checkParameters(connectors, expectedParameterCOnfiguration);
 	}
 	
 	@Test
@@ -267,6 +296,13 @@ public class TestConnectorMigrationUseCase {
 		final MainProcess mainProc = importBar("CMISDeleteObjectMigrationUseCase--1.0.bar");
 		final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
 		assertEquals("Invalid number of connector", 1, connectors.size());
+		Map<String,AbstractExpression> expectedParameterCOnfiguration = new HashMap<String, AbstractExpression>();
+		expectedParameterCOnfiguration.put("username", ExpressionHelper.createConstantExpression("admin", String.class.getName()));
+		expectedParameterCOnfiguration.put("url", ExpressionHelper.createConstantExpression("http://cmis.alfresco.com/service/cmis", String.class.getName()));
+		expectedParameterCOnfiguration.put("repository", ExpressionHelper.createConstantExpression("Main Repository", String.class.getName()));
+		expectedParameterCOnfiguration.put("binding_type", ExpressionHelper.createConstantExpression("ATOM", String.class.getName()));
+		expectedParameterCOnfiguration.put("document_path", ExpressionHelper.createConstantExpression("/Bonita", String.class.getName()));
+		checkParameters(connectors, expectedParameterCOnfiguration);
 	}
 	
 	@Test
@@ -401,6 +437,33 @@ public class TestConnectorMigrationUseCase {
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
 		return mainProc;
 	}
+	
+	private void checkParameters(final List<Connector> connectors,
+			Map<String, AbstractExpression> expectedParameterCOnfiguration) {
+		Connector c = connectors.get(0);
+		ConnectorConfiguration configuration = c.getConfiguration();
+		for (Entry<String,AbstractExpression> expectedConnectorParameter : expectedParameterCOnfiguration.entrySet()) {	
+			EList<ConnectorParameter> parameters = configuration.getParameters();
+			boolean found = false;
+			final String currentParameterKey = expectedConnectorParameter.getKey();
+			for (ConnectorParameter connectorParameter : parameters) {
+				if(currentParameterKey.equals(connectorParameter.getKey())){
+					AbstractExpression expectedValueExpression = expectedConnectorParameter.getValue();
+					AbstractExpression actualValueExpression = connectorParameter.getExpression();
+					if(expectedValueExpression instanceof Expression){
+						assertEquals("Wrong name of expression for parameter "+currentParameterKey,((Expression) expectedValueExpression).getName(), ((Expression)actualValueExpression).getName());
+						assertEquals("Wrong type of expression for parameter "+currentParameterKey,((Expression) expectedValueExpression).getType(), ((Expression)actualValueExpression).getType());
+						assertEquals("Wrong content of expression for parameter "+currentParameterKey,((Expression) expectedValueExpression).getContent(), ((Expression)actualValueExpression).getContent());
+						found = true;
+					} else {
+						assertTrue("Missing implementation", false);
+					}				
+				}
+			}
+			assertTrue("The expected connector parameter"+currentParameterKey+" was not found.", found);
+		}
+	}
+
 	
 }
 
