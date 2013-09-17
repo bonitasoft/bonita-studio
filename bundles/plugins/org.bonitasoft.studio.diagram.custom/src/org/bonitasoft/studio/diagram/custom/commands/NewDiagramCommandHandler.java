@@ -75,6 +75,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
@@ -108,6 +109,7 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 
 
 	private static final String BASE_VERSION = "1.0"; //$NON-NLS-1$
+	private static final int SCALE =1000;
 	private String diagramName ;
 	private String diagramIdentifier;
 	private DiagramRepositoryStore diagramStore;
@@ -125,45 +127,56 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 		try{
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					monitor.beginTask(Messages.newDiagram, IProgressMonitor.UNKNOWN) ;
+				public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					monitor.beginTask(Messages.newDiagram, 40) ;
 
 					diagramIdentifier = getNewProcessIdentifier(diagramStore);
+					monitor.worked(1*SCALE);
 					diagramName =  NamingUtils.convertToId(org.bonitasoft.studio.diagram.custom.Messages.newFilePrefix + diagramIdentifier)  ;
-
+					monitor.worked(1*SCALE);
 					String uniqueFileName = NamingUtils.toDiagramFilename(diagramName ,BASE_VERSION) ;
-
+					monitor.worked(1*SCALE);
 					fileStore = diagramStore.createRepositoryFileStore(uniqueFileName) ;
-
+					monitor.worked(1*SCALE);
 					MainProcess model = createInitialModel();
+					monitor.worked(1*SCALE);
 					final Diagram diagram = ViewService.createDiagram(model,
 							MainProcessEditPart.MODEL_ID,
 							ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
-
+					monitor.worked(1*SCALE);
 					diagram.setName(model.getName());
+					monitor.worked(1*SCALE);
 					diagram.setElement(model);
+					monitor.worked(1*SCALE);
 					fileStore.getEMFResource().getContents().add(model) ;
+					monitor.worked(1*SCALE);
 					fileStore.getEMFResource().getContents().add(diagram) ;
+					monitor.worked(1*SCALE);
 					fileStore.save(null) ;
-
+					monitor.worked(1*SCALE);
 					Display.getDefault().syncExec(new Runnable() {
 
 						public void run() {
 							Diagram d = (Diagram) fileStore.getEMFResource().getContents().get(1) ;
-							buildDiagram(d);
+							monitor.worked(1*SCALE);
+							buildDiagram(d,monitor);
+							monitor.worked(1*SCALE);
 							IEditorPart editor = (IEditorPart) fileStore.open() ;
+							monitor.worked(1*SCALE);
 							if(editor instanceof DiagramEditor){
 								final String author = System.getProperty("user.name","unknown");
 								final TransactionalEditingDomain editingDomain = ((DiagramEditor) editor).getDiagramEditPart().getEditingDomain();
 								editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, 
 										((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement(), ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, author));
 							}
+							monitor.worked(1*SCALE);
 							//clear the OperationHistory because it implies otherwise and that we don't need undo/redo for the basic creation.
 							OperationHistoryFactory.getOperationHistory().dispose((IUndoContext) editor.getAdapter(IUndoContext.class), true, true, true);
+							monitor.worked(1*SCALE);
 						}
 
 					});
-
+					monitor.done();
 				}
 			};
 
@@ -259,52 +272,66 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 	}
 
 
-	protected void buildDiagram(final Diagram diagram){
+	protected void buildDiagram(final Diagram diagram, IProgressMonitor monitor){
 		ResourceSet rSet = diagram.eResource().getResourceSet() ;
+		monitor.worked(1*SCALE);
 		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.getInstance().createEditingDomain(rSet) ;
+		monitor.worked(1*SCALE);
 		final Shell shell = new Shell() ;
+		monitor.worked(1*SCALE);
 		DiagramEditPart	diagramEp = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagram,shell ,ProcessDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT) ;
+		monitor.worked(1*SCALE);
 		diagramEp.refresh() ;
-
+		monitor.worked(1*SCALE);
 		CompoundCommand cc;
+		monitor.worked(1*SCALE);
 		List<Actor> actors = createPool(diagramEp);
-
+		monitor.worked(1*SCALE);
 		String poolSemanticHint = ProcessVisualIDRegistry.getType(PoolEditPart.VISUAL_ID);
+		monitor.worked(1*SCALE);
 		String poolCompartmentSemanticHint = ProcessVisualIDRegistry.getType(PoolPoolCompartmentEditPart.VISUAL_ID);
+		monitor.worked(1*SCALE);
 		PoolEditPart poolEditPart = (PoolEditPart) diagramEp.getChildBySemanticHint(poolSemanticHint);
+		monitor.worked(1*SCALE);
 		PoolPoolCompartmentEditPart poolCompartment = (PoolPoolCompartmentEditPart) poolEditPart.getChildBySemanticHint(poolCompartmentSemanticHint);
-
+		monitor.worked(1*SCALE);
 		ViewAndElementDescriptor laneViewDescriptor = new ViewAndElementDescriptor(
 				new CreateElementRequestAdapter(new CreateElementRequest(ProcessElementTypes.Lane_3007)),
 				Node.class,
 				((IHintedType) ProcessElementTypes.Lane_3007).getSemanticHint(),
 				diagramEp.getDiagramPreferencesHint());
+		monitor.worked(1*SCALE);
 		CreateViewAndElementRequest laneReq = new CreateViewAndElementRequest(laneViewDescriptor);
+		monitor.worked(1*SCALE);
 		laneReq.setLocation(new Point(0, 0));
-		poolCompartment.getDiagramEditDomain().getDiagramCommandStack().execute(poolCompartment.getCommand(laneReq));
-
+		monitor.worked(1*SCALE);
+		poolCompartment.getDiagramEditDomain().getDiagramCommandStack().execute(poolCompartment.getCommand(laneReq),new SubProgressMonitor(monitor, 1*SCALE));
+		monitor.worked(1*SCALE);
 		cc = new CompoundCommand();
+		monitor.worked(1*SCALE);
 		Lane lane =  (Lane) laneReq.getViewAndElementDescriptor().getElementAdapter().getAdapter(EObject.class) ;
+		monitor.worked(1*SCALE);
 		cc.append(SetCommand.create(
 				diagramEp.getEditingDomain(),
 				lane,
 				ProcessPackage.Literals.ELEMENT__NAME,
 				Messages.defaultLaneName));
 
-
+		monitor.worked(1*SCALE);
 		createAssignableActor(diagramEp, cc, actors, lane);
-
+		monitor.worked(1*SCALE);
 		diagramEp.getEditingDomain().getCommandStack().execute(cc);
-
 		LaneLaneCompartmentEditPart laneCompartment = createLaneCompartment(diagramEp,	poolCompartment);
-
+		monitor.worked(1*SCALE);
 		createStartEventTaskAndSeqFlow(diagramEp, poolCompartment, laneCompartment);
-
+		monitor.worked(1*SCALE);
 		createDefaultProcessArtifact(editingDomain,fileStore.getContent()) ;
+		monitor.worked(1*SCALE);
 		fileStore.save(null) ;
 		diagramEp.deactivate();
 		shell.dispose() ;
 		editingDomain.dispose() ;
+		monitor.worked(1*SCALE);
 	}
 
 	private Boolean processExist(List<AbstractProcess> l, String newProcessName){
