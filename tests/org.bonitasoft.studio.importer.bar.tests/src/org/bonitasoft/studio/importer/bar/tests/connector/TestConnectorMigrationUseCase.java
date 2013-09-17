@@ -271,7 +271,7 @@ public class TestConnectorMigrationUseCase {
 		expectedParameterCOnfiguration.put("url", ExpressionHelper.createConstantExpression("http://cmis.alfresco.com/service/cmis", String.class.getName()));
 		expectedParameterCOnfiguration.put("repository", ExpressionHelper.createConstantExpression("Main Repository", String.class.getName()));
 		expectedParameterCOnfiguration.put("folder_path", ExpressionHelper.createConstantExpression("/Bonita", String.class.getName()));
-		expectedParameterCOnfiguration.put("binding_type", ExpressionHelper.createConstantExpression("ATOM", String.class.getName()));
+		expectedParameterCOnfiguration.put("binding_type", ExpressionHelper.createConstantExpression("atompub", String.class.getName()));
 		checkParameters(connectors, expectedParameterCOnfiguration);
 	}
 	
@@ -285,7 +285,7 @@ public class TestConnectorMigrationUseCase {
 		expectedParameterCOnfiguration.put("url", ExpressionHelper.createConstantExpression("http://cmis.alfresco.com/service/cmis", String.class.getName()));
 		expectedParameterCOnfiguration.put("repository", ExpressionHelper.createConstantExpression("Main Repository", String.class.getName()));
 		expectedParameterCOnfiguration.put("folder_path", ExpressionHelper.createConstantExpression("/Bonita/", String.class.getName()));
-		expectedParameterCOnfiguration.put("binding_type", ExpressionHelper.createConstantExpression("ATOM", String.class.getName()));
+		expectedParameterCOnfiguration.put("binding_type", ExpressionHelper.createConstantExpression("atompub", String.class.getName()));
 		expectedParameterCOnfiguration.put("document", ExpressionHelper.createConstantExpression("newFile", String.class.getName()));
 		expectedParameterCOnfiguration.put("destinationName", ExpressionHelper.createConstantExpression("document.txt", String.class.getName()));
 		checkParameters(connectors, expectedParameterCOnfiguration);
@@ -300,7 +300,7 @@ public class TestConnectorMigrationUseCase {
 		expectedParameterCOnfiguration.put("username", ExpressionHelper.createConstantExpression("admin", String.class.getName()));
 		expectedParameterCOnfiguration.put("url", ExpressionHelper.createConstantExpression("http://cmis.alfresco.com/service/cmis", String.class.getName()));
 		expectedParameterCOnfiguration.put("repository", ExpressionHelper.createConstantExpression("Main Repository", String.class.getName()));
-		expectedParameterCOnfiguration.put("binding_type", ExpressionHelper.createConstantExpression("ATOM", String.class.getName()));
+		expectedParameterCOnfiguration.put("binding_type", ExpressionHelper.createConstantExpression("atompub", String.class.getName()));
 		expectedParameterCOnfiguration.put("document_path", ExpressionHelper.createConstantExpression("/Bonita", String.class.getName()));
 		checkParameters(connectors, expectedParameterCOnfiguration);
 	}
