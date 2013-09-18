@@ -108,6 +108,7 @@
                   style="push">
             </command>
             <menu
+                  icon="icons/menuIcons/recently.png"
                   label="%RecentlyModified">
                <dynamic
                      class="org.bonitasoft.studio.application.actions.ProcessListContribution"
