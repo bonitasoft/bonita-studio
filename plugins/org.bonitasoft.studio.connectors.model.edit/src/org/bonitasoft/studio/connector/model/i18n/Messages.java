@@ -347,6 +347,8 @@ public class Messages extends NLS {
 	public static String showDocuments;
 	public static String idIsInvalid;
 	public static String noWhiteSpaceInPageID;
+	public static String inputMandatoryError;
+	public static String inputMandatoryErrorTitle;
 
 
 
