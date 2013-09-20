@@ -111,6 +111,7 @@
                    label="%connectMenu_Label">
                 <command
                       commandId="org.bonitasoft.studio.connectors.newDefinition"
+                      icon="icons/connector_def-new.png"
                       style="push">
                 </command>
             <command
@@ -161,6 +162,7 @@
             </separator>
             <command
                   commandId="org.bonitasoft.studio.connectors.editConnectorConfiguration"
+                  icon="icons/editConfiguration.png"
                   style="push">
             </command>
          	<visibleWhen

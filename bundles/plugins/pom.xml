@@ -42,6 +42,7 @@
 		<module>org.bonitasoft.studio.diagram.custom</module>
 		<module>org.bonitasoft.studio.diagram.form.custom</module>
 		<module>org.bonitasoft.studio.diagram.form.properties</module>
+		<module>org.bonitasoft.studio.document</module>
 		<module>org.bonitasoft.studio.engine</module>
 		<module>org.bonitasoft.studio.examples</module>
 		<module>org.bonitasoft.studio.exporter</module>

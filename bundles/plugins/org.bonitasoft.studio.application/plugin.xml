@@ -107,6 +107,14 @@
                   label="%openProcess_label"
                   style="push">
             </command>
+            <menu
+                  icon="icons/menuIcons/recently.png"
+                  label="%RecentlyModified">
+               <dynamic
+                     class="org.bonitasoft.studio.application.actions.ProcessListContribution"
+                     id="org.bonitasoft.studio.application.openRecently">
+               </dynamic>
+            </menu>
             <command
                   commandId="org.eclipse.ui.file.save"
                   disabledIcon="icons/menuIcons/save_disabled.png"

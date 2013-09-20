@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration.connector.mapper;
 
+import java.util.Map;
+
 import org.bonitasoft.studio.connectors.extension.AbstractConnectorDefinitionMapper;
 import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
 
@@ -51,4 +53,20 @@ public class CMISDeleteFolderConnectorMapper extends
 			return super.getParameterKeyFor(legacyParameterKey);
 		}
 	}
+	
+	@Override
+	public Object transformParameterValue(String parameterKeyFor, Object value,
+			Map<String, Object> otherInputs) {
+		if("binding_type".equals(parameterKeyFor)){
+			if(value instanceof String){
+				if("ATOM".equals(value)){
+					return "atompub";
+				} else {
+					return "webservices";
+				}
+			}
+		}
+		return super.transformParameterValue(parameterKeyFor, value, otherInputs);
+	}
+
 }

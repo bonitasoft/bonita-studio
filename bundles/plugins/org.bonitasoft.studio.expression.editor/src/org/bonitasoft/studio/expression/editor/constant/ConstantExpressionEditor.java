@@ -137,7 +137,7 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
 	 */
 	 @Override
 	 public boolean canFinish() {
-		return typeCombo != null && !typeCombo.getCombo().isDisposed() && typeCombo.getCombo().getText() != null && !typeCombo.getCombo().getText().isEmpty();
+		 return typeCombo != null && !typeCombo.getCombo().isDisposed() && typeCombo.getCombo().getText() != null && !typeCombo.getCombo().getText().isEmpty();
 	}
 
 	@Override

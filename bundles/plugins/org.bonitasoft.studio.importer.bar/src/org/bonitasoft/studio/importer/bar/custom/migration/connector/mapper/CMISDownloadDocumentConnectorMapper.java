@@ -21,15 +21,18 @@ import java.util.Map;
 import org.bonitasoft.studio.connectors.extension.AbstractConnectorDefinitionMapper;
 import org.bonitasoft.studio.connectors.extension.IConnectorDefinitionMapper;
 
-/**
- * @author Maxence Raoux
- * 
- */
-public class CMISDeleteObjectConnectorMapper extends
+public class CMISDownloadDocumentConnectorMapper extends
 		AbstractConnectorDefinitionMapper implements IConnectorDefinitionMapper {
 
-	private static final String CMIS_CONNECTOR_DEFINITION_ID = "cmis-deletedocument";
-	private static final String LEGACY_CMIS_CONNECTOR_ID = "DeleteObject";
+	
+	private static final String CMIS_CONNECTOR_DEFINITION_ID = "cmis-downloaddocument";
+	private static final String LEGACY_CMIS_CONNECTOR_ID = "DownloadDocument";
+	
+	
+	@Override
+	public String getDefinitionId() {
+		return CMIS_CONNECTOR_DEFINITION_ID;
+	}
 
 	@Override
 	public String getLegacyConnectorId() {
@@ -37,21 +40,14 @@ public class CMISDeleteObjectConnectorMapper extends
 	}
 
 	@Override
-	public String getDefinitionId() {
-		return CMIS_CONNECTOR_DEFINITION_ID;
-	}
-
-	@Override
 	public String getParameterKeyFor(String legacyParameterKey) {
 		if ("setRepositoryName".equals(legacyParameterKey)) {
 			return "repository";
-		} else if ("setBinding_type".equals(legacyParameterKey)) {
-			return "binding_type";
-		} else if ("setObjectPath".equals(legacyParameterKey)) {
-			return "document_path";
-		} else {
-			return super.getParameterKeyFor(legacyParameterKey);
 		}
+		if ("setDocumentPath".equals(legacyParameterKey)){
+			return "remote_document_path";
+		}
+		return super.getParameterKeyFor(legacyParameterKey);
 	}
 	
 	@Override
@@ -68,4 +64,5 @@ public class CMISDeleteObjectConnectorMapper extends
 		}
 		return super.transformParameterValue(parameterKeyFor, value, otherInputs);
 	}
+
 }

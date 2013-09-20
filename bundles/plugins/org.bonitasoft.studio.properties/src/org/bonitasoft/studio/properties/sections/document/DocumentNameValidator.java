@@ -10,11 +10,16 @@ package org.bonitasoft.studio.properties.sections.document;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.model.process.Document;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ListViewer;
 
 /**
@@ -24,18 +29,42 @@ import org.eclipse.jface.viewers.ListViewer;
 public class DocumentNameValidator implements IValidator {
 
 	private ListViewer documentListViewer;
+	private EObject context;
 
 	public DocumentNameValidator(ListViewer documentListViewer) {
 		this.documentListViewer = documentListViewer;
 	}
+	
+	public DocumentNameValidator(EObject context){
+		this.context=context;
+		
+	}
 
 	@Override
 	public IStatus validate(Object value) {
+		if (value instanceof String){
+			String v=(String)value;
+			if (v.isEmpty()){
+				return ValidationStatus.error(Messages.error_empty);
+			}
+		}
+		if (documentListViewer!=null){
 		final ArrayList<String> documentList = new ArrayList<String>(Arrays.asList(documentListViewer.getList().getItems()));
 		final String[] selection = documentListViewer.getList().getSelection();
 		if (documentList.contains(value) && ((selection.length>0 && !selection[0].equals(value)) || selection.length==0)) {
 			return ValidationStatus.error(Messages.error_documentAllreadyexist);
+			}
+		} else {
+			if (context!=null){
+				Pool pool = (Pool)ModelHelper.getParentProcess(context);
+				for (Document document:pool.getDocuments()){
+					if (document.getName().equals(value)){
+						return ValidationStatus.error(Messages.error_documentAllreadyexist);
+					}
+				}
+			}
 		}
+		
 		return ValidationStatus.ok();
 	}
 
