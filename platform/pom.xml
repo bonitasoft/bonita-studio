@@ -25,7 +25,7 @@
 							<targetFiles>
 								<param>platform.target</param>
 							</targetFiles>
-							<failOnError>false</failOnError>
+							<failOnError>true</failOnError>
 						</configuration>
 					</execution>
 				</executions>
