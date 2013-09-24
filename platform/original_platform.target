@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target includeMode="feature" name="platform" sequenceNumber="49">
+<?pde version="3.8"?><target includeMode="feature" name="platform" sequenceNumber="50">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.uguess.tribix.feature.group" version="2.5.2.201107181644"/>
@@ -116,9 +116,10 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.codehaus.groovy18.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
-<unit id="org.codehaus.groovy20.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
-<unit id="org.codehaus.groovy21.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
+<unit id="org.codehaus.groovy.jdt.patch.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
+<unit id="org.codehaus.groovy21.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
+<unit id="org.codehaus.groovy20.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <repository location="http://dist.springsource.org/release/GRECLIPSE/e3.7/"/>
 </location>
 </locations>

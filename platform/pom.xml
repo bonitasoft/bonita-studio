@@ -308,6 +308,10 @@
 									<version>2.8.0.xx-20130703-1500-e37-RELEASE</version>
 								</iu>
 								<iu>
+									<id>org.codehaus.groovy.jdt.patch.feature.group</id>
+									<version>2.8.0.xx-20130703-1500-e37-RELEASE</version>
+								</iu>								
+								<iu>
 									<id>org.codehaus.groovy.eclipse.feature.feature.group</id>
 									<version>2.8.0.xx-20130703-1500-e37-RELEASE</version>
 								</iu>

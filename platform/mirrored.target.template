@@ -34,6 +34,7 @@
 <unit id="org.codehaus.groovy18.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <unit id="org.codehaus.groovy21.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <unit id="org.codehaus.groovy20.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
+<unit id="org.codehaus.groovy.jdt.patch.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <unit id="org.eclipse.birt.feature.group" version="3.7.2.v20120213-BDF9E9bGTzuHh03p2c0AWvmC3Ltk"/>
 <unit id="org.eclipse.team.svn.resource.ignore.rules.jdt.feature.group" version="0.7.9.I20110602-1700"/>

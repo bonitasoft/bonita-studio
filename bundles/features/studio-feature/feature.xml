@@ -27,7 +27,7 @@
          id="org.eclipse.jdt.core"
          download-size="0"
          install-size="0"
-         version="3.7.4.xx-20120921-2000-e37RELEASE"
+         version="2.8.0.xx-20130703-1500-e37-RELEASE"
          unpack="false"/>
 
    <plugin
