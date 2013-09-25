@@ -323,6 +323,9 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 	protected void addAutologin(List<BarResource> res, AbstractProcess process, Configuration conf) throws Exception {
 		if(process.isAutoLogin()){
 			File securityConfig = BonitaHomeUtil.getDefaultTenantSecurityConfigFile(TENANT_ID);
+			if(!securityConfig.exists()){
+				securityConfig = BonitaHomeUtil.getDefaultTenantSecurityConfigStudioFile();
+			}
 			if (securityConfig.exists()) {
 				Properties properties = new Properties();
 				FileInputStream is = new FileInputStream(securityConfig);
@@ -341,6 +344,7 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 				is.close() ;
 				os.close() ;
 			}else{
+				
 				throw new FileNotFoundException(securityConfig.getAbsolutePath());
 			}
 		}
