@@ -1027,7 +1027,9 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 		 *         and <code>false</code> if it is still open
 		 */
 		public boolean close() {
-			popupCloser.removeListeners();
+			if(popupCloser != null){
+				popupCloser.removeListeners();
+			}			
 			if (infoPopup != null) {
 				infoPopup.close();
 			}
