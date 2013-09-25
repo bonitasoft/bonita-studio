@@ -17,23 +17,23 @@
  */
 package org.bonitasoft.studio.exporter.tests.autologin;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.bonitasoft.engine.bpm.bar.BusinessArchive;
-import org.bonitasoft.studio.console.test.util.ProcessRegistry;
+import org.bonitasoft.studio.common.BonitaHomeUtil;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.engine.export.BarExporter;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.configuration.ConfigurationFactory;
 import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.PlatformUI;
 import org.junit.Assert;
 import org.junit.Test;
-
-import junit.framework.TestCase;
 
 /**
  * @author Florine Boudin
@@ -99,5 +99,11 @@ public class TestAutoLogin extends TestCase {
     		Assert.assertTrue("The "+securityFileName+" file was not generated in the path "+securityFilePath, hasSecurityFile);
     	}
 
+    }
+    
+    @Test
+    public void testGetSecurityConfigStudio() throws Exception {
+    	File file = BonitaHomeUtil.getDefaultTenantSecurityConfigStudioFile();
+    	assertTrue("Default Studio config file can't be retrieved. It might impact Workspace API.",file.exists());
     }
 }

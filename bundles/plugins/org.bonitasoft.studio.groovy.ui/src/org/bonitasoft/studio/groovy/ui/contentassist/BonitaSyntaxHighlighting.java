@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
 import org.bonitasoft.engine.expression.ExpressionConstantsResolver;
+import org.bonitasoft.forms.server.api.IFormExpressionsAPI;
 import org.bonitasoft.forms.server.validator.AbstractFormValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.codehaus.groovy.eclipse.editor.highlighting.IHighlightingExtender;
@@ -47,6 +48,7 @@ public class BonitaSyntaxHighlighting implements IHighlightingExtender {
         BONITA_KEYWORDS.add(ExpressionConstants.LOGGED_USER_ID.getEngineConstantName());
         BONITA_KEYWORDS.add(AbstractFormValidator.CLICKED_BUTTON_VARNAME);
         BONITA_KEYWORDS.add(ExpressionConstants.TASK_ASSIGNEE_ID.getEngineConstantName());
+        BONITA_KEYWORDS.add(IFormExpressionsAPI.USER_LOCALE);
     }
 
     public BonitaSyntaxHighlighting() {

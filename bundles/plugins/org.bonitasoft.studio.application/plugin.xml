@@ -356,6 +356,7 @@
             </separator>
             <command
                   commandId="org.eclipse.ui.help.aboutAction"
+                  icon="icons/menuIcons/about.png"
                   style="push">
             </command>
             <visibleWhen
