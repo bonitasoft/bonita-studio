@@ -182,7 +182,7 @@ public class BonitaHomeUtil {
 		File bonitaFolder = null;
 		try {
 			bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
-			return new File(bonitaFolder,"client"+File.separator+"platform"+File.separator+"conf"+File.separator+"security-config.properties");
+			return new File(bonitaFolder,"client"+File.separator+"platform"+File.separator+"tenant-template"+File.separator+"conf"+File.separator+"security-config.properties");
 		} catch (IOException e) {
 			BonitaStudioLog.error(e);
 		}
