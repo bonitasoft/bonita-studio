@@ -19,6 +19,7 @@ package org.bonitasoft.studio.tests;
 
 import junit.framework.TestCase;
 
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
@@ -29,13 +30,19 @@ import org.eclipse.ui.PlatformUI;
  *
  */
 public class TestVersion extends TestCase {
-
+	
+	private final String version = "6.0.4";//TO BE MODIFIED AT EACH RELEASE
+	
 	public void testNewProcessVersionMatchesProduct() throws Exception {
-		String version = "6.0.3";//TO BE MODIFIED AT EACH RELEASE
+		
 		NewDiagramCommandHandler command = new NewDiagramCommandHandler();
 		command.execute(null);
 		ProcessDiagramEditor editor = (ProcessDiagramEditor)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		String bonitaVersion = ((MainProcess)editor.getDiagramEditPart().resolveSemanticElement()).getBonitaVersion();
 		assertEquals("New Process Version <" + bonitaVersion + "> does not match product version <" + version + ">", version, bonitaVersion);
+	}
+	
+	public void testCurrentProductVersion(){
+		assertEquals("Cuuren tProduct version is not correct", version, ProductVersion.CURRENT_VERSION);
 	}
 }

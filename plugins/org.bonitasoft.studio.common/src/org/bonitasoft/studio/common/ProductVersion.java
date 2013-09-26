@@ -47,8 +47,9 @@ public class ProductVersion {
     public static final String VERSION_6_0_1 = "6.0.1";
     public static final String VERSION_6_0_2 = "6.0.2";
     public static final String VERSION_6_0_3 = "6.0.3";
+    public static final String VERSION_6_0_4 = "6.0.4";
 
-    public static final String CURRENT_VERSION = VERSION_6_0_3;
+    public static final String CURRENT_VERSION = VERSION_6_0_4;
 
     public static final List<String> orderedVerions = new ArrayList<String>();
     static{
@@ -58,6 +59,7 @@ public class ProductVersion {
     	orderedVerions.add(VERSION_6_0_1);
     	orderedVerions.add(VERSION_6_0_2);
     	orderedVerions.add(VERSION_6_0_3);
+    	orderedVerions.add(VERSION_6_0_4);
     }
 
     public static boolean sameVersion(String version){
