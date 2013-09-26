@@ -5,11 +5,11 @@
   <parent>
     <artifactId>plugins</artifactId>
     <groupId>org.bonitasoft.studio</groupId>
-    <version>6.0.4-SNAPSHOT</version>
+    <version>6.0.4.rctest8</version>
     <relativePath>../../../plugins/pom.xml</relativePath>
   </parent>
   <groupId>org.bonitasoft.studio</groupId>
   <artifactId>org.bonitasoft.studio.connectors.model.edit.nl_fr</artifactId>
-  <version>6.0.4-SNAPSHOT</version>
+  <version>6.0.4.rctest8</version>
   <packaging>eclipse-plugin</packaging>
 </project>
