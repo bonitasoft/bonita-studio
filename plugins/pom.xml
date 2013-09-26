@@ -6,11 +6,11 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>studio</artifactId>
-		<version>6.0.4.rctest7</version>
+		<version>6.0.4-SNAPSHOT</version>
 	</parent>
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>plugins</artifactId>
-	<version>6.0.4.rctest7</version>
+	<version>6.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 
