@@ -6,10 +6,10 @@
   <parent>
     <groupId>org.bonitasoft.studio</groupId>
     <artifactId>releng</artifactId>
-    <version>6.0.4.rctest9</version>
+    <version>6.0.4-SNAPSHOT</version>
   </parent>
 	<groupId>org.bonitasoft.studio.releng</groupId>
 	<artifactId>org.bonitasoft.studio_antTasks</artifactId>
-	<version>6.0.4.rctest9</version>
+	<version>6.0.4-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 </project>
