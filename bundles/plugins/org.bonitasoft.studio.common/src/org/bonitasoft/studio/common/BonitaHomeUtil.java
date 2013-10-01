@@ -178,9 +178,11 @@ public class BonitaHomeUtil {
 	}
 	
 	public static File getDefaultTenantSecurityConfigStudioFile() {
-		URL url = ProjectUtil.getConsoleLibsBundle().getEntry("src/security-config.properties");
+		URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita");
+		File bonitaFolder = null;
 		try {
-			return new File(FileLocator.toFileURL(url).getFile());
+			bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
+			return new File(bonitaFolder,"client"+File.separator+"platform"+File.separator+"tenant-template"+File.separator+"conf"+File.separator+"security-config.properties");
 		} catch (IOException e) {
 			BonitaStudioLog.error(e);
 		}

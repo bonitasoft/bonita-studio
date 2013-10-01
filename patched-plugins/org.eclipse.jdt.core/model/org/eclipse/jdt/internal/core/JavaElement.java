@@ -780,23 +780,24 @@ public abstract class JavaElement extends PlatformObject implements IJavaElement
 			}
 			String encoding = connection.getContentEncoding();
 			byte[] contents = org.eclipse.jdt.internal.compiler.util.Util.getInputStreamAsByteArray(stream, connection.getContentLength());
-			if (encoding == null) {
-				int index = getIndexOf(contents, CONTENT_TYPE, 0);
-				if (index != -1) {
-					index = getIndexOf(contents, CONTENT, index);
-					if (index != -1) {
-						int offset = index + CONTENT.length;
-						int index2 = getIndexOf(contents, CLOSING_DOUBLE_QUOTE, offset);
-						if (index2 != -1) {
-							final int charsetIndex = getIndexOf(contents, CHARSET, offset);
-							if (charsetIndex != -1) {
-								int start = charsetIndex + CHARSET.length;
-								encoding = new String(contents, start, index2 - start, org.eclipse.jdt.internal.compiler.util.Util.UTF_8);
-							}
-						}
-					}
-				}
-			}
+			//QUICK FIX FOR Bug 394382
+//			if (encoding == null) {
+//				int index = getIndexOf(contents, CONTENT_TYPE, 0);
+//				if (index != -1) {
+//					index = getIndexOf(contents, CONTENT, index);
+//					if (index != -1) {
+//						int offset = index + CONTENT.length;
+//						int index2 = getIndexOf(contents, CLOSING_DOUBLE_QUOTE, offset);
+//						if (index2 != -1) {
+//							final int charsetIndex = getIndexOf(contents, CHARSET, offset);
+//							if (charsetIndex != -1) {
+//								int start = charsetIndex + CHARSET.length;
+//								encoding = new String(contents, start, index2 - start, org.eclipse.jdt.internal.compiler.util.Util.UTF_8);
+//							}
+//						}
+//					}
+//				}
+//			}
 			try {
 				if (encoding == null) {
 					encoding = getJavaProject().getProject().getDefaultCharset();
