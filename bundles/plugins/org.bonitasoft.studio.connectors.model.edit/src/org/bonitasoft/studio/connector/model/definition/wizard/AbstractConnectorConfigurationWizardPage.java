@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Page;
@@ -42,7 +43,7 @@ import org.eclipse.swt.widgets.Control;
  * @author Romain Bioteau
  *
  */
-public abstract class AbstractConnectorConfigurationWizardPage extends WizardPage {
+public abstract class AbstractConnectorConfigurationWizardPage extends WizardPage implements IBonitaVariableContext {
 
     private ConnectorConfiguration configuration;
     private Page page;
@@ -52,6 +53,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
     private WizardPageSupport supportPage;
     private DefinitionResourceProvider messageProvider;
     private AvailableExpressionTypeFilter connectorExpressionContentTypeFilter ;
+    private boolean isPageFlowContext = false;
 
     public AbstractConnectorConfigurationWizardPage(){
         this(AbstractConnectorConfigurationWizardPage.class.getName()) ;
@@ -61,6 +63,7 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
         super(pageName) ;
         context = new EMFDataBindingContext() ;
     }
+    
 
     @Override
     public final void createControl(final Composite parent) {
@@ -185,5 +188,15 @@ public abstract class AbstractConnectorConfigurationWizardPage extends WizardPag
 		this.connectorExpressionContentTypeFilter = connectorExpressionContentTypeFilter;
 	}
 
+	@Override
+	public boolean isPageFlowContext() {
+
+		return isPageFlowContext;
+	}
+	
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext = isPageFlowContext;
+	}
 
 }

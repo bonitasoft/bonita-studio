@@ -18,6 +18,7 @@ package org.bonitasoft.studio.expression.editor.provider;
 
 import java.util.List;
 
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.databinding.observable.IObservable;
@@ -33,7 +34,7 @@ import org.eclipse.swt.widgets.Listener;
  * @author Romain Bioteau
  *
  */
-public interface IExpressionEditor {
+public interface IExpressionEditor extends IBonitaVariableContext {
 
     Control createExpressionEditor(Composite parent) ;
 

@@ -80,6 +80,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 	private Button browseClassesButton;
 	private Expression inputExpression;
 	private IObservableValue returnTypeModelObservable = null;
+	private boolean isPageFlowContext=false;
 
 	public ScriptExpressionEditor(Expression expression) {
 		if(expression != null){
@@ -132,7 +133,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 
 		IScriptLanguageProvider provider = ScriptLanguageService.getInstance().getScriptLanguageProvider(languageId) ;
 		editor = provider.getExpressionEditor() ;
-
+		editor.setIsPageFlowContext(isPageFlowContext);
 		Composite editorComposite = new Composite(mainComposite, SWT.NONE);
 		editorComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).span(4, 1).create()) ;
 		layout = new GridLayout(1, false) ;
@@ -144,7 +145,7 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 		layout.marginLeft = 0 ;
 		editorComposite.setLayout(layout) ;
 		editor.createExpressionEditor(editorComposite) ;
-
+		
 		createReturnTypeComposite(editorComposite);
 
 		return mainComposite;
@@ -297,6 +298,18 @@ public class ScriptExpressionEditor extends SelectionAwareExpressionEditor imple
 	@Override
 	public Control getTextControl() {
 		return editor.getTextControl();
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 
 }

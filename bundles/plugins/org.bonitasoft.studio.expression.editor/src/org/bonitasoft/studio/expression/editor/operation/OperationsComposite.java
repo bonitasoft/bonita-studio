@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
@@ -64,7 +65,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * @author Aurelie Zara
  * @author Romain Bioteau
  */
-public abstract class OperationsComposite extends Composite {
+public abstract class OperationsComposite extends Composite implements IBonitaVariableContext {
 
 	public static final String SWTBOT_ID_REMOVE_LINE = "actionLinesCompositeRemoveButton";
 	protected List<OperationViewer> operationViewers = new ArrayList<OperationViewer>();
@@ -82,12 +83,15 @@ public abstract class OperationsComposite extends Composite {
 	private IExpressionNatureProvider actionExpressionNatureProvider;
 	private Map<String, IExpressionValidator> validatorMap = new HashMap<String, IExpressionValidator>();
 	private EObject eObjectContext;
-
+	private boolean isPageFlowContext = false;
+	
+	
 	public OperationsComposite(TabbedPropertySheetPage tabbedPropertySheetPage,
 			Composite mainComposite, ViewerFilter actionExpressionFilter,
-			ViewerFilter storageExpressionFilter) {
+			ViewerFilter storageExpressionFilter,boolean isPageFlowContext){
 		super(mainComposite, SWT.NONE);
 		this.mainComposite = mainComposite;
+		this.isPageFlowContext=isPageFlowContext;
 		if (tabbedPropertySheetPage != null) {
 			widgetFactory = tabbedPropertySheetPage.getWidgetFactory();
 			if (widgetFactory != null) {
@@ -134,6 +138,14 @@ public abstract class OperationsComposite extends Composite {
 			}
 		});
 
+		
+	}
+
+	public OperationsComposite(TabbedPropertySheetPage tabbedPropertySheetPage,
+			Composite mainComposite, ViewerFilter actionExpressionFilter,
+			ViewerFilter storageExpressionFilter) {
+		this(tabbedPropertySheetPage,mainComposite,actionExpressionFilter,storageExpressionFilter,false);	
+		
 	}
 
 	protected EditingDomain getEditingDomain() {
@@ -188,7 +200,7 @@ public abstract class OperationsComposite extends Composite {
 	}
 
 	protected OperationViewer createOperationViewer(Operation action) {
-		final OperationViewer viewer = new OperationViewer(this, widgetFactory, getEditingDomain(), actionExpressionFilter, storageExpressionFilter) ;
+		final OperationViewer viewer = new OperationViewer(this, widgetFactory, getEditingDomain(), actionExpressionFilter, storageExpressionFilter,isPageFlowContext) ;
 		viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		if(context != null){
 			viewer.setContext(context);
@@ -330,6 +342,17 @@ public abstract class OperationsComposite extends Composite {
 		actionExpressionNatureProvider = provider;
 	}
 
-
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+	
+	
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext = isPageFlowContext;
+		
+	}
 
 }

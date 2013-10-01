@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.jface.databinding.observables.DocumentObservable;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -95,7 +96,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Romain Bioteau
  * 
  */
-public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor {
+public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor implements IExpressionEditor,IBonitaVariableContext {
 
 	protected Composite mainComposite;
 	protected Expression inputExpression;
@@ -114,6 +115,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 	protected TableComboViewer dataCombo;
 	private Section depndencySection;
 	protected TableComboViewer bonitaDataCombo;
+	private boolean isPageFlowContext=false;
 	private final ViewerSorter comboSorter = new ViewerSorter() {
 		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
@@ -373,7 +375,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
 	protected void createGroovyEditor(Composite parent) {
 
-		groovyViewer = new GroovyViewer(mainComposite);
+		groovyViewer = new GroovyViewer(mainComposite,isPageFlowContext);
 		groovyViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
 		sourceViewer = groovyViewer.getSourceViewer();
 		document = groovyViewer.getDocument();
@@ -459,7 +461,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 			}
 		}
 
-		bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context, filters));
+		bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context, filters,isPageFlowContext));
 		bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 
 		dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable);
@@ -482,7 +484,7 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 
 		dependencyJob = new ComputeScriptDependenciesJob(sourceViewer.getDocument());
 		dependencyJob.setContext(context);
-		this.nodes.addAll(GroovyUtil.getBonitaVariables(context, filters));
+		this.nodes.addAll(GroovyUtil.getBonitaVariables(context, filters,isPageFlowContext));
 		dependencyJob.setNodes(nodes);
 
 		final InputLengthValidator lenghtValidator = new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH);
@@ -631,5 +633,16 @@ public class GroovyScriptExpressionEditor extends SelectionAwareExpressionEditor
 	@Override
 	public IObservable getContentObservable() {
 		return new DocumentObservable(sourceViewer);
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 }

@@ -99,7 +99,7 @@ public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor impleme
 			dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 		}
 
-		bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context,null));
+		bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context,null,isPageFlowContext()));
 		bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 
 		dataBindingContext.bindValue(SWTObservables.observeText(sourceViewer.getTextWidget(),SWT.Modify), contentModelObservable,new UpdateValueStrategy().setAfterGetValidator(new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH)), null) ;

@@ -55,6 +55,7 @@ import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.PageFlow;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.RecapFlow;
 import org.bonitasoft.studio.model.process.SequenceFlow;
@@ -254,7 +255,7 @@ public class GroovyUtil {
 	}
 
 	private static List<ExpressionConstants> getBonitaConstantsFor(
-			EObject context, ViewerFilter[] filters) {
+			EObject context, ViewerFilter[] filters, boolean isPageFlowContext) {
 		final List<ExpressionConstants> result = new ArrayList<ExpressionConstants>();
 		DisplayEngineExpressionWithName engineFilter = null;
 		if(filters != null){
@@ -274,7 +275,9 @@ public class GroovyUtil {
 		if(context instanceof Expression){
 			context = context.eContainer();
 		}
-
+		if (isPageFlowContext){
+			result.add(ExpressionConstants.LOGGED_USER_ID);
+		}
 		if (context instanceof Activity) {
 			if (((Activity) context).isIsMultiInstance()) {
 				if(engineFilter != null){
@@ -316,8 +319,8 @@ public class GroovyUtil {
 		return result;
 	}
 
-	public static List<String> getBonitaKeyWords(final EObject context, final ViewerFilter[] filters) {
-		final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(context,filters);
+	public static List<String> getBonitaKeyWords(final EObject context, final ViewerFilter[] filters,boolean isPageFlowContext) {
+		final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(context,filters,isPageFlowContext);
 		final ArrayList<String> result = new ArrayList<String>(
 				bonitaConstantsFor.size());
 		for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
@@ -334,8 +337,8 @@ public class GroovyUtil {
 	}
 
 	private static void addBonitaVariables(final List<ScriptVariable> result,
-			final EObject element, ViewerFilter[] filters) {
-		final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(element,filters);
+			final EObject element, ViewerFilter[] filters,boolean isPageFlowContext) {
+		final List<ExpressionConstants> bonitaConstantsFor = getBonitaConstantsFor(element,filters,isPageFlowContext);
 		for (final ExpressionConstants expressionConstants : bonitaConstantsFor) {
 			ScriptVariable scriptVariable =new ScriptVariable(expressionConstants.getEngineConstantName(),getEngineExpressionReturnType(expressionConstants.getEngineConstantName()));
 			result.add(scriptVariable);
@@ -398,9 +401,9 @@ public class GroovyUtil {
 		}
 	}
 
-	public static List<ScriptVariable> getBonitaVariables(final EObject element, ViewerFilter[] filters) {
+	public static List<ScriptVariable> getBonitaVariables(final EObject element, ViewerFilter[] filters,boolean isPageFlowContext) {
 		final List<ScriptVariable> result = new ArrayList<ScriptVariable>();
-		addBonitaVariables(result, element,filters);
+		addBonitaVariables(result, element,filters,isPageFlowContext);
 		return result;
 	}
 

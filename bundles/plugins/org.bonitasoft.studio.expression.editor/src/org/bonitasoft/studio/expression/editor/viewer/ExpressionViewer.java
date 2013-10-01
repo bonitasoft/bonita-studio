@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
@@ -124,7 +125,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * 
  */
 public class ExpressionViewer extends ContentViewer implements ExpressionConstants, SWTBotConstants,
-		IContentProposalListener, IBonitaContentProposalListener2 {
+		IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
 
 	protected Composite control;
 	private Text textControl;
@@ -145,6 +146,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private boolean withConnector = false;
 	private List<IExpressionValidationListener> validationListeners = new ArrayList<IExpressionValidationListener>();
 	private ToolItem eraseControl;
+	private boolean isPageFlowContext = false;
 
 	protected final DisposeListener disposeListener = new DisposeListener() {
 
@@ -374,6 +376,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			}
 		}
 		EditExpressionDialog dialog = createEditDialog(editInput);
+		dialog.setIsPageFlowContext(isPageFlowContext);
 		if (dialog.open() == Dialog.OK) {
 			Expression newExpression = dialog.getExpression();
 			updateSelection(newExpression);
@@ -1165,5 +1168,17 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 	public IExpressionNatureProvider getExpressionNatureProvider() {
 		return expressionNatureProvider;
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 }

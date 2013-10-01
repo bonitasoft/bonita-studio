@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.DateUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.extension.IWidgetContribtution;
@@ -152,7 +153,7 @@ import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 /**
  * @author Romain Bioteau
  */
-public class DataWizardPage extends WizardPage {
+public class DataWizardPage extends WizardPage implements IBonitaVariableContext{
 
 	private static final String GENERATE_DATA_CONTRIBUTION_ID = "org.bonitasoft.studio.propertiies.generateData";
 
@@ -183,6 +184,7 @@ public class DataWizardPage extends WizardPage {
 	private ControlDecoration typeDescriptionDecorator;
 	private WizardPageSupport pageSupport;
 	private String fixedReturnType;
+	private boolean isPageFlowContext=false;
 
 	private final ViewerFilter typeViewerFilter = new ViewerFilter() {
 
@@ -808,6 +810,7 @@ public class DataWizardPage extends WizardPage {
 		defaultValueComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(300, SWT.DEFAULT).span(2, 1).create());
 
 		defaultValueViewer = new ExpressionViewer(defaultValueComposite, SWT.BORDER, ProcessPackage.Literals.DATA__DEFAULT_VALUE);
+		defaultValueViewer.setIsPageFlowContext(isPageFlowContext);
 		defaultValueViewer.getControl().setLayoutData(GridDataFactory.swtDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).create());
 		defaultValueViewer.setContext(container);
 
@@ -1269,5 +1272,17 @@ public class DataWizardPage extends WizardPage {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 }
