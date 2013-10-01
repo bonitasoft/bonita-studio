@@ -351,7 +351,8 @@ public class Messages extends NLS {
 	public static String definitionVersion;
 	public static String onlyCustomConnector;
 	public static String all;
-
+	public static String inputMandatoryError;
+	public static String inputMandatoryErrorTitle;
 
 
     /**
