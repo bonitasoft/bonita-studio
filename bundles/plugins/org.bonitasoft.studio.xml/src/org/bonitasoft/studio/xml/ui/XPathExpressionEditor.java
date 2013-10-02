@@ -94,6 +94,7 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
 	private TreeViewer xsdViewer;
 	private ComboViewer typeCombo;
 	private Text text;
+	private boolean isPageFlowContext=false;
 
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.expression.editor.provider.IExpressionEditor#createExpressionEditor(org.eclipse.swt.widgets.Composite)
@@ -522,6 +523,18 @@ public class XPathExpressionEditor extends SelectionAwareExpressionEditor implem
 	@Override
 	public Control getTextControl() {
 		return null;
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 
 }

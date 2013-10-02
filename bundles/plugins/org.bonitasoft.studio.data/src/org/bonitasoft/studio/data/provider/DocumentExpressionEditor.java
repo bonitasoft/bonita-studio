@@ -75,6 +75,7 @@ implements IExpressionEditor {
 	private Composite mainComposite;
 	private Text typeText;
 	private IObservableValue returnTypeObservable = null;
+	private boolean isPageFlowContext=false;
 
 	@Override
 	public Control createExpressionEditor(Composite parent) {
@@ -287,5 +288,17 @@ implements IExpressionEditor {
 		if (returnTypeObservable != null) {
 			returnTypeObservable.dispose();
 		}
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 }

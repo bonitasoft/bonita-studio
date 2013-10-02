@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.DatasourceConstants;
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -55,7 +56,7 @@ import org.eclipse.xtext.ui.XtextProjectHelper;
  * @author Romain Bioteau
  *
  */
-public class DataWizard extends Wizard {
+public class DataWizard extends Wizard implements IBonitaVariableContext {
 
 
 
@@ -68,6 +69,7 @@ public class DataWizard extends Wizard {
 	private boolean showAutogenerateForm;
 	private DataWizardPage page;
 	private String fixedReturnType;
+	private boolean isPageFlowContext=false;
 
 	public DataWizard(EObject container,EStructuralFeature dataContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID, boolean showAutogenerateForm){
 		initDataWizard(dataContainmentFeature, showAutogenerateForm);
@@ -118,10 +120,14 @@ public class DataWizard extends Wizard {
 
 	protected DataWizardPage getWizardPage() {
 		if(!dataContainmentFeature.equals(ProcessPackage.Literals.DATA_AWARE__DATA)){
-			return new DataWizardPage(dataWorkingCopy,container,false,false,false, showAutogenerateForm,featureToCheckForUniqueID, fixedReturnType) ;
+			DataWizardPage page = new DataWizardPage(dataWorkingCopy,container,false,false,false, showAutogenerateForm,featureToCheckForUniqueID, fixedReturnType);
+			page.setIsPageFlowContext(isPageFlowContext);
+			return  page ;
 		}else{
 			boolean isOnActivity = container instanceof Activity;
-			return new DataWizardPage(dataWorkingCopy,container,true, true, isOnActivity, showAutogenerateForm, featureToCheckForUniqueID, fixedReturnType) ;
+			DataWizardPage page = new DataWizardPage(dataWorkingCopy,container,true, true, isOnActivity, showAutogenerateForm, featureToCheckForUniqueID, fixedReturnType);
+			page.setPageComplete(isPageFlowContext);
+			return  page;
 		}
 	}
 
@@ -192,6 +198,17 @@ public class DataWizard extends Wizard {
 
 	public Data getOriginalData() {
 		return originalData;
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 
 }

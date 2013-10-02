@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
@@ -83,7 +84,7 @@ import org.eclipse.xtext.ui.XtextProjectHelper;
  * 
  * @author Romain Bioteau
  */
-public abstract class AbstractDataSection extends AbstractBonitaDescriptionSection implements ISelectionChangedListener,IDoubleClickListener{
+public abstract class AbstractDataSection extends AbstractBonitaDescriptionSection implements ISelectionChangedListener,IDoubleClickListener,IBonitaVariableContext{
 
 
 	private Button updateDataButton;
@@ -98,7 +99,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	private IObservableList observeDataListType;
 	private IObservableList observeTransient;
 	private IObservableList observeJObjectType;
-
+	private boolean isPageFlowContext = false;
 
 	/*
 	 * (non-Javadoc)
@@ -302,7 +303,9 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
 
 	 public void setWizardDialog(){
-		 WizardDialog wizardDialog = new DataWizardDialog(Display.getCurrent().getActiveShell(), new DataWizard(getEObject(), getDataFeature(), getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm()),this);
+		 DataWizard wizard= new DataWizard(getEObject(), getDataFeature(), getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
+		 wizard.setIsPageFlowContext(isPageFlowContext());
+		 WizardDialog wizardDialog = new DataWizardDialog(Display.getCurrent().getActiveShell(),wizard ,this);
 		 if(wizardDialog.open() == Dialog.OK){
 			 tableViewer.refresh();
 		 }
@@ -327,7 +330,9 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		 if (selection.size() != 1) {
 			 MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.selectOnlyOneElementTitle, Messages.selectOnlyOneElementMessage);
 		 } else {
-			 WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), new DataWizard((Data) selection.getFirstElement(),getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm()));
+			 DataWizard wizard = new DataWizard((Data) selection.getFirstElement(),getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
+			 wizard.setIsPageFlowContext(isPageFlowContext());
+			 WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard );
 			 wizardDialog.open();
 			 tableViewer.setInput(getEObject());
 		 }
@@ -470,4 +475,17 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	  public String getSectionDescription() {
 		  return Messages.dataSectionDescription;
 	  }
+	  
+	  
+	  @Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+	  
+	  @Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
+	}
 }

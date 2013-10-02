@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.expression.editor.viewer;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.jface.databinding.DialogSupport;
 import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
@@ -72,7 +73,7 @@ import org.eclipse.swt.widgets.ToolItem;
  * @author Romain Bioteau
  *
  */
-public class EditExpressionDialog extends TrayDialog {
+public class EditExpressionDialog extends TrayDialog implements IBonitaVariableContext{
 
 	protected Expression inputExpression;
 	private TableViewer expressionTypeViewer;
@@ -84,6 +85,7 @@ public class EditExpressionDialog extends TrayDialog {
 	private ISelection oldSelection ;
 	protected final ViewerFilter[] viewerTypeFilters;
 	private boolean isPassword;
+	private boolean isPageFlowContext;
 	private final Listener openTrayListener = new Listener() {
 
 		@Override
@@ -288,6 +290,7 @@ public class EditExpressionDialog extends TrayDialog {
 		}
 
 		currentExpressionEditor = provider.getExpressionEditor(inputExpression,context);
+		currentExpressionEditor.setIsPageFlowContext(isPageFlowContext);
 		if(currentExpressionEditor != null){
 			currentExpressionEditor.createExpressionEditor(contentComposite,isPassword) ;
 			contentComposite.layout(true, true) ;
@@ -388,6 +391,21 @@ public class EditExpressionDialog extends TrayDialog {
 
 	public Expression getExpression() {
 		return inputExpression;
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		if (currentExpressionEditor!=null){
+			currentExpressionEditor.setIsPageFlowContext(isPageFlowContext);
+		}
+		
 	}
 
 }

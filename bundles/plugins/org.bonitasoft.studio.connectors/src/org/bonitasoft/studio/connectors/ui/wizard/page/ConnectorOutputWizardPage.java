@@ -56,7 +56,7 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
                 ExpressionConstants.DOCUMENT_TYPE
         }) ;
 
-        lineComposite = new WizardPageOperationsComposite(null, mainComposite, rightFilter, leftFilter) ;
+        lineComposite = new WizardPageOperationsComposite(null, mainComposite, rightFilter, leftFilter,isPageFlowContext()) ;
         lineComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         lineComposite.setContext(context) ;
         lineComposite.setContext(getElementContainer());

@@ -121,6 +121,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 	private Expression inputExpression;
 	private XtextResource resource;
 	private Resource eResource;
+	private boolean isPageFlowContext=false;
 
 	public ComparisonExpressionEditor(Resource eResource, EObject context) {
 		this.context = context;
@@ -421,6 +422,18 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 	@Override
 	public Control getTextControl() {
 		return comparisonEditor.getViewer().getTextWidget();
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 
 

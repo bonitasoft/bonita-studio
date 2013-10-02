@@ -100,11 +100,25 @@ public class GroovyViewer {
 	private GroovyFileStore tmpGroovyFileStore;
 	private boolean contextInitialized = false;
 	private HashSet<String> knowVariables;
+	private boolean isPageFlowContext;
 
+	
+	
 	public GroovyViewer(final Composite mainComposite) {
 		this(mainComposite, null);
 	}
 
+	public GroovyViewer(final Composite mainComposite,boolean isPageFlowContext){
+		this(mainComposite,null,isPageFlowContext);
+	}
+	
+	
+	public GroovyViewer(final Composite mainComposite,final IEditorInput input,boolean isPageFlowContext){
+		this(mainComposite,input);
+		this.isPageFlowContext=isPageFlowContext;
+	}
+	
+	
 	public GroovyViewer(final Composite mainComposite, final IEditorInput input) {
 		IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
 		groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING,false) ;
@@ -173,7 +187,7 @@ public class GroovyViewer {
 		});
 		enableContextAssitShortcut();
 
-		getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, GroovyUtil.getBonitaKeyWords(null,null));
+		getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, GroovyUtil.getBonitaKeyWords(null,null,isPageFlowContext));
 		getSourceViewer().getDocument().addDocumentListener(new IDocumentListener() {
 
 			private Object previousContent;
@@ -295,7 +309,7 @@ public class GroovyViewer {
 
 		// Add context in TextWidget to access it in content assist
 		getSourceViewer().getTextWidget().setData(PROCESS_VARIABLES_DATA_KEY, nodes);
-		final List<String> bonitaKeyWords = GroovyUtil.getBonitaKeyWords(context,filters);
+		final List<String> bonitaKeyWords = GroovyUtil.getBonitaKeyWords(context,filters,isPageFlowContext);
 		getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, bonitaKeyWords);
 		getSourceViewer().getTextWidget().setData(CONTEXT_DATA_KEY, context);
 		

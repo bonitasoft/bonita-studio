@@ -92,6 +92,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 	private Text typeText;
 	private IObservableValue returnTypeObservable = null;
 	private Button addExpressionButton;
+	private boolean isPageFlowContext=false;
 
 	@Override
 	public Control createExpressionEditor(Composite parent) {
@@ -421,5 +422,17 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 		if (returnTypeObservable != null) {
 			returnTypeObservable.dispose();
 		}
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 }
