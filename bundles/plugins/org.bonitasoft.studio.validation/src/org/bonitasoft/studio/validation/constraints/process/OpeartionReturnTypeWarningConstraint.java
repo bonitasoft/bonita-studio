@@ -60,6 +60,12 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 				if(op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)){
 					return ctx.createSuccessStatus();
 				}
+				if (op.eContainer() instanceof FileWidget){
+					FileWidget fileWidget = (FileWidget)op.eContainer();
+					if (fileWidget.isDownloadOnly()){
+						return ctx.createSuccessStatus();
+					}
+				}
 				validator.setDataExpression(op.getLeftOperand());
 				final IStatus status = validator.validate(op.getRightOperand());
 				if(!status.isOK()){
@@ -109,6 +115,12 @@ public class OpeartionReturnTypeWarningConstraint extends AbstractLiveValidation
 			}
 			if(op.eContainingFeature().equals(ProcessPackage.Literals.CONNECTOR__OUTPUTS)){
 				return ctx.createSuccessStatus();
+			}
+			if (op.eContainer() instanceof FileWidget){
+				FileWidget fileWidget = (FileWidget)op.eContainer();
+				if (fileWidget.isDownloadOnly()){
+					return ctx.createSuccessStatus();
+				}
 			}
 			if(op.getLeftOperand() == null 
 					|| op.getLeftOperand().getContent() == null 
