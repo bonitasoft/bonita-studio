@@ -54,6 +54,7 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
 	private Text valueText;
 	private ComboViewer typeCombo;
 	private Expression inputExpression;
+	private boolean isPageFlowContext=false;
 
 	@Override
 	public Control createExpressionEditor(Composite parent) {
@@ -151,6 +152,18 @@ public class ConstantExpressionEditor extends SelectionAwareExpressionEditor imp
 	@Override
 	public Control getTextControl() {
 		return valueText;
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 
 

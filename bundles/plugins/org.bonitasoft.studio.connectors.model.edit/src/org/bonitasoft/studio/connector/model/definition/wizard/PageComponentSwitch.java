@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connector.model.definition.Array;
@@ -92,7 +93,7 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author Romain Bioteau
  *
  */
-public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
+public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> implements IBonitaVariableContext {
 
 
 	private final Composite parent;
@@ -104,6 +105,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 	protected final DefinitionResourceProvider messageProvider;
 	protected final AvailableExpressionTypeFilter connectorExpressionContentTypeFilter;
 	private IWizardContainer iWizardContainer;
+	private boolean isPageFlowContext = false;
 
 	public PageComponentSwitch(IWizardContainer iWizardContainer, Composite parent,EObject container,ConnectorDefinition definition,ConnectorConfiguration connectorConfiguration, EMFDataBindingContext context,DefinitionResourceProvider messageProvider,AvailableExpressionTypeFilter connectorExpressionContentTypeFilter) {
 		this.parent = parent ;
@@ -312,6 +314,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		if(parameter != null){
 			createFieldLabel(composite,SWT.CENTER,object.getId(),input.isMandatory()) ;
 			final CheckBoxExpressionViewer viewer = new CheckBoxExpressionViewer(composite, SWT.BORDER, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION);
+			viewer.setIsPageFlowContext(isPageFlowContext);
 			viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 			viewer.setContext(container);
 			if(input.isMandatory()){
@@ -353,6 +356,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			if(parameter != null){
 				createFieldLabel(composite,SWT.CENTER,object.getId(),input.isMandatory()) ;
 				final ExpressionViewer viewer = new ExpressionViewer(composite,SWT.BORDER, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION) ;
+				viewer.setIsPageFlowContext(isPageFlowContext);
 				viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 				viewer.setContext(container);
 				if(input.isMandatory()){
@@ -388,6 +392,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		if(parameter != null){
 			createFieldLabel(composite,SWT.CENTER,object.getId(),input.isMandatory()) ;
 			final ExpressionViewer viewer = new GroovyOnlyExpressionViewer(composite,SWT.BORDER, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION) ;
+			viewer.setIsPageFlowContext(isPageFlowContext);
 			viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 			viewer.setContext(container);
 			if(input.isMandatory()){
@@ -539,6 +544,7 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 		if(parameter != null){
 			createFieldLabel(composite,SWT.CENTER,object.getId(),input.isMandatory()) ;
 			final ExpressionViewer viewer = new ExpressionViewer(composite,SWT.BORDER | SWT.PASSWORD, ConnectorConfigurationPackage.Literals.CONNECTOR_PARAMETER__EXPRESSION) ;
+			viewer.setIsPageFlowContext(isPageFlowContext);
 			viewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 			viewer.setContext(container);
 			if(input.isMandatory()){
@@ -672,5 +678,16 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> {
 			}
 			return expression ;
 		}
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 }

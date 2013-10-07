@@ -20,6 +20,7 @@ package org.bonitasoft.studio.expression.editor.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.widgets.MagicComposite;
 import org.bonitasoft.studio.expression.editor.autocompletion.IExpressionProposalLabelProvider;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
@@ -74,7 +75,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 /**
  * @author Romain Bioteau
  */
-public class ExpressionCollectionViewer {
+public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
 	private Composite viewerComposite;
 	private TableViewer viewer;
@@ -107,6 +108,7 @@ public class ExpressionCollectionViewer {
 	private List<ViewerFilter> viewerFilters = new ArrayList<ViewerFilter>();
 	private final List<IExpressionNatureProvider> viewerExprProviders = new ArrayList<IExpressionNatureProvider>();
 	private boolean withConnectors = false;
+	private boolean isPageFlowContext = false;
 	private final SelectionAdapter removeRowListener = new SelectionAdapter() {
 		@Override
 		public void widgetSelected(SelectionEvent event) {
@@ -332,6 +334,7 @@ public class ExpressionCollectionViewer {
 				.grab(true, false).create());
 		expressionEditor = new ExpressionViewer(expressionComposite,
 				SWT.BORDER, widgetFactory, null,null,withConnectors);
+		expressionEditor.setIsPageFlowContext(isPageFlowContext);
 		expressionEditor.getControl().setLayoutData(
 				GridDataFactory.fillDefaults().grab(true, false).create());
 
@@ -1046,6 +1049,16 @@ public class ExpressionCollectionViewer {
 				editingSupports.get(colIndex).setExpressionProposalLableProvider(expressionProposalLabelProvider);
 			}
 		}
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+	this.isPageFlowContext = isPageFlowContext;
 	}
 
 }

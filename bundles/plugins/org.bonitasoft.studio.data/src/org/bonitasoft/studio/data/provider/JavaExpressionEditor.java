@@ -92,6 +92,7 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 	private TreeViewer javaTreeviewer;
 	private Data data;
 	private ITreeContentProvider contentProvider;
+	private boolean isPageFlowContext=false;
 
 
 	@Override
@@ -480,5 +481,17 @@ public class JavaExpressionEditor extends SelectionAwareExpressionEditor impleme
 	@Override
 	public Control getTextControl() {
 		return null;
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 }

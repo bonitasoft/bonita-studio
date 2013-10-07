@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.expression.editor.operation;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
@@ -69,7 +70,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * @author Aurelien Pupier
  *
  */
-public class OperationViewer extends Composite {
+public class OperationViewer extends Composite implements IBonitaVariableContext{
 
 	public static final String SWTBOT_ID_REMOVE_LINE = "actionLinesCompositeRemoveButton";
 	protected EMFDataBindingContext context;
@@ -89,9 +90,12 @@ public class OperationViewer extends Composite {
 	private IExpressionNatureProvider actionExpressionProvider;
 	private Operation operation;
 	private EObject eObjectContext;
-
-	public OperationViewer(Composite parent,TabbedPropertySheetWidgetFactory widgetFactory ,EditingDomain editingDomain, ViewerFilter actionExpressionFilter, ViewerFilter storageExpressionFilter) {
+	private boolean isPageFlowContext;
+	
+	
+	public OperationViewer(Composite parent,TabbedPropertySheetWidgetFactory widgetFactory ,EditingDomain editingDomain, ViewerFilter actionExpressionFilter, ViewerFilter storageExpressionFilter,boolean isPageFlowContext){
 		super(parent, SWT.NONE);
+		this.isPageFlowContext=isPageFlowContext;
 		this.editingDomain = editingDomain ;
 		this.widgetFactory = widgetFactory ;
 		if(widgetFactory != null){
@@ -102,6 +106,10 @@ public class OperationViewer extends Composite {
 		operationReturnTypeValidator = new OperationReturnTypesValidator();
 		setLayout(GridLayoutFactory.fillDefaults().numColumns(4).margins(0, 0).create());
 		doCreateControls() ;
+	}
+
+	public OperationViewer(Composite parent,TabbedPropertySheetWidgetFactory widgetFactory ,EditingDomain editingDomain, ViewerFilter actionExpressionFilter, ViewerFilter storageExpressionFilter) {
+		this(parent,widgetFactory,editingDomain,actionExpressionFilter,storageExpressionFilter,false);
 	}
 
 	public void refreshDatabinding(){
@@ -321,6 +329,7 @@ public class OperationViewer extends Composite {
 
 	protected ExpressionViewer createActionExpressionViewer() {
 		final ExpressionViewer actionViewer = new ExpressionViewer(this,SWT.BORDER,widgetFactory,editingDomain, getActionTargetFeature()) ;
+		actionViewer.setIsPageFlowContext(isPageFlowContext);
 		actionViewer.addFilter(actionExpressionFilter) ;
 		actionViewer.setExternalDataBindingContext(context);
 		actionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true,false).hint(200, SWT.DEFAULT).create());
@@ -430,5 +439,16 @@ public class OperationViewer extends Composite {
 
 	public void addActionExpressionValidator(String expressionType,IExpressionValidator validator) {
 		actionExpression.addExpressionValidator(expressionType, validator);
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
 	}
 }

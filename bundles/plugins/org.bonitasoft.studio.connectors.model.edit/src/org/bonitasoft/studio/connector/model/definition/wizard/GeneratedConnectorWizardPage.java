@@ -52,7 +52,7 @@ public class GeneratedConnectorWizardPage extends AbstractConnectorConfiguration
         pageComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
         final Page page = getPage() ;
         final PageComponentSwitch componentSwitch = getPageComponentSwitch(context, pageComposite) ;
-
+        componentSwitch.setIsPageFlowContext(isPageFlowContext());
         for(Component component : page.getWidget()){
             componentSwitch.doSwitch(component) ;
         }

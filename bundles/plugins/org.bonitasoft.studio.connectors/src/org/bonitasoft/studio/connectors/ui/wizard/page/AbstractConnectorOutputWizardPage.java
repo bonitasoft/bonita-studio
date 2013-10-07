@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.model.process.Connector;
@@ -34,7 +35,7 @@ import org.eclipse.swt.widgets.Control;
  * @author Romain Bioteau
  *
  */
-public abstract class AbstractConnectorOutputWizardPage extends WizardPage {
+public abstract class AbstractConnectorOutputWizardPage extends WizardPage implements IBonitaVariableContext {
 
     private EObject elementContainer;
     private ConnectorDefinition definition;
@@ -43,6 +44,7 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage {
     private EStructuralFeature outputDataFeature;
     private WizardPageSupport pageSupport;
 	private IWizardPage previousPageBackup;
+	private boolean isPageFlowContext = false;
 
 
     public AbstractConnectorOutputWizardPage(){
@@ -123,5 +125,16 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage {
     	this.previousPageBackup = page;
     	super.setPreviousPage(page);
     }
+    
+    @Override
+    public boolean isPageFlowContext() {
+    	return isPageFlowContext;
+    }
 
+    
+    @Override
+    public void setIsPageFlowContext(boolean isPageFlowContext) {
+    	this.isPageFlowContext=isPageFlowContext;
+    	
+    }
 }

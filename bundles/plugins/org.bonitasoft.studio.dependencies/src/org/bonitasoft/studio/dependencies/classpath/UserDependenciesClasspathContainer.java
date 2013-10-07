@@ -39,64 +39,65 @@ import org.eclipse.jdt.core.JavaCore;
  */
 public class UserDependenciesClasspathContainer extends ClasspathContainerInitializer implements IClasspathContainer {
 
-    private static final IPath CONTAINER_ID = new Path("repositoryDependencies");
-    private IJavaProject project;
+	private static final IPath CONTAINER_ID = new Path("repositoryDependencies");
+	private IJavaProject project;
 
-    public UserDependenciesClasspathContainer(){
+	public UserDependenciesClasspathContainer(){
+	}
 
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jdt.core.IClasspathContainer#getClasspathEntries()
+	 */
+	@Override
+	public IClasspathEntry[] getClasspathEntries() {
+		Set<IClasspathEntry> entries = new HashSet<IClasspathEntry>() ;
+		if(project != null && project.exists() && project.isOpen()){
+			try {
+				final IFolder libFolder = project.getProject().getFolder("lib");
+				if(libFolder.exists()){
+					for(IResource f : libFolder.members()){
+						if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar")){
+							entries.add(JavaCore.newLibraryEntry(f.getLocation(), null, null, true));
+						}
+					}
+				}
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e);
+			}
+		}
+		return entries.toArray(new IClasspathEntry[]{});
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jdt.core.IClasspathContainer#getClasspathEntries()
-     */
-    @Override
-    public IClasspathEntry[] getClasspathEntries() {
-        Set<IClasspathEntry> entries = new HashSet<IClasspathEntry>() ;
-        try {
-            final IFolder libFolder = project.getProject().getFolder("lib");
-            if(libFolder.exists()){
-                for(IResource f : libFolder.members()){
-                    if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar")){
-                        entries.add(JavaCore.newLibraryEntry(f.getLocation(), null, null, true));
-                    }
-                }
-            }
-        } catch (CoreException e) {
-            BonitaStudioLog.error(e);
-        }
-        return entries.toArray(new IClasspathEntry[]{});
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
+	 */
+	@Override
+	public String getDescription() {
+		return Messages.userClassPathDescription;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return Messages.userClassPathDescription;
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jdt.core.IClasspathContainer#getKind()
+	 */
+	@Override
+	public int getKind() {
+		return K_APPLICATION;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jdt.core.IClasspathContainer#getKind()
-     */
-    @Override
-    public int getKind() {
-        return K_APPLICATION;
-    }
+	/* (non-Javadoc)
+	 * @see org.eclipse.jdt.core.IClasspathContainer#getPath()
+	 */
+	@Override
+	public IPath getPath() {
+		return CONTAINER_ID;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jdt.core.IClasspathContainer#getPath()
-     */
-    @Override
-    public IPath getPath() {
-        return CONTAINER_ID;
-    }
-
-    @Override
-    public void initialize(IPath containerPath, IJavaProject project) throws CoreException {
-        if(containerPath.equals(CONTAINER_ID)){
-            this.project = project ;
-            JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {this}, null);
-        }
-    }
+	@Override
+	public void initialize(IPath containerPath, IJavaProject project) throws CoreException {
+		if(containerPath.equals(CONTAINER_ID)){
+			this.project = project ;
+			JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {this}, null);
+		}
+	}
 
 }

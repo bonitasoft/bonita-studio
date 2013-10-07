@@ -70,6 +70,7 @@ public class SimulationDataExpressionEditor extends SelectionAwareExpressionEdit
 	private Expression editorInputExpression;
 	private Composite mainComposite;
 	private Text typeText;
+	private boolean isPageFlowContext=false;
 
 
 	@Override
@@ -255,5 +256,17 @@ public class SimulationDataExpressionEditor extends SelectionAwareExpressionEdit
 	@Override
 	public Control getTextControl() {
 		return null;
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 }

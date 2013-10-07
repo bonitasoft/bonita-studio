@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.ExtensibleWizard;
@@ -97,7 +98,7 @@ import org.eclipse.jface.wizard.IWizardPage;
  * @author Romain Bioteau
  *
  */
-public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefinitionContainer {
+public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefinitionContainer,IBonitaVariableContext {
 
 	private static final String CUSTOM_WIZARD_ID = "org.bonitasoft.studio.connectors.connectorWizard";
 	private static final String DATABASE_ID ="database";
@@ -113,7 +114,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	private SelectNameAndDescWizardPage namePage;
 	protected DefinitionResourceProvider messageProvider;
 	protected CustomWizardExtension extension;
-
+	private boolean isPageFlowContext = false;
 	private List<CustomWizardExtension> contributions;
 
 	private boolean useEvents = true;
@@ -222,6 +223,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 			extension = findCustomWizardExtension(definition) ;
 			List<IWizardPage> pages = getPagesFor(definition) ;
 			for(IWizardPage p : pages){
+				
 				addAdditionalPage(p) ;
 			}
 			addOuputPage(definition) ;
@@ -509,6 +511,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		if(extension != null && (!extension.hasCanBeUsedProvider() || extension.canBeUsed(definition,connectorWorkingCopy))){ //Extension page
 			List<AbstractConnectorConfigurationWizardPage> advancedPages = extension.getPages();
 			for(AbstractConnectorConfigurationWizardPage p : advancedPages){
+				p.setIsPageFlowContext(isPageFlowContext);
 				p.setMessageProvider(messageProvider) ;
 				p.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
 				p.setDefinition(definition) ;
@@ -574,6 +577,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	protected SelectDatabaseOutputTypeWizardPage addDatabaseOutputModeSelectionPage(
 			ConnectorDefinition definition) {
 		final SelectDatabaseOutputTypeWizardPage selectOutputPage = new SelectDatabaseOutputTypeWizardPage(isEditMode());
+		selectOutputPage.setIsPageFlowContext(isPageFlowContext);
 		selectOutputPage.setMessageProvider(messageProvider) ;
 		selectOutputPage.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
 		selectOutputPage.setDefinition(definition) ;
@@ -584,6 +588,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	protected IWizardPage createDefaultConnectorPage(ConnectorDefinition def,Page page) {
 		AbstractConnectorConfigurationWizardPage wizPage = new GeneratedConnectorWizardPage() ;
+		wizPage.setIsPageFlowContext(isPageFlowContext);
 		wizPage.setMessageProvider(messageProvider) ;
 		wizPage.setConfiguration(connectorWorkingCopy.getConfiguration()) ;
 		wizPage.setDefinition(def) ;
@@ -659,5 +664,17 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 }

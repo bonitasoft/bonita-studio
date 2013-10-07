@@ -72,6 +72,7 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
     private TableViewer viewer;
     private Expression inputExpression;
     private Text typeText;
+    private boolean isPageFlowContext=false;
 
     public ConnectorOutputExpressionEditor(){
 
@@ -262,6 +263,18 @@ public class ConnectorOutputExpressionEditor extends SelectionAwareExpressionEdi
     public Control getTextControl() {
         return null;
     }
+
+	@Override
+	public boolean isPageFlowContext() {
+		
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
+	}
 
 
 }

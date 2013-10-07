@@ -66,7 +66,6 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 
 		createLeftViewFolder(layout, editorArea);
 		bottomRight.addView("org.bonitasoft.studio.validation.view");
-		layout.setFixed(true);
 	}
 
 	protected void configureIntroView(IPageLayout layout) {

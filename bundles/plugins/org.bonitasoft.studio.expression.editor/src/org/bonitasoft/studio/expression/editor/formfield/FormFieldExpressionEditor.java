@@ -77,6 +77,7 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
 	private final AdapterFactoryLabelProvider adapterLabelProvider;
 	private Expression inputExpression;
 	private Text typeText;
+	private boolean isPageFlowContext=false;
 
 	public FormFieldExpressionEditor(){
 		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
@@ -273,6 +274,18 @@ public class FormFieldExpressionEditor extends SelectionAwareExpressionEditor im
 
 	public Control getTextControl() {
 		return null;
+	}
+
+	@Override
+	public boolean isPageFlowContext() {
+	
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 
 

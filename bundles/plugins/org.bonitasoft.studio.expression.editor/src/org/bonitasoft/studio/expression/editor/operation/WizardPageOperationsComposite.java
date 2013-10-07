@@ -35,6 +35,13 @@ public class WizardPageOperationsComposite extends OperationsComposite {
 		super(tabbedPropertySheetPage, mainComposite, actionExpressionFilter,
 				storageExpressionFilter);
 	}
+	
+	public WizardPageOperationsComposite(TabbedPropertySheetPage tabbedPropertySheetPage,
+			Composite mainComposite, ViewerFilter actionExpressionFilter,
+			ViewerFilter storageExpressionFilter,boolean isPageFlowContext) {
+		super(tabbedPropertySheetPage, mainComposite, actionExpressionFilter,
+				storageExpressionFilter,isPageFlowContext);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.expression.editor.operation.OperationsComposite#refresh()

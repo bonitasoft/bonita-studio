@@ -63,6 +63,7 @@ public class MessageIdExpressionEditor extends SelectionAwareExpressionEditor im
     private Text valueText;
     private Expression inputExpression;
     private TableViewer viewer;
+    private boolean isPageFlowContext=false;
 
     @Override
     public Control createExpressionEditor(Composite parent) {
@@ -162,6 +163,17 @@ public class MessageIdExpressionEditor extends SelectionAwareExpressionEditor im
     public Control getTextControl() {
         return valueText;
     }
+
+	@Override
+	public boolean isPageFlowContext() {
+		return isPageFlowContext;
+	}
+
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
+	}
 
 
 }
