@@ -26,6 +26,7 @@ import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
@@ -59,10 +60,12 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
 import org.eclipse.gmf.runtime.gef.ui.internal.l10n.Cursors;
+import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.Connector;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.Size;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
@@ -360,13 +363,21 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
 				Point newLoc = FiguresHelper.handleCompartmentMargin((IGraphicalEditPart) targetEditPart, loc.getX(), loc.getY(),(((IGraphicalEditPart) targetEditPart).resolveSemanticElement() instanceof SubProcessEvent)) ;
 				if(((IGraphicalEditPart) targetEditPart).getParent() instanceof ShapeCompartmentEditPart){
 					ShapeCompartmentEditPart compartment = (ShapeCompartmentEditPart) ((IGraphicalEditPart) targetEditPart).getParent();
+					Bounds parentBounds = (Bounds) ((Node)((IGraphicalEditPart) targetEditPart.getParent().getParent()).getNotationView()).getLayoutConstraint() ;
+					if(compartment.resolveSemanticElement() instanceof  SubProcessEvent){
+						newLoc.translate(-parentBounds.getX(), -parentBounds.getY());
+					}
 					while(newLoc.y + 65 > compartment.getFigure().getBounds().height){
 						newLoc.y = newLoc.y -10;
 					}
 					while(newLoc.x + 100 > compartment.getFigure().getBounds().width){
 						newLoc.x = newLoc.x -10;
 					}
+					if(compartment.resolveSemanticElement() instanceof  SubProcessEvent){
+						newLoc.translate(parentBounds.getX(), parentBounds.getY());
+					}
 				}
+
 				executeCommand(new ICommandProxy(new SetBoundsCommand(((IGraphicalEditPart) targetEditPart).getEditingDomain(), "Check Overlap", new EObjectAdapter(((IGraphicalEditPart) targetEditPart).getNotationView()),newLoc))) ;
 
 				if(connectionRequest != null){
