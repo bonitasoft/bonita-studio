@@ -176,6 +176,7 @@ public class Repository implements IRepository {
 		try {
 			if(!project.isOpen()){
 				project.open(NULL_PROGRESS_MONITOR) ;
+				refresh(NULL_PROGRESS_MONITOR);
 			}
 		} catch (CoreException e) {
 			BonitaStudioLog.error(e) ;
