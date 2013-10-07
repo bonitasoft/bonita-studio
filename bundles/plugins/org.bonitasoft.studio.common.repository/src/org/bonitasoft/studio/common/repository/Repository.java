@@ -83,6 +83,8 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.core.ClasspathValidation;
+import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -171,12 +173,20 @@ public class Repository implements IRepository {
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.repository.IRepository#open()
 	 */
+	@SuppressWarnings("restriction")
 	@Override
 	public void open() {
 		try {
 			if(!project.isOpen()){
 				project.open(NULL_PROGRESS_MONITOR) ;
-				refresh(NULL_PROGRESS_MONITOR);
+				JavaProject jProject = (JavaProject)project.getNature(JavaCore.NATURE_ID);
+				if(jProject!= null){
+					if(!jProject.isOpen()){
+						jProject.open(NULL_PROGRESS_MONITOR);
+					}
+					new ClasspathValidation(jProject).validate();
+				}
+			
 			}
 		} catch (CoreException e) {
 			BonitaStudioLog.error(e) ;

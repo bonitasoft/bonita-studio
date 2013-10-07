@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -26,8 +26,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.ClasspathContainerInitializer;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -37,14 +35,16 @@ import org.eclipse.jdt.core.JavaCore;
  * @author Romain Bioteau
  *
  */
-public class UserDependenciesClasspathContainer extends ClasspathContainerInitializer implements IClasspathContainer {
+public class UserDependenciesContainer implements IClasspathContainer {
 
-	private static final IPath CONTAINER_ID = new Path("repositoryDependencies");
 	private IJavaProject project;
-
-	public UserDependenciesClasspathContainer(){
+	private IPath containerPath;
+	
+	public UserDependenciesContainer(IPath containerPath,IJavaProject project){
+		this.project = project;
+		this.containerPath = containerPath;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getClasspathEntries()
 	 */
@@ -67,7 +67,7 @@ public class UserDependenciesClasspathContainer extends ClasspathContainerInitia
 		}
 		return entries.toArray(new IClasspathEntry[]{});
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
 	 */
@@ -89,15 +89,8 @@ public class UserDependenciesClasspathContainer extends ClasspathContainerInitia
 	 */
 	@Override
 	public IPath getPath() {
-		return CONTAINER_ID;
+		return containerPath;
 	}
 
-	@Override
-	public void initialize(IPath containerPath, IJavaProject project) throws CoreException {
-		if(containerPath.equals(CONTAINER_ID)){
-			this.project = project ;
-			JavaCore.setClasspathContainer(containerPath, new IJavaProject[] {project}, new IClasspathContainer[] {this}, null);
-		}
-	}
 
 }
