@@ -72,7 +72,7 @@ public class OpenActionContentProvider implements IIntroXHTMLContentProvider {
 			final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if(activeWorkbenchWindow != null){
 				final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-				if(activePage != null){
+				if(activePage != null ){
 					if(PlatformUI.getWorkbench().getService(ICommandService.class) != null){
 						// Do not replace by static link since this command does not resolve to the same between BOS and SP
 						Command open = ((ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class)).getCommand("org.bonitasoft.studio.diagram.command.openDiagram");//$NON-NLS-1$
