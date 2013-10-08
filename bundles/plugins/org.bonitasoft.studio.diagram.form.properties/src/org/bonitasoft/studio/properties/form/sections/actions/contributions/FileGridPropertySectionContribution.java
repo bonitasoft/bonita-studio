@@ -127,7 +127,7 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 		//createURLButton(widgetFactory, radioComposite);
 
 		createUseResourceButton(radioComposite);
-
+		
 		initialValueSection = widgetFactory.createSection(mainComposite, Section.NO_TITLE | Section.CLIENT_INDENT) ;
 		initialValueSection.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(0, 0).create());
 		initialValueSection.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).span(3, 1).create()) ;
@@ -143,17 +143,22 @@ public class FileGridPropertySectionContribution implements IExtensibleGridPrope
 				initialValueSection.setClient(createResourceComposite(initialValueSection, widgetFactory));
 			}
 		}
-
+		bindFields();
+		
 		if(initialInputType == FileWidgetInputType.DOCUMENT){
 			useDocumentButton.setSelection(true);
+			useDocumentButton.notifyListeners(SWT.Selection, new Event());
+			
 			/*}else if(initialInputType == FileWidgetInputType.URL){
 			useURLButton.setSelection(true);*/
-		}else if(initialInputType == FileWidgetInputType.RESOURCE){
+		}else {
 			useResourceButton.setSelection(true);
+			useResourceButton.notifyListeners(SWT.Selection,new Event());
 		}
+		
 
 
-		bindFields();
+		
 	}
 
 	private void createUseResourceButton(Composite radioComposite) {
