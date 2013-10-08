@@ -230,5 +230,12 @@ public class Messages extends NLS {
 	public static String initiator;
 	public static String newActor;
 	public static String actorWizardPageTitle;
+	public static String organizationHasBeenModifiedTitle;
+	public static String organizationHasBeenModifiedMessage;
+	public static String doNotDisplayAgain;
+	public static String userDoesntExistAnymoreTitle;
+	public static String userDoesntExistAnymore;
+
+
 
 }

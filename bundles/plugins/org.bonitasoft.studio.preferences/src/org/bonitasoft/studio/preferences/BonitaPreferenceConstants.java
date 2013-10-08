@@ -202,6 +202,7 @@ public class BonitaPreferenceConstants {
     public static final String VALIDATION_BEFORE_RUN = "validateBeforeRun";
 	public static final String ASK_RENAME_ON_FIRST_SAVE = "renameOnFirstSave";
 	public static final String ALWAYS_USE_SCRIPTING_MODE = "useScriptingMode";
+	public static final String TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION="toggleStateForPublishOrganization";
 
     /**
      * @param locales2 TODO
