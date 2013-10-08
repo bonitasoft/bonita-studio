@@ -85,6 +85,7 @@ import org.ow2.bonita.connector.core.desc.Array;
 import org.ow2.bonita.connector.core.desc.Checkbox;
 import org.ow2.bonita.connector.core.desc.Component;
 import org.ow2.bonita.connector.core.desc.Getter;
+import org.ow2.bonita.connector.core.desc.Group;
 import org.ow2.bonita.connector.core.desc.Password;
 import org.ow2.bonita.connector.core.desc.Radio;
 import org.ow2.bonita.connector.core.desc.Select;
@@ -92,6 +93,7 @@ import org.ow2.bonita.connector.core.desc.Setter;
 import org.ow2.bonita.connector.core.desc.SimpleList;
 import org.ow2.bonita.connector.core.desc.Text;
 import org.ow2.bonita.connector.core.desc.Textarea;
+import org.ow2.bonita.connector.core.desc.WidgetComponent;
 import org.ow2.bonita.facade.runtime.AttachmentInstance;
 import org.w3c.dom.Document;
 
@@ -307,9 +309,15 @@ public class ConnectorDescriptorToConnectorDefinition {
 			widget = createListWidget((SimpleList)component);
 		}else if(component instanceof Textarea){
 			widget = createTextAreaWidget((Textarea)component);
+		}else if(component instanceof Group){
+			widget = createGroupWidget((Group)component);
+			for(WidgetComponent wc : ((Group) component).getWidgets()){
+				((org.bonitasoft.studio.connector.model.definition.Group)widget).getWidget().add(createWidget(wc));
+			}
 		}
 		return widget;
 	}
+
 
 	private String toInputName(Setter setter) {
 		String name = setter.getSetterName();
@@ -320,6 +328,15 @@ public class ConnectorDescriptorToConnectorDefinition {
 		return name;
 	}
 
+
+	protected org.bonitasoft.studio.connector.model.definition.Component createGroupWidget(
+			Group component) {
+		final org.bonitasoft.studio.connector.model.definition.Group group = ConnectorDefinitionFactory.eINSTANCE.createGroup();
+		group.setId(component.getLabelId());
+		group.setOptional(component.isOptional());
+		return group;
+	}
+	
 	protected org.bonitasoft.studio.connector.model.definition.Component createTextAreaWidget(
 			Textarea component) {
 		final TextArea textArea = ConnectorDefinitionFactory.eINSTANCE.createTextArea();
