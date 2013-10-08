@@ -226,6 +226,11 @@ public class Messages extends NLS {
 	public static String actorDescriptionLane;
 	public static String actorDescriptionTask;
 	public static String exportActorFilterTitle;
+	public static String organizationHasBeenModifiedTitle;
+	public static String organizationHasBeenModifiedMessage;
+	public static String doNotDisplayAgain;
+	public static String userDoesntExistAnymoreTitle;
+	public static String userDoesntExistAnymore;
 
 
 
