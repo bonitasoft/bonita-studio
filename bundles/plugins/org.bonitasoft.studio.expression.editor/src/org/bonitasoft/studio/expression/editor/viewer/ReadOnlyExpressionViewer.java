@@ -25,6 +25,8 @@ import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
+import org.bonitasoft.studio.expression.editor.provider.DataExpressionNatureProvider;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.FormPackage;
@@ -36,6 +38,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusListener;
@@ -87,8 +90,8 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 	protected Set<Expression> getFilteredExpressions() {
 		Set<Expression> result = super.getFilteredExpressions();
 		Set<Expression> toRemove = new HashSet<Expression>();
-		EObject context = expressionNatureProvider.getContext();
-		boolean isATransientDataInitialization = isTransientDataInitialization(context);
+
+		boolean isATransientDataInitialization = isTransientDataInitialization(expressionNatureProvider);
 		if(!isATransientDataInitialization){
 			for(Expression e : result){
 				if(ExpressionConstants.VARIABLE_TYPE.equals(e.getType())){
@@ -108,7 +111,16 @@ public class ReadOnlyExpressionViewer extends ExpressionViewer {
 		return result;
 	}
 
-	private boolean isTransientDataInitialization(EObject context) {
+	private boolean isTransientDataInitialization(IExpressionNatureProvider expressionNatureProvider) {
+		if(expressionNatureProvider instanceof DataExpressionNatureProvider){
+			EStructuralFeature dataFeature = ((DataExpressionNatureProvider) expressionNatureProvider).getDataFeature();
+			if(dataFeature.equals(ProcessPackage.Literals.RECAP_FLOW__RECAP_TRANSIENT_DATA)
+					|| dataFeature.equals(ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA)
+					|| dataFeature.equals(ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_TRANSIENT_DATA)){
+				return true;
+			}
+		}
+		EObject context = expressionNatureProvider.getContext();
 		if(context != null){
 			if(context instanceof Operation && context.eContainer() instanceof Connector){
 				return  context.eContainer().eContainmentFeature().equals(ProcessPackage.Literals.PAGE_FLOW__PAGE_FLOW_CONNECTORS);

@@ -18,10 +18,10 @@
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.connectors.expression.DataExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
 import org.bonitasoft.studio.expression.editor.operation.WizardPageOperationsComposite;
+import org.bonitasoft.studio.expression.editor.provider.DataExpressionNatureProvider;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -58,12 +58,12 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
 
         lineComposite = new WizardPageOperationsComposite(null, mainComposite, rightFilter, leftFilter,isPageFlowContext()) ;
         lineComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
-        lineComposite.setContext(context) ;
-        lineComposite.setContext(getElementContainer());
-        lineComposite.setEObject(getConnector()) ;
         if(getOutputDataFeature() != null){
             lineComposite.setStorageExpressionNatureContentProvider(new DataExpressionNatureProvider(getOutputDataFeature())) ;
         }
+        lineComposite.setContext(context) ;
+        lineComposite.setContext(getElementContainer());
+        lineComposite.setEObject(getConnector()) ;
         lineComposite.fillTable() ;
         return mainComposite ;
     }
