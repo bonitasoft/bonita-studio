@@ -17,10 +17,6 @@
       [Enter License Description here.]
    </license>
 
-   <includes
-         id="org.codehaus.groovy.eclipse.feature"
-         version="0.0.0"/>
-
    <requires>
       <import feature="org.eclipse.rcp" version="3.7.1.r37x_v20110729-9DB5FmNFnFLSFCtLxnRfMqt15A4A" match="greaterOrEqual"/>
       <import feature="org.eclipse.wst.web_ui.feature"/>
@@ -450,6 +446,13 @@
          install-size="0"
          version="0.0.0"
          fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.codehaus.groovy.eclipse.dsl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
