@@ -60,6 +60,17 @@ public class ProductVersion {
 		return current.compareTo(productVersion) < 0;
 	}
 
+	public static boolean canBeImported(String version) {
+		Version current = new Version("0.0.0");
+		try{
+			current = Version.parseVersion(version);
+		}catch(IllegalArgumentException e){
+			
+		}
+		Version productVersion = new Version(CURRENT_VERSION);
+		return current.compareTo(productVersion) <= 0;
+	}
+
 
 
 }
