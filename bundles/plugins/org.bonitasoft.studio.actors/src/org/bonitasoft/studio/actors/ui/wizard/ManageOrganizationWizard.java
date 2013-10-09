@@ -177,6 +177,17 @@ public class ManageOrganizationWizard extends Wizard {
 		}
 		IPreferenceStore preferenceStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore();
 		String pref =preferenceStore.getString(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION);
+		boolean publishOrganization = preferenceStore.getBoolean(ActorsPreferenceConstants.PUBLISH_ORGANIZATION);
+		if (publishOrganization && MessageDialogWithToggle.ALWAYS.equals(pref)){
+			try {
+				publishOrganization(preferenceStore);
+			} catch (InvocationTargetException e) {
+				BonitaStudioLog.error(e);
+
+			} catch (InterruptedException e) {
+				BonitaStudioLog.error(e);
+			}
+		} else {
 		if (MessageDialogWithToggle.NEVER.equals(pref) && activeOrganizationHasBeenModified){
 			String [] buttons = {IDialogConstants.YES_LABEL,IDialogConstants.NO_LABEL};
 			MessageDialogWithToggle mdwt = new MessageDialogWithToggle(Display.getDefault().getActiveShell(), Messages.organizationHasBeenModifiedTitle, null, Messages.bind(Messages.organizationHasBeenModifiedMessage, activeOrganization.getName()), MessageDialog.WARNING,buttons , 0, Messages.doNotDisplayAgain, false);
@@ -186,14 +197,21 @@ public class ManageOrganizationWizard extends Wizard {
 			if (index == 2){
 				try {
 					publishOrganization(preferenceStore);
+					if (preferenceStore.getString(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION).equals(MessageDialogWithToggle.ALWAYS)){
+						preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, true);
+					}
 				} catch (InvocationTargetException e) {
 					BonitaStudioLog.error(e);
 
 				} catch (InterruptedException e) {
 					BonitaStudioLog.error(e);
 				}
+			} else {
+				if (preferenceStore.getString(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION).equals(MessageDialogWithToggle.ALWAYS)){
+					preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, false);
+				}
 			}
-
+		}
 
 		}
 		return true;
