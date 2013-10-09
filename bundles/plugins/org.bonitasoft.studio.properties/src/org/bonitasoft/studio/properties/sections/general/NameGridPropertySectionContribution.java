@@ -30,6 +30,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidat
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
@@ -259,11 +260,14 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 			if(nameDialog.open() == Dialog.OK ) {
 				DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
 				MainProcess newProcess   = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
+				editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, newProcess, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, System.getProperty("user.name", "Unknown")));
+				editor.doSave(Repository.NULL_PROGRESS_MONITOR);
+				
 				processNamingTools.changeProcessNameAndVersion(newProcess, nameDialog.getDiagramName(), nameDialog.getDiagramVersion());
 				for(ProcessesNameVersion pnv : nameDialog.getPools()){
 					processNamingTools.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
 				}
-
+				
 				try{
 					ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
 					org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save") ;
