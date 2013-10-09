@@ -988,6 +988,7 @@ public class CronEditor extends Composite {
 		minuteLabel.setText(Messages.minuteLabel);
 
 		item.setControl(minuteContent);
+		cronExpression.setMode(item.getText());
 	}
 
 	public DataBindingContext getContext() {
