@@ -53,7 +53,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.quartz.CronExpression;
 
 /**
@@ -66,6 +68,7 @@ public class TimerConditionWizardPage extends WizardPage {
 	private Expression condition;
 	private ExpressionViewer conditionViewer;
 	private boolean enableCycles = false;
+	private Button generateExpression;
 
 	protected TimerConditionWizardPage(AbstractTimerEvent event, Expression condition) {
 		super(TimerConditionWizardPage.class.getName());
@@ -232,6 +235,16 @@ public class TimerConditionWizardPage extends WizardPage {
 		WizardPageSupport.create(this, editor.getContext());
 		setControl(mainComposite);
 	}
+	
+	@Override
+	public void setPageComplete(boolean complete) {
+		super.setPageComplete(complete);
+		setCronGenerationEnabled(complete);
+	}
+
+	private void setCronGenerationEnabled(boolean complete) {
+		generateExpression.setEnabled(getErrorMessage() == null);
+	}
 
 	protected Control createCalendarEditor(Composite stackedComposite) {
 		final Composite calendarControl = new Composite(stackedComposite, SWT.NONE);
@@ -311,8 +324,15 @@ public class TimerConditionWizardPage extends WizardPage {
 
 		final CronEditor editor = new CronEditor(cronGroup, SWT.NONE);
 		editor.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-
-		final Button generateExpression = new Button(cronGroup, SWT.PUSH);
+		editor.addTabChangedListener(new Listener() {
+			
+			@Override
+			public void handleEvent(Event event) {
+				generateExpression.setEnabled(true);
+			}
+		});
+		
+		generateExpression = new Button(cronGroup, SWT.PUSH);
 		generateExpression.setText(Messages.generateCronButtonLabel);
 		generateExpression.setLayoutData(GridDataFactory.swtDefaults().create());
 		generateExpression.addSelectionListener(new SelectionAdapter() {
