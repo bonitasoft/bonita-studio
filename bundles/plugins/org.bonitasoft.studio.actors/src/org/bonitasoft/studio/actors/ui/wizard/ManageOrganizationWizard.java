@@ -197,7 +197,7 @@ public class ManageOrganizationWizard extends Wizard {
 			if (index == 2){
 				try {
 					publishOrganization(preferenceStore);
-					if (preferenceStore.getString(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION).equals(MessageDialogWithToggle.ALWAYS)){
+					if (mdwt.getToggleState()){
 						preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, true);
 					}
 				} catch (InvocationTargetException e) {
@@ -207,8 +207,9 @@ public class ManageOrganizationWizard extends Wizard {
 					BonitaStudioLog.error(e);
 				}
 			} else {
-				if (preferenceStore.getString(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION).equals(MessageDialogWithToggle.ALWAYS)){
+				if (mdwt.getToggleState()){
 					preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, false);
+					preferenceStore.setDefault(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION,MessageDialogWithToggle.ALWAYS);
 				}
 			}
 		}
