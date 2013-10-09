@@ -249,7 +249,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 				fos.close();
 			}
 		}
-		final URLClassLoader customURLClassLoader = createBarClassloader(archiveFile);
+		final URLClassLoader customURLClassLoader = createBarClassloader(archiveFile,tmpConnectorJarFile);
 		String connectorClassname = findCustomConnectorClassName(tmpConnectorJarFile);
 		if(connectorClassname != null){
 			connectorsJars.add(tmpConnectorJarFile.getName());
@@ -276,15 +276,17 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 	/***
 	 * Create an URLClassloader with all jar inside the archive file
 	 * @param archiveFile
+	 * @param tmpConnectorJarFile 
 	 * @return
 	 * @throws MalformedURLException
 	 * @throws ZipException
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	protected URLClassLoader createBarClassloader(File archiveFile) throws MalformedURLException,
+	protected URLClassLoader createBarClassloader(File archiveFile, File tmpConnectorJarFile) throws MalformedURLException,
 			ZipException, IOException, FileNotFoundException {
 		List<URL> urls = new ArrayList<URL>();
+		urls.add(tmpConnectorJarFile.toURI().toURL());
 		Enumeration<URL> urlEnum = BarImporterPlugin.getDefault().getBundle().findEntries("lib/", "*.jar", true);
 		while (urlEnum.hasMoreElements()) {
 			URL type = (URL) urlEnum.nextElement();
