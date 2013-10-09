@@ -28,6 +28,7 @@ import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -47,11 +48,13 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.SetConnectionBendpointsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.internal.parts.PaletteToolTransferDropTargetListener;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateConnectionViewAndElementRequest.ConnectionViewAndElementDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest.ViewAndElementDescriptor;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
+import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.Connector;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Location;
@@ -84,7 +87,6 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 	protected void handleDrop() {
 		CreateRequest request = getCreateRequest();
 		Point loc = super.getDropLocation().getCopy();
-		loc.translate(0, -25);
 		request.setLocation(loc);
 		updateTargetEditPart();
 
@@ -92,7 +94,7 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 			Command command = getCommand();
 			if (command != null && command.canExecute()){
 				getViewer().getEditDomain().getCommandStack().execute(command);
-				insertOnSequenceFlow(command,getTargetEditPart(),getViewer());
+				insertOnSequenceFlow(command,getTargetEditPart(),getViewer(),true);
 				selectAddedObject(getViewer(),DiagramCommandStack.getReturnValues(command));
 			} else {
 				getCurrentEvent().detail = DND.DROP_NONE;
@@ -124,7 +126,7 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 	}
 
 
-	public static void insertOnSequenceFlow(Command command,final EditPart targetEditPart,EditPartViewer viewer) {
+	public static void insertOnSequenceFlow(Command command,final EditPart targetEditPart,EditPartViewer viewer, boolean correctOffset) {
 		Collection objects = DiagramCommandStack.getReturnValues(command) ;
 		CompoundCommand cc = new CompoundCommand("Check Overlap") ;
 		final List editparts = new ArrayList();
@@ -134,6 +136,9 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 				if (object instanceof ViewAndElementDescriptor) {
 					final ViewAndElementDescriptor descriptor = (ViewAndElementDescriptor) object; 
 					final ShapeEditPart editPart = (ShapeEditPart) viewer.getEditPartRegistry().get(descriptor.getAdapter(View.class));
+					Bounds b = (Bounds) ((Node)editPart.getNotationView()).getLayoutConstraint();
+					SetBoundsCommand sbc = new SetBoundsCommand(editPart.getEditingDomain(), "", descriptor,new Point(b.getX()-25,b.getY()-25 ));
+					
 					final ReconnectRequest reconnect = new ReconnectRequest(RequestConstants.REQ_RECONNECT_TARGET);
 					reconnect.setConnectionEditPart((ConnectionEditPart) targetEditPart);
 					reconnect.setTargetEditPart(editPart);
@@ -145,6 +150,9 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 
 					connectionCommand = new DeferredCreateConnectionViewAndElementCommand(connectionRequest, descriptor, ((ConnectionEditPart)targetEditPart).getTarget(), editPart.getViewer());
 					CompoundCommand coupound = 	new CompoundCommand();
+					if(correctOffset){
+						coupound.add(new ICommandProxy(sbc));
+					}
 					coupound.add(reconnectCommand);
 					coupound.add(new ICommandProxy(connectionCommand));
 					viewer.getEditDomain().getCommandStack().execute(coupound);
