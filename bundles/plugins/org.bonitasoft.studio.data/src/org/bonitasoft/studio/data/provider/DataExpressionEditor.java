@@ -186,15 +186,21 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 
 		DataWizardDialog wizardDialog = null;
 		if (editorInputExpression.isReturnTypeFixed()) {
+			DataWizard wizard = new DataWizard(container, feat,
+					res, true, editorInputExpression.getReturnType());
+			wizard.setIsPageFlowContext(isPageFlowContext);
 		wizardDialog = new DataWizardDialog(Display
-				.getCurrent().getActiveShell(), new DataWizard(container, feat,
-				res, true, editorInputExpression.getReturnType()), null);
+				.getCurrent().getActiveShell(),wizard , null);
 		} else {
+			DataWizard wizard = new DataWizard(container, feat,
+					res, true);
+			wizard.setIsPageFlowContext(isPageFlowContext);
 			wizardDialog = new DataWizardDialog(Display
-					.getCurrent().getActiveShell(), new DataWizard(container, feat,
-					res, true), null);
+					.getCurrent().getActiveShell(),wizard, null);
 		}
+		
 		if (wizardDialog.open() == Dialog.OK) {
+			
 			fillViewerData(context, filters);
 		}
 	}

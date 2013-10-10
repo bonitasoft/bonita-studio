@@ -126,7 +126,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 		}else{
 			boolean isOnActivity = container instanceof Activity;
 			DataWizardPage page = new DataWizardPage(dataWorkingCopy,container,true, true, isOnActivity, showAutogenerateForm, featureToCheckForUniqueID, fixedReturnType);
-			page.setPageComplete(isPageFlowContext);
+			page.setIsPageFlowContext(isPageFlowContext);
 			return  page;
 		}
 	}
