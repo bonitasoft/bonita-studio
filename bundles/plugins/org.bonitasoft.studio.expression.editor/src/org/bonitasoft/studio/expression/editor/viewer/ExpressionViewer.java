@@ -859,6 +859,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			return ExpressionConstants.JAVA_TYPE;
 		} else if (ExpressionConstants.XPATH_TYPE.equals(expressionType)) {
 			return ExpressionConstants.XPATH_TYPE;
+		} else if (ExpressionConstants.URL_ATTRIBUTE_TYPE.equals(expressionType)) {
+			return ExpressionConstants.URL_ATTRIBUTE_TYPE;
 		}
 
 		Set<String> cache = new HashSet<String>();
