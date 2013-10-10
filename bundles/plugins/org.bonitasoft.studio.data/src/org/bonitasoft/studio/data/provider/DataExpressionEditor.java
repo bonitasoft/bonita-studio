@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.data.i18n.Messages;
@@ -38,8 +39,10 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
@@ -138,6 +141,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 		addExpressionButton.setLayoutData(GridDataFactory.fillDefaults()
 				.align(SWT.LEFT, SWT.CENTER).hint(85, SWT.DEFAULT).create());
 		addExpressionButton.setText(Messages.addData);
+		
 
 		return mainComposite;
 	}
@@ -239,8 +243,13 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 	@Override
 	public void bindExpression(EMFDataBindingContext dataBindingContext,
 			EObject context, Expression inputExpression, ViewerFilter[] filters,ExpressionViewer expressionViewer) {
-
+		
 		final EObject finalContext = context;
+		if (context instanceof Widget){
+			if (ModelHelper.getPageFlow((Widget)context) instanceof Pool){
+				addExpressionButton.setEnabled(false);
+			}
+		}
 		final ViewerFilter[] finalFilters = filters;
 		addExpressionButton.addSelectionListener(new SelectionAdapter() {
 			@Override
