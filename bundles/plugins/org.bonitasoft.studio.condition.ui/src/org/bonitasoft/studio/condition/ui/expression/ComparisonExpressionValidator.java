@@ -133,6 +133,14 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
 				for(Expression_ProcessRef ref : references){
 					EObject dep = resolveProxy(ref.getValue());
+					List<EObject> orignalDep = ModelHelper.getAllItemsOfType( ModelHelper.getMainProcess(context), dep.eClass());
+					for(EObject d : orignalDep){
+						if(EcoreUtil.equals(dep, d)){
+							dep = d;
+							break;
+						}
+					}
+					inputExpression.getReferencedElements().add(EcoreUtil.copy(dep));
 					domain.getCommandStack().execute(new AddCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(dep)));
 				}
 			}
@@ -143,6 +151,13 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
 				for(Expression_ProcessRef ref : references){
 					EObject dep = resolveProxy(ref.getValue());
+					List<EObject> orignalDep = ModelHelper.getAllItemsOfType( ModelHelper.getMainProcess(context), dep.eClass());
+					for(EObject d : orignalDep){
+						if(EcoreUtil.equals(dep, d)){
+							dep = d;
+							break;
+						}
+					}
 					inputExpression.getReferencedElements().add(EcoreUtil.copy(dep));
 				}
 			}

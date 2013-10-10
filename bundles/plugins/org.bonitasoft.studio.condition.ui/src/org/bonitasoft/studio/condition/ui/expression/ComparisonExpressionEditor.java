@@ -44,9 +44,13 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DataType;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
@@ -54,6 +58,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.EcoreUtil.ProxyCrossReferencer;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
@@ -157,7 +162,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 		supportedOperators.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		supportedOperators.setText(Messages.comparisonSupportedOperators);
 		supportedOperators.setFont(BonitaStudioFontRegistry.getItalicFont());
-		
+
 	}
 
 	@SuppressWarnings("restriction")
@@ -190,7 +195,7 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 		ConditionModelActivator activator = ConditionModelActivator.getInstance();
 		Injector injector =  activator.getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
 		EmbeddedEditorFactory factory = injector.getInstance(EmbeddedEditorFactory.class);
-		
+
 		final Builder buildEditor = factory.newEditor(resourceProvider);
 		comparisonEditor = buildEditor.withParent(parent);
 		comparisonEditor.createPartialEditor(true);
@@ -278,13 +283,20 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 		inputExpression.getReferencedElements().clear();
 		final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
 		final IResourceValidator xtextResourceChecker =	injector.getInstance(IResourceValidator.class);
-		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
+		final List<Issue> issues = xtextResourceChecker.validate(resource, CheckMode.NORMAL_AND_FAST, null);
 		if(issues.isEmpty()){//Validation is OK
 			Operation_Compare compareOp = (Operation_Compare) resource.getContents().get(0);
 			if(compareOp != null){
 				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
 				for(Expression_ProcessRef ref : references){
 					EObject dep = resolveProxy(ref.getValue());
+					List<EObject> orignalDep = ModelHelper.getAllItemsOfType( ModelHelper.getMainProcess(context), dep.eClass());
+					for(EObject d : orignalDep){
+						if(EcoreUtil.equals(dep, d)){
+							dep = d;
+							break;
+						}
+					}
 					inputExpression.getReferencedElements().add(EcoreUtil.copy(dep));
 				}
 			}
@@ -333,19 +345,16 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 		final IObservableValue autoDepsModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__AUTOMATIC_DEPENDENCIES) ;
 		final IObservableValue returnTypeModelObservable = EMFObservables.observeValue(inputExpression, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE) ;
 		final ISWTObservableValue observeText = SWTObservables.observeText(comparisonEditor.getViewer().getControl(),SWT.Modify);
-		final UpdateValueStrategy updateStrategy = new UpdateValueStrategy();
-		updateStrategy.setConverter(new Converter(String.class,String.class) {
-
+		dataBindingContext.bindValue(observeText, contentModelObservable) ;
+		observeText.addValueChangeListener(new IValueChangeListener() {
+			
 			@Override
-			public Object convert(Object fromObject) {
+			public void handleValueChange(ValueChangeEvent event) {
 				if(ComparisonExpressionEditor.this.inputExpression.isAutomaticDependencies()){
 					updateDependencies();
 				}
-
-				return fromObject;
 			}
 		});
-		dataBindingContext.bindValue(observeText, contentModelObservable,updateStrategy,null) ;
 		dataBindingContext.bindValue(observeText, nameModelObservable) ;
 		dataBindingContext.bindValue(ViewersObservables.observeInput(dependenciesViewer), dependenciesModelObservable) ;
 
@@ -426,14 +435,14 @@ public class ComparisonExpressionEditor extends SelectionAwareExpressionEditor i
 
 	@Override
 	public boolean isPageFlowContext() {
-		
+
 		return isPageFlowContext;
 	}
 
 	@Override
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
-		
+
 	}
 
 
