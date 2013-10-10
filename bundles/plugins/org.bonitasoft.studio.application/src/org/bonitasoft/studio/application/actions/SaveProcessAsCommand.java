@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.ConfigurationIdProvider;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
@@ -148,6 +149,7 @@ public class SaveProcessAsCommand extends AbstractHandler {
                     ResourceSet rSet = newDiagram.eResource().getResourceSet() ;
                     final TransactionalEditingDomain createEditingDomain = GMFEditingDomainFactory.getInstance().createEditingDomain(rSet) ;
                     changeProcessNameAndVersion(newDiagram, createEditingDomain, newProcessLabel, newProcessVersion);
+                    createEditingDomain.getCommandStack().execute(SetCommand.create(createEditingDomain, newDiagram, ProcessPackage.Literals.MAIN_PROCESS__CONFIG_ID, ConfigurationIdProvider.getConfigurationIdProvider().getConfigurationId((MainProcess) newDiagram)));
                     try {
                         OperationHistoryFactory.getOperationHistory().execute(new AbstractTransactionalCommand(createEditingDomain,"Duplicate",Collections.EMPTY_LIST) {
 
@@ -422,6 +424,7 @@ public class SaveProcessAsCommand extends AbstractHandler {
     private void changeProcessNameAndVersion(final AbstractProcess process, TransactionalEditingDomain editingDomain, final String newProcessLabel, final String newProcessVersion) {
         editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ELEMENT__NAME, newProcessLabel));
         editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, process, ProcessPackage.Literals.ABSTRACT_PROCESS__VERSION, newProcessVersion));
+
         try {
             process.eResource().save(Collections.EMPTY_MAP);
         } catch (IOException e) {
