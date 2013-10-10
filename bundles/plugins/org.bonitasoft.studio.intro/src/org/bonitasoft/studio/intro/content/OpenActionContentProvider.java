@@ -28,7 +28,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.intro.config.IIntroContentProviderSite;
 import org.eclipse.ui.intro.config.IIntroXHTMLContentProvider;
 import org.w3c.dom.Document;
@@ -74,7 +73,7 @@ public class OpenActionContentProvider implements IIntroXHTMLContentProvider {
 			final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			if(activeWorkbenchWindow != null){
 				final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-				if(activePage != null){
+				if(activePage != null && activePage.getActivePart() != null){
 					IWorkbenchPart part = activePage.getActivePart();
 					ICommandService cmdService = (ICommandService)part.getSite().getService( ICommandService.class);
 					// Do not replace by static link since this command does not resolve to the same between BOS and SP

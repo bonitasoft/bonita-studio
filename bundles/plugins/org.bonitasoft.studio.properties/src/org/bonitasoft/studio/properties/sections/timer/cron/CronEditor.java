@@ -17,6 +17,8 @@
 package org.bonitasoft.studio.properties.sections.timer.cron;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.properties.i18n.Messages;
@@ -27,6 +29,9 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.NumberToStringConverter;
 import org.eclipse.core.databinding.conversion.StringToNumberConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -36,8 +41,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -167,7 +174,19 @@ public class CronEditor extends Composite {
 
 	private CronExpression cronExpression;
 	private DataBindingContext context;
+	private IValidator dotValidator = new IValidator() {
+		
+		@Override
+		public IStatus validate(Object value) {
+			if( value != null && !value.toString().contains(".")){
+				return ValidationStatus.ok();
+			}
+			return ValidationStatus.error(Messages.bind(Messages.notAValidInput,value));
+		}
+	};
 
+	private List<Listener> tabChangedListeners = new ArrayList<Listener>();
+	
 	public CronEditor(Composite parent, int style) {
 		super(parent, style);
 		setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
@@ -208,7 +227,14 @@ public class CronEditor extends Composite {
 		createWeeklyTab(tablFolder);
 		createMonthlyTab(tablFolder);
 		createYearyTab(tablFolder);
-
+		tablFolder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				for(Listener l : tabChangedListeners){
+					l.handleEvent(new Event());
+				}
+			}
+		});
 	}
 
 	protected void initializeExpression() {
@@ -334,6 +360,7 @@ public class CronEditor extends Composite {
 		dayText.setLayoutData(GridDataFactory.swtDefaults().hint(70, SWT.DEFAULT).create());
 
 		UpdateValueStrategy dayTextStrategy = new UpdateValueStrategy();
+		dayTextStrategy.setAfterGetValidator(dotValidator);
 		dayTextStrategy.setConverter(StringToNumberConverter.toInteger(true));
 		dayTextStrategy.setBeforeSetValidator(new DayInMonthValidator());
 		context.bindValue(SWTObservables.observeText(dayText, SWT.Modify),
@@ -599,6 +626,7 @@ public class CronEditor extends Composite {
 		dayText.setLayoutData(GridDataFactory.fillDefaults().hint(70, SWT.DEFAULT).create());
 
 		UpdateValueStrategy dayTextStrategy = new UpdateValueStrategy();
+		dayTextStrategy.setAfterGetValidator(dotValidator);
 		dayTextStrategy.setConverter(StringToNumberConverter.toInteger(true));
 		dayTextStrategy.setBeforeSetValidator(new DayInMonthValidator());
 		context.bindValue(SWTObservables.observeText(dayText, SWT.Modify),
@@ -612,6 +640,7 @@ public class CronEditor extends Composite {
 		everyMonthText.setLayoutData(GridDataFactory.fillDefaults().hint(70, SWT.DEFAULT).create());
 
 		UpdateValueStrategy everyMonthTextStrategy = new UpdateValueStrategy();
+		everyMonthTextStrategy.setAfterGetValidator(dotValidator);
 		everyMonthTextStrategy.setConverter(StringToNumberConverter.toInteger(true));
 		everyMonthTextStrategy.setBeforeSetValidator(new MonthInYearValidator());
 		context.bindValue(SWTObservables.observeText(everyMonthText, SWT.Modify),
@@ -827,6 +856,7 @@ public class CronEditor extends Composite {
 		dayText.setLayoutData(GridDataFactory.fillDefaults().hint(70, SWT.DEFAULT).create());
 
 		UpdateValueStrategy dayFrequencyStrategy = new UpdateValueStrategy();
+		dayFrequencyStrategy.setAfterGetValidator(dotValidator);
 		dayFrequencyStrategy.setConverter(StringToNumberConverter.toInteger(true));
 		dayFrequencyStrategy.setBeforeSetValidator(new FrequencyValidator());
 		context.bindValue(SWTObservables.observeText(dayText, SWT.Modify),
@@ -877,6 +907,7 @@ public class CronEditor extends Composite {
 
 
 		UpdateValueStrategy hourFrequencyStrategy = new UpdateValueStrategy();
+		hourFrequencyStrategy.setAfterGetValidator(dotValidator);
 		hourFrequencyStrategy.setConverter(StringToNumberConverter.toInteger(true));
 		hourFrequencyStrategy.setBeforeSetValidator(new FrequencyValidator());
 
@@ -946,6 +977,7 @@ public class CronEditor extends Composite {
 		minuteText.setLayoutData(GridDataFactory.fillDefaults().hint(70, SWT.DEFAULT).create());
 
 		UpdateValueStrategy strategy = new UpdateValueStrategy();
+		strategy.setAfterGetValidator(dotValidator);
 		strategy.setConverter(StringToNumberConverter.toInteger(true));
 		strategy.setBeforeSetValidator(new FrequencyValidator());
 		context.bindValue(SWTObservables.observeText(minuteText, SWT.Modify), 
@@ -956,6 +988,7 @@ public class CronEditor extends Composite {
 		minuteLabel.setText(Messages.minuteLabel);
 
 		item.setControl(minuteContent);
+		cronExpression.setMode(item.getText());
 	}
 
 	public DataBindingContext getContext() {
@@ -965,6 +998,10 @@ public class CronEditor extends Composite {
 
 	public String getExpression() {
 		return cronExpression.getExpression();
+	}
+
+	public void addTabChangedListener(Listener listener) {
+		tabChangedListeners .add(listener);
 	}
 
 }

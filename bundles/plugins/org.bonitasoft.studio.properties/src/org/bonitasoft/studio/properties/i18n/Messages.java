@@ -436,6 +436,8 @@ public class Messages extends NLS {
 	public static String startTimerConditionHint;
 	public static String cronShortDescription;
 
+	public static String notAValidInput;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

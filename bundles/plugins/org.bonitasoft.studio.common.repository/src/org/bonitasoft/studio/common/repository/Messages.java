@@ -60,6 +60,10 @@ public final class Messages extends NLS {
 	public static String poolAlreadyExistWarningMessage;
 	public static String warningDuplicateDialogTitle;
 
+	public static String importErrorTitle;
+
+	public static String incompatibleProductVersion;
+
     private Messages() {
         // Do not instantiate
     }

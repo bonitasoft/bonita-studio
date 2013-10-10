@@ -21,6 +21,7 @@ import java.util.Locale;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.internal.browser.WebBrowserUIPlugin;
@@ -63,7 +64,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(BonitaPreferenceConstants.DELETE_TENANT_ON_EXIT, true);
         store.setDefault(BonitaPreferenceConstants.LOAD_ORGANIZATION, true);
         store.setDefault(BonitaPreferenceConstants.AUTOMATIC_ID, "true");
-
+        store.setDefault(BonitaPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION,MessageDialogWithToggle.NEVER);
+        store.setDefault(BonitaPreferenceConstants.PUBLISH_ORGANIZATION, false);
 
         Locale defaultLocal = Locale.getDefault();
         boolean defaultLocalExists=false;

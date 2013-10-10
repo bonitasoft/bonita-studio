@@ -14,15 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.connectors.expression;
+package org.bonitasoft.studio.expression.editor.provider;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.expression.editor.provider.ExpressionContentProvider;
-import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Data;
@@ -40,7 +38,11 @@ public class DataExpressionNatureProvider extends ExpressionContentProvider impl
     private EObject context;
     private final EStructuralFeature dataFeature;
 
-    public DataExpressionNatureProvider(EStructuralFeature dataFeature){
+    public EStructuralFeature getDataFeature() {
+		return dataFeature;
+	}
+
+	public DataExpressionNatureProvider(EStructuralFeature dataFeature){
         this.dataFeature = dataFeature ;
     }
 
