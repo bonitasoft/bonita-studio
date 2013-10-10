@@ -39,6 +39,7 @@ import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.bonitasoft.studio.model.process.SequenceFlowConditionType;
 import org.bonitasoft.studio.model.process.SourceElement;
 import org.bonitasoft.studio.model.process.TargetElement;
+import org.bonitasoft.studio.model.process.XORGateway;
 import org.bonitasoft.studio.model.process.decision.DecisionTable;
 import org.bonitasoft.studio.model.process.decision.DecisionTableAction;
 import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
@@ -286,7 +287,7 @@ public class TransitionCondition implements IExtensibleGridPropertySectionContri
     		SourceElement source =  ((SequenceFlow)eObject).getSource() ;
     		boolean sourceIdAndGateway = source instanceof ANDGateway ;
     		TargetElement target =  ((SequenceFlow)eObject).getTarget() ;
-    		boolean targetIsAndGateway = target instanceof ANDGateway ;
+    		boolean targetIsAndGateway = target instanceof ANDGateway && !(source instanceof XORGateway);
     		return !(source instanceof BoundaryEvent) &&  !sourceIdAndGateway && !targetIsAndGateway;
 
     	}
