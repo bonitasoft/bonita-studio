@@ -64,9 +64,9 @@ public class ProcessListContribution extends ContributionItem {
 				}
 				DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 				List<DiagramFileStore> recentDiagrams = diagramStore.getRecentChildren(10);
-
-				for (final DiagramFileStore diagram:recentDiagrams){
-
+				for (int i = 0;i<recentDiagrams.size();i++){
+			//	for (final DiagramFileStore diagram:recentDiagrams){
+					final DiagramFileStore diagram = recentDiagrams.get(recentDiagrams.size()-1-i);
 					item=new MenuItem(menu,SWT.NONE,index);
 					item.setText(diagram.getDisplayName());
 
