@@ -112,9 +112,10 @@ public class RecentProcessContentProvider implements IIntroXHTMLContentProvider 
 				DiagramFileStore diagram = (DiagramFileStore) proc;
 
 				a.setAttribute("title", displayNameForLabelProvider);
-				if (displayNameForLabelProvider.length() > 82) {
+				int maxChar = diagram.getMigrationReport() != null ? 25 : 40 ; 
+				if (displayNameForLabelProvider.length() > maxChar) {
 					displayNameForLabelProvider = displayNameForLabelProvider
-							.substring(0, 82) + "...";
+							.substring(0, maxChar) + "...";
 				}
 				Text procName = doc.createTextNode(displayNameForLabelProvider);
 				a.appendChild(procName);
