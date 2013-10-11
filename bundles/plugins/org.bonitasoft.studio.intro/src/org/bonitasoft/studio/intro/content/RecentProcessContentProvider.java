@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.intro.Messages;
 import org.bonitasoft.studio.intro.actions.OpenSpecificProcessAction;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -123,7 +124,7 @@ public class RecentProcessContentProvider implements IIntroXHTMLContentProvider 
 					a.appendChild(style);
 					style.setAttribute("color", "#01A8CE");
 					Text migrationOngoing = doc
-							.createTextNode(" Migration ongoing");
+							.createTextNode(" "+Messages.migrationOngoing);
 					style.appendChild(migrationOngoing);
 				}
 				ul.appendChild(li);
