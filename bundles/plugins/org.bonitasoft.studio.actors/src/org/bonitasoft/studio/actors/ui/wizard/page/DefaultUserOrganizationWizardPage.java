@@ -23,6 +23,7 @@ import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
@@ -52,7 +53,9 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
     private DataBindingContext context;
     private WizardPageSupport pageSupport;
     private AutoCompleteField autoCompletionField;
-    Set<String> usernames;
+    private Set<String> usernames;
+    private Text usernameText;
+    private Binding binding;
 
     public DefaultUserOrganizationWizardPage() {
         super(DefaultUserOrganizationWizardPage.class.getName());
@@ -76,7 +79,7 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
         usernameLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create()) ;
         usernameLabel.setText(Messages.userName) ;
 
-        final Text usernameText = new Text(mainComposite, SWT.BORDER) ;
+        usernameText = new Text(mainComposite, SWT.BORDER) ;
         usernameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
         autoCompletionField = new AutoCompleteField(usernameText, new TextContentAdapter(), new String[]{}) ;
@@ -88,26 +91,14 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
 //        final Text passwordText = new Text(mainComposite, SWT.BORDER | SWT.PASSWORD) ;
 //        passwordText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
-        UpdateValueStrategy strategy = new UpdateValueStrategy() ;
-        strategy.setBeforeSetValidator(new EmptyInputValidator(Messages.userName)) ;
-        strategy.setAfterGetValidator(new IValidator(){
-            @Override
-            public IStatus validate(Object value) {
-            	String user = (String)value;
-            	if (!usernames.contains(user)){
-            		return ValidationStatus.error(Messages.bind(Messages.UserDoesntExistError,user));
-            	}
-				return Status.OK_STATUS;
-            	
-            }
-        });
-        context.bindValue(SWTObservables.observeText(usernameText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "user").observe(this),strategy,null) ;
+    
       
        // UpdateValueStrategy strategy2 = new UpdateValueStrategy() ;
        // strategy2.setBeforeSetValidator(new EmptyInputValidator(Messages.password)) ;
        // context.bindValue(SWTObservables.observeText(passwordText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "password").observe(this),strategy2,null) ;
-
+        refreshBindings();
         pageSupport = WizardPageSupport.create(this,context) ;
+        
         setControl(mainComposite) ;
     }
 
@@ -122,13 +113,32 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
         }
 
     }
+    
+    public void refreshBindings(){
+    	
+        UpdateValueStrategy strategy = new UpdateValueStrategy() ;
+        strategy.setAfterGetValidator(new EmptyInputValidator(Messages.userName)) ;
+        strategy.setBeforeSetValidator(new IValidator(){
+            @Override
+            public IStatus validate(Object value) {
+            	String user = (String)value;
+            	if (!usernames.contains(user)){
+            		return ValidationStatus.error(Messages.bind(Messages.UserDoesntExistError,user));
+            	}
+				return Status.OK_STATUS;
+            	
+            }
+        });
+       binding = context.bindValue(SWTObservables.observeText(usernameText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "user").observe(this),strategy,null) ;	
+    }
 
     public void setOrganization(Organization organization){
-       
+    	
         for(User user : organization.getUsers().getUser()){
             usernames.add(user.getUserName()) ;
         }
         autoCompletionField.setProposals(usernames.toArray(new String[usernames.size()])) ;
+        binding.validateModelToTarget();
     }
 
     public String getUser() {
