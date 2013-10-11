@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,12 +46,16 @@ import org.eclipse.ui.progress.IProgressService;
 
 public class AddJarsHandler extends AbstractHandler {
 
+	private String[] filenames = null;
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
 		final FileDialog fd = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN | SWT.MULTI);
 		fd.setFilterExtensions(new String[] { "*.jar;*.zip" });
-
+		if(filenames != null){
+			fd.setFilterNames(filenames);
+		}
 		if (fd.open() != null) {
 			final DependencyRepositoryStore libStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
 			final String[] jars = fd.getFileNames();
@@ -143,6 +147,10 @@ public class AddJarsHandler extends AbstractHandler {
 
 		}
 		return fd.getFileNames();
+	}
+	
+	public void setFileNameFilter(String[] fileNames){
+		this.filenames  = fileNames;
 	}
 
 }
