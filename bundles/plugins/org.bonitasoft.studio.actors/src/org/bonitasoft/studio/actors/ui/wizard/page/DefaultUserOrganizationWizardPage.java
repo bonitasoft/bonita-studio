@@ -138,7 +138,7 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
             usernames.add(user.getUserName()) ;
         }
         autoCompletionField.setProposals(usernames.toArray(new String[usernames.size()])) ;
-        binding.validateModelToTarget();
+        binding.validateTargetToModel();
     }
 
     public String getUser() {
