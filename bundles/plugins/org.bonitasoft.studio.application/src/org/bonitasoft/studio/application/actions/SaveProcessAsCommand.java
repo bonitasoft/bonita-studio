@@ -238,7 +238,6 @@ public class SaveProcessAsCommand extends AbstractHandler {
             TransactionalEditingDomain createEditingDomain) {
 
         ApplicationResourceRepositoryStore resourceStore = (ApplicationResourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ApplicationResourceRepositoryStore.class) ;
-        String newProcId = ModelHelper.getEObjectID(newProcess) ;
         for(AbstractProcess oldProc : ModelHelper.getAllProcesses(oldProcess)){
             AbstractProcess newProc = null;
             for(AbstractProcess process : ModelHelper.getAllProcesses(newProcess)){
@@ -248,6 +247,7 @@ public class SaveProcessAsCommand extends AbstractHandler {
                     break;
                 }
             }
+            String newProcId = ModelHelper.getEObjectID(newProc) ;
             /*Duplicate Resource Folders*/
             newProc.getResourceFolders().clear();
             for(ResourceFolder rf : oldProc.getResourceFolders()){
