@@ -65,7 +65,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(BonitaPreferenceConstants.LOAD_ORGANIZATION, true);
         store.setDefault(BonitaPreferenceConstants.AUTOMATIC_ID, "true");
         store.setDefault(BonitaPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION,MessageDialogWithToggle.NEVER);
-
+        store.setDefault(BonitaPreferenceConstants.PUBLISH_ORGANIZATION, false);
 
         Locale defaultLocal = Locale.getDefault();
         boolean defaultLocalExists=false;
