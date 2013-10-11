@@ -180,6 +180,7 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
             } catch (CoreException e) {
                 BonitaStudioLog.error(e) ;
             }
+            fireFileStoreEvent(new FileStoreChangeEvent(EventType.POST_SAVE, this)) ;
             setName(newName);
         }
     }
