@@ -48,6 +48,7 @@ public class Messages extends NLS {
 	public static String run2;
 	public static String examples;
 	public static String resources2;
+	public static String migrationOngoing;
 	
 	/**
 	 * @param id
