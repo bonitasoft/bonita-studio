@@ -235,6 +235,7 @@ public class Messages extends NLS {
 	public static String doNotDisplayAgain;
 	public static String userDoesntExistAnymoreTitle;
 	public static String userDoesntExistAnymore;
+	public static String UserDoesntExistError;
 
 
 
