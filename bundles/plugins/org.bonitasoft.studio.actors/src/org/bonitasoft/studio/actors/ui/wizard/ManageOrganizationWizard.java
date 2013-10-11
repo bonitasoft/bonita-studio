@@ -69,7 +69,7 @@ public class ManageOrganizationWizard extends Wizard {
 	private final OrganizationUserValidator validator = new OrganizationUserValidator() ;
 	private Organization activeOrganization;
 	private boolean activeOrganizationHasBeenModified = false;
-	 String userName;
+	String userName;
 
 	public ManageOrganizationWizard(){
 		organizations = new ArrayList<Organization>() ;
@@ -188,104 +188,113 @@ public class ManageOrganizationWizard extends Wizard {
 				BonitaStudioLog.error(e);
 			}
 		} else {
-		if (MessageDialogWithToggle.NEVER.equals(pref) && activeOrganizationHasBeenModified){
-			String [] buttons = {IDialogConstants.YES_LABEL,IDialogConstants.NO_LABEL};
-			MessageDialogWithToggle mdwt = new MessageDialogWithToggle(Display.getDefault().getActiveShell(), Messages.organizationHasBeenModifiedTitle, null, Messages.bind(Messages.organizationHasBeenModifiedMessage, activeOrganization.getName()), MessageDialog.WARNING,buttons , 0, Messages.doNotDisplayAgain, false);
-			mdwt.setPrefStore(preferenceStore);
-			mdwt.setPrefKey(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION);
-			int index = mdwt.open();
-			if (index == 2){
-				try {
-					publishOrganization(preferenceStore);
-					if (mdwt.getToggleState()){
-						preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, true);
-					}
-				} catch (InvocationTargetException e) {
-					BonitaStudioLog.error(e);
-
-				} catch (InterruptedException e) {
-					BonitaStudioLog.error(e);
-				}
-			} else {
-				if (mdwt.getToggleState()){
-					preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, false);
-					preferenceStore.setDefault(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION,MessageDialogWithToggle.ALWAYS);
-				}
-			}
-		}
-
-		}
-		return true;
-	}
-
-
-
-	private void publishOrganization(final IPreferenceStore preferenceStore) throws InvocationTargetException, InterruptedException{
-		getContainer().run(true, false, new IRunnableWithProgress() {
-
-			@Override
-			public void run(IProgressMonitor maonitor) throws InvocationTargetException,InterruptedException {
-				maonitor.beginTask(Messages.synchronizingOrganization, IProgressMonitor.UNKNOWN) ;
-				userName = preferenceStore.getString(BonitaPreferenceConstants.USER_NAME);
-				String password =  preferenceStore.getString(BonitaPreferenceConstants.USER_PASSWORD);
-
-				if (isUserExist(activeOrganization.getUsers().getUser(), userName)){
-
-
-					ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
-					Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization") ;
-					Map<String, Object> parameters = new HashMap<String, Object>() ;
-					parameters.put("artifact", activeOrganization.getName()) ;
-
-					ExecutionEvent ee = new ExecutionEvent(cmd, parameters, null, null) ;
-
+			if (MessageDialogWithToggle.NEVER.equals(pref) && activeOrganizationHasBeenModified){
+				String [] buttons = {IDialogConstants.YES_LABEL,IDialogConstants.NO_LABEL};
+				MessageDialogWithToggle mdwt = new MessageDialogWithToggle(Display.getDefault().getActiveShell(), Messages.organizationHasBeenModifiedTitle, null, Messages.bind(Messages.organizationHasBeenModifiedMessage, activeOrganization.getName()), MessageDialog.WARNING,buttons , 0, Messages.doNotDisplayAgain, false);
+				mdwt.setPrefStore(preferenceStore);
+				mdwt.setPrefKey(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION);
+				int index = mdwt.open();
+				if (index == 2){
 					try {
-						cmd.executeWithChecks(ee) ;
+						publishOrganization(preferenceStore);
 
-					} catch (Exception e) {
-						BonitaStudioLog.error(e) ;
-						return  ;
-					}
+						if (mdwt.getToggleState()){
 
-					Display.getDefault().syncExec( new Runnable() {
-						public void run() {
-							MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.synchronizeInformationTitle,Messages.bind(Messages.synchronizeOrganizationSuccessMsg, activeOrganization.getName()));
+
+							preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, true);
 						}
-					});
-					
+					} catch (InvocationTargetException e) {
+						BonitaStudioLog.error(e);
+
+					} catch (InterruptedException e) {
+						BonitaStudioLog.error(e);
+					}
 				} else {
-					Display.getDefault().syncExec( new Runnable() {
-						public void run() {
-							MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.userDoesntExistAnymoreTitle, Messages.bind(Messages.userDoesntExistAnymore,userName));
+
+					if (mdwt.getToggleState()){
+						preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, false);
+						preferenceStore.setDefault(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION,MessageDialogWithToggle.ALWAYS);
+
+						if (preferenceStore.getString(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION).equals(MessageDialogWithToggle.ALWAYS)){
+							preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, false);
+
 						}
-					});	
-				}
-			
-			}
-		});
-	}
-
-
-			private boolean isUserExist(List<User> users,String userName){
-				for ( User user:users){
-					if (user.getUserName().equals(userName)){
-						return true;
 					}
 				}
-				return false;
+
 			}
-
-			protected void openErrorStatusDialog(String errorMessage) {
-				MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.organizationValidationFailed, errorMessage) ;
-			}
-
-			protected String isOrganizationValid(Organization organization) {
-				final IStatus status = validator.validate(organization) ;
-				if(!status.isOK()){
-					return status.getMessage() ;
-				}
-				return null;
-			}
-
-
 		}
+			return true;
+		}
+
+
+
+		private void publishOrganization(final IPreferenceStore preferenceStore) throws InvocationTargetException, InterruptedException{
+			getContainer().run(true, false, new IRunnableWithProgress() {
+
+				@Override
+				public void run(IProgressMonitor maonitor) throws InvocationTargetException,InterruptedException {
+					maonitor.beginTask(Messages.synchronizingOrganization, IProgressMonitor.UNKNOWN) ;
+					userName = preferenceStore.getString(BonitaPreferenceConstants.USER_NAME);
+					String password =  preferenceStore.getString(BonitaPreferenceConstants.USER_PASSWORD);
+
+					if (isUserExist(activeOrganization.getUsers().getUser(), userName)){
+
+
+						ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
+						Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization") ;
+						Map<String, Object> parameters = new HashMap<String, Object>() ;
+						parameters.put("artifact", activeOrganization.getName()) ;
+
+						ExecutionEvent ee = new ExecutionEvent(cmd, parameters, null, null) ;
+
+						try {
+							cmd.executeWithChecks(ee) ;
+
+						} catch (Exception e) {
+							BonitaStudioLog.error(e) ;
+							return  ;
+						}
+
+						Display.getDefault().syncExec( new Runnable() {
+							public void run() {
+								MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.synchronizeInformationTitle,Messages.bind(Messages.synchronizeOrganizationSuccessMsg, activeOrganization.getName()));
+							}
+						});
+
+					} else {
+						Display.getDefault().syncExec( new Runnable() {
+							public void run() {
+								MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.userDoesntExistAnymoreTitle, Messages.bind(Messages.userDoesntExistAnymore,userName));
+							}
+						});	
+					}
+
+				}
+			});
+		}
+
+
+		private boolean isUserExist(List<User> users,String userName){
+			for ( User user:users){
+				if (user.getUserName().equals(userName)){
+					return true;
+				}
+			}
+			return false;
+		}
+
+		protected void openErrorStatusDialog(String errorMessage) {
+			MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.organizationValidationFailed, errorMessage) ;
+		}
+
+		protected String isOrganizationValid(Organization organization) {
+			final IStatus status = validator.validate(organization) ;
+			if(!status.isOK()){
+				return status.getMessage() ;
+			}
+			return null;
+		}
+
+
+	}
