@@ -20,10 +20,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValid
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
-import org.bonitasoft.studio.groovy.GroovyUtil;
-import org.bonitasoft.studio.groovy.ui.Messages;
 import org.bonitasoft.studio.groovy.ui.viewer.GroovyViewer;
-import org.bonitasoft.studio.groovy.ui.wizard.ProcessVariableContentProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -35,7 +32,6 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -71,6 +67,11 @@ public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor impleme
 	public boolean canFinish() {
 		return true;
 	}
+	
+	@Override
+	protected void createDataChooserArea(Composite composite) {
+		
+	}
 
 	@Override
 	public void bindExpression(EMFDataBindingContext dataBindingContext,final EObject context, Expression inputExpression,ViewerFilter[] filters,ExpressionViewer expressionViewer) {
@@ -85,22 +86,6 @@ public class GroovyScriptFileEditor extends GroovyScriptExpressionEditor impleme
 			natureProvider = expressionViewer.getExpressionNatureProvider();
 		}
 		groovyViewer.setContext(context,filters,natureProvider) ;
-		nodes = groovyViewer.getFieldNodes() ;
-
-		if (context == null && (nodes == null || nodes.isEmpty())) {
-			dataCombo.add(Messages.noProcessVariableAvailable);
-			dataCombo.getTableCombo().setText(Messages.noProcessVariableAvailable);
-			dataCombo.getTableCombo().setEnabled(false);
-		}else if(nodes != null){
-			dataCombo.setInput(nodes);
-			dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
-		}else{
-			dataCombo.setInput(groovyViewer.getFieldNodes());
-			dataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
-		}
-
-		bonitaDataCombo.setInput(GroovyUtil.getBonitaVariables(context,null,isPageFlowContext()));
-		bonitaDataCombo.setSelection(new StructuredSelection(ProcessVariableContentProvider.SELECT_ENTRY));
 
 		dataBindingContext.bindValue(SWTObservables.observeText(sourceViewer.getTextWidget(),SWT.Modify), contentModelObservable,new UpdateValueStrategy().setAfterGetValidator(new InputLengthValidator("", GroovyViewer.MAX_SCRIPT_LENGTH)), null) ;
 		sourceViewer.addTextListener(new ITextListener() {
