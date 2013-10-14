@@ -60,7 +60,6 @@ public class EditGroovyScriptHandler extends AbstractHandler {
             final Expression inputExpression = ExpressionFactory.eINSTANCE.createExpression();
             inputExpression.setContent(script);
             inputExpression.setType(ExpressionConstants.SCRIPT_TYPE);
-
             final GroovyScriptFileDialog bonitaGroovyEditorDialog = new GroovyScriptFileDialog(shell, inputExpression,null,null,null);
             BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 
@@ -76,7 +75,6 @@ public class EditGroovyScriptHandler extends AbstractHandler {
                             BonitaStudioLog.error(e);
                         }finally{
                         	FileActionDialog.setDisablePopup(false);
-                        	
                         }
                     }
                     try {
