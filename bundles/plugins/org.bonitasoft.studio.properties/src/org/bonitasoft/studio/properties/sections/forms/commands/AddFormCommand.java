@@ -31,6 +31,7 @@ import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -58,6 +59,7 @@ import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EnumType;
+import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.form.part.ValidateAction;
@@ -227,14 +229,14 @@ public class AddFormCommand extends AbstractTransactionalCommand {
                     break;
             }
 
-
-            tempWidget.setName(key.getName());
+            String name  = computeName(key.getName());
+            tempWidget.setName(name);
             Expression displayLabel = ExpressionFactory.eINSTANCE.createExpression();
-            displayLabel.setName(key.getName());
+            displayLabel.setName(name);
             displayLabel.setType(ExpressionConstants.CONSTANT_TYPE);
             displayLabel.setReturnType(String.class.getName());
             displayLabel.setReturnTypeFixed(true);
-            displayLabel.setContent(key.getName());
+            displayLabel.setContent(name);
             tempWidget.setDisplayLabel(displayLabel);
             Expression insertWidgetIf = createInsertWidgetIfScript(); 
             tempWidget.setInjectWidgetScript(insertWidgetIf);
@@ -440,5 +442,14 @@ public class AddFormCommand extends AbstractTransactionalCommand {
     	exp.setReturnTypeFixed(true);
     	return exp ;	
     }
-
+    
+    private String computeName(String key){
+    	PageFlow pf = (PageFlow)pageFlow;
+    	if (pf !=null){
+    		int number = NamingUtils.getMaxElements((Element) pageFlow, key);
+			number++;
+			key +=number;		
+    	}
+    return key;
+    }
 }

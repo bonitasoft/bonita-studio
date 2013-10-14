@@ -18,8 +18,11 @@
 package org.bonitasoft.studio.properties.form.sections.general.contributions;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.databinding.MultiValidator;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.OpenNameDialog;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
@@ -30,12 +33,14 @@ import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -90,6 +95,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
                 if(!fromObject.toString().equals(element.getName()) && element instanceof Widget){
                     IProgressService service = PlatformUI.getWorkbench().getProgressService();
                     try {
+                    
                         service.busyCursorWhile(new RefactorWidgetOperation((Widget)element,fromObject.toString()));
                     } catch (InvocationTargetException e) {
                         BonitaStudioLog.error(e);
@@ -97,18 +103,26 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
                         BonitaStudioLog.error(e);
                     }
                 }
+                
                 return fromObject;
             }
         };
 
         UpdateValueStrategy labelTargetToModelUpdate = new UpdateValueStrategy();
         labelTargetToModelUpdate.setConverter(convertToId);
-        labelTargetToModelUpdate.setAfterGetValidator(new IValidator() {
+        List<IValidator> validators = new ArrayList<IValidator>();
+		IValidator javaValidator = new IValidator() {
 
             public IStatus validate(Object value) {
                 return JavaConventions.validateFieldName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
             }
-        }) ;
+            
+        };
+		validators.add(getWidgetValidator());
+		validators.add(javaValidator);
+		MultiValidator multiValidation = new MultiValidator(validators);
+        labelTargetToModelUpdate.setAfterGetValidator(multiValidation) ;
+       
         labelTargetToModelUpdate.setBeforeSetValidator(new InputLengthValidator(Messages.name, 50)) ;
         ISWTObservableValue observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
 
@@ -171,4 +185,24 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
             }
         }
     }
+    
+    private IValidator getWidgetValidator(){
+		return new IValidator(){
+
+			public IStatus validate(Object value) {
+				if (element instanceof Widget){
+					Widget widget = (Widget) element;
+					List<Widget> widgets = ModelHelper.getAllWidgetInsidePageFlow((PageFlow) ModelHelper.getPageFlow(widget));
+					for (Widget wd:widgets){
+						if (!wd.equals(widget) && wd.getName().equals((String)value)){
+							return ValidationStatus.error(Messages.bind(Messages.widgetNameAllreadyExistError,wd.getName()));
+						}
+					}
+				}
+				return ValidationStatus.ok();
+			}
+			
+		};
+	}
+    
 }
