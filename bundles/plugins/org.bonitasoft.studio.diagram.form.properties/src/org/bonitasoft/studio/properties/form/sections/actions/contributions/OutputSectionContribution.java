@@ -58,7 +58,7 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
 	protected TransactionalEditingDomain editingDomain;
 	protected EMFDataBindingContext dataBinding;
 	private OperationViewer operationViewer;
-
+	
 	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
 		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		composite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).create());
@@ -92,6 +92,7 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
 	}
 
 	protected void bindWidgets() {
+		
 		if(operationViewer != null && !operationViewer.isDisposed()){
 			if(dataBinding != null){
 				dataBinding.dispose();
@@ -114,16 +115,19 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
 			}
 			operationViewer.setEditingDomain(getEditingDomain()) ;
 			operationViewer.setEObject(element) ;
+			UpdateValueStrategy strategy = new UpdateValueStrategy();
+			strategy.setConverter(new Converter(Boolean.class,Boolean.class){
+				public Object convert(Object fromObject) {
+					return !((Boolean)fromObject).booleanValue();
+				}
+			});
 			if(element instanceof FileWidget){
-				UpdateValueStrategy strategy = new UpdateValueStrategy();
-				strategy.setConverter(new Converter(Boolean.class,Boolean.class){
-					public Object convert(Object fromObject) {
-						return !((Boolean)fromObject).booleanValue();
-					}
-				});
+				
 				dataBinding.bindValue(SWTObservables.observeVisible(ExtensibleGridPropertySection.getLabelCompositeOf(operationViewer.getParent())), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY),strategy,strategy);
 				dataBinding.bindValue(SWTObservables.observeVisible(operationViewer.getParent()), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY),strategy,strategy);
 			}
+			dataBinding.bindValue(SWTObservables.observeVisible(ExtensibleGridPropertySection.getLabelCompositeOf(operationViewer.getParent())), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.WIDGET__READ_ONLY),strategy,strategy);
+			dataBinding.bindValue(SWTObservables.observeVisible(operationViewer.getParent()), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.WIDGET__READ_ONLY),strategy,strategy);
 		}
 	}
 
