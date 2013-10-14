@@ -107,7 +107,6 @@ public class BatchValidationHandler extends AbstractHandler {
 				}
 			}
 
-
 			final IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
 			final BatchValidationOperation validateOperation = new BatchValidationOperation();
 			validateOperation.setDiagramToValidate(toValidate);
