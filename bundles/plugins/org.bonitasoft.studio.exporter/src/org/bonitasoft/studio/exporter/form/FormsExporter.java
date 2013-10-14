@@ -790,7 +790,15 @@ public class FormsExporter {
 
 	protected void addHtmlAttributes(final IFormBuilder builder, final Widget widget) throws InvalidFormDefinitionException {
 		final String s = widget.getRealHtmlAttributes();
-		if (!(widget instanceof Group && ((Duplicable) widget).isDuplicate()) && s != null) {
+		if(widget instanceof Duplicable){
+			if( ((Duplicable) widget).isDuplicate()){
+				return;
+			}
+		}
+		if (widget instanceof Group){
+			return;
+		}
+		if (s != null && !s.isEmpty()) {
 			final Map<String, String> map = parseToExtractHtmlAttributes(s);
 			final Set<Entry<String, String>> entries = map.entrySet();
 			for (final Entry<String, String> entry : entries) {

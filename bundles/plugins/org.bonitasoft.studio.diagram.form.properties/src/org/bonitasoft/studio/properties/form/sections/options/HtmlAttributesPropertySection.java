@@ -22,6 +22,7 @@ import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
 import org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.Widget;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
@@ -94,7 +95,7 @@ public class HtmlAttributesPropertySection implements IExtensibleGridPropertySec
 	 * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
 	 */
 	public boolean isRelevantFor(EObject eObject) {
-		return eObject instanceof Widget;
+		return eObject instanceof Widget && !(eObject instanceof Group);
 	}
 
 	/* (non-Javadoc)
