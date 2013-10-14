@@ -77,6 +77,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -435,6 +436,9 @@ public class Repository implements IRepository {
 					CPListElement[] existingCPElement =  CPListElement.createFromExisting(javaProject);
 					BuildPathsBlock.flush(new ArrayList<CPListElement>(Arrays.asList(existingCPElement)),javaProject.getOutputLocation(), javaProject, null, monitor);
 					getProject().build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
+					IJobManager jobManager = Job.getJobManager(); 
+					jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, monitor);
+					jobManager.join(ResourcesPlugin.FAMILY_MANUAL_BUILD, monitor);
 				}
 			} catch (Exception ex) {
 				BonitaStudioLog.error(ex);
