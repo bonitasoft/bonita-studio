@@ -60,6 +60,7 @@ public class Messages extends NLS {
 	public static String reviewRequiredHelp;
 	public static String actionRequiredHelp;
 	public static String doNotDisplayAtNextImport;
+	public static String migrating;
 
     static {
         initializeMessages("messages", Messages.class); //$NON-NLS-1$

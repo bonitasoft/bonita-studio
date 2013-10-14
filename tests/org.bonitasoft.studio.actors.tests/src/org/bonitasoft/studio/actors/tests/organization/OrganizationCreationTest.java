@@ -132,8 +132,8 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         for(User u : orga.getUsers().getUser()){
             assertNotNull(u.getMetaDatas());
         }
-        synchronizeOrganization(organizationName);
-        synchronizeOrganization("ACME");
+        synchronizeOrganization(organizationName,user1);
+        synchronizeOrganization("ACME",null);
     }
 
     private void addNewUSer(String username,String firstName, String lastName,String manager,
@@ -158,9 +158,13 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         //bot.sleep(1000);
     }
 
-    private void synchronizeOrganization(String organizationName) {
+    private void synchronizeOrganization(String organizationName,String username) {
         SWTBotActorFilterUtil.activateSynchronizeOrganizationWizard(bot);
         bot.table().select(organizationName);
+        bot.button(IDialogConstants.NEXT_LABEL).click();
+        if (username!=null){
+        	bot.textWithLabel(Messages.userName).setText(username);
+        }
         bot.button(Messages.synchronize).click();
         bot.waitUntil(Conditions.shellIsActive(Messages.synchronizeInformationTitle),
                 1500000);
@@ -234,6 +238,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         // Finish the user add
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
         bot.button(IDialogConstants.FINISH_LABEL).click();
+        bot.button(IDialogConstants.NO_LABEL).click();
     }
 
 

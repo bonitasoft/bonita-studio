@@ -50,6 +50,9 @@ public class ProductVersion {
 	}
 
 	public static boolean canBeMigrated(String version) {
+		if(version == null){
+			return false;
+		}
 		Version current = new Version("0.0.0");
 		try{
 			current = Version.parseVersion(version);
@@ -61,6 +64,9 @@ public class ProductVersion {
 	}
 
 	public static boolean canBeImported(String version) {
+		if(version == null){
+			return true;
+		}
 		Version current = new Version("0.0.0");
 		try{
 			current = Version.parseVersion(version);
