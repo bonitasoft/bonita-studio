@@ -57,11 +57,8 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobManager;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -195,9 +192,6 @@ public class ImportBosArchiveOperation {
 			}
 			FileActionDialog.deactivateYesNoToAll();
 			RepositoryManager.getInstance().getCurrentRepository().refresh(monitor);
-			IJobManager jobManager = Job.getJobManager(); 
-			jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
-			jobManager.join(ResourcesPlugin.FAMILY_AUTO_REFRESH, new NullProgressMonitor());
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
 		} finally {
