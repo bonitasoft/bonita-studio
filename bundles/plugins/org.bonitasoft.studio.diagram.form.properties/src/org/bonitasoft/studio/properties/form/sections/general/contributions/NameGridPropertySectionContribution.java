@@ -109,6 +109,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
                 return JavaConventions.validateFieldName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
             }
         }) ;
+        
         labelTargetToModelUpdate.setBeforeSetValidator(new InputLengthValidator(Messages.name, 50)) ;
         ISWTObservableValue observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
 

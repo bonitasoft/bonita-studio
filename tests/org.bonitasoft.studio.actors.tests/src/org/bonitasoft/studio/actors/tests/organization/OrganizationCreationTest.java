@@ -132,8 +132,10 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         for(User u : orga.getUsers().getUser()){
             assertNotNull(u.getMetaDatas());
         }
-        synchronizeOrganization(organizationName);
-        synchronizeOrganization("ACME");
+
+        synchronizeOrganization(organizationName,user1);
+        synchronizeOrganization("ACME","walter.bates");
+
     }
 
     private void addNewUSer(String username,String firstName, String lastName,String manager,
