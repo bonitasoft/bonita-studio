@@ -27,14 +27,14 @@
          id="org.eclipse.jdt.groovy.core"
          download-size="0"
          install-size="0"
-         version="2.8.0.xx-20130703-1500-e37-RELEASE"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.edapt.migration"
          download-size="0"
          install-size="0"
-         version="0.3.1"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -420,7 +420,7 @@
          id="javax.servlet"
          download-size="0"
          install-size="0"
-         version="2.5.0.v201103041518"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -454,5 +454,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.codehaus.groovy"
+         download-size="0"
+         install-size="0"
+         version="1.8.6.xx-20130703-1500-e37-RELEASE"/>
 
 </feature>
