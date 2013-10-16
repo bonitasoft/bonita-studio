@@ -118,7 +118,7 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="event" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ignoreErrors" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        defaultValueLiteral="true">
+        defaultValueLiteral="false">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="ignoreErrors -> ignore error&#xD;&#xA;!ignoreError &amp;&amp; throwErrorEvent -> throwErrorEvent&#xD;&#xA;!ignoreError &amp;&amp; !throwErrorEvent -> raise exception"/>
       </eAnnotations>

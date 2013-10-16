@@ -136,7 +136,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	public ConnectorWizard(EObject container,EStructuralFeature connectorContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID){
 		this.container = container ;
 		connectorWorkingCopy = ProcessFactory.eINSTANCE.createConnector() ;
-		connectorWorkingCopy.setIgnoreErrors(false);
 		connectorWorkingCopy.setConfiguration(ConnectorConfigurationFactory.eINSTANCE.createConnectorConfiguration()) ;
 		editMode = false ;
 		this.connectorContainmentFeature = connectorContainmentFeature ;
