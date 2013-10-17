@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.filestore.EMFFileStore;
@@ -36,6 +37,8 @@ import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionAdapterFactory;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionResourceImpl;
 import org.bonitasoft.studio.connector.model.definition.util.ConnectorDefinitionXMLProcessor;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -52,7 +55,19 @@ import org.osgi.framework.Bundle;
 public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> extends AbstractEMFRepositoryStore<T> implements IDefinitionRepositoryStore {
 	
 	private List<T> cachedFileStore = new ArrayList<T>();
-		
+	private List<IConnectorDefinitionFilter> filters = new ArrayList<IConnectorDefinitionFilter>();
+	
+	public AbstractDefinitionRepositoryStore(){
+		super();
+		for(IConfigurationElement elem : BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.connectors.connectorDefFilter")){
+			try {
+				filters.add((IConnectorDefinitionFilter) elem.createExecutableExtension("class"));
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e);
+			}
+		}
+	}
+	
     @Override
     public List<ConnectorDefinition> getDefinitions() {
         final List<ConnectorDefinition> result = new ArrayList<ConnectorDefinition>();
@@ -113,8 +128,16 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
         				String extension = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length()) ;
         				if(getCompatibleExtensions().contains(extension)){
         					T defFileStore = getDefFileStore(url);
-							cachedFileStore.add(defFileStore);
-        					result.add(defFileStore) ;
+        					boolean filtered = false;
+        					for(IConnectorDefinitionFilter filter : filters){
+        						if(filter.filter((ConnectorDefinition) defFileStore.getContent())){
+        							filtered = true;
+        						}
+        					}
+        					if(!filtered){
+        					cachedFileStore.add(defFileStore);
+        					result.add(defFileStore);
+        					}
         				}
         			}
         		}
@@ -131,7 +154,13 @@ public abstract class AbstractDefinitionRepositoryStore<T extends EMFFileStore> 
         if(file == null){
             URL url = getBundle().getResource(getName()+ "/" +fileName);
             if(url != null){
-                return getDefFileStore(url) ;
+            	T defFileStore = getDefFileStore(url) ;
+                for(IConnectorDefinitionFilter filter : filters){
+					if(filter.filter((ConnectorDefinition) defFileStore.getContent())){
+						return null;
+					}
+				}
+                return defFileStore;
             }else{
                 return null ;
             }
