@@ -3,6 +3,7 @@
 <plugin>
    <extension-point id="connectorWizard" name="Custom Connector Wizard" schema="schema/connectorWizard.exsd"/>
    <extension-point id="connectorDefinitionMapper" name="Connector Definition Mapper" schema="schema/connectorMapper.exsd"/>
+   <extension-point id="connectorDefFilter" name="Connector Definition Filter" schema="schema/connectorDefFilter.exsd"/>
    
    <extension
          point="org.eclipse.ui.commands">
