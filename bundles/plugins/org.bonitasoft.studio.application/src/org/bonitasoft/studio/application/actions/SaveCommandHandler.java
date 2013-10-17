@@ -88,6 +88,7 @@ public class SaveCommandHandler extends SaveHandler {
 		if(isDirty()){
 			IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 			MainProcess proc = null ;
+			String formName = null;
 			boolean changed = false;
 			String formName = null;
 			if(editorPart instanceof DiagramEditor){

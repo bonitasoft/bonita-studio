@@ -32,7 +32,6 @@ Embedded-Artifacts: lib/bonita-client.jar;g="org.bonitasoft.engine";a="b
  ";c="sources",lib/bonita-common.jar;g="org.bonitasoft.engine";a="bonita
  -common";v="6.1.0-SNAPSHOT",lib/bonita-server.jar;g="org.bonitasoft.eng
  ine";a="bonita-server";v="6.1.0-SNAPSHOT",lib/theme-builder.jar;g="org.
- bonitasoft.web";a="theme-builder";v="6.0.0",lib/forms-server.jar;g="org
  .bonitasoft.forms";a="forms-server";v="6.1.0-SNAPSHOT",lib/forms-model.
  jar;g="org.bonitasoft.forms";a="forms-model";v="6.1.0-SNAPSHOT",lib/for
  ms-rpc.jar;g="org.bonitasoft.forms";a="forms-rpc";v="6.1.0-SNAPSHOT",li
@@ -423,40 +422,4 @@ Ignore-Package: org.bonitasoft.theme.model,org.bonitasoft.engine.identit
  va.lang.reflect,org.bonitasoft.engine.bpm.connector,java.awt.font,org.b
  onitasoft.engine.bpm.document,org.kxml2.io,javax.xml.transform.stream,o
  rg.scribe.model,org.fedorahosted.tennera.jgettext.catalog.parse,java.sq
- l,java.beans,org.quartz.core,javax.ejb,java.lang.annotation,javax.secur
- ity.auth.login,nu.xom,org.springframework.beans,org.bonitasoft.forms.se
- rver.exception,org.hibernate.exception,org.springframework.beans.factor
- y.config,org.hibernate.type,javax.xml.transform.dom,org.bonitasoft.cons
- ole.common.server.preferences.properties,java.nio.charset,org.bonitasof
- t.engine.search,java.math,org.apache.commons.io.filefilter,java.lang.re
- f,sun.misc,org.mindrot.jbcrypt,java.util.concurrent.atomic,org.bonitaso
- ft.engine.expression,java.awt,org.bonitasoft.engine.api,org.dom4j,org.q
- uartz.spi,org.hibernate.cfg,org.slf4j,sun.reflect,javax.crypto.spec,org
- .hibernate.mapping,javax.net,java.security.cert,org.quartz.impl,javax.s
- ecurity.auth.spi,java.rmi,org.dom4j.io,org.bonitasoft.web.toolkit.clien
- t.common.exception.api,org.hibernate.usertype,org.bonitasoft.web.toolki
- t.server.servlet,org.bonitasoft.web.rest.model.user,org.bonitasoft.web.
- toolkit.server,org.quartz.impl.matchers,java.util.jar,org.bonitasoft.en
- gine.session,org.bonitasoft.web.toolkit.server.utils,org.bonitasoft.eng
- ine.bpm.data,org.springframework.context.support,org.bonitasoft.engine.
- command,org.bonitasoft.console.common.server.sso,com.google.gwt.user.cl
- ient.rpc,javax.xml.namespace,org.bonitasoft.engine.bpm.flownode,javax.s
- ervlet,org.hibernate.classic,org.fedorahosted.tennera.jgettext,javax.sw
- ing,java.io,org.scribe.oauth,javax.security.auth.x500,javax.xml.transfo
- rm.sax,java.lang,javax.net.ssl,org.bonitasoft.engine.profile,org.bonita
- soft.web.rest.server.framework.utils,javax.naming,org.apache.commons.fi
- leupload,org.codehaus.jettison.mapped,javax.xml.parsers,org.ietf.jgss,n
- et.sf.ehcache.config,javax.xml.xpath,org.hibernate.dialect,org.hibernat
- e,org.joda.time.format,javax.xml.validation,org.bonitasoft.engine.bpm.a
- ctor,org.xml.sax.helpers,java.util.logging,org.bonitasoft.engine.bpm.pr
- ocess,org.apache.commons.fileupload.disk,java.nio.channels,java.util,ne
- t.htmlparser.jericho,org.bonitasoft.forms.client.model,org.bonitasoft.t
- heme.exception,groovy.lang,org.apache.commons.lang3.text,org.bonitasoft
- .forms.server.validator,org.joda.time,org.bonitasoft.theme.impl,java.ut
- il.regex,org.apache.commons.io,org.apache.xbean.classloader,javax.secur
- ity.auth.callback,org.dom4j.tree,org.jdom.input,java.text,java.nio,org.
- apache.avalon.framework.logger,javax.activation,java.security,org.apach
- e.log,javax.sql,javax.xml.transform,javax.transaction,org.scribe.builde
- r,org.bonitasoft.theme,org.hibernate.stat,javax.xml.bind,javax.servlet.
- http
 Tool: Bnd-1.50.0

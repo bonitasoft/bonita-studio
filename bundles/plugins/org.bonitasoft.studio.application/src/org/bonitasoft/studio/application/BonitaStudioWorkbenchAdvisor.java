@@ -226,20 +226,20 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 		/*Look if there are contribution to launch,
 		 * typically add repo team listener
 		 * */
-		IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.repository.postinitrepository"); //$NON-NLS-1$
-		IPostInitRepositoryJobContribution contrib = null;
-		for (IConfigurationElement elem : elements){
-			try {
-				contrib = (IPostInitRepositoryJobContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-			} catch (CoreException e) {
-				BonitaStudioLog.error(e);
-			}
-			contrib.execute();
-		}
-		FunctionsRepositoryFactory.getFunctionCatgories();
+		 IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.repository.postinitrepository"); //$NON-NLS-1$
+		 IPostInitRepositoryJobContribution contrib = null;
+		 for (IConfigurationElement elem : elements){
+			 try {
+				 contrib = (IPostInitRepositoryJobContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
+			 } catch (CoreException e) {
+				 BonitaStudioLog.error(e);
+			 }
+			 contrib.execute();
+		 }
+		 FunctionsRepositoryFactory.getFunctionCatgories();
 	}
 
-
+	
 	/**
 	 * Disconnect from the core workspace.
 	 */
@@ -259,14 +259,14 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 				public void run(IProgressMonitor monitor) {
 					try {
 						if (applyPolicy)
-							status.merge(((Workspace) ResourcesPlugin
-									.getWorkspace()).save(true, true, monitor));
+						status.merge(((Workspace) ResourcesPlugin
+								.getWorkspace()).save(true, true, monitor));
 					} catch (CoreException e) {
 						status.merge(e.getStatus());
 					}
 				}
 			};
-			
+
 			 p.run(true, false, new IRunnableWithProgress() {
 
 					@Override
@@ -293,10 +293,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 			p.run(true, false, runnable);
 		} catch (InvocationTargetException e) {
 			status
-			.merge(new Status(IStatus.ERROR,
-					IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
-					IDEWorkbenchMessages.InternalError, e
-					.getTargetException()));
+					.merge(new Status(IStatus.ERROR,
+							IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
+							IDEWorkbenchMessages.InternalError, e
+									.getTargetException()));
 		} catch (InterruptedException e) {
 			status.merge(new Status(IStatus.ERROR,
 					IDEWorkbenchPlugin.IDE_WORKBENCH, 1,
@@ -350,7 +350,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 		super.postShutdown();
 		disconnectFromWorkspace(Repository.NULL_PROGRESS_MONITOR);
 	}
-
+	
 
 	private void sendUserInfo() {
 		String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$

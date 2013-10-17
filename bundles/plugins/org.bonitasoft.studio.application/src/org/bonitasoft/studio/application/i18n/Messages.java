@@ -91,6 +91,8 @@ public class Messages extends NLS {
 	public static String noProcessAvailable;
 
 
+	public static String noProcessAvailable;
+
 
 
 

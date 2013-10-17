@@ -545,11 +545,6 @@ public class DefinitionResourceProvider {
 		Image icon = categoryImageRegistry.get(category.getId());
 
 		if (icon == null) {
-			try {
-			FileLocator.toFileURL(bundle.getResource(store.getName()));
-		} catch (IOException e1) {
-			BonitaStudioLog.error(e1);
-		}
 			Resource resource = category.eResource();
 			File f = null;
 			if (resource != null) {
@@ -572,7 +567,9 @@ public class DefinitionResourceProvider {
 				}
 				if (iconURL != null || iconFile.exists())  {
 					try {
-						iconURL = iconFile.toURI().toURL();
+						if(iconURL == null){
+							iconURL = iconFile.toURI().toURL();
+						}
 						icon = ImageDescriptor.createFromURL(iconURL)
 								.createImage();
 						categoryImageRegistry.put(category.getId(), icon);
@@ -683,12 +680,6 @@ public class DefinitionResourceProvider {
 		Image icon = definitionImageRegistry.get(definitionId);
 
 		if (icon == null || icon.isDisposed()) {
-			//Load icons
-			try {
-				FileLocator.toFileURL(bundle.getResource(store.getName()));
-			} catch (IOException e1) {
-				BonitaStudioLog.error(e1);
-			}
 			Resource resource = definition.eResource();
 			File f = null;
 			if (resource != null) {
@@ -714,7 +705,9 @@ public class DefinitionResourceProvider {
 				}
 				if (iconURL != null || iconFile.exists())  {
 					try {
-						iconURL = iconFile.toURI().toURL();
+						if(iconURL == null){
+							iconURL = iconFile.toURI().toURL();
+						}
 						icon = ImageDescriptor.createFromURL(iconURL).createImage();
 						if (definitionImageRegistry.get(definitionId) != null) {
 							definitionImageRegistry.remove(definitionId);

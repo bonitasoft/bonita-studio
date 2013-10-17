@@ -49,7 +49,7 @@ public class CMISDownloadDocumentConnectorMapper extends
 		}
 		return super.getParameterKeyFor(legacyParameterKey);
 	}
-
+	
 	@Override
 	public Object transformParameterValue(String parameterKeyFor, Object value,
 			Map<String, Object> otherInputs) {
@@ -64,5 +64,5 @@ public class CMISDownloadDocumentConnectorMapper extends
 		}
 		return super.transformParameterValue(parameterKeyFor, value, otherInputs);
 	}
-	
+
 }

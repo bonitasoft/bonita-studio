@@ -223,7 +223,7 @@ public class SWTBotConnectorTestUtil {
 	 * @param dataName
 	 * @param version
 	 */
-	public static void addConnectorToPool(final SWTBot bot,final String connectorDefinitionLabel,final String version,final String categoryLabel,final String connectorName) {
+	public static void addConnectorToPool(final SWTBot bot,final String connectorDefinitionLabel,final String version,final String[] categoryPathLabels,final String connectorName) {
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
 		bot.button("Add...").click();
 		Assert.assertFalse(IDialogConstants.NEXT_LABEL + " should be disabled", bot
@@ -232,21 +232,37 @@ public class SWTBotConnectorTestUtil {
 				.button(IDialogConstants.FINISH_LABEL).isEnabled());
 			
 		bot.treeWithId(SWTBotConstants.SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
-        bot.waitUntil(new ICondition() {
+
+		for(int i = 0; i < categoryPathLabels.length; i++){
 			
+			final String categoryLabel = categoryPathLabels[i];
+			System.out.println("will try to open node: "+categoryLabel);
+			bot.waitUntil(new ICondition() {
+
 			public boolean test() throws Exception {
-				return  bot.tableWithId(SWTBotConstants.SWTBOT_ID_EXPLORER_RIGHT_TABLE).rowCount() > 0;
-			}
-			
+					if(categoryItem == null){
+						bot.tree().collapseNode(categoryLabel);
+						categoryItem = bot.tree().expandNode(categoryLabel,true);
+					} else {
+						categoryItem.collapseNode(categoryLabel);
+						categoryItem = categoryItem.expandNode(categoryLabel);
+					}
+					
+					System.out.println("item expanded: "+categoryItem.getText());
+					nodes = categoryItem.getNodes();
+					if(!nodes.isEmpty() && nodes.get(0).isEmpty()){
+						return false;
+				}
+
 			public void init(SWTBot bot) {
 			}
-			
+
 			public String getFailureMessage() {
-				return "No items found in right table of connector explorer";
+					return "Category "+categoryLabel +" has no children\n"+"Current category item is "+categoryItem.getText() ;
 			}
-		});
-        bot.tableWithId(SWTBotConstants.SWTBOT_ID_EXPLORER_RIGHT_TABLE).select(connectorDefinitionLabel);
-		
+			},10000,1000);
+		}
+
 		Assert.assertTrue(IDialogConstants.NEXT_LABEL + " should be enabled", bot
 				.button(IDialogConstants.NEXT_LABEL).isEnabled());
 		Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
@@ -257,24 +273,31 @@ public class SWTBotConnectorTestUtil {
 		bot.textWithLabel("Name *").setText(connectorName);
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)),5000);
 	}
-	
-	public static void selectDefinitionInConnectorShell(final SWTBot bot, final String definition) {
-		bot.treeWithId(SWTBotConstants.SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
-        bot.waitUntil(new ICondition() {
-			
+
+		String cNode = null;
+		for(String node : nodes){
+			if(node.startsWith(connectorDefinitionLabel) && node.contains(version)){
+				cNode =  node ;
+				break;
+			}
+		}
+		Assert.assertNotNull("Connector "+connectorDefinitionLabel + " (" + version + ") not found in category path "+categoryPathLabels.toString() +" containing children:\n"+nodes ,cNode);
+		final String nodeToSelect = cNode;
+		bot.waitUntil(new ICondition() {
+
 			public boolean test() throws Exception {
 				return  bot.tableWithId(SWTBotConstants.SWTBOT_ID_EXPLORER_RIGHT_TABLE).rowCount() > 0;
 			}
-			
+
 			public void init(SWTBot bot) {
 			}
-			
+
 			public String getFailureMessage() {
 				return "No items found in right table of connector explorer";
 			}
 		});
         bot.tableWithId(SWTBotConstants.SWTBOT_ID_EXPLORER_RIGHT_TABLE).select(definition);
-        bot.button(IDialogConstants.NEXT_LABEL).click();
+		bot.button(IDialogConstants.NEXT_LABEL).click();
 	}
 
 }

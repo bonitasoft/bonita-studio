@@ -30,6 +30,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import static org.bonitasoft.studio.dependencies.i18n.Messages.selectMissingJarTitle;
 /**
  * @author Aurelien Pupier
@@ -62,8 +63,13 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
         bot.button("Evaluate").click();
         bot.waitUntil(Conditions.shellIsActive(selectMissingJarTitle));
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.waitUntil(Conditions.shellIsActive("Evaluation results"));
-        assertEquals("test me", bot.text().getText()) ;
+        bot.waitUntil(Conditions.shellIsActive("Evaluation results"), 30000);
+        boolean groovyEvaluateOK = "test me".equals(bot.text().getText());
+        if(!groovyEvaluateOK){
+        	bot.button(IDialogConstants.CANCEL_LABEL).click();
+            bot.button(IDialogConstants.OK_LABEL).click();
+        }
+        assertTrue("Error while evaluating groovy script", groovyEvaluateOK);
         bot.button(IDialogConstants.OK_LABEL).click();
         if(!FileActionDialog.getDisablePopup()){
             bot.button(IDialogConstants.OK_LABEL).click();

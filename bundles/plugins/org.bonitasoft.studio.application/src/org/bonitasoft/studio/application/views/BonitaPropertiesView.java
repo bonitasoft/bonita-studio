@@ -102,5 +102,5 @@ public abstract class BonitaPropertiesView extends PropertySheet implements ICon
         }
         return super.getBootstrapPart();
     }
-
+    
 }

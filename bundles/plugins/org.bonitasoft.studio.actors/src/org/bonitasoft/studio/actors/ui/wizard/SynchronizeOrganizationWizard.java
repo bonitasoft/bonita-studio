@@ -120,7 +120,7 @@ public class SynchronizeOrganizationWizard extends Wizard {
     				} catch (Exception e) {
     					BonitaStudioLog.error(e);
     				}
-
+                    
                     final String organizationName = artifact.getDisplayName();
                     Display.getDefault().syncExec( new Runnable() {
 						public void run() {

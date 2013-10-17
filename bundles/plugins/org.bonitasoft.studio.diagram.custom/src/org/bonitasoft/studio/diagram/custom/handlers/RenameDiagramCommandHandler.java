@@ -55,13 +55,13 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
 		final OpenNameAndVersionForDiagramDialog nameDialog = new OpenNameAndVersionForDiagramDialog(Display.getDefault().getActiveShell(),diagram,diagramStore) ;
 		if(nameDialog.open() == Dialog.OK ) {
 			DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
-			
+		
 			EObject currentObject = editor.getDiagramEditPart().resolveSemanticElement();
 			while(!(currentObject instanceof MainProcess)){
 				currentObject = currentObject.eContainer();
-			}
+			}			
 
-			MainProcess newProcess = (MainProcess) currentObject;
+			MainProcess newProcess = (MainProcess) currentObject;			
 			EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(newProcess);
 			
 			final ProcessNamingTools tool = new ProcessNamingTools(domain);
@@ -69,7 +69,6 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
 			for(ProcessesNameVersion pnv : nameDialog.getPools()){
 				tool.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
 			}
-
 			try{
 				ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
 				org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save") ;

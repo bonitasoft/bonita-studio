@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,6 +57,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 	private static final String QUERY = "SELECT ${"+DATA_NAME_1+"} from MyTable WHERE ${"+DATA_NAME_2+"}='"+DATA_NAME_3+"'";
 	private static final String JDBC_DB_CONNECTOR_ID = "database-jdbc";
 	private static final String DB_CATEGORY_ID = "database";
+	private static final String GENERIC_DB_CATEGORY_ID = "generic";
 	private static final String GROOVY_SQL_QUERY = "\"SELECT \"+"+DATA_NAME_1+"+\" from MyTable WHERE \"+"+DATA_NAME_2+"+\"='\"+"+DATA_NAME_3+"+\"'\"";
 
 	@Test
@@ -68,7 +69,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 		createData(DATA_NAME_3);
 		String connectorLabel = getConnectorLabel(JDBC_DB_CONNECTOR_ID);
 		String connectorVersion = getConnectorVersion(JDBC_DB_CONNECTOR_ID);
-		String dbCategoryLabel = getCategoryLabel(DB_CATEGORY_ID);
+		String[] dbCategoryLabel = getCategoryLabels(new String[]{DB_CATEGORY_ID, GENERIC_DB_CATEGORY_ID});
 		addDBConnectorWithPatternExpression(connectorLabel, connectorVersion,dbCategoryLabel,"patternDBConnector");
 		fillPatternExpression();
 		checkPatternExpressionModel();
@@ -123,7 +124,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 	}
 
 	private void addDBConnectorWithPatternExpression(String connectorLabel,
-			String connectorVersion, String dbCategoryLabel,String connectorName) {
+			String connectorVersion, String[] dbCategoryLabel,String connectorName) {
 		SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorLabel,connectorVersion,dbCategoryLabel, connectorName);
 		bot.button(IDialogConstants.NEXT_LABEL).click();
 		bot.button(IDialogConstants.NEXT_LABEL).click();
@@ -158,14 +159,19 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 		bot.activeEditor().save();
 	}
 
-	private String getCategoryLabel(String categoryId) {
+	private String[] getCategoryLabels(String[] categoryIds) {
+		String[] res = new String[categoryIds.length];
+		for(int i = 0; i < categoryIds.length; i++){
+			final String categoryIdToSearch = categoryIds[i];
 		ConnectorDefRepositoryStore defSore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		for(Category c : defSore.getResourceProvider().getAllCategories()){
-			if(c.getId().equals(categoryId)){
-				return defSore.getResourceProvider().getCategoryLabel(c);
+				if(c.getId().equals(categoryIdToSearch)){
+					res[i] = defSore.getResourceProvider().getCategoryLabel(c);
+					continue;
+				}
 			}
 		}
-		return null;
+		return res;
 	}
 
 	private String getConnectorVersion(String connectorId) {

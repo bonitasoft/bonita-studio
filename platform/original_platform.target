@@ -86,6 +86,12 @@
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/"/>
 </location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.codehaus.groovy18.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
+<unit id="org.codehaus.groovy.jdt.patch.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
+<unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
+<repository location="http://dist.springsource.org/release/GRECLIPSE/e3.7/"/>
+</location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 </target>

@@ -45,6 +45,10 @@ import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -62,6 +66,8 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
 		final List<BarResource>  classpathResources = new ArrayList<BarResource>() ;
 		final List<BarResource>  resources = new ArrayList<BarResource>() ;
 		if(configuration != null){
+			IJobManager jobManager = Job.getJobManager(); 
+			jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
 			addGroovyScriptDependencies(configuration, classpathResources,configuration.getProcessDependencies(),"");
 			addGroovyScriptDependencies(configuration, resources,configuration.getApplicationDependencies(),BARResourcesProvider.FORMS_FOLDER_IN_BAR+"/lib/");
 			for(BarResource barResource : resources){

@@ -176,6 +176,19 @@ public class BonitaHomeUtil {
 		File bonitaFolder =  new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "tomcat"+File.separator+"bonita");
 		return new File(bonitaFolder,"client"+File.separator+"tenants"+File.separator+String.valueOf(tenantId)+File.separator+"conf"+File.separator+"security-config.properties");
 	}
+	
+	public static File getDefaultTenantSecurityConfigStudioFile() {
+		URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita");
+		File bonitaFolder = null;
+		try {
+			bonitaFolder = new File(FileLocator.toFileURL(url).getFile());
+			return new File(bonitaFolder,"client"+File.separator+"platform"+File.separator+"tenant-template"+File.separator+"conf"+File.separator+"security-config.properties");
+		} catch (IOException e) {
+			BonitaStudioLog.error(e);
+		}
+
+		return null ;	
+	}
 
 	public static File getDefaultPlatformTenantConfigFile() {
 		URL url = ProjectUtil.getConsoleLibsBundle().getEntry("bonita");

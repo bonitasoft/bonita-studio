@@ -159,8 +159,8 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 		importProcessJarDependencies(archiveFile,progressMonitor);
 		importFormJarDependencies(archiveFile,progressMonitor);
 		importApplicationResources(archiveFile,progressMonitor);
-
-
+		
+		
 		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
 
 		final Resource resource =  new XMLResourceFactoryImpl().createResource(URI.createFileURI(barProcFile.getAbsolutePath()));
@@ -325,6 +325,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 	protected URLClassLoader createBarClassloader(File archiveFile) throws MalformedURLException,
 			ZipException, IOException, FileNotFoundException {
 		List<URL> urls = new ArrayList<URL>();
+		urls.add(tmpConnectorJarFile.toURI().toURL());
 		Enumeration<URL> urlEnum = BarImporterPlugin.getDefault().getBundle().findEntries("lib/", "*.jar", true);
 		while (urlEnum.hasMoreElements()) {
 			URL type = (URL) urlEnum.nextElement();
@@ -351,7 +352,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 		
 		final URLClassLoader customURLClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),getClass().getClassLoader());
 		return customURLClassLoader;
-	}
+		}
 
 	private Change createImportFailureReport(String connectorClassname,Throwable e) {
 		Change change = MigrationReportFactory.eINSTANCE.createChange();
@@ -384,7 +385,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 				}
 			}
 		}
-
+		
 		return null;
 	}
 
@@ -407,7 +408,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 			resource.load(Collections.EMPTY_MAP);
 			AbstractEMFOperation emfOperation = new AbstractEMFOperation(editingDomain, "Update report") {
 
-
+	
 
 				@Override
 				protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info)
@@ -444,7 +445,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 			throw new MigrationException("Model could not be loaded", e);
 		}
 	}
-
+	
 	protected Change addReportChange(String elementName,String elementType,String elementUUID,String description,String propertyName, int status){
 		Change change = MigrationReportFactory.eINSTANCE.createChange();
 		change.setElementName(elementName);

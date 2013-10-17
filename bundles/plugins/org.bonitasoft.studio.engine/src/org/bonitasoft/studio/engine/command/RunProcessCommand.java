@@ -104,7 +104,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 	}
 
 
-
+ 
 	public RunProcessCommand(AbstractProcess proc,Set<EObject> excludedObject,boolean runSynchronously) {
 		this(proc,runSynchronously);
 		this.excludedObject = excludedObject ;
@@ -138,8 +138,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 				Resource eResource = p.eResource();
 				if(eResource!=null){
 					procFiles.add(URI.decode(eResource.getURI().lastSegment()));
-				}
-			}
+						}
+					}
 			try {
 				Parameterization showReportParam = new Parameterization(cmd.getParameter("showReport"), Boolean.FALSE.toString());
 				Parameterization filesParam = new Parameterization(cmd.getParameter("diagrams"),procFiles.toString());
@@ -238,7 +238,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 						if(!runSynchronously){
 							BOSWebServerManager.getInstance().startServer(monitor) ;
 							if (hasInitiator){
-								new OpenBrowserCommand(url, BonitaPreferenceConstants.APPLICATION_BROWSER_ID, "Bonita Application").execute(null) ;
+							new OpenBrowserCommand(url, BonitaPreferenceConstants.APPLICATION_BROWSER_ID, "Bonita Application").execute(null) ;
 							} else {
 								final AbstractProcess proc=p;
 								Display.getDefault().syncExec(new Runnable() {
@@ -257,7 +257,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 								});
 
 								status=openConsole();
-							}
+						}
 						}
 					}catch (Exception e) {
 						status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,e.getMessage(),e);
@@ -272,16 +272,16 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
 			private Status openConsole() {
 				Status status=null;
-				ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
-				Command cmd = service.getCommand("org.bonitasoft.studio.application.openConsole") ;
-				try {
-					cmd.executeWithChecks(new ExecutionEvent());
-				} catch (Exception ex) {
-					status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,ex.getMessage(),ex);
-					BonitaStudioLog.error(ex);
-				}
+						ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
+						Command cmd = service.getCommand("org.bonitasoft.studio.application.openConsole") ;
+						try {
+							cmd.executeWithChecks(new ExecutionEvent());
+						} catch (Exception ex) {
+							status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,ex.getMessage(),ex);
+							BonitaStudioLog.error(ex);
+						}
 				return status;
-			}
+					}
 
 		};
 

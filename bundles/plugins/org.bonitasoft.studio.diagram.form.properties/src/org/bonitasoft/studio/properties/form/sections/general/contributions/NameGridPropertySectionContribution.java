@@ -116,8 +116,8 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
             public IStatus validate(Object value) {
                 return JavaConventions.validateFieldName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
             }
-
-		};
+            
+        };
 
             
   

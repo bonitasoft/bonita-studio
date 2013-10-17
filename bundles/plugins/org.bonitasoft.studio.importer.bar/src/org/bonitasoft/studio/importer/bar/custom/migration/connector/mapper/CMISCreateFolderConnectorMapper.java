@@ -68,4 +68,5 @@ public class CMISCreateFolderConnectorMapper extends
 		}
 		return super.transformParameterValue(parameterKeyFor, value, otherInputs);
 	}
+	
 }
