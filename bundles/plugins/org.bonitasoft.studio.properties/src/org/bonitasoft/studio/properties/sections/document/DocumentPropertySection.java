@@ -44,6 +44,7 @@ import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.properties.i18n.Messages;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.observable.list.IObservableList;
@@ -109,6 +110,7 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 	private Button externalCheckbox;
 	private Composite detailsComposite;
 	private ControlDecorationSupport decorationSupport;
+	private Binding nameBinding;
 
 	public DocumentPropertySection() {
 		// keep it for reflective instanciation by Eclipse
@@ -415,6 +417,13 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 		final IObservableValue documentSelected = ViewersObservables.observeSingleSelection(documentListViewer);
 		bindDetails(documentSelected);
 		documentListViewer.setSelection(new StructuredSelection());
+		documentListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				nameBinding.updateTargetToModel();
+			}
+		});
 	}
 
 	protected void bindList() {
@@ -428,6 +437,12 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 	}
 
 	protected void bindDetails(final IObservableValue documentSelected) {
+		if(nameBinding != null){
+			nameBinding.dispose();
+		}
+		if(decorationSupport != null){
+			decorationSupport.dispose();
+		}
 		IObservableValue externalUrlObserved = EMFEditProperties.value(
 				getEditingDomain(), ProcessPackage.Literals.DOCUMENT__URL)
 				.observeDetail(documentSelected);
@@ -447,21 +462,20 @@ public class DocumentPropertySection extends AbstractBonitaDescriptionSection {
 
 		targetToModel.setAfterGetValidator(new InputLengthValidator(
 				Messages.name, 50));
-		targetToModel.setBeforeSetValidator(new GroovyReferenceValidator(
-				Messages.name, false));
 		targetToModel.setBeforeSetValidator(new DocumentNameValidator(documentListViewer));
 
 		final IObservableValue nameObserved = EMFEditProperties.value(
 				getEditingDomain(), ProcessPackage.Literals.ELEMENT__NAME)
 				.observeDetail(documentSelected);
 
-		decorationSupport = ControlDecorationSupport.create(
-				emfDataBindingContext.bindValue(
-						SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentNameText, SWT.Modify)), 
-						nameObserved,
-						targetToModel, 
-						null), 
-						SWT.LEFT);
+	
+		nameBinding = emfDataBindingContext.bindValue(
+				SWTObservables.observeDelayedValue(500, SWTObservables.observeText(documentNameText, SWT.Modify)), 
+				nameObserved,
+				targetToModel, 
+				null);
+		
+		decorationSupport = ControlDecorationSupport.create(nameBinding, SWT.LEFT);
 
 		nameObserved.addValueChangeListener(new IValueChangeListener() {
 			@Override

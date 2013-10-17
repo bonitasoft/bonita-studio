@@ -28,6 +28,7 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.pics.Pics;
@@ -47,7 +48,9 @@ public class DocumentReferenceExpressionProvider implements IExpressionProvider 
 	public Set<Expression> getExpressions(EObject context) {
 		Set<Expression> result = new HashSet<Expression>() ;
 		Pool process = null;
-		if(!(context instanceof Pool)){
+		if(context instanceof Form && ModelHelper.isAnEntryPageFlowOnAPool((Form) context)){
+			return result;
+		}else{
 			EObject parent = ModelHelper.getParentProcess(context);
 			if(parent instanceof Pool){
 				process = (Pool) parent;
