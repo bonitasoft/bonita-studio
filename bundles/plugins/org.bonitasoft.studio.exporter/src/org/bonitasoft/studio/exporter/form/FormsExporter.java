@@ -450,8 +450,8 @@ public class FormsExporter {
 	protected void addFormGlobalActions(final IFormBuilder builder, final Form f) throws InvalidFormDefinitionException {
 		// add forms global actions last
 		for (final Operation action : f.getActions()) {
-			if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && action.getLeftOperand() != null
-					&& action.getLeftOperand().getContent() != null) {
+			if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty() && action.getLeftOperand() != null
+					&& action.getLeftOperand().getContent() != null &&  !action.getLeftOperand().getContent().isEmpty()) {
 				addAction(builder, action);
 			}
 		}
