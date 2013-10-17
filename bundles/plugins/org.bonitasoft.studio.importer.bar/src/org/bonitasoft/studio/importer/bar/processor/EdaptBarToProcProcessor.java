@@ -325,7 +325,6 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 	protected URLClassLoader createBarClassloader(File archiveFile) throws MalformedURLException,
 			ZipException, IOException, FileNotFoundException {
 		List<URL> urls = new ArrayList<URL>();
-		urls.add(tmpConnectorJarFile.toURI().toURL());
 		Enumeration<URL> urlEnum = BarImporterPlugin.getDefault().getBundle().findEntries("lib/", "*.jar", true);
 		while (urlEnum.hasMoreElements()) {
 			URL type = (URL) urlEnum.nextElement();

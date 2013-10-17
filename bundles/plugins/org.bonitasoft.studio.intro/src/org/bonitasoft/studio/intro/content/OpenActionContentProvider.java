@@ -94,23 +94,6 @@ public class OpenActionContentProvider implements IIntroXHTMLContentProvider {
 							} else {
 								li.setAttribute("id", id+"-disabled");
 							}
-					Document dom = parent.getOwnerDocument();
-					Element ul = (Element) dom.getElementsByTagName("ul").item(0);
-					NodeList liList = ul.getElementsByTagName("li");
-					if(liList.getLength() == 2){
-						Element li = dom.createElement("li");
-						ul.insertBefore(li, liList.item(1));
-						Element link = dom.createElement("a");
-						li.appendChild(link);
-						if(open.isEnabled()){
-							link.setAttribute("href", "http://org.eclipse.ui.intro/runAction?pluginId=org.bonitasoft.studio.intro&class=org.bonitasoft.studio.intro.actions.OpenProcess");
-						}		
-						Text t = dom.createTextNode(Messages.getMessage("openAProcess"));
-						link.appendChild(t);
-						if(open.isEnabled()){
-							li.setAttribute("id", id);
-						}else{
-							li.setAttribute("id", id+"-disabled");
 						}
 					}
 				}

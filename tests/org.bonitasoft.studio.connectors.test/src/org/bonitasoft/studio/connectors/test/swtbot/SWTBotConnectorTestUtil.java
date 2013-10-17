@@ -230,16 +230,16 @@ public class SWTBotConnectorTestUtil {
 				.button(IDialogConstants.NEXT_LABEL).isEnabled());
 		Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
 				.button(IDialogConstants.FINISH_LABEL).isEnabled());
-			
-		bot.treeWithId(SWTBotConstants.SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
-
+		categoryItem = null;
+		nodes = null;
+		
 		for(int i = 0; i < categoryPathLabels.length; i++){
 			
 			final String categoryLabel = categoryPathLabels[i];
 			System.out.println("will try to open node: "+categoryLabel);
 			bot.waitUntil(new ICondition() {
 
-			public boolean test() throws Exception {
+				public boolean test() throws Exception {
 					if(categoryItem == null){
 						bot.tree().collapseNode(categoryLabel);
 						categoryItem = bot.tree().expandNode(categoryLabel,true);
@@ -252,27 +252,20 @@ public class SWTBotConnectorTestUtil {
 					nodes = categoryItem.getNodes();
 					if(!nodes.isEmpty() && nodes.get(0).isEmpty()){
 						return false;
+					}
+					return !nodes.isEmpty();
 				}
 
-			public void init(SWTBot bot) {
-			}
+				public void init(SWTBot bot) {
 
-			public String getFailureMessage() {
+				}
+
+				public String getFailureMessage() {
 					return "Category "+categoryLabel +" has no children\n"+"Current category item is "+categoryItem.getText() ;
-			}
+				}
 			},10000,1000);
 		}
 
-		Assert.assertTrue(IDialogConstants.NEXT_LABEL + " should be enabled", bot
-				.button(IDialogConstants.NEXT_LABEL).isEnabled());
-		Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
-				.button(IDialogConstants.FINISH_LABEL).isEnabled());
-		bot.button(IDialogConstants.NEXT_LABEL).click();
-		Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
-				.button(IDialogConstants.FINISH_LABEL).isEnabled());
-		bot.textWithLabel("Name *").setText(connectorName);
-		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)),5000);
-	}
 
 		String cNode = null;
 		for(String node : nodes){
@@ -286,18 +279,47 @@ public class SWTBotConnectorTestUtil {
 		bot.waitUntil(new ICondition() {
 
 			public boolean test() throws Exception {
-				return  bot.tableWithId(SWTBotConstants.SWTBOT_ID_EXPLORER_RIGHT_TABLE).rowCount() > 0;
+				categoryItem.select(nodeToSelect);
+				String selection = bot.tree().selection().get(0,0);
+				return selection != null &&  selection.startsWith(connectorDefinitionLabel);
 			}
 
 			public void init(SWTBot bot) {
+
 			}
 
+			public String getFailureMessage() {
+				return "Cannot select tree item";
+			}
+		},10000,1000);
+		Assert.assertTrue(IDialogConstants.NEXT_LABEL + " should be enabled", bot
+				.button(IDialogConstants.NEXT_LABEL).isEnabled());
+		Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
+				.button(IDialogConstants.FINISH_LABEL).isEnabled());
+		bot.button(IDialogConstants.NEXT_LABEL).click();
+		Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
+				.button(IDialogConstants.FINISH_LABEL).isEnabled());
+		bot.textWithLabel("Name *").setText(connectorName);
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)),5000);
+	}
+	
+	public static void selectDefinitionInConnectorShell(final SWTBot bot, final String definition) {
+		bot.treeWithId(SWTBotConstants.SWTBOT_ID_EXPLORER_LEFT_TREE).select(0);
+        bot.waitUntil(new ICondition() {
+			
+			public boolean test() throws Exception {
+				return  bot.tableWithId(SWTBotConstants.SWTBOT_ID_EXPLORER_RIGHT_TABLE).rowCount() > 0;
+			}
+			
+			public void init(SWTBot bot) {
+			}
+			
 			public String getFailureMessage() {
 				return "No items found in right table of connector explorer";
 			}
 		});
         bot.tableWithId(SWTBotConstants.SWTBOT_ID_EXPLORER_RIGHT_TABLE).select(definition);
-		bot.button(IDialogConstants.NEXT_LABEL).click();
+        bot.button(IDialogConstants.NEXT_LABEL).click();
 	}
 
 }
