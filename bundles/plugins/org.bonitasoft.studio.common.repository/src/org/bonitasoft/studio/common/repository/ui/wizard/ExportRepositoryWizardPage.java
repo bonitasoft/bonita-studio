@@ -331,7 +331,7 @@ public class ExportRepositoryWizardPage extends WizardPage {
 						status);
 				return false;
 			}else{
-				MessageDialog.openInformation(getContainer().getShell(),Messages.exportLabel, Messages.exportFinishMessage) ;
+				MessageDialog.openInformation(getContainer().getShell(),Messages.exportLabel, Messages.bind(Messages.exportFinishMessage,getDetinationPath())) ;
 			}
 
 			return status.getSeverity() == IStatus.OK ;
