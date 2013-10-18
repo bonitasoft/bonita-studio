@@ -65,7 +65,7 @@ public class UserDependenciesContainer implements IClasspathContainer {
 				BonitaStudioLog.error(e);
 			}
 		}
-		return entries.toArray(new IClasspathEntry[]{});
+		return entries.toArray(new IClasspathEntry[entries.size()]);
 	}
 	
 	/* (non-Javadoc)
