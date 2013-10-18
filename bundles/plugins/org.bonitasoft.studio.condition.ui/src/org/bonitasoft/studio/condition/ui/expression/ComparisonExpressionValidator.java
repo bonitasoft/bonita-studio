@@ -140,7 +140,6 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 							break;
 						}
 					}
-					inputExpression.getReferencedElements().add(EcoreUtil.copy(dep));
 					domain.getCommandStack().execute(new AddCommand(domain, inputExpression, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(dep)));
 				}
 			}
