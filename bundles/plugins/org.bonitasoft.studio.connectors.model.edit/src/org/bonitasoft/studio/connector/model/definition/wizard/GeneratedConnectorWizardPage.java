@@ -33,6 +33,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class GeneratedConnectorWizardPage extends AbstractConnectorConfigurationWizardPage {
 
+	private PageComponentSwitch componentSwitch;
+
 	public GeneratedConnectorWizardPage(String pageName){
 		super(pageName);
 	}
@@ -64,7 +66,10 @@ public class GeneratedConnectorWizardPage extends AbstractConnectorConfiguration
 
 	protected PageComponentSwitch getPageComponentSwitch(
 			EMFDataBindingContext context, final Composite pageComposite) {
-		return new PageComponentSwitch(getContainer(),pageComposite,getElementContainer(),getDefinition(),getConfiguration(),context,getMessageProvider(),getExpressionTypeFilter());
+		if(componentSwitch == null){
+			componentSwitch = new PageComponentSwitch(getContainer(),pageComposite,getElementContainer(),getDefinition(),getConfiguration(),context,getMessageProvider(),getExpressionTypeFilter());
+		}
+		return componentSwitch;
 	}
 
 
