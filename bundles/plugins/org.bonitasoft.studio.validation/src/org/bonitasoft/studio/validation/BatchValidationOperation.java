@@ -70,7 +70,6 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 	public void run(IProgressMonitor monitor) throws InvocationTargetException,InterruptedException {
 		Assert.isNotNull(toValidate);
 		monitor.beginTask(Messages.validating, IProgressMonitor.UNKNOWN);
-	//	RepositoryManager.getInstance().getCurrentRepository().refresh(monitor);
 		Display.getDefault().syncExec(new Runnable() {
 
 			public void run() {	
