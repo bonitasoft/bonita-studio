@@ -130,7 +130,7 @@ public class CustomMainPaletteViewer extends PaletteViewerEx {
 		}
 		fireModeChanged();
 
-		if(toolPalette != null){
+		if(toolPalette != null  && getControl() != null && !getControl().isDisposed()){
 			setEditDomain(toolPalette.getEditDomain());
 			toolPalette.setActiveTool(newMode);
 		}
