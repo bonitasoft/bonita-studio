@@ -178,7 +178,8 @@ public class CronEditor extends Composite {
 		
 		@Override
 		public IStatus validate(Object value) {
-			if( value != null && !value.toString().contains(".")){
+			if( value != null && 
+					!value.toString().contains(".") && !value.toString().contains(",")){
 				return ValidationStatus.ok();
 			}
 			return ValidationStatus.error(Messages.bind(Messages.notAValidInput,value));
