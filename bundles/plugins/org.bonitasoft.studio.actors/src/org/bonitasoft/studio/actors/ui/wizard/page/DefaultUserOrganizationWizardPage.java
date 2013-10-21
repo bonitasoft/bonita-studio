@@ -96,7 +96,7 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
        // UpdateValueStrategy strategy2 = new UpdateValueStrategy() ;
        // strategy2.setBeforeSetValidator(new EmptyInputValidator(Messages.password)) ;
        // context.bindValue(SWTObservables.observeText(passwordText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "password").observe(this),strategy2,null) ;
-        refreshBindings();
+        createBindings();
         pageSupport = WizardPageSupport.create(this,context) ;
         
         setControl(mainComposite) ;
@@ -114,7 +114,7 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
 
     }
     
-    public void refreshBindings(){
+    public void createBindings(){
     	
         UpdateValueStrategy strategy = new UpdateValueStrategy() ;
         strategy.setAfterGetValidator(new EmptyInputValidator(Messages.userName)) ;
@@ -133,7 +133,7 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
     }
 
     public void setOrganization(Organization organization){
-    	
+    	usernames.clear();
         for(User user : organization.getUsers().getUser()){
             usernames.add(user.getUserName()) ;
         }
@@ -149,6 +149,8 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
         this.user = user;
     }
 
-  
+    public void refreshBindings(){
+    	binding.validateTargetToModel();
+    }
 
 }
