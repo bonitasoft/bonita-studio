@@ -90,7 +90,6 @@ public class SaveCommandHandler extends SaveHandler {
 			MainProcess proc = null ;
 			String formName = null;
 			boolean changed = false;
-			String formName = null;
 			if(editorPart instanceof DiagramEditor){
 				DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
 				if(editorPart instanceof ProcessDiagramEditor){
