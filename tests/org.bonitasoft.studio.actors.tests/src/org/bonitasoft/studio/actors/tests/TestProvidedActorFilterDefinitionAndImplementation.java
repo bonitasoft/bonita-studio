@@ -80,14 +80,19 @@ public class TestProvidedActorFilterDefinitionAndImplementation extends TestCase
                 if(!(definition.getIcon() != null && !definition.getIcon().isEmpty())){
                 	if(!"single-user-1.0.0.def".equals(resourceName)
                 			&& !"same-task-user-1.0.0.def".equals(resourceName)
-                			&& !"user-manager-1.0.0.def".equals(resourceName) )
-                    testReport.append("\n");
-                    testReport.append("Missing definition icon for "+resourceName);
+                			&& !"user-manager-1.0.0.def".equals(resourceName) ){
+                		testReport.append("\n");
+                		testReport.append("Missing definition icon for "+resourceName);
+                	}
                 }
 
                 if(connectorResourceProvider.getDefinitionIcon(definition) == null){
-                    testReport.append("\n");
-                    testReport.append("Missing definition icon file for "+resourceName);
+                	if(!"single-user-1.0.0.def".equals(resourceName)
+                			&& !"same-task-user-1.0.0.def".equals(resourceName)
+                			&& !"user-manager-1.0.0.def".equals(resourceName) ){
+                		testReport.append("\n");
+                		testReport.append("Missing definition icon file for "+resourceName);
+                	}
                 }
 
                 if(definition.getCategory().isEmpty()){
