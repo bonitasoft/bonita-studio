@@ -146,7 +146,7 @@
          unpack="false"/>
          
            <plugin
-         id=" org.bonitasoft.studio.document.nl_de"
+         id="org.bonitasoft.studio.document.nl_de"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -154,7 +154,7 @@
          unpack="false"/>
          
            <plugin
-         id=" org.bonitasoft.studio.document.nl_es"
+         id="org.bonitasoft.studio.document.nl_es"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -162,7 +162,7 @@
          unpack="false"/>
          
            <plugin
-         id=" org.bonitasoft.studio.document.nl_fr"
+         id="org.bonitasoft.studio.document.nl_fr"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -170,7 +170,7 @@
          unpack="false"/>
          
            <plugin
-         id=" org.bonitasoft.studio.document.nl_it"
+         id="org.bonitasoft.studio.document.nl_it"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -178,7 +178,7 @@
          unpack="false"/>
          
            <plugin
-         id=" org.bonitasoft.studio.document.nl_ja"
+         id="org.bonitasoft.studio.document.nl_ja"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -186,7 +186,7 @@
          unpack="false"/>
          
           <plugin
-         id=" org.bonitasoft.studio.document.nl_pt"
+         id="org.bonitasoft.studio.document.nl_pt"
          download-size="0"
          install-size="0"
          version="0.0.0"
