@@ -118,8 +118,6 @@
 <unit id="org.codehaus.groovy18.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <unit id="org.codehaus.groovy.jdt.patch.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
-<unit id="org.codehaus.groovy21.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
-<unit id="org.codehaus.groovy20.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <repository location="http://dist.springsource.org/release/GRECLIPSE/e3.7/"/>
 </location>
 </locations>

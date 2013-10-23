@@ -245,7 +245,7 @@ public class BOSMigrator  {
 				return null;
 			}
 
-			monitor.beginTask("Migrate",
+			monitor.beginTask(Messages.migrating,
 					numberOfSteps(sourceRelease, targetRelease));
 			EcoreForwardReconstructor reconstructor = new EcoreForwardReconstructor(
 					URI.createFileURI("test"));

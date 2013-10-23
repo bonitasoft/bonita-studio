@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.Pair;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -56,11 +57,8 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobManager;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -194,9 +192,6 @@ public class ImportBosArchiveOperation {
 			}
 			FileActionDialog.deactivateYesNoToAll();
 			RepositoryManager.getInstance().getCurrentRepository().refresh(monitor);
-			IJobManager jobManager = Job.getJobManager(); 
-			jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
-			jobManager.join(ResourcesPlugin.FAMILY_AUTO_REFRESH, new NullProgressMonitor());
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
 		} finally {
@@ -238,6 +233,11 @@ public class ImportBosArchiveOperation {
 		Properties manifestProperties = getManifestInfo(container);
 		if (manifestProperties != null) {
 			final String version = manifestProperties.getProperty(ExportBosArchiveOperation.VERSION);
+			if(!ProductVersion.canBeImported(version)){
+				cleanTmpProject();
+				MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.importErrorTitle,Messages.bind(Messages.incompatibleProductVersion,  ProductVersion.CURRENT_VERSION,version));
+				throw new RuntimeException(Messages.bind(Messages.incompatibleProductVersion,  ProductVersion.CURRENT_VERSION,version));
+			}
 			String toOpen = manifestProperties.getProperty(ExportBosArchiveOperation.TO_OPEN);
 			String[] array = toOpen.split(",");
 			resourceToOpen = new HashSet<String>(Arrays.asList(array));

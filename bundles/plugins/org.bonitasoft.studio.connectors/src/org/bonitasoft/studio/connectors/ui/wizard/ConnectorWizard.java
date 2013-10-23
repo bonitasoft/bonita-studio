@@ -668,7 +668,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	@Override
 	public boolean isPageFlowContext() {
-		
 		return isPageFlowContext;
 	}
 

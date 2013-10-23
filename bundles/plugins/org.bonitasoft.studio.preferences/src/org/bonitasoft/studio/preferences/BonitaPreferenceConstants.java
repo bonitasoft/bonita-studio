@@ -191,6 +191,7 @@ public class BonitaPreferenceConstants {
     public static String PREF_MARGIN_LEFT = "print.margin.left"; //$NON-NLS-1$
     public static String PREF_MARGIN_RIGHT = "print.margin.right"; //$NON-NLS-1$
     // END PRINTING PREFERENCES
+	
 
 
 
@@ -203,6 +204,8 @@ public class BonitaPreferenceConstants {
     public static final String VALIDATION_BEFORE_RUN = "validateBeforeRun";
 	public static final String ASK_RENAME_ON_FIRST_SAVE = "renameOnFirstSave";
 	public static final String ALWAYS_USE_SCRIPTING_MODE = "useScriptingMode";
+	public static final String TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION="toggleStateForPublishOrganization";
+	public static final String PUBLISH_ORGANIZATION="publishOrganization";
 
     /**
      * @param locales2 TODO

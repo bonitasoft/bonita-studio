@@ -32,17 +32,12 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.jobs.IJobManager;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -94,7 +89,6 @@ public class BatchValidationHandler extends AbstractHandler {
 				}
 			}
 
-
 			final IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
 			final BatchValidationOperation validateOperation = new BatchValidationOperation();
 			validateOperation.setDiagramToValidate(toValidate);
@@ -102,9 +96,6 @@ public class BatchValidationHandler extends AbstractHandler {
 
 				public void run() {
 					try {
-						IJobManager jobManager = Job.getJobManager(); 
-						jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
-						jobManager.join(ResourcesPlugin.FAMILY_AUTO_REFRESH, new NullProgressMonitor());
 						service.run(true, false, validateOperation );
 					} catch (InvocationTargetException e) {
 						BonitaStudioLog.error(e);

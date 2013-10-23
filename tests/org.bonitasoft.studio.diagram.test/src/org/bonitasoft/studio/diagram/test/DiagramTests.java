@@ -219,11 +219,11 @@ public class DiagramTests extends SWTBotGefTestCase {
 				// add script to conver to an integer on "Step3"
 				if(nametask.equals("Step2")){
 					SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
-					formEditor.getEditPart("varInteger").click();
+					formEditor.getEditPart("varInteger1").click();
 					bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
 					SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
 					bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
-					String valueOf = "Integer.valueOf(field_varInteger)";
+					String valueOf = "Integer.valueOf(field_varInteger1)";
 					SWTBotTestUtil.setScriptExpression(bot, "theInteger", valueOf, Integer.class.getName());
 					bot.waitUntil(new ICondition() {
 						
@@ -271,7 +271,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 		
 		SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
 		
-		final String[] varTab = new String[]{"varText", "varBoolean", "varInteger"};
+		final String[] varTab = new String[]{"varText1", "varBoolean1", "varInteger1"};
 		for(String s : varTab){
 
 			formEditor.getEditPart(s).click();

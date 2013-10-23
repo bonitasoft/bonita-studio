@@ -220,7 +220,7 @@ public class BonitaUnspecifiedTypeCreationTool extends UnspecifiedTypeCreationTo
 	protected void executeCurrentCommand() {
 		Command c = getCurrentCommand() ;
 		super.executeCurrentCommand();
-		PaletteToolTransferDropTargetListenerWithSelection.insertOnSequenceFlow(c, getTargetEditPart(), getCurrentViewer());
+		PaletteToolTransferDropTargetListenerWithSelection.insertOnSequenceFlow(c, getTargetEditPart(), getCurrentViewer(),false);
 	}
 
 	/**

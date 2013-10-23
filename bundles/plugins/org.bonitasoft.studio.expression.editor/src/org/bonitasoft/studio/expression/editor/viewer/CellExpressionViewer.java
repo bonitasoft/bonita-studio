@@ -65,7 +65,7 @@ public class CellExpressionViewer extends ExpressionViewer {
 	@Override
 	public void proposalAccepted(IContentProposal proposal) {
 		super.proposalAccepted(proposal);
-		columnViewer.refresh(null);
+		columnViewer.getControl().getParent().setFocus();
 	}
 
 	@Override

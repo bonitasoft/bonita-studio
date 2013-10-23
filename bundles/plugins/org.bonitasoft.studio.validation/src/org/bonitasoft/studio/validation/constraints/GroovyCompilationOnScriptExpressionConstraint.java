@@ -16,26 +16,20 @@
  */
 package org.bonitasoft.studio.validation.constraints;
 
-import java.util.Map;
-
-import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.connector.model.definition.Widget;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.codehaus.groovy.eclipse.core.compiler.GroovySnippetCompiler;
 import org.codehaus.groovy.eclipse.core.model.GroovyProjectFacade;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
-import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.internal.compiler.CompilationResult;
 
@@ -82,7 +76,8 @@ public class GroovyCompilationOnScriptExpressionConstraint  extends AbstractLive
 	private IStatus evaluateExpression(IValidationContext context,final EObject eObj) {
 		final Expression expression = (Expression) eObj;
 		String scriptText = expression.getContent();
-		final GroovySnippetCompiler compiler = new GroovySnippetCompiler(new GroovyProjectFacade(RepositoryManager.getInstance().getCurrentRepository().getJavaProject()));
+		IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
+		final GroovySnippetCompiler compiler = new GroovySnippetCompiler(new GroovyProjectFacade(javaProject));
 		final CompilationResult result = compiler.compileForErrors(scriptText, null);
 		CategorizedProblem[] problems =  result.getAllProblems();
 		if(problems != null && problems.length > 0){

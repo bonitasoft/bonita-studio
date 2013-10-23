@@ -129,7 +129,7 @@ public class ExpressionViewerCellEditor extends CellEditor {
 		}
 
 		viewer = new CellExpressionViewer(parent, SWT.NONE, null, editingDomain,null);
-
+	
 		final Text text = viewer.getTextControl();
 		text.addSelectionListener(new SelectionAdapter() {
 			@Override

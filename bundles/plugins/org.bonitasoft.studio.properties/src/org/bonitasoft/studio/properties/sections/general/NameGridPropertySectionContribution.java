@@ -17,11 +17,13 @@
  */
 package org.bonitasoft.studio.properties.sections.general;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.OpenNameAndVersionDialog;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog;
 import org.bonitasoft.studio.common.OpenNameAndVersionForDiagramDialog.ProcessesNameVersion;
+import org.bonitasoft.studio.common.databinding.MultiValidator;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
@@ -30,14 +32,17 @@ import org.bonitasoft.studio.common.jface.databinding.validator.UTF8InputValidat
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractNamePropertySectionContribution;
 import org.bonitasoft.studio.common.properties.ExtensibleGridPropertySection;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.refactoring.ProcessNamingTools;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
+import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.LaneEditPart;
@@ -46,6 +51,9 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
@@ -223,8 +231,12 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 	@Override
 	protected void createBinding(EMFDataBindingContext context) {
 		labelTargetToModelUpdate = new UpdateValueStrategy();
+		
 		labelTargetToModelUpdate.setAfterGetValidator(new UTF8InputValidator(Messages.name)) ;
-		labelTargetToModelUpdate.setBeforeSetValidator(new InputLengthValidator(Messages.name,0, 50)) ;
+		List<IValidator> validators = new ArrayList<IValidator>();
+		validators.add(new InputLengthValidator(Messages.name,0, 50));
+		MultiValidator multiValidation = new MultiValidator(validators);
+		labelTargetToModelUpdate.setBeforeSetValidator(multiValidation) ;
 		labelTargetToModelUpdate.setAfterConvertValidator(new SpecialCharactersValidator());
 
 		observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
@@ -259,11 +271,14 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 			if(nameDialog.open() == Dialog.OK ) {
 				DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
 				MainProcess newProcess   = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;
+				editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, newProcess, ProcessPackage.Literals.ABSTRACT_PROCESS__AUTHOR, System.getProperty("user.name", "Unknown")));
+				editor.doSave(Repository.NULL_PROGRESS_MONITOR);
+				
 				processNamingTools.changeProcessNameAndVersion(newProcess, nameDialog.getDiagramName(), nameDialog.getDiagramVersion());
 				for(ProcessesNameVersion pnv : nameDialog.getPools()){
 					processNamingTools.changeProcessNameAndVersion(pnv.getAbstractProcess(), pnv.getNewName(), pnv.getNewVersion());
 				}
-
+				
 				try{
 					ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
 					org.eclipse.core.commands.Command c = service.getCommand("org.eclipse.ui.file.save") ;
@@ -278,7 +293,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 		}
 	}
 
-
+	
 	
 
 

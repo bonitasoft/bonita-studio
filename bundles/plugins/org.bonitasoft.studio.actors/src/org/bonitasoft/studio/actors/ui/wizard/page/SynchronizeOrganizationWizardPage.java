@@ -105,7 +105,11 @@ public class SynchronizeOrganizationWizardPage extends WizardPage implements ISe
     public void selectionChanged(SelectionChangedEvent event) {
         if(!event.getSelection().isEmpty()){
             file = (IRepositoryFileStore) ((IStructuredSelection) event.getSelection()).getFirstElement() ;
+            DefaultUserOrganizationWizardPage nextPage = (DefaultUserOrganizationWizardPage)getNextPage();
+            nextPage.setOrganization((Organization)file.getContent());
+            nextPage.refreshBindings();
         }
+       
         getContainer().updateButtons() ;
     }
 

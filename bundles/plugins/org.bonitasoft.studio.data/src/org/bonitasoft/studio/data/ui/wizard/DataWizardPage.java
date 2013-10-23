@@ -185,6 +185,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 	private WizardPageSupport pageSupport;
 	private String fixedReturnType;
 	private boolean isPageFlowContext=false;
+	final private Set<String> availableDataNames = new HashSet<String>();
 
 	private final ViewerFilter typeViewerFilter = new ViewerFilter() {
 
@@ -829,21 +830,19 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 			}
 		});
 
-		final Set<String> availableDataNames = new HashSet<String>();
-		if(!(container instanceof AbstractProcess)){
-			for(Data d : ModelHelper.getAccessibleData(ModelHelper.getParentProcess(container))){
-				availableDataNames.add(d.getName());
-			}
-		}
+		
+		refreshDataNames();
+		
 		defaultValueViewer.addFilter(new AvailableExpressionTypeFilter(new String[] {ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.SCRIPT_TYPE,
 				ExpressionConstants.PARAMETER_TYPE }){
 			@Override
 			public boolean select(Viewer viewer, Object context, Object element) {
 				boolean selected = super.select(viewer, context, element);
+				refreshDataNames();
 				if(element instanceof Expression && ExpressionConstants.VARIABLE_TYPE.equals(((Expression)element).getType())){
 					return availableDataNames.contains(((Expression)element).getName());
 				}else if(element instanceof IExpressionProvider && ExpressionConstants.VARIABLE_TYPE.equals(((IExpressionProvider) element).getExpressionType())){
-					return !(container instanceof AbstractProcess);
+					return !(container instanceof AbstractProcess );
 				}
 				return selected;
 			}
@@ -1284,5 +1283,17 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
 		
+	}
+	
+	public void refreshDataNames(){
+		if(!(container instanceof AbstractProcess)){
+			List<Data> availableData = ModelHelper.getAccessibleData(ModelHelper.getParentProcess(container));
+			if(isPageFlowContext && container instanceof Task){
+				availableData.addAll(((Task)container).getData());
+			}
+				for(Data d : availableData){
+					availableDataNames.add(d.getName());
+				}
+		}
 	}
 }

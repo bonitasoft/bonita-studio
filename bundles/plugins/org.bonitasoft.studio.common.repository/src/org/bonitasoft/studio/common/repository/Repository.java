@@ -55,6 +55,8 @@ import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceC
 import org.bonitasoft.studio.common.repository.store.RepositoryStoreComparator;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.pics.Pics;
+import org.codehaus.groovy.eclipse.core.compiler.CompilerUtils;
+import org.codehaus.groovy.frameworkadapter.util.SpecifiedVersion;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IContainer;
@@ -77,12 +79,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.edapt.migration.MigrationException;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.core.ClasspathValidation;
+import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -171,12 +176,20 @@ public class Repository implements IRepository {
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.common.repository.IRepository#open()
 	 */
+	@SuppressWarnings("restriction")
 	@Override
 	public void open() {
 		try {
 			if(!project.isOpen()){
 				project.open(NULL_PROGRESS_MONITOR) ;
-				refresh(NULL_PROGRESS_MONITOR);
+				JavaProject jProject = (JavaProject)project.getNature(JavaCore.NATURE_ID);
+				if(jProject!= null){
+					if(!jProject.isOpen()){
+						jProject.open(NULL_PROGRESS_MONITOR);
+					}
+					new ClasspathValidation(jProject).validate();
+				}
+			
 			}
 		} catch (CoreException e) {
 			BonitaStudioLog.error(e) ;
@@ -273,6 +286,7 @@ public class Repository implements IRepository {
 		javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
 		javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
 		javaProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
+		CompilerUtils.setCompilerLevel(project,SpecifiedVersion._18);
 	}
 
 	protected void createProjectDescriptor(IProject project) throws CoreException {
@@ -412,7 +426,10 @@ public class Repository implements IRepository {
 					//Took example from JDT configure Build path dialog
 					CPListElement[] existingCPElement =  CPListElement.createFromExisting(javaProject);
 					BuildPathsBlock.flush(new ArrayList<CPListElement>(Arrays.asList(existingCPElement)),javaProject.getOutputLocation(), javaProject, null, monitor);
-					getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
+					getProject().build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
+					IJobManager jobManager = Job.getJobManager(); 
+					jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, NULL_PROGRESS_MONITOR);
+					jobManager.join(ResourcesPlugin.FAMILY_MANUAL_BUILD, NULL_PROGRESS_MONITOR);
 				}
 			} catch (Exception ex) {
 				BonitaStudioLog.error(ex);

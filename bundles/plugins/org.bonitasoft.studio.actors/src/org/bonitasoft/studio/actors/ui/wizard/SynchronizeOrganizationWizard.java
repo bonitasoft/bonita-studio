@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
+import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.actors.preference.ActorsPreferenceConstants;
 import org.bonitasoft.studio.actors.ui.wizard.page.DefaultUserOrganizationWizardPage;
 import org.bonitasoft.studio.actors.ui.wizard.page.SynchronizeOrganizationWizardPage;
@@ -51,6 +52,7 @@ public class SynchronizeOrganizationWizard extends Wizard {
     protected IRepositoryFileStore file;
     private SynchronizeOrganizationWizardPage page;
     private DefaultUserOrganizationWizardPage userPage;
+    private Organization activeOrganization;
 
     public SynchronizeOrganizationWizard(){
     	setWindowTitle(Messages.synchronizeOrganizationTitle);
@@ -65,7 +67,7 @@ public class SynchronizeOrganizationWizard extends Wizard {
         userPage = new DefaultUserOrganizationWizardPage() ;
         IPreferenceStore prefStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
         userPage.setUser(prefStore.getString(BonitaPreferenceConstants.USER_NAME));
-        userPage.setPassword(prefStore.getString(BonitaPreferenceConstants.USER_PASSWORD));
+       // userPage.setPassword(prefStore.getString(BonitaPreferenceConstants.USER_PASSWORD));
         addPage(page) ;
         addPage(userPage) ;
     }
@@ -73,7 +75,8 @@ public class SynchronizeOrganizationWizard extends Wizard {
     @Override
     public IWizardPage getNextPage(IWizardPage page) {
         if(page instanceof SynchronizeOrganizationWizardPage){
-            userPage.setOrganization((Organization) ((SynchronizeOrganizationWizardPage)page).getFileStore().getContent()) ;
+        	activeOrganization = (Organization) ((SynchronizeOrganizationWizardPage)page).getFileStore().getContent();
+            userPage.setOrganization(activeOrganization) ;
             return userPage ;
         }else{
             return super.getNextPage(page);
@@ -93,15 +96,25 @@ public class SynchronizeOrganizationWizard extends Wizard {
                     maonitor.beginTask(Messages.synchronizingOrganization, IProgressMonitor.UNKNOWN) ;
 
                     IPreferenceStore prefStore = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
-                    prefStore.setValue(BonitaPreferenceConstants.USER_NAME,userPage.getUser());
-                    prefStore.setValue(BonitaPreferenceConstants.USER_PASSWORD,userPage.getPassword());
+                    String userName = userPage.getUser();
+                    String password = null;
+                    if (activeOrganization!=null){
+                    	
+                    	for (User user:activeOrganization.getUsers().getUser()){
+                    		if (user.getUserName().equals(userPage.getUser())){
+                    			password = user.getPassword().getValue();
+                    		}
+                    	}
+                    }
+                    prefStore.setValue(BonitaPreferenceConstants.USER_NAME,userName);
+                    prefStore.setValue(BonitaPreferenceConstants.USER_PASSWORD,password);
 
                     IRepositoryFileStore artifact = getFileStore() ;
                     ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
                     Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization") ;
                     Map<String, Object> parameters = new HashMap<String, Object>() ;
                     parameters.put("artifact", artifact.getName()) ;
-
+                    
                     ExecutionEvent ee = new ExecutionEvent(cmd, parameters, null, null) ;
 
                     try {

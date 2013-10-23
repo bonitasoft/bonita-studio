@@ -26,6 +26,7 @@ import org.bonitasoft.studio.exporter.extension.BonitaModelExporterImpl;
 import org.bonitasoft.studio.exporter.extension.IBonitaModelExporter;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.MainProcessEditPart;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.ui.PlatformUI;
 
@@ -48,6 +49,7 @@ public class TestBonitaExportModel extends TestCase {
         newCmd.execute(new ExecutionEvent()) ;
         DiagramFileStore artifact = newCmd.getNewDiagramFileStore() ;
         DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+        editor.doSave(new NullProgressMonitor());
         String editorName = editor.getTitle().replaceFirst("(.*)\\s\\((.*)\\)", "$1");
         String editorVersion = editor.getTitle().replaceFirst("(.*)\\s\\((.*)\\)", "$2");
         IBonitaModelExporter exporter  = new BonitaModelExporterImpl((MainProcessEditPart) editor.getDiagramEditPart()) ;

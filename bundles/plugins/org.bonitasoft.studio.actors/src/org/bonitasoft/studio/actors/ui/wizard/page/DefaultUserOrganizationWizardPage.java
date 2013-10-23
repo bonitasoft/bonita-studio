@@ -23,9 +23,14 @@ import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
 import org.bonitasoft.studio.actors.model.organization.User;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.fieldassist.AutoCompleteField;
@@ -45,15 +50,18 @@ import org.eclipse.swt.widgets.Text;
 public class DefaultUserOrganizationWizardPage extends WizardPage {
 
     private String user ;
-    private String password ;
     private DataBindingContext context;
     private WizardPageSupport pageSupport;
     private AutoCompleteField autoCompletionField;
+    private Set<String> usernames;
+    private Text usernameText;
+    private Binding binding;
 
     public DefaultUserOrganizationWizardPage() {
         super(DefaultUserOrganizationWizardPage.class.getName());
         setTitle(Messages.defaultUserOrganizationTitle) ;
         setDescription(Messages.defaultUserOrganizationDesc) ;
+        usernames = new HashSet<String>() ;
     }
 
     /* (non-Javadoc)
@@ -71,28 +79,26 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
         usernameLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create()) ;
         usernameLabel.setText(Messages.userName) ;
 
-        final Text usernameText = new Text(mainComposite, SWT.BORDER) ;
+        usernameText = new Text(mainComposite, SWT.BORDER) ;
         usernameText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
         autoCompletionField = new AutoCompleteField(usernameText, new TextContentAdapter(), new String[]{}) ;
 
-        final Label passwordLabel = new Label(mainComposite, SWT.NONE) ;
-        passwordLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create()) ;
-        passwordLabel.setText(Messages.password) ;
+//        final Label passwordLabel = new Label(mainComposite, SWT.NONE) ;
+//        passwordLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create()) ;
+//        passwordLabel.setText(Messages.password) ;
+//
+//        final Text passwordText = new Text(mainComposite, SWT.BORDER | SWT.PASSWORD) ;
+//        passwordText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
-        final Text passwordText = new Text(mainComposite, SWT.BORDER | SWT.PASSWORD) ;
-        passwordText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-
-        UpdateValueStrategy strategy = new UpdateValueStrategy() ;
-        strategy.setBeforeSetValidator(new EmptyInputValidator(Messages.userName)) ;
-
-        context.bindValue(SWTObservables.observeText(usernameText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "user").observe(this),strategy,null) ;
+    
       
-        UpdateValueStrategy strategy2 = new UpdateValueStrategy() ;
-        strategy2.setBeforeSetValidator(new EmptyInputValidator(Messages.password)) ;
-        context.bindValue(SWTObservables.observeText(passwordText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "password").observe(this),strategy2,null) ;
-
+       // UpdateValueStrategy strategy2 = new UpdateValueStrategy() ;
+       // strategy2.setBeforeSetValidator(new EmptyInputValidator(Messages.password)) ;
+       // context.bindValue(SWTObservables.observeText(passwordText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "password").observe(this),strategy2,null) ;
+        createBindings();
         pageSupport = WizardPageSupport.create(this,context) ;
+        
         setControl(mainComposite) ;
     }
 
@@ -107,13 +113,32 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
         }
 
     }
+    
+    public void createBindings(){
+    	
+        UpdateValueStrategy strategy = new UpdateValueStrategy() ;
+        strategy.setAfterGetValidator(new EmptyInputValidator(Messages.userName)) ;
+        strategy.setBeforeSetValidator(new IValidator(){
+            @Override
+            public IStatus validate(Object value) {
+            	String user = (String)value;
+            	if (!usernames.contains(user)){
+            		return ValidationStatus.error(Messages.bind(Messages.UserDoesntExistError,user));
+            	}
+				return Status.OK_STATUS;
+            	
+            }
+        });
+       binding = context.bindValue(SWTObservables.observeText(usernameText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "user").observe(this),strategy,null) ;	
+    }
 
     public void setOrganization(Organization organization){
-        Set<String> usernames = new HashSet<String>() ;
+    	usernames.clear();
         for(User user : organization.getUsers().getUser()){
             usernames.add(user.getUserName()) ;
         }
         autoCompletionField.setProposals(usernames.toArray(new String[usernames.size()])) ;
+        binding.validateTargetToModel();
     }
 
     public String getUser() {
@@ -124,12 +149,8 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
         this.user = user;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void refreshBindings(){
+    	binding.validateTargetToModel();
     }
 
 }

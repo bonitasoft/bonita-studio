@@ -19,6 +19,7 @@ package org.bonitasoft.studio.expression.editor.operation;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
@@ -132,6 +133,13 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
 			Expression actionExp = action.getRightOperand() ;
 			if(actionExp == null){
 				actionExp  = ExpressionFactory.eINSTANCE.createExpression() ;
+				if(actionExpressionFilter instanceof AvailableExpressionTypeFilter){
+					if(!((AvailableExpressionTypeFilter) actionExpressionFilter).getContentTypes().contains(ExpressionConstants.CONSTANT_TYPE)){
+						if(!((AvailableExpressionTypeFilter) actionExpressionFilter).getContentTypes().isEmpty()){
+							actionExp.setType(((AvailableExpressionTypeFilter) actionExpressionFilter).getContentTypes().iterator().next());
+						}
+					}
+				}
 				if(editingDomain != null){
 					editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, action, ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND, actionExp));
 				}else{

@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
@@ -346,7 +347,7 @@ public class GroovyUtil {
 		Form form = ModelHelper.getParentForm(element);
 		
 		if (form!=null){
-			result.add(new ScriptVariable(IFormExpressionsAPI.USER_LOCALE, String.class.getName()));
+			result.add(new ScriptVariable(IFormExpressionsAPI.USER_LOCALE, Locale.class.getName()));
 		}
 		if (element!=null && element instanceof Validator){
 			result.add(new ScriptVariable(AbstractFormValidator.CLICKED_BUTTON_VARNAME,

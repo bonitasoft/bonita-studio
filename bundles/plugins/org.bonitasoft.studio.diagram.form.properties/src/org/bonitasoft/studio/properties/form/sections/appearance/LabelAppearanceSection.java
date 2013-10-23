@@ -19,6 +19,7 @@ package org.bonitasoft.studio.properties.form.sections.appearance;
 
 import org.bonitasoft.studio.common.exporter.ExporterTools;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
+import org.bonitasoft.studio.model.form.Widget;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -40,6 +41,7 @@ public class LabelAppearanceSection extends AppearancePropertySection {
 	private Button right;
 	private Button up;
 	private Button down;
+	Group group;
 
 
 	/* (non-Javadoc)
@@ -47,26 +49,29 @@ public class LabelAppearanceSection extends AppearancePropertySection {
 	 */
 	@Override
 	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
-		super.createControls(parent, aTabbedPropertySheetPage);
-		tabLabelContents = getWidgetFactory().createComposite(parent, SWT.NONE);
+		
+			super.createControls(parent, aTabbedPropertySheetPage);
+			tabLabelContents = getWidgetFactory().createComposite(parent, SWT.NONE);
 
-		tabLabelContents.setLayout(new GridLayout(2, true));
+			tabLabelContents.setLayout(new GridLayout(2, true));
 
-		addSizeGroup(tabLabelContents, ExporterTools.PREFIX_LABEL, 1, 1);
-		addCustomStyleGroup(tabLabelContents, ExporterTools.PREFIX_LABEL, 1, 2);
-		addFontGroup(tabLabelContents, ExporterTools.PREFIX_LABEL, 1, 1);
-		addTextGroup(tabLabelContents, ExporterTools.PREFIX_LABEL, 1, 1);
-		addLabelPositionGroup(tabLabelContents, 1, 1);
+			addSizeGroup(tabLabelContents, ExporterTools.PREFIX_LABEL, 1, 1);
+			addCustomStyleGroup(tabLabelContents, ExporterTools.PREFIX_LABEL, 1, 2);
+			addFontGroup(tabLabelContents, ExporterTools.PREFIX_LABEL, 1, 1);
+			addTextGroup(tabLabelContents, ExporterTools.PREFIX_LABEL, 1, 1);
+			addLabelPositionGroup(tabLabelContents, 1, 1);
+			
+		
 	}
-	
-	
+
+
 	/**
 	 * @param tabInputContents2
 	 * @param i
 	 * @param j
 	 */
 	protected void addLabelPositionGroup(Composite tabInputContents2, int nbCols, int nbRows) {
-		Group group = getWidgetFactory().createGroup(tabInputContents2, Messages.AppearancePropertySection_LabelPosition);
+		group = getWidgetFactory().createGroup(tabInputContents2, Messages.AppearancePropertySection_LabelPosition);
 		group.setLayoutData(GridDataFactory.fillDefaults().span(nbCols, nbRows).create());
 		group.setLayout(new RowLayout());
 		left = getWidgetFactory().createButton(group, Messages.AppearancePropertySection_Left, SWT.RADIO);
@@ -76,7 +81,7 @@ public class LabelAppearanceSection extends AppearancePropertySection {
 
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.properties.form.sections.appearance.AppearancePropertySection#setInput(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
@@ -86,4 +91,15 @@ public class LabelAppearanceSection extends AppearancePropertySection {
 		bindLabelPositionGroup(left, right, up, down);
 	}
 	
+	@Override
+	public void refresh() {
+		Widget widget = getWidget();
+		if ((widget!=null) && widget instanceof org.bonitasoft.studio.model.form.Group) {
+			group.setVisible(false);
+		} else {
+			group.setVisible(true);
+		}
+		super.refresh();
+	}
+
 }
