@@ -33,6 +33,7 @@
 		<module>org.bonitasoft.studio.diagram.custom.nl_fr</module>
 		<module>org.bonitasoft.studio.diagram.form.custom.nl_fr</module>
 		<module>org.bonitasoft.studio.diagram.form.properties.nl_fr</module>
+		<module>org.bonitasoft.studio.document.nl_fr</module>
 		<module>org.bonitasoft.studio.engine.nl_fr</module>
 		<module>org.bonitasoft.studio.exporter.nl_fr</module>
 		<module>org.bonitasoft.studio.expression.editor.nl_fr</module>

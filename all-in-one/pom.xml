@@ -118,235 +118,254 @@
 					</execution>
 				</executions>
 			</plugin>
-
-			<!-- Build installers for each platform -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>linux-x86</id>
-						<phase>install</phase>
-						<configuration>
-							<arguments>
-								<argument>build</argument>
-								<argument>${basedir}/installer/installer_project_linux_x86.xml</argument>
-								<argument>linux</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>linux-x86_64</id>
-						<phase>install</phase>
-						<configuration>
-							<arguments>
-								<argument>build</argument>
-								<argument>${basedir}/installer/installer_project_linux_x86_64.xml</argument>
-								<argument>linux-x64</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>macosx-x86</id>
-						<phase>install</phase>
-						<configuration>
-							<arguments>
-								<argument>build</argument>
-								<argument>${basedir}/installer/installer_project_macosx_x86.xml</argument>
-								<argument>osx</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>macosx-x86_64</id>
-						<phase>install</phase>
-						<configuration>
-							<arguments>
-								<argument>build</argument>
-								<argument>${basedir}/installer/installer_project_macosx_x86_64.xml</argument>
-								<argument>osx</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>win-x86</id>
-						<phase>install</phase>
-						<configuration>
-							<arguments>
-								<argument>build</argument>
-								<argument>${basedir}/installer/installer_project_win_x86.xml</argument>
-								<argument>windows</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>win-x86_64</id>
-						<phase>install</phase>
-						<configuration>
-							<arguments>
-								<argument>build</argument>
-								<argument>${basedir}/installer/installer_project_win_x86_64.xml</argument>
-								<argument>windows</argument>
-							</arguments>
-						</configuration>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<executable>${BITROCK_HOME}/bin/builder</executable>
-				</configuration>
-			</plugin>
-			<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>linux x86 installer file</id>
-						<phase>prepare-package</phase>
-						<configuration>
-							<target>
-								<property name="studio.dir"
-									value="${project.build.directory}/products/${productId}/linux/gtk/x86" />
-								<property name="bitrock.install" value="${project.build.directory}/installers" />
-								<property name="os_arch" value="32" />
-								<property file="installer/installer.properties" />
-								<property name="installer.name"
-									value="${product.short.name}-${product.version}-x86.run" />
-								<property name="updated.project.file"
-									value="${basedir}/installer/installer_project_linux_x86.xml" />
-								<ant antfile="createInstallerProject.xml" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>linux x86_64 installer file</id>
-						<phase>prepare-package</phase>
-						<configuration>
-							<target>
-								<property name="studio.dir"
-									value="${project.build.directory}/products/${productId}/linux/gtk/x86_64" />
-								<property name="bitrock.install" value="${project.build.directory}/installers" />
-								<property name="os_arch" value="64" />
-								<property file="installer/installer.properties" />
-								<property name="installer.name"
-									value="${product.short.name}-${product.version}-x86_64.run" />
-								<property name="updated.project.file"
-									value="${basedir}/installer/installer_project_linux_x86_64.xml" />
-								<ant antfile="createInstallerProject.xml" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>macosx x86 installer file</id>
-						<phase>prepare-package</phase>
-						<configuration>
-							<target>
-								<property name="studio.dir"
-									value="${project.build.directory}/products/${productId}/macosx/cocoa/x86" />
-								<property name="bitrock.install" value="${project.build.directory}/installers" />
-								<property name="os_arch" value="32" />
-								<property file="installer/installer.properties" />
-								<property name="installer.name"
-									value="${product.short.name}-${product.version}-x86" />
-								<property name="updated.project.file"
-									value="${basedir}/installer/installer_project_macosx_x86.xml" />
-								<ant antfile="createInstallerProject.xml" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>macosx x86_64 installer file</id>
-						<phase>prepare-package</phase>
-						<configuration>
-							<target>
-								<property name="studio.dir"
-									value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64" />
-								<property name="bitrock.install" value="${project.build.directory}/installers" />
-								<property name="os_arch" value="64" />
-								<property file="installer/installer.properties" />
-								<property name="installer.name"
-									value="${product.short.name}-${product.version}-x86_64" />
-								<property name="updated.project.file"
-									value="${basedir}/installer/installer_project_macosx_x86_64.xml" />
-								<ant antfile="createInstallerProject.xml" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>windows x86 installer file</id>
-						<phase>prepare-package</phase>
-						<configuration>
-							<target>
-								<property name="studio.dir"
-									value="${project.build.directory}/products/${productId}/win32/win32/x86" />
-								<property name="bitrock.install" value="${project.build.directory}/installers" />
-								<property name="os_arch" value="32" />
-								<property file="installer/installer.properties" />
-								<property name="installer.name"
-									value="${product.short.name}-${product.version}-x86.exe" />
-								<property name="updated.project.file"
-									value="${basedir}/installer/installer_project_win_x86.xml" />
-								<ant antfile="createInstallerProject.xml" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>windows x86_64 installer file</id>
-						<phase>prepare-package</phase>
-						<configuration>
-							<target>
-								<property name="studio.dir"
-									value="${project.build.directory}/products/${productId}/win32/win32/x86_64" />
-								<property name="bitrock.install" value="${project.build.directory}/installers" />
-								<property name="os_arch" value="64" />
-								<property file="installer/installer.properties" />
-								<property name="installer.name"
-									value="${product.short.name}-${product.version}-x86_64.exe" />
-								<property name="updated.project.file"
-									value="${basedir}/installer/installer_project_win_x86_64.xml" />
-								<ant antfile="createInstallerProject.xml" />
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>buildInstaller</id>
+			<activation>
+				<property>
+					<name>BITROCK_HOME</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<!-- Build installers for each platform -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>linux-x86</id>
+								<phase>install</phase>
+								<configuration>
+									<arguments>
+										<argument>build</argument>
+										<argument>${basedir}/installer/installer_project_linux_x86.xml</argument>
+										<argument>linux</argument>
+									</arguments>
+								</configuration>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>linux-x86_64</id>
+								<phase>install</phase>
+								<configuration>
+									<arguments>
+										<argument>build</argument>
+										<argument>${basedir}/installer/installer_project_linux_x86_64.xml</argument>
+										<argument>linux-x64</argument>
+									</arguments>
+								</configuration>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>macosx-x86</id>
+								<phase>install</phase>
+								<configuration>
+									<arguments>
+										<argument>build</argument>
+										<argument>${basedir}/installer/installer_project_macosx_x86.xml</argument>
+										<argument>osx</argument>
+									</arguments>
+								</configuration>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>macosx-x86_64</id>
+								<phase>install</phase>
+								<configuration>
+									<arguments>
+										<argument>build</argument>
+										<argument>${basedir}/installer/installer_project_macosx_x86_64.xml</argument>
+										<argument>osx</argument>
+									</arguments>
+								</configuration>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>win-x86</id>
+								<phase>install</phase>
+								<configuration>
+									<arguments>
+										<argument>build</argument>
+										<argument>${basedir}/installer/installer_project_win_x86.xml</argument>
+										<argument>windows</argument>
+									</arguments>
+								</configuration>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>win-x86_64</id>
+								<phase>install</phase>
+								<configuration>
+									<arguments>
+										<argument>build</argument>
+										<argument>${basedir}/installer/installer_project_win_x86_64.xml</argument>
+										<argument>windows</argument>
+									</arguments>
+								</configuration>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<executable>${BITROCK_HOME}/bin/builder</executable>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>linux x86 installer file</id>
+								<phase>prepare-package</phase>
+								<configuration>
+									<target>
+										<property name="studio.dir"
+											value="${project.build.directory}/products/${productId}/linux/gtk/x86" />
+										<property name="bitrock.install"
+											value="${project.build.directory}/installers" />
+										<property name="os_arch" value="32" />
+										<property file="installer/installer.properties" />
+										<property name="installer.name"
+											value="${product.short.name}-${product.version}-x86.run" />
+										<property name="updated.project.file"
+											value="${basedir}/installer/installer_project_linux_x86.xml" />
+										<ant antfile="createInstallerProject.xml" />
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>linux x86_64 installer file</id>
+								<phase>prepare-package</phase>
+								<configuration>
+									<target>
+										<property name="studio.dir"
+											value="${project.build.directory}/products/${productId}/linux/gtk/x86_64" />
+										<property name="bitrock.install"
+											value="${project.build.directory}/installers" />
+										<property name="os_arch" value="64" />
+										<property file="installer/installer.properties" />
+										<property name="installer.name"
+											value="${product.short.name}-${product.version}-x86_64.run" />
+										<property name="updated.project.file"
+											value="${basedir}/installer/installer_project_linux_x86_64.xml" />
+										<ant antfile="createInstallerProject.xml" />
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>macosx x86 installer file</id>
+								<phase>prepare-package</phase>
+								<configuration>
+									<target>
+										<property name="studio.dir"
+											value="${project.build.directory}/products/${productId}/macosx/cocoa/x86" />
+										<property name="bitrock.install"
+											value="${project.build.directory}/installers" />
+										<property name="os_arch" value="32" />
+										<property file="installer/installer.properties" />
+										<property name="installer.name"
+											value="${product.short.name}-${product.version}-x86" />
+										<property name="updated.project.file"
+											value="${basedir}/installer/installer_project_macosx_x86.xml" />
+										<ant antfile="createInstallerProject.xml" />
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>macosx x86_64 installer file</id>
+								<phase>prepare-package</phase>
+								<configuration>
+									<target>
+										<property name="studio.dir"
+											value="${project.build.directory}/products/${productId}/macosx/cocoa/x86_64" />
+										<property name="bitrock.install"
+											value="${project.build.directory}/installers" />
+										<property name="os_arch" value="64" />
+										<property file="installer/installer.properties" />
+										<property name="installer.name"
+											value="${product.short.name}-${product.version}-x86_64" />
+										<property name="updated.project.file"
+											value="${basedir}/installer/installer_project_macosx_x86_64.xml" />
+										<ant antfile="createInstallerProject.xml" />
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>windows x86 installer file</id>
+								<phase>prepare-package</phase>
+								<configuration>
+									<target>
+										<property name="studio.dir"
+											value="${project.build.directory}/products/${productId}/win32/win32/x86" />
+										<property name="bitrock.install"
+											value="${project.build.directory}/installers" />
+										<property name="os_arch" value="32" />
+										<property file="installer/installer.properties" />
+										<property name="installer.name"
+											value="${product.short.name}-${product.version}-x86.exe" />
+										<property name="updated.project.file"
+											value="${basedir}/installer/installer_project_win_x86.xml" />
+										<ant antfile="createInstallerProject.xml" />
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>windows x86_64 installer file</id>
+								<phase>prepare-package</phase>
+								<configuration>
+									<target>
+										<property name="studio.dir"
+											value="${project.build.directory}/products/${productId}/win32/win32/x86_64" />
+										<property name="bitrock.install"
+											value="${project.build.directory}/installers" />
+										<property name="os_arch" value="64" />
+										<property file="installer/installer.properties" />
+										<property name="installer.name"
+											value="${product.short.name}-${product.version}-x86_64.exe" />
+										<property name="updated.project.file"
+											value="${basedir}/installer/installer_project_win_x86_64.xml" />
+										<ant antfile="createInstallerProject.xml" />
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

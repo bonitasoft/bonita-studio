@@ -72,7 +72,8 @@ public class TimerConstraint extends AbstractLiveValidationMarkerConstraint {
 		}
 		final String returnType = condition.getReturnType();
 		return Long.class.getName().equals(returnType)
-				|| Date.class.getName().equals(returnType);
+				|| Date.class.getName().equals(returnType)
+				|| String.class.getName().equals(returnType);
 	}
 
 	private boolean isMissingCondition(AbstractTimerEvent timerEvent, Expression condition) {
@@ -88,6 +89,8 @@ public class TimerConstraint extends AbstractLiveValidationMarkerConstraint {
         final Expression condition = timerEvent.getCondition();
         if(isMissingCondition(timerEvent,condition)){
         	return ctx.createFailureStatus(new Object[] {Messages.Validation_TimerEvent_MissingCondition});
+        } else if(!isSupportedReturnType(condition)){
+        	return ctx.createFailureStatus(new Object[] {Messages.vaidation_TimerEvent_WrongReturnType});
         }
         return ctx.createSuccessStatus();
     }
