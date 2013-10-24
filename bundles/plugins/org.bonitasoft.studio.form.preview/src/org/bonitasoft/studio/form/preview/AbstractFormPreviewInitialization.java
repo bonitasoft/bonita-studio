@@ -40,6 +40,7 @@ import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.Data;
+import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.Lane;
@@ -204,10 +205,19 @@ public abstract class AbstractFormPreviewInitialization {
 						expr.setType(ExpressionConstants.CONSTANT_TYPE);
 						expr.setContent("");
 						expr.setName("");
+							
 					} else {
-						expr.setType(ExpressionConstants.CONSTANT_TYPE);
-						expr.setContent(data.getDefaultValue().getContent());
-						expr.getReferencedElements().clear();
+						String defaultValueType = data.getDefaultValue().getType();
+						if (defaultValueType.equals(ExpressionConstants.SCRIPT_TYPE) || defaultValueType.equals(ExpressionConstants.CONSTANT_TYPE)  ){
+							expr.setType(data.getDefaultValue().getType());
+							expr.setInterpreter(data.getDefaultValue().getInterpreter());
+							expr.setContent(data.getDefaultValue().getContent());
+							expr.getReferencedElements().clear();
+						} else {
+							expr.setType(ExpressionConstants.CONSTANT_TYPE);
+							expr.setContent("");
+							expr.setName("");
+						}
 					}
 				}
 			} else {
