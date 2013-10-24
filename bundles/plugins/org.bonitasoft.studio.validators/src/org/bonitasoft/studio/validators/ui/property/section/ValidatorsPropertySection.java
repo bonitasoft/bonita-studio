@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
@@ -98,6 +99,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  */
 public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection {
 
+	private static final String GROOVY_TYPE = "Groovy expression";
 	protected EMFDataBindingContext context = new EMFDataBindingContext();
 
 	private TableViewer tableViewer;
@@ -322,6 +324,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 					if(selection == null){
 						selection = ExpressionFactory.eINSTANCE.createExpression() ;
 						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator, FormPackage.Literals.VALIDATOR__PARAMETER, selection)) ;
+						
 					}
 					parameterExpressionViewer.setContext(getValidable());
 					parameterExpressionViewer.setInput(currentValidator) ;
@@ -594,7 +597,12 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 					final boolean enabled = descriptior.getHasParameter() ;
 					parameterExpressionViewer.getTextControl().setEnabled(enabled);
 					parameterExpressionViewer.getButtonControl().setEnabled(enabled);
+					if (descriptior.getName().equals(GROOVY_TYPE) && !currentValidator.getParameter().getReturnType().equals(Boolean.class.getName())){
+						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, Boolean.class.getName()));
+						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE_FIXED, true));
+					}
 				}
+			
 			}
 		}
 	}
