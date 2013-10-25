@@ -17,6 +17,7 @@ package org.bonitasoft.studio.groovy.ui.contentassist;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
 import org.bonitasoft.engine.expression.ExpressionConstantsResolver;
@@ -73,12 +74,15 @@ public class BonitaSyntaxHighlighting implements IHighlightingExtender {
         if (keyWord != null) {
             final ExpressionConstants expressionConstantsFromName = ExpressionConstantsResolver.getExpressionConstantsFromName(keyWord);
             if (expressionConstantsFromName != null) {
-
                 try {
                     return Class.forName(expressionConstantsFromName.getReturnType());
                 } catch (final Exception e) {
                     BonitaStudioLog.error(e);
                 }
+            }else if(keyWord.equals(IFormExpressionsAPI.USER_LOCALE)){
+            	return Locale.class;
+            }else if(keyWord.equals(AbstractFormValidator.CLICKED_BUTTON_VARNAME)){
+            	return String.class;
             }
         }
         return null;
