@@ -513,7 +513,7 @@ public class ProcBuilder implements IProcBuilder {
             throw new ProcBuilderException("Impossible to create SequenceFlow "+name) ;
         }
 
-        if(bendpoints != null && bendpoints.size() > 0){
+        if(bendpoints != null && bendpoints.size() > 1){
             /*Manage BendPoints*/
             SetConnectionBendpointsCommand setConnectionBendPointsCommand = new SetConnectionBendpointsCommand(editingDomain);
             setConnectionBendPointsCommand.setEdgeAdapter(newObject);
@@ -1063,7 +1063,7 @@ public class ProcBuilder implements IProcBuilder {
             CreateConnectionViewAndElementRequest request = new CreateConnectionViewAndElementRequest(ProcessElementTypes.MessageFlow_4002, ((IHintedType) ProcessElementTypes.MessageFlow_4002).getSemanticHint(), diagramPart.getDiagramPreferencesHint());
             Command createSequenceFlowCommand = CreateConnectionViewAndElementRequest.getCreateCommand(request, source, target);
             if(createSequenceFlowCommand == null){
-                throw new ProcBuilderException("Impossible to create Message Flow") ;
+                continue;
             }
 
             diagramPart.getDiagramEditDomain().getDiagramCommandStack().execute(createSequenceFlowCommand);
