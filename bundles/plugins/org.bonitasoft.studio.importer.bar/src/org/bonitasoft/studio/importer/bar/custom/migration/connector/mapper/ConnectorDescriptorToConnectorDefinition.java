@@ -45,6 +45,7 @@ import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProjectUtil;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -124,7 +125,24 @@ public class ConnectorDescriptorToConnectorDefinition {
 		final String connectorId = v5Descriptor.getId();
 		final String connectorVersion = BASE_VERSION;
 		final List<org.ow2.bonita.connector.core.desc.Category> v5Categories = v5Descriptor.getCategories();
+		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
+		ConnectorDefFileStore connectorDefStore = store.getChild(NamingUtils.toConnectorDefinitionFilename(connectorId, connectorVersion, true));
+		if ((connectorDefStore !=null)){
+			if (FileActionDialog.overwriteQuestion(connectorDefStore.getName())){
+				initConnectorDefinition(connectorId, connectorVersion, v5Categories,
+						store);
+			}
+		} else {
+			initConnectorDefinition(connectorId, connectorVersion, v5Categories,
+					store);
+		}
+	}
 
+	private void initConnectorDefinition(
+			final String connectorId,
+			final String connectorVersion,
+			final List<org.ow2.bonita.connector.core.desc.Category> v5Categories,
+			final ConnectorDefRepositoryStore store) throws IOException {
 		final ConnectorDefinition connectorDefinition = ConnectorDefinitionFactory.eINSTANCE.createConnectorDefinition();
 		connectorDefinition.setId(connectorId);
 		connectorDefinition.setVersion(connectorVersion);
@@ -139,7 +157,6 @@ public class ConnectorDescriptorToConnectorDefinition {
 		addPages(connectorDefinition);
 
 
-		final ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 		final ConnectorDefFileStore file = store.createRepositoryFileStore(NamingUtils.toConnectorDefinitionFilename(connectorId, connectorVersion, true));
 		file.save(connectorDefinition);
 		store.getResourceProvider().loadDefinitionsCategories(Repository.NULL_PROGRESS_MONITOR);
@@ -165,14 +182,28 @@ public class ConnectorDescriptorToConnectorDefinition {
 
 		IType classType = RepositoryManager.getInstance().getCurrentRepository().getJavaProject().findType(connectorImplementation.getImplementationClassname()) ;
 		if(classType != null){
-			classType.getCompilationUnit().delete(true, Repository.NULL_PROGRESS_MONITOR);
+			if (FileActionDialog.overwriteQuestion(classType.getParent().getElementName())) {
+				classType.getCompilationUnit().delete(true, Repository.NULL_PROGRESS_MONITOR);
+				generateAndMergeConnectorImplClass(connectorImplementation,
+						sourceStore, definition);
+			}
+		} else {
+			generateAndMergeConnectorImplClass(connectorImplementation,
+					sourceStore, definition);
 		}
-		ClassGenerator.generateConnectorImplementationClass(connectorImplementation,definition,sourceStore, Repository.NULL_PROGRESS_MONITOR) ;
-		mergeSourceFile(v5Descriptor.getConnectorClass().getName(),sourceStore);
-
+		
 		final ConnectorImplRepositoryStore store = (ConnectorImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
 		final ConnectorImplFileStore file = store.createRepositoryFileStore(NamingUtils.toConnectorImplementationFilename(implementationId, BASE_VERSION, true));
 		file.save(connectorImplementation);
+	}
+
+	private void generateAndMergeConnectorImplClass(
+			final ConnectorImplementation connectorImplementation,
+			final ConnectorSourceRepositoryStore sourceStore,
+			ConnectorDefinition definition) throws Exception, ZipException,
+			IOException, CoreException {
+		ClassGenerator.generateConnectorImplementationClass(connectorImplementation,definition,sourceStore, Repository.NULL_PROGRESS_MONITOR) ;
+		mergeSourceFile(v5Descriptor.getConnectorClass().getName(),sourceStore);
 	}
 
 	private String getNewImplementationClassName() {

@@ -121,13 +121,13 @@ public class OutputSectionContribution implements IExtensibleGridPropertySection
 					return !((Boolean)fromObject).booleanValue();
 				}
 			});
+		
+			dataBinding.bindValue(SWTObservables.observeVisible(ExtensibleGridPropertySection.getLabelCompositeOf(operationViewer.getParent())), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.WIDGET__READ_ONLY),strategy,strategy);
+			dataBinding.bindValue(SWTObservables.observeVisible(operationViewer.getParent()), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.WIDGET__READ_ONLY),strategy,strategy);
 			if(element instanceof FileWidget){
-				
 				dataBinding.bindValue(SWTObservables.observeVisible(ExtensibleGridPropertySection.getLabelCompositeOf(operationViewer.getParent())), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY),strategy,strategy);
 				dataBinding.bindValue(SWTObservables.observeVisible(operationViewer.getParent()), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.FILE_WIDGET__DOWNLOAD_ONLY),strategy,strategy);
 			}
-			dataBinding.bindValue(SWTObservables.observeVisible(ExtensibleGridPropertySection.getLabelCompositeOf(operationViewer.getParent())), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.WIDGET__READ_ONLY),strategy,strategy);
-			dataBinding.bindValue(SWTObservables.observeVisible(operationViewer.getParent()), EMFEditObservables.observeValue(getEditingDomain(), element, FormPackage.Literals.WIDGET__READ_ONLY),strategy,strategy);
 		}
 	}
 

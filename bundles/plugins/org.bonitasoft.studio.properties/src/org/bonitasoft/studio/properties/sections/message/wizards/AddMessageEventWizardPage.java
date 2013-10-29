@@ -484,8 +484,10 @@ public class AddMessageEventWizardPage extends WizardPage implements
 				databindingContext);
 		elementExpressionViewer.setContext(element);
 		catchEventNatureProvider = new CatchMessageEventNamesExpressionNatureProvider();
+		catchEventNatureProvider.setThrowMessage(element);
 		elementExpressionViewer
 				.setExpressionNatureProvider(catchEventNatureProvider);
+		
 		if (workingCopyMessage.getTargetElementExpression() == null) {
 			final Expression createExpression = ExpressionFactory.eINSTANCE
 					.createExpression();

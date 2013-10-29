@@ -18,13 +18,15 @@ package org.bonitasoft.studio.validators.ui.property.section;
 
 import java.util.Collection;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
+import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
@@ -98,6 +100,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  */
 public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection {
 
+	private static final String GROOVY_TYPE = "Groovy expression";
 	protected EMFDataBindingContext context = new EMFDataBindingContext();
 
 	private TableViewer tableViewer;
@@ -194,12 +197,14 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 		// Label text
 		labelExpressionViewer = new ExpressionViewer(fieldsComposite,SWT.BORDER,getWidgetFactory(),getEditingDomain(),FormPackage.Literals.VALIDATOR__DISPLAY_NAME);
 		labelExpressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false, 3, 1));
+		labelExpressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.FORM_FIELD_TYPE,ExpressionConstants.DOCUMENT_TYPE}));
 		labelExpressionViewer.setExpressionNatureProvider(new ValidatorExpressionNatureProvider());
 
 		/*create the parameter field */
 		getWidgetFactory().createLabel(fieldsComposite, Messages.Validator_Parameter);
 		parameterExpressionViewer = new ExpressionViewer(fieldsComposite,SWT.BORDER,getWidgetFactory(),getEditingDomain(),FormPackage.Literals.VALIDATOR__PARAMETER);
 		parameterExpressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(300, SWT.DEFAULT).span(3, 1).create());
+		parameterExpressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.SCRIPT_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.FORM_FIELD_TYPE,ExpressionConstants.DOCUMENT_TYPE}));
 		parameterExpressionViewer.setExpressionNatureProvider(new ValidatorExpressionNatureProvider());
 
 
@@ -322,8 +327,14 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 					if(selection == null){
 						selection = ExpressionFactory.eINSTANCE.createExpression() ;
 						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator, FormPackage.Literals.VALIDATOR__PARAMETER, selection)) ;
+						
 					}
-					parameterExpressionViewer.setContext(getValidable());
+					if(currentValidator != null){
+						parameterExpressionViewer.setContext(currentValidator);
+					}else{
+						parameterExpressionViewer.setContext(getValidable());
+					}
+					
 					parameterExpressionViewer.setInput(currentValidator) ;
 
 					expressionContext.bindValue(
@@ -339,7 +350,12 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 						selection = ExpressionFactory.eINSTANCE.createExpression() ;
 						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator, FormPackage.Literals.VALIDATOR__DISPLAY_NAME, selection)) ;
 					}
-					labelExpressionViewer.setContext(getValidable());
+					if(currentValidator != null){
+						labelExpressionViewer.setContext(currentValidator);
+					}else{
+						labelExpressionViewer.setContext(getValidable());
+					}
+					
 					labelExpressionViewer.setInput(currentValidator) ;
 					expressionContext.bindValue(
 							ViewerProperties.singleSelection().observe(labelExpressionViewer),
@@ -594,7 +610,12 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 					final boolean enabled = descriptior.getHasParameter() ;
 					parameterExpressionViewer.getTextControl().setEnabled(enabled);
 					parameterExpressionViewer.getButtonControl().setEnabled(enabled);
+					if (descriptior.getName().equals(GROOVY_TYPE) && !currentValidator.getParameter().getReturnType().equals(Boolean.class.getName())){
+						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, Boolean.class.getName()));
+						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE_FIXED, true));
+					}
 				}
+			
 			}
 		}
 	}
