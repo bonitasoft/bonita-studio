@@ -334,37 +334,38 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 
 	@Override
 	public void postStartup() {
-		try {
-			IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
-			IPostStartupContribution contrib = null;
-			for (IConfigurationElement elem : elements){
-				try {
-					contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-				} catch (CoreException e) {
-					BonitaStudioLog.error(e);
-				}
-				contrib.execute();
+		IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
+		IPostStartupContribution contrib = null;
+		for (IConfigurationElement elem : elements){
+			try {
+				contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e);
 			}
-			buildWorkspace();
-			if (PlatformUI.isWorkbenchRunning()) {
-				IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				PlatformUI.getWorkbench().showPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID, activeWorkbenchWindow);
-
-				if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective() != null) {
-					PlatformUI.getWorkbench().getIntroManager().showIntro(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), false);
-				}
-			}
-
-			long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME ;
-			BonitaStudioLog.info("Startup duration : "+DateUtil.getDisplayDuration(startupDuration),ApplicationPlugin.PLUGIN_ID) ;
-
-			if (PlatformUI.isWorkbenchRunning()) {
-				sendUserInfo();
-				openStartupDialog() ;
-			}
-		} catch (WorkbenchException ex) {
-			BonitaStudioLog.error(ex);
+			contrib.execute();
 		}
+	
+		if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			try {
+				PlatformUI.getWorkbench().showPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID, activeWorkbenchWindow);
+			} catch (WorkbenchException e) {
+				BonitaStudioLog.error(e);
+			}
+
+			if(activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage().getPerspective() != null) {
+				PlatformUI.getWorkbench().getIntroManager().showIntro(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), false);
+			}
+		}
+
+		long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME ;
+		BonitaStudioLog.info("Startup duration : "+DateUtil.getDisplayDuration(startupDuration),ApplicationPlugin.PLUGIN_ID) ;
+
+		if (PlatformUI.isWorkbenchRunning()) {
+			sendUserInfo();
+			openStartupDialog() ;
+		}
+		buildWorkspace();
 	}
 
 
