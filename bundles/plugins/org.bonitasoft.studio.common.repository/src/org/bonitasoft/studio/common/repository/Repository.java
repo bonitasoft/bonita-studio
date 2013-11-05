@@ -729,9 +729,6 @@ public class Repository implements IRepository {
 	@Override
 	public void migrate() throws CoreException, MigrationException {
 		Assert.isNotNull(project);
-		for(IRepositoryStore<?> store : getAllStores()){
-			store.migrate();
-		}
 		Set<String> additionalNatures = getNatures() ;
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[0]);
@@ -742,6 +739,9 @@ public class Repository implements IRepository {
 		desc = project.getDescription();
 		desc.setComment(ProductVersion.CURRENT_VERSION) ;
 		project.setDescription(desc, NULL_PROGRESS_MONITOR);
+		for(IRepositoryStore<?> store : getAllStores()){
+			store.migrate();
+		}
 		
 	}
 
