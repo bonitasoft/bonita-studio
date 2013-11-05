@@ -53,7 +53,6 @@
 		<module>org.bonitasoft.studio.model.edit.nl_ja</module>
 		<module>org.bonitasoft.studio.model.edit.custom.nl_ja</module>
 		<module>org.bonitasoft.studio.preferences.nl_ja</module>
-		<module>org.bonitasoft.studio.presentation.nl_ja</module>
 		<module>org.bonitasoft.studio.profiles.nl_ja</module>
 		<module>org.bonitasoft.studio.properties.nl_ja</module>
 		<module>org.bonitasoft.studio.registration.nl_ja</module>
