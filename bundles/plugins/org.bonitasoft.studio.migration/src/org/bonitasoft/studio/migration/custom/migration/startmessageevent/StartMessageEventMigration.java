@@ -3,10 +3,6 @@ package org.bonitasoft.studio.migration.custom.migration.startmessageevent;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.model.expression.ExpressionFactory;
-import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.process.CorrelationTypeActive;
 import org.eclipse.emf.edapt.migration.CustomMigration;
 import org.eclipse.emf.edapt.migration.Instance;
 import org.eclipse.emf.edapt.migration.Metamodel;
@@ -20,7 +16,9 @@ public class StartMessageEventMigration extends CustomMigration {
 			throws MigrationException {
 		for (Instance ste : model.getAllInstances("process.StartMessageEvent")){
 			Instance tableCorrelation = ste.get("correlation");
-			model.delete(tableCorrelation);
+			if(tableCorrelation != null){
+				model.delete(tableCorrelation);
+			}
 			Instance messageFlow = ste.get("incomingMessag");
 			Instance messageSource = messageFlow.get("source");
 			List<Instance> events = new ArrayList<Instance>();
