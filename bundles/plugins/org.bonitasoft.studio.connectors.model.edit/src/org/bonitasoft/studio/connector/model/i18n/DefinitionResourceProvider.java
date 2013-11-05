@@ -562,6 +562,7 @@ public class DefinitionResourceProvider {
 					try {
 						String name = store.getResource().getName()+"/"+category.getIcon();
 						URL resourceURL = bundle.getResource(name);
+						BonitaStudioLog.debug(name, "org.bonitasoft.studio.connectors.model.edit");
 						if(resourceURL != null){
 							iconURL = FileLocator.toFileURL(resourceURL);
 						}
