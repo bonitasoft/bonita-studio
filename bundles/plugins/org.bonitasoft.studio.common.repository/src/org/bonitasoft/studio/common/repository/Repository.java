@@ -302,6 +302,9 @@ public class Repository implements IRepository {
 	}
 
 	protected void createProjectDescriptor(IProject project) throws CoreException {
+		IProjectDescription descriptor = project.getDescription();
+		descriptor.setComment(ProductVersion.CURRENT_VERSION);
+		project.setDescription(descriptor, NULL_PROGRESS_MONITOR);
 		Set<String> additionalNatures = getNatures() ;
 		for(String natureId : additionalNatures){
 			addNature(natureId, project);
@@ -317,7 +320,6 @@ public class Repository implements IRepository {
 		}
 		
 		IProjectDescription descriptor = project.getDescription();
-		descriptor.setComment(ProductVersion.CURRENT_VERSION);
 		String[] natures = descriptor.getNatureIds();
 		String[] arryOfNatures = new String[]{natureId};
 		String[] newNatures = new String[natures.length + arryOfNatures.length];
@@ -326,7 +328,7 @@ public class Repository implements IRepository {
 			newNatures[i] = arryOfNatures[i - natures.length] ;
 		}
 		descriptor.setNatureIds(newNatures);
-		project.setDescription(descriptor, null);
+		project.setDescription(descriptor, NULL_PROGRESS_MONITOR);
 	}
 	protected Set<String> getNatures() {
 		final Set<String> result = new HashSet<String>() ;
@@ -730,7 +732,17 @@ public class Repository implements IRepository {
 		for(IRepositoryStore<?> store : getAllStores()){
 			store.migrate();
 		}
-		project.getDescription().setComment(ProductVersion.CURRENT_VERSION) ;
+		Set<String> additionalNatures = getNatures() ;
+		IProjectDescription desc = project.getDescription();
+		desc.setNatureIds(new String[0]);
+		project.setDescription(desc, NULL_PROGRESS_MONITOR);
+		for(String natureId : additionalNatures){
+			addNature(natureId, project);
+		}
+		desc = project.getDescription();
+		desc.setComment(ProductVersion.CURRENT_VERSION) ;
+		project.setDescription(desc, NULL_PROGRESS_MONITOR);
+		
 	}
 
 }
