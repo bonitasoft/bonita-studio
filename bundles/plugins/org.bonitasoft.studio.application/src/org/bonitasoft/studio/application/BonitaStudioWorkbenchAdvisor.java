@@ -67,9 +67,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchAdvisor;
@@ -246,6 +244,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 	/**
 	 * Disconnect from the core workspace.
 	 */
+	@SuppressWarnings("restriction")
 	private void disconnectFromWorkspace(IProgressMonitor monitor) {
 		// save the workspace
 		final MultiStatus status = new MultiStatus(
@@ -330,42 +329,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 		job.setPriority(Job.DECORATE);
 		job.setUser(false);
 		job.schedule();
-	}
-
-	@Override
-	public void postStartup() {
-		IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
-		IPostStartupContribution contrib = null;
-		for (IConfigurationElement elem : elements){
-			try {
-				contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-			} catch (CoreException e) {
-				BonitaStudioLog.error(e);
-			}
-			contrib.execute();
-		}
-	
-		if (PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-			try {
-				PlatformUI.getWorkbench().showPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID, activeWorkbenchWindow);
-			} catch (WorkbenchException e) {
-				BonitaStudioLog.error(e);
-			}
-
-			if(activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage().getPerspective() != null) {
-				PlatformUI.getWorkbench().getIntroManager().showIntro(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), false);
-			}
-		}
-
-		long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME ;
-		BonitaStudioLog.info("Startup duration : "+DateUtil.getDisplayDuration(startupDuration),ApplicationPlugin.PLUGIN_ID) ;
-
-		if (PlatformUI.isWorkbenchRunning()) {
-			sendUserInfo();
-			openStartupDialog() ;
-		}
-		buildWorkspace();
 	}
 
 
@@ -463,6 +426,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 			sendUserInfo();
 			openStartupDialog() ;
 		}
+		buildWorkspace();
 	}
 
 
