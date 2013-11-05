@@ -288,22 +288,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.presentation.nl_es"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.presentation.nl_fr"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.properties.nl_es"
          download-size="0"
          install-size="0"
@@ -600,14 +584,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.presentation.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.properties.nl_pt"
          download-size="0"
          install-size="0"
@@ -784,14 +760,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.presentation.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.properties.nl_it"
          download-size="0"
          install-size="0"
@@ -961,14 +929,6 @@
 
    <plugin
          id="org.bonitasoft.studio.preferences.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.presentation.nl_de"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2065,14 +2025,6 @@
 
    <plugin
          id="org.bonitasoft.studio.preferences.nl_ja"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.presentation.nl_ja"
          download-size="0"
          install-size="0"
          version="0.0.0"
