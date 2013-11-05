@@ -93,6 +93,7 @@ import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.framework.adaptor.BundleClassLoader;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.xml.sax.InputSource;
@@ -142,7 +143,9 @@ public class Repository implements IRepository {
 			initRepositoryStores() ;
 			initClasspath(project) ;
 			enableBuild();
-			addNature(GROOVY_NATURE, project);
+			IProjectDescription projectDescriptor = project.getDescription();
+			addNature(GROOVY_NATURE,projectDescriptor, project);
+			project.setDescription(projectDescriptor,NULL_PROGRESS_MONITOR);
 			try {
 				getProject().build(IncrementalProjectBuilder.FULL_BUILD,NULL_PROGRESS_MONITOR);
 			} catch (CoreException e) {
@@ -302,31 +305,30 @@ public class Repository implements IRepository {
 	}
 
 	protected void createProjectDescriptor(IProject project) throws CoreException {
+		IProjectDescription descriptor = project.getDescription();
+		descriptor.setComment(ProductVersion.CURRENT_VERSION);
 		Set<String> additionalNatures = getNatures() ;
 		for(String natureId : additionalNatures){
-			addNature(natureId, project);
+			addNature(natureId,descriptor, project);
 		}
+		project.setDescription(descriptor, NULL_PROGRESS_MONITOR);
 	}
 
 	
-	protected void addNature(String natureId,IProject project) throws CoreException{
+	protected void addNature(String natureId,IProjectDescription projectDescriptor, IProject project) throws CoreException{
 		Object naturDesc = ((Workspace) ResourcesPlugin.getWorkspace()).getNatureManager().getNatureDescriptor(natureId);
 		if(naturDesc == null){
 			BonitaStudioLog.log("Project nature "+natureId+" not found");
 			return;
 		}
-		
-		IProjectDescription descriptor = project.getDescription();
-		descriptor.setComment(ProductVersion.CURRENT_VERSION);
-		String[] natures = descriptor.getNatureIds();
+		String[] natures = projectDescriptor.getNatureIds();
 		String[] arryOfNatures = new String[]{natureId};
 		String[] newNatures = new String[natures.length + arryOfNatures.length];
 		System.arraycopy(natures, 0, newNatures, 0, natures.length);
 		for(int i = natures.length ; i< natures.length+arryOfNatures.length; i++){
 			newNatures[i] = arryOfNatures[i - natures.length] ;
 		}
-		descriptor.setNatureIds(newNatures);
-		project.setDescription(descriptor, null);
+		projectDescriptor.setNatureIds(newNatures);
 	}
 	protected Set<String> getNatures() {
 		final Set<String> result = new HashSet<String>() ;
@@ -727,10 +729,29 @@ public class Repository implements IRepository {
 	@Override
 	public void migrate() throws CoreException, MigrationException {
 		Assert.isNotNull(project);
+		Set<String> additionalNatures = getNatures() ;
+		final IProjectDescription desc = project.getDescription();
+		desc.setNatureIds(new String[0]);
+		for(String natureId : additionalNatures){
+			addNature(natureId,desc, project);
+		}
+		desc.setComment(ProductVersion.CURRENT_VERSION) ;
+		Display.getDefault().syncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					project.setDescription(desc, NULL_PROGRESS_MONITOR);
+				} catch (CoreException e) {
+					BonitaStudioLog.error(e);
+				}
+			}
+		});
+	
 		for(IRepositoryStore<?> store : getAllStores()){
 			store.migrate();
 		}
-		project.getDescription().setComment(ProductVersion.CURRENT_VERSION) ;
+		
 	}
 
 }

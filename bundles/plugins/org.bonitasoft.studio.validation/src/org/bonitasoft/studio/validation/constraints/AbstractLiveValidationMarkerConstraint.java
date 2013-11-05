@@ -102,8 +102,6 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
 		if(PlatformUI.isWorkbenchRunning() &&  PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow() != null &&  PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow().getActivePage() != null){
-			
-			
 			IEditorPart editorPart = PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getActivePage()
 					.getActiveEditor();
