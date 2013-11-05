@@ -302,8 +302,6 @@ public class Repository implements IRepository {
 	}
 
 	protected void createProjectDescriptor(IProject project) throws CoreException {
-		IProjectDescription descriptor = project.getDescription();
-		descriptor.setComment(ProductVersion.CURRENT_VERSION) ;
 		Set<String> additionalNatures = getNatures() ;
 		for(String natureId : additionalNatures){
 			addNature(natureId, project);
@@ -319,6 +317,7 @@ public class Repository implements IRepository {
 		}
 		
 		IProjectDescription descriptor = project.getDescription();
+		descriptor.setComment(ProductVersion.CURRENT_VERSION);
 		String[] natures = descriptor.getNatureIds();
 		String[] arryOfNatures = new String[]{natureId};
 		String[] newNatures = new String[natures.length + arryOfNatures.length];
