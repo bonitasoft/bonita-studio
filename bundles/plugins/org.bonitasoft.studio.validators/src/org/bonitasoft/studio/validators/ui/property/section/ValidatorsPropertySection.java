@@ -101,6 +101,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection {
 
 	private static final String GROOVY_TYPE = "Groovy expression";
+	private static final String REGULAR_TYPE = "Regular expression";
 	protected EMFDataBindingContext context = new EMFDataBindingContext();
 
 	private TableViewer tableViewer;
@@ -327,14 +328,14 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 					if(selection == null){
 						selection = ExpressionFactory.eINSTANCE.createExpression() ;
 						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator, FormPackage.Literals.VALIDATOR__PARAMETER, selection)) ;
-						
+
 					}
 					if(currentValidator != null){
 						parameterExpressionViewer.setContext(currentValidator);
 					}else{
 						parameterExpressionViewer.setContext(getValidable());
 					}
-					
+
 					parameterExpressionViewer.setInput(currentValidator) ;
 
 					expressionContext.bindValue(
@@ -355,7 +356,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 					}else{
 						labelExpressionViewer.setContext(getValidable());
 					}
-					
+
 					labelExpressionViewer.setInput(currentValidator) ;
 					expressionContext.bindValue(
 							ViewerProperties.singleSelection().observe(labelExpressionViewer),
@@ -463,21 +464,21 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 					}
 
 
-//					for(Validator validator :((Validable)lastEObject).getValidators()){
-//						if(validator.getValidatorClass() != null){
-//							boolean stilExists = false ;
-//							for(IRepositoryFileStore file : validatorStore.getChildren()){
-//								ValidatorDescriptor desc = (ValidatorDescriptor) file.getContent() ;
-//								if(desc.getClassName().equals(validator.getValidatorClass())){
-//									stilExists = true ;
-//									break ;
-//								}
-//							}
-//							if(!stilExists){
-//								getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), validator, FormPackage.Literals.VALIDATOR__VALIDATOR_CLASS, null)) ;
-//							}
-//						}
-//					}
+					//					for(Validator validator :((Validable)lastEObject).getValidators()){
+					//						if(validator.getValidatorClass() != null){
+					//							boolean stilExists = false ;
+					//							for(IRepositoryFileStore file : validatorStore.getChildren()){
+					//								ValidatorDescriptor desc = (ValidatorDescriptor) file.getContent() ;
+					//								if(desc.getClassName().equals(validator.getValidatorClass())){
+					//									stilExists = true ;
+					//									break ;
+					//								}
+					//							}
+					//							if(!stilExists){
+					//								getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), validator, FormPackage.Literals.VALIDATOR__VALIDATOR_CLASS, null)) ;
+					//							}
+					//						}
+					//					}
 
 					comboViewerForValidatorClass.setInput(validatorStore.getValidatorDescriptors());
 
@@ -508,7 +509,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 					 * Use pattern master-detail databinding in order to be up to date with the selection in the FilteredTreeViewer
 					 * */
 
-					 //		labelField.setElement((Element) lastEObject);
+					//		labelField.setElement((Element) lastEObject);
 					//		labelField.reset();
 
 					/*Observe change in selection*/
@@ -565,12 +566,12 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 
 					/*When value changed,
 					 * look if need to enabled/disabled some widgets*/
-					 comboViewerObservable.addValueChangeListener(new IValueChangeListener() {
-						 @Override
-						 public void handleValueChange(ValueChangeEvent event) {
-							 updateFieldDependingOnValidatorClass();
-						 }
-					 });
+					comboViewerObservable.addValueChangeListener(new IValueChangeListener() {
+						@Override
+						public void handleValueChange(ValueChangeEvent event) {
+							updateFieldDependingOnValidatorClass();
+						}
+					});
 
 
 
@@ -614,8 +615,14 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, Boolean.class.getName()));
 						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE_FIXED, true));
 					}
+					else {
+						if (descriptior.getName().equals(REGULAR_TYPE)){
+							getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, String.class.getName()));
+							getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE_FIXED, false));
+						}
+					}
 				}
-			
+
 			}
 		}
 	}
@@ -677,78 +684,78 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 	/**
 	 * create a new validator
 	 */
-	 private void createValidator() {
+	private void createValidator() {
 		IUndoableOperation operation = new AddValidatorCommand(getEditingDomain(), getValidable(), generateValidatorDefaultName(), this);
 		try {
 			OperationHistoryFactory.getOperationHistory().execute(operation, new NullProgressMonitor(), null);
 		} catch (ExecutionException e) {
 			BonitaStudioLog.error(e);
 		}
-	 }
+	}
 
 
-	 /**
-	  * Create a validator with validatorClass and set the validatorClass in the list of resource to include in the application.
-	  * @param validatorClass
-	  */
-	 private void createValidator(String validatorClass) {
-		 IUndoableOperation operation =
-				 new AddValidatorCommand(getEditingDomain(), getValidable(), generateValidatorDefaultName(), validatorClass, this);
-		 try {
-			 OperationHistoryFactory.getOperationHistory().execute(operation, new NullProgressMonitor(), null);
-		 } catch (ExecutionException e) {
-			 BonitaStudioLog.error(e);
-		 }
-		 //		EObject eobject = getEObject();
-		 //		while(!(eobject instanceof AbstractProcess)){
-		 //			eobject = eobject.eContainer();
-		 //		}
-		 //		AbstractProcess ap = (AbstractProcess) eobject;
-		 //		getEditingDomain().getCommandStack().execute(new AddCommand(getEditingDomain(), ap.getResourceValidators(), ValidatorRepositoryArtifact.ID_BASE+validatorClass));
-	 }
+	/**
+	 * Create a validator with validatorClass and set the validatorClass in the list of resource to include in the application.
+	 * @param validatorClass
+	 */
+	private void createValidator(String validatorClass) {
+		IUndoableOperation operation =
+				new AddValidatorCommand(getEditingDomain(), getValidable(), generateValidatorDefaultName(), validatorClass, this);
+		try {
+			OperationHistoryFactory.getOperationHistory().execute(operation, new NullProgressMonitor(), null);
+		} catch (ExecutionException e) {
+			BonitaStudioLog.error(e);
+		}
+		//		EObject eobject = getEObject();
+		//		while(!(eobject instanceof AbstractProcess)){
+		//			eobject = eobject.eContainer();
+		//		}
+		//		AbstractProcess ap = (AbstractProcess) eobject;
+		//		getEditingDomain().getCommandStack().execute(new AddCommand(getEditingDomain(), ap.getResourceValidators(), ValidatorRepositoryArtifact.ID_BASE+validatorClass));
+	}
 
-	 /**
-	  * Generate a Validator name following <validableName>Validator<number>
-	  * @return
-	  */
-	 private String generateValidatorDefaultName(){
-		 String prefix = "";
-		 if(getValidable() instanceof Element){
-			 prefix = ((Element) getValidable()).getName();
-		 }
-		 return prefix + Messages.ValidatorDefaultName + (getValidable().getValidators().size() + 1);
-	 }
+	/**
+	 * Generate a Validator name following <validableName>Validator<number>
+	 * @return
+	 */
+	private String generateValidatorDefaultName(){
+		String prefix = "";
+		if(getValidable() instanceof Element){
+			prefix = ((Element) getValidable()).getName();
+		}
+		return prefix + Messages.ValidatorDefaultName + (getValidable().getValidators().size() + 1);
+	}
 
-	 public void select(Validator validator) {
-		 /*Unselect in order to avoid issues with databinding*/
-		 tableViewer.setSelection(StructuredSelection.EMPTY);
-		 tableViewer.refresh(true);
-		 tableViewer.setSelection(new StructuredSelection(validator));
-	 }
+	public void select(Validator validator) {
+		/*Unselect in order to avoid issues with databinding*/
+		tableViewer.setSelection(StructuredSelection.EMPTY);
+		tableViewer.refresh(true);
+		tableViewer.setSelection(new StructuredSelection(validator));
+	}
 
 
-	 @Override
-	 public void dispose() {
-		 super.dispose();
+	@Override
+	public void dispose() {
+		super.dispose();
 
-		 if(defaultValidatorContext!=null) {
-			 defaultValidatorContext.dispose();
-		 }
-		 if(context != null){
-			 context.dispose();
-		 }
-		 if(comboViewerForValidatorClass!= null && !comboViewerForValidatorClass.getCombo().isDisposed()){
-			 comboViewerForValidatorClass.getCombo().dispose();
-		 }
-		 if(defaultValidator != null && !defaultValidator.isDisposed()){
-			 defaultValidator.dispose();
-		 }
+		if(defaultValidatorContext!=null) {
+			defaultValidatorContext.dispose();
+		}
+		if(context != null){
+			context.dispose();
+		}
+		if(comboViewerForValidatorClass!= null && !comboViewerForValidatorClass.getCombo().isDisposed()){
+			comboViewerForValidatorClass.getCombo().dispose();
+		}
+		if(defaultValidator != null && !defaultValidator.isDisposed()){
+			defaultValidator.dispose();
+		}
 
-	 }
+	}
 
-	 @Override
-	 public String getSectionDescription() {
-		 // TODO Auto-generated method stub
-		 return null;
-	 }
+	@Override
+	public String getSectionDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
