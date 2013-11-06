@@ -20,7 +20,7 @@
    <requires>
       <import feature="org.eclipse.rcp" version="3.7.1.r37x_v20110729-9DB5FmNFnFLSFCtLxnRfMqt15A4A" match="greaterOrEqual"/>
       <import feature="org.eclipse.wst.web_ui.feature"/>
-      <import feature="platform-specific-feature" version="6.1.0" match="equivalent"/>
+      <import feature="platform-specific-feature" version="6.2.0" match="equivalent"/>
    </requires>
 
    <plugin
