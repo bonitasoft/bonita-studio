@@ -127,17 +127,20 @@ public class TestConnectorWizard extends ConnectorWizard {
 		if(connectorWorkingCopy.getDefinitionId() != null && !connectorWorkingCopy.getDefinitionId().isEmpty()){
 			return defStore.getDefinition(connectorWorkingCopy.getDefinitionId(), connectorWorkingCopy.getDefinitionVersion()) ;
 		}
-
 		return null;
 	}
 
+	
+	
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
 		if(page.equals(selectionPage)){
-			final ConnectorDefinition definition = selectionPage.getSelectedDefinition() ;
-			checkDefinitionDependencies(definition) ;
-			extension = findCustomWizardExtension(definition) ;
-			recreateConnectorConfigurationPages(definition,false);
+			ConnectorDefinition definition = selectionPage.getSelectedConnectorDefinition();
+			if(definition !=null){
+				checkDefinitionDependencies(definition) ;
+				extension = findCustomWizardExtension(definition) ;
+				recreateConnectorConfigurationPages(definition,false);
+			}
 		}
 
 		List<IWizardPage> pages = getAllPageList() ;
