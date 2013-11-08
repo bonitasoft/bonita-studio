@@ -27,6 +27,7 @@ import java.util.List;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.validation.constraints.process.AssignableConstraint;
+import org.bonitasoft.studio.validation.constraints.process.ConnectorExistenceConstraint;
 import org.bonitasoft.studio.validation.constraints.process.InclusiveMergeGatewayConstraint;
 import org.bonitasoft.studio.validation.constraints.process.XORGatewayConstraint;
 import org.eclipse.core.resources.IMarker;
@@ -136,6 +137,30 @@ public class TestValidationConstraints extends ValidationTestBase {
 		assertEquals(1, assignableStatus.size());
 		for(IConstraintStatus st : assignableStatus ){
 			assertTrue(st.getSeverity() == IMarker.SEVERITY_INFO);
+		}
+	}
+	
+	@Test
+	public void testConnectorExistenceConstraint() throws Exception{
+		MainProcess diagram = getDiagramFromArchive("testConnectorExistence.bos","MyDiagram19","1.0");
+		
+		Pool processWithoutError = getProcess(diagram,"Pool19","1.0");
+		Pool processWithErrors = getProcess(diagram,"Pool20","1.0");
+		
+		IStatus[] status = getStatuses(batchValidator.validate(processWithErrors));
+		List<IConstraintStatus> assignableStatus = getStatusForConstraint(status,ConnectorExistenceConstraint.ID);
+		assertFalse(assignableStatus.isEmpty());
+		assertEquals(1, assignableStatus.size());
+		for(IConstraintStatus st : assignableStatus ){
+			assertFalse(st.isOK());
+		}
+		
+		status = getStatuses(batchValidator.validate(processWithoutError));
+		assignableStatus = getStatusForConstraint(status,ConnectorExistenceConstraint.ID);
+		assertFalse(assignableStatus.isEmpty());
+		assertEquals(1, assignableStatus.size());
+		for(IConstraintStatus st : assignableStatus ){
+			assertTrue(st.isOK());
 		}
 	}
 
