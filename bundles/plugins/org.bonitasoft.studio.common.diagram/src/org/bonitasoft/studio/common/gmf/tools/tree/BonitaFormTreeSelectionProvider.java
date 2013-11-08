@@ -78,7 +78,7 @@ public class BonitaFormTreeSelectionProvider {
 		}else if(element instanceof Expression){
 			return "Form.DataTab" ;
 		}else if(element instanceof Connector){
-			return "Form.DataTab" ;
+			return "Form.FormConnectorTab" ;
 		}
 		return "Form.GeneralTab";
 	}
