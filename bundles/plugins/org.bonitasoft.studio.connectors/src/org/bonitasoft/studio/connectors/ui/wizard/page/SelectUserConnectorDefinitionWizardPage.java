@@ -16,14 +16,21 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
+import java.util.List;
+
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.DefinitionConfigurationFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
 import org.bonitasoft.studio.connectors.i18n.Messages;
+import org.bonitasoft.studio.connectors.repository.ConnectorConfRepositoryStore;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
+import org.bonitasoft.studio.connectors.repository.ConnectorImplRepositoryStore;
 import org.bonitasoft.studio.connectors.ui.provider.ConnectorDefinitionContentProvider;
+import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -36,52 +43,85 @@ import org.eclipse.swt.widgets.Composite;
 
 public class SelectUserConnectorDefinitionWizardPage extends SelectConnectorDefinitionWizardPage {
 
-    private Button removeButton;
-    private ConnectorDefinition selection;
+	private Button removeButton;
+	private ConnectorDefinition selection;
+	private final ConnectorConfRepositoryStore connectorConfStore;
+	private final ConnectorImplRepositoryStore connectorImplStore;
 
-    public SelectUserConnectorDefinitionWizardPage(Connector connectorWorkingCopy,DefinitionResourceProvider messageProvider) {
-        super(connectorWorkingCopy,messageProvider) ;
-    }
+	public SelectUserConnectorDefinitionWizardPage(Connector connectorWorkingCopy,DefinitionResourceProvider messageProvider) {
+		super(connectorWorkingCopy,messageProvider) ;
+		connectorConfStore = (ConnectorConfRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class);
+		connectorImplStore = (ConnectorImplRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class);
+	}
 
-    @Override
-    public void createControl(Composite parent) {
-        super.createControl(parent);
-        Composite composite = (Composite) getControl() ;
-        removeButton = new Button(composite, SWT.PUSH) ;
-        removeButton.setText(Messages.remove) ;
-        removeButton.setLayoutData(GridDataFactory.swtDefaults().hint(85, SWT.DEFAULT).create()) ;
-        removeButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                if(selection != null){
-                    ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-                    String fileName = selection.eResource().getURI().lastSegment() ;
-                    IRepositoryFileStore file = store.getChild(fileName) ;
-                    if(FileActionDialog.confirmDeletionQuestion(fileName)){
-                        file.delete() ;
-                    }
-                    refresh() ;
-                    removeButton.setEnabled(false);
-                }
+	@Override
+	public void createControl(Composite parent) {
+		super.createControl(parent);
+		Composite composite = (Composite) getControl() ;
+		removeButton = new Button(composite, SWT.PUSH) ;
+		removeButton.setText(Messages.remove) ;
+		removeButton.setLayoutData(GridDataFactory.swtDefaults().hint(85, SWT.DEFAULT).create()) ;
+		removeButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				deleteConnectorRessources();
 
+			}
+		}) ;
+		removeButton.setEnabled(false) ;
+	}
 
-            }
-        }) ;
-        removeButton.setEnabled(false) ;
-    }
+	@Override
+	protected ConnectorDefinitionContentProvider getContentProvider() {
+		return new ConnectorDefinitionContentProvider(true);
+	}
 
-    @Override
-    protected ConnectorDefinitionContentProvider getContentProvider() {
-        return new ConnectorDefinitionContentProvider(true);
-    }
+	@Override
+	public void selectionChanged(SelectionChangedEvent event) {
+		Object selection =  ((IStructuredSelection) event.getSelection()).getFirstElement() ;
+		if(removeButton != null && selection instanceof ConnectorDefinition){
+			this.selection = (ConnectorDefinition) selection ;
+			removeButton.setEnabled(true) ;
+		}
+	}
 
-    @Override
-    public void selectionChanged(SelectionChangedEvent event) {
-        Object selection =  ((IStructuredSelection) event.getSelection()).getFirstElement() ;
-        if(removeButton != null && selection instanceof ConnectorDefinition){
-            this.selection = (ConnectorDefinition) selection ;
-            removeButton.setEnabled(true) ;
-        }
-    }
+	private void deleteConnectorRessources(){
+		if(selection != null){
+
+			
+			ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
+			String fileName = selection.eResource().getURI().lastSegment() ;
+			IRepositoryFileStore file = store.getChild(fileName) ;
+
+			if(FileActionDialog.confirmDeletionQuestionWithCustomMessage(Messages.bind(Messages.deleteConnectorDefinition, fileName))){
+				deleteConnectorConfigurations();
+				deleteConnectorImplementations();
+				file.delete() ;
+			}
+			refresh() ;
+			removeButton.setEnabled(false);
+		}
+	}
+
+	private void deleteConnectorConfigurations(){
+		if (selection!=null){
+			List<ConnectorConfiguration> connectorConfs=connectorConfStore.getFilterConfigurationsFor(selection.getId(), selection.getVersion());
+			for (ConnectorConfiguration conf:connectorConfs){
+				DefinitionConfigurationFileStore file = connectorConfStore.getChild(conf.getName()+"."+ConnectorConfRepositoryStore.CONF_EXT);
+				if (file!=null){
+					file.delete();
+				}
+			}
+		}
+	}
+
+	private void deleteConnectorImplementations(){
+		if (selection!=null){
+			List<ConnectorImplementation> connectorImpls=connectorImplStore.getImplementations(selection.getId(), selection.getVersion());
+			for (ConnectorImplementation connectorImpl:connectorImpls){
+				connectorImplStore.getImplementationFileStore(connectorImpl.getImplementationId(), connectorImpl.getImplementationVersion()).delete();
+			}
+		}
+	}
 
 }
