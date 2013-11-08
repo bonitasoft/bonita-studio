@@ -22,6 +22,7 @@ import java.util.Set;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.actors.ui.wizard.ActorFilterDefinitionWizardDialog;
+import org.bonitasoft.studio.actors.ui.wizard.AddActorWizard;
 import org.bonitasoft.studio.actors.ui.wizard.FilterWizard;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
@@ -32,7 +33,6 @@ import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Assignable;
 import org.bonitasoft.studio.model.process.Lane;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
@@ -49,9 +49,11 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -87,16 +89,46 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 	public void createControls(Composite parent,TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage) ;
 		TabbedPropertySheetWidgetFactory widgetFactory = aTabbedPropertySheetPage.getWidgetFactory() ;
+		
 		Composite mainComposite = widgetFactory.createComposite(parent, SWT.NONE) ;
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).extendedMargins(0, 25, 0, 25).spacing(10, 15).create()) ;
+		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).extendedMargins(0, 25, 0, 25).spacing(10, 15).create()) ;
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		createRadioComposite(widgetFactory, mainComposite);
 
 		Label actorsLabel = widgetFactory.createLabel(mainComposite, Messages.selectActor) ;
 		actorsLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).create()) ;
+	
+		createActorComboViewer(mainComposite);
+		
+		createAddActorButton(mainComposite);
 
+		filterLabelProvider = new StyledFilterLabelProvider() ;
+		createFiltersViewer(mainComposite) ;
+
+		updateDatabinding() ;
+	}
+
+	private void createAddActorButton(Composite mainComposite) {
+		final Button addActor = new Button(mainComposite, SWT.FLAT);
+		addActor.setText(Messages.addActor);
+		addActor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				super.widgetSelected(e);
+				AddActorWizard actorWizard = new AddActorWizard(getEObject(), getEditingDomain());
+				WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), actorWizard);
+				if(wizardDialog.open() == Dialog.OK){
+					if(actorWizard.getNewActor()!=null){
+						actorComboViewer.setSelection((ISelection) new StructuredSelection(actorWizard.getNewActor()));
+					}
+				}
+			}
+		});
+	}
+
+	private void createActorComboViewer(Composite mainComposite) {
 		actorComboViewer = new ComboViewer(mainComposite, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY) ;
-		actorComboViewer.getCombo().setLayoutData(GridDataFactory.fillDefaults().create()) ;
+		actorComboViewer.getCombo().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 		actorComboViewer.setContentProvider(new ArrayContentProvider()) ;
 		actorComboViewer.setLabelProvider(new LabelProvider(){
 			@Override
@@ -113,15 +145,7 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 				return super.getText(element);
 			}
 		});
-
-
-		filterLabelProvider = new StyledFilterLabelProvider() ;
-		createFiltersViewer(mainComposite) ;
-
-		updateDatabinding() ;
 	}
-
-
 
 	protected void createFiltersViewer(Composite parent) {
 
@@ -129,7 +153,7 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 		actorFilters.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
 
 		final Composite viewerComposite = getWidgetFactory().createPlainComposite(parent, SWT.NONE);
-		viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+		viewerComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create()) ;
 		viewerComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(4).margins(0, 0).create()) ;
 
 
@@ -142,16 +166,13 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 		removeConnectorButton = createRemoveButton(viewerComposite);
 	}
 
-
-
 	protected EStructuralFeature getFilterFeature() {
 		return ProcessPackage.Literals.ASSIGNABLE__FILTERS ;
 	}
 
-
 	protected ToolItem createRemoveButton(Composite buttonsComposite) {
 		ToolBar toolBar = new ToolBar(buttonsComposite, SWT.FLAT);
-		//		getWidgetFactory().adapt(toolBar);
+		getWidgetFactory().adapt(toolBar);
 		ToolItem toolItem = new ToolItem(toolBar, SWT.FLAT);
 		toolItem.setImage(Pics.getImage(PicsConstants.clear));
 		toolItem.setToolTipText(Messages.remove);
@@ -180,7 +201,6 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 		});
 		return toolItem;
 	}
-
 
 	protected Button createUpdateButton(Composite buttonsComposite) {
 		Button updateButton = getWidgetFactory().createButton(buttonsComposite, Messages.edit, SWT.FLAT);
@@ -213,8 +233,6 @@ public abstract class AbstractActorsPropertySection extends AbstractBonitaDescri
 		res.add(getFilterFeature());
 		return res;
 	}
-
-
 
 	protected Button createSetButton(Composite buttonsComposite) {
 		final Button setButton = getWidgetFactory().createButton(buttonsComposite, Messages.set, SWT.FLAT);
