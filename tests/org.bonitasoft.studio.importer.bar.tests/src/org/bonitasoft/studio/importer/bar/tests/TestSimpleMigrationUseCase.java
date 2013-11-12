@@ -304,7 +304,7 @@ public class TestSimpleMigrationUseCase {
 			assertFalse("Message content should not be empty",message.getMessageContent().getExpressions().isEmpty());
 			assertFalse("Message target processs hould not be empty",message.getTargetProcessExpression().getContent().isEmpty());
 			assertFalse("Message target element should not be empty",message.getTargetElementExpression().getContent().isEmpty());
-			assertEquals("Invalid correlation type",CorrelationTypeActive.KEYS,message.getCorrelation().getCorrelationType());
+			assertEquals("Invalid correlation type",CorrelationTypeActive.INACTIVE,message.getCorrelation().getCorrelationType());
 			assertFalse("Invalid correlation association",message.getCorrelation().getCorrelationAssociation().getExpressions().isEmpty());
 		}
 		List<AbstractCatchMessageEvent> catchMessages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT);
