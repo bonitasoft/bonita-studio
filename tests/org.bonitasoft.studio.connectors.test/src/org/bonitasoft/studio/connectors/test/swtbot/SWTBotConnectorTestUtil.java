@@ -261,7 +261,7 @@ public class SWTBotConnectorTestUtil {
 				}
 
 				public String getFailureMessage() {
-					return "Category "+categoryLabel +" has no children\n"+"Current category item is "+categoryItem.getText() ;
+					return "Category "+categoryLabel +" has no children\n"+"Current category item is "+ categoryItem != null ? categoryItem.getText() : "null";
 				}
 			},10000,1000);
 		}
