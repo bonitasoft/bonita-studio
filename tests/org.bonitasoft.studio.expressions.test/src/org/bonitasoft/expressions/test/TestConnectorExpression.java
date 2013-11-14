@@ -96,8 +96,10 @@ public class TestConnectorExpression extends SWTBotGefTestCase implements SWTBot
         final String id="connectorExpressionTest";
         createConnectorDefinition(id);
         SWTBotConnectorTestUtil.activateConnectorTestWizard(bot);
-        bot.tree().select("Uncategorized");
+        bot.text().setText(id);
         bot.table().select(id);
+    //    bot.tree().select("Uncategorized");
+      //  bot.table().select(id);
         //bot.table().select(indices);
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON,0).click();
