@@ -66,8 +66,8 @@ public class TestTextAreaInConnectorWizard extends SWTBotGefTestCase {
                 .button(IDialogConstants.NEXT_LABEL).isEnabled());
         Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
                 .button(IDialogConstants.FINISH_LABEL).isEnabled());
-        bot.tree().expandNode("Uncategorized")
-        .select(connectorId + " (" + version + ")");
+        bot.text().setText(connectorId);
+        bot.table().select(connectorId);
         Assert.assertTrue(IDialogConstants.NEXT_LABEL + " should be disabled", bot
                 .button(IDialogConstants.NEXT_LABEL).isEnabled());
         Assert.assertFalse(IDialogConstants.FINISH_LABEL + " should be disabled", bot
