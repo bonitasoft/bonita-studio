@@ -128,7 +128,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
 		bot.button("Add...").click();
 		bot.text().setText(connectorLabel);
-		bot.table().select(connectorLabel);
+		bot.table().select(0);
 		bot.button(IDialogConstants.NEXT_LABEL).click();
 		//SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorLabel,connectorVersion,dbCategoryLabel, connectorName);
 		bot.textWithLabel("Name *").setText(connectorName);
