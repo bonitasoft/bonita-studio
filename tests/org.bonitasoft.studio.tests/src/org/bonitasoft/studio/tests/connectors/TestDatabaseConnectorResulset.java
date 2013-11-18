@@ -58,7 +58,9 @@ import org.junit.Test;
 /**
  *@Author Aur�lie Zara
  *
- *
+* This test has dependency on Postgres database:
+ * - the running machine need to be authorized in pg_hba.conf (IP network mask)
+ * - the provided .bos hardly point to the machine containing the postgresSQL
  */
 public class TestDatabaseConnectorResulset {
 
