@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
-		<!--forceContextQualifier-->
+		<forceContextQualifier>${tag.qualifier}</forceContextQualifier>
 		<tychoVersion>0.18.0</tychoVersion>
 		<tychoExtrasVersion>0.18.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
