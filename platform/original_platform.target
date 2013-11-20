@@ -44,7 +44,7 @@
 <unit id="org.eclipse.emf.texo.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.runtime.core.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/modeling/emft/texo/updates/interim"/>
+<repository location="http://download.eclipse.org/modeling/emft/texo/updates/milestones/0.1.0M1/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="2.2.2.I20110602-1700"/>
