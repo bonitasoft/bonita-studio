@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.bonitasoft.studio.common.AbstractRefactorOperation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -92,6 +94,7 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -118,6 +121,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -125,7 +129,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * 
  */
 public class ExpressionViewer extends ContentViewer implements ExpressionConstants, SWTBotConstants,
-		IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
+IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
 
 	protected Composite control;
 	private Text textControl;
@@ -147,6 +151,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private List<IExpressionValidationListener> validationListeners = new ArrayList<IExpressionValidationListener>();
 	private ToolItem eraseControl;
 	private boolean isPageFlowContext = false;
+	private AbstractRefactorOperation operation;
 
 	protected final DisposeListener disposeListener = new DisposeListener() {
 
@@ -518,7 +523,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		autoCompletion.setContext(expressionNatureProvider.getContext());
 		final Set<Expression> filteredExpressions = getFilteredExpressions();
 		autoCompletion.setProposals(filteredExpressions.toArray(new Expression[filteredExpressions.size()]));
-		
+
 		final ArrayList<String> filteredExpressionType = getFilteredExpressionType();
 		autoCompletion.setFilteredExpressionType(filteredExpressionType);
 		if((filteredExpressionType.contains(ExpressionConstants.VARIABLE_TYPE) 
@@ -535,7 +540,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		final ArrayList<String> filteredExpressions = new ArrayList<String>();
 		final Set<ViewerFilter> fitlers = getFilters();
 		final EObject input = expressionNatureProvider.getContext();
-		
+
 		Expression exp = ExpressionFactory.eINSTANCE.createExpression();
 		exp.setName("");
 		if (filters != null && expressionNatureProvider != null && input!=null) {
@@ -816,7 +821,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				|| selectedExpression.getType().equals(ExpressionConstants.XPATH_TYPE)
 				|| selectedExpression.getType().equals(ExpressionConstants.JAVA_TYPE)) {
 			return selectedExpression.getContent(); // NO CONTENT UPDATE WHEN
-													// THOSES TYPES
+			// THOSES TYPES
 		}
 
 		Set<String> cache = new HashSet<String>();
@@ -861,6 +866,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			return ExpressionConstants.XPATH_TYPE;
 		} else if (ExpressionConstants.URL_ATTRIBUTE_TYPE.equals(expressionType)) {
 			return ExpressionConstants.URL_ATTRIBUTE_TYPE;
+		} else if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(expressionType)){
+			return ExpressionConstants.SEARCH_INDEX_TYPE;
 		}
 
 		Set<String> cache = new HashSet<String>();
@@ -1098,7 +1105,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				updateContentType(getContentTypeFromInput(input));
 				updateContent(getContentFromInput(input));
 				refresh();
-
+				executeOperation(input);
 				return fromObject;
 			}
 
@@ -1174,13 +1181,32 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 	@Override
 	public boolean isPageFlowContext() {
-		
+
 		return isPageFlowContext;
 	}
 
 	@Override
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
-		
+
+	}
+
+	public void setRefactorOperationToExecuteWhenUpdatingContent(AbstractRefactorOperation operation){
+		this.operation = operation;
+	}
+
+	private void executeOperation(String newValue){
+		if (operation!=null){
+			operation.setNewValue(newValue);
+			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+			try {
+				service.busyCursorWhile(operation);
+			} catch (InvocationTargetException e) {
+				BonitaStudioLog.error(e);
+			} catch (InterruptedException e) {
+				BonitaStudioLog.error(e);
+			}
+
+		}
 	}
 }
