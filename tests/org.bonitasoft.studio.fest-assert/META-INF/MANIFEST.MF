@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Fest-assert
+Bundle-SymbolicName: org.bonitasoft.studio.fest-assert
+Bundle-Version: 1.4.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.fest.assertions
+Require-Bundle: org.bonitasoft.studio.fest-util;bundle-version="1.1.6"

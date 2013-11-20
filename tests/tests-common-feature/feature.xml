@@ -472,4 +472,18 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.bonitasoft.studio.fest-assert"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.fest-util"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
