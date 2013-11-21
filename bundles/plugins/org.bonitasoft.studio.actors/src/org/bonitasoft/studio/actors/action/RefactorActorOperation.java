@@ -46,50 +46,52 @@ import org.eclipse.emf.edit.domain.EditingDomain;
  */
 public class RefactorActorOperation extends AbstractRefactorOperation {
 
-	
+
 	private AbstractProcess process;
 	private Actor actor;
-	
+
 	public RefactorActorOperation(AbstractProcess process,Actor actor){
 		this.process=process;
 		this.actor=actor;
 	}
-	
-	
+
+
 	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
+	InterruptedException {
 		EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(process);
-		 String id = ModelHelper.getEObjectID(process) ;
-         String fileName = id+".conf";
-         ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
-         ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
-         Configuration localeConfiguration = file.getContent();
-         Configuration localConfigurationCopy=EcoreUtil.copy(localeConfiguration);
-		 List<Configuration> configurations = new ArrayList<Configuration>();
-		 if (localeConfiguration!=null){
-			 configurations.add(localeConfiguration);
-		 }
-		 configurations.addAll(process.getConfigurations());
-		
+		String id = ModelHelper.getEObjectID(process) ;
+		String fileName = id+".conf";
+		ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
+		ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
+		Configuration localeConfiguration = file.getContent();
+		Configuration localConfigurationCopy=EcoreUtil.copy(localeConfiguration);
+		List<Configuration> configurations = new ArrayList<Configuration>();
+		if (localeConfiguration!=null){
+			configurations.add(localeConfiguration);
+		}
+		configurations.addAll(process.getConfigurations());
+
 		CompoundCommand cc = new CompoundCommand();
 		for (Configuration configuration:configurations){
-			List<ActorMapping> actorMappings =configuration.getActorMappings().getActorMapping();
-			for (ActorMapping actorMapping:actorMappings){
-				if (actorMapping.getName().equals(actor.getName())){
-				cc.append(SetCommand.create(editingDomain, actorMapping, ActorMappingPackage.Literals.ACTOR_MAPPING__NAME, newValue));
+			if (configuration.getActorMappings()!=null){
+				List<ActorMapping> actorMappings =configuration.getActorMappings().getActorMapping();
+				for (ActorMapping actorMapping:actorMappings){
+					if (actorMapping.getName().equals(actor.getName())){
+						cc.append(SetCommand.create(editingDomain, actorMapping, ActorMappingPackage.Literals.ACTOR_MAPPING__NAME, newValue));
+					}
 				}
-			}
-			if (localeConfiguration!=null){
-				cc.append(new SaveConfigurationEMFCommand(file, localConfigurationCopy, localeConfiguration));
+				if (localeConfiguration!=null){
+					cc.append(new SaveConfigurationEMFCommand(file, localConfigurationCopy, localeConfiguration));
+				}
 			}
 		}
 		cc.append(SetCommand.create(editingDomain, actor, ProcessPackage.Literals.ELEMENT__NAME, newValue));
 		editingDomain.getCommandStack().execute(cc);
-		
+
 	}
-	
-	
-	
-	
+
+
+
+
 }
