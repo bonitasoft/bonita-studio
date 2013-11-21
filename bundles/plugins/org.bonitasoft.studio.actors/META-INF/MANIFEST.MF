@@ -39,7 +39,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.connectors;bundle-version="1.0.0",
  org.bonitasoft.studio.preferences;bundle-version="1.0.0",
  org.bonitasoft.studio.engine;bundle-version="1.0.0",
- org.eclipse.emf.edapt.history;bundle-version="0.3.0"
+ org.eclipse.emf.edapt.history;bundle-version="0.3.0",
+ org.bonitasoft.studio.diagram.custom
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.engine.bpm,

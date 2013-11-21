@@ -16,9 +16,13 @@
  */
 package org.bonitasoft.studio.actors.ui.section.editingsupport;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.bonitasoft.studio.actors.action.RefactorActorOperation;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.CellEditorValidationStatusListener;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -32,6 +36,8 @@ import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * @author Romain Bioteau
@@ -109,7 +115,8 @@ public class ActorNameEditingSupport extends EditingSupport {
         if(element != null && value != null && transactionalEditingDomain != null){
             AbstractProcess process = ModelHelper.getParentProcess((EObject) element) ;
             if(process != null){
-                transactionalEditingDomain.getCommandStack().execute(SetCommand.create(transactionalEditingDomain, element, ProcessPackage.Literals.ELEMENT__NAME, value)) ;
+               // transactionalEditingDomain.getCommandStack().execute(SetCommand.create(transactionalEditingDomain, element, ProcessPackage.Literals.ELEMENT__NAME, value)) ;
+            	executeOperation(process, (String)value, element);
                 getViewer().refresh() ;
             }
         }
@@ -119,6 +126,18 @@ public class ActorNameEditingSupport extends EditingSupport {
         this.transactionalEditingDomain = transactionalEditingDomain;
     }
 
+	private void executeOperation(AbstractProcess process,String newValue,Object element){
+			RefactorActorOperation operation = new RefactorActorOperation(process, (Actor)element);
+			operation.setNewValue(newValue);
+			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+			try {
+				service.busyCursorWhile(operation);
+			} catch (InvocationTargetException e) {
+				BonitaStudioLog.error(e);
+			} catch (InterruptedException e) {
+				BonitaStudioLog.error(e);
+			}
 
+	}
 
 }
