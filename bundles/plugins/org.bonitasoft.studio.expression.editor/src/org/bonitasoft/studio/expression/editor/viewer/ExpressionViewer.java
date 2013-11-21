@@ -915,6 +915,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 				}
 			}
 			refreshMessageDecoration();
+			textControl.setSelection(textControl.getText().length(), textControl.getText().length());
 		}
 
 	}
@@ -1104,8 +1105,8 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 				String input = (String) fromObject;
 				updateContentType(getContentTypeFromInput(input));
 				updateContent(getContentFromInput(input));
-				refresh();
 				executeOperation(input);
+				refresh();
 				return fromObject;
 			}
 
