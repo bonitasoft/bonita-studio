@@ -59,6 +59,7 @@ import org.codehaus.groovy.eclipse.core.compiler.CompilerUtils;
 import org.codehaus.groovy.frameworkadapter.util.SpecifiedVersion;
 import org.eclipse.core.internal.resources.ProjectDescriptionReader;
 import org.eclipse.core.internal.resources.Workspace;
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -189,7 +190,7 @@ public class Repository implements IRepository {
 					}
 					new ClasspathValidation(jProject).validate();
 				}
-			
+
 			}
 		} catch (CoreException e) {
 			BonitaStudioLog.error(e) ;
@@ -312,7 +313,30 @@ public class Repository implements IRepository {
 			newNatures[i] = arryOfNatures[i - natures.length] ;
 		}
 		descriptor.setNatureIds(newNatures);
+		addBuilders(descriptor);
 		project.setDescription(descriptor, null);
+	}
+
+	protected void addBuilders(IProjectDescription desc) {
+		List<ICommand> commands = new ArrayList<ICommand>(); 
+		for(String builderId : getBuilders()){
+			ICommand[] existingCommands = desc.getBuildSpec();
+			for (int i = 0; i < existingCommands.length; ++i){
+				if (existingCommands[i].getBuilderName().equals(builderId)){
+					commands.add(existingCommands[i]);
+					continue;
+				}
+			}
+			//add builder to project
+			ICommand command = desc.newCommand();
+			command.setBuilderName(builderId);
+			commands.add(command);
+		}
+		desc.setBuildSpec(commands.toArray(new ICommand[commands.size()]));
+	}
+
+	protected List<String> getBuilders() {
+		return new ArrayList<String>();
 	}
 
 	protected Set<String> getNatures() {
@@ -386,7 +410,10 @@ public class Repository implements IRepository {
 		//Add src folders in classpath
 		for(IRepositoryStore repository : getAllStores()){
 			if(repository instanceof SourceRepositoryStore){
-				entries.add(JavaCore.newSourceEntry(repository.getResource().getFullPath()));
+				IClasspathEntry newSourceEntry = JavaCore.newSourceEntry(repository.getResource().getFullPath());
+				if(!entries.contains(newSourceEntry)){
+					entries.add(newSourceEntry);
+				}
 			}
 		}
 		return entries;
