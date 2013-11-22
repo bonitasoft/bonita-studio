@@ -71,6 +71,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
@@ -152,6 +153,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 	private ToolItem eraseControl;
 	private boolean isPageFlowContext = false;
 	private AbstractRefactorOperation operation;
+	private AbstractRefactorOperation  removeOperation;
 
 	protected final DisposeListener disposeListener = new DisposeListener() {
 
@@ -281,22 +283,23 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 					type = ExpressionConstants.CONSTANT_TYPE;
 				}
 				if (editingDomain != null) {
-					editingDomain.getCommandStack().execute(
-							SetCommand.create(editingDomain, selectedExpression,
-									ExpressionPackage.Literals.EXPRESSION__TYPE, type));
-					editingDomain.getCommandStack().execute(
-							SetCommand.create(editingDomain, selectedExpression,
-									ExpressionPackage.Literals.EXPRESSION__NAME, ""));
-					editingDomain.getCommandStack().execute(
-							SetCommand.create(editingDomain, selectedExpression,
-									ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
-					editingDomain.getCommandStack().execute(
-							RemoveCommand.create(editingDomain, selectedExpression,
-									ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-									selectedExpression.getReferencedElements()));
-					editingDomain.getCommandStack().execute(
-							RemoveCommand.create(editingDomain, selectedExpression,
-									ExpressionPackage.Literals.EXPRESSION__CONNECTORS, selectedExpression.getConnectors()));
+					
+					CompoundCommand cc=new CompoundCommand();
+					cc.append(SetCommand.create(editingDomain, selectedExpression,
+							ExpressionPackage.Literals.EXPRESSION__TYPE, type));
+					cc.append(SetCommand.create(editingDomain, selectedExpression,
+							ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+					cc.append(SetCommand.create(editingDomain, selectedExpression,
+							ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+					cc.append(RemoveCommand.create(editingDomain, selectedExpression,
+							ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+							selectedExpression.getReferencedElements()));
+					cc.append(RemoveCommand.create(editingDomain, selectedExpression,
+							ExpressionPackage.Literals.EXPRESSION__CONNECTORS, selectedExpression.getConnectors()));
+					boolean hasBeenExecuted = executeRemoveOperation(cc);
+					if (!hasBeenExecuted){
+						editingDomain.getCommandStack().execute(cc);
+					}
 				} else {
 					selectedExpression.setType(type);
 					selectedExpression.setName("");
@@ -304,11 +307,13 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 					selectedExpression.getReferencedElements().clear();
 					selectedExpression.getConnectors().clear();
 				}
+				
 				textControl.setText("");
 				validate();
 				refresh();
 			}
 		});
+
 
 		eraseControl.addDisposeListener(disposeListener);
 		return eraseControl;
@@ -1210,4 +1215,27 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 
 		}
 	}
+
+	public void setRemoveOperation(AbstractRefactorOperation removeOperation){
+		this.removeOperation = removeOperation;
+	}
+
+	private boolean executeRemoveOperation(CompoundCommand cc){
+		boolean isExecuted=false;
+		if (removeOperation !=null){
+			removeOperation.setCompoundCommand(cc);
+			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+			try {
+				service.busyCursorWhile(removeOperation);
+				isExecuted = true;
+			} catch (InvocationTargetException e) {
+				BonitaStudioLog.error(e);
+			} catch (InterruptedException e) {
+				BonitaStudioLog.error(e);
+			}
+		
+		}
+		return isExecuted;
+	}
+
 }
