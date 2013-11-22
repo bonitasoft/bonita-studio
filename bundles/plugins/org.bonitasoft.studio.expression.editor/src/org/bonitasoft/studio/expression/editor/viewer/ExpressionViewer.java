@@ -920,7 +920,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 				}
 			}
 			refreshMessageDecoration();
-			textControl.setSelection(textControl.getText().length(), textControl.getText().length());
+			
 		}
 
 	}
@@ -1107,14 +1107,17 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 
 			@Override
 			public Object convert(Object fromObject) {
+				int caretPosition = textControl.getCaretPosition();
 				String input = (String) fromObject;
 				updateContentType(getContentTypeFromInput(input));
 				updateContent(getContentFromInput(input));
-				executeOperation(input);
+				boolean hasBeenExecuted = executeOperation(input);
 				refresh();
+				if (hasBeenExecuted){
+					textControl.setSelection(caretPosition, caretPosition);
+				}
 				return fromObject;
 			}
-
 		};
 		return nameConverter;
 	}
@@ -1201,12 +1204,14 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 		this.operation = operation;
 	}
 
-	private void executeOperation(String newValue){
+	private boolean executeOperation(String newValue){
+		boolean hasBeenExecuted = false;
 		if (operation!=null){
 			operation.setNewValue(newValue);
 			IProgressService service = PlatformUI.getWorkbench().getProgressService();
 			try {
 				service.busyCursorWhile(operation);
+				hasBeenExecuted =true;
 			} catch (InvocationTargetException e) {
 				BonitaStudioLog.error(e);
 			} catch (InterruptedException e) {
@@ -1214,6 +1219,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 			}
 
 		}
+		return hasBeenExecuted;
 	}
 
 	public void setRemoveOperation(AbstractRefactorOperation removeOperation){
