@@ -39,6 +39,7 @@ import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
@@ -68,7 +69,10 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
  */
 public class NameGridPropertySectionContribution extends AbstractNamePropertySectionContribution {
 
-    /**
+    private UpdateValueStrategy labelTargetToModelUpdate;
+	private IObservableValue nameObserver;
+
+	/**
      * @param tabbedPropertySheetPage
      * @param extensibleGridPropertySection
      */
@@ -92,7 +96,7 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
                     FormDiagramEditor editor = (FormDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
                     editor.setPartName(text.getText());
                 }
-                if(!fromObject.toString().equals(element.getName()) && element instanceof Widget){
+                if( element instanceof Widget){
                     IProgressService service = PlatformUI.getWorkbench().getProgressService();
                     try {
                     
@@ -103,12 +107,11 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
                         BonitaStudioLog.error(e);
                     }
                 }
-                
                 return fromObject;
             }
         };
 
-        UpdateValueStrategy labelTargetToModelUpdate = new UpdateValueStrategy();
+        labelTargetToModelUpdate = new UpdateValueStrategy();
         labelTargetToModelUpdate.setConverter(convertToId);
         List<IValidator> validators = new ArrayList<IValidator>();
 		IValidator javaValidator = new IValidator() {
@@ -122,11 +125,9 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 		validators.add(javaValidator);
 		MultiValidator multiValidation = new MultiValidator(validators);
         labelTargetToModelUpdate.setAfterGetValidator(multiValidation) ;
-       
         labelTargetToModelUpdate.setBeforeSetValidator(new InputLengthValidator(Messages.name, 50)) ;
         ISWTObservableValue observable = SWTObservables.observeDelayedValue(400, SWTObservables.observeText(text, SWT.Modify));
-
-
+        nameObserver = EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME);
         ControlDecorationSupport.create(context.bindValue(observable, EMFEditObservables.observeValue(editingDomain, element, ProcessPackage.Literals.ELEMENT__NAME),labelTargetToModelUpdate,null),SWT.LEFT);
     }
 
@@ -170,18 +171,25 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
     @Override
     protected void editProcessNameAndVersion() {
         // change the id of the form
-        if (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer())) {
-            Form form = (Form) element.eContainer();
+     //   if (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer())) {
+    	if ((element instanceof Widget && element.eContainer() instanceof Form)){
+    		
+    		Form form = (Form) element.eContainer();
             OpenNameDialog dialog = new OpenNameDialog(Display.getDefault().getActiveShell(), element.getName());
+            dialog.setMessage(Messages.widgetEditMessage);
+            dialog.setBinding(nameObserver, labelTargetToModelUpdate, null);
             if (dialog.open() == Dialog.OK) {
-                // TODO check that the id does not already exists
+               if (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer())){
                 String srcName = dialog.getSrcName();
                 String name = dialog.getNewName();
                 CompoundCommand cc = new CompoundCommand();
                 cc.append(SetCommand.create(editingDomain, element, ProcessPackage.eINSTANCE.getElement_Name(), NamingUtils.convertToId(name)));
                 editingDomain.getCommandStack().execute(cc);
-                // change the template
-                FormsUtils.changeIdInTemplate(form, srcName, name);
+                
+         
+             // change the template
+              FormsUtils.changeIdInTemplate(form, srcName, name);
+               }
             }
         }
     }

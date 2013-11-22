@@ -170,8 +170,10 @@ public abstract class AbstractNamePropertySectionContribution implements IExtens
     }
 
     private boolean useEditButton() {
-        return element instanceof MainProcess || element instanceof Pool|| (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer()));
+      //  return element instanceof MainProcess || element instanceof Pool|| (element instanceof Widget && element.eContainer() instanceof Form && ModelHelper.formIsCustomized((Form) element.eContainer()));
+    	return element instanceof MainProcess || element instanceof Pool|| (element instanceof Widget && element.eContainer() instanceof Form) ;
     }
+    
 
     protected void editProcessNameAndVersion() {
         //TO IMPLEMENT IN SUBCLASS
