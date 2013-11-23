@@ -18,6 +18,7 @@
 
 	<modules>
 		<module>org.mockito</module>
+		<module>org.powermock</module>
 		<module>org.fest-util</module>
 		<module>org.fest-assert</module>
 		<module>org.eclipse.swtbot.finder.nebula</module>
