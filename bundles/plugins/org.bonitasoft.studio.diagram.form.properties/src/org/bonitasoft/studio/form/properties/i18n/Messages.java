@@ -248,6 +248,8 @@ public class Messages extends NLS {
 
 	public static String widgetEditMessage;
 
+	public static String editWidgetNameTitle;
+
 
 
     static {

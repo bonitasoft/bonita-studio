@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.dialogs.Dialog;
@@ -61,9 +62,14 @@ public class OpenNameDialog extends Dialog {
 	private EMFDataBindingContext context;
 	private Binding binding;
 	private UpdateValueStrategy modelToTarget;
+	private String title;
 
 
 
+	public OpenNameDialog(Shell parentShell,String title,String name){
+		this(parentShell,name);
+		this.title = title;
+	}
 
 	/**
 	 * @param name
@@ -79,7 +85,11 @@ public class OpenNameDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.openNameAndVersionDialogTitle);
+		if (title == null){
+			newShell.setText(Messages.openNameAndVersionDialogTitle);
+		} else {
+			newShell.setText(title);
+		}
 	}
 
 	@Override

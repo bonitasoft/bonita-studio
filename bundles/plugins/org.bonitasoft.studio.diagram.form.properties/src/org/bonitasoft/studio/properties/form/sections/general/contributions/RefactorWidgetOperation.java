@@ -24,7 +24,9 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -58,6 +60,7 @@ public class RefactorWidgetOperation implements IRunnableWithProgress {
         EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(widget);
         final List<Expression> expressions =  ModelHelper.getAllItemsOfType(ModelHelper.getPageFlow(widget), ExpressionPackage.Literals.EXPRESSION);
         final CompoundCommand cc = new CompoundCommand();
+        cc.append(SetCommand.create(editingDomain,widget,ProcessPackage.Literals.ELEMENT__NAME, newName));
         for(Expression exp : expressions){
             String fieldExpressionName = exp.getName();
             String oldExpressionName = "field_"+widget.getName();
