@@ -4,7 +4,7 @@
 <target includeMode="feature" name="mirrored" sequenceNumber="45">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
-<repository location="http://192.168.1.227/6.1/repository/"/>
+<repository location="http://192.168.4.5/6.2/repository/"/>
 <unit id="org.uguess.tribix.feature.group" version="2.5.2.201107181644"/>
 <unit id="org.eclipse.gmf.sdk.experimental.feature.group" version="1.2.0.201108160853"/>
 <unit id="org.eclipse.gmf.sdk.feature.group" version="2.4.0.201108160853"/>
@@ -32,8 +32,6 @@
 <unit id="org.polarion.eclipse.team.svn.connector.svnkit15.feature.group" version="2.2.2.I20110602-1700"/>
 <unit id="org.polarion.eclipse.team.svn.connector.svnkit16.feature.group" version="2.2.2.I20110602-1700"/>
 <unit id="org.codehaus.groovy18.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
-<unit id="org.codehaus.groovy21.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
-<unit id="org.codehaus.groovy20.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <unit id="org.codehaus.groovy.jdt.patch.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.8.0.xx-20130703-1500-e37-RELEASE"/>
 <unit id="org.eclipse.birt.feature.group" version="3.7.2.v20120213-BDF9E9bGTzuHh03p2c0AWvmC3Ltk"/>
