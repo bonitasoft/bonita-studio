@@ -884,6 +884,21 @@
                   </event>
                </target>
             </constraint>
+            <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.ParalellMergeGatewayConstraint"
+                  id="org.bonitasoft.studio.validation.constraints.paralellMerge"
+                  lang="java"
+                  mode="Batch"
+                  name="Paralell merge"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="AndGateway">
+               </target>
+            </constraint>
          </constraints>
          <package
                namespaceUri="http://www.bonitasoft.org/ns/studio/process">
