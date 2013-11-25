@@ -336,7 +336,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		 } else {
 			 DataWizard wizard = new DataWizard((Data) selection.getFirstElement(),getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
 			 wizard.setIsPageFlowContext(isPageFlowContext());
-			 WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard );
+			 WizardDialog wizardDialog = new DataWizardDialog(Display.getCurrent().getActiveShell(), wizard,null);
 			 wizardDialog.open();
 			 tableViewer.setInput(getEObject());
 		 }
