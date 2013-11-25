@@ -115,6 +115,8 @@ public class Messages extends NLS {
 	public static String documentReferenceType;
 	public static String xmlDefaultValueTooLongMessage;
 	public static String xmlDefaultValueTooLongTitle;
+	public static String editVariableTitle;
+	public static String editVariableDescription;
 
     static {
         NLS.initializeMessages("messages", Messages.class);//$NON-NLS-1$
