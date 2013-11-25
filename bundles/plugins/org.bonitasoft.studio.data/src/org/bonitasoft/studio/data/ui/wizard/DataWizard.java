@@ -142,7 +142,9 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 		setDatasourceId(workingCopy,dataContainmentFeature) ;
 		if(editMode){
 			AbstractProcess process = ModelHelper.getParentProcess(container) ;
+			CompoundCommand cc = new CompoundCommand();
 			final RefactorDataOperation op = new RefactorDataOperation() ;
+			op.setCompoundCommand(cc);
 			op.setEditingDomain(editingDomain);
 			op.setContainer(process) ;
 			op.setNewData(workingCopy) ;
@@ -156,7 +158,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 			} catch (InterruptedException e) {
 				BonitaStudioLog.error(e);
 			}
-			CompoundCommand cc = new CompoundCommand();
+			
 			if(switchingDataeClass){
 				List<?> dataList =  (List<?>) container.eGet(dataContainmentFeature) ;
 				int index = dataList.indexOf(originalData) ;
