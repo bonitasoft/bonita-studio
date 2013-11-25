@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.ProcessConfigurationRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.SaveConfigurationEMFCommand;
+import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.model.actormapping.ActorMapping;
 import org.bonitasoft.studio.model.actormapping.ActorMappingPackage;
 import org.bonitasoft.studio.model.configuration.Configuration;
@@ -59,6 +60,7 @@ public class RefactorActorOperation extends AbstractRefactorOperation {
 	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException,
 	InterruptedException {
+		monitor.beginTask(Messages.updateActorReferences, IProgressMonitor.UNKNOWN);
 		EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(process);
 		String id = ModelHelper.getEObjectID(process) ;
 		String fileName = id+".conf";
