@@ -24,6 +24,7 @@
 		<module>org.eclipse.swtbot.finder.nebula</module>
 		<module>org.eclipse.swtbot.finder.nebula.gallery</module>
 		<module>org.eclipse.swtbot.finder.nebula.tableCombo</module>
+		<module>tests-dependencies-feature</module>
 	</modules>
 
 
