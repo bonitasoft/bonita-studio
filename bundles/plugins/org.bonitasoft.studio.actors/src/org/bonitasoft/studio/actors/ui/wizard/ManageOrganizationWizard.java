@@ -235,7 +235,7 @@ public class ManageOrganizationWizard extends Wizard {
 					ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
 					Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization") ;
 					Map<String, Object> parameters = new HashMap<String, Object>() ;
-					parameters.put("artifact", activeOrganization.getName()) ;
+					parameters.put("artifact", activeOrganization.getName()+"."+OrganizationRepositoryStore.ORGANIZATION_EXT) ;
 
 					ExecutionEvent ee = new ExecutionEvent(cmd, parameters, null, null) ;
 
