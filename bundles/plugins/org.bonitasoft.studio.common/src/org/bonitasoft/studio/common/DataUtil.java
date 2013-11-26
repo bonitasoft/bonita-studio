@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.bonitasoft.studio.model.process.BooleanType;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.BusinessObjectType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataType;
 import org.bonitasoft.studio.model.process.DateType;
@@ -66,6 +68,8 @@ public class DataUtil {
             return String.class.getName() ;
         } else if (type instanceof XMLType) {
             return String.class.getName();
+        }else if (type instanceof BusinessObjectType) {
+            return ((BusinessObjectData) data).getClassname() ;
         }
         return null;
     }

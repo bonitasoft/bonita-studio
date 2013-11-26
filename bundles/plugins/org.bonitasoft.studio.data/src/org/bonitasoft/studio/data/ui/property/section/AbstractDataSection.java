@@ -36,6 +36,7 @@ import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.data.ui.wizard.DataWizard;
 import org.bonitasoft.studio.data.ui.wizard.DataWizardDialog;
 import org.bonitasoft.studio.data.ui.wizard.MoveDataWizard;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Lane;
@@ -69,7 +70,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -283,22 +283,17 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		 return moveData;
 	 }
 
-	 private Button createAddDataButton(final Composite parent) {
+	 protected void createAddDataButton(final Composite parent) {
 		 final Button addData = getWidgetFactory().createButton(parent, Messages.addData, SWT.FLAT);
 		 addData.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
-		 addData.addSelectionListener(new SelectionListener() {
+		 addData.addSelectionListener(new SelectionAdapter() {
 
 			 @Override
 			 public void widgetSelected(SelectionEvent e) {
 				 setWizardDialog();
 			 }
 
-			 @Override
-			 public void widgetDefaultSelected(SelectionEvent e) {
-
-			 }
 		 });
-		 return addData;
 	 }
 
 
@@ -330,7 +325,12 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		 if (selection.size() != 1) {
 			 MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.selectOnlyOneElementTitle, Messages.selectOnlyOneElementMessage);
 		 } else {
-			 DataWizard wizard = new DataWizard((Data) selection.getFirstElement(),getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
+			 Data selectedData = (Data) selection.getFirstElement();
+			 if(selectedData instanceof BusinessObjectData){
+				 MessageDialog.openError(Display.getDefault().getActiveShell(), "Not yet implemented", "Business object data edition not yet implemented !");
+				 return ;
+			 }
+			 DataWizard wizard = new DataWizard(selectedData,getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
 			 wizard.setIsPageFlowContext(isPageFlowContext());
 			 WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard );
 			 wizardDialog.open();
