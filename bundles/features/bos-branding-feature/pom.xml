@@ -7,7 +7,7 @@
     <artifactId>features</artifactId>
     <version>6.2.0-SNAPSHOT</version>
   </parent>
-  <groupId>org.bonitasoft.studio.bundles.feature</groupId>
+  <groupId>org.bonitasoft.studio.bundles.features</groupId>
   <artifactId>bos-branding-feature</artifactId>
   <version>6.2.0-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
