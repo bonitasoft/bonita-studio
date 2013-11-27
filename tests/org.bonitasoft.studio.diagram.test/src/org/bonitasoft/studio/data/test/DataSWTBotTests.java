@@ -123,7 +123,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         bot.button(Messages.updateData).click();
         bot.text().setText("newName");
         bot.comboBox().setSelection("Integer");
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+        bot.button(IDialogConstants.OK_LABEL).click();
 
         bot.menu("Diagram").menu("Save").click();
 
