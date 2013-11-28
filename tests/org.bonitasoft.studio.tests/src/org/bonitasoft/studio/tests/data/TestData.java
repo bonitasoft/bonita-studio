@@ -36,6 +36,7 @@ import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.TimeoutException;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -86,7 +87,7 @@ public class TestData extends SWTBotGefTestCase {
      * @throws ExecutionException 
      * 
      */
-    @Test
+    @Ignore
     public void changeDataTypeInPool() throws ExecutionException{
     	
     	boolean isOK;
