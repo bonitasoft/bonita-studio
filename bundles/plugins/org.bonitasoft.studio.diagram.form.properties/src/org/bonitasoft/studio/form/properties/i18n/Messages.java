@@ -250,6 +250,8 @@ public class Messages extends NLS {
 
 	public static String editWidgetNameTitle;
 
+	public static String removingWidgetReferences;
+
 
 
     static {
