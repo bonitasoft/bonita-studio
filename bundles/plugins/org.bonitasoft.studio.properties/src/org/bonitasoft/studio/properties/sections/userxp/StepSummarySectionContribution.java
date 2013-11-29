@@ -48,7 +48,7 @@ public class StepSummarySectionContribution extends AbstractPropertySectionContr
 
     private EMFDataBindingContext context;
     private ExpressionViewer expressionViewer;
-
+    private final int maxLength=254;
     /* (non-Javadoc)
      * @see org.bonitasoft.studio.common.properties.IExtensibleGridPropertySectionContribution#isRelevantFor(org.eclipse.emf.ecore.EObject)
      */
@@ -86,7 +86,7 @@ public class StepSummarySectionContribution extends AbstractPropertySectionContr
         expressionViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.stepSummaryHint,IStatus.INFO) ;
-
+        expressionViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE, new ExpressionLengthValidator(maxLength));
         refreshDataBindingContext();
     }
 

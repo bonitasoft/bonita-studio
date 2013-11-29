@@ -48,7 +48,8 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
 
     private ExpressionViewer expressionViewer;
     private EMFDataBindingContext dataBindingContext;
-
+    private final int maxLength = 254;
+    
     @Override
     public void createControl(Composite composite,
             TabbedPropertySheetWidgetFactory widgetFactory,
@@ -60,7 +61,7 @@ public class DynamicDescriptionPropertySectionContribution extends AbstractPrope
         expressionViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{ExpressionConstants.CONSTANT_TYPE,ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.PARAMETER_TYPE,ExpressionConstants.SCRIPT_TYPE}));
         expressionViewer.setInput(eObject) ;
         expressionViewer.setMessage(Messages.dynamicDescriptionHint,IStatus.INFO) ;
-
+        expressionViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE, new ExpressionLengthValidator(maxLength));
         refreshDataBindingContext();
     }
 
