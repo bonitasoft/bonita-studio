@@ -912,7 +912,7 @@
                   {0}
                </message>
                <target
-                     class="AndGateway">
+                     class="ANDGateway">
                </target>
             </constraint>
          </constraints>
