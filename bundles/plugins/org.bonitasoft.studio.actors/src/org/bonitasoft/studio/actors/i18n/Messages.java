@@ -237,6 +237,7 @@ public class Messages extends NLS {
 	public static String userDoesntExistAnymore;
 	public static String UserDoesntExistError;
 	public static String updateActorReferences;
+	public static String refactoringActorMappings;
 
 
 
