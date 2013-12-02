@@ -20,6 +20,7 @@ package org.bonitasoft.studio.tests.data;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
@@ -54,32 +55,30 @@ public class TestData extends SWTBotGefTestCase {
 	public void tearDown(){
 		bot.saveAllEditors();
 	}
-
+	
+	@Test
     public void testMaxLengthDescription(){
         SWTBotTestUtil.createNewDiagram(bot);
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
         SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
-        bot.button("Add...").click();
+        bot.button(Messages.addData).click();
 
-        bot.textWithLabel("Name *").setText("MyName");
+        bot.textWithLabel(Messages.name +" *").setText("MyName");
         assertFalse("We shouldn't be able to create a data with an Uppercase as first charater", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
-        bot.textWithLabel("Name *").setText("myName");
+        bot.textWithLabel(Messages.name +" *").setText("myName");
         String text270 = "";
         for (int i = 0; i < 270; i++) {
             text270 += "a";
         }
-        bot.textWithLabel("Description").setText(text270);
+        bot.textWithLabel(Messages.dataDescriptionLabel).setText(text270);
         assertFalse("We shouldn't be able to put more than 255 characters",   bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         String text255 = "";
         for (int i = 0; i < 254; i++) {
             text255 += "b";
         }
-        bot.textWithLabel("Description").setText(text255);
+        bot.textWithLabel(Messages.dataDescriptionLabel).setText(text255);
         assertTrue("We should be able to put at least 254 characters", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.button(IDialogConstants.CANCEL_LABEL).click();
-
-
-
     }
     
     
@@ -88,6 +87,7 @@ public class TestData extends SWTBotGefTestCase {
      * 
      */
     @Ignore
+    @Test
     public void changeDataTypeInPool() throws ExecutionException{
     	
     	boolean isOK;
