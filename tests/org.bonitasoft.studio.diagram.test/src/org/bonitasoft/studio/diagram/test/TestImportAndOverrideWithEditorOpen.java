@@ -23,9 +23,11 @@ import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -81,16 +83,22 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
         assertEquals("Unique description 0", model.getDocumentation());
 
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
+        final SWTGefBot botGef = bot;
         botEditor = bot.activeEditor();
         gmfEditor = bot.gefEditor(botEditor.getTitle());
         
-        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
-        
-        part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-        model = (MainProcess)part.resolveSemanticElement();
-        assertNotNull("no pool found (import failed?)",model);
-        assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
-        assertEquals("Unique description 1", model.getDocumentation());
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {
+				IGraphicalEditPart part = (IGraphicalEditPart)botGef.gefEditor(botGef.activeEditor().getTitle()).mainEditPart().part();
+				MainProcess model = (MainProcess)part.resolveSemanticElement();
+				return "Unique description 1".equals(model.getDocumentation());
+			}
+			
+			public String getFailureMessage() {
+				return "Override has not been working, the description message is not Unique description 1";
+			}
+		}, 10000, 1000);
     }
 
     @Test
@@ -103,16 +111,20 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
         
         SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_2ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
-        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
         
-        
-        botEditor = bot.activeEditor();
-        gmfEditor = bot.gefEditor(botEditor.getTitle());
-        IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-        MainProcess model = (MainProcess)part.resolveSemanticElement();
-        assertNotNull("no pool found (import failed?)",model);
-        assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
-        assertEquals("Unique description 2", model.getDocumentation());
+        final SWTGefBot botGef = bot;
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {
+				IGraphicalEditPart part = (IGraphicalEditPart)botGef.gefEditor(botGef.activeEditor().getTitle()).mainEditPart().part();
+				MainProcess model = (MainProcess)part.resolveSemanticElement();
+				return "Unique description 2".equals(model.getDocumentation());
+			}
+			
+			public String getFailureMessage() {
+				return "Override has not been working, the description message is not Unique description 2";
+			}
+		}, 10000, 1000);
     }
 
 }
