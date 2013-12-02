@@ -638,7 +638,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 		try {
 			Class<?> currentReturnTypeClass = Class.forName(currentReturnType);
 			Class<?> expressionReturnTypeClass = Class.forName(expressionReturnType);
-			return currentReturnTypeClass.isAssignableFrom(expressionReturnTypeClass);
+			return expressionReturnTypeClass.isAssignableFrom(currentReturnTypeClass);
 		} catch (Exception e) {
 			BonitaStudioLog.warning("Failed to determine the compatibility between " + expressionReturnType + " and "
 					+ currentReturnType, ExpressionEditorPlugin.PLUGIN_ID);

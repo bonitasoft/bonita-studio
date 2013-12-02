@@ -62,6 +62,7 @@ public interface ExpressionConstants {
     String DOCUMENT_VALUE_RETURN_TYPE = DocumentValue.class.getName();
 	String DOCUMENT_REF_TYPE = "DOCUMENT_REF_TYPE";
 	String ALL_TYPES = "ALL_TYPES";
+	String GROUP_ITERATOR_TYPE = "GROUP_ITERATOR_TYPE";
    
 
   
