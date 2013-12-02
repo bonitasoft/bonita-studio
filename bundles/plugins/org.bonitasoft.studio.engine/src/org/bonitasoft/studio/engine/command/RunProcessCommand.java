@@ -155,7 +155,6 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 					if(!FileActionDialog.getDisablePopup()){
 						String errorMessage = Messages.errorValidationMessage +PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle()+Messages.errorValidationContinueAnywayMessage ;
 						int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,errorMessage, ValidationDialog.YES_NO_SEEDETAILS).open();
-
 						if(result == ValidationDialog.NO){
 							return null;
 						}else if(result == ValidationDialog.SEE_DETAILS){
