@@ -53,6 +53,7 @@ import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.pics.Pics;
@@ -1157,8 +1158,11 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 				if (parent instanceof Widget) {
 					final Widget w = (Widget) parent;
 					if (w != null && w instanceof TextFormField && copy.getName().equals("field_" + w.getName())) {
-						final String returnTypeModifier = w.getReturnTypeModifier();
+						String returnTypeModifier = w.getReturnTypeModifier();
 						if (returnTypeModifier != null) {
+							if(w instanceof Duplicable && ((Duplicable) w).isDuplicate()){
+								returnTypeModifier = List.class.getName();
+							}
 							if (!copy.isReturnTypeFixed()) {
 								copy.setReturnType(returnTypeModifier);
 							}
