@@ -62,7 +62,7 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         bot.text("Checkbox1").setText("CheckboxModified");
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.activeEditor().save();
-
+        saveEditorAndWaitNoMoreDirtyState();
 
         /*check it has opened, content and close it to come back to form editor*/
         formGefEditor.mainEditPart().click();
@@ -90,18 +90,7 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         formGefEditor.clickContextMenu("Delete");
         bot.waitUntil(Conditions.shellIsActive("Warning"));
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.activeEditor().save();
-        final SWTGefBot gefBot = bot;
-        bot.waitUntil(new DefaultCondition() {
-			
-			public boolean test() throws Exception {				
-				return !gefBot.activeEditor().isDirty();
-			}
-			
-			public String getFailureMessage() {
-				return "The editor is still dirty.";
-			}
-		});
+        saveEditorAndWaitNoMoreDirtyState();
         /*check it has opened, content and close it to come back to form editor*/
         formGefEditor.mainEditPart().select();
         checkTextInsideHtml("<div id=\"Date1\">");
@@ -112,11 +101,27 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         bot.button(Messages.Clear).click();
         bot.waitUntil(Conditions.shellIsActive(Messages.confirm_title));
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.activeEditor().save();
-
-        assertFalse(bot.button(Messages.Edit).isEnabled());
-        assertFalse(bot.button(Messages.Clear).isEnabled());
+        saveEditorAndWaitNoMoreDirtyState();
+        
+        assertFalse("Edit button is still enabled", bot.button(Messages.Edit).isEnabled());
+        assertFalse("Clear button is still enabled", bot.button(Messages.Clear).isEnabled());
     }
+
+	private SWTGefBot saveEditorAndWaitNoMoreDirtyState() {
+		final SWTGefBot gefBot = bot;
+		gefBot.activeEditor().save();
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {				
+				return !gefBot.activeEditor().isDirty();
+			}
+			
+			public String getFailureMessage() {
+				return "The editor is still dirty after the save.";
+			}
+		});
+		return gefBot;
+	}
 
     private void checkTextInsideHtml(final String textToCheck) {
         bot.button(Messages.Edit).click();
@@ -141,12 +146,10 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         bot.waitUntil(new ICondition() {
 
             public boolean test() throws Exception {
-                return bot.editors().size() == 0;
+                return bot.editors().isEmpty();
             }
 
             public void init(SWTBot bot) {
-                // TODO Auto-generated method stub
-
             }
 
             public String getFailureMessage() {
@@ -167,22 +170,8 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         bot.button(Messages.Restore).click();
 
         /*There is a long-running operation before so need a waituntil*/
-        bot.waitUntil(new ICondition() {
-
-            public boolean test() throws Exception {
-                return bot.button(Messages.Edit).isEnabled();
-            }
-
-            public void init(SWTBot bot) {
-            }
-
-            public String getFailureMessage() {
-                return "Edit button never goes enable.";
-            }
-        },15000,100);
-        /*Check that edit and clear button are enabled*/
-        assertTrue(bot.button(Messages.Edit).isEnabled());
-        assertTrue(bot.button(Messages.Clear).isEnabled());
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.Edit)),15000,100);
+        assertTrue("Clear button is not enabled", bot.button(Messages.Clear).isEnabled());
         return formGefEditor;
     }
 
