@@ -28,8 +28,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -294,6 +296,7 @@ public class Repository implements IRepository {
 		IProjectDescription descriptor = project.getDescription();
 		descriptor.setComment(ProductVersion.CURRENT_VERSION) ;
 		String[] natures = descriptor.getNatureIds();
+		List<String> existingNatures = Arrays.asList(natures);
 		Set<String> additionalNatures = getNatures() ;
 		Set<String> notExistingNature = new HashSet<String>();
 		for(String natureId : additionalNatures){
@@ -302,6 +305,10 @@ public class Repository implements IRepository {
 			if(naturDesc == null){
 				notExistingNature.add(natureId);
 				BonitaStudioLog.log("Project nature "+natureId+" not found");
+			}
+			if(existingNatures.contains(natureId)){
+				notExistingNature.add(natureId);
+				BonitaStudioLog.log("Project nature "+natureId+" already exists");
 			}
 		}
 		additionalNatures.removeAll(notExistingNature);
@@ -318,21 +325,20 @@ public class Repository implements IRepository {
 	}
 
 	protected void addBuilders(IProjectDescription desc) {
-		List<ICommand> commands = new ArrayList<ICommand>(); 
-		for(String builderId : getBuilders()){
-			ICommand[] existingCommands = desc.getBuildSpec();
-			for (int i = 0; i < existingCommands.length; ++i){
-				if (existingCommands[i].getBuilderName().equals(builderId)){
-					commands.add(existingCommands[i]);
-					continue;
-				}
-			}
-			//add builder to project
-			ICommand command = desc.newCommand();
-			command.setBuilderName(builderId);
-			commands.add(command);
+		ICommand[] existingCommands = desc.getBuildSpec();
+		Map<String,ICommand> existingBuilders = new HashMap<String, ICommand>();
+		for(ICommand builder : existingCommands){
+			existingBuilders.put(builder.getBuilderName(), builder);
 		}
-		desc.setBuildSpec(commands.toArray(new ICommand[commands.size()]));
+		for(String builderId : getBuilders()){
+			if(!existingBuilders.containsKey(builderId)){
+				//add builder to project
+				ICommand command = desc.newCommand();
+				command.setBuilderName(builderId);
+				existingBuilders.put(builderId,command);
+			}
+		}
+		desc.setBuildSpec(existingBuilders.values().toArray(new ICommand[existingBuilders.values().size()]));
 	}
 
 	protected List<String> getBuilders() {
@@ -453,8 +459,11 @@ public class Repository implements IRepository {
 					//Took example from JDT configure Build path dialog
 					CPListElement[] existingCPElement =  CPListElement.createFromExisting(javaProject);
 					BuildPathsBlock.flush(new ArrayList<CPListElement>(Arrays.asList(existingCPElement)),javaProject.getOutputLocation(), javaProject, null, monitor);
-					getProject().build(IncrementalProjectBuilder.FULL_BUILD, monitor);
+					getProject().build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
 					IJobManager jobManager = Job.getJobManager(); 
+					jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, NULL_PROGRESS_MONITOR);
+					jobManager.join(ResourcesPlugin.FAMILY_MANUAL_BUILD, NULL_PROGRESS_MONITOR);
+					getProject().build(IncrementalProjectBuilder.FULL_BUILD, monitor);
 					jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, NULL_PROGRESS_MONITOR);
 					jobManager.join(ResourcesPlugin.FAMILY_MANUAL_BUILD, NULL_PROGRESS_MONITOR);
 				}
