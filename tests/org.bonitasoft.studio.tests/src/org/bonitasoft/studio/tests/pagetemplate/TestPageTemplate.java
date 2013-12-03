@@ -132,7 +132,7 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         });
         /*Check the content*/
         System.out.println(editorTextContent);
-        assertTrue("The generated html is not well-formed\nCurrent text:\n"+editorTextContent,editorTextContent.contains(textToCheck));
+        assertTrue("The generated html is not well-formed. It doesn't contain "+textToCheck+"\nCurrent text:\n"+editorTextContent,editorTextContent.contains(textToCheck));
         bot.activeEditor().close();
     }
 
