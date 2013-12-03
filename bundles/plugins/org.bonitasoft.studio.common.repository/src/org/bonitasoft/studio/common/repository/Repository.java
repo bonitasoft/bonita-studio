@@ -426,8 +426,11 @@ public class Repository implements IRepository {
 					//Took example from JDT configure Build path dialog
 					CPListElement[] existingCPElement =  CPListElement.createFromExisting(javaProject);
 					BuildPathsBlock.flush(new ArrayList<CPListElement>(Arrays.asList(existingCPElement)),javaProject.getOutputLocation(), javaProject, null, monitor);
-					getProject().build(IncrementalProjectBuilder.FULL_BUILD, monitor);
+					getProject().build(IncrementalProjectBuilder.CLEAN_BUILD, monitor);
 					IJobManager jobManager = Job.getJobManager(); 
+					jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, NULL_PROGRESS_MONITOR);
+					jobManager.join(ResourcesPlugin.FAMILY_MANUAL_BUILD, NULL_PROGRESS_MONITOR);
+					getProject().build(IncrementalProjectBuilder.FULL_BUILD, monitor);
 					jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, NULL_PROGRESS_MONITOR);
 					jobManager.join(ResourcesPlugin.FAMILY_MANUAL_BUILD, NULL_PROGRESS_MONITOR);
 				}
