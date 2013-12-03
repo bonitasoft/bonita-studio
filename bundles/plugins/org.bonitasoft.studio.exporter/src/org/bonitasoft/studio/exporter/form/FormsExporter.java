@@ -141,9 +141,9 @@ public class FormsExporter {
 		builder.createFormDefinition();
 
 		final AssociatedFile hostPage = studioProcess.getHostPage();
-		if (hostPage != null && hostPage.getPath() != null) {
-			builder.addHomePage(ExporterTools.getTemplateWarPath(studioProcess, TemplateType.HOST_PAGE));
-		}
+//		if (hostPage != null && hostPage.getPath() != null) {
+//			builder.addHomePage(ExporterTools.getTemplateWarPath(studioProcess, TemplateType.HOST_PAGE));
+//		}
 		final String version = studioProcess.getVersion();
 		if (version != null && version.length() > 0) {
 			builder.addApplication(studioProcess.getName(), version);
