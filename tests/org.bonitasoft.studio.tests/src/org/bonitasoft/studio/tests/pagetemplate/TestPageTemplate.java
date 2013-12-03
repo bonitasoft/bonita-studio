@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2011-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,10 +24,12 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
@@ -89,6 +91,17 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         bot.waitUntil(Conditions.shellIsActive("Warning"));
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.activeEditor().save();
+        final SWTGefBot gefBot = bot;
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {				
+				return !gefBot.activeEditor().isDirty();
+			}
+			
+			public String getFailureMessage() {
+				return "The editor is still dirty.";
+			}
+		});
         /*check it has opened, content and close it to come back to form editor*/
         formGefEditor.mainEditPart().select();
         checkTextInsideHtml("<div id=\"Date1\">");
@@ -103,9 +116,6 @@ public class TestPageTemplate extends SWTBotGefTestCase {
 
         assertFalse(bot.button(Messages.Edit).isEnabled());
         assertFalse(bot.button(Messages.Clear).isEnabled());
-
-
-
     }
 
     private void checkTextInsideHtml(final String textToCheck) {
@@ -122,7 +132,7 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         });
         /*Check the content*/
         System.out.println(editorTextContent);
-        assertTrue("The generated html is not well-formed",editorTextContent.contains(textToCheck));
+        assertTrue("The generated html is not well-formed\nCurrent text:\n"+editorTextContent,editorTextContent.contains(textToCheck));
         bot.activeEditor().close();
     }
 
