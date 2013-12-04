@@ -349,12 +349,12 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 
 
 	private void buildWorkspace() {
-		try {
-			JavaCore.initializeAfterLoad(monitor);
-		} catch (CoreException e) {
-			BonitaStudioLog.error(e);
-		}
-		RepositoryManager.getInstance().getCurrentRepository().refresh(monitor);
+//		try {
+//			JavaCore.initializeAfterLoad(monitor);
+//		} catch (CoreException e) {
+//			BonitaStudioLog.error(e);
+//		}
+//		RepositoryManager.getInstance().getCurrentRepository().refresh(monitor);
 	}
 
 	private void openStartupDialog() {

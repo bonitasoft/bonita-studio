@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
@@ -57,6 +58,7 @@ import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -288,7 +290,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 			Data selectedData = (Data) selection.getFirstElement();
 			DataWizard wizard = new DataWizard(selectedData,getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
 			wizard.setIsPageFlowContext(isPageFlowContext());
-			new WizardDialog(Display.getCurrent().getActiveShell(), wizard ).open();;
+			new CustomWizardDialog(Display.getCurrent().getActiveShell(), wizard ,IDialogConstants.OK_LABEL).open();
 			dataTableViewer.refresh() ;
 		}
 	}
