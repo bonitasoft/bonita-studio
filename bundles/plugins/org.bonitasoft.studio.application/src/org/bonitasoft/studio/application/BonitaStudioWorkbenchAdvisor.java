@@ -55,6 +55,7 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -349,12 +350,19 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 
 
 	private void buildWorkspace() {
-//		try {
-//			JavaCore.initializeAfterLoad(monitor);
-//		} catch (CoreException e) {
-//			BonitaStudioLog.error(e);
-//		}
-//		RepositoryManager.getInstance().getCurrentRepository().refresh(monitor);
+		WorkspaceJob job = new WorkspaceJob("Rebuild current project") {
+			
+			@Override
+			public IStatus runInWorkspace(IProgressMonitor monitor)
+					throws CoreException {
+				RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
+				return Status.OK_STATUS;
+			}
+		};
+		job.setPriority(Job.BUILD);
+		job.setSystem(true);
+		job.setUser(false);
+		job.schedule();
 	}
 
 	private void openStartupDialog() {
