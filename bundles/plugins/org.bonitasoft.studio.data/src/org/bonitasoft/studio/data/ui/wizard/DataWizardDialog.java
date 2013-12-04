@@ -88,7 +88,7 @@ public class DataWizardDialog extends WizardDialog {
 			getWizard().performFinish();
 			close();
 			if (dataSection != null) {
-				dataSection.setWizardDialog();
+				dataSection.addData();
 			}
 		}
 	}

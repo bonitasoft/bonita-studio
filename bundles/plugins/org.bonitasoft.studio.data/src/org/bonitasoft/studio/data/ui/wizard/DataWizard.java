@@ -163,7 +163,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 			} catch (InterruptedException e) {
 				BonitaStudioLog.error(e);
 			}
-			
+			cc = new CompoundCommand();
 			if(switchingDataeClass){
 				List<?> dataList =  (List<?>) container.eGet(dataContainmentFeature) ;
 				int index = dataList.indexOf(originalData) ;

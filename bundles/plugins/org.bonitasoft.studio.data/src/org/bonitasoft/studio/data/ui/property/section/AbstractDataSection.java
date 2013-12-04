@@ -25,7 +25,6 @@ import java.util.Set;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
-import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -36,37 +35,36 @@ import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.data.ui.wizard.DataWizard;
 import org.bonitasoft.studio.data.ui.wizard.DataWizardDialog;
 import org.bonitasoft.studio.data.ui.wizard.MoveDataWizard;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.databinding.ObservablesManager;
-import org.eclipse.core.databinding.observable.ChangeEvent;
-import org.eclipse.core.databinding.observable.IChangeListener;
-import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.databinding.edit.EMFEditProperties;
-import org.eclipse.emf.databinding.edit.IEMFEditListProperty;
+import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.databinding.EMFDataBindingContext;
+import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.DeleteCommand;
+import org.eclipse.jface.databinding.swt.SWTObservables;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -87,7 +85,7 @@ import org.eclipse.xtext.ui.XtextProjectHelper;
  * 
  * @author Romain Bioteau
  */
-public abstract class AbstractDataSection extends AbstractBonitaDescriptionSection implements ISelectionChangedListener,IDoubleClickListener,IBonitaVariableContext{
+public abstract class AbstractDataSection extends AbstractBonitaDescriptionSection implements IDoubleClickListener,IBonitaVariableContext{
 
 
 	private Button updateDataButton;
@@ -96,13 +94,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	protected Composite mainComposite;
 	protected ObservablesManager observablesManager = new ObservablesManager();
 	private TableViewer dataTableViewer;
-	private IObservableList observeDataList;
-	private IChangeListener dataListener;
-	private IObservableList observeDataListNames;
-	private IObservableList observeDataListType;
-	private IObservableList observeTransient;
-	private IObservableList observeJObjectType;
 	private boolean isPageFlowContext = false;
+	protected EMFDataBindingContext context;
 
 	/*
 	 * (non-Javadoc)
@@ -138,9 +131,9 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		buttonsComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(5,0).spacing(0, 3).create());
 
 		createAddDataButton(buttonsComposite);
-		updateDataButton = createUpdateDataButton(buttonsComposite);
+		updateDataButton = createEditDataButton(buttonsComposite);
 		removeDataButton = createRemoveDataButton(buttonsComposite);
-		promoteDataButton = createPromoteDataButton(buttonsComposite);
+		promoteDataButton = createMoveDataButton(buttonsComposite);
 
 		dataTableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
 		dataTableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
@@ -148,360 +141,278 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		dataTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
 		dataTableViewer.setSorter(new ViewerSorter());
 		dataTableViewer.addDoubleClickListener(this);
-		dataTableViewer.addSelectionChangedListener(this);
+		dataTableViewer.setContentProvider(new ArrayContentProvider());
+		dataTableViewer.setLabelProvider(new DataStyledTreeLabelProvider());
+	}
 
-
-
-		EMFListFeatureTreeContentProvider cp = new EMFListFeatureTreeContentProvider(getDataFeature());
-		dataTableViewer.setContentProvider(cp);
-		dataTableViewer.addFilter(new ViewerFilter() {
-			
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				return !(element instanceof BusinessObjectData);
-			}
-		});
-
-		DataStyledTreeLabelProvider labelProvider = new DataStyledTreeLabelProvider();
-		dataTableViewer.setLabelProvider(labelProvider);
-
+	public TableViewer getDataTableViewer(){
+		return dataTableViewer;
 	}
 
 	protected abstract void createLabel(Composite dataComposite) ;
 
 
-	private void updateButtons() {
-		if (dataTableViewer != null) {
-			IStructuredSelection selection = (IStructuredSelection) dataTableViewer.getSelection();
-			if (!removeDataButton.isDisposed()) {
-				removeDataButton.setEnabled(!selection.isEmpty());
-			}
-			if (!updateDataButton.isDisposed()) {
-				updateDataButton.setEnabled(selection.size() == 1);
-			}
-			if (promoteDataButton != null && !promoteDataButton.isDisposed()) {
-
-				boolean enabled = selection.size() > 0 && ModelHelper.getParentProcess(getEObject()) != null;
-				if(enabled) {
-					for (Object obj : selection.toList()) {
-						if (obj instanceof Data) {
-							Data data = (Data) obj;
-							if(data.isTransient()) {
-								enabled = false;
-								break;
-							}
-						}else{
-							enabled = false;
-							break;
-						}
-					}
-				}
-				promoteDataButton.setEnabled(enabled);
-
-			}
-		}
-	}
-
-	/**
-	 * @param buttonsComposite
-	 * @return
-	 */
-	 private Button createRemoveDataButton(final Composite parent) {
+	protected Button createRemoveDataButton(final Composite parent) {
 		Button removeButton = getWidgetFactory().createButton(parent, Messages.removeData, SWT.FLAT);
 		removeButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
 		removeButton.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				if (dataTableViewer != null && ((IStructuredSelection) dataTableViewer.getSelection()).size() > 0) {
-					List<?> selection = ((IStructuredSelection) dataTableViewer.getSelection()).toList();
-					if (MessageDialog.openConfirm(parent.getShell(), Messages.deleteDataDialogTitle, createMessage())) {
-						IProgressService service = PlatformUI.getWorkbench().getProgressService();
-						for(Object d : selection){
-							RefactorDataOperation op = new RefactorDataOperation();
-							op.setContainer(ModelHelper.getParentProcess(eObject));
-							op.setEditingDomain(getEditingDomain());
-							op.setOldData((Data) d);
-							try {
-								service.run(true, false, op);
-							} catch (InvocationTargetException e) {
-								BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
-							} catch (InterruptedException e) {
-								BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
-							}
-						}
-						getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), selection));
-						dataTableViewer.refresh() ;
-						try {
-							RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.EMPTY_MAP,null);
-						} catch (CoreException e) {
-							BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
-						}
-					}
+				if (dataTableViewer != null && !((IStructuredSelection) dataTableViewer.getSelection()).isEmpty()) {
+					removeData(((IStructuredSelection) dataTableViewer.getSelection()));
 				}
 			}
 
-			public String createMessage() {
-				Object[] selection = ((IStructuredSelection) dataTableViewer.getSelection()).toArray();
-				StringBuilder res = new StringBuilder(Messages.deleteDialogConfirmMessage);
-				res.append(' ');
-				res.append(((Data) selection[0]).getName());
-				for (int i = 1; i < selection.length; i++) {
-					res.append(", ");res.append(((Data) selection[i]).getName()); //$NON-NLS-1$
-				}
-				res.append(" ?"); //$NON-NLS-1$
-				return res.toString();
-			}
 		});
 		return removeButton;
-	 }
+	}
 
-	 protected Button createPromoteDataButton(final Composite parent) {
-		 Button moveData = getWidgetFactory().createButton(parent, Messages.moveData, SWT.FLAT);
-		 moveData.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
-		 moveData.setToolTipText(Messages.moveData_tooltip);
-		 moveData.addSelectionListener(new SelectionAdapter() {
+	protected String createMessage(IStructuredSelection structruredSelection) {
+		Object[] selection = structruredSelection.toArray();
+		StringBuilder res = new StringBuilder(Messages.deleteDialogConfirmMessage);
+		res.append(' ');
+		res.append(((Data) selection[0]).getName());
+		for (int i = 1; i < selection.length; i++) {
+			res.append(", ");res.append(((Data) selection[i]).getName()); //$NON-NLS-1$
+		}
+		res.append(" ?"); //$NON-NLS-1$
+		return res.toString();
+	}
 
-			 @Override
-			 @SuppressWarnings("unchecked")
-			 public void widgetSelected(SelectionEvent e) {
-				 List<Data> datas = ((IStructuredSelection) dataTableViewer.getSelection()).toList();
-
-				 MoveDataWizard moveDataWizard = new MoveDataWizard((DataAware) getEObject());
-				 if(new WizardDialog(AbstractDataSection.this.getPart().getSite().getShell(),moveDataWizard).open() == Dialog.OK){
-					 DataAware dataAware = moveDataWizard.getSelectedDataAwareElement();
-					 try {
-						 MoveDataCommand cmd = new MoveDataCommand(getEditingDomain(), (DataAware) getEObject(), datas, dataAware);
-						 OperationHistoryFactory.getOperationHistory().execute(cmd, null, null);
-
-						 if (!(cmd.getCommandResult().getStatus().getSeverity() == Status.OK)) {
-							 List<Data> data = (List<Data>) cmd.getCommandResult().getReturnValue();
-							 String dataNames = "";
-							 for (Data d : data) {
-								 dataNames = dataNames + d.getName() + ",";
-							 }
-							 dataNames = dataNames.substring(0, dataNames.length() - 1);
-							 MessageDialog.openWarning(parent.getShell(), Messages.PromoteDataWarningTitle,
-									 Messages.bind(Messages.PromoteDataWarningMessage, dataNames));
-						 }
-
-					 } catch (ExecutionException e1) {
-						 BonitaStudioLog.error(e1);
-					 }
-					 refresh();
-				 }
-			 }
-
-		 });
-
-		 moveData.setEnabled(true);
-		 return moveData;
-	 }
-
-	 protected void createAddDataButton(final Composite parent) {
-		 final Button addData = getWidgetFactory().createButton(parent, Messages.addData, SWT.FLAT);
-		 addData.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
-		 addData.addSelectionListener(new SelectionAdapter() {
-
-			 @Override
-			 public void widgetSelected(SelectionEvent e) {
-				 setWizardDialog();
-			 }
-
-		 });
-	 }
+	protected void removeData(IStructuredSelection structuredSelection) {
+		if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.deleteDataDialogTitle, createMessage(structuredSelection))) {
+			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+			for(Object d : structuredSelection.toList()){
+				RefactorDataOperation op = new RefactorDataOperation();
+				op.setContainer(ModelHelper.getParentProcess(eObject));
+				op.setEditingDomain(getEditingDomain());
+				op.setOldData((Data) d);
+				op.setCompoundCommand(new CompoundCommand());
+				try {
+					service.run(true, false, op);
+				} catch (InvocationTargetException e) {
+					BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
+				} catch (InterruptedException e) {
+					BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
+				}
+			}
+			getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), structuredSelection.toList()));
+			try {
+				RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.EMPTY_MAP,null);
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
+			}
+		}
+	}
 
 
-	 public void setWizardDialog(){
-		 DataWizard wizard= new DataWizard(getEObject(), getDataFeature(), getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
-		 wizard.setIsPageFlowContext(isPageFlowContext());
-		 WizardDialog wizardDialog = new DataWizardDialog(Display.getCurrent().getActiveShell(),wizard ,this);
-		 if(wizardDialog.open() == Dialog.OK){
-			 dataTableViewer.refresh();
-		 }
-	 }
+	protected Button createMoveDataButton(final Composite parent) {
+		Button moveData = getWidgetFactory().createButton(parent, Messages.moveData, SWT.FLAT);
+		moveData.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
+		moveData.setToolTipText(Messages.moveData_tooltip);
+		moveData.addSelectionListener(new SelectionAdapter() {
 
-	 private Button createUpdateDataButton(final Composite parent) {
-		 Button updateButton = getWidgetFactory().createButton(parent, Messages.updateData, SWT.FLAT);
-		 updateButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
-		 updateButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				moveData((IStructuredSelection) dataTableViewer.getSelection());
+			}
+		});
+		return moveData;
+	}
 
-			 @Override
-			 public void handleEvent(Event event) {
-				 updateDataAction();
-			 }
-		 });
-		 return updateButton;
-	 }
+	protected void moveData(IStructuredSelection structuredSelection) {
+		MoveDataWizard moveDataWizard = new MoveDataWizard((DataAware) getEObject());
+		if(new WizardDialog(Display.getDefault().getActiveShell(),moveDataWizard).open() == Dialog.OK){
+			DataAware dataAware = moveDataWizard.getSelectedDataAwareElement();
+			try {
+				MoveDataCommand cmd = new MoveDataCommand(getEditingDomain(), (DataAware) getEObject(), structuredSelection.toList(), dataAware);
+				OperationHistoryFactory.getOperationHistory().execute(cmd, null, null);
+
+				if (!(cmd.getCommandResult().getStatus().getSeverity() == Status.OK)) {
+					List<Object> data = (List<Object>) cmd.getCommandResult().getReturnValue();
+					String dataNames = "";
+					for (Object d : data) {
+						dataNames = dataNames + ((Element) d).getName() + ",";
+					}
+					dataNames = dataNames.substring(0, dataNames.length() - 1);
+					MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.PromoteDataWarningTitle,
+							Messages.bind(Messages.PromoteDataWarningMessage, dataNames));
+				}
+
+			} catch (ExecutionException e1) {
+				BonitaStudioLog.error(e1);
+			}
+			refresh();
+		}
+	}
+
+	protected void createAddDataButton(final Composite parent) {
+		final Button addDataButton = getWidgetFactory().createButton(parent, Messages.addData, SWT.FLAT);
+		addDataButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
+		addDataButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addData();
+			}
+
+		});
+	}
 
 
-	 private void updateDataAction() {
-		 IStructuredSelection selection = (IStructuredSelection) dataTableViewer.getSelection();
-		 if(onlyOneElementSelected(selection)){
-			 Data selectedData = (Data) selection.getFirstElement();
-			 DataWizard wizard = new DataWizard(selectedData,getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
-			 wizard.setIsPageFlowContext(isPageFlowContext());
-			 WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard );
-			 wizardDialog.open();
-			 dataTableViewer.setInput(getEObject());
-		 }
-	 }
+	public void addData(){
+		DataWizard wizard= new DataWizard(getEObject(), getDataFeature(), getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
+		wizard.setIsPageFlowContext(isPageFlowContext());
+		if(new DataWizardDialog(Display.getCurrent().getActiveShell(),wizard ,this).open() == Dialog.OK){
+			dataTableViewer.refresh();
+		}
+	}
 
-	 protected boolean onlyOneElementSelected(IStructuredSelection selection) {
-		 if (selection.size() != 1) {
-			 MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.selectOnlyOneElementTitle, Messages.selectOnlyOneElementMessage);
-			 return false;
-		 }
+	protected Button createEditDataButton(final Composite parent) {
+		Button updateButton = getWidgetFactory().createButton(parent, Messages.updateData, SWT.FLAT);
+		updateButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
+		updateButton.addListener(SWT.Selection, new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+				editData();
+			}
+		});
+		return updateButton;
+	}
+
+
+	protected void editData() {
+		IStructuredSelection selection = (IStructuredSelection) dataTableViewer.getSelection();
+		if(onlyOneElementSelected(selection)){
+			Data selectedData = (Data) selection.getFirstElement();
+			DataWizard wizard = new DataWizard(selectedData,getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
+			wizard.setIsPageFlowContext(isPageFlowContext());
+			new WizardDialog(Display.getCurrent().getActiveShell(), wizard ).open();;
+			dataTableViewer.refresh() ;
+		}
+	}
+
+	protected boolean onlyOneElementSelected(IStructuredSelection selection) {
+		if (selection.size() != 1) {
+			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.selectOnlyOneElementTitle, Messages.selectOnlyOneElementMessage);
+			return false;
+		}
 		return true;
 	}
 
 
 	protected boolean getShowAutoGenerateForm() {
-		 return true;
-	 }
+		return true;
+	}
 
-	 protected EStructuralFeature getDataFeature() {
-		 return ProcessPackage.Literals.DATA_AWARE__DATA;
-	 }
+	protected EStructuralFeature getDataFeature() {
+		return ProcessPackage.Literals.DATA_AWARE__DATA;
+	}
 
-	 protected Set<EStructuralFeature> getDataFeatureToCheckUniqueID() {
-		 Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
-		 res.add(ProcessPackage.Literals.DATA_AWARE__DATA);
-		 return res;
-	 }
-
-
-	 protected void refreshBindings() {
-		 if (dataTableViewer != null && getEObject() != null) {
-			 bindDataTree();
-		 }
-	 }
+	protected Set<EStructuralFeature> getDataFeatureToCheckUniqueID() {
+		Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
+		res.add(ProcessPackage.Literals.DATA_AWARE__DATA);
+		return res;
+	}
 
 
-	 private void bindDataTree() {
+	protected void bindSection() {
+		if(context != null){
+			context.dispose();
+		}
+		context = new EMFDataBindingContext();
+		if (getEObject() != null) {
+			if(dataTableViewer != null){
+				context.bindValue(ViewersObservables.observeInput(dataTableViewer), EMFEditObservables.observeValue(getEditingDomain(), getEObject(),getDataFeature()));
+				final UpdateValueStrategy enableStrategy = new UpdateValueStrategy() ;
+				enableStrategy.setConverter(new Converter(Data.class,Boolean.class){
 
-		 if(observeDataList != null
-				 && dataListener != null
-				 && observeDataListNames != null
-				 && observeDataListType != null){
-			 observeDataList.removeChangeListener(dataListener);
-			 observeDataList.dispose();
-			 observeDataListNames.removeChangeListener(dataListener);
-			 observeDataListNames.dispose();
-			 observeDataListType.removeChangeListener(dataListener);
-			 observeDataListType.dispose();
-			 observeTransient.removeChangeListener(dataListener);
-			 observeTransient.dispose();
-			 observeJObjectType.removeChangeListener(dataListener);
-			 observeJObjectType.dispose();
-		 }
+					@Override
+					public Object convert(Object fromObject) {
+						return fromObject != null;
+					}
 
+				});
 
-		 IEMFEditListProperty list = EMFEditProperties.list(getEditingDomain(), getDataFeature());
-		 observeDataList = list.observe(getEObject());
-		 observeDataListNames = list.values(ProcessPackage.Literals.ELEMENT__NAME).observe(getEObject());
-		 observeDataListType = list.values(ProcessPackage.Literals.DATA__DATA_TYPE).observe(getEObject());
-		 observeTransient = list.values(ProcessPackage.Literals.DATA__TRANSIENT).observe(getEObject());
-		 observeJObjectType = list.values(ProcessPackage.Literals.JAVA_OBJECT_DATA__CLASS_NAME).observe(getEObject());
-		 dataListener = new IChangeListener() {
+				context.bindValue(SWTObservables.observeEnabled(updateDataButton), ViewersObservables.observeSingleSelection(dataTableViewer), new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy);
+				context.bindValue(SWTObservables.observeEnabled(removeDataButton), ViewersObservables.observeSingleSelection(dataTableViewer), new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableStrategy);
 
-			 @Override
-			 public void handleChange(ChangeEvent event) {
-				 refreshDataTree();
-			 }
-		 };
-		 observeDataList.addChangeListener(dataListener);
-		 observeDataListNames.addChangeListener(dataListener);
-		 observeDataListType.addChangeListener(dataListener);
-		 observeTransient.addChangeListener(dataListener);
-		 observeJObjectType.addChangeListener(dataListener);
+				if(promoteDataButton != null){
+					final UpdateValueStrategy enableMoveStrategy = new UpdateValueStrategy() ;
+					enableMoveStrategy.setConverter(new Converter(Data.class,Boolean.class){
 
-		 dataTableViewer.setInput(getEObject());
-		 updateButtons();
-	 }
+						@Override
+						public Object convert(Object fromObject) {
+							return fromObject != null && ModelHelper.getParentProcess(getEObject()) != null && !((Data)fromObject).isTransient();
+						}
 
-	 /**
-	  * 
-	  */
-	  protected void refreshDataTree() {
-		 if(!dataTableViewer.getTable().isDisposed()){
-			 dataTableViewer.setInput(getEObject());
-		 }
-	 }
-
-	 /*
-	  * (non-Javadoc)
-	  * 
-	  * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
-	  * AbstractModelerPropertySection#setEObject(org.eclipse.emf.ecore.EObject)
-	  */
-	  @Override
-	  public void setEObject(EObject object) {
-		 super.setEObject(object);
-		 refreshBindings();
-	  }
-
-	  /*
-	   * (non-Javadoc)
-	   * 
-	   * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
-	   * AbstractModelerPropertySection#getEObject()
-	   */
-	  @Override
-	  protected EObject getEObject() {
-		  EObject eObject = super.getEObject();
-		  if (eObject instanceof Lane) {
-			  return ModelHelper.getParentProcess(eObject);
-		  }
-		  return eObject;
-	  }
+					});
+					context.bindValue(SWTObservables.observeEnabled(promoteDataButton), ViewersObservables.observeSingleSelection(dataTableViewer), new UpdateValueStrategy(UpdateValueStrategy.POLICY_NEVER), enableMoveStrategy);
+				}
+			}
+		}
+	}
 
 
-	  /* (non-Javadoc)
-	   * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#dispose()
-	   */
-	  @Override
-	  public void dispose() {
-		  if(observeDataList != null) {
-			  observeDataList.dispose();
-		  }
-		  if(observeDataListNames != null) {
-			  observeDataListNames.dispose();
-		  }
-		  if(observeDataListType != null) {
-			  observeDataListType.dispose();
-		  }
-		  if(observeTransient != null) {
-			  observeTransient.dispose();
-		  }
-		  super.dispose();
-	  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
+	 * AbstractModelerPropertySection#setEObject(org.eclipse.emf.ecore.EObject)
+	 */
+	@Override
+	public void setEObject(EObject object) {
+		super.setEObject(object);
+		bindSection();
+	}
 
-	  @Override
-	  public void doubleClick(DoubleClickEvent event) {
-		  updateDataAction();
-	  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.
+	 * AbstractModelerPropertySection#getEObject()
+	 */
+	@Override
+	protected EObject getEObject() {
+		EObject eObject = super.getEObject();
+		if (eObject instanceof Lane) {
+			return ModelHelper.getParentProcess(eObject);
+		}
+		return eObject;
+	}
 
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.gmf.runtime.diagram.ui.properties.sections.AbstractModelerPropertySection#dispose()
+	 */
+	@Override
+	public void dispose() {
+		super.dispose();
+		if(context != null){
+			context.dispose();
+		}
+	}
 
-	  @Override
-	  public void selectionChanged(SelectionChangedEvent event) {
-		  updateButtons() ;
-	  }
+	@Override
+	public void doubleClick(DoubleClickEvent event) {
+		editData();
+	}
 
-	  @Override
-	  public String getSectionDescription() {
-		  return Messages.dataSectionDescription;
-	  }
-	  
-	  
-	  @Override
+	@Override
+	public String getSectionDescription() {
+		return Messages.dataSectionDescription;
+	}
+
+
+	@Override
 	public boolean isPageFlowContext() {
 		return isPageFlowContext;
 	}
-	  
-	  @Override
+
+	@Override
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
-		
+
 	}
 }
