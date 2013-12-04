@@ -679,7 +679,7 @@ public class ModelHelper {
 
 		// xml
 		DataType businessObjectType = ProcessFactory.eINSTANCE.createBusinessObjectType();
-		businessObjectType.setName(DataTypeLabels.businessObjectType);
+		businessObjectType.setName(NamingUtils.convertToId(DataTypeLabels.businessObjectType));
 		proc.getDatatypes().add(businessObjectType);
 	}
 
