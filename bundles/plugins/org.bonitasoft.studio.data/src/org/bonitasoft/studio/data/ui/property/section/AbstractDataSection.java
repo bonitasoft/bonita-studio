@@ -65,11 +65,14 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -92,7 +95,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	private Button promoteDataButton;
 	protected Composite mainComposite;
 	protected ObservablesManager observablesManager = new ObservablesManager();
-	private TableViewer tableViewer;
+	private TableViewer dataTableViewer;
 	private IObservableList observeDataList;
 	private IChangeListener dataListener;
 	private IObservableList observeDataListNames;
@@ -113,7 +116,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
 		super.createControls(parent, aTabbedPropertySheetPage);
 		mainComposite = getWidgetFactory().createComposite(parent);
-		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(20, 15).create());
+		mainComposite.setLayout(createMainCompositeLayout());
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create());
 		final Composite dataComposite = getWidgetFactory().createComposite(mainComposite) ;
 		dataComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create()) ;
@@ -122,7 +125,12 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	}
 
 
-	private void createDataComposite(Composite parent) {
+	protected GridLayout createMainCompositeLayout() {
+		return GridLayoutFactory.fillDefaults().numColumns(1).margins(20, 15).create();
+	}
+
+
+	protected void createDataComposite(Composite parent) {
 		createLabel(parent);
 
 		Composite buttonsComposite = getWidgetFactory().createPlainComposite(parent, SWT.NONE);
@@ -134,22 +142,28 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		removeDataButton = createRemoveDataButton(buttonsComposite);
 		promoteDataButton = createPromoteDataButton(buttonsComposite);
 
-		tableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
-		tableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
-		getWidgetFactory().adapt(tableViewer.getTable(), false, false) ;
-		tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
-		tableViewer.setSorter(new ViewerSorter());
-		tableViewer.addDoubleClickListener(this);
-		tableViewer.addSelectionChangedListener(this);
+		dataTableViewer = new TableViewer(parent, SWT.BORDER | SWT.MULTI | SWT.NO_FOCUS | SWT.H_SCROLL | SWT.V_SCROLL);
+		dataTableViewer.getTable().setLayout(GridLayoutFactory.fillDefaults().create());
+		getWidgetFactory().adapt(dataTableViewer.getTable(), false, false) ;
+		dataTableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(200, 100).create());
+		dataTableViewer.setSorter(new ViewerSorter());
+		dataTableViewer.addDoubleClickListener(this);
+		dataTableViewer.addSelectionChangedListener(this);
 
 
 
 		EMFListFeatureTreeContentProvider cp = new EMFListFeatureTreeContentProvider(getDataFeature());
-		tableViewer.setContentProvider(cp);
-
+		dataTableViewer.setContentProvider(cp);
+		dataTableViewer.addFilter(new ViewerFilter() {
+			
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				return !(element instanceof BusinessObjectData);
+			}
+		});
 
 		DataStyledTreeLabelProvider labelProvider = new DataStyledTreeLabelProvider();
-		tableViewer.setLabelProvider(labelProvider);
+		dataTableViewer.setLabelProvider(labelProvider);
 
 	}
 
@@ -157,8 +171,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
 
 	private void updateButtons() {
-		if (tableViewer != null) {
-			IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
+		if (dataTableViewer != null) {
+			IStructuredSelection selection = (IStructuredSelection) dataTableViewer.getSelection();
 			if (!removeDataButton.isDisposed()) {
 				removeDataButton.setEnabled(!selection.isEmpty());
 			}
@@ -198,8 +212,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		removeButton.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				if (tableViewer != null && ((IStructuredSelection) tableViewer.getSelection()).size() > 0) {
-					List<?> selection = ((IStructuredSelection) tableViewer.getSelection()).toList();
+				if (dataTableViewer != null && ((IStructuredSelection) dataTableViewer.getSelection()).size() > 0) {
+					List<?> selection = ((IStructuredSelection) dataTableViewer.getSelection()).toList();
 					if (MessageDialog.openConfirm(parent.getShell(), Messages.deleteDataDialogTitle, createMessage())) {
 						IProgressService service = PlatformUI.getWorkbench().getProgressService();
 						for(Object d : selection){
@@ -216,7 +230,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 							}
 						}
 						getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), selection));
-						tableViewer.refresh() ;
+						dataTableViewer.refresh() ;
 						try {
 							RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.EMPTY_MAP,null);
 						} catch (CoreException e) {
@@ -227,7 +241,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 			}
 
 			public String createMessage() {
-				Object[] selection = ((IStructuredSelection) tableViewer.getSelection()).toArray();
+				Object[] selection = ((IStructuredSelection) dataTableViewer.getSelection()).toArray();
 				StringBuilder res = new StringBuilder(Messages.deleteDialogConfirmMessage);
 				res.append(' ');
 				res.append(((Data) selection[0]).getName());
@@ -250,7 +264,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 			 @Override
 			 @SuppressWarnings("unchecked")
 			 public void widgetSelected(SelectionEvent e) {
-				 List<Data> datas = ((IStructuredSelection) tableViewer.getSelection()).toList();
+				 List<Data> datas = ((IStructuredSelection) dataTableViewer.getSelection()).toList();
 
 				 MoveDataWizard moveDataWizard = new MoveDataWizard((DataAware) getEObject());
 				 if(new WizardDialog(AbstractDataSection.this.getPart().getSite().getShell(),moveDataWizard).open() == Dialog.OK){
@@ -302,7 +316,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		 wizard.setIsPageFlowContext(isPageFlowContext());
 		 WizardDialog wizardDialog = new DataWizardDialog(Display.getCurrent().getActiveShell(),wizard ,this);
 		 if(wizardDialog.open() == Dialog.OK){
-			 tableViewer.refresh();
+			 dataTableViewer.refresh();
 		 }
 	 }
 
@@ -321,24 +335,27 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
 
 	 private void updateDataAction() {
-		 IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
-		 if (selection.size() != 1) {
-			 MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.selectOnlyOneElementTitle, Messages.selectOnlyOneElementMessage);
-		 } else {
+		 IStructuredSelection selection = (IStructuredSelection) dataTableViewer.getSelection();
+		 if(onlyOneElementSelected(selection)){
 			 Data selectedData = (Data) selection.getFirstElement();
-			 if(selectedData instanceof BusinessObjectData){
-				 MessageDialog.openError(Display.getDefault().getActiveShell(), "Not yet implemented", "Business object data edition not yet implemented !");
-				 return ;
-			 }
 			 DataWizard wizard = new DataWizard(selectedData,getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
 			 wizard.setIsPageFlowContext(isPageFlowContext());
 			 WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard );
 			 wizardDialog.open();
-			 tableViewer.setInput(getEObject());
+			 dataTableViewer.setInput(getEObject());
 		 }
 	 }
 
-	 protected boolean getShowAutoGenerateForm() {
+	 protected boolean onlyOneElementSelected(IStructuredSelection selection) {
+		 if (selection.size() != 1) {
+			 MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.selectOnlyOneElementTitle, Messages.selectOnlyOneElementMessage);
+			 return false;
+		 }
+		return true;
+	}
+
+
+	protected boolean getShowAutoGenerateForm() {
 		 return true;
 	 }
 
@@ -354,7 +371,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 
 
 	 protected void refreshBindings() {
-		 if (tableViewer != null && getEObject() != null) {
+		 if (dataTableViewer != null && getEObject() != null) {
 			 bindDataTree();
 		 }
 	 }
@@ -398,7 +415,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		 observeTransient.addChangeListener(dataListener);
 		 observeJObjectType.addChangeListener(dataListener);
 
-		 tableViewer.setInput(getEObject());
+		 dataTableViewer.setInput(getEObject());
 		 updateButtons();
 	 }
 
@@ -406,8 +423,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	  * 
 	  */
 	  protected void refreshDataTree() {
-		 if(!tableViewer.getTable().isDisposed()){
-			 tableViewer.setInput(getEObject());
+		 if(!dataTableViewer.getTable().isDisposed()){
+			 dataTableViewer.setInput(getEObject());
 		 }
 	 }
 
