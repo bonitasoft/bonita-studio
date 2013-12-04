@@ -28,6 +28,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCombo;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.junit.Assert;
@@ -65,9 +66,18 @@ public class TestConvertToMessage extends SWTBotGefTestCase {
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         SWTBotView generalProperties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL);
         generalProperties.bot().textWithLabel("Show label").setText("testDisplayLabel");
-        bot.sleep(5000);
-        Expression displayLabel = ((Widget)(((IGraphicalEditPart)gmfEditor.getEditPart("testDisplayLabel").parent().part()).resolveSemanticElement())).getDisplayLabel();
-        assertTrue("no display label set", displayLabel.getContent().equals("testDisplayLabel"));
+        final SWTBotGefEditor gefEditor = gmfEditor;
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {
+				Expression displayLabel = ((Widget)(((IGraphicalEditPart)gefEditor.getEditPart("testDisplayLabel").parent().part()).resolveSemanticElement())).getDisplayLabel();
+				return displayLabel.getContent().equals("testDisplayLabel");
+			}
+			
+			public String getFailureMessage() {
+				return "no display label set";
+			}
+		});
         SWTBotCombo combo = generalProperties.bot().comboBox("Checkbox") ;
         /*Change type to duration*/
         combo.setSelection("Message");
