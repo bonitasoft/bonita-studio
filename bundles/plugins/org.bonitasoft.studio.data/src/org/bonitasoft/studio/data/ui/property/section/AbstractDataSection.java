@@ -496,7 +496,6 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 	  
 	  @Override
 	public boolean isPageFlowContext() {
-		
 		return isPageFlowContext;
 	}
 	  

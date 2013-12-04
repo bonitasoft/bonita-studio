@@ -61,7 +61,7 @@ public class DataWizardDialog extends WizardDialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		super.createButtonsForButtonBar(parent);
-		if (dataSection != null) {
+		if (dataSection!=null ) {
 			createAndNewButton = super.createButton(parent, CREATE_AND_NEW_ID,
 					Messages.createAndNewButton, true);
 			setButtonLayoutData(createAndNewButton);
@@ -69,10 +69,14 @@ public class DataWizardDialog extends WizardDialog {
 		Button cancelButton = getButton(IDialogConstants.CANCEL_ID);
 		cancelButton.setText(IDialogConstants.CANCEL_LABEL);
 		Button finishButton = getButton(IDialogConstants.FINISH_ID);
-		finishButton.setText(IDialogConstants.FINISH_LABEL);
+		
 		cancelButton.moveBelow(null);
-		if (dataSection != null) {
+		if (dataSection!=null) {
 			createAndNewButton.moveAbove(cancelButton);
+			finishButton.setText(IDialogConstants.FINISH_LABEL);
+		} else {
+			finishButton.setText(IDialogConstants.OK_LABEL);
+			
 		}
 		finishButton.moveAbove(createAndNewButton);
 	}

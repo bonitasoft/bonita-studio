@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.diagram.custom.repository;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +32,7 @@ import org.bonitasoft.studio.diagram.custom.Messages;
 import org.bonitasoft.studio.model.configuration.Configuration;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -82,6 +84,8 @@ public class ProcessConfigurationFileStore extends EMFFileStore implements IRepo
             options.put(XMLResource.OPTION_XML_VERSION, "1.0");
             resource.save(options) ;
             resource.unload() ;
+           
+           
         } catch (IOException e) {
             BonitaStudioLog.error(e) ;
         }
@@ -98,6 +102,8 @@ public class ProcessConfigurationFileStore extends EMFFileStore implements IRepo
     public IFile getResource() {
         return getParentStore().getResource().getFile(getName());
     }
+    
+
 
     @Override
     public String getDisplayName() {
@@ -127,5 +133,10 @@ public class ProcessConfigurationFileStore extends EMFFileStore implements IRepo
     public Image getIcon() {
         return getParentStore().getIcon() ;
     }
+    
+   
+    
+    
+    
 
 }

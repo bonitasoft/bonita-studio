@@ -119,16 +119,21 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 	}
 
 	protected DataWizardPage getWizardPage() {
+		DataWizardPage page = null;
 		if(!dataContainmentFeature.equals(ProcessPackage.Literals.DATA_AWARE__DATA)){
-			DataWizardPage page = new DataWizardPage(dataWorkingCopy,container,false,false,false, showAutogenerateForm,featureToCheckForUniqueID, fixedReturnType);
+			page = new DataWizardPage(dataWorkingCopy,container,false,false,false, showAutogenerateForm,featureToCheckForUniqueID, fixedReturnType);
 			page.setIsPageFlowContext(isPageFlowContext);
 			return  page ;
 		}else{
 			boolean isOnActivity = container instanceof Activity;
-			DataWizardPage page = new DataWizardPage(dataWorkingCopy,container,true, true, isOnActivity, showAutogenerateForm, featureToCheckForUniqueID, fixedReturnType);
+			page = new DataWizardPage(dataWorkingCopy,container,true, true, isOnActivity, showAutogenerateForm, featureToCheckForUniqueID, fixedReturnType);
 			page.setIsPageFlowContext(isPageFlowContext);
-			return  page;
 		}
+		if (editMode){
+			page.setTitle(Messages.editVariableTitle);
+			page.setDescription(Messages.editVariableDescription);
+		}
+		return  page;
 	}
 
 
@@ -142,7 +147,9 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 		setDatasourceId(workingCopy,dataContainmentFeature) ;
 		if(editMode){
 			AbstractProcess process = ModelHelper.getParentProcess(container) ;
+			CompoundCommand cc = new CompoundCommand();
 			final RefactorDataOperation op = new RefactorDataOperation() ;
+			op.setCompoundCommand(cc);
 			op.setEditingDomain(editingDomain);
 			op.setContainer(process) ;
 			op.setNewData(workingCopy) ;
@@ -156,7 +163,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 			} catch (InterruptedException e) {
 				BonitaStudioLog.error(e);
 			}
-			CompoundCommand cc = new CompoundCommand();
+			
 			if(switchingDataeClass){
 				List<?> dataList =  (List<?>) container.eGet(dataContainmentFeature) ;
 				int index = dataList.indexOf(originalData) ;

@@ -34,6 +34,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.junit.After;
 import org.junit.Assert;
@@ -113,18 +114,36 @@ public class CopyPasteTests extends SWTBotGefTestCase {
         final SWTBotGefEditPart poolPart = part.parent().parent();
         poolPart.click();
         editor.clickContextMenu("Paste");
-        SWTBotGefEditPart newPart = null;
-        for (SWTBotGefEditPart child : poolPart.children()) {
-            if (child.sourceConnections().size() == 0 && child.targetConnections().size() == 0) {
-                newPart = child;
-            }
-        }
-        Activity activity = (Activity) ((IGraphicalEditPart)newPart.part()).resolveSemanticElement();
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {
+				return findNewActivityPart(poolPart) != null;
+			}
+			
+			public String getFailureMessage() {
+				return "Can't find the new Activity EditPart that just have been pasted";
+			}
+		});
+        SWTBotGefEditPart newPart = findNewActivityPart(poolPart);
+        
+        final IGraphicalEditPart activityEditPart = (IGraphicalEditPart)newPart.part();
+		Activity activity = (Activity) activityEditPart.resolveSemanticElement();
         Assert.assertNotNull("Data type not copied", activity.getData().get(0).getDataType());
         Assert.assertTrue("Bad Copied DataType", activity.getData().get(0).getDataType() instanceof StringType);
         Assert.assertNotNull("Data type not copied", activity.getData().get(1).getDataType());
         Assert.assertTrue("Bad Copied DataType", activity.getData().get(1).getDataType() instanceof EnumType);
     }
+
+	private SWTBotGefEditPart findNewActivityPart(
+			final SWTBotGefEditPart poolPart) {
+		SWTBotGefEditPart newPart = null;
+        for (SWTBotGefEditPart child : poolPart.children()) {
+            if (child.sourceConnections().size() == 0 && child.targetConnections().size() == 0) {
+                newPart = child;
+            }
+        }
+		return newPart;
+	}
 
     @Test
     public void testMultipleCopyPaste() throws Exception {

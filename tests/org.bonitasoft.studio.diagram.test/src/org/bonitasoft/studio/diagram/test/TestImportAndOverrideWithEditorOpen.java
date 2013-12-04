@@ -25,6 +25,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -82,7 +83,9 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
         botEditor = bot.activeEditor();
         gmfEditor = bot.gefEditor(botEditor.getTitle());
-
+        
+        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
+        
         part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
         model = (MainProcess)part.resolveSemanticElement();
         assertNotNull("no pool found (import failed?)",model);
@@ -95,10 +98,14 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
         SWTBotEditor botEditor = bot.activeEditor();
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-
+        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
+        
+        
         SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_2ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
-
+        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
+        
+        
         botEditor = bot.activeEditor();
         gmfEditor = bot.gefEditor(botEditor.getTitle());
         IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
