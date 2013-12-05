@@ -145,7 +145,7 @@ public class DesignProcessDefinitionBuilder {
 	protected void processFlowElements(final AbstractProcess process,
 			final ProcessDefinitionBuilder processBuilder) {
 		List<FlowElement> flowElements = ModelHelper.getAllItemsOfType(process, ProcessPackage.Literals.FLOW_ELEMENT);
-		final FlowElementSwitch flowElementSwitch = new FlowElementSwitch(processBuilder, eObjectNotExported) ;
+		final FlowElementSwitch flowElementSwitch = createFlowElementSwitch(processBuilder) ;
 		for (FlowElement flowElement : flowElements) {
 			if(!eObjectNotExported.contains(flowElement) && !ModelHelper.isInEvenementialSubProcessPool(flowElement)){
 				flowElementSwitch.doSwitch(flowElement);
@@ -157,6 +157,12 @@ public class DesignProcessDefinitionBuilder {
 				flowElementSwitch.doSwitch(flowElement);
 			}
 		}
+	}
+
+
+	protected FlowElementSwitch createFlowElementSwitch(
+			final ProcessDefinitionBuilder processBuilder) {
+		return new FlowElementSwitch(processBuilder, eObjectNotExported);
 	}
 
 	protected void processSequenceFlows(final AbstractProcess process,

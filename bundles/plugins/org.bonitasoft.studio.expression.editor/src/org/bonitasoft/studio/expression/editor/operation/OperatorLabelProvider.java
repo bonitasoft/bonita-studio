@@ -38,6 +38,8 @@ public class OperatorLabelProvider extends LabelProvider {
                 return Messages.xpathUpdateOperator ;
             }else if(ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(element)){
                 return Messages.setDocumentOperator ;
+            }else if(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(element)){
+                return Messages.createBusinessData;
             }
         }else if(element instanceof Operator){
             Operator op = (Operator) element ;
@@ -58,6 +60,8 @@ public class OperatorLabelProvider extends LabelProvider {
                 return xpathExpression ;
             }else if(ExpressionConstants.SET_DOCUMENT_OPERATOR.equals(operatorType)){
                 return Messages.setDocumentOperator ;
+            }else if(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operatorType)){
+                return Messages.createBusinessData;
             }
         }
         return super.getText(element);

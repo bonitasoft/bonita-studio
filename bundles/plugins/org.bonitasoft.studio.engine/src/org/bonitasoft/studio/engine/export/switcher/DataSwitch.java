@@ -42,7 +42,7 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
 
     private final Data data;
     private final FlowElementBuilder builder;
-    private final Expression expr;
+	private final Expression expr;
 
     public DataSwitch(Data data, Expression defaultValue,FlowElementBuilder flowElementBuilder){
         builder = flowElementBuilder ;
@@ -50,6 +50,14 @@ public class DataSwitch extends ProcessSwitch<DataDefinitionBuilder> {
         expr = defaultValue ;
     }
 
+    public Data getData() {
+		return data;
+	}
+
+	public FlowElementBuilder getBuilder() {
+		return builder;
+	}
+    
     @Override
     public DataDefinitionBuilder caseStringType(final StringType type) {
     	return builder.addLongTextData(data.getName(), expr);
