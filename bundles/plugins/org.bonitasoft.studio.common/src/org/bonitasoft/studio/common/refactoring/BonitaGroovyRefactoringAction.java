@@ -1,0 +1,107 @@
+package org.bonitasoft.studio.common.refactoring;
+
+
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+
+import org.bonitasoft.studio.common.Messages;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.eclipse.compare.CompareConfiguration;
+import org.eclipse.compare.CompareUI;
+import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+
+public class BonitaGroovyRefactoringAction implements IWorkbenchWindowActionDelegate{
+
+
+
+
+	private String elementToRefactorName;
+	private List<Expression> groovyScriptExpressions;
+	private String newElementName;
+	private BonitaCompareEditorInput editorInput;
+	private  String regex;
+	private  CompoundCommand cc;
+	private EditingDomain domain;
+	private boolean status=false;
+	public boolean canExecute;
+
+	public BonitaGroovyRefactoringAction(String elementToRefactorName,String newElementName,List<Expression> groovyScriptExpressions,CompoundCommand cc,EditingDomain domain) throws JavaModelException{
+		this.elementToRefactorName = elementToRefactorName;
+		this.groovyScriptExpressions = groovyScriptExpressions;
+		this.newElementName = newElementName;
+		this.regex =elementToRefactorName;
+		this.cc = cc;
+		this.domain = domain;
+		initGroovyRefactoring();
+	}
+
+
+	private void initGroovyRefactoring() {
+
+		
+		final CompareConfiguration config=new CompareConfiguration();
+		config.setRightEditable(true);
+		config.setLeftEditable(false);
+		config.setLeftLabel(Messages.currentScript);
+		config.setRightLabel(Messages.refactoredScript);
+		config.setProperty(CompareConfiguration.USE_OUTLINE_VIEW, true);
+		editorInput =new BonitaCompareEditorInput(config,groovyScriptExpressions,performRefactoringForAllScripts());
+		editorInput.setCompoundCommand(cc, domain);
+		
+	}
+
+
+	@Override
+	public void run(IAction action) {
+		CompareUI.openCompareDialog(editorInput);
+		status = editorInput.getStatus();
+		
+	}
+
+	private List<Expression> performRefactoringForAllScripts(){
+		List<Expression> newExpressions = new ArrayList<Expression>(groovyScriptExpressions.size());
+		for (Expression expr:groovyScriptExpressions){
+			Expression newExpr = EcoreUtil.copy(expr);
+			newExpr.setContent(performRefactoring(expr.getContent()));
+			newExpressions.add(newExpr);
+		}
+		return newExpressions;
+	}
+	
+	private String performRefactoring(String script){
+		return script.replaceAll(regex, newElementName);
+	}
+
+	@Override
+	public void selectionChanged(IAction action, ISelection selection) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void dispose() {
+		
+	}
+
+
+	@Override
+	public void init(IWorkbenchWindow window) {
+		
+	}
+
+	public boolean getStatus(){
+		return status;
+	}
+}

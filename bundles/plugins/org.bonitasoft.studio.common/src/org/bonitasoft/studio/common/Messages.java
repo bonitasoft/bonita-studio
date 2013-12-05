@@ -327,4 +327,8 @@ public class Messages extends NLS {
 	public static String fieldIsTooShort;
 	public static String nonInterruptingTimerEvent_desc;
 	public static String nonInterruptingTimerEvent_title;
+	public static String currentScript;
+	public static String refactoredScript;
+	public static String refactorTitle;
+	public static String reviewChangesMessage;
 }

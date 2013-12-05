@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.data.operation;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -25,9 +26,12 @@ import java.util.Set;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.refactoring.BonitaGroovyRefactoringAction;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.MultiInstantiation;
@@ -44,6 +48,7 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
 
@@ -59,6 +64,20 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 	private EditingDomain domain;
 	private boolean updateDataReferences = false;
 	private CompoundCommand finalCommand;
+	private List<Expression> scriptExpressions;
+	private boolean canExecute = true;
+
+	public boolean isCanExecute() {
+		return canExecute;
+	}
+
+	public void setCanExecute(boolean canExecute) {
+		this.canExecute = canExecute;
+	}
+
+	public RefactorDataOperation(){
+		this.scriptExpressions=new ArrayList<Expression>();
+	}
 
 	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -70,19 +89,19 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 		//CompoundCommand finalCommand=new CompoundCommand("Refactor Data Command");
 		//CompoundCommand cc = new CompoundCommand("Refactor Data Command") ;
 		//finalCommand.append(cc);
-		if(newData !=null){
+		if(newData !=null && canExecute){
 			//TODO : find an intelligent way to search references to the oldData and replace them with the new one instead of writing specific code for each usecase
 			updateDataReferenceInVariableExpressions(finalCommand);
 			//domain.getCommandStack().execute(cc) ;
-		//	cc =  new CompoundCommand("Refactor Data Command") ;
+			//	cc =  new CompoundCommand("Refactor Data Command") ;
 			//finalCommand.append(cc);
 			updateDataReferenceInExpressions(finalCommand);
 			if(updateDataReferences ){
-			//	cc =  new CompoundCommand("Refactor Data Command") ;
-			//	finalCommand.append(cc);
+				//	cc =  new CompoundCommand("Refactor Data Command") ;
+				//	finalCommand.append(cc);
 				updateDataInListsOfData(finalCommand);
 				//domain.getCommandStack().execute(cc) ;
-			//	cc =  new CompoundCommand("Refactor Data Command") ;
+				//	cc =  new CompoundCommand("Refactor Data Command") ;
 				//finalCommand.append(cc);
 				updateDataReferenceInMultinstanciation(finalCommand);
 				//domain.getCommandStack().execute(cc) ;
@@ -90,8 +109,8 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 		}else{
 			removeAllDataReferences(finalCommand);
 		}
-		
-	//	domain.getCommandStack().execute(finalCommand) ;
+
+		//	domain.getCommandStack().execute(finalCommand) ;
 		monitor.done() ;
 	}
 
@@ -107,14 +126,14 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 					}
 				}
 			}
-//		if(!cc.isEmpty()){
-//				for(org.eclipse.emf.common.command.Command c :cc.getCommandList()){
-//					if(c.canExecute()){
-//						domain.getCommandStack().execute(c) ;
-//					}
-//				}
-//			finalCommand.append(cc);
-//			}
+			//		if(!cc.isEmpty()){
+			//				for(org.eclipse.emf.common.command.Command c :cc.getCommandList()){
+			//					if(c.canExecute()){
+			//						domain.getCommandStack().execute(c) ;
+			//					}
+			//				}
+			//			finalCommand.append(cc);
+			//			}
 		}
 	}
 
@@ -225,8 +244,42 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 	public void setUpdateDataReferences(boolean updateDataReferences) {
 		this.updateDataReferences = updateDataReferences;
 	}
-	
+
 	public void setCompoundCommand(CompoundCommand finalCommand){
 		this.finalCommand = finalCommand;
 	}
+
+	public void updateReferencesInScripts(){
+		if (newData!=null){
+			scriptExpressions = ModelHelper.findAllScriptExpressionWithReferencedElement(oldData.eContainer(),oldData);
+			if (!scriptExpressions.isEmpty() && !oldData.getName().equals(newData.getName())){
+				try {
+					BonitaGroovyRefactoringAction action = new BonitaGroovyRefactoringAction(oldData.getName(), newData.getName(),scriptExpressions , finalCommand, domain);
+					action.run(null);
+					canExecute  = action.getStatus();
+					//if (canExecute){
+					//	for (Expression script:scriptExpressions){
+						//	Object referencedObject = getDataToRemove(script);
+						//	finalCommand.append(RemoveCommand.create(domain, script, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS  , referencedObject));
+						//	finalCommand.append(AddCommand.create(domain, script, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS  ,EcoreUtil.copy(newData)));
+					//	}
+					//}
+				} catch (JavaModelException e) {
+					BonitaStudioLog.error(e);
+				}
+			} else {
+				canExecute = true;
+			}
+		}
+	}
+
+	public EObject getDataToRemove(Expression expr){
+		for (EObject object:expr.getReferencedElements()){
+			if (object instanceof Data && ((Data) object).getName().equals(oldData.getName())){
+				return object;
+			}
+		}
+		return null;
+	}
+
 }

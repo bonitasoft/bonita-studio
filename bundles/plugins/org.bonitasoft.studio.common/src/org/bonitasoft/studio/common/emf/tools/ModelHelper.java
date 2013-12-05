@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.DataTypeLabels;
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -40,6 +41,7 @@ import org.bonitasoft.studio.model.form.Group;
 import org.bonitasoft.studio.model.form.ViewForm;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.form.WidgetLayoutInfo;
+import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractPageFlow;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -934,26 +936,59 @@ public class ModelHelper {
 		return null;
 	}
 
-	/**
-	 * @param subProcessName
-	 * @param version
-	 *            : this is not use by now
-	 * @param elements
-	 * @param processes
-	 */
-	private static void findProcessRecursivly(String subProcessName, String version, List<? extends Element> elements, List<AbstractProcess> processes) {
-		// TODO : use the version argument
-		for (Element item : elements) {
-			if (item instanceof AbstractProcess) {
-				AbstractProcess process = (AbstractProcess) item;
-				if (process.getName().equals(subProcessName)) {
-					processes.add(process);
-				} else {
-					findProcessRecursivly(subProcessName, version, process.getElements(), processes);
-				}
-			}
-		}
-	}
+
+	 /**
+	  * @param subProcessName
+	  * @param version
+	  *            : this is not use by now
+	  * @param elements
+	  * @param processes
+	  */
+	 private static void findProcessRecursivly(String subProcessName, String version, List<? extends Element> elements, List<AbstractProcess> processes) {
+		 // TODO : use the version argument
+		 for (Element item : elements) {
+			 if (item instanceof AbstractProcess) {
+				 AbstractProcess process = (AbstractProcess) item;
+				 if (process.getName().equals(subProcessName)) {
+					 processes.add(process);
+				 } else {
+					 findProcessRecursivly(subProcessName, version, process.getElements(), processes);
+				 }
+			 }
+		 }
+	 }
+	 
+	 
+	 
+	 public static List<Expression> findAllScriptExpressionWithReferencedElement(EObject container,EObject element){
+		 List<Expression> result = new ArrayList<Expression>();
+		 for (EObject o:ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION)){
+			 Expression expr = (Expression)o;
+			 if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())){
+				 if (isElementIsReferencedInScript(expr, element)){
+					 result.add(expr);
+				 }
+			 }
+		 }
+		 return result;
+		 
+	 }
+	 
+	 
+	 private static boolean isElementIsReferencedInScript(Expression expr,EObject element){
+		 if (!expr.getReferencedElements().isEmpty()){
+			 for (EObject o:expr.getReferencedElements()){
+				 if ( element instanceof Element && o instanceof Element && ((Element)element).getName().equals(((Element)o).getName())){
+					 return true;
+				 } else {
+					 if (element instanceof Parameter && o instanceof Parameter && ((Parameter)element).getName().equals(((Parameter)o).getName())){
+						 return true;
+					 }
+				 }
+			 }
+		 }
+		 return false;
+	 }
 
 	public static Set<Form> getAllFormsContainedIn(EObject copiedElement) {
 		// TODO : improve algo
