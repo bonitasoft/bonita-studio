@@ -278,32 +278,41 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor i
         for(int i = 0 ; i < MAX_CONTRIBUTION_SIZE ; i++){
             IConfigurationElement element = findContributionForPosition(i,elements) ;
             if(element != null){
-                try {
-                    IBonitaContributionItem item = (IBonitaContributionItem) element.createExecutableExtension(CLASS) ;
-                    if(toolbar.getItemCount() > 1 && item instanceof SeparatorCoolbarItem){
-                        int index = toolbar.getItemCount()-1;
-                        ToolItem previousItem = toolbar.getItem(index);
-                        if((previousItem.getStyle() & SWT.SEPARATOR) != 0){
-                            item.setVisible(false);
-                        }
-                    }
-                    if(item.isVisible()){
-                        if(size == CoolbarSize.SMALL){
-                            item.fill(toolbar, i,ICON_SIZE) ;
-                        }else{
-                            item.fill(toolbar, i, -1) ;
-                        }
-                        contributions.put(toolbar.getItemCount()-1, item) ;
-                    }
-                } catch (CoreException e) {
-                    BonitaStudioLog.error(e) ;
-                }
+                fillBonitaBarWithItemAtPosition(i, element);
             }
         }
 
         refreshCoolBarButtons();
 
     }
+
+	private void fillBonitaBarWithItemAtPosition(int i,
+			IConfigurationElement element) {
+		try {
+		    IBonitaContributionItem item = (IBonitaContributionItem) element.createExecutableExtension(CLASS) ;
+		    setItemVisibleIfApplicable(item);
+		    if(item.isVisible()){
+		        if(size == CoolbarSize.SMALL){
+		            item.fill(toolbar, i,ICON_SIZE) ;
+		        }else{
+		            item.fill(toolbar, i, -1) ;
+		        }
+		        contributions.put(toolbar.getItemCount()-1, item) ;
+		    }
+		} catch (CoreException e) {
+		    BonitaStudioLog.error(e) ;
+		}
+	}
+
+	private void setItemVisibleIfApplicable(IBonitaContributionItem item) {
+		if(toolbar.getItemCount() > 1 && item instanceof SeparatorCoolbarItem){
+		    int index = toolbar.getItemCount()-1;
+		    ToolItem previousItem = toolbar.getItem(index);
+		    if((previousItem.getStyle() & SWT.SEPARATOR) != 0){
+		        item.setVisible(false);
+		    }
+		}
+	}
 
     private IConfigurationElement findContributionForPosition(int position,IConfigurationElement[] elements) {
         List<IConfigurationElement> list = new ArrayList<IConfigurationElement>() ;
