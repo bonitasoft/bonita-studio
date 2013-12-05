@@ -194,9 +194,19 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         final SWTBotGefEditPart poolPart = step1Part.parent().parent();
         editor1.clickContextMenu("Extract subprocess");
 
-        Lane lane = (Lane) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
+        final Lane lane = (Lane) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
 
-        assertEquals("Not same number of nodes in main as expected", 2, lane.getElements().size());
+        //use a waitUntil in order to wait UI operation to finish
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {
+				return 2 == lane.getElements().size();
+			}
+			
+			public String getFailureMessage() {
+				return "Not same number of nodes in main as expected";
+			}
+		});
         assertEquals("Not same number of transitions in main as expected", 1,((Pool)lane.eContainer()).getConnections().size());
         Pool subprocessPool = (Pool) ModelHelper.getMainProcess(lane).getElements().get(1);
         assertEquals("Not same number of nodes as expected", 2, subprocessPool.getElements().size());
