@@ -36,7 +36,6 @@ import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
-import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -47,6 +46,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -123,7 +123,7 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         bot.button(Messages.updateData).click();
         bot.text().setText("newName");
         bot.comboBox().setSelection("Integer");
-        bot.button(IDialogConstants.FINISH_LABEL).click();
+        bot.button(IDialogConstants.OK_LABEL).click();
 
         bot.menu("Diagram").menu("Save").click();
 
@@ -176,21 +176,29 @@ public class DataSWTBotTests extends SWTBotGefTestCase {
         SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
         SWTBotGefEditPart parent = gmfEditor.getEditPart("Step1").parent();
-        Activity step = (Activity) ((IGraphicalEditPart) parent.part()).resolveSemanticElement();
+        final Activity step = (Activity) ((IGraphicalEditPart) parent.part()).resolveSemanticElement();
         SWTBotGefEditPart poolPart = gmfEditor.getEditPart(pool.getName()).parent();
         poolPart.select();
         poolPart.click();
         addDataOnSelectedElementWithName("dataToMove");
         int nbPoolData = pool.getData().size();
-        int nbStepData = step.getData().size();
+        final int nbStepData = step.getData().size();
         bot.table().select("dataToMove -- Text");
         // button("Move...")
         bot.button(Messages.moveData).click();
         bot.tree().getTreeItem("Pool "+pool.getName()).getNode("Lane "+lane.getName()).select("Task Step1");
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.menu("Diagram").menu("Save").click();
-        bot.sleep(5000);
-        assertEquals("data not removed",nbStepData +1, step.getData().size());
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {
+				return nbStepData +1 == step.getData().size();
+			}
+			
+			public String getFailureMessage() {
+				return "data not removed";
+			}
+		});
         assertEquals("data not added",nbPoolData -1, pool.getData().size());
         bot.menu("Diagram").menu("Close").click();
     }

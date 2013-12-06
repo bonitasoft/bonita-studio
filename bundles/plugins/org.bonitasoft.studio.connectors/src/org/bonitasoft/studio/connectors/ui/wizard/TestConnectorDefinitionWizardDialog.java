@@ -39,7 +39,12 @@ import org.eclipse.swt.widgets.Shell;
 public class TestConnectorDefinitionWizardDialog extends AbstractDefinitionWizardDialog {
 
     public TestConnectorDefinitionWizardDialog(Shell parentShell, IWizard newWizard) {
-        super(parentShell, newWizard, RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class),RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class), (IImplementationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class));
+        super(
+        		parentShell, 
+        		newWizard,
+        		RepositoryManager.getInstance().getRepositoryStore(ConnectorConfRepositoryStore.class),
+        		RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class), 
+        		(IImplementationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class));
     }
 
     @Override

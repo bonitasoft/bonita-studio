@@ -58,56 +58,63 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 	private Data oldData;
 	private EditingDomain domain;
 	private boolean updateDataReferences = false;
+	private CompoundCommand finalCommand;
 
 	@Override
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		Assert.isNotNull(parentProcess) ;
 		Assert.isNotNull(oldData) ;
-		Assert.isNotNull(domain) ;
+		Assert.isNotNull(domain);
+		Assert.isNotNull(finalCommand);
 		monitor.beginTask(Messages.refactoringData, IProgressMonitor.UNKNOWN) ;
-		CompoundCommand cc = new CompoundCommand("Refactor Data Command") ;
-
+		//CompoundCommand finalCommand=new CompoundCommand("Refactor Data Command");
+		//CompoundCommand cc = new CompoundCommand("Refactor Data Command") ;
+		//finalCommand.append(cc);
 		if(newData !=null){
 			//TODO : find an intelligent way to search references to the oldData and replace them with the new one instead of writing specific code for each usecase
-			updateDataReferenceInVariableExpressions(cc);
-			domain.getCommandStack().execute(cc) ;
-			cc =  new CompoundCommand("Refactor Data Command") ;
-			updateDataReferenceInExpressions(cc);
+			updateDataReferenceInVariableExpressions(finalCommand);
+			//domain.getCommandStack().execute(cc) ;
+		//	cc =  new CompoundCommand("Refactor Data Command") ;
+			//finalCommand.append(cc);
+			updateDataReferenceInExpressions(finalCommand);
 			if(updateDataReferences ){
-				cc =  new CompoundCommand("Refactor Data Command") ;
-				updateDataInListsOfData(cc);
-				domain.getCommandStack().execute(cc) ;
-				cc =  new CompoundCommand("Refactor Data Command") ;
-				updateDataReferenceInMultinstanciation(cc);
-				domain.getCommandStack().execute(cc) ;
+			//	cc =  new CompoundCommand("Refactor Data Command") ;
+			//	finalCommand.append(cc);
+				updateDataInListsOfData(finalCommand);
+				//domain.getCommandStack().execute(cc) ;
+			//	cc =  new CompoundCommand("Refactor Data Command") ;
+				//finalCommand.append(cc);
+				updateDataReferenceInMultinstanciation(finalCommand);
+				//domain.getCommandStack().execute(cc) ;
 			}
 		}else{
-			removeAllDataReferences(cc);
+			removeAllDataReferences(finalCommand);
 		}
-		domain.getCommandStack().execute(cc) ;
+		
+	//	domain.getCommandStack().execute(finalCommand) ;
 		monitor.done() ;
 	}
 
-	private void updateDataReferenceInExpressions(CompoundCommand cc) {
+	private void updateDataReferenceInExpressions(CompoundCommand finalCommand) {
 		List<Expression> expressions = ModelHelper.getAllItemsOfType(parentProcess, ExpressionPackage.Literals.EXPRESSION) ;
 		for(Expression exp : expressions){
-			cc =  new CompoundCommand("Refactor Data Command") ;
+			//CompoundCommand cc =  new CompoundCommand("Refactor Data Command") ;
 			for(EObject dependency : exp.getReferencedElements()){
 				if(dependency instanceof Data){
 					if(((Data)dependency).getName().equals(oldData.getName())){
-						cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, dependency));
-						cc.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(newData)));
+						finalCommand.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, dependency));
+						finalCommand.append(AddCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS, EcoreUtil.copy(newData)));
 					}
 				}
 			}
-			if(!cc.isEmpty()){
-				for(org.eclipse.emf.common.command.Command c :cc.getCommandList()){
-					if(c.canExecute()){
-						domain.getCommandStack().execute(c) ;
-					}
-				}
-			}
-			cc.dispose();
+//		if(!cc.isEmpty()){
+//				for(org.eclipse.emf.common.command.Command c :cc.getCommandList()){
+//					if(c.canExecute()){
+//						domain.getCommandStack().execute(c) ;
+//					}
+//				}
+//			finalCommand.append(cc);
+//			}
 		}
 	}
 
@@ -217,5 +224,9 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 
 	public void setUpdateDataReferences(boolean updateDataReferences) {
 		this.updateDataReferences = updateDataReferences;
+	}
+	
+	public void setCompoundCommand(CompoundCommand finalCommand){
+		this.finalCommand = finalCommand;
 	}
 }

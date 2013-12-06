@@ -26,6 +26,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.AbstractCatchMessageEvent;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.ThrowMessageEvent;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -34,6 +35,8 @@ import org.eclipse.emf.ecore.EObject;
 public class CatchMessageEventNamesExpressionNatureProvider implements IExpressionNatureProvider {
 
 	private List<AbstractProcess> processes;
+	private ThrowMessageEvent throwMessage;
+
 
 	@Override
 	public Expression[] getExpressions() {
@@ -42,7 +45,7 @@ public class CatchMessageEventNamesExpressionNatureProvider implements IExpressi
 			final Set<String> names = new HashSet<String>();
 			for(AbstractProcess process : processes){
 				for(AbstractCatchMessageEvent catchMessage :  ModelHelper.getAllCatchEvent(process)){
-					if(!names.contains(catchMessage.getName()) && catchMessage.getIncomingMessag() == null){
+					if(!names.contains(catchMessage.getName()) && (catchMessage.getIncomingMessag() == null || catchMessage.getIncomingMessag().getSource().equals(throwMessage))){
 						names.add(catchMessage.getName());
 					}
 				}
@@ -70,6 +73,10 @@ public class CatchMessageEventNamesExpressionNatureProvider implements IExpressi
 
 	}
 
+	public void setThrowMessage(ThrowMessageEvent throwMessage){
+		this.throwMessage = throwMessage;
+	}
+	
 	@Override
 	public AbstractProcess getContext() {
 		return null;

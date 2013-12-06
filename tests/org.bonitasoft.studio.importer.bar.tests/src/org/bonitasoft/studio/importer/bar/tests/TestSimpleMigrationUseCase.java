@@ -56,12 +56,14 @@ import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.StartMessageEvent;
 import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationPackage;
 import org.bonitasoft.studio.validators.descriptor.validator.ValidatorDescriptor;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorFileStore;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
 import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.core.IJavaProject;
 import org.junit.AfterClass;
@@ -300,18 +302,40 @@ public class TestSimpleMigrationUseCase {
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
 		List<Message> messages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.MESSAGE);
+		List<EObject> startMessageEventList = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.START_MESSAGE_EVENT);
 		for(Message message : messages){
 			assertFalse("Message content should not be empty",message.getMessageContent().getExpressions().isEmpty());
 			assertFalse("Message target processs hould not be empty",message.getTargetProcessExpression().getContent().isEmpty());
 			assertFalse("Message target element should not be empty",message.getTargetElementExpression().getContent().isEmpty());
-			assertEquals("Invalid correlation type",CorrelationTypeActive.KEYS,message.getCorrelation().getCorrelationType());
+			Expression target = message.getTargetElementExpression();
+			
+			if (isTargetIsStartMessageEvent(startMessageEventList, target.getName())) {
+				assertEquals("Invalid correlation type",CorrelationTypeActive.INACTIVE,message.getCorrelation().getCorrelationType());
+			} else {
+				assertEquals("Invalid correlation type",CorrelationTypeActive.KEYS,message.getCorrelation().getCorrelationType());
+			}
 			assertFalse("Invalid correlation association",message.getCorrelation().getCorrelationAssociation().getExpressions().isEmpty());
 		}
 		List<AbstractCatchMessageEvent> catchMessages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT);
 		for(AbstractCatchMessageEvent message : catchMessages){
+		if (!(message instanceof StartMessageEvent)){
 			assertFalse("Invalid correlation association",message.getCorrelation().getExpressions().isEmpty());
+			}
+		else {
+			assertTrue("startMessageEvent should not contain correlation Keis", message.getCorrelation()==null);
+		}
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+	
+	private boolean isTargetIsStartMessageEvent(List<EObject> allStartMessagesEvent, String name){
+		for (EObject messageEvent:allStartMessagesEvent){
+			StartMessageEvent sme = (StartMessageEvent)messageEvent;
+			if (sme.getName().equals(name)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Test

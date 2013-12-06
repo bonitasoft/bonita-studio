@@ -430,6 +430,9 @@ public class Repository implements IRepository {
 					IJobManager jobManager = Job.getJobManager(); 
 					jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, NULL_PROGRESS_MONITOR);
 					jobManager.join(ResourcesPlugin.FAMILY_MANUAL_BUILD, NULL_PROGRESS_MONITOR);
+					getProject().build(IncrementalProjectBuilder.FULL_BUILD, monitor);
+					jobManager.join(ResourcesPlugin.FAMILY_AUTO_BUILD, NULL_PROGRESS_MONITOR);
+					jobManager.join(ResourcesPlugin.FAMILY_MANUAL_BUILD, NULL_PROGRESS_MONITOR);
 				}
 			} catch (Exception ex) {
 				BonitaStudioLog.error(ex);

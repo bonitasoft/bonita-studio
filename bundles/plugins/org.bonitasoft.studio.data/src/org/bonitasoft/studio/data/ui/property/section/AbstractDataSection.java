@@ -49,6 +49,7 @@ import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
 import org.eclipse.emf.databinding.edit.IEMFEditListProperty;
 import org.eclipse.emf.ecore.EObject;
@@ -201,9 +202,11 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 				if (tableViewer != null && ((IStructuredSelection) tableViewer.getSelection()).size() > 0) {
 					List<?> selection = ((IStructuredSelection) tableViewer.getSelection()).toList();
 					if (MessageDialog.openConfirm(parent.getShell(), Messages.deleteDataDialogTitle, createMessage())) {
+						CompoundCommand cc = new CompoundCommand("Remove list of data");
 						IProgressService service = PlatformUI.getWorkbench().getProgressService();
 						for(Object d : selection){
 							RefactorDataOperation op = new RefactorDataOperation();
+							op.setCompoundCommand(cc);
 							op.setContainer(ModelHelper.getParentProcess(eObject));
 							op.setEditingDomain(getEditingDomain());
 							op.setOldData((Data) d);
@@ -215,7 +218,8 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 								BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
 							}
 						}
-						getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), selection));
+						cc.append(DeleteCommand.create(getEditingDomain(), selection));
+						getEditingDomain().getCommandStack().execute(cc);
 						tableViewer.refresh() ;
 						try {
 							RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.EMPTY_MAP,null);
@@ -332,7 +336,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		 } else {
 			 DataWizard wizard = new DataWizard((Data) selection.getFirstElement(),getDataFeature(),getDataFeatureToCheckUniqueID(), getShowAutoGenerateForm());
 			 wizard.setIsPageFlowContext(isPageFlowContext());
-			 WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard );
+			 WizardDialog wizardDialog = new DataWizardDialog(Display.getCurrent().getActiveShell(), wizard,null);
 			 wizardDialog.open();
 			 tableViewer.setInput(getEObject());
 		 }

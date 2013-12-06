@@ -30,10 +30,14 @@ import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementationPackage;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
 import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractImplementationWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorImplementationWizard;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.emf.databinding.EMFObservables;
+import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
+import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.wizard.IWizardPage;
 
@@ -79,7 +83,6 @@ public class FilterImplementationWizard extends ConnectorImplementationWizard {
         return Messages.actorFilterImplementationPageTitle;
     }
 
-
     @Override
     protected String getPageDescription() {
         return Messages.actorFilterImplementationPageDesc ;
@@ -98,6 +101,13 @@ public class FilterImplementationWizard extends ConnectorImplementationWizard {
 			@Override
 			protected ITreeContentProvider getCustomContentProvider() {
 				return  new FilterUniqueDefinitionContentProvider(true);
+			}
+
+			@Override
+			protected void bindValue() {
+				final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(explorer.getRightTableViewer());
+				context.bindValue(observeSingleSelection, EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_ID),defIdStrategy,defModelStrategy) ;
+				context.bindValue(ViewersObservables.observeSingleSelection(versionCombo), EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_VERSION));
 			}
 			
 		};

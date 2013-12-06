@@ -90,7 +90,7 @@ public abstract class SelectionAwareExpressionEditor implements IExpressionEdito
 			Class<?> expressionReturnTypeClass = Class.forName(expressionReturnType);
 			return currentReturnTypeClass.isAssignableFrom(expressionReturnTypeClass);
 		}catch (Exception ex) {
-			BonitaStudioLog.debug("Failed to determine the compatbility between "+expressionReturnType+" and "+currentReturnType, ExpressionEditorPlugin.PLUGIN_ID);
+			BonitaStudioLog.debug("Failed to determine the compatibility between "+expressionReturnType+" and "+currentReturnType, ExpressionEditorPlugin.PLUGIN_ID);
 		}
 		return true;
 	}

@@ -26,6 +26,7 @@ import org.bonitasoft.studio.connectors.test.swtbot.SWTBotConnectorTestUtil;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.junit.Test;
@@ -66,7 +67,14 @@ public class TestDatabaseConnectorOutputMode extends SWTBotGefTestCase implement
 
 	private void addDBConnectorWithPatternExpression(String connectorLabel,
 			String connectorVersion, String[] dbCategoryLabel,String connectorName) {
-		SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorLabel,connectorVersion,dbCategoryLabel, connectorName);
+		//SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorLabel,connectorVersion,dbCategoryLabel, connectorName);
+		SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
+		bot.button("Add...").click();
+		bot.text().setText(connectorLabel);
+		bot.table().select(0);
+		bot.button(IDialogConstants.NEXT_LABEL).click();
+		bot.textWithLabel("Name *").setText(connectorName);
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.NEXT_LABEL)),5000);
 		bot.button(IDialogConstants.NEXT_LABEL).click();
 		bot.button(IDialogConstants.NEXT_LABEL).click();
 		bot.button(IDialogConstants.NEXT_LABEL).click();

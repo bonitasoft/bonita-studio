@@ -891,19 +891,20 @@ public class SWTBotTestUtil implements SWTBotConstants{
 	public static void editConnector(SWTGefBot bot, String connectorType, String connectorTool){
 
 		bot.waitUntil(Conditions.shellIsActive("Connectors"));
-		SWTBotTree tree = bot.tree();
-		tree.expandNode(connectorType);
-		SWTBotTreeItem theItem = tree.getTreeItem(connectorType);
-		Assert.assertNotNull("Error : No item "+connectorType+" found in the tree.", theItem);
-		for( SWTBotTreeItem item : theItem.getItems()){
-			System.out.println("item = "+item.getText());
-			if(item.getText().startsWith(connectorTool)){
-				item.select();
-				item.click();
-				break;
-			}
-		}
-
+//		SWTBotTree tree = bot.tree();
+//		tree.expandNode(connectorType);
+//		SWTBotTreeItem theItem = tree.getTreeItem(connectorType);
+//		Assert.assertNotNull("Error : No item "+connectorType+" found in the tree.", theItem);
+//		for( SWTBotTreeItem item : theItem.getItems()){
+//			System.out.println("item = "+item.getText());
+//			if(item.getText().startsWith(connectorTool)){
+//				item.select();
+//				item.click();
+//				break;
+//			}
+//		}
+		bot.text().setText(connectorTool);
+		bot.table().select(0);
 		Assert.assertTrue("Error : No "+ connectorTool +" "+connectorType +" found in the connector list", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
 
 		bot.button(IDialogConstants.NEXT_LABEL).click();

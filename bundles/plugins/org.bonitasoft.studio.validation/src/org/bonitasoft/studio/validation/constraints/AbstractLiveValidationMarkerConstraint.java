@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.BoundaryEvent;
@@ -43,6 +44,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.validation.AbstractModelConstraint;
 import org.eclipse.emf.validation.EMFEventType;
@@ -87,14 +89,31 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
 				}
 			}
 		}
+		EObject target = ctx.getTarget();
+		if(isAExpressionReferencedElement(target)){
+			return ctx.createSuccessStatus();
+		}
 		if (eType != EMFEventType.NULL) { //LIVE
 			status = performLiveValidation(ctx);
 			updateValidationMarkersOnDiagram(status, ctx);
 		}else{ //Batch
 			status = performBatchValidation(ctx);
 		}
-		
+
 		return status;
+	}
+
+	protected boolean isAExpressionReferencedElement(EObject target) {
+		if(target != null){
+			EObject current = target;
+			EReference ref = current.eContainmentFeature();
+			while (ref != null && !ref.equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
+				current = current.eContainer();
+				ref = current.eContainmentFeature();
+			}
+			return ref != null;
+		}
+		return false;
 	}
 
 	private void updateValidationMarkersOnDiagram(IStatus status,IValidationContext context) {
@@ -153,9 +172,9 @@ public abstract class AbstractLiveValidationMarkerConstraint extends AbstractMod
 
 	protected String getMarkerType(DiagramEditor editor){
 		if(editor instanceof ProcessDiagramEditor){
-			 return ProcessMarkerNavigationProvider.MARKER_TYPE;
+			return ProcessMarkerNavigationProvider.MARKER_TYPE;
 		}else if (editor instanceof FormDiagramEditor){
-			 return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
+			return org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider.MARKER_TYPE;
 		}
 		return null;
 	}
