@@ -24,8 +24,10 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -39,80 +41,111 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 
-    private static boolean before;
+	private static boolean before;
 
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        before = ImportFileCommand.isTest;
-        ImportFileCommand.isTest = true;
-    }
+	@BeforeClass
+	public static void setUpBeforeClass() {
+		before = ImportFileCommand.isTest;
+		ImportFileCommand.isTest = true;
+	}
 
-    @AfterClass
-    public static void tearDownAfterClass() {
-        ImportFileCommand.isTest = before;
-    }
+	@AfterClass
+	public static void tearDownAfterClass() {
+		ImportFileCommand.isTest = before;
+	}
 
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        bot.saveAllEditors();
-        bot.closeAllEditors();
-    }
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		bot.saveAllEditors();
+		bot.closeAllEditors();
+	}
 
-    @Override
-    protected void tearDown() throws Exception {
-        bot.saveAllEditors();
-        bot.closeAllEditors();
-    }
+	@Override
+	protected void tearDown() throws Exception {
+		bot.saveAllEditors();
+		bot.closeAllEditors();
+	}
 
-    @Test
-    public void testImportAndOverrideWithProcessEditorOpen() throws Exception {
+	@Test
+	public void testImportAndOverrideWithProcessEditorOpen() throws Exception {
 
-        /* import the base process to override */
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+		/* import the base process to override */
+		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
+		SWTBotEditor botEditor = bot.activeEditor();
+		final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 
-        IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-        MainProcess model = (MainProcess)part.resolveSemanticElement();
-        assertNotNull("no pool found (import failed?)",model);
-        assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
-        assertEquals("Unique description 0", model.getDocumentation());
+		IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
+		MainProcess model = (MainProcess)part.resolveSemanticElement();
+		assertNotNull("no pool found (import failed?)",model);
+		assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
+		assertEquals("Unique description 0", model.getDocumentation());
 
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
-        botEditor = bot.activeEditor();
-        gmfEditor = bot.gefEditor(botEditor.getTitle());
-        
-        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
-        
-        part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-        model = (MainProcess)part.resolveSemanticElement();
-        assertNotNull("no pool found (import failed?)",model);
-        assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
-        assertEquals("Unique description 1", model.getDocumentation());
-    }
+		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
+		botEditor = bot.activeEditor();
+		final SWTBotGefEditor gmfEditor2 = bot.gefEditor(botEditor.getTitle());
 
-    @Test
-    public void testImportAndOverrideWithFormEditorOpen() throws Exception {
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
-        SWTBotEditor botEditor = bot.activeEditor();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
-        
-        
-        SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
-        SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_2ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
-        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
-        
-        
-        botEditor = bot.activeEditor();
-        gmfEditor = bot.gefEditor(botEditor.getTitle());
-        IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
-        MainProcess model = (MainProcess)part.resolveSemanticElement();
-        assertNotNull("no pool found (import failed?)",model);
-        assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
-        assertEquals("Unique description 2", model.getDocumentation());
-    }
+		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
+
+		part = (IGraphicalEditPart)gmfEditor2.mainEditPart().part();
+		model = (MainProcess)part.resolveSemanticElement();
+		assertNotNull("no pool found (import failed?)",model);
+		assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
+		bot.waitUntil(new ICondition() {
+
+			public boolean test() throws Exception {
+				MainProcess diagram = (MainProcess) ((IGraphicalEditPart)gmfEditor2.mainEditPart().part()).resolveSemanticElement();
+				return "Unique description 1".equals(diagram.getDocumentation());
+			}
+
+			public void init(SWTBot bot) {
+
+			}
+
+			public String getFailureMessage() {
+				MainProcess diagram = (MainProcess) ((IGraphicalEditPart)gmfEditor2.mainEditPart().part()).resolveSemanticElement();
+				return "Unique description 1 was expected but was :"+diagram.getDocumentation();
+			}
+		},10000,500);
+	}
+
+	@Test
+	public void testImportAndOverrideWithFormEditorOpen() throws Exception {
+		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
+		SWTBotEditor botEditor = bot.activeEditor();
+		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
+
+
+		SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
+		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_2ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
+		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
+
+
+		botEditor = bot.activeEditor();
+		final SWTBotGefEditor gmfEditor2 = bot.gefEditor(botEditor.getTitle());
+		IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor2.mainEditPart().part();
+		MainProcess model = (MainProcess)part.resolveSemanticElement();
+		assertNotNull("no pool found (import failed?)",model);
+		assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
+		bot.waitUntil(new ICondition() {
+
+			public boolean test() throws Exception {
+				MainProcess diagram = (MainProcess) ((IGraphicalEditPart)gmfEditor2.mainEditPart().part()).resolveSemanticElement();
+				return "Unique description 2".equals(diagram.getDocumentation());
+			}
+
+			public void init(SWTBot bot) {
+
+			}
+
+			public String getFailureMessage() {
+				MainProcess diagram = (MainProcess) ((IGraphicalEditPart)gmfEditor2.mainEditPart().part()).resolveSemanticElement();
+				return "Unique description 2 was expected but was :"+diagram.getDocumentation();
+			}
+		},10000,500);
+		assertEquals("Unique description 2", model.getDocumentation());
+	}
 
 }
