@@ -17,7 +17,7 @@
 package org.bonitasoft.studio.data.ui.property.section;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -200,7 +200,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 			}
 			getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), structuredSelection.toList()));
 			try {
-				RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.EMPTY_MAP,null);
+				RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,new HashMap<String, String>(),null);
 			} catch (CoreException e) {
 				BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
 			}
@@ -222,6 +222,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		return moveData;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void moveData(IStructuredSelection structuredSelection) {
 		MoveDataWizard moveDataWizard = new MoveDataWizard((DataAware) getEObject());
 		if(new WizardDialog(Display.getDefault().getActiveShell(),moveDataWizard).open() == Dialog.OK){
