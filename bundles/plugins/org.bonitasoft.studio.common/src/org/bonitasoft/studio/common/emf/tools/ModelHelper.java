@@ -966,6 +966,7 @@ public class ModelHelper {
 			 Expression expr = (Expression)o;
 			 if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())){
 				 if (isElementIsReferencedInScript(expr, element)){
+					 
 					 result.add(expr);
 				 }
 			 }
@@ -979,16 +980,29 @@ public class ModelHelper {
 		 if (!expr.getReferencedElements().isEmpty()){
 			 for (EObject o:expr.getReferencedElements()){
 				 if ( element instanceof Element && o instanceof Element && ((Element)element).getName().equals(((Element)o).getName())){
-					 return true;
+					 return (true && isAExpressionReferencedElement(o));
 				 } else {
 					 if (element instanceof Parameter && o instanceof Parameter && ((Parameter)element).getName().equals(((Parameter)o).getName())){
-						 return true;
+						 return true && isAExpressionReferencedElement(o);
 					 }
 				 }
 			 }
 		 }
 		 return false;
 	 }
+	 
+	 private static boolean isAExpressionReferencedElement(EObject target) {
+			if(target != null){
+				EObject current = target;
+				EReference ref = current.eContainmentFeature();
+				while (ref != null && !ref.equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
+					current = current.eContainer();
+					ref = current.eContainmentFeature();
+				}
+				return ref != null;
+			}
+			return false;
+		}
 
 	public static Set<Form> getAllFormsContainedIn(EObject copiedElement) {
 		// TODO : improve algo
