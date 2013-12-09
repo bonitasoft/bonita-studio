@@ -3,21 +3,13 @@ package org.bonitasoft.studio.common.refactoring;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.expression.ListExpression;
-import org.bonitasoft.studio.model.expression.Operation;
-import org.bonitasoft.studio.model.expression.TableExpression;
-import org.bonitasoft.studio.model.form.Validator;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.Correlation;
-import org.bonitasoft.studio.model.process.Element;
-import org.bonitasoft.studio.model.process.PageFlowTransition;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.SearchIndex;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
 import org.eclipse.compare.IContentChangeListener;
@@ -25,6 +17,7 @@ import org.eclipse.compare.IContentChangeNotifier;
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.compare.structuremergeviewer.DiffTreeViewer;
 import org.eclipse.compare.structuremergeviewer.Differencer;
+import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -39,7 +32,6 @@ import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
 public class BonitaCompareEditorInput extends CompareEditorInput{
 
@@ -184,111 +176,121 @@ public class BonitaCompareEditorInput extends CompareEditorInput{
 		node.setParent(parentNode);
 		parentNode.add(node);
 		CompareScript ancestor =null;
-		if (container instanceof SearchIndex){
-			Expression expr = ExpressionHelper.createConstantExpression("SearchIndex", String.class.getName());
-			expr.setName("SearchIndex");
-			ancestor = new CompareScript(expr.getName()+" "+((SearchIndex)container).getName().getName(),expr);
-		} else {
-			if (container instanceof Parameter){
-				Expression expr = ExpressionHelper.createConstantExpression("Parameter", String.class.getName());
-				expr.setName("Parameter");
-				ancestor = new CompareScript(expr.getName()+" "+((Parameter)container).getName(),expr);
+//		if (container instanceof SearchIndex){
+//			Expression expr = ExpressionHelper.createConstantExpression("SearchIndex", String.class.getName());
+//			expr.setName("SearchIndex");
+//			ancestor = new CompareScript(expr.getName()+" "+((SearchIndex)container).getName().getName(),expr);
+//		}
+//		if (container instanceof Parameter){
+//			Expression expr = ExpressionHelper.createConstantExpression("Parameter", String.class.getName());
+//			expr.setName("Parameter");
+//			ancestor = new CompareScript(expr.getName()+" "+((Parameter)container).getName(),expr);
+//		}
+//		if (container instanceof ConnectorParameter){
+//			String name="Connector parameter";
+//			Expression expr = ExpressionHelper.createConstantExpression(name,String.class.getName());
+//			expr.setName(name);
+//			ancestor = new CompareScript(expr.getName(),expr);
+//		}
+//		if (container instanceof Operation){
+//			Expression expr = ExpressionHelper.createConstantExpression("Operation", String.class.getName());
+//			expr.setName("Operation");
+//			ancestor = new CompareScript(expr.getName(),expr);
+//		}
+//		if (container instanceof Expression){
+//			Expression expr = ExpressionHelper.createConstantExpression("Expression", String.class.getName());
+//			expr.setName("Expression");
+//			ancestor = new CompareScript(expr.getName(),expr);
+//		}
+//		if (container instanceof ListExpression){
+//			Expression expr = ExpressionHelper.createConstantExpression("List of Expression", String.class.getName());
+//			expr.setName("List of Expression");
+//			ancestor = new CompareScript(expr.getName(),expr);
+//		}
+//		if (container instanceof TableExpression){
+//			Expression expr = ExpressionHelper.createConstantExpression("Table of Expression", String.class.getName());
+//			expr.setName("Table of Expression");
+//			ancestor = new CompareScript(expr.getName(),expr);
+//		} 
+//		if (container instanceof Validator){
+//			Expression expr = ExpressionHelper.createConstantExpression("Validator", String.class.getName());
+//			expr.setName("Validator");
+//			ancestor = new CompareScript(expr.getName()+" "+((Validator)container).getName(),expr);
+//		}
+//		if (container instanceof PageFlowTransition){
+//			Expression expr = ExpressionHelper.createConstantExpression("Page flow transition", String.class.getName());
+//			expr.setName("Page flow transition");
+//			ancestor = new CompareScript(expr.getName(),expr);
+//		}
+//		if (container instanceof Correlation){
+//			Expression expr = ExpressionHelper.createConstantExpression("Correlation", String.class.getName());
+//			expr.setName("Correlation");
+//			ancestor = new CompareScript(expr.getName(),expr);
+//		} 
+//		if (container instanceof Element){
+			String name=adapterFactoryLabelProvider.getText(container);
+			Expression expr = ExpressionHelper.createConstantExpression(name,String.class.getName());
+			expr.setName(name);
+			ancestor = new CompareScript(expr.getName(),expr);
+//		}
+
+	ancestor.setImage(adapterFactoryLabelProvider.getImage(container));
+	parentNode.setAncestor(ancestor);
+	if (container instanceof Pool){
+		return parentNode;
+	}
+	if (container instanceof ConnectorParameter){
+		return buildPathNodes(container.eContainer().eContainer(), parentNode);
+	}
+	return buildPathNodes(container.eContainer(),parentNode);
+}
+
+//	private void insertNode(DiffNode nodeToInsert){
+//		for (IDiffElement node:root.getChildren()){
+//			DiffNode diffNode = (DiffNode)node;
+//			if (diffNode.getAncestor().equals(ancestor.getName())){
+//				return diffNode;
+//			} else {
+//				if (diffNode.hasChildren()){
+//					return findNodeWithSameAncestor((CompareScript)diffNode.getAncestor());
+//				}
+//			}
+//		}
+//		
+//		return null;
+//	}
+	
+	
+@Override
+public void saveChanges(IProgressMonitor monitor) throws CoreException {
+	super.saveChanges(monitor);
+	for (int i=0; i<oldExpressions.size();i++){
+		if (!oldExpressions.get(i).getContent().equals(newExpressions.get(i).getContent())){
+			cc.append(SetCommand.create(domain,oldExpressions.get(i) , ExpressionPackage.Literals.EXPRESSION__CONTENT, newExpressions.get(i).getContent()));
+			if (ExpressionConstants.CONDITION_TYPE.equals(oldExpressions.get(i).getType())){
+				cc.append(SetCommand.create(domain, oldExpressions.get(i),ExpressionPackage.Literals.EXPRESSION__NAME, newExpressions.get(i).getContent()));
 			}
-			else {
-				if (container instanceof ConnectorParameter){
-					String name="Connector parameter";
-					Expression expr = ExpressionHelper.createConstantExpression(name,String.class.getName());
-					expr.setName(name);
-					ancestor = new CompareScript(expr.getName(),expr);
-				} else {
-					if (container instanceof Operation){
-						Expression expr = ExpressionHelper.createConstantExpression("Operation", String.class.getName());
-						expr.setName("Operation");
-						ancestor = new CompareScript(expr.getName(),expr);
-					} else {
-						if (container instanceof Expression){
-							Expression expr = ExpressionHelper.createConstantExpression("Expression", String.class.getName());
-							expr.setName("Expression");
-							ancestor = new CompareScript(expr.getName(),expr);
-						} else {
-							if (container instanceof ListExpression){
-								Expression expr = ExpressionHelper.createConstantExpression("List of Expression", String.class.getName());
-								expr.setName("List of Expression");
-								ancestor = new CompareScript(expr.getName(),expr);
-							} else {
-								if (container instanceof TableExpression){
-									Expression expr = ExpressionHelper.createConstantExpression("Table of Expression", String.class.getName());
-									expr.setName("Table of Expression");
-									ancestor = new CompareScript(expr.getName(),expr);
-								} else {
-									if (container instanceof Validator){
-										Expression expr = ExpressionHelper.createConstantExpression("Validator", String.class.getName());
-										expr.setName("Validator");
-										ancestor = new CompareScript(expr.getName()+" "+((Validator)container).getName(),expr);
-									} else {
-										if (container instanceof PageFlowTransition){
-											Expression expr = ExpressionHelper.createConstantExpression("Page flow transition", String.class.getName());
-											expr.setName("Page flow transition");
-											ancestor = new CompareScript(expr.getName(),expr);
-										} else {
-											if (container instanceof Correlation){
-												Expression expr = ExpressionHelper.createConstantExpression("Correlation", String.class.getName());
-												expr.setName("Correlation");
-												ancestor = new CompareScript(expr.getName(),expr);
-											}
-											if (container instanceof Element){
-												String name=adapterFactoryLabelProvider.getText(container);
-												Expression expr = ExpressionHelper.createConstantExpression(name,String.class.getName());
-												expr.setName(name);
-												ancestor = new CompareScript(expr.getName(),expr);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
 		}
-		ancestor.setImage(adapterFactoryLabelProvider.getImage(container));
-		parentNode.setAncestor(ancestor);
-		if (container instanceof Pool){
-			return parentNode;
-		}
-		if (container instanceof ConnectorParameter){
-			return buildPathNodes(container.eContainer().eContainer(), parentNode);
-		}
-		return buildPathNodes(container.eContainer(),parentNode);
 	}
-
-	@Override
-	public void saveChanges(IProgressMonitor monitor) throws CoreException {
-		super.saveChanges(monitor);
-		for (int i=0; i<oldExpressions.size();i++){
-			if (!oldExpressions.get(i).getContent().equals(newExpressions.get(i).getContent())){
-				cc.append(SetCommand.create(domain,oldExpressions.get(i) , ExpressionPackage.Literals.EXPRESSION__CONTENT, newExpressions.get(i).getContent()));
-			}
-		}
-		status = true;
-	}
+	status = true;
+}
 
 
 
 
-	public boolean getStatus(){
-		return status;
-	}
+public boolean getStatus(){
+	return status;
+}
 
-	@Override
-	public boolean isDirty() {
-		return true;
-	}
+@Override
+public boolean isDirty() {
+	return true;
+}
 
 
-	@Override
-	public Object getCompareResult() {
-		return super.getCompareResult();
-	}
+@Override
+public Object getCompareResult() {
+	return super.getCompareResult();
+}
 
 }

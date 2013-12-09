@@ -16,6 +16,7 @@ import org.eclipse.compare.structuremergeviewer.IStructureComparator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.internal.core.util.Util.Comparer;
 import org.eclipse.jdt.internal.ui.javaeditor.ClassFileDocumentProvider.InputChangeListener;
 import org.eclipse.jdt.internal.ui.javaeditor.IClassFileEditorInput;
@@ -24,12 +25,12 @@ import org.eclipse.swt.graphics.Image;
 public class CompareScript implements IStreamContentAccessor,IStructureComparator,IEditableContent, ITypedElement, IAdaptable, IContentChangeNotifier {
 
 	private String name;
-	private Expression content;
+	private EObject content;
 	private List<Object> children;
 	private ContentChangeNotifier changeNotifier;
 	private Image image;
 
-	CompareScript(String name,Expression content){
+	CompareScript(String name,EObject content){
 		this.name = name;
 		this.content = content;
 		children = new ArrayList<Object>();
@@ -56,11 +57,17 @@ public class CompareScript implements IStreamContentAccessor,IStructureComparato
 
 	@Override
 	public InputStream getContents() throws CoreException {
-		return new ByteArrayInputStream(content.getContent().getBytes());
+		if (content instanceof Expression){
+			return new ByteArrayInputStream(((Expression)content).getContent().getBytes());
+		}
+		return null;
 	}
 	
 	public Expression getContentExpression(){
-		return content;
+		if (content instanceof Expression){
+			return (Expression)content;
+		} 
+		return null;
 	}
 
 	@Override
@@ -85,7 +92,9 @@ public class CompareScript implements IStreamContentAccessor,IStructureComparato
 
 	@Override
 	public void setContent(byte[] arg0) {
-		content.setContent(new String(arg0));
+		if (content instanceof Expression){
+			((Expression)content).setContent(new String(arg0));
+		}
 		if (changeNotifier !=null){
 			changeNotifier.fireContentChanged();
 		}

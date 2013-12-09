@@ -9,6 +9,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 public abstract class AbstractRefactorOperation implements
 		IRunnableWithProgress {
 
+	public static final String EMPTY_VALUE = "     ";
+	
 	protected String newValue;
 	protected CompoundCommand cc;
 	@Override

@@ -97,7 +97,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation implement
 	}
 
 	public  void refactorReferencesInScripts(){
-		List<Expression> scriptsToRefactor = ModelHelper.findAllScriptExpressionWithReferencedElement(ModelHelper.getPageFlow(widget), widget);
+		List<Expression> scriptsToRefactor = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(ModelHelper.getPageFlow(widget), widget);
 		if (!scriptsToRefactor.isEmpty() && cc!=null){
 			try {
 				BonitaGroovyRefactoringAction action = new BonitaGroovyRefactoringAction(widget.getName(), newName,scriptsToRefactor , cc, editingDomain);

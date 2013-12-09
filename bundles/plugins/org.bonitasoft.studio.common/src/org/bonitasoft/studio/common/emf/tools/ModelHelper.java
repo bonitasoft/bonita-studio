@@ -960,11 +960,11 @@ public class ModelHelper {
 	 
 	 
 	 
-	 public static List<Expression> findAllScriptExpressionWithReferencedElement(EObject container,EObject element){
+	 public static List<Expression> findAllScriptAndConditionsExpressionWithReferencedElement(EObject container,EObject element){
 		 List<Expression> result = new ArrayList<Expression>();
 		 for (EObject o:ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION)){
 			 Expression expr = (Expression)o;
-			 if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())){
+			 if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType())){
 				 if (isElementIsReferencedInScript(expr, element)){
 					 
 					 result.add(expr);
@@ -980,10 +980,10 @@ public class ModelHelper {
 		 if (!expr.getReferencedElements().isEmpty()){
 			 for (EObject o:expr.getReferencedElements()){
 				 if ( element instanceof Element && o instanceof Element && ((Element)element).getName().equals(((Element)o).getName())){
-					 return (true && isAExpressionReferencedElement(o));
+					 return (true && !isAExpressionReferencedElement(expr));
 				 } else {
 					 if (element instanceof Parameter && o instanceof Parameter && ((Parameter)element).getName().equals(((Parameter)o).getName())){
-						 return true && isAExpressionReferencedElement(o);
+						 return true && !isAExpressionReferencedElement(expr);
 					 }
 				 }
 			 }
@@ -992,16 +992,24 @@ public class ModelHelper {
 	 }
 	 
 	 private static boolean isAExpressionReferencedElement(EObject target) {
-			if(target != null){
-				EObject current = target;
-				EReference ref = current.eContainmentFeature();
-				while (ref != null && !ref.equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
-					current = current.eContainer();
-					ref = current.eContainmentFeature();
-				}
-				return ref != null;
-			}
-			return false;
+		 EObject container = target.eContainer();
+		 while (container!=null ){
+			 if (container instanceof Expression){
+				 return true;
+			 }
+			 container = container.eContainer();
+		 }
+		 return false;
+//			if(target != null){
+//				EObject current = target;
+//				EReference ref = current.eContainmentFeature();
+//				while (ref != null && !ref.equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
+//					current = current.eContainer();
+//					ref = current.eContainmentFeature();
+//				}
+//				return ref != null;
+//			}
+//			return false;
 		}
 
 	public static Set<Form> getAllFormsContainedIn(EObject copiedElement) {

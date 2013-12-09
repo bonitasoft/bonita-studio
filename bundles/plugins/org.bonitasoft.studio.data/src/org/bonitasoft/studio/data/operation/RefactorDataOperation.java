@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.AbstractRefactorOperation;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -154,7 +155,7 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 				cc.append(SetCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__TYPE, ExpressionConstants.CONSTANT_TYPE));
 				//update referenced data
 				cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,exp.getReferencedElements()));
-			}else if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType()) ){
+			}else if(ExpressionConstants.SCRIPT_TYPE.equals(exp.getType()) || ExpressionConstants.CONDITION_TYPE.equals(exp.getType())){
 				Set<EObject> toRemove = new HashSet<EObject>();
 				for(EObject dep : exp.getReferencedElements()){
 					if(dep instanceof Data){
@@ -165,6 +166,10 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 				}
 				if(!toRemove.isEmpty()){
 					cc.append(RemoveCommand.create(domain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,toRemove));
+				}
+			} else {
+				if (ExpressionConstants.CONDITION_TYPE.equals(exp.getType())){
+					
 				}
 			}
 
@@ -250,11 +255,16 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 	}
 
 	public void updateReferencesInScripts(){
+		String newName=null;
 		if (newData!=null){
-			scriptExpressions = ModelHelper.findAllScriptExpressionWithReferencedElement(oldData.eContainer(),oldData);
-			if (!scriptExpressions.isEmpty() && !oldData.getName().equals(newData.getName())){
+			newName=newData.getName();
+		} else {
+			newName=AbstractRefactorOperation.EMPTY_VALUE;
+		}
+			scriptExpressions = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(oldData.eContainer(),oldData);
+			if (!scriptExpressions.isEmpty() && !oldData.getName().equals(newName)){
 				try {
-					BonitaGroovyRefactoringAction action = new BonitaGroovyRefactoringAction(oldData.getName(), newData.getName(),scriptExpressions , finalCommand, domain);
+					BonitaGroovyRefactoringAction action = new BonitaGroovyRefactoringAction(oldData.getName(), newName,scriptExpressions , finalCommand, domain);
 					action.run(null);
 					canExecute  = action.getStatus();
 					//if (canExecute){
@@ -271,7 +281,6 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 				canExecute = true;
 			}
 		}
-	}
 
 	public EObject getDataToRemove(Expression expr){
 		for (EObject object:expr.getReferencedElements()){
