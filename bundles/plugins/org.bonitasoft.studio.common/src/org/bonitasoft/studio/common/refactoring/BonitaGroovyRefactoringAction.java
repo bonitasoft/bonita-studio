@@ -8,6 +8,9 @@ import java.util.List;
 
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.compare.CompareConfiguration;
@@ -49,7 +52,7 @@ public class BonitaGroovyRefactoringAction implements IWorkbenchWindowActionDele
 
 	private void initGroovyRefactoring() {
 
-		
+
 		final CompareConfiguration config=new CompareConfiguration();
 		config.setRightEditable(true);
 		config.setLeftEditable(false);
@@ -58,7 +61,7 @@ public class BonitaGroovyRefactoringAction implements IWorkbenchWindowActionDele
 		config.setProperty(CompareConfiguration.USE_OUTLINE_VIEW, true);
 		editorInput =new BonitaCompareEditorInput(config,groovyScriptExpressions,performRefactoringForAllScripts());
 		editorInput.setCompoundCommand(cc, domain);
-		
+
 	}
 
 
@@ -66,7 +69,7 @@ public class BonitaGroovyRefactoringAction implements IWorkbenchWindowActionDele
 	public void run(IAction action) {
 		CompareUI.openCompareDialog(editorInput);
 		status = editorInput.getStatus();
-		
+
 	}
 
 	private List<Expression> performRefactoringForAllScripts(){
@@ -78,27 +81,59 @@ public class BonitaGroovyRefactoringAction implements IWorkbenchWindowActionDele
 		}
 		return newExpressions;
 	}
-	
+
 	private String performRefactoring(String script){
-		return script.replaceAll(regex, newElementName);
+		//String regex = "([\\D\\W^_])"+elementToRefactorName+"[\\D\\W]";
+		String contextRegex="[\\D\\W^_]";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(script);
+		StringBuffer buf=new StringBuffer();
+		while(m.find()){
+			String prefix=null;
+			String suffix=null;
+			if (m.start()>0 ){
+				prefix =script.substring(m.start()-1, m.start());
+			}
+				if (m.end()<script.length()){
+					suffix = script.substring(m.end(),m.end()+1);
+				}
+				if (prefix==null && suffix==null){
+					m.appendReplacement(buf, newElementName);
+				} else {
+					if (prefix!=null && prefix.matches(contextRegex) && suffix==null){
+						m.appendReplacement(buf, newElementName);
+					} else {
+						if (prefix==null && suffix!=null && suffix.matches(contextRegex)){
+							m.appendReplacement(buf, newElementName);
+						} else {
+							if (prefix!=null && suffix!=null && prefix.matches(contextRegex) && suffix.matches(contextRegex)){
+								m.appendReplacement(buf, newElementName);
+							}
+						}
+					}
+				}
+
+			}
+			m.appendTail(buf);
+		return buf.toString();
 	}
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
 	public void dispose() {
-		
+
 	}
 
 
 	@Override
 	public void init(IWorkbenchWindow window) {
-		
+
 	}
 
 	public boolean getStatus(){
