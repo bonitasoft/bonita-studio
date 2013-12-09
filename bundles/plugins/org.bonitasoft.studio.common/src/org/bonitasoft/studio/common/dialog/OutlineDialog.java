@@ -64,7 +64,7 @@ public class OutlineDialog extends MessageDialog{
 		messageLabel.setLayout(GridLayoutFactory.fillDefaults().spacing(0, 30).create());
 		Composite viewersComposite = new Composite(mainComposite,SWT.NONE);
 		viewersComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(5,20).create());
-		viewersComposite.setLayoutData(GridDataFactory.fillDefaults().hint(350,250).grab(true,true).create());
+		viewersComposite.setLayoutData(GridDataFactory.fillDefaults().hint(450,250).grab(true,true).create());
 		objectListViewer = new ListViewer(viewersComposite);
 		objectListViewer.getList().setLayoutData(GridDataFactory.fillDefaults().hint(100,200).create());
 		objectListViewer.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
@@ -85,7 +85,7 @@ public class OutlineDialog extends MessageDialog{
 		objectListViewer.setInput(elementToDisplay);
 		
 		outline = new TreeViewer(viewersComposite);
-		outline.getTree().setLayoutData(GridDataFactory.fillDefaults().hint(200,200).create());
+		outline.getTree().setLayoutData(GridDataFactory.fillDefaults().hint(300,200).create());
 		outline.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
 		outline.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
 		outlineFilter = new OutlineFilter();
