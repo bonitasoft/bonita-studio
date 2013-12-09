@@ -195,14 +195,18 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		}                    
 
 		if (data.getDataType() instanceof EnumType && widget instanceof MultipleValuatedFormField) {
-			if(!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool && !ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA.equals(data.eContainingFeature()))){
+			if(!isOnInstantiationForm(data)){
 				((MultipleValuatedFormField) widget).setDefaultExpression(inputExpression);
 			}
 			inputExpression = ExpressionHelper.createExpressionFromEnumType((EnumType) data.getDataType());
 			((FormField) widget).setInputExpression(inputExpression);
-		}else if(!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool && !ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA.equals(data.eContainingFeature()))){ //Do not set input expression if we are in an instantiation form
+		}else if(!isOnInstantiationForm(data)){ //Do not set input expression if we are in an instantiation form
 			((FormField) widget).setInputExpression(inputExpression);
 		}
+	}
+
+	protected boolean isOnInstantiationForm(final Data data) {
+		return feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool && !ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA.equals(data.eContainingFeature());
 	}
 
 	protected void addOutputOperationForData(Widget widget,final EObject key) {
