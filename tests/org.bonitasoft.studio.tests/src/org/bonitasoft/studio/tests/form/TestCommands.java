@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.diagram.form.custom.tests;
+package org.bonitasoft.studio.tests.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,27 +152,7 @@ public class TestCommands extends TestCase {
 
     }
 
-    /*it seems that we can't create view programmatically due to a bug in GMF so the test will wait*/
-
-    //	public void testGridLayoutCreateCommand() throws Exception{
-    //	    FormDiagramEditor formEditor = openFormEditorWithBaseTestForForm();
-    //
-    //		Form actualForm = ((Form) formEditor.getDiagram().getElement());
-    //		Widget widget = FormFactory.eINSTANCE.createDateFormField();
-    //
-    //		Command set = new SetCommand(formEditor.getEditingDomain(), actualForm, FormPackage.eINSTANCE.getForm_Widgets(), widget);
-    //		formEditor.getEditingDomain().getCommandStack().execute(set);
-    //		//CreateViewRequestFactory.getCreateShapeRequest(widget., preferencesHint)
-    //		CreateViewRequest request = new CreateViewRequest(widget, FormDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
-    //		request.setLocation(new Point(200,30000));
-    //
-    //		GridLayoutCreateCommand c = new GridLayoutCreateCommand(formEditor.getEditingDomain(), request.getViewDescriptors().get(0), formEditor.getDiagramEditPart().getNotationView(), 3, 2);
-    //		//c.execute(null, formEditor);
-    //	}
-
-
     public void testCompositionOfCommand() throws Exception{
-        //	ProcessValidationProvider.DISABLE_VALIDATION = true ;
         FormDiagramEditor formEditor = openFormEditorWithBaseTestForForm();
 
         FormEditPart formEditPart = (FormEditPart) formEditor.getDiagramEditPart();
@@ -196,7 +176,6 @@ public class TestCommands extends TestCase {
         new RedoCommandHandler().execute(null);
         formEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
         formEditor.close(false);
-        //	ProcessValidationProvider.DISABLE_VALIDATION = false ;
     }
 
     public static FormDiagramEditor openFormEditorWithBaseTestForForm() throws Exception {
@@ -205,17 +184,6 @@ public class TestCommands extends TestCase {
         Form form = ((PageFlow) proc.getElements().get(0)).getForm().get(0);
         /* get the Diagram element related to the form in the resource */
         Diagram diag = ModelHelper.getDiagramFor(form, null);
-        //        Diagram diag = null;
-        //        EList<EObject> resources = form.eResource().getContents();
-        //        for (EObject eObject : resources) {
-        //            if (eObject instanceof Diagram) {
-        //                if (((Diagram) eObject).getElement() != null && ((Diagram) eObject).getElement().equals(form)) {
-        //                    diag = (Diagram) eObject;
-        //                    break;
-        //                }
-        //            }
-        //        }
-
         URI uri = EcoreUtil.getURI(diag);
 
         /* open the form editor */

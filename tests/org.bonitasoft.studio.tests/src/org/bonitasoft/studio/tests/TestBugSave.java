@@ -33,6 +33,7 @@ import org.bonitasoft.studio.properties.sections.forms.FormsUtils.WidgetEnum;
 import org.bonitasoft.studio.properties.sections.forms.commands.AddFormCommand;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.ui.PlatformUI;
 
@@ -46,7 +47,7 @@ public class TestBugSave extends TestCase {
         new NewDiagramCommandHandler().execute(null);
         ProcessDiagramEditor processEditor = (ProcessDiagramEditor)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
-        AddFormCommand formCommand = new AddFormCommand(mainProcess,ProcessPackage.Literals.PAGE_FLOW__FORM,"form", "", new HashMap<Element, WidgetEnum>(), processEditor.getEditingDomain());
+        AddFormCommand formCommand = new AddFormCommand(mainProcess,ProcessPackage.Literals.PAGE_FLOW__FORM,"form", "", new HashMap<EObject, WidgetEnum>(), processEditor.getEditingDomain());
         OperationHistoryFactory.getOperationHistory().execute(formCommand, new NullProgressMonitor(), null);
         assertEquals("There should be only one resource", 1, processEditor.getEditingDomain().getResourceSet().getResources().size());
         // form

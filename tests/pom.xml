@@ -19,6 +19,7 @@
 		<module>org.bonitasoft.studio.jre.extension</module>
 		<module>org.bonitasoft.studio.actors.tests</module>
 		<module>org.bonitasoft.studio.application.test</module>
+		<module>org.bonitasoft.studio.common.tests</module>
 		<module>org.bonitasoft.studio.common.diagram.test</module>
 		<module>org.bonitasoft.studio.configuration.test</module>
 		<module>org.bonitasoft.studio.connectors.test</module>

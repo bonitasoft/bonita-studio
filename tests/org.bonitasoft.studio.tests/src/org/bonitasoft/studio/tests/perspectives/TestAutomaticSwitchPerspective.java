@@ -101,7 +101,7 @@ public class TestAutomaticSwitchPerspective extends TestCase {
         }
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         TransactionalEditingDomain editingDomain = ((ProcessDiagramEditor)editor).getEditingDomain();
-        Map<Element, WidgetEnum> m= Collections.emptyMap();
+        Map<EObject, WidgetEnum> m= Collections.emptyMap();
         FormsUtils.addForm(pageflow, editingDomain,  ProcessPackage.Literals.PAGE_FLOW__FORM, "testForm", "form to test perspectives", m);
 
         assertTrue("Wrong perspective when opening the form",new TestAsyncThread(10, 500) {

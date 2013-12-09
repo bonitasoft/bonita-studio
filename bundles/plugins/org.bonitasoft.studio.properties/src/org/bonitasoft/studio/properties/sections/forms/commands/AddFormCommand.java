@@ -17,11 +17,9 @@
 package org.bonitasoft.studio.properties.sections.forms.commands;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,7 +29,6 @@ import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.emf.tools.WidgetModifiersSwitch;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -70,6 +67,7 @@ import org.bonitasoft.studio.properties.sections.forms.FormsUtils.WidgetEnum;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -88,11 +86,11 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCo
 public class AddFormCommand extends AbstractTransactionalCommand {
 
     private final String formName;
-    private final Map<Element, WidgetEnum> vars;
+    private final Map<EObject, WidgetEnum> vars;
     private final Element pageFlow;
     private Form form = null;
     private final String description;
-    private final Expression label;
+    private final Expression labelExpression;
     private final EStructuralFeature feature;
 
     /**
@@ -107,22 +105,26 @@ public class AddFormCommand extends AbstractTransactionalCommand {
      *            type of widget of each data
      * @param editingDomain
      */
-    public AddFormCommand(Element pageFlow2, EStructuralFeature feature, String formName, String description, Map<Element, WidgetEnum> vars,
+    public AddFormCommand(Element pageFlow, EStructuralFeature feature, String formName, String description, Map<EObject, WidgetEnum> vars,
             TransactionalEditingDomain editingDomain) {
-        super(editingDomain, Messages.formAddFormCommandLabel, getWorkspaceFiles(pageFlow2));
+        super(editingDomain, Messages.formAddFormCommandLabel, getWorkspaceFiles(pageFlow));
         this.formName = NamingUtils.toJavaIdentifier(formName,true);
-        Expression expr = ExpressionFactory.eINSTANCE.createExpression();
+        this.labelExpression = createLabelExpression(formName);
+        this.description = description;
+        this.vars = vars;
+        this.pageFlow = pageFlow;
+        this.feature = feature;
+    }
+
+	protected Expression createLabelExpression(String formName) {
+		Expression expr = ExpressionFactory.eINSTANCE.createExpression();
         expr.setName(formName);
         expr.setContent(formName);
         expr.setType(ExpressionConstants.CONSTANT_TYPE);
         expr.setReturnType(String.class.getName());
         expr.setReturnTypeFixed(true);
-        label = expr;
-        this.description = description;
-        this.vars = new HashMap<Element, WidgetEnum>(vars);
-        pageFlow = pageFlow2;
-        this.feature = feature;
-    }
+		return expr;
+	}
 
     /**
      * @param myForm
@@ -158,26 +160,37 @@ public class AddFormCommand extends AbstractTransactionalCommand {
             nCol = 1;
         }
         myForm.setName(formName);
-        myForm.setPageLabel(label);
+        myForm.setPageLabel(labelExpression);
         myForm.setShowPageLabel(true);
         myForm.setDocumentation(description);
 
 
         Widget tempWidget = null;
         
-        Set<Entry<Element,WidgetEnum>> entrySet = vars.entrySet();
-        List<Entry<Element,WidgetEnum>> entryList = new ArrayList<Entry<Element,WidgetEnum>>(entrySet);
+        Set<Entry<EObject,WidgetEnum>> entrySet = vars.entrySet();
+        List<Entry<EObject,WidgetEnum>> entryList = new ArrayList<Entry<EObject,WidgetEnum>>(entrySet);
         		//new ArrayList(vars.entrySet());
-        Collections.sort(entryList, new Comparator<Entry<Element,WidgetEnum>>() {
+        Collections.sort(entryList, new Comparator<Entry<EObject,WidgetEnum>>() {
 			@Override
-			public int compare(Entry<Element, WidgetEnum> o1,
-					Entry<Element, WidgetEnum> o2) {
-				return o1.getKey().getName().compareTo(o2.getKey().getName());
+			public int compare(Entry<EObject, WidgetEnum> o1,
+					Entry<EObject, WidgetEnum> o2) {
+				EObject key1 = o1.getKey();
+				EObject key2 = o2.getKey();
+				if(key1 instanceof Element && key2 instanceof Element){
+					return ((Element) key1).getName().compareTo(((Element) key2).getName());
+				}else if(key1 instanceof Element && !(key2 instanceof Element)){
+					return -1;
+				}else if(!(key1 instanceof Element) && key2 instanceof Element){
+					return -1;
+				}else if(key1 instanceof EStructuralFeature && key2 instanceof EStructuralFeature){
+        			return ((EStructuralFeature) key1).getName().compareTo(((EStructuralFeature) key2).getName());
+				}
+				return -1;
 			}
 		});
         
-        for (Entry<Element, WidgetEnum> entry : entryList) {
-            final Element key = entry.getKey();
+        for (Entry<EObject, WidgetEnum> entry : entryList) {
+            final EObject key = entry.getKey();
             switch (entry.getValue()) {
                 case TEXT_AREA:
                     tempWidget = FormFactory.eINSTANCE.createTextAreaFormField();
@@ -229,14 +242,20 @@ public class AddFormCommand extends AbstractTransactionalCommand {
                     break;
             }
 
-            String name  = computeName(key.getName());
+            String keyName = null;
+            if(key instanceof Element){
+            	keyName = ((Element) key).getName();
+            }else if(key instanceof EStructuralFeature){
+            	keyName =((EStructuralFeature) key).getName();
+            }
+            String name  = computeName(keyName);
             tempWidget.setName(name);
             Expression displayLabel = ExpressionFactory.eINSTANCE.createExpression();
-            displayLabel.setName(name);
+            displayLabel.setName(keyName);
             displayLabel.setType(ExpressionConstants.CONSTANT_TYPE);
             displayLabel.setReturnType(String.class.getName());
             displayLabel.setReturnTypeFixed(true);
-            displayLabel.setContent(name);
+            displayLabel.setContent(keyName);
             tempWidget.setDisplayLabel(displayLabel);
             Expression insertWidgetIf = createInsertWidgetIfScript(); 
             tempWidget.setInjectWidgetScript(insertWidgetIf);
@@ -249,8 +268,8 @@ public class AddFormCommand extends AbstractTransactionalCommand {
 
                 // add expression
                 Expression currentExpression = ExpressionFactory.eINSTANCE.createExpression();
-                currentExpression.setContent(key.getName()) ;
-                currentExpression.setName(key.getName()) ;
+                currentExpression.setContent(keyName) ;
+                currentExpression.setName(keyName) ;
                 currentExpression.setType(ExpressionConstants.VARIABLE_TYPE) ;
                 currentExpression.getReferencedElements().add(EcoreUtil.copy(key)) ;
 

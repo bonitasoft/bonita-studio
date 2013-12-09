@@ -83,10 +83,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="BoundaryMessageEvent" eSuperTypes="#//BoundaryEvent #//AbstractCatchMessageEvent"/>
   <eClassifiers xsi:type="ecore:EClass" name="BoundarySignalEvent" eSuperTypes="#//BoundaryEvent #//SignalEvent"/>
   <eClassifiers xsi:type="ecore:EClass" name="BoundaryTimerEvent" eSuperTypes="#//BoundaryEvent #//AbstractTimerEvent"/>
-  <eClassifiers xsi:type="ecore:EClass" name="BusinessObjectData" eSuperTypes="#//Data">
+  <eClassifiers xsi:type="ecore:EClass" name="BusinessObjectData" eSuperTypes="#//JavaObjectData">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="businessObjectDefinitionId"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="classname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="createNewInstance" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         defaultValueLiteral="true"/>
   </eClassifiers>

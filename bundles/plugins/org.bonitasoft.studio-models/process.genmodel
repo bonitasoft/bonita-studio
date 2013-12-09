@@ -527,7 +527,6 @@
     <genClasses ecoreClass="process.ecore#//BoundaryTimerEvent"/>
     <genClasses ecoreClass="process.ecore#//BusinessObjectData">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//BusinessObjectData/businessObjectDefinitionId"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//BusinessObjectData/classname"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//BusinessObjectData/createNewInstance"/>
     </genClasses>
     <genClasses ecoreClass="process.ecore#//BusinessObjectType"/>

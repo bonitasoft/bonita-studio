@@ -27,4 +27,5 @@ Export-Package: org.bonitasoft.studio.diagram.form.custom.clipboard,
  org.bonitasoft.studio.diagram.form.custom.parts,
  org.bonitasoft.studio.diagram.form.custom.providers
 Bundle-Activator: org.bonitasoft.studio.diagram.form.custom.Activator
+Import-Package: org.bonitasoft.engine.bpm.document
 

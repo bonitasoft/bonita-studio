@@ -131,12 +131,12 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 				Expression exp = operation.getLeftOperand() ;
 				if(exp != null && !exp.getReferencedElements().isEmpty() && ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
 					EObject data = exp.getReferencedElements().get(0) ;
-					if(data instanceof JavaObjectData){
+					if(data instanceof BusinessObjectData){
+						return element.equals(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR) ||  element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
+					}else if(data instanceof JavaObjectData){
 						return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ||  element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
 					}else if(data instanceof XMLData){
 						return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ||  element.equals(ExpressionConstants.XPATH_UPDATE_OPERATOR);
-					}else if(data instanceof BusinessObjectData){
-						return element.equals(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR) ||  element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR);
 					}else{
 						return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ;
 					}
@@ -160,8 +160,8 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 			}
 		}
 		createOperatorEditorFor(section, operator.getType(), operator, exp) ;
-		
-		
+
+
 		context.bindValue(ViewersObservables.observeSingleSelection(operatorViewer), EMFObservables.observeValue(operator, ExpressionPackage.Literals.OPERATOR__TYPE)) ;
 		operatorViewer.addSelectionChangedListener(this) ;
 

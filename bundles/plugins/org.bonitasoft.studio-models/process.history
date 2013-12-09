@@ -7754,7 +7754,7 @@
         <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData"
             featureName="name" dataValue="BusinessObjectData"/>
         <changes xsi:type="history:Add" element="process.ecore#//BusinessObjectData"
-            featureName="eSuperTypes" referenceValue="process.ecore#//Data"/>
+            featureName="eSuperTypes" referenceValue="process.ecore#//JavaObjectData"/>
       </changes>
       <operation name="newClass">
         <parameters name="ePackage">
@@ -7808,35 +7808,6 @@
         </parameters>
         <parameters name="name">
           <dataValue>businessObjectDefinitionId</dataValue>
-        </parameters>
-        <parameters name="type">
-          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-        </parameters>
-        <parameters name="lowerBound">
-          <dataValue>0</dataValue>
-        </parameters>
-        <parameters name="upperBound">
-          <dataValue>1</dataValue>
-        </parameters>
-        <parameters name="defaultValue">
-          <dataValue xsi:nil="true"/>
-        </parameters>
-      </operation>
-    </changes>
-    <changes xsi:type="history:OperationChange">
-      <changes xsi:type="history:Create" target="process.ecore#//BusinessObjectData"
-          referenceName="eStructuralFeatures" element="process.ecore#//BusinessObjectData/classname">
-        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/classname"
-            featureName="name" dataValue="classname"/>
-        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/classname"
-            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-      </changes>
-      <operation name="newAttribute">
-        <parameters name="eClass">
-          <referenceValue element="process.ecore#//BusinessObjectData"/>
-        </parameters>
-        <parameters name="name">
-          <dataValue>classname</dataValue>
         </parameters>
         <parameters name="type">
           <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>

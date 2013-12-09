@@ -61,6 +61,7 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -166,8 +167,12 @@ public class FormsUtils {
      * @param form
      *            the form to add to the current pageFlow
      */
-    public static void addForm(Element pageFlow, TransactionalEditingDomain editingDomain, EStructuralFeature feature, String formName, String description,
-            Map<Element, WidgetEnum> vars) {
+    public static void addForm(Element pageFlow, 
+    		TransactionalEditingDomain editingDomain, 
+    		EStructuralFeature feature, 
+    		String formName, 
+    		String description,
+            Map<EObject, WidgetEnum> vars) {
         try {
             OperationHistoryFactory.getOperationHistory().execute(new AddFormCommand(pageFlow, feature, formName, description, vars, editingDomain),
                     new NullProgressMonitor(), null);
