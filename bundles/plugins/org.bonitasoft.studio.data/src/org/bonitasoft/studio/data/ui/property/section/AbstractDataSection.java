@@ -210,6 +210,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 					//if (MessageDialog.openConfirm(parent.getShell(), Messages.deleteDataDialogTitle, createMessage())) {
 						CompoundCommand cc = new CompoundCommand("Remove list of data");
 						IProgressService service = PlatformUI.getWorkbench().getProgressService();
+						boolean canExecute=false;
 						for(Object d : selection){
 							RefactorDataOperation op = new RefactorDataOperation();
 							op.setCompoundCommand(cc);
@@ -218,15 +219,25 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 							op.setOldData((Data) d);
 							op.updateReferencesInScripts();
 							try {
+							if (op.isCanExecute()){
 								service.run(true, false, op);
+								cc.append(DeleteCommand.create(getEditingDomain(), d));
+								canExecute = canExecute || true;
+							} else {
+								canExecute = canExecute || false;
+							}
 							} catch (InvocationTargetException e) {
 								BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
 							} catch (InterruptedException e) {
 								BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
 							}
+							
 						}
-						cc.append(DeleteCommand.create(getEditingDomain(), selection));
-						getEditingDomain().getCommandStack().execute(cc);
+						if (canExecute){
+							getEditingDomain().getCommandStack().execute(cc);
+						} else {
+							cc.dispose();
+						}
 						tableViewer.refresh() ;
 						try {
 							RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,Collections.EMPTY_MAP,null);
