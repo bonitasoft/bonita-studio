@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Form diagram tests Fragment
-Bundle-SymbolicName: org.bonitasoft.studio.diagram.form.custom..tests
+Bundle-SymbolicName: org.bonitasoft.studio.diagram.form.custom.tests
 Bundle-Version: 6.2.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Fragment-Host: org.bonitasoft.studio.diagram.form.custom;bundle-version="6.2.0"
