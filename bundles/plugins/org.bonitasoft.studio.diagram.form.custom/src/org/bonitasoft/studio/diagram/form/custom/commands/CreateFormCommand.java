@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -56,6 +57,7 @@ import org.bonitasoft.studio.model.process.diagram.form.providers.ElementInitial
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.codegen.util.CodeGenUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -96,10 +98,13 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		this.feature = feature;
 	}
 
-	protected Expression createLabelExpression(String formName) {
+	protected Expression createLabelExpression(String name) {
+		String capName = CodeGenUtil.capName(name, Locale.getDefault());
+		String formattedName = CodeGenUtil.format(capName, ' ', null, false, false);
+		
 		Expression expr = ExpressionFactory.eINSTANCE.createExpression();
-		expr.setName(formName);
-		expr.setContent(formName);
+		expr.setName(formattedName);
+		expr.setContent(formattedName);
 		expr.setType(ExpressionConstants.CONSTANT_TYPE);
 		expr.setReturnType(String.class.getName());
 		expr.setReturnTypeFixed(true);
@@ -194,7 +199,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 			inputExpression.setReturnTypeFixed(true);
 		}                    
 
-		if (data.getDataType() instanceof EnumType && widget instanceof MultipleValuatedFormField) {
+		if (isAnEnumOnAMultipleValuatedFormField(data, widget)) {
 			if(!isOnInstantiationForm(data)){
 				((MultipleValuatedFormField) widget).setDefaultExpression(inputExpression);
 			}
@@ -205,8 +210,14 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		}
 	}
 
+	protected boolean isAnEnumOnAMultipleValuatedFormField(Data data,Widget widget) {
+		return data.getDataType() instanceof EnumType && widget instanceof MultipleValuatedFormField;
+	}
+
 	protected boolean isOnInstantiationForm(final Data data) {
-		return feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool && !ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA.equals(data.eContainingFeature());
+		return feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) //Entry form
+				&& pageFlow instanceof Pool  //On a pool
+				&& !ProcessPackage.Literals.PAGE_FLOW__TRANSIENT_DATA.equals(data.eContainingFeature()); //Not a pageflow data
 	}
 
 	protected void addOutputOperationForData(Widget widget,final EObject key) {

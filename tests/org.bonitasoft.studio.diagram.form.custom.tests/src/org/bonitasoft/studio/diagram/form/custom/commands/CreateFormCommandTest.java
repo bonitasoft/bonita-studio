@@ -75,6 +75,18 @@ public class CreateFormCommandTest {
 	}
 	
 	@Test
+	public void shouldCreateLabelExpression_ReturnFormattedNameExpression() throws Exception {
+		Expression exp = commandUnderTest.createLabelExpression("firstName");
+		assertThat(exp).isNotNull();
+		assertThat(exp.getContent()).isEqualTo("First Name");
+		assertThat(exp.getName()).isEqualTo("First Name");
+		assertThat(exp.getReturnType()).isEqualTo(String.class.getName());
+		assertThat(exp.isReturnTypeFixed()).isTrue();
+		assertThat(exp.getType()).isEqualTo(ExpressionConstants.CONSTANT_TYPE);
+		assertThat(exp.getReferencedElements()).isEmpty();
+	}
+	
+	@Test
 	public void shoudCalculateAndSetNumColumn_AlwaysReturnOneForViewPageFlow() throws Exception {
 		commandUnderTest = new CreateFormCommand(ProcessFactory.eINSTANCE.createTask(),
 				ProcessPackage.Literals.VIEW_PAGE_FLOW__VIEW_FORM, 
