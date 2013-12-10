@@ -67,6 +67,7 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 	private CompoundCommand finalCommand;
 	private List<Expression> scriptExpressions;
 	private boolean canExecute = true;
+	private int operationType;
 
 	public boolean isCanExecute() {
 		return canExecute;
@@ -76,8 +77,9 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 		this.canExecute = canExecute;
 	}
 
-	public RefactorDataOperation(){
+	public RefactorDataOperation(int operationType){
 		this.scriptExpressions=new ArrayList<Expression>();
+		this.operationType = operationType;
 	}
 
 	@Override
@@ -264,7 +266,7 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 			scriptExpressions = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(oldData.eContainer(),oldData);
 			if (!scriptExpressions.isEmpty() && !oldData.getName().equals(newName)){
 				try {
-					BonitaGroovyRefactoringAction action = new BonitaGroovyRefactoringAction(oldData.getName(), newName,scriptExpressions , finalCommand, domain,BonitaGroovyRefactoringAction.REFACTOR_OPERATION);
+					BonitaGroovyRefactoringAction action = new BonitaGroovyRefactoringAction(oldData.getName(), newName,scriptExpressions , finalCommand, domain,operationType);
 					action.run(null);
 					canExecute  = action.getStatus();
 					//if (canExecute){

@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.refactoring.BonitaGroovyRefactoringAction;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
@@ -148,7 +149,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 		if(editMode){
 			AbstractProcess process = ModelHelper.getParentProcess(container) ;
 			CompoundCommand cc = new CompoundCommand();
-			final RefactorDataOperation op = new RefactorDataOperation() ;
+			final RefactorDataOperation op = new RefactorDataOperation(BonitaGroovyRefactoringAction.REFACTOR_OPERATION) ;
 			op.setCompoundCommand(cc);
 			op.setEditingDomain(editingDomain);
 			op.setContainer(process) ;

@@ -29,6 +29,7 @@ import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.refactoring.BonitaGroovyRefactoringAction;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.commands.MoveDataCommand;
@@ -212,7 +213,7 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 						IProgressService service = PlatformUI.getWorkbench().getProgressService();
 						boolean canExecute=false;
 						for(Object d : selection){
-							RefactorDataOperation op = new RefactorDataOperation();
+							RefactorDataOperation op = new RefactorDataOperation(BonitaGroovyRefactoringAction.REMOVE_OPERATION);
 							op.setCompoundCommand(cc);
 							op.setContainer(ModelHelper.getParentProcess(eObject));
 							op.setEditingDomain(getEditingDomain());
