@@ -46,6 +46,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.tabbed.ISection;
@@ -75,11 +76,9 @@ public class BonitaProcessTreeSelectionProvider {
     public void fireSelectionChanged(IGraphicalEditPart ep ,EObject element){
         TabbedPropertySheetPage page;
         try {
-            page = getTabbedPropertySheetPage(element);
+            page = getTabbedPropertySheetPage(element,ep);
             if(page != null){
-                page.selectionChanged(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor(), new StructuredSelection(ep)) ;
                 page.setSelectedTab(getTabIdForElement(element)) ;
-
                 for(ISection s : page.getCurrentTab().getSections()){
                     if(s instanceof PropertySectionWithTabs){
                         if(isTransientData(element)){
@@ -156,16 +155,22 @@ public class BonitaProcessTreeSelectionProvider {
         return "tab.general";
     }
 
-    private TabbedPropertySheetPage getTabbedPropertySheetPage(EObject element) throws PartInitException {
+    private TabbedPropertySheetPage getTabbedPropertySheetPage(EObject element,IGraphicalEditPart ep) throws PartInitException {
         IViewPart viewPart = null ;
+        boolean inApplicationView = displayApplicationTab(element);
         for(IViewReference vr : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences() ){
-            if(displayApplicationTab(element)){
+        	IWorkbenchPart part = vr.getPart(true);
+			TabbedPropertySheetPage propertyPage =  (TabbedPropertySheetPage) part.getAdapter(TabbedPropertySheetPage.class);
+    		if(propertyPage != null){
+    			propertyPage.selectionChanged(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor(), new StructuredSelection(ep)) ;
+    		}
+        	if(inApplicationView){
                 if(vr.getId().equals("org.bonitasoft.studio.views.properties.application")){
-                    viewPart = vr.getView(true) ;
+                    viewPart = (IViewPart) part;
                 }
-            }else{
+            }else if(!inApplicationView){
                 if(vr.getId().equals("org.bonitasoft.studio.views.properties.process.general")){
-                    viewPart = vr.getView(true) ;
+                    viewPart = (IViewPart) part;
                 }
             }
         }
