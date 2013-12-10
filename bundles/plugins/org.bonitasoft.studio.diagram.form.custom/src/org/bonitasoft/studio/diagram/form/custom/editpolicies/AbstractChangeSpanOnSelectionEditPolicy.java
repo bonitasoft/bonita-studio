@@ -176,8 +176,10 @@ public abstract class AbstractChangeSpanOnSelectionEditPolicy extends SelectionE
 			for (int i = 0; i < wLInfo.getHorizontalSpan(); i++) {
 				for (int j = 0; j < wLInfo.getVerticalSpan(); j++) {
 					//avoid IndexOutOfBoundException
-					if(map.get(wLInfo.getColumn() + i).size() > wLInfo.getLine() + j)
-						map.get(wLInfo.getColumn() + i).set(wLInfo.getLine() + j, Boolean.TRUE);
+					int columnIndex = wLInfo.getColumn() + i;
+					int lineIndex = wLInfo.getLine() + j;
+					if(map.indexOf(columnIndex) != -1 && map.get(columnIndex).size() > lineIndex)
+						map.get(columnIndex).set(lineIndex, Boolean.TRUE);
 				}
 			}
 		}
