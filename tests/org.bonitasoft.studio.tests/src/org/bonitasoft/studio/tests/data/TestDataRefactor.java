@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.refactoring.BonitaGroovyRefactoringAction;
 import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -187,7 +188,7 @@ public class TestDataRefactor {
 
     private AbstractProcess initTestForDataRefactor(final String newDataName, final Data dataToRefactor) {
         final AbstractProcess process = createProcessWithData();
-        refactorDataOperation = new RefactorDataOperation();
+        refactorDataOperation = new RefactorDataOperation(BonitaGroovyRefactoringAction.REFACTOR_OPERATION);
         cc = new CompoundCommand();
         refactorDataOperation.setCompoundCommand(cc);
         refactorDataOperation.setContainer(process);
