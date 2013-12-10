@@ -330,5 +330,10 @@ public class Messages extends NLS {
 	public static String currentScript;
 	public static String refactoredScript;
 	public static String refactorTitle;
-	public static String reviewChangesMessage;
+	public static String reviewChangesMessageRefactoring;
+	public static String reviewChangesMessageRemoving;
+	public static String deleteFormFieldDialogTitle;
+	public static String askConfirmationForDeleting;
+	public static String removingWidgetReferences;
+	public static String removeTitle;
 }

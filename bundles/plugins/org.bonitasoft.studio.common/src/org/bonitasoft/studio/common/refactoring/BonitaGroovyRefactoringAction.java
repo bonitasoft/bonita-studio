@@ -15,18 +15,21 @@ import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
+import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 public class BonitaGroovyRefactoringAction implements IWorkbenchWindowActionDelegate{
 
-
+	public static final int REFACTOR_OPERATION=0;
+	public static final int REMOVE_OPERATION=1;
 
 
 	private String elementToRefactorName;
@@ -38,14 +41,16 @@ public class BonitaGroovyRefactoringAction implements IWorkbenchWindowActionDele
 	private EditingDomain domain;
 	private boolean status=false;
 	public boolean canExecute;
+	private int currentOperation;
 
-	public BonitaGroovyRefactoringAction(String elementToRefactorName,String newElementName,List<Expression> groovyScriptExpressions,CompoundCommand cc,EditingDomain domain) throws JavaModelException{
+	public BonitaGroovyRefactoringAction(String elementToRefactorName,String newElementName,List<Expression> groovyScriptExpressions,CompoundCommand cc,EditingDomain domain,int operation) throws JavaModelException{
 		this.elementToRefactorName = elementToRefactorName;
 		this.groovyScriptExpressions = groovyScriptExpressions;
 		this.newElementName = newElementName;
 		this.regex =elementToRefactorName;
 		this.cc = cc;
 		this.domain = domain;
+		this.currentOperation =operation;
 		initGroovyRefactoring();
 	}
 
@@ -59,7 +64,7 @@ public class BonitaGroovyRefactoringAction implements IWorkbenchWindowActionDele
 		config.setLeftLabel(Messages.currentScript);
 		config.setRightLabel(Messages.refactoredScript);
 		config.setProperty(CompareConfiguration.USE_OUTLINE_VIEW, true);
-		editorInput =new BonitaCompareEditorInput(config,groovyScriptExpressions,performRefactoringForAllScripts());
+		editorInput =new BonitaCompareEditorInput(config,groovyScriptExpressions,performRefactoringForAllScripts(),currentOperation,elementToRefactorName,newElementName);
 		editorInput.setCompoundCommand(cc, domain);
 
 	}

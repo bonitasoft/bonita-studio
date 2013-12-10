@@ -264,7 +264,7 @@ public class RefactorDataOperation implements IRunnableWithProgress {
 			scriptExpressions = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(oldData.eContainer(),oldData);
 			if (!scriptExpressions.isEmpty() && !oldData.getName().equals(newName)){
 				try {
-					BonitaGroovyRefactoringAction action = new BonitaGroovyRefactoringAction(oldData.getName(), newName,scriptExpressions , finalCommand, domain);
+					BonitaGroovyRefactoringAction action = new BonitaGroovyRefactoringAction(oldData.getName(), newName,scriptExpressions , finalCommand, domain,BonitaGroovyRefactoringAction.REFACTOR_OPERATION);
 					action.run(null);
 					canExecute  = action.getStatus();
 					//if (canExecute){

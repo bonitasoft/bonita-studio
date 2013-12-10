@@ -29,6 +29,9 @@ public class CompareScript implements IStreamContentAccessor,IStructureComparato
 	private List<Object> children;
 	private ContentChangeNotifier changeNotifier;
 	private Image image;
+	private EObject element;
+
+	
 
 	CompareScript(String name,EObject content){
 		this.name = name;
@@ -124,6 +127,12 @@ public class CompareScript implements IStreamContentAccessor,IStructureComparato
 		return changeNotifier;
 	}
 
-	
+	public EObject getElement() {
+		return element;
+	}
+
+	public void setElement(EObject element) {
+		this.element = element;
+	}
 
 }

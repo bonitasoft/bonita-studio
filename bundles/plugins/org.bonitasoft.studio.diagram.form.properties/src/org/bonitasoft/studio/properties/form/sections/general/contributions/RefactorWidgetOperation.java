@@ -17,7 +17,6 @@
 package org.bonitasoft.studio.properties.form.sections.general.contributions;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.AbstractRefactorOperation;
@@ -28,9 +27,7 @@ import org.bonitasoft.studio.common.refactoring.BonitaGroovyRefactoringAction;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
-import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -43,8 +40,6 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
 
 /**
@@ -100,7 +95,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation implement
 		List<Expression> scriptsToRefactor = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(ModelHelper.getPageFlow(widget), widget);
 		if (!scriptsToRefactor.isEmpty() && cc!=null){
 			try {
-				BonitaGroovyRefactoringAction action = new BonitaGroovyRefactoringAction(widget.getName(), newName,scriptsToRefactor , cc, editingDomain);
+				BonitaGroovyRefactoringAction action = new BonitaGroovyRefactoringAction(widget.getName(), newName,scriptsToRefactor , cc, editingDomain,BonitaGroovyRefactoringAction.REFACTOR_OPERATION);
 				action.run(null);
 				canExecute = action.getStatus();
 				if (canExecute){
