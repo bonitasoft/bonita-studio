@@ -57,7 +57,6 @@ import org.bonitasoft.studio.tests.TestBugSave;
 import org.bonitasoft.studio.tests.TestFullScenario;
 import org.bonitasoft.studio.tests.TestPathSize;
 import org.bonitasoft.studio.tests.TestURLs;
-import org.bonitasoft.studio.tests.TestVersion;
 import org.bonitasoft.studio.tests.conditions.TestConditions;
 import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
@@ -106,7 +105,6 @@ import org.junit.runners.Suite;
     TestSimulationLoadProfileRepository.class,
     TestSimulationExporter.class,
     TestBugSave.class,
-    TestVersion.class,
     TestImportExtensionPoint.class,
     ProcBuilderTests.class,
     TestImportXPDL.class,
