@@ -28,7 +28,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.edapt.migration;bundle-version="0.3.0";visibility:=reexport,
  org.eclipse.emf.edapt.history;bundle-version="0.3.0";visibility:=reexport,
  org.bonitasoft.studio.migration;bundle-version="1.0.0",
- org.codehaus.groovy.eclipse.core
+ org.codehaus.groovy.eclipse.core,
+ javax.persistence;bundle-version="2.0.3"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.apache.xbean.classloader,
