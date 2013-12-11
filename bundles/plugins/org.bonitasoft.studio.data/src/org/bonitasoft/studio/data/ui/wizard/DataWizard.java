@@ -124,6 +124,10 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 		if(!dataContainmentFeature.equals(ProcessPackage.Literals.DATA_AWARE__DATA)){
 			page = new DataWizardPage(dataWorkingCopy,container,false,false,false, showAutogenerateForm,featureToCheckForUniqueID, fixedReturnType);
 			page.setIsPageFlowContext(isPageFlowContext);
+			if (editMode){
+				page.setTitle(Messages.editVariableTitle);
+				page.setDescription(Messages.editVariableDescription);
+			}
 			return  page ;
 		}else{
 			boolean isOnActivity = container instanceof Activity;
