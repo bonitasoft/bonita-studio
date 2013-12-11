@@ -24,7 +24,7 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
  */
 public class FileStoreChangeEvent {
 
-	public enum EventType {PRE_OPEN,POST_OPEN,POST_CLOSE,PRE_CLOSE,PRE_DELETE,POST_DELETE,PRE_SAVE,POST_SAVE}
+	public enum EventType {PRE_OPEN,POST_OPEN,POST_CLOSE,PRE_CLOSE,PRE_DELETE,POST_DELETE,PRE_SAVE,POST_SAVE,POST_IMPORT, PRE_IMPORT}
 
 	private EventType event;
 	private IRepositoryFileStore fileStore;  ;
