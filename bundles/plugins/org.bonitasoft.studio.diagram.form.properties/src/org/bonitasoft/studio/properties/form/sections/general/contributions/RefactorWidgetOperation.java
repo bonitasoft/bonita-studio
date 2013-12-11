@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.properties.form.sections.general.contributions;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.AbstractRefactorOperation;
@@ -27,6 +28,7 @@ import org.bonitasoft.studio.common.refactoring.BonitaGroovyRefactoringAction;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -39,14 +41,13 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class RefactorWidgetOperation extends AbstractRefactorOperation implements IRunnableWithProgress {
+public class RefactorWidgetOperation extends AbstractRefactorOperation  {
 
 	private final Widget widget;
 	private final String newName;
@@ -57,7 +58,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation implement
 	public RefactorWidgetOperation(Widget widget, String newName) {
 		this.widget = widget;
 		this.newName = newName;
-		this.widgetCopy=EcoreUtil.copy(widget);
+		this.widgetCopy= (Widget) FormFactory.eINSTANCE.create(widget.eClass()); 
 		widgetCopy.setName(newName);
 		editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(widget);
 	}
@@ -69,11 +70,18 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation implement
 		monitor.beginTask(Messages.updatingWidgetReferences, IProgressMonitor.UNKNOWN);
 		if (canExecute){
 			final List<Expression> expressions =  ModelHelper.getAllItemsOfType(ModelHelper.getPageFlow(widget), ExpressionPackage.Literals.EXPRESSION);
+			List<Expression> expressionsList = new ArrayList<Expression>();
+			for (Expression exp:expressions){
+				if (!ModelHelper.isAExpressionReferencedElement(exp)){
+					expressionsList.add(exp);
+				}
+			}
+			
 			if (cc==null){
 				cc = new CompoundCommand();
 			}
 			cc.append(SetCommand.create(editingDomain,widget,ProcessPackage.Literals.ELEMENT__NAME, newName));
-			for(Expression exp : expressions){
+			for(Expression exp : expressionsList){
 				String fieldExpressionName = exp.getName();
 				String oldExpressionName = "field_"+widget.getName();
 				if(ExpressionConstants.FORM_FIELD_TYPE.equals(exp.getType()) && fieldExpressionName.equals(oldExpressionName)){
@@ -82,7 +90,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation implement
 					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, "field_"+newName));
 					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE  , widget.getAssociatedReturnType()));
 					cc.append(RemoveCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS  , exp.getReferencedElements()));
-					cc.append(AddCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS  ,EcoreUtil.copy(widgetCopy)));
+					cc.append(AddCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,EcoreUtil.copy(widgetCopy)));
 				}
 			}
 			editingDomain.getCommandStack().execute(cc);
