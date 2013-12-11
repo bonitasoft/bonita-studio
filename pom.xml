@@ -192,7 +192,7 @@
 						<artifact>
 							<groupId>org.bonitasoft.studio</groupId>
 							<artifactId>platform</artifactId>
-							<version>6.2.0-SNAPSHOT</version>
+							<version>6.2.0.alpha-06</version>
 						</artifact>
 					</target>
 					<filters>
