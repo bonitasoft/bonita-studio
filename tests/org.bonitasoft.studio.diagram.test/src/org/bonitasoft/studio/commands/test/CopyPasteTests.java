@@ -20,6 +20,7 @@ package org.bonitasoft.studio.commands.test;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.model.process.Activity;
+import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
@@ -30,6 +31,7 @@ import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
@@ -128,10 +130,13 @@ public class CopyPasteTests extends SWTBotGefTestCase {
         
         final IGraphicalEditPart activityEditPart = (IGraphicalEditPart)newPart.part();
 		Activity activity = (Activity) activityEditPart.resolveSemanticElement();
-        Assert.assertNotNull("Data type not copied", activity.getData().get(0).getDataType());
-        Assert.assertTrue("Bad Copied DataType", activity.getData().get(0).getDataType() instanceof StringType);
-        Assert.assertNotNull("Data type not copied", activity.getData().get(1).getDataType());
-        Assert.assertTrue("Bad Copied DataType", activity.getData().get(1).getDataType() instanceof EnumType);
+        final EList<Data> activityDatas = activity.getData();
+		final Data firstData = activityDatas.get(0);
+		Assert.assertNotNull("Data type not copied", firstData.getDataType());
+        Assert.assertTrue("Bad Copied DataType", firstData.getDataType() instanceof StringType);
+        final Data secondData = activityDatas.get(1);
+		Assert.assertNotNull("Data type not copied", secondData.getDataType());
+        Assert.assertTrue("Bad Copied DataType", secondData.getDataType() instanceof EnumType);
     }
 
 	private SWTBotGefEditPart findNewActivityPart(

@@ -69,7 +69,7 @@ public class ManageOrganizationWizard extends Wizard {
 	private final OrganizationUserValidator validator = new OrganizationUserValidator() ;
 	private Organization activeOrganization;
 	private boolean activeOrganizationHasBeenModified = false;
-	 String userName;
+	String userName;
 
 	public ManageOrganizationWizard(){
 		organizations = new ArrayList<Organization>() ;
@@ -144,11 +144,17 @@ public class ManageOrganizationWizard extends Wizard {
 						}
 						String fileName = organization.getName()+"."+OrganizationRepositoryStore.ORGANIZATION_EXT;
 						IRepositoryFileStore file = store.getChild(fileName) ;
+						Organization oldOrga = null;
 						if(file == null){
 							file = store.createRepositoryFileStore(fileName) ;
+						}else{
+							oldOrga = (Organization) file.getContent();
+						}
+						if(oldOrga != null){
+							RefactorActorMappingsOperation refactorOp = new RefactorActorMappingsOperation(oldOrga,organization);
+							refactorOp.run(monitor);
 						}
 						file.save(organization) ;
-
 					}
 					for(Organization orga : organizations){
 						boolean exists = false ;
@@ -188,35 +194,36 @@ public class ManageOrganizationWizard extends Wizard {
 				BonitaStudioLog.error(e);
 			}
 		} else {
-		if (MessageDialogWithToggle.NEVER.equals(pref) && activeOrganizationHasBeenModified){
-			String [] buttons = {IDialogConstants.YES_LABEL,IDialogConstants.NO_LABEL};
-			MessageDialogWithToggle mdwt = new MessageDialogWithToggle(Display.getDefault().getActiveShell(), Messages.organizationHasBeenModifiedTitle, null, Messages.bind(Messages.organizationHasBeenModifiedMessage, activeOrganization.getName()), MessageDialog.WARNING,buttons , 0, Messages.doNotDisplayAgain, false);
-			mdwt.setPrefStore(preferenceStore);
-			mdwt.setPrefKey(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION);
-			int index = mdwt.open();
-			if (index == 2){
-				try {
-					publishOrganization(preferenceStore);
-					if (mdwt.getToggleState()){
-						preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, true);
-					}
-				} catch (InvocationTargetException e) {
-					BonitaStudioLog.error(e);
+			if (MessageDialogWithToggle.NEVER.equals(pref) && activeOrganizationHasBeenModified){
+				String [] buttons = {IDialogConstants.YES_LABEL,IDialogConstants.NO_LABEL};
+				MessageDialogWithToggle mdwt = new MessageDialogWithToggle(Display.getDefault().getActiveShell(), Messages.organizationHasBeenModifiedTitle, null, Messages.bind(Messages.organizationHasBeenModifiedMessage, activeOrganization.getName()), MessageDialog.WARNING,buttons , 0, Messages.doNotDisplayAgain, false);
+				mdwt.setPrefStore(preferenceStore);
+				mdwt.setPrefKey(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION);
+				int index = mdwt.open();
+				if (index == 2){
+					try {
+						publishOrganization(preferenceStore);
+						if (mdwt.getToggleState()){
+							preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, true);
+						}
+					} catch (InvocationTargetException e) {
+						BonitaStudioLog.error(e);
 
-				} catch (InterruptedException e) {
-					BonitaStudioLog.error(e);
-				}
-			} else {
-				if (mdwt.getToggleState()){
-					preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, false);
-					preferenceStore.setDefault(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION,MessageDialogWithToggle.ALWAYS);
+					} catch (InterruptedException e) {
+						BonitaStudioLog.error(e);
+					}
+				} else {
+					if (mdwt.getToggleState()){
+						preferenceStore.setDefault(ActorsPreferenceConstants.PUBLISH_ORGANIZATION, false);
+						preferenceStore.setDefault(ActorsPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION,MessageDialogWithToggle.ALWAYS);
+					}
 				}
 			}
-		}
 
 		}
 		return true;
 	}
+
 
 
 
@@ -252,7 +259,7 @@ public class ManageOrganizationWizard extends Wizard {
 							MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.synchronizeInformationTitle,Messages.bind(Messages.synchronizeOrganizationSuccessMsg, activeOrganization.getName()));
 						}
 					});
-					
+
 				} else {
 					Display.getDefault().syncExec( new Runnable() {
 						public void run() {
@@ -260,32 +267,32 @@ public class ManageOrganizationWizard extends Wizard {
 						}
 					});	
 				}
-			
+
 			}
 		});
 	}
 
 
-			private boolean isUserExist(List<User> users,String userName){
-				for ( User user:users){
-					if (user.getUserName().equals(userName)){
-						return true;
-					}
-				}
-				return false;
+	private boolean isUserExist(List<User> users,String userName){
+		for ( User user:users){
+			if (user.getUserName().equals(userName)){
+				return true;
 			}
-
-			protected void openErrorStatusDialog(String errorMessage) {
-				MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.organizationValidationFailed, errorMessage) ;
-			}
-
-			protected String isOrganizationValid(Organization organization) {
-				final IStatus status = validator.validate(organization) ;
-				if(!status.isOK()){
-					return status.getMessage() ;
-				}
-				return null;
-			}
-
-
 		}
+		return false;
+	}
+
+	protected void openErrorStatusDialog(String errorMessage) {
+		MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.organizationValidationFailed, errorMessage) ;
+	}
+
+	protected String isOrganizationValid(Organization organization) {
+		final IStatus status = validator.validate(organization) ;
+		if(!status.isOK()){
+			return status.getMessage() ;
+		}
+		return null;
+	}
+
+
+}

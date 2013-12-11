@@ -1872,6 +1872,25 @@ public class ModelHelper {
 		}
 	}
 
+	public static Group getParentGroup(EObject context) {
+		Widget widget = getParentWidget(context);
+		if(widget != null){
+			Widget parentGroup = widget;
+			while (parentGroup != null && !(parentGroup instanceof Group)) {
+				EObject parent = parentGroup.eContainer();
+				if(parent instanceof Widget){
+					parentGroup = (Widget) parent;
+				}else{
+					parentGroup = null;
+				}
+			}
+			if(parentGroup != null){
+				return (Group) parentGroup;
+			}
+		}
+		return null;
+	}
+
 
 
 

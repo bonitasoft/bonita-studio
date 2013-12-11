@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.model.expression.Expression;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -41,54 +42,57 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class SelectDependencyDialog extends Dialog {
 
-    private final ComposedAdapterFactory adapterFactory;
-    private final AdapterFactoryLabelProvider adapterLabelProvider;
-    private TableViewer dependenciesViewer;
-    private final List<EObject> deps;
-    private final Set<Expression> filteredExpression;
+	private final ComposedAdapterFactory adapterFactory;
+	private final AdapterFactoryLabelProvider adapterLabelProvider;
+	private TableViewer dependenciesViewer;
+	private final List<EObject> deps;
+	private final Set<Expression> filteredExpression;
 
-    public SelectDependencyDialog(Shell parentShell,Set<Expression> filteredExpression ,List<EObject> currentDepList) {
-        super(parentShell);
-        this.filteredExpression = filteredExpression ;
-        adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        adapterLabelProvider  = new AdapterFactoryLabelProvider(adapterFactory) ;
-        deps = currentDepList;
-    }
+	public SelectDependencyDialog(Shell parentShell,Set<Expression> filteredExpression ,List<EObject> currentDepList) {
+		super(parentShell);
+		this.filteredExpression = filteredExpression ;
+		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+		adapterLabelProvider  = new AdapterFactoryLabelProvider(adapterFactory) ;
+		deps = currentDepList;
+	}
 
-    @Override
-    protected void setShellStyle(int newShellStyle) {
-        super.setShellStyle(newShellStyle | SWT.SHEET);
-    }
+	@Override
+	protected void setShellStyle(int newShellStyle) {
+		super.setShellStyle(newShellStyle | SWT.SHEET);
+	}
 
-    @Override
-    protected Control createDialogArea(Composite parent) {
-        Composite  composite = (Composite) super.createDialogArea(parent);
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		Composite  composite = (Composite) super.createDialogArea(parent);
 
-        dependenciesViewer = new TableViewer(composite, SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY | SWT.MULTI) ;
-        dependenciesViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
-        dependenciesViewer.setContentProvider(new ArrayContentProvider()) ;
-        dependenciesViewer.setLabelProvider(adapterLabelProvider) ;
+		dependenciesViewer = new TableViewer(composite, SWT.BORDER | SWT.V_SCROLL | SWT.READ_ONLY | SWT.MULTI) ;
+		dependenciesViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+		dependenciesViewer.setContentProvider(new ArrayContentProvider()) ;
+		dependenciesViewer.setLabelProvider(adapterLabelProvider) ;
 
-        List<EObject> input = new ArrayList<EObject>() ;
-        for(Expression e : filteredExpression){
-            EObject element = e.getReferencedElements().get(0);
-            input.add(EcoreUtil.copy(element)) ;
-        }
+		List<EObject> input = new ArrayList<EObject>() ;
+		for(Expression e : filteredExpression){
+			EList<EObject> referencedElements = e.getReferencedElements();
+			if(!referencedElements.isEmpty()){
+				EObject element = referencedElements.get(0);
+				input.add(EcoreUtil.copy(element)) ;
+			}
+		}
 
-        dependenciesViewer.setInput(input) ;
-        return composite ;
-    }
+		dependenciesViewer.setInput(input) ;
+		return composite ;
+	}
 
-    @Override
-    protected void okPressed() {
-        for(Object sel : ((IStructuredSelection)dependenciesViewer.getSelection()).toList()){
-            deps.add((EObject) sel) ;
-        }
+	@Override
+	protected void okPressed() {
+		for(Object sel : ((IStructuredSelection)dependenciesViewer.getSelection()).toList()){
+			deps.add((EObject) sel) ;
+		}
 
-        super.okPressed();
-    }
+		super.okPressed();
+	}
 
-    public List<EObject> getDependencies() {
-        return deps;
-    }
+	public List<EObject> getDependencies() {
+		return deps;
+	}
 }

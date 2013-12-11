@@ -29,6 +29,7 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
@@ -209,6 +210,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         ICondition newEditorCond = new OneMoreEditor(bot, bot.editors().size());
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "BoundaryProcess_1_0.bos", "Bonita 6.x", "BoundaryProcess", this.getClass(), false);
         bot.waitUntil(newEditorCond);
+        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));//to avoid Progress information dialog
     }
 
 }

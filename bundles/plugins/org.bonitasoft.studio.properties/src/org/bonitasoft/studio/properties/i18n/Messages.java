@@ -437,7 +437,12 @@ public class Messages extends NLS {
 	public static String cronShortDescription;
 	public static String notAValidInput;
 
+	public static String transientDataWarning;
 
+	public static String errorDisplayLabelMaxLength;
+
+	public static String warningDisplayLabelMaxLength;
+	
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
