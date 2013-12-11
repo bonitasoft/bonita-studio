@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.diagram.test;
 
 import org.bonitasoft.studio.application.actions.ImportFileCommand;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -93,7 +94,7 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
 
 		part = (IGraphicalEditPart)gmfEditor2.mainEditPart().part();
-		model = (MainProcess)part.resolveSemanticElement();
+		model = (MainProcess)ModelHelper.getMainProcess(part.resolveSemanticElement());
 		assertNotNull("no pool found (import failed?)",model);
 		assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
 		bot.waitUntil(new ICondition() {
