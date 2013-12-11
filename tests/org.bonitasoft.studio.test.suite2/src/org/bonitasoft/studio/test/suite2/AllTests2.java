@@ -33,7 +33,6 @@ import org.bonitasoft.studio.exporter.tests.bpmn.BPMNDataExportImportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNImportExportTest;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNSequenceFlowConditionExportImportTest;
 import org.bonitasoft.studio.exporter.tests.form.TestFormsExporter;
-import org.bonitasoft.studio.exporter.tests.preview.TestPreviewForm;
 import org.bonitasoft.studio.groovy.ui.test.TestGroovyScriptExpressionEditor;
 import org.bonitasoft.studio.importer.test.bos.TestBOSArchiveImport;
 import org.bonitasoft.studio.migration.tests.MigrationReportPDFExportTest;
@@ -76,7 +75,6 @@ import org.junit.runners.Suite;
     TestProvidedActorFilterDefinitionAndImplementation.class,
     TestFormsExporter.class,
     TestHtmlTemplateGenerator.class,
-    TestPreviewForm.class,
     TestCommands.class,
     TestDatabaseConnectorResulset.class,
     TestAutomaticSwitchPerspective.class,

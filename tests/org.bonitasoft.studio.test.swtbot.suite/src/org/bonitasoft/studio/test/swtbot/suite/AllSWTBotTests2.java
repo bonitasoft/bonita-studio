@@ -8,7 +8,6 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.test.swtbot.TestProcessDependencies;
-import org.bonitasoft.studio.connectors.test.swtbot.ConnectorConfigurationTest;
 import org.bonitasoft.studio.data.test.DataSWTBotTests;
 import org.bonitasoft.studio.diagram.test.NewRunTest;
 import org.bonitasoft.studio.diagram.test.SharedEditingDomainTests;
@@ -87,7 +86,6 @@ import org.junit.runners.Suite;
     CopyPasteTests.class,
     TestCreateValidatorWizard.class,
     TestLifeCycleWidget.class,
-    ConnectorConfigurationTest.class,
     TestConnectorExpression.class,
     TestMultiInstantiation.class,
     BPMNConnectorExportImportTest.class,

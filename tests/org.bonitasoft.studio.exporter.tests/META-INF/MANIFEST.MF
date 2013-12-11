@@ -41,8 +41,7 @@ Export-Package: org.bonitasoft.studio.exporter.tests,
  org.bonitasoft.studio.exporter.tests.application,
  org.bonitasoft.studio.exporter.tests.autologin,
  org.bonitasoft.studio.exporter.tests.bpmn,
- org.bonitasoft.studio.exporter.tests.form,
- org.bonitasoft.studio.exporter.tests.preview
+ org.bonitasoft.studio.exporter.tests.form
 Import-Package: net.htmlparser.jericho,
  org.bonitasoft.engine.bpm.bar,
  org.bonitasoft.engine.exception

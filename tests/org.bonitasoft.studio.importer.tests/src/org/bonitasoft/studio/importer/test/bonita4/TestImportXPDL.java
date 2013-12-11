@@ -45,7 +45,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -283,28 +282,5 @@ public class TestImportXPDL extends TestCase {
         destFile.delete();
     }
 
-    @Ignore
-    public void testMultiInstantiation() throws Exception {
-        File destFile = new File("destMultiInstantiation" + System.currentTimeMillis() + ".proc");
-        destFile.createNewFile();
-        destFile.deleteOnExit();
-        URL xpdlResource = FileLocator.toFileURL(getClass().getResource("multiInstantiation.xpdl"));
-        XPDLToProc xpdlToProc = new XPDLToProc();
-        destFile = xpdlToProc.createDiagram(xpdlResource, new NullProgressMonitor());
-
-        ResourceSet resourceSet = new ResourceSetImpl();
-        Resource resource = resourceSet.getResource(toEMFURI(destFile), true);
-        MainProcess mainProcess = (MainProcess)resource.getContents().get(0);
-        Pool process = (Pool)mainProcess.getElements().get(0);
-
-        Activity activity = null;
-        for (Element item : process.getElements()) {
-            if (item instanceof Activity) {
-                activity = (Activity)item;
-            }
-        }
-        
-        assertNotNull("Missing a multiinstantiation", activity.getMultiInstantiation());
-        destFile.delete();
-    }
+  
 }
