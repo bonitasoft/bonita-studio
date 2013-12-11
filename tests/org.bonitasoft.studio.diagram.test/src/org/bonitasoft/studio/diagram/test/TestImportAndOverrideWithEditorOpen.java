@@ -28,7 +28,9 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,6 +58,7 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 
 
 	@Override
+	@Before
 	protected void setUp() throws Exception {
 		super.setUp();
 		bot.saveAllEditors();
@@ -63,6 +66,7 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 	}
 
 	@Override
+	@After
 	protected void tearDown() throws Exception {
 		bot.saveAllEditors();
 		bot.closeAllEditors();
