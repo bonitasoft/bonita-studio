@@ -1,6 +1,9 @@
 package org.bonitasoft.studio.common.refactoring;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
@@ -26,13 +29,9 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IOpenListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -40,7 +39,6 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 
 public class BonitaCompareEditorInput extends CompareEditorInput{
 
@@ -127,8 +125,9 @@ public class BonitaCompareEditorInput extends CompareEditorInput{
 			}
 		});
 		viewer.setFilters(getFilters());
-		viewer.setInput(root);
+		viewer.setLabelProvider(new DiffTreeLabelProvider());
 		viewer.setContentProvider(new BonitaScriptRefactoringContentProvider());
+		viewer.setInput(root);
 		viewer.expandAll();
 
 		return viewer;
@@ -186,12 +185,14 @@ public class BonitaCompareEditorInput extends CompareEditorInput{
 	public void buildTree(){
 		for (int i=0;i<oldExpressions.size();i++){
 			final Expression oldExpression = oldExpressions.get(i);
-			CompareScript lefts = new CompareScript(oldExpression.getName(),oldExpression);
-			lefts.setImage(adapterFactoryLabelProvider.getImage(oldExpression));
+			CompareScript left = new CompareScript(oldExpression.getName(),oldExpression);
+			left.setElement(oldExpression);
+			left.setImage(adapterFactoryLabelProvider.getImage(oldExpression));
 			final Expression newExpression = newExpressions.get(i);
 
-			final CompareScript rights = new CompareScript(newExpression.getName(),newExpression);
-			rights.addContentChangeListener(new IContentChangeListener() {
+			final CompareScript right = new CompareScript(newExpression.getName(),newExpression);
+			right.setElement(newExpression);
+			right.addContentChangeListener(new IContentChangeListener() {
 
 				@Override
 				public void contentChanged(IContentChangeNotifier compareScript) {
@@ -203,11 +204,12 @@ public class BonitaCompareEditorInput extends CompareEditorInput{
 					}
 				}
 			});
-			rights.setImage(adapterFactoryLabelProvider.getImage(newExpression));
-			DiffNode leaf = new DiffNode(null,Differencer.CHANGE,null,lefts,rights);
+			right.setImage(adapterFactoryLabelProvider.getImage(newExpression));
+			DiffNode leaf = new DiffNode(null,Differencer.CHANGE,null,left,right);
 			final DiffNode poolNode = buildPathNodes(oldExpression.eContainer(),leaf);
-			poolNode.setParent(root);
-			root.add(poolNode);
+			if (((CompareScript)poolNode.getAncestor()).getElement()instanceof Pool && root.getChildren().length==0){
+				root.add(poolNode);
+			}
 		}
 	}
 
@@ -220,8 +222,13 @@ public class BonitaCompareEditorInput extends CompareEditorInput{
 		Expression expr = ExpressionHelper.createConstantExpression(name,String.class.getName());
 		expr.setName(name);
 		ancestor = new CompareScript(expr.getName(),expr);
+		ancestor.setElement(container);
 		ancestor.setImage(adapterFactoryLabelProvider.getImage(container));
 		parentNode.setAncestor(ancestor);
+		
+		if (insertParentNode(parentNode)){
+			return parentNode;
+		}
 		if (container instanceof Pool){
 			return parentNode;
 		}
@@ -246,8 +253,32 @@ public class BonitaCompareEditorInput extends CompareEditorInput{
 	//		return null;
 	//	}
 
-	private boolean insertNode(DiffNode nodeToInsert,DiffNode tree){
+	private void getAllNodes(List<DiffNode> nodes,DiffNode root){
+		if (root.hasChildren()){
+			nodes.addAll((Collection<? extends DiffNode>) Arrays.asList(root.getChildren()));
+			for (IDiffElement child:root.getChildren()){
+				getAllNodes(nodes,(DiffNode)child);
+			}
+		}
+				
+	}
+	
+	private boolean insertParentNode(DiffNode nodeToInsert){
+		List<DiffNode>nodes = new ArrayList<DiffNode>();
+		getAllNodes(nodes, root);
+		for (DiffNode node:nodes){
+			if (node.getAncestor()!=null && ((CompareScript)node.getAncestor()).getElement().equals(((CompareScript)nodeToInsert.getAncestor()).getElement())){
+				addChildrenToParent(node,nodeToInsert.getChildren());
+				return true;
+			}
+		}
 		return false;
+	}
+	
+	private void addChildrenToParent(DiffNode parent,IDiffElement[] children){
+		for (IDiffElement child : children){
+			parent.add(child);
+		}
 	}
 
 	@Override

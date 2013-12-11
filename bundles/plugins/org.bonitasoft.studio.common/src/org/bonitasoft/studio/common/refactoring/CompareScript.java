@@ -17,9 +17,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jdt.internal.core.util.Util.Comparer;
-import org.eclipse.jdt.internal.ui.javaeditor.ClassFileDocumentProvider.InputChangeListener;
-import org.eclipse.jdt.internal.ui.javaeditor.IClassFileEditorInput;
 import org.eclipse.swt.graphics.Image;
 
 public class CompareScript implements IStreamContentAccessor,IStructureComparator,IEditableContent, ITypedElement, IAdaptable, IContentChangeNotifier {

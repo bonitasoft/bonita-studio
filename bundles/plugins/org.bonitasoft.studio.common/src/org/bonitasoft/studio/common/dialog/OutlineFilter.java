@@ -9,7 +9,6 @@ import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.eclipse.emf.ecore.EObject;

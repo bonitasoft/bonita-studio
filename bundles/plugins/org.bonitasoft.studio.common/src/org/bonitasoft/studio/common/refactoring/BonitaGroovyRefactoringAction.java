@@ -5,9 +5,6 @@ package org.bonitasoft.studio.common.refactoring;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,14 +12,12 @@ import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
-import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 

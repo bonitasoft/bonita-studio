@@ -991,7 +991,7 @@ public class ModelHelper {
 		 return false;
 	 }
 	 
-	 private static boolean isAExpressionReferencedElement(EObject target) {
+	 public static boolean isAExpressionReferencedElement(EObject target) {
 		 EObject container = target.eContainer();
 		 while (container!=null ){
 			 if (container instanceof Expression){

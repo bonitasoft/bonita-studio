@@ -1,8 +1,5 @@
 package org.bonitasoft.studio.common.refactoring;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.compare.structuremergeviewer.DiffNode;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;

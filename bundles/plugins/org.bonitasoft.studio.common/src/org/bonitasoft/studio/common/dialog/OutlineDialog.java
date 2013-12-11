@@ -35,7 +35,6 @@ public class OutlineDialog extends MessageDialog{
 	private ListViewer objectListViewer;
 	private TreeViewer outline;
 	private Image warningImg;
-	private OutlineFilter outlineFilter;
 	
 	public OutlineDialog(Shell parentShell, String dialogTitle,
 			Image dialogTitleImage, String dialogMessage, int dialogImageType,
@@ -88,7 +87,7 @@ public class OutlineDialog extends MessageDialog{
 		outline.getTree().setLayoutData(GridDataFactory.fillDefaults().hint(300,200).create());
 		outline.setLabelProvider(new AdapterFactoryLabelProvider(adapterFactory));
 		outline.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
-		outlineFilter = new OutlineFilter();
+		new OutlineFilter();
 		ViewerFilter[] filters = {new OutlineFilter()};
 		outline.setFilters(filters);
 	    outline.setInput(ModelHelper.getParentProcess((EObject)elementToDisplay.get(0)));
