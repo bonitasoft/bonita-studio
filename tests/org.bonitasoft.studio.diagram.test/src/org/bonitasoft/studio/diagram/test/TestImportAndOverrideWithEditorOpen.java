@@ -58,17 +58,16 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 	}
 
 
-	@Override
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		bot.saveAllEditors();
 		bot.closeAllEditors();
 	}
 
-	@Override
+
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		bot.saveAllEditors();
 		bot.closeAllEditors();
 	}
