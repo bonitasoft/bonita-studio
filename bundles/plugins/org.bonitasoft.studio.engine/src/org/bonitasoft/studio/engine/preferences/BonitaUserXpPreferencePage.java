@@ -147,7 +147,7 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         }
         if(artifact != null){
             File target = null;
-            target = new File(BonitaHomeUtil.getBonitaHome(),WEB_CONSTANTS.getPortalThemeFolder().getAbsolutePath()+File.separatorChar+artifact.getName());
+            target = new File(BonitaHomeUtil.getBonitaHome(),WEB_CONSTANTS.getConsoleThemeFolder().getAbsolutePath()+File.separatorChar+artifact.getName());
             target.delete() ;
             target.mkdirs() ;
             File zipFile = new File(target,artifact.getName()+".zip") ;
