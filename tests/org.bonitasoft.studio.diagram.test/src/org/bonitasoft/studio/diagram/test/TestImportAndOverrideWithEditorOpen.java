@@ -130,7 +130,7 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 		botEditor = bot.activeEditor();
 		final SWTBotGefEditor gmfEditor2 = bot.gefEditor(botEditor.getTitle());
 		IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor2.mainEditPart().part();
-		MainProcess model = (MainProcess)part.resolveSemanticElement();
+		MainProcess model = ModelHelper.getMainProcess(part.resolveSemanticElement());
 		assertNotNull("no pool found (import failed?)",model);
 		assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
 		bot.waitUntil(new ICondition() {
