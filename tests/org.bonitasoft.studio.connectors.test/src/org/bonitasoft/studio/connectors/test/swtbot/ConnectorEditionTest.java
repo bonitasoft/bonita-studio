@@ -65,7 +65,7 @@ public class ConnectorEditionTest extends SWTBotGefTestCase {
 				.tree().select("Uncategorized").expandNode("Uncategorized")
 				.getNode(name + " (" + version + ")"));
 		bot.tree().select("Uncategorized").expandNode("Uncategorized").select(name + " (" + version + ")");
-		bot.button("Remove").click();
+		bot.button("Delete").click();
 		if (!FileActionDialog.getDisablePopup()){
 			bot.waitUntil(Conditions.shellIsActive("Delete?"));
 			bot.button(IDialogConstants.YES_LABEL).click();
