@@ -824,10 +824,11 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 	}
 
 	protected String getContentFromInput(String input) {
-		if (selectedExpression.getType().equals(ExpressionConstants.SCRIPT_TYPE)
-				|| selectedExpression.getType().equals(ExpressionConstants.PATTERN_TYPE)
-				|| selectedExpression.getType().equals(ExpressionConstants.XPATH_TYPE)
-				|| selectedExpression.getType().equals(ExpressionConstants.JAVA_TYPE)) {
+		final String selectedExpressionType = selectedExpression.getType();
+		if (ExpressionConstants.SCRIPT_TYPE.equals(selectedExpressionType)
+				|| ExpressionConstants.PATTERN_TYPE.equals(selectedExpressionType)
+				|| ExpressionConstants.XPATH_TYPE.equals(selectedExpressionType)
+				|| ExpressionConstants.JAVA_TYPE.equals(selectedExpressionType)) {
 			return selectedExpression.getContent(); // NO CONTENT UPDATE WHEN
 			// THOSES TYPES
 		}
