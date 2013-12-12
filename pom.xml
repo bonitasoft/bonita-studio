@@ -5,11 +5,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>studio</artifactId>
-	<version>6.2.0-SNAPSHOT</version>
+	<version>6.2.0.alpha-07</version>
 	<packaging>pom</packaging>
 	<name>Bonita Studio</name>
 	<properties>
-		<!--forceContextQualifier-->
+		<forceContextQualifier>201312121204</forceContextQualifier>
 		<tychoVersion>0.18.0</tychoVersion>
 		<tychoExtrasVersion>0.18.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
