@@ -390,9 +390,11 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 		dialog.setIsPageFlowContext(isPageFlowContext);
 		if (dialog.open() == Dialog.OK) {
 			Expression newExpression = dialog.getExpression();
+			boolean hasBeenExecuted = executeOperation(newExpression.getName());
 			updateSelection(newExpression);
 			setSelection(new StructuredSelection(selectedExpression));
 			if (editingDomain == null) {
+				
 				selectedExpression.setReturnType(newExpression.getReturnType());
 				selectedExpression.setType(newExpression.getType());
 			} else {
@@ -403,6 +405,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 						SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE,
 								newExpression.getType()));
 			}
+		
 			refresh();
 			fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression)));
 		}
