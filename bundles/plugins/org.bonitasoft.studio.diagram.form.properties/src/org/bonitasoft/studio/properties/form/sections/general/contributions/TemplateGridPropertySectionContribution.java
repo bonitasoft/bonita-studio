@@ -56,6 +56,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -176,8 +177,8 @@ public class TemplateGridPropertySectionContribution implements IExtensibleGridP
                         restoreTemplate();
                         setPathIsFilled(true);
                     } catch (Exception e1) {
-                        new BonitaErrorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.error, Messages.error_apply_template,
-                                e1);
+                        new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.error, Messages.error_apply_template,
+                                e1).open();
                         BonitaStudioLog.error(e1);
                         setPathIsFilled(false);
                     }
