@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2010-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,8 +84,6 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
         final SWTGefBot botGef = bot;
-        botEditor = bot.activeEditor();
-        gmfEditor = bot.gefEditor(botEditor.getTitle());
         
         bot.waitUntil(new DefaultCondition() {
 			

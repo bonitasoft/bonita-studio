@@ -42,6 +42,9 @@ import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Messages;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent;
+import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.EventType;
+import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.model.process.AbstractProcess;
@@ -83,14 +86,14 @@ public class ImportBosArchiveOperation {
 
 		try {
 			IContainer container = createTempProject(archive, monitor);
-
 			final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap = new HashMap<String, IRepositoryStore<? extends IRepositoryFileStore>>();
-			final List<IRepositoryStore<? extends IRepositoryFileStore>> allRepositories = RepositoryManager.getInstance().getCurrentRepository().getAllStores();
+			IRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
+			currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
+			final List<IRepositoryStore<? extends IRepositoryFileStore>> allRepositories = currentRepository.getAllStores();
 			FileActionDialog.activateYesNoToAll();
 			for (IRepositoryStore<? extends IRepositoryFileStore> repository : allRepositories) {
 				repositoryMap.put(repository.getName(), repository);
 			}
-
 			boolean isValid = false;
 			while (container != null && !isValid) {
 				IResource lastVisited = null;
@@ -147,51 +150,11 @@ public class ImportBosArchiveOperation {
 							BonitaStudioLog.error(e);
 						}
 					}
-
-					protected void importRepositoryStore(Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair)
-							throws CoreException {
-						IFolder storeFolder = pair.getSecond();
-						IRepositoryStore<? extends IRepositoryFileStore> repository = pair.getFirst();
-						for (IResource child : storeFolder.members()) {
-							final String filename = child.getName();
-							final boolean openAfterImport = (resourceToOpen != null && resourceToOpen.contains(filename))
-									|| resourceToOpen == null;
-							final IRepositoryFileStore fileStore = repository.importIResource(filename, child);
-							if(fileStore != null){
-								if(!FileActionDialog.getDisablePopup()){
-									final ArrayList<AbstractProcess> processes = getAllProcesseRepository(fileStore.getParentStore().getChildren(), fileStore.getName());
-									final ArrayList<AbstractProcess> importedProcess = getProcess(fileStore);
-									final ArrayList<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
-									for (AbstractProcess p : importedProcess) {
-										if (processExistInList(p, processes)) {
-											duplicateProcess.add(p);
-										}
-									}
-									if (!duplicateProcess.isEmpty()) {
-										Display.getDefault().syncExec(new Runnable() {
-
-											@Override
-											public void run() {
-												StringBuilder sb = new StringBuilder();
-												for (AbstractProcess p : duplicateProcess) {
-													sb.append(SWT.CR);
-													sb.append(p.getName()+" "+"("+p.getVersion()+")");
-												}
-												MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.warningDuplicateDialogTitle, Messages.bind(Messages.poolAlreadyExistWarningMessage,sb.toString()));
-											}
-										});
-									}
-								}
-								if (fileStore != null && openAfterImport) {
-									fileStore.open();
-								}
-							}
-						}
-					}
 				});
 			}
 			FileActionDialog.deactivateYesNoToAll();
-			RepositoryManager.getInstance().getCurrentRepository().refresh(monitor);
+			currentRepository.refresh(monitor);
+			currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
 		} finally {
@@ -207,6 +170,47 @@ public class ImportBosArchiveOperation {
 			}
 		}
 		return false;
+	}
+	
+	protected void importRepositoryStore(Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair)
+			throws CoreException {
+		IFolder storeFolder = pair.getSecond();
+		IRepositoryStore<? extends IRepositoryFileStore> repository = pair.getFirst();
+		for (IResource child : storeFolder.members()) {
+			final String filename = child.getName();
+			final boolean openAfterImport = (resourceToOpen != null && resourceToOpen.contains(filename))
+					|| resourceToOpen == null;
+			final IRepositoryFileStore fileStore = repository.importIResource(filename, child);
+			if(fileStore != null){
+				if(!FileActionDialog.getDisablePopup()){
+					final ArrayList<AbstractProcess> processes = getAllProcesseRepository(fileStore.getParentStore().getChildren(), fileStore.getName());
+					final ArrayList<AbstractProcess> importedProcess = getProcess(fileStore);
+					final ArrayList<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
+					for (AbstractProcess p : importedProcess) {
+						if (processExistInList(p, processes)) {
+							duplicateProcess.add(p);
+						}
+					}
+					if (!duplicateProcess.isEmpty()) {
+						Display.getDefault().syncExec(new Runnable() {
+
+							@Override
+							public void run() {
+								StringBuilder sb = new StringBuilder();
+								for (AbstractProcess p : duplicateProcess) {
+									sb.append(SWT.CR);
+									sb.append(p.getName()+" "+"("+p.getVersion()+")");
+								}
+								MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.warningDuplicateDialogTitle, Messages.bind(Messages.poolAlreadyExistWarningMessage,sb.toString()));
+							}
+						});
+					}
+				}
+				if (fileStore != null && openAfterImport) {
+					fileStore.open();
+				}
+			}
+		}
 	}
 
 	private ArrayList<AbstractProcess> getAllProcesseRepository(List<IRepositoryFileStore> l, String fileStoreName) {

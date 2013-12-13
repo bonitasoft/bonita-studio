@@ -87,20 +87,12 @@ public class SaveCommandHandler extends SaveHandler {
 
 		if(isDirty()){
 			IEditorPart editorPart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-			MainProcess proc = null ;
 			String formName = null;
 			boolean changed = false;
 			if(editorPart instanceof DiagramEditor){
 				DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
 
-				if(editorPart instanceof ProcessDiagramEditor){
-					DiagramEditPart diagram = ((ProcessDiagramEditor) editorPart).getDiagramEditPart();
-					proc = (MainProcess) diagram.resolveSemanticElement() ;
-				}else if(editorPart instanceof FormDiagramEditor){
-					DiagramEditPart formDiagram = ((DiagramDocumentEditor)editorPart).getDiagramEditPart();
-					Form form = (Form) formDiagram.resolveSemanticElement();
-					proc = ModelHelper.getMainProcess(form.eContainer()) ;
-				}
+				MainProcess proc = findProc(editorPart);
 
 				DiagramFileStore oldArtifact = null;
 				List<DiagramDocumentEditor> editorsWithSameResourceSet = new ArrayList<DiagramDocumentEditor>();
@@ -114,23 +106,8 @@ public class SaveCommandHandler extends SaveHandler {
 						editorsWithSameResourceSet.add((DiagramDocumentEditor) editor);
 						formName = ((FormDiagramEditor)editor).getPartName();
 					}
-					for (IEditorReference editorRef : editorReferences) {
-						try {
-							IEditorInput currentEditorInput = editorRef.getEditorInput();
-							if (currentEditorInput != editorInput) {
-								IEditorPart openEditor = editorRef.getEditor(false);
-								if (openEditor instanceof DiagramDocumentEditor) {
-									DiagramDocumentEditor openDiagramEditor = (DiagramDocumentEditor) openEditor;
-									ResourceSet diagramResourceSet = openDiagramEditor.getEditingDomain().getResourceSet();
-									if (diagramResourceSet == resourceSet) {
-										editorsWithSameResourceSet.add(openDiagramEditor);
-									}
-								}
-							}
-						} catch (Exception ex) {
-							BonitaStudioLog.error(ex);
-						}
-					}
+					
+					maintainListOfEditorsWithSameResourceSet(editorsWithSameResourceSet, editorReferences,editorInput, resourceSet);
 					oldArtifact = diagramStore.getChild(NamingUtils.toDiagramFilename(getOldProcess(proc)));
 					changed = true;
 				}
@@ -147,24 +124,9 @@ public class SaveCommandHandler extends SaveHandler {
 						}
 						oldArtifact.rename(NamingUtils.toDiagramFilename(proc)) ;
 						IWorkbenchPart newEditorOfDiagram = oldArtifact.open();
-						MainProcess diagram =  oldArtifact.getContent();
-						List<EObject> forms=ModelHelper.getAllItemsOfType(diagram, FormPackage.Literals.FORM);
-						for (EObject form:forms){
-							String id = ModelHelper.getEObjectID(form);
-							if (formIds.contains(id)){
-								//TODO: find a way to just open the diagram without bringing them to top and make the UI blinking
-								FormsUtils.openDiagram((Form)form, null);
-							}
-						}
+						List<EObject> forms = openDiagramsForFormsId(oldArtifact, formIds);
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(newEditorOfDiagram);
-						if(formName!=null){
-							for (EObject form:forms){
-								if(form instanceof Form && ((Form)form).getName().equals(formName)){
-									FormsUtils.openDiagram((Form)form, null);
-									break;
-								}
-							}
-						}
+						openFormDiagramWithNameIfInList(formName, forms);
 					}else{
 						EObject root = ((DiagramEditor)editorPart).getDiagramEditPart().resolveSemanticElement();
 						Resource res = root.eResource();
@@ -189,6 +151,68 @@ public class SaveCommandHandler extends SaveHandler {
 		}
 
 		return null;
+	}
+
+	private void openFormDiagramWithNameIfInList(String formName,
+			List<EObject> forms) {
+		if(formName!=null){
+			for (EObject form:forms){
+				if(form instanceof Form && ((Form)form).getName().equals(formName)){
+					FormsUtils.openDiagram((Form)form, null);
+					break;
+				}
+			}
+		}
+	}
+
+	private List<EObject> openDiagramsForFormsId(DiagramFileStore oldArtifact,
+			Set<String> formIds) {
+		MainProcess diagram =  oldArtifact.getContent();
+		List<EObject> forms=ModelHelper.getAllItemsOfType(diagram, FormPackage.Literals.FORM);
+		for (EObject form:forms){
+			String id = ModelHelper.getEObjectID(form);
+			if (formIds.contains(id)){
+				//TODO: find a way to just open the diagram without bringing them to top and make the UI blinking
+				FormsUtils.openDiagram((Form)form, null);
+			}
+		}
+		return forms;
+	}
+
+	private MainProcess findProc(IEditorPart editorPart) {
+		MainProcess proc = null ;
+		if(editorPart instanceof ProcessDiagramEditor){
+			DiagramEditPart diagram = ((ProcessDiagramEditor) editorPart).getDiagramEditPart();
+			proc = (MainProcess) diagram.resolveSemanticElement() ;
+		}else if(editorPart instanceof FormDiagramEditor){
+			DiagramEditPart formDiagram = ((DiagramDocumentEditor)editorPart).getDiagramEditPart();
+			Form form = (Form) formDiagram.resolveSemanticElement();
+			proc = ModelHelper.getMainProcess(form.eContainer()) ;
+		}
+		return proc;
+	}
+
+	private void maintainListOfEditorsWithSameResourceSet(
+			List<DiagramDocumentEditor> editorsWithSameResourceSet,
+			IEditorReference[] editorReferences, IEditorInput editorInput,
+			ResourceSet resourceSet) {
+		for (IEditorReference editorRef : editorReferences) {
+			try {
+				IEditorInput currentEditorInput = editorRef.getEditorInput();
+				if (currentEditorInput != editorInput) {
+					IEditorPart openEditor = editorRef.getEditor(false);
+					if (openEditor instanceof DiagramDocumentEditor) {
+						DiagramDocumentEditor openDiagramEditor = (DiagramDocumentEditor) openEditor;
+						ResourceSet diagramResourceSet = openDiagramEditor.getEditingDomain().getResourceSet();
+						if (diagramResourceSet == resourceSet) {
+							editorsWithSameResourceSet.add(openDiagramEditor);
+						}
+					}
+				}
+			} catch (Exception ex) {
+				BonitaStudioLog.error(ex);
+			}
+		}
 	}
 	/**
 	 * @param proc

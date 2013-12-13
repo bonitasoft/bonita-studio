@@ -115,34 +115,7 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
 	}
 
 	private String getDataType(Expression_ProcessRef e) {
-		EObject proxy = e.getValue();
-		rSet = null;
-		if (proxy.eIsProxy() && EcoreUtil.getURI(proxy).lastSegment().endsWith(".proc")) {
-			Display.getDefault().syncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.getActivePage().getActiveEditor();
-					if (editor != null) {
-						final DiagramEditPart diagramEditPart = editor.getDiagramEditPart();
-						if (diagramEditPart != null) {
-							final EObject resolveSemanticElement = diagramEditPart.resolveSemanticElement();
-							if (resolveSemanticElement != null) {
-								final Resource eResource = resolveSemanticElement.eResource();
-								if (eResource != null) {
-									rSet = eResource.getResourceSet();
-								}
-							}
-						}
-					}
-				}
-			});
-		}
-		EObject data = EcoreUtil2.resolve(proxy, rSet);
-		if (rSet != null) {
-			rSet.getResources().remove(e.eResource());
-		}
+		EObject data = resolveProxyReferenceOnCurrentResourceSet(e);
 		if (data instanceof JavaObjectData) {
 			JavaObjectData javaData = (JavaObjectData) data;
 			String className = javaData.getClassName();
@@ -211,5 +184,49 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
 			}
 		}
 		return null;
+	}
+
+	
+	protected EObject resolveProxyReferenceOnCurrentResourceSet(
+			Expression_ProcessRef e) {
+		EObject proxy = (EObject) e.eGet(ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF__VALUE , false);
+		rSet = getCurrentResourceSet(proxy);
+		EObject data = EcoreUtil2.resolve(proxy, rSet);
+		e.setValue(data);
+		if (rSet != null) {
+			rSet.getResources().remove(e.eResource());
+		}
+		return data;
+	}
+
+	/**
+	 * @param proxy
+	 * @return 
+	 */
+	private ResourceSet getCurrentResourceSet(EObject proxy) {
+		rSet = null;
+		if (proxy.eIsProxy() && EcoreUtil.getURI(proxy).lastSegment().endsWith(".proc")) {
+			Display.getDefault().syncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getActivePage().getActiveEditor();
+					if (editor != null) {
+						final DiagramEditPart diagramEditPart = editor.getDiagramEditPart();
+						if (diagramEditPart != null) {
+							final EObject resolveSemanticElement = diagramEditPart.resolveSemanticElement();
+							if (resolveSemanticElement != null) {
+								final Resource eResource = resolveSemanticElement.eResource();
+								if (eResource != null) {
+									rSet = eResource.getResourceSet();
+								}
+							}
+						}
+					}
+				}
+			});
+		}
+		return rSet;
 	}
 }
