@@ -17,7 +17,7 @@
 		<engine.version>6.2.0.alpha-08</engine.version>
 		<connector.version>6.1.1</connector.version>
 		<simulation.version>6.1.0</simulation.version>
-		<filters.version>6.2.0-008</filters.version>
+		<filters.version>6.2.0.alpha-08</filters.version>
 		<theme.builder.version>6.1.0</theme.builder.version>
 		<watchdog.version>6.0.1</watchdog.version>
 		<p2MirrorUrl>http://repositories.rd.lan/p2/6.2</p2MirrorUrl>
