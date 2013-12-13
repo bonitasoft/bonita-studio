@@ -20,8 +20,6 @@ package org.bonitasoft.studio.tests.pagetemplate;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
@@ -31,7 +29,6 @@ import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
  * @author Aurelien Pupier
@@ -125,19 +122,20 @@ public class TestPageTemplate extends SWTBotGefTestCase {
 
     private void checkTextInsideHtml(final String textToCheck) {
         bot.button(Messages.Edit).click();
-        StructuredTextEditor editorPart;
-        editorPart = (StructuredTextEditor) bot.activeEditor().getReference().getEditor(false);
-        final StyledText textWidget2 = editorPart.getTextViewer().getTextWidget();
-
-        Display.getDefault().syncExec(new Runnable() {
-
-            public void run() {
-                editorTextContent = textWidget2.getText();
-            }
-        });
-        /*Check the content*/
-        System.out.println(editorTextContent);
-        assertTrue("The generated html is not well-formed. It doesn't contain "+textToCheck+"\nCurrent text:\n"+editorTextContent,editorTextContent.contains(textToCheck));
+        bot.waitUntil(new ICondition() {
+			
+			public boolean test() throws Exception {
+				editorTextContent = bot.styledText().getText();
+				return editorTextContent.contains(textToCheck);
+			}
+			
+			public void init(SWTBot bot) {
+			}
+			
+			public String getFailureMessage() {
+				return "The generated html is not well-formed. It doesn't contain "+textToCheck+"\nCurrent text:\n"+editorTextContent;
+			}
+		},10000,500);
         bot.activeEditor().close();
     }
 
@@ -170,7 +168,7 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         bot.button(Messages.Restore).click();
 
         /*There is a long-running operation before so need a waituntil*/
-        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.Edit)),15000,100);
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.Edit)),20000,100);
         assertTrue("Clear button is not enabled", bot.button(Messages.Clear).isEnabled());
         return formGefEditor;
     }
