@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2010-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,9 +39,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.CompoundCommand;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -79,21 +77,22 @@ public class DeleteHandler extends AbstractHandler {
 				MessageFlow flow  = null;
 				List<IGraphicalEditPart> newSelection = new ArrayList<IGraphicalEditPart>() ;
 				for (Object item : currentSelection.toArray()) {
-					if (((IGraphicalEditPart) item).resolveSemanticElement() instanceof Pool) {
+					final EObject semanticElement = ((IGraphicalEditPart) item).resolveSemanticElement();
+					if (semanticElement instanceof Pool) {
 						containsPool = true;
 					}
-					if(((IGraphicalEditPart) item).resolveSemanticElement() instanceof Lane){
-						lanes.add((Lane) ((IGraphicalEditPart) item).resolveSemanticElement()) ;
+					if(semanticElement instanceof Lane){
+						lanes.add((Lane) semanticElement) ;
 					}
-					if (((IGraphicalEditPart) item).resolveSemanticElement() instanceof PageFlow) {
+					if (semanticElement instanceof PageFlow) {
 
-						PageFlow element = (PageFlow)((IGraphicalEditPart) item).resolveSemanticElement();
+						PageFlow element = (PageFlow)semanticElement;
 						List<Form> forms =element.getForm();
 						closeFormsRelatedToDiagramElement(forms);
 					} 
-					if  (((IGraphicalEditPart) item).resolveSemanticElement() instanceof MessageFlow) {
+					if  (semanticElement instanceof MessageFlow) {
 						isMessageFlow = true;
-						flow = (MessageFlow)((IGraphicalEditPart) item).resolveSemanticElement();
+						flow = (MessageFlow)semanticElement;
 						
 						//removeMessageFlow(flow);
 						
@@ -143,7 +142,6 @@ public class DeleteHandler extends AbstractHandler {
 	
 	private void closeFormsRelatedToDiagramElement(List<Form> forms){
 		for (Form form:forms){
-			URI uri = EcoreUtil.getURI(form);
 			List<IEditorPart> editors =(List<IEditorPart>)EditorService.getInstance().getRegisteredEditorParts();
 			for (IEditorPart editor:editors){
 				if (editor instanceof FormDiagramEditor){

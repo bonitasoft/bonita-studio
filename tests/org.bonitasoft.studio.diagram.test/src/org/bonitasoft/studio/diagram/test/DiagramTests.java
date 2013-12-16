@@ -17,6 +17,15 @@
  */
 package org.bonitasoft.studio.diagram.test;
 
+import static org.bonitasoft.studio.data.i18n.Messages.datatypeLabel;
+import static org.bonitasoft.studio.data.i18n.Messages.name;
+import static org.bonitasoft.studio.data.i18n.Messages.newVariable;
+import static org.bonitasoft.studio.form.properties.i18n.Messages.formFieldType;
+import static org.bonitasoft.studio.properties.i18n.Messages.activityType;
+import static org.bonitasoft.studio.properties.i18n.Messages.activityType_task;
+import static org.bonitasoft.studio.properties.i18n.Messages.addForm;
+import static org.bonitasoft.studio.properties.i18n.Messages.addFormTitle;
+
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -42,24 +51,14 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.bonitasoft.studio.properties.i18n.Messages.addForm;
-import static org.bonitasoft.studio.properties.i18n.Messages.addFormTitle;
-import static org.bonitasoft.studio.properties.i18n.Messages.activityType;
-import static org.bonitasoft.studio.properties.i18n.Messages.activityType_task;
-import static org.bonitasoft.studio.data.i18n.Messages.newVariable;
-import static org.bonitasoft.studio.data.i18n.Messages.datatypeLabel;
-import static org.bonitasoft.studio.data.i18n.Messages.name;
-import static org.bonitasoft.studio.form.properties.i18n.Messages.formFieldType;
 /**
  * @author Mickael Istria
  * @author Florine Boudin
@@ -225,14 +224,10 @@ public class DiagramTests extends SWTBotGefTestCase {
 					bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
 					String valueOf = "Integer.valueOf(field_varInteger1)";
 					SWTBotTestUtil.setScriptExpression(bot, "theInteger", valueOf, Integer.class.getName());
-					bot.waitUntil(new ICondition() {
+					bot.waitUntil(new DefaultCondition() {
 						
 						public boolean test() throws Exception {
 							return bot.textWithId(ExpressionViewer.SWTBOT_ID_EXPRESSIONVIEWER_TEXT,2).getText().equals("theInteger");
-						}
-						
-						public void init(SWTBot bot) {
-				
 						}
 						
 						public String getFailureMessage() {

@@ -48,7 +48,6 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edapt.common.EcoreUtils;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jdt.core.JavaConventions;
 import org.eclipse.jdt.core.JavaCore;
@@ -176,7 +175,10 @@ public class NameGridPropertySectionContribution extends AbstractNamePropertySec
 				if( element instanceof Widget){
 					IProgressService service = PlatformUI.getWorkbench().getProgressService();
 					try {
-						service.busyCursorWhile(new RefactorWidgetOperation((Widget)element,dialog.getNewName()));
+						RefactorWidgetOperation operation =new RefactorWidgetOperation((Widget)element,dialog.getNewName());
+						operation.setCompoundCommand(new CompoundCommand());
+						operation.refactorReferencesInScripts();
+						service.busyCursorWhile(operation);
 					} catch (InvocationTargetException e) {
 						BonitaStudioLog.error(e);
 					} catch (InterruptedException e) {
