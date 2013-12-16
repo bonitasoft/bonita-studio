@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.Messages;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
-import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.eclipse.core.databinding.observable.map.IMapChangeListener;
@@ -150,8 +149,6 @@ public class DataStyledTreeLabelProvider extends StyledCellLabelProvider impleme
         }
         if (element instanceof JavaObjectData) {
             builder.append(((JavaObjectData) element).getClassName());
-        } else if(element instanceof BusinessObjectData){
-        	  builder.append(((BusinessObjectData) element).getBusinessObjectDefinitionId());
         }else if (element.getDataType() == null || element.getDataType().getName() == null) {
             builder.append("?");
         } else {

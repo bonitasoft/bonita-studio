@@ -7796,10 +7796,10 @@
     </changes>
     <changes xsi:type="history:OperationChange">
       <changes xsi:type="history:Create" target="process.ecore#//BusinessObjectData"
-          referenceName="eStructuralFeatures" element="process.ecore#//BusinessObjectData/businessObjectDefinitionId">
-        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/businessObjectDefinitionId"
-            featureName="name" dataValue="businessObjectDefinitionId"/>
-        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/businessObjectDefinitionId"
+          referenceName="eStructuralFeatures" element="process.ecore#//BusinessObjectData/businessDataRepositoryId">
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/businessDataRepositoryId"
+            featureName="name" dataValue="businessDataRepositoryId"/>
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/businessDataRepositoryId"
             featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       </changes>
       <operation name="newAttribute">
@@ -7851,6 +7851,35 @@
         </parameters>
         <parameters name="defaultValue">
           <dataValue>true</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//BusinessObjectData"
+          referenceName="eStructuralFeatures" element="process.ecore#//BusinessObjectData/eClassName">
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/eClassName"
+            featureName="name" dataValue="eClassName"/>
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/eClassName"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//BusinessObjectData"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>eClassName</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
         </parameters>
       </operation>
     </changes>
