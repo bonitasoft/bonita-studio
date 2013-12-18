@@ -6919,7 +6919,7 @@
   <plugin
       name="Bonita process editor"
       provider="BonitaSoft S.A."
-      version="6.2.0.qualifier">
+      version="6.2.1.qualifier">
     <requiredPlugins>org.eclipse.draw2d</requiredPlugins>
     <requiredPlugins>org.eclipse.gmf.runtime.draw2d.ui</requiredPlugins>
     <requiredPlugins>org.eclipse.gmf.runtime.lite.svg</requiredPlugins>
