@@ -326,7 +326,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 				}
 				contrib.execute();
 			}
-			buildWorkspace();
 			if (PlatformUI.isWorkbenchRunning()) {
 				IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				PlatformUI.getWorkbench().showPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID, activeWorkbenchWindow);
@@ -348,22 +347,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 		}
 	}
 
-
-	private void buildWorkspace() {
-		WorkspaceJob job = new WorkspaceJob("Rebuild current project") {
-			
-			@Override
-			public IStatus runInWorkspace(IProgressMonitor monitor)
-					throws CoreException {
-				RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
-				return Status.OK_STATUS;
-			}
-		};
-		job.setPriority(Job.BUILD);
-		job.setSystem(true);
-		job.setUser(false);
-		job.schedule();
-	}
 
 	private void openStartupDialog() {
 		String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$
