@@ -57,198 +57,179 @@ import org.eclipse.ui.progress.IProgressService;
  */
 public class ImportFileCommand extends AbstractHandler {
 
-    /**
-     * {@link ExecutionEvent} Parameter key to set the NAME of the files to import.
-     * Must be a list of names separated by ";"
-     */
-    public static final String FILE_NAMES = "fileNames";
-    /**
-     * {@link ExecutionEvent} parameter key to set the folder in which files are located
-     */
-    public static final String BASE_FOLDER = "baseFolder";
-    /**
-     * {@link ExecutionEvent}  parameter key to skip the overwrite question.
-     * Set it to "true" or "false". Default value will be "false", and overwrite
-     * question will open.
-     */
-    public static final String SKIP_OVERWRITE_QUESTION = "skipOverwriteQuestion";
-    private String baseFolder;
-    private String[] fileNames;
-    public static boolean isTest = false;
-    private ImporterFactory importerFactory;
+	/**
+	 * {@link ExecutionEvent} Parameter key to set the NAME of the files to import.
+	 * Must be a list of names separated by ";"
+	 */
+	public static final String FILE_NAMES = "fileNames";
+	/**
+	 * {@link ExecutionEvent} parameter key to set the folder in which files are located
+	 */
+	public static final String BASE_FOLDER = "baseFolder";
+	/**
+	 * {@link ExecutionEvent}  parameter key to skip the overwrite question.
+	 * Set it to "true" or "false". Default value will be "false", and overwrite
+	 * question will open.
+	 */
+	public static final String SKIP_OVERWRITE_QUESTION = "skipOverwriteQuestion";
+	private String baseFolder;
+	private String[] fileNames;
+	public static boolean isTest = false;
+	private ImporterFactory importerFactory;
 
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
-     * ExecutionEvent)
-     */
-    @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+	 * ExecutionEvent)
+	 */
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 
-        Shell shell = Display.getCurrent().getActiveShell();
-        if(event !=null){
-            baseFolder = event.getParameter(BASE_FOLDER);
-            fileNames = event.getParameter(FILE_NAMES)!=null?event.getParameter(FILE_NAMES).split(";"):null;
+		Shell shell = Display.getCurrent().getActiveShell();
+		if(event !=null){
+			baseFolder = event.getParameter(BASE_FOLDER);
+			fileNames = event.getParameter(FILE_NAMES)!=null?event.getParameter(FILE_NAMES).split(";"):null;
 
-        }
-        if (baseFolder != null && fileNames != null) {
-            try {
-                importProcessWithProgressMonitor(shell, baseFolder, fileNames);
-            } catch (Exception ex) {
-                MessageDialog.openError(shell, "Could not import", ex.getMessage());
-            }
-        } else {
-            String selected = null;
-            String baseFolder = "";
-            ImportFileWizard importFileWizard = new ImportFileWizard();
-            new WizardDialog(shell, importFileWizard).open();
-            selected = importFileWizard.getSelectedFilePath();
-            if (selected == null) {
-                return null;
-            }
-            File selectedFile = new File(selected);
-            importerFactory = importFileWizard.getSelectedTransfo();
-            baseFolder = selectedFile.getParent();
-            String[] fileNames = new String[1];
-            fileNames[0] = selectedFile.getName();
-            if (selected != null) {
-                try {
-                    importProcessWithProgressMonitor(shell, baseFolder, fileNames);
-                } catch (Exception ex) {
-                    MessageDialog.openError(shell, "Could not import", ex.getMessage());
-                    BonitaStudioLog.error("Import has failed for file "+ selectedFile.getName(), ApplicationPlugin.PLUGIN_ID);
-                    BonitaStudioLog.error(ex,ApplicationPlugin.PLUGIN_ID);
-                }
-            }
-        }
+		}
+		if (baseFolder != null && fileNames != null) {
+			try {
+				importProcessWithProgressMonitor(shell, baseFolder, fileNames);
+			} catch (Exception ex) {
+				MessageDialog.openError(shell, "Could not import", ex.getMessage());
+			}
+		} else {
+			String selected = null;
+			String baseFolder = "";
+			ImportFileWizard importFileWizard = new ImportFileWizard();
+			new WizardDialog(shell, importFileWizard).open();
+			selected = importFileWizard.getSelectedFilePath();
+			if (selected == null) {
+				return null;
+			}
+			File selectedFile = new File(selected);
+			importerFactory = importFileWizard.getSelectedTransfo();
+			baseFolder = selectedFile.getParent();
+			String[] fileNames = new String[1];
+			fileNames[0] = selectedFile.getName();
+			if (selected != null) {
+				try {
+					importProcessWithProgressMonitor(shell, baseFolder, fileNames);
+				} catch (Exception ex) {
+					MessageDialog.openError(shell, "Could not import", ex.getMessage());
+					BonitaStudioLog.error("Import has failed for file "+ selectedFile.getName(), ApplicationPlugin.PLUGIN_ID);
+					BonitaStudioLog.error(ex,ApplicationPlugin.PLUGIN_ID);
+				}
+			}
+		}
 
-        OperationHistoryFactory.getOperationHistory().dispose(IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, true);
-        return null;
-    }
+		OperationHistoryFactory.getOperationHistory().dispose(IOperationHistory.GLOBAL_UNDO_CONTEXT, true, true, true);
+		return null;
+	}
 
-    /**
-     * @param shell
-     * @param string
-     * @param file
-     */
-    protected void importProcessWithProgressMonitor(final Shell shell, final String baseFolder, final String[] fileNames) {
-        IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
-        IRunnableWithProgress runnable = new IRunnableWithProgress() {
+	/**
+	 * @param shell
+	 * @param string
+	 * @param file
+	 */
+	protected void importProcessWithProgressMonitor(final Shell shell, final String baseFolder, final String[] fileNames) {
+		IProgressService progressManager = PlatformUI.getWorkbench().getProgressService();
+		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
-            @Override
-            public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                try {
-                    monitor.beginTask(Messages.importProcessProgressDialog,IProgressMonitor.UNKNOWN);
+			@Override
+			public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				try {
+					monitor.beginTask(Messages.importProcessProgressDialog,IProgressMonitor.UNKNOWN);
+					for(final String fileName : fileNames){
+						File file = new File(baseFolder + File.separator + fileName);
+						try {
+							boolean oldPopup = FileActionDialog.getDisablePopup();
+							DiagramFileStore diagramFile = null;
+							if (importerFactory != null) {
+								final ToProcProcessor processor = importerFactory.createProcessor(file.getName()) ;
+								processor.createDiagram(file.toURI().toURL(), monitor)  ;
 
-                    for(final String fileName : fileNames){
-                        Display.getDefault().syncExec(new Runnable() {
+								if(processor.getErrors().size()>0) {
+									Display.getDefault().syncExec(new Runnable() {
+										@Override
+										public void run() {
 
-                            @Override
-                            public void run() {
-                                DiagramRepositoryStore diagramStore = null;//lazy initialization
-                                File file = new File(baseFolder + File.separator + fileName);
-                                try {
-                                    boolean oldPopup = FileActionDialog.getDisablePopup();
-                                    DiagramFileStore diagramFile = null;
-                                    if (importerFactory != null) {
-                                        final ToProcProcessor processor = importerFactory.createProcessor(file.getName()) ;
-                                        processor.createDiagram(file.toURI().toURL(), monitor)  ;
-
-                                        if(processor.getErrors().size()>0) {
-                                            Display.getDefault().syncExec(new Runnable() {
-                                                @Override
-                                                public void run() {
-
-                                                    String message = Messages.errorWhileImporting_message;
-                                                    StringBuilder stringBuilder = new StringBuilder(message);
-                                                    for (Object error : processor.getErrors()) {
-                                                        stringBuilder.append('\n');
-                                                        stringBuilder.append(error.toString());
-                                                    }
-                                                    MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.errorWhileImporting_title, stringBuilder.toString());
-                                                }
-                                            });
-                                        }
+											String message = Messages.errorWhileImporting_message;
+											StringBuilder stringBuilder = new StringBuilder(message);
+											for (Object error : processor.getErrors()) {
+												stringBuilder.append('\n');
+												stringBuilder.append(error.toString());
+											}
+											MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.errorWhileImporting_title, stringBuilder.toString());
+										}
+									});
+								}
 
 
-                                        if(processor.getResources() != null){
-                                            // final ResourceSet resourceSet = new ResourceSetImpl();
-                                            for(File f : processor.getResources()){
-                                                //    Resource resource = resourceSet.createResource(URI.createFileURI(f.getAbsolutePath()));
+								if(processor.getResources() != null){
+									for(File f : processor.getResources()){
+										final FileInputStream fis = new FileInputStream(f);
+										DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
+										diagramFile = diagramStore.importInputStream(f.getName(), fis) ;
+										fis.close();
+										f.delete();
+									}
+								}
 
-                                                //    resource.load(getLoadOptions());
-                                                //    MainProcess process = (MainProcess) resource.getContents().get(0);
-                                                //    String destFileName = NamingUtils.toDiagramFilename(process.getName(),process.getVersion());
-                                                //    resource.unload();
-                                                final FileInputStream fis = new FileInputStream(f);
-                                                if(diagramStore == null){
-                                                    diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(DiagramRepositoryStore.class) ;
-                                                }
-                                                diagramFile = diagramStore.importInputStream(f.getName(), fis) ;
-                                                fis.close();
-                                                f.delete();
-                                            }
-                                        }
+							}
 
-                                    }
+							FileActionDialog.setDisablePopup(oldPopup);
+							if(diagramFile != null){
+								diagramFile.open();
+							} else {
+								/*if it is null it might be because
+								 * the import was cancelled
+								 * or was not working
+								 * so do nothing*/
+							}
+							PlatformUtil.closeIntro() ;
+							PlatformUtil.openIntroIfNoOtherEditorOpen() ;
 
-                                    FileActionDialog.setDisablePopup(oldPopup);
-                                    if(diagramFile != null){
-                                        diagramFile.open();
-                                    } else {
-                                        /*if it is null it might be because
-                                         * the import was cancelled
-                                         * or was not working
-                                         * so do nothing*/
-                                    }
-                                    PlatformUtil.closeIntro() ;
-                                    PlatformUtil.openIntroIfNoOtherEditorOpen() ;
+						} catch (final Exception e) {
+							BonitaStudioLog.error(e) ;
+							Display.getDefault().syncExec(new Runnable() {
 
-                                } catch (final Exception e) {
-                                    BonitaStudioLog.error(e) ;
-                                    Display.getDefault().syncExec(new Runnable() {
+								@Override
+								public void run() {
+									String message =  Messages.errorWhileImporting_message;
+									if(e.getMessage() != null && !e.getMessage().isEmpty()){
+										message = e.getMessage();
+									}
+									new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title,message,e).open();
+								}
+							}) ;
 
-                                        @Override
-                                        public void run() {
-                                        	String message =  Messages.errorWhileImporting_message;
-                                        	if(e.getMessage() != null && !e.getMessage().isEmpty()){
-                                        		message = e.getMessage();
-                                        	}
-                                            new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.errorWhileImporting_title,message,e).open();
-                                        }
-                                    }) ;
+						}
+					}
 
-                                }
-                            }
+				} catch (Exception e) {
+					BonitaStudioLog.error(e);
+					throw new InvocationTargetException(e);
+				}
+			}
+		};
 
+		try {
+			progressManager.run(true,false,runnable);
+		} catch (InvocationTargetException e) {
+			BonitaStudioLog.error(e);
+		} catch (InterruptedException e) {
+			BonitaStudioLog.error(e);
+		}
 
-                        });
-                    }
+	}
 
-                } catch (Exception e) {
-                    BonitaStudioLog.error(e);
-                    throw new InvocationTargetException(e);
-                }
-            }
-        };
-
-        try {
-            progressManager.run(false,false,runnable);
-        } catch (InvocationTargetException e) {
-            BonitaStudioLog.error(e);
-        } catch (InterruptedException e) {
-            BonitaStudioLog.error(e);
-        }
-
-    }
-
-    protected Map<Object, Object> getLoadOptions() {
-        final Map<Object, Object> options = new HashMap<Object, Object>();
-        options.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
-        return options;
-    }
+	protected Map<Object, Object> getLoadOptions() {
+		final Map<Object, Object> options = new HashMap<Object, Object>();
+		options.put(XMIResource.OPTION_RECORD_UNKNOWN_FEATURE, Boolean.TRUE);
+		return options;
+	}
 
 }

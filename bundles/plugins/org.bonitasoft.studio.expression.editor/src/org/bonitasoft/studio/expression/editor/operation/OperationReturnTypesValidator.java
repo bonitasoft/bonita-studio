@@ -248,7 +248,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 	protected IStatus validateJavaMethodOperation(Expression expression,
 			String expressionName, final Operation operation) {
 		if(!ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType())
-				|| !(dataExpression.getReferencedElements().get(0) instanceof JavaObjectData)){
+				|| !(!dataExpression.getReferencedElements().isEmpty() && dataExpression.getReferencedElements().get(0) instanceof JavaObjectData)){
 			return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,typeLabelProvider.getText(dataExpression.getType()),operatorLabelProvider.getText(operation.getOperator())));
 		}
 		if(!operation.getOperator().getInputTypes().isEmpty()){
