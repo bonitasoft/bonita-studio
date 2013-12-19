@@ -964,7 +964,7 @@ public class ModelHelper {
 		 List<Expression> result = new ArrayList<Expression>();
 		 for (EObject o:ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION)){
 			 Expression expr = (Expression)o;
-			 if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType())){
+			 if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType()) || ExpressionConstants.PATTERN_TYPE.equals(expr.getType())){
 				 if (isElementIsReferencedInScript(expr, element)){
 					 
 					 result.add(expr);
