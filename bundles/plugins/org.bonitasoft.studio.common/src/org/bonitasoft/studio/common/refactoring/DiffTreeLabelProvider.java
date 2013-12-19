@@ -30,7 +30,7 @@ import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * @author aurelie
+ * @author aurelie zara
  *
  */
 
