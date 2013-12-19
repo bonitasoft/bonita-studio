@@ -48,10 +48,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DiffPackage;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
+import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 
@@ -102,6 +105,28 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 					refactorUsername((User)updatedAttribute.getLeftElement(),(User)updatedAttribute.getRightElement(),actorMappings);
 				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__USER_NAME)){
 					refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership)updatedAttribute.getLeftElement(),(org.bonitasoft.studio.actors.model.organization.Membership)updatedAttribute.getRightElement(),actorMappings);
+				}
+			}
+			List<ModelElementChangeLeftTarget> newElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET);
+			List<ModelElementChangeRightTarget> oldElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET);
+			if(!newElementChange.isEmpty() && !oldElementChange.isEmpty()){
+				ModelElementChangeLeftTarget leftTarget = newElementChange.get(0);
+				ModelElementChangeRightTarget rightTarget = oldElementChange.get(0);
+				EObject newEObject = leftTarget.getLeftElement();
+				EObject oldEObject = rightTarget.getRightElement();
+				if(newEObject instanceof Group && oldEObject instanceof Group){
+					refactorGroup((Group)oldEObject,(Group)newEObject,actorMappings);
+					refactorMembership((Group)oldEObject,(Group)newEObject,actorMappings);
+				}
+				if(newEObject instanceof Role && oldEObject instanceof Role){
+					refactorRole((Role)oldEObject,(Role)newEObject,actorMappings);
+					refactorMembership((Role)oldEObject,(Role)newEObject,actorMappings);
+				}
+				if(newEObject instanceof User && oldEObject instanceof User){
+					refactorUsername((User)oldEObject,(User)newEObject,actorMappings);
+				}
+				if(newEObject instanceof Membership && oldEObject instanceof Membership){
+					refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership)oldEObject,(org.bonitasoft.studio.actors.model.organization.Membership)newEObject,actorMappings);
 				}
 			}
 		}
