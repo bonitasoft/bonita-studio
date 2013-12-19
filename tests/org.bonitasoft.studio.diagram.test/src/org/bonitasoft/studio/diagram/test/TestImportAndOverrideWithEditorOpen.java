@@ -19,8 +19,12 @@ package org.bonitasoft.studio.diagram.test;
 
 import org.bonitasoft.studio.application.actions.ImportFileCommand;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
+import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.bonitasoft.studio.test.swtbot.util.conditions.EditorOpenCondition;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
@@ -46,6 +50,8 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 
 	private static boolean before;
 
+	private DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+	
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		before = ImportFileCommand.isTest;
@@ -61,6 +67,7 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
+		BOSEngineManager.getInstance().start();//wait start engine ended
 		bot.saveAllEditors();
 		bot.closeAllEditors();
 	}
@@ -77,19 +84,21 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 
 		/* import the base process to override */
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
+		bot.waitUntil(new EditorOpenCondition(store.getChild("ProcWithSameNameAndVersion-1.0.proc").getResource()));
 		SWTBotEditor botEditor = bot.activeEditor();
 		final SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-
+		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
+		
 		IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor.mainEditPart().part();
 		MainProcess model = (MainProcess)part.resolveSemanticElement();
 		assertNotNull("no pool found (import failed?)",model);
 		assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
 		assertEquals("Unique description 0", model.getDocumentation());
-
+			
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
+		bot.waitUntil(new EditorOpenCondition(store.getChild("ProcWithSameNameAndVersion-1.0.proc").getResource()));
 		botEditor = bot.activeEditor();
 		final SWTBotGefEditor gmfEditor2 = bot.gefEditor(botEditor.getTitle());
-
 		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
 
 		part = (IGraphicalEditPart)gmfEditor2.mainEditPart().part();
@@ -117,22 +126,23 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 	@Test
 	public void testImportAndOverrideWithFormEditorOpen() throws Exception {
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_1ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
+		bot.waitUntil(new EditorOpenCondition(store.getChild("ProcWithSameNameAndVersion-1.0.proc").getResource()));
 		SWTBotEditor botEditor = bot.activeEditor();
-		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+		String title = botEditor.getTitle();
+		SWTBotGefEditor gmfEditor = bot.gefEditor(title);
 		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
 
 
 		SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
 		SWTBotTestUtil.importProcessWIthPathFromClass(bot, "_2ProcWithSameNameAndVersion_1_0.bos", "Bonita 6.x", "ProcWithSameNameAndVersion", getClass(), false);
+		bot.waitUntil(new EditorOpenCondition(store.getChild("ProcWithSameNameAndVersion-1.0.proc").getResource()));
 		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
 
-
-		botEditor = bot.activeEditor();
-		final SWTBotGefEditor gmfEditor2 = bot.gefEditor(botEditor.getTitle());
+		final SWTBotGefEditor gmfEditor2 = bot.gefEditor(title);
 		IGraphicalEditPart part = (IGraphicalEditPart)gmfEditor2.mainEditPart().part();
 		MainProcess model = ModelHelper.getMainProcess(part.resolveSemanticElement());
 		assertNotNull("no pool found (import failed?)",model);
-		assertContains("ProcWithSameNameAndVersion", botEditor.getTitle());
+		assertContains("ProcWithSameNameAndVersion", gmfEditor2.getTitle());
 		bot.waitUntil(new ICondition() {
 
 			public boolean test() throws Exception {
@@ -149,7 +159,6 @@ public class TestImportAndOverrideWithEditorOpen extends SWTBotGefTestCase {
 				return "Unique description 2 was expected but was :"+diagram.getDocumentation();
 			}
 		},10000,500);
-		assertEquals("Unique description 2", model.getDocumentation());
 	}
 
 }
