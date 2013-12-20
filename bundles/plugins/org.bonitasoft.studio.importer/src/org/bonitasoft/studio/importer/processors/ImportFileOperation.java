@@ -23,10 +23,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.importer.ImporterFactory;
@@ -96,7 +96,11 @@ public class ImportFileOperation implements IRunnableWithProgress {
 
 	protected void addFileStoresToOpen(final ToProcProcessor processor)
 			throws InvocationTargetException {
-		fileStoresToOpen.addAll((Collection<? extends DiagramFileStore>) processor.getDiagramFileStoresToOpen());
+		for(IRepositoryFileStore fStore : processor.getDiagramFileStoresToOpen()){
+			if(fStore instanceof DiagramFileStore){
+				fileStoresToOpen.add((DiagramFileStore) fStore);
+			}
+		}
 		if(processor.getResources() != null){
 			for(File f : processor.getResources()){
 				FileInputStream fis = null;
