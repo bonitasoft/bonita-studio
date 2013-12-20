@@ -32,7 +32,6 @@ import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -84,24 +83,14 @@ public class ImportHandler extends AbstractHandler {
 			return null;
 		}
 
+		for(final DiagramFileStore fileStore : operation.getFileStoresToOpen()){
+			fileStore.open();
+		}
+		PlatformUtil.closeIntro() ;
+		PlatformUtil.openIntroIfNoOtherEditorOpen() ;
 
-		BusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-
-			@Override
-			public void run() {
-				for(final DiagramFileStore fileStore : operation.getFileStoresToOpen()){
-					fileStore.open();
-				}
-				PlatformUtil.closeIntro() ;
-				PlatformUtil.openIntroIfNoOtherEditorOpen() ;
-			}
-		});
-	
-
-
-
-	return null;
-}
+		return null;
+	}
 
 
 
