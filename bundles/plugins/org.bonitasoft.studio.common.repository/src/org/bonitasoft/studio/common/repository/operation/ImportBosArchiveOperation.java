@@ -76,7 +76,6 @@ public class ImportBosArchiveOperation {
 
 	public IStatus run(IProgressMonitor monitor) {
 		status = Status.OK_STATUS;
-		
 		Assert.isNotNull(archiveFile);
 		final File archive = new File(archiveFile);
 		Assert.isTrue(archive.exists());
@@ -84,40 +83,25 @@ public class ImportBosArchiveOperation {
 		try {
 			IContainer container = createTempProject(archive, monitor);
 			final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap = new HashMap<String, IRepositoryStore<? extends IRepositoryFileStore>>();
+		
 			IRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
 			currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
 			final List<IRepositoryStore<? extends IRepositoryFileStore>> allRepositories = currentRepository.getAllStores();
+			
 			FileActionDialog.activateYesNoToAll();
+		
 			for (IRepositoryStore<? extends IRepositoryFileStore> repository : allRepositories) {
 				repositoryMap.put(repository.getName(), repository);
 			}
-			boolean isValid = false;
-			while (container != null && !isValid) {
-				IResource lastVisited = null;
-				for (IResource r : container.members(IResource.FOLDER)) {
-					if (repositoryMap.get(r.getName()) != null) {
-						isValid = true;
-						break;
-					}
-					lastVisited = r;
-				}
-				if (isValid) {
-					break;
-				}
-				if (lastVisited instanceof IFolder) {
-					container = (IFolder) lastVisited;
-				} else {
-					container = null;
-				}
-			}
-
-			if (!isValid) {
+			
+			IContainer rootContainer = getRootContainer(container, repositoryMap);
+			if (rootContainer == null) {
 				return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, Messages.bind(Messages.invalidArchive,new Object[] { bosProductName }));
 			}
-
-			updateResourcesToOpenList(container);
+			
+			updateResourcesToOpenList(rootContainer);
 			FileActionDialog.activateYesNoToAll();
-			final IResource[] folders = container.members(IContainer.FOLDER);
+			final IResource[] folders = rootContainer.members(IContainer.FOLDER);
 			final List<IResource> folderSortedList = new ArrayList<IResource>(Arrays.asList(folders));
 			final Comparator<IResource> importFolderComparator = new ImportFolderComparator<IResource>();
 			Collections.sort(folderSortedList, importFolderComparator);
@@ -152,6 +136,36 @@ public class ImportBosArchiveOperation {
 			cleanTmpProject();
 		}
 		return status;
+	}
+
+
+	protected IContainer getRootContainer(
+			IContainer container,
+			final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap)
+			throws CoreException {
+		boolean isValid = false;
+		while (container != null && !isValid) {
+			IResource lastVisited = null;
+			for (IResource r : container.members(IResource.FOLDER)) {
+				if (repositoryMap.get(r.getName()) != null) {
+					isValid = true;
+					break;
+				}
+				lastVisited = r;
+			}
+			if (isValid) {
+				break;
+			}
+			if (lastVisited instanceof IFolder) {
+				container = (IFolder) lastVisited;
+			} else {
+				container = null;
+			}
+		}
+		if(!isValid){
+			return null;
+		}
+		return container;
 	}
 
 
@@ -227,7 +241,7 @@ public class ImportBosArchiveOperation {
 		container.create(Repository.NULL_PROGRESS_MONITOR);
 		container.open(Repository.NULL_PROGRESS_MONITOR);
 		try {
-			PlatformUtil.unzipZipFiles(archive, container.getLocation().toFile(), monitor);
+			PlatformUtil.unzipZipFiles(archive, container.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
 			MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.importBonita6xTitle,
