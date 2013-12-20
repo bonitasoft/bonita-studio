@@ -33,5 +33,21 @@
             priorityDisplay="3">
       </importFactory>
    </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.bonitasoft.studio.importer.handler.ImportHandler"
+            id="org.bonitasoft.studio.application.importCommand"
+            name="%importLabel">
+      </command>
+   </extension>
+   <extension
+         point="org.bonitasoft.studio.coolbarContributionItem">
+      <coolbarItem
+            class="org.bonitasoft.studio.importer.coolbar.ImportBarCoolbarItem"
+            priority="0"
+            toolbarPosition="4">
+      </coolbarItem>
+   </extension>
 
 </plugin>

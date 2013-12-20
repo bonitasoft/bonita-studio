@@ -20,7 +20,7 @@ package org.bonitasoft.studio.importer.jpdl;
 import java.io.InputStream;
 
 import org.bonitasoft.studio.importer.ImporterFactory;
-import org.bonitasoft.studio.importer.ToProcProcessor;
+import org.bonitasoft.studio.importer.processors.ToProcProcessor;
 
 /**
  * @author Mickael Istria

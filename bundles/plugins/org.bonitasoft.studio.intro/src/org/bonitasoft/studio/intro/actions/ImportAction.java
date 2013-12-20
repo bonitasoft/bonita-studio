@@ -19,8 +19,17 @@ package org.bonitasoft.studio.intro.actions;
 
 import java.util.Properties;
 
-import org.bonitasoft.studio.application.actions.ImportFileCommand;
+import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.intro.Messages;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 
@@ -34,10 +43,13 @@ public class ImportAction implements IIntroAction {
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
 	public void run(IIntroSite introSite, Properties param) {
+		ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
+		Command cmd = service.getCommand("org.bonitasoft.studio.application.importCommand") ;
 		try {
-			new ImportFileCommand().execute(null);
-		} catch (Exception ex) {
-			BonitaStudioLog.error(ex);
+			cmd.executeWithChecks(null);
+		} catch (Exception e) {
+			BonitaStudioLog.error(e);
+			new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.importErrorTitle, Messages.importErrorMessage, e).open();
 		}
 	}
 

@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.importer.processors.ToProcProcessor;
 import org.eclipse.core.runtime.IConfigurationElement;
 
 /**

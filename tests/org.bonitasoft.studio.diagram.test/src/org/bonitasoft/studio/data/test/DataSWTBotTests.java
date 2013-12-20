@@ -23,7 +23,6 @@ import static org.bonitasoft.studio.expression.editor.i18n.Messages.expressionTy
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.application.actions.ImportFileCommand;
 import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.data.i18n.Messages;
@@ -48,9 +47,7 @@ import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -61,19 +58,6 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class DataSWTBotTests extends SWTBotGefTestCase {
 
-    private static boolean before;
-
-
-    @BeforeClass
-    public static void setUpBeforeClass() {
-        before = ImportFileCommand.isTest;
-        ImportFileCommand.isTest = true;
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() {
-        ImportFileCommand.isTest = before;
-    }
 
     /**
      * @throws Exception

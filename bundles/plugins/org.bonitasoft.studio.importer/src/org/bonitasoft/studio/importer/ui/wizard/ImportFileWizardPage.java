@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.actions.wizards;
+package org.bonitasoft.studio.importer.ui.wizard;
 
 import java.io.File;
 
-import org.bonitasoft.studio.application.ApplicationPlugin;
-import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.importer.ImporterFactory;
+import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.ImporterPriorityDisplayComparator;
 import org.bonitasoft.studio.importer.ImporterRegistry;
+import org.bonitasoft.studio.importer.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+
 import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
 /**
  * @author Mickael Istria
@@ -201,7 +202,7 @@ public class ImportFileWizardPage extends WizardPage {
     }
 
     private String getLastPath() {
-        String path = ApplicationPlugin.getDefault().getDialogSettings().get(LAST_IMPORT_PATH) ;
+        String path = ImporterPlugin.getDefault().getDialogSettings().get(LAST_IMPORT_PATH) ;
         if(path == null || !new File(path).exists()){
             path = System.getProperty("user.home") ;
         }
@@ -209,7 +210,7 @@ public class ImportFileWizardPage extends WizardPage {
     }
 
     private void savePath(String path) {
-        ApplicationPlugin.getDefault().getDialogSettings().put(LAST_IMPORT_PATH,path) ;
+    	ImporterPlugin.getDefault().getDialogSettings().put(LAST_IMPORT_PATH,path) ;
     }
 
 

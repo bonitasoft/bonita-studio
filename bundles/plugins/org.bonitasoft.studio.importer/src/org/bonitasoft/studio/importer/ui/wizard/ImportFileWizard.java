@@ -15,9 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.application.actions.wizards;
+package org.bonitasoft.studio.importer.ui.wizard;
 
 import org.bonitasoft.studio.importer.ImporterFactory;
+import org.bonitasoft.studio.importer.Messages;
 import org.eclipse.jface.wizard.Wizard;
 
 /**
@@ -32,7 +33,7 @@ public class ImportFileWizard extends Wizard {
 	
 	@Override
 	public String getWindowTitle() {
-		return "Import...";
+		return Messages.importTitle ;
 	}
 		
 	public void addPages() {
@@ -52,18 +53,10 @@ public class ImportFileWizard extends Wizard {
 		return page.isPageComplete();
 	}
 
-	
-	
-	/**
-	 * @return
-	 */
 	public String getSelectedFilePath() {
 		return this.filePath;
 	}
-	
-	/**
-	 * 
-	 */
+
 	public ImporterFactory getSelectedTransfo() {
 		return this.selectedTransfo;
 	}

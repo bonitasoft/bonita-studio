@@ -31,5 +31,18 @@ public class Messages extends NLS {
 	
 	public static String importFromXPDL;
 	public static String importFromBPMN;
+	public static String importTitle;
+	public static String importFileTitle;
+	public static String importFileDescription;
+	public static String selectImportLabel;
+	public static String importDescriptionLabel;
+	public static String selectFileToImport;
+	public static String browseButton_label;
+	public static String importProcessTitle;
+	public static String importProcessProgressDialog;
+	public static String errorWhileImporting_message;
+	public static String errorWhileImporting_title;
+	public static String ImportProcessButtonLabel;
+	public static String importButtonLabel;
 
 }

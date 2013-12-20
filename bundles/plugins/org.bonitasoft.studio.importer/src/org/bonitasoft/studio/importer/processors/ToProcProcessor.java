@@ -15,18 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.importer;
+package org.bonitasoft.studio.importer.processors;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 
 /**
- * @author Baptiste Mesta
+ * @author Romain Bioteau
  *
  */
 public abstract class ToProcProcessor {
@@ -40,38 +42,22 @@ public abstract class ToProcProcessor {
 		this.resourceName = resourceName;
 	}
 	
+	/**
+	 * 
+	 * @deprecated Use getDiagramFileStoresToOpen instead
+	 */
+	@Deprecated
 	public abstract List<File> getResources() ;
 	
-//	/**
-//	 * 
-//	 *  try to place elements of the graph correctly 
-//	 * @param modelProcess2
-//	 * @param diagram
-//	 */
-//	public void arrangeGraph(MainProcess modelProcess2, Diagram diagram) {
-//
-//		for(Pool pool:ModelHelper.getChildrenProcess(modelProcess2)){
-//
-//			IGraphicalEditPart poolPart = (IGraphicalEditPart) diagramPart.findEditPart(diagramPart, pool);
-//			//resize the pool
-//			org.eclipse.draw2d.geometry.Dimension poolSize = poolPart.getFigure().getBounds().getSize();
-//			int nbElements = ModelHelper.getFlowElements(pool, true).size();
-//			if(100*(1+ nbElements/ 7) >= poolSize.height  ){
-//				//resizePool
-//				ChangeBoundsRequest req = new ChangeBoundsRequest(RequestConstants.REQ_RESIZE);
-//				int height = 100*(1+ nbElements/ 7);
-//				
-//				req.setSizeDelta(new org.eclipse.draw2d.geometry.Dimension(0, height-poolSize.height));
-//				
-//				poolPart.performRequest(req);
-//			}
-//			
-//		}
-//	}
-
 	/**
+	 * Default implementation returns an empty list
 	 * @return
 	 */
+	public List<IRepositoryFileStore> getDiagramFileStoresToOpen() {
+		return Collections.emptyList();
+	}
+	
+
 	public abstract String getExtension();
 
 	public List<Object> getErrors(){

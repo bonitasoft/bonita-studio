@@ -224,7 +224,6 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		boolean disable = FileActionDialog.getDisablePopup();
 		FileActionDialog.setDisablePopup(true);
 		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
-	//	bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")),20000);
 		SWTBotMenu menu = bot.menu("Diagram");
 		menu.menu("Import...").click();
 
@@ -234,7 +233,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		File file = new File(url.getFile());
 		bot.text().setText(file.getAbsolutePath());
 		bot.table().select(importName);
-		bot.button(IDialogConstants.FINISH_LABEL).click();
+		bot.button("Import").click();
 		bot.waitUntil(new ICondition() {
 			@Override
 			public boolean test() throws Exception {

@@ -49,6 +49,8 @@ public class Messages extends NLS {
 	public static String examples;
 	public static String resources2;
 	public static String migrationOngoing;
+	public static String importErrorTitle;
+	public static String importErrorMessage;
 	
 	/**
 	 * @param id

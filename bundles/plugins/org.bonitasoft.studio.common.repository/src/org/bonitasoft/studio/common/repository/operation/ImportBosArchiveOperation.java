@@ -72,7 +72,7 @@ public class ImportBosArchiveOperation {
 	private IStatus status;
 	private String archiveFile;
 	private Set<String> resourceToOpen;
-	private Set<IRepositoryFileStore> fileStoresToOpen = new HashSet<IRepositoryFileStore>();
+	private List<IRepositoryFileStore> fileStoresToOpen = new ArrayList<IRepositoryFileStore>();
 
 	public IStatus run(IProgressMonitor monitor) {
 		status = Status.OK_STATUS;
@@ -144,8 +144,7 @@ public class ImportBosArchiveOperation {
 				}
 			}
 			FileActionDialog.deactivateYesNoToAll();
-			currentRepository.refresh(monitor);
-			openFilesToOpen();
+			currentRepository.refresh(Repository.NULL_PROGRESS_MONITOR); 
 			currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
@@ -160,6 +159,11 @@ public class ImportBosArchiveOperation {
 		for(IRepositoryFileStore f : fileStoresToOpen){
 			f.open();
 		}
+	}
+
+
+	public List<IRepositoryFileStore> getFileStoresToOpen() {
+		return fileStoresToOpen;
 	}
 
 
