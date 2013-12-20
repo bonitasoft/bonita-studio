@@ -26,7 +26,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.importer.ImporterPlugin;
-import org.bonitasoft.studio.importer.Messages;
+import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.importer.processors.ImportFileOperation;
 import org.bonitasoft.studio.importer.ui.wizard.ImportFileWizard;
 import org.eclipse.core.commands.AbstractHandler;

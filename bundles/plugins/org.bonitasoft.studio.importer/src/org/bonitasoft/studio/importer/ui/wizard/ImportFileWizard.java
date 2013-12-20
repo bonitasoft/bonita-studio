@@ -18,7 +18,7 @@
 package org.bonitasoft.studio.importer.ui.wizard;
 
 import org.bonitasoft.studio.importer.ImporterFactory;
-import org.bonitasoft.studio.importer.Messages;
+import org.bonitasoft.studio.importer.i18n.Messages;
 import org.eclipse.jface.wizard.Wizard;
 
 /**

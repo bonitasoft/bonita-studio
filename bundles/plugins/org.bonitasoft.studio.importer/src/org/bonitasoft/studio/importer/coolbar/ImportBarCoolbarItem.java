@@ -18,7 +18,7 @@ package org.bonitasoft.studio.importer.coolbar;
 
 import org.bonitasoft.studio.common.extension.IBonitaContributionItem;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.importer.Messages;
+import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.core.commands.Command;

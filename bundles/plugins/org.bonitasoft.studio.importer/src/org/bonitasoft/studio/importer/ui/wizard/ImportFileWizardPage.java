@@ -23,7 +23,7 @@ import org.bonitasoft.studio.importer.ImporterFactory;
 import org.bonitasoft.studio.importer.ImporterPlugin;
 import org.bonitasoft.studio.importer.ImporterPriorityDisplayComparator;
 import org.bonitasoft.studio.importer.ImporterRegistry;
-import org.bonitasoft.studio.importer.Messages;
+import org.bonitasoft.studio.importer.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
