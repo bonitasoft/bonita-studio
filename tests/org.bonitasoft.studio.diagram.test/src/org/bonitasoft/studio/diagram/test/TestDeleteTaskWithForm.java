@@ -25,6 +25,7 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.junit.After;
 import org.junit.Test;
 
 /**
@@ -46,8 +47,8 @@ public class TestDeleteTaskWithForm extends SWTBotGefTestCase{
 		bot.editorByTitle(diagramTitle).show();
 		bot.editorByTitle(diagramTitle).setFocus();
 		
-		SWTBotGefEditPart element =gmfEditor.getEditPart("Step1");
-        element.click();
+		SWTBotGefEditPart element =gmfEditor.getEditPart("Step1").parent();
+        element.select();
         gmfEditor.clickContextMenu("Delete");
         
         List<? extends SWTBotEditor> editors = bot.editors();
@@ -55,5 +56,12 @@ public class TestDeleteTaskWithForm extends SWTBotGefTestCase{
         	assertFalse("Step1 form should be closed",editor.getTitle().equals("Step1"));
         }	
 	}
+	
+	@After
+	public void closeEditor(){
+		bot.saveAllEditors();
+		bot.closeAllEditors();
+	}
+	
 
 }

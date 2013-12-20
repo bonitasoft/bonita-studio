@@ -90,13 +90,9 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.ClasspathValidation;
 import org.eclipse.jdt.internal.core.JavaProject;
-import org.eclipse.jdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
-import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.framework.adaptor.BundleClassLoader;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 import org.xml.sax.InputSource;
 
 /**
@@ -441,7 +437,6 @@ public class Repository implements IRepository {
 		}
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	public void refresh(IProgressMonitor monitor) {
 		if(isBuildEnable()){
@@ -455,9 +450,6 @@ public class Repository implements IRepository {
 				}
 				IJavaProject javaProject = getJavaProject();
 				if(javaProject != null){
-					//Took example from JDT configure Build path dialog
-					CPListElement[] existingCPElement =  CPListElement.createFromExisting(javaProject);
-					BuildPathsBlock.flush(new ArrayList<CPListElement>(Arrays.asList(existingCPElement)),javaProject.getOutputLocation(), javaProject, null, monitor);
 					getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
 				}
 			} catch (Exception ex) {

@@ -115,12 +115,12 @@ public class ImportBosArchiveOperation {
 								if (subFolder instanceof IFolder) {
 									pair = findRepository(repositoryMap, (IFolder) subFolder);
 									if (pair != null) {
-										importRepositoryStore(pair);
+										importRepositoryStore(pair,monitor);
 									}
 								}
 							}
 						} else if (pair != null) {
-							importRepositoryStore(pair);
+							importRepositoryStore(pair,monitor);
 						}
 					}
 				} catch (Exception e) {
@@ -128,7 +128,6 @@ public class ImportBosArchiveOperation {
 				}
 			}
 			FileActionDialog.deactivateYesNoToAll();
-			currentRepository.refresh(Repository.NULL_PROGRESS_MONITOR); 
 			currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
@@ -181,7 +180,7 @@ public class ImportBosArchiveOperation {
 	}
 
 
-	protected void importRepositoryStore(Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair)
+	protected void importRepositoryStore(Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair,IProgressMonitor monitor)
 			throws CoreException {
 		IFolder storeFolder = pair.getSecond();
 		IRepositoryStore<? extends IRepositoryFileStore> repository = pair.getFirst();
