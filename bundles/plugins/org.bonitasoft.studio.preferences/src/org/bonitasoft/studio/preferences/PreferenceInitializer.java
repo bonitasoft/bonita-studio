@@ -90,8 +90,12 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
             store.setDefault(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, defaultUseXPLocalExists? defaultLocal.getLanguage():Locale.ENGLISH.getLanguage());
             store.setValue(BonitaPreferenceConstants.CURRENT_UXP_LOCALE, defaultUseXPLocalExists? defaultLocal.getLanguage():Locale.ENGLISH.getLanguage());
         }
-        store.setDefault(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, defaultLocalExists? defaultLocal.getLanguage():Locale.ENGLISH.getLanguage());
-
+       String defaultLocaleValue = store.getString(BonitaPreferenceConstants.DEFAULT_STUDIO_LOCALE);//Default value is compute on the first the studio is run only because Locale.getDefault() is based on osgi.nl property
+        if( defaultLocaleValue == null || defaultLocaleValue.isEmpty()){
+        	store.setValue(BonitaPreferenceConstants.DEFAULT_STUDIO_LOCALE, defaultLocalExists? defaultLocal.getLanguage():Locale.ENGLISH.getLanguage());
+        	defaultLocaleValue = store.getString(BonitaPreferenceConstants.DEFAULT_STUDIO_LOCALE);
+        }
+    	store.setDefault(BonitaPreferenceConstants.CURRENT_STUDIO_LOCALE, defaultLocaleValue != null? defaultLocaleValue:Locale.ENGLISH.getLanguage());
 
         store.setDefault(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE, BonitaCoolBarPreferenceConstant.NORMAL) ;
         store.setDefault(BonitaPreferenceConstants.APLLICATION_DEPLOYMENT_MODE, BonitaPreferenceConstants.ALL_IN_BAR) ;
