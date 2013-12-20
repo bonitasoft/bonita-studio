@@ -85,6 +85,10 @@ public static final String CONTEXT_ID = "«contextID»"; «EXPAND xpt::Common::n
 		getSite().registerContextMenu(org.eclipse.gmf.runtime.diagram.ui.actions.ActionIds.DIAGRAM_EDITOR_CONTEXT_MENU, provider, getDiagramGraphicalViewer());
 		«REM»Disable multiple selection for PREVIEW «ENDREM»
 		getDiagramGraphicalViewer().setSelectionManager(new org.bonitasoft.studio.common.diagram.tools.BonitaDiagramSelectionManager());
+		
+		org.eclipse.gef.KeyHandler viewerKeyHandler = new org.bonitasoft.studio.common.diagram.tools.CustomDiagramGraphicalViewerKeyHandler(getDiagramGraphicalViewer())
+        .setParent(getKeyHandler());
+		getDiagramGraphicalViewer().setKeyHandler(new org.eclipse.gmf.runtime.diagram.ui.internal.parts.DirectEditKeyHandler(getDiagramGraphicalViewer()).setParent(viewerKeyHandler));
 	}
 «ENDAROUND»
 

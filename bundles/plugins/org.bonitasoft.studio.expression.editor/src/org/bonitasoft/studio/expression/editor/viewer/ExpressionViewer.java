@@ -96,7 +96,6 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -390,9 +389,11 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 		dialog.setIsPageFlowContext(isPageFlowContext);
 		if (dialog.open() == Dialog.OK) {
 			Expression newExpression = dialog.getExpression();
+			boolean hasBeenExecuted = executeOperation(newExpression.getName());
 			updateSelection(newExpression);
 			setSelection(new StructuredSelection(selectedExpression));
 			if (editingDomain == null) {
+				
 				selectedExpression.setReturnType(newExpression.getReturnType());
 				selectedExpression.setType(newExpression.getType());
 			} else {
@@ -403,6 +404,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 						SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE,
 								newExpression.getType()));
 			}
+		
 			refresh();
 			fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression)));
 		}
@@ -822,10 +824,11 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 	}
 
 	protected String getContentFromInput(String input) {
-		if (selectedExpression.getType().equals(ExpressionConstants.SCRIPT_TYPE)
-				|| selectedExpression.getType().equals(ExpressionConstants.PATTERN_TYPE)
-				|| selectedExpression.getType().equals(ExpressionConstants.XPATH_TYPE)
-				|| selectedExpression.getType().equals(ExpressionConstants.JAVA_TYPE)) {
+		final String selectedExpressionType = selectedExpression.getType();
+		if (ExpressionConstants.SCRIPT_TYPE.equals(selectedExpressionType)
+				|| ExpressionConstants.PATTERN_TYPE.equals(selectedExpressionType)
+				|| ExpressionConstants.XPATH_TYPE.equals(selectedExpressionType)
+				|| ExpressionConstants.JAVA_TYPE.equals(selectedExpressionType)) {
 			return selectedExpression.getContent(); // NO CONTENT UPDATE WHEN
 			// THOSES TYPES
 		}

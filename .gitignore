@@ -2,3 +2,7 @@ target
 bin
 /.project
 screenshots
+
+tests/org.bonitasoft.studio.exporter.tests/.classpath
+bundles/plugins/org.bonitasoft.studio.condition/.launch/Launch Runtime Eclipse.launch
+bundles/plugins/org.bonitasoft.studio.condition/.launch/Subscription.launch

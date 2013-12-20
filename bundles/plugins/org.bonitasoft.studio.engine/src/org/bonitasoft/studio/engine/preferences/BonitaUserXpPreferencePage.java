@@ -147,13 +147,12 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
         }
         if(artifact != null){
             File target = null;
-            target = new File(BonitaHomeUtil.getBonitaHome(),WEB_CONSTANTS.getConsoleThemeFolder().getAbsolutePath()+File.separatorChar+artifact.getName());
+            target = new File(BonitaHomeUtil.getBonitaHome(),WEB_CONSTANTS.getPortalThemeFolder().getAbsolutePath()+File.separatorChar+artifact.getName());
             target.delete() ;
             target.mkdirs() ;
             File zipFile = new File(target,artifact.getName()+".zip") ;
             zipFile.delete() ;
             artifact.export(zipFile.getAbsolutePath()) ;
-            //	store.exportRepositoryFileStore(target, artifact, new NullProgressMonitor()) ;
             try{
             	PlatformUtil.unzipZipFiles(zipFile, target, new NullProgressMonitor()) ;
             }catch(Exception e){
@@ -162,11 +161,6 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
             if(zipFile!=null){
             	zipFile.delete() ;
             }
-//            try {
-//                PropertiesFactory.getPlatformProperties().setProperty("currentTheme",artifact.getName()) ;
-//            } catch (IOException e) {
-//                BonitaStudioLog.error(e) ;
-//            }
         }
     }
 

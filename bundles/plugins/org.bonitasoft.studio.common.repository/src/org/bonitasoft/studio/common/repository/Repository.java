@@ -459,7 +459,6 @@ public class Repository implements IRepository {
 					CPListElement[] existingCPElement =  CPListElement.createFromExisting(javaProject);
 					BuildPathsBlock.flush(new ArrayList<CPListElement>(Arrays.asList(existingCPElement)),javaProject.getOutputLocation(), javaProject, null, monitor);
 					getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, monitor);
-			//		getProject().build(IncrementalProjectBuilder.FULL_BUILD, monitor);
 				}
 			} catch (Exception ex) {
 				BonitaStudioLog.error(ex);
@@ -588,7 +587,6 @@ public class Repository implements IRepository {
 
 	@Override
 	public void importFromArchive(final File archiveFile, boolean askOverwrite) {
-		IProgressService service = PlatformUI.getWorkbench().getProgressService() ;
 		boolean disableConfirmation = FileActionDialog.getDisablePopup();
 		FileActionDialog.setDisablePopup(!askOverwrite);
 		final ImportBosArchiveOperation operation = new ImportBosArchiveOperation();

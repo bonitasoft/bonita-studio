@@ -20,7 +20,7 @@
 		<filters.version>6.1.0</filters.version>
 		<theme.builder.version>6.1.0</theme.builder.version>
 		<watchdog.version>6.0.1</watchdog.version>
-		<p2MirrorUrl>http://repositories.rd.lan/p2/6.2/</p2MirrorUrl>
+		<p2MirrorUrl>http://repositories.rd.lan/p2/6.2</p2MirrorUrl>
 		<tycho.testArgLine></tycho.testArgLine>
 		<sonar.jacoco.itReportPath>C:\jacoco.exec</sonar.jacoco.itReportPath>
 	</properties>
@@ -355,7 +355,22 @@
 				</plugins>
 			</build>
 		</profile>
-		
+		<profile>
+		<id>StaticCodeAnalysis</id>
+		<properties>
+			<maven.pmd.cpd.enable>true</maven.pmd.cpd.enable>
+			<aggregate>true</aggregate>
+		</properties>
+		<reporting>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>3.0.1</version>
+				</plugin>
+			</plugins>
+		</reporting>
+	</profile>
 	</profiles>
 
 

@@ -23,11 +23,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.dialog.OutlineDialog;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.CustomWizardDialog;
 import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
+import org.bonitasoft.studio.common.refactoring.BonitaGroovyRefactoringAction;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.commands.MoveDataCommand;
@@ -181,24 +183,41 @@ public abstract class AbstractDataSection extends AbstractBonitaDescriptionSecti
 		return res.toString();
 	}
 
+
+
 	protected void removeData(IStructuredSelection structuredSelection) {
-		if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.deleteDataDialogTitle, createMessage(structuredSelection))) {
-			IProgressService service = PlatformUI.getWorkbench().getProgressService();
-			for(Object d : structuredSelection.toList()){
-				RefactorDataOperation op = new RefactorDataOperation();
-				op.setContainer(ModelHelper.getParentProcess(eObject));
-				op.setEditingDomain(getEditingDomain());
-				op.setOldData((Data) d);
-				op.setCompoundCommand(new CompoundCommand());
-				try {
-					service.run(true, false, op);
-				} catch (InvocationTargetException e) {
-					BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
-				} catch (InterruptedException e) {
-					BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
+			String[] buttonList = {IDialogConstants.OK_LABEL,IDialogConstants.CANCEL_LABEL};
+			OutlineDialog dialog = new OutlineDialog(Display.getDefault().getActiveShell(), Messages.deleteDataDialogTitle, Display.getCurrent().getSystemImage(SWT.ICON_WARNING),createMessage(structuredSelection),MessageDialog.CONFIRM,buttonList,1,structuredSelection.toList());
+			if (dialog.open() == Dialog.OK) {
+				IProgressService service = PlatformUI.getWorkbench().getProgressService();
+				CompoundCommand cc = new CompoundCommand("Remove list of data");
+				boolean canExecute=false;
+				for(Object d : structuredSelection.toList()){
+					RefactorDataOperation op = new RefactorDataOperation(BonitaGroovyRefactoringAction.REMOVE_OPERATION);
+					op.setCompoundCommand(cc);
+					op.setContainer(ModelHelper.getParentProcess(eObject));
+					op.setEditingDomain(getEditingDomain());
+					op.setOldData((Data) d);
+					op.updateReferencesInScripts();
+					try {
+						if (op.isCanExecute()){
+							service.run(true, false, op);
+							cc.append(DeleteCommand.create(getEditingDomain(), d));
+							canExecute = canExecute || true;
+						} else {
+							canExecute = canExecute || false;
+						}
+					} catch (InvocationTargetException e) {
+						BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
+					} catch (InterruptedException e) {
+						BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
+					}
 				}
-			}
-			getEditingDomain().getCommandStack().execute(DeleteCommand.create(getEditingDomain(), structuredSelection.toList()));
+				if (canExecute){
+					getEditingDomain().getCommandStack().execute(cc);
+				} else {
+					cc.dispose();
+				}
 			try {
 				RepositoryManager.getInstance().getCurrentRepository().getProject().build(IncrementalProjectBuilder.FULL_BUILD,XtextProjectHelper.BUILDER_ID,new HashMap<String, String>(),null);
 			} catch (CoreException e) {
