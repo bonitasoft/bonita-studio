@@ -61,6 +61,7 @@
 
 	
 		<properties>
+			<tests.log.level>INFO</tests.log.level>
    			<sonar.jacoco.itReportPath>../../target/jacoco.exec</sonar.jacoco.itReportPath>
   		</properties>
 
