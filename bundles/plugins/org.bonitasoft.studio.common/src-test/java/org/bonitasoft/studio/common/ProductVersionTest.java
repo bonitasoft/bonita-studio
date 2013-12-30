@@ -27,6 +27,7 @@ import org.apache.ivy.plugins.repository.url.URLResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.osgi.framework.Version;
 
 /**
  * @author Romain Bioteau
@@ -79,7 +80,11 @@ public class ProductVersionTest {
 
 
 	@Test
-	public void shouldCurrentProductVersionEquals_POMVersionWithoutSNAPSHOT() throws Exception {
-		assertThat(ProductVersion.CURRENT_VERSION).isEqualTo(pomVersion);
+	public void shouldCurrentProductVersionEquals_POMVersionIgnoringQualifier() throws Exception {
+		Version current = new Version(ProductVersion.CURRENT_VERSION);
+		Version osgiPomVersion = Version.parseVersion(pomVersion);
+		assertThat(current.getMajor()).isEqualTo(osgiPomVersion.getMajor());
+		assertThat(current.getMinor()).isEqualTo(osgiPomVersion.getMinor());
+		assertThat(current.getMicro()).isEqualTo(osgiPomVersion.getMicro());
 	}
 }
