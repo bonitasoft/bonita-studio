@@ -21,6 +21,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Map;
 
 import org.fest.assertions.MapAssert;
@@ -42,7 +43,8 @@ public class DependencyRepositoryStoreTest {
 	@Before
 	public void setUp() throws Exception {
 		storeUnderTest = spy(new DependencyRepositoryStore());
-		File fakeTomcat = new File("tomcat");
+		URL resource = DependencyRepositoryStore.class.getResource("/tomcat");
+		File fakeTomcat = new File(resource.getFile());
 		doReturn(fakeTomcat).when(storeUnderTest).getTomcatRootFile();
 	}
 
