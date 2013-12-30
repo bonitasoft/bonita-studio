@@ -153,7 +153,7 @@ public class PlatformUtil {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
 				final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
-				if(model != null &&  ((CustomizableIntroPart)IntroPlugin.getIntro()).getControl() != null) {
+				if(model != null &&  introManager.getIntro() != null && ((CustomizableIntroPart)introManager.getIntro()).getControl() != null) {
 					model.getPresentation().navigateHome();
 				}
 				introManager.showIntro(
