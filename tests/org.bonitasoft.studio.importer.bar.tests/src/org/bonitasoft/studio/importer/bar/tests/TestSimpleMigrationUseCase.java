@@ -28,6 +28,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -62,7 +63,6 @@ import org.bonitasoft.studio.model.simulation.SimulationPackage;
 import org.bonitasoft.studio.validators.descriptor.validator.ValidatorDescriptor;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorFileStore;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
-import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.core.IJavaProject;
@@ -446,9 +446,9 @@ public class TestSimpleMigrationUseCase {
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
 		List<Validator> validators = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.VALIDATOR);
+		RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
 		final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
 		final ValidatorDescriptorRepositoryStore validatorDescriptorStore = (ValidatorDescriptorRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
-		final ValidatorSourceRepositorySotre validatorSourceStore = (ValidatorSourceRepositorySotre)RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class);
 		for(Validator validator : validators){
 			if(!(ModelHelper.getParentWidget(validator).eContainer() instanceof Expression)){
 				assertNotNull("Validator error message is missing",validator.getDisplayName());
@@ -458,10 +458,6 @@ public class TestSimpleMigrationUseCase {
 				assertNotNull("Validator descriptor is missing",validatorDescriptor);
 				final ValidatorDescriptorFileStore filseSotre = (ValidatorDescriptorFileStore) validatorDescriptorStore.getChild(validatorDescriptor.getName()+"."+ValidatorDescriptorRepositoryStore.VALIDATOR_EXT);
 				assertNotNull("Validator descriptor file store is missing",filseSotre);
-//				UNCOMMENT WHEN IMPLEMENTED
-//				if(!filseSotre.isReadOnly()){ //Not a provided validator descriptor
-//					assertNotNull("Custom validator source file is missing",validatorSourceStore.getChild(validator.getValidatorClass()));
-//				}
 			}
 		}
 

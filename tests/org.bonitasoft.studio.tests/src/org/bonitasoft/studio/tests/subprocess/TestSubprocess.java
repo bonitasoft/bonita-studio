@@ -41,17 +41,17 @@ import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.util.test.EngineAPIUtil;
 import org.bonitasoft.studio.util.test.async.TestAsyncThread;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,6 +65,7 @@ public class TestSubprocess {
 
 	private HumanTaskInstance newTask;
 	private APISession session;
+	private DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 
 	@Before
 	public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException {
@@ -83,13 +84,14 @@ public class TestSubprocess {
 		URL fileURL2 = FileLocator.toFileURL(TestSubprocess.class.getResource("ActivityToAdmin-1.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
 		op.run(new NullProgressMonitor());
-		ProcessDiagramEditor processEditor2 = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		assertEquals("ActivityToAdmin", ((MainProcess)processEditor2.getDiagramEditPart().resolveSemanticElement()).getName());
+		MainProcess diagram  = store.getChild("ActivityToAdmin-1.0.proc").getContent();
+		assertEquals("ActivityToAdmin", diagram.getName());
+		
+		
 		URL fileURL1 = FileLocator.toFileURL(TestSubprocess.class.getResource("InvokeActivityToAdmin-1.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
 		op.run(new NullProgressMonitor());
-		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
+		MainProcess mainProcess  = store.getChild("InvokeActivityToAdmin-1.0.proc").getContent();
 		assertEquals("InvokeActivityToAdmin", mainProcess.getName());
 		final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
 		final List<HumanTaskInstance> tasks =processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
@@ -143,13 +145,11 @@ public class TestSubprocess {
 		op.setArchiveFile(FileLocator.toFileURL(fileURL3).getFile());
 		op.run(new NullProgressMonitor());
 
-		ProcessDiagramEditor pe = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		MainProcess mainProcess2 = (MainProcess)pe.getDiagramEditPart().resolveSemanticElement();
+		MainProcess mainProcess2 = store.getChild("DynamicSubprocess-1.0.proc").getContent();
 		assertEquals("DynamicSubprocess", mainProcess2.getName());
 
 		//session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
 
-		Map<String,Object> param2 = new HashMap<String, Object>();
 		param.put(RunProcessCommand.PROCESS, mainProcess2.getElements().get(0));
 		ExecutionEvent ee2 = new ExecutionEvent(null,param,null,null);
 		runProcessCommand.execute(ee2);
@@ -175,12 +175,11 @@ public class TestSubprocess {
 		URL fileURL2 = FileLocator.toFileURL(TestSubprocess.class.getResource("Calculator-1.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
 		op.run(new NullProgressMonitor());
-		ProcessDiagramEditor processEditor2 = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+	
 		URL fileURL1 = FileLocator.toFileURL(TestSubprocess.class.getResource("InvokeCalculator-1.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
 		op.run(new NullProgressMonitor());
-		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
+		MainProcess mainProcess  = store.getChild("InvokeCalculator-1.0.proc").getContent();
 		assertEquals("InvokeCalculator", mainProcess.getName());
 
 		final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
@@ -214,36 +213,6 @@ public class TestSubprocess {
 		assertEquals("Diff should be 0", 0,processApi.getProcessDataInstance("less", newTask.getParentProcessInstanceId()).getValue());
 	}
 
-	/*    public void testDynamicSubprocess() throws Exception {
-
-
-        //		BonitaEnvironmentInit.init(new NullProgressMonitor());
-        //		final LoginContext lc = BonitaEnvironmentInit.createALoginContext();
-        //		lc.login();
-        //		final int previousTasks = queryRuntimeAPI.getTaskList("admin", ActivityState.READY).size();
-        //		lc.logout();
-        //		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        //
-        //		URL url = getClass().getResource("DynamicSubprocess_1_0_DynamicSubprocess_1.0.bar");
-        //		url = FileLocator.toFileURL(url);
-        //		File file = new File(url.getFile());
-        //		ProcessRepository.ImportBARModule.importProcOrBar(shell, file).open();
-        //
-        //		new RunProcessCommand(true).execute(null);
-//        		lc.login();
-//        		assertTrue(new TestAsyncThread(12, 1000) {
-//        			@Override
-//        			public boolean isTestGreen() throws Exception {
-//        				lc.login();
-//        				int currentTasks = queryRuntimeAPI.getTaskList("admin", ActivityState.READY).size();
-//        				lc.logout();
-//        				return currentTasks != previousTasks + 1;
-//        			}
-//        		}.evaluate());
-        //		lc.logout();
-    }*/
-
-
 
 	@Test
 	public void testTwiceDeploymentOfSubprocessEvent() throws Exception {
@@ -252,11 +221,11 @@ public class TestSubprocess {
 		final List<HumanTaskInstance> previoustasks =processApi.searchPendingTasksForUser(session.getUserId(), searchOptions2).getResult();
 		final int nbPreviousTasks=previoustasks.size();
 		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+	
 		URL fileURL = FileLocator.toFileURL(TestSubprocess.class.getResource("ParentSubProcEvent-1.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
 		op.run(new NullProgressMonitor());
-		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
+		MainProcess mainProcess  = store.getChild("ParentSubProcEvent-1.0.proc").getContent();
 		RunProcessCommand runProcessCommand = new RunProcessCommand(true);
 		Map<String,Object> param = new HashMap<String, Object>();
 		param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));

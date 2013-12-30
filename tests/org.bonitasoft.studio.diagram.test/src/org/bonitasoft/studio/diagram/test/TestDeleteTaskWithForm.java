@@ -20,7 +20,6 @@ package org.bonitasoft.studio.diagram.test;
 import java.util.List;
 
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
-import org.eclipse.swt.SWT;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;

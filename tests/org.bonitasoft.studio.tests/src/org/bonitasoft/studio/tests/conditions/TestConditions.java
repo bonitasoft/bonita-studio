@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.flownode.ActivityInstanceCriterion;
 import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
@@ -41,17 +40,17 @@ import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.util.test.EngineAPIUtil;
 import org.bonitasoft.studio.util.test.async.TestAsyncThread;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.ui.PlatformUI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,68 +60,68 @@ import org.junit.Test;
  *
  */
 public class TestConditions {
+
+	private HumanTaskInstance newTask;
+	private APISession session;
+	private DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 	
-	  private HumanTaskInstance newTask;
-	    private APISession session;
+	@Before
+	public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, LoginException {
+		session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
+	}
 
-	    @Before
-	    public void setUp() throws LoginException, BonitaHomeNotSetException, ServerAPIException, UnknownAPITypeException, LoginException {
-	        session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
-	    }
+	@After
+	public void tearDown(){
+		BOSEngineManager.getInstance().logoutDefaultTenant(session);
+	}
 
-	    @After
-	    public void tearDown(){
-	        BOSEngineManager.getInstance().logoutDefaultTenant(session);
-	    }
-	    
-	    @Test
-	    public void testConditions() throws Exception{
-	    	 final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
-	         ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-	         URL fileURL1 = FileLocator.toFileURL(TestConditions.class.getResource("testConditions-2.0.bos")); //$NON-NLS-1$
-	         op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
-	         op.run(new NullProgressMonitor());
-	         ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-	         MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
-	         
-	         final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
-	         final List<HumanTaskInstance> tasks =processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
+	@Test
+	public void testConditions() throws Exception{
+		final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);
+		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+		URL fileURL1 = FileLocator.toFileURL(TestConditions.class.getResource("testConditions-2.0.bos")); //$NON-NLS-1$
+		op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
+		op.run(new NullProgressMonitor());
+		MainProcess mainProcess = store.getChild("testConditions-2.0.proc").getContent();
 
-	         final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-	         Map<String,Object> param = new HashMap<String, Object>();
-	         param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-	         ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
-	         runProcessCommand.execute(ee);
-	         
-	         long processId=processApi.getProcessDefinitionId("Pool3", "1.0");
-	         final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
-	         assertNotNull(processDef);
-	         processApi.startProcess(processId);
-	         
-	         boolean evaluateAsync = new TestAsyncThread(30, 1000) {
-	             @Override
-	             public boolean isTestGreen() throws Exception {
+		final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
+		final List<HumanTaskInstance> tasks =processApi.searchPendingTasksForUser(session.getUserId(), searchOptions).getResult();
 
-	                 newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(), session.getUserId());
+		final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
+		Map<String,Object> param = new HashMap<String, Object>();
+		param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
+		ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
+		runProcessCommand.execute(ee);
 
-	                 return newTask != null;
-	             }
-	         }.evaluate();
-	         
-	         
-	         String errorMessageDetailled = "";
-	         if(!evaluateAsync){
-	             final Collection<HumanTaskInstance> actualTask =processApi.getPendingHumanTaskInstances(session.getUserId(),0, 20, ActivityInstanceCriterion.DEFAULT);
-	             errorMessageDetailled += "\n processUUID searched: "+processDef.getId();
-	             for (TaskInstance taskInstance : actualTask) {
-	                 errorMessageDetailled += "\n"+taskInstance.getParentProcessInstanceId();
-	             }
+		long processId=processApi.getProcessDefinitionId("Pool3", "1.0");
+		final ProcessDefinition processDef = processApi.getProcessDefinition(processId);
+		assertNotNull(processDef);
+		processApi.startProcess(processId);
 
-	         }
-	         assertTrue("a new task should have started for Pool3 task:\n"+errorMessageDetailled,evaluateAsync);
-	         assertNotNull("a new task should have started", newTask);
-	         assertEquals("This task does not belong to new process", processDef.getId(), newTask.getProcessDefinitionId());
-	         assertEquals("the current task should be Step3","Step3",newTask.getName());
+		boolean evaluateAsync = new TestAsyncThread(30, 1000) {
+			@Override
+			public boolean isTestGreen() throws Exception {
 
-	    }
+				newTask = EngineAPIUtil.findNewPendingTaskForSpecifiedProcessDefAndUser(session, tasks, processDef.getId(), session.getUserId());
+
+				return newTask != null;
+			}
+		}.evaluate();
+
+
+		String errorMessageDetailled = "";
+		if(!evaluateAsync){
+			final Collection<HumanTaskInstance> actualTask =processApi.getPendingHumanTaskInstances(session.getUserId(),0, 20, ActivityInstanceCriterion.DEFAULT);
+			errorMessageDetailled += "\n processUUID searched: "+processDef.getId();
+			for (TaskInstance taskInstance : actualTask) {
+				errorMessageDetailled += "\n"+taskInstance.getParentProcessInstanceId();
+			}
+
+		}
+		assertTrue("a new task should have started for Pool3 task:\n"+errorMessageDetailled,evaluateAsync);
+		assertNotNull("a new task should have started", newTask);
+		assertEquals("This task does not belong to new process", processDef.getId(), newTask.getProcessDefinitionId());
+		assertEquals("the current task should be Step3","Step3",newTask.getName());
+
+	}
 }
