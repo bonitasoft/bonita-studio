@@ -71,7 +71,6 @@ import org.bonitasoft.studio.migration.ui.wizard.MigrationWarningWizard;
 import org.bonitasoft.studio.migration.utils.DeadlineMigrationStore;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.ProcessPackage;
-import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.runtime.IAdaptable;
@@ -129,6 +128,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 	private BOSMigrator migrator;
 	private List<String> connectorsJars = new ArrayList<String>();
 	private List<File> toDelete = new ArrayList<File>();
+	private boolean continueImport = true;
 
 	public EdaptBarToProcProcessor(){
 		final URI migratorURI = URI.createPlatformPluginURI("/" + BarImporterPlugin.getDefault().getBundle().getSymbolicName() + "/" + MIGRATION_HISTORY_PATH, true);
@@ -145,12 +145,22 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 	@Override
 	public File createDiagram(URL sourceFileURL, IProgressMonitor progressMonitor) throws Exception {
 		if(!FileActionDialog.getDisablePopup() && displayMigrationWarningPopup()){
-			int result =  new WizardDialog(Display.getDefault().getActiveShell(), new MigrationWarningWizard()).open();
-			if(result != Dialog.OK){
-				return null;
-			}
+			Display.getDefault().syncExec(new Runnable() {
+				
+				@Override
+				public void run() {
+					final WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), new MigrationWarningWizard());
+					int result =  dialog.open();
+					if(result != Dialog.OK){
+						continueImport = false;
+					}
+				}
+			});
+			
 		}
-
+		if(!continueImport){
+			return null;
+		}
 		final File archiveFile = new File(URI.decode(sourceFileURL.getFile())) ;
 		final File barProcFile = getProcFormBar(archiveFile);
 
@@ -509,7 +519,6 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 
 
 	private void importValidatorSource(File currentFile,IProgressMonitor monitor) {
-		final ValidatorSourceRepositorySotre validatorSourceStore = (ValidatorSourceRepositorySotre)RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class);
 		// TODO Import validator sources in repository
 	}
 
