@@ -24,7 +24,9 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -40,27 +42,41 @@ public class TestDeleteTaskWithForm extends SWTBotGefTestCase{
 		SWTBotEditor botEditor = bot.activeEditor();
 		diagramTitle=botEditor.getTitle();
 		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
-		
+
 		SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
-		
+
 		bot.editorByTitle(diagramTitle).show();
 		bot.editorByTitle(diagramTitle).setFocus();
-		
+
 		SWTBotGefEditPart element =gmfEditor.getEditPart("Step1").parent();
-        element.select();
-        gmfEditor.clickContextMenu("Delete");
-        
-        List<? extends SWTBotEditor> editors = bot.editors();
-        for (SWTBotEditor editor:editors){
-        	assertFalse("Step1 form should be closed",editor.getTitle().equals("Step1"));
-        }	
+		element.select();
+		gmfEditor.clickContextMenu("Delete");
+
+
+		bot.waitUntil(new DefaultCondition() {
+
+			public boolean test() throws Exception {
+				List<? extends SWTBotEditor> editors = TestDeleteTaskWithForm.this.bot.editors();
+				boolean formEditorOpened = false;
+				for (SWTBotEditor editor:editors){
+					formEditorOpened = editor.getTitle().equals("Step1");
+				}	
+				return !formEditorOpened;
+			}
+
+			public String getFailureMessage() {
+				return "Step1 form should be closed";
+			}
+		});
+
 	}
-	
+
 	@After
+	@Before
 	public void closeEditor(){
 		bot.saveAllEditors();
 		bot.closeAllEditors();
 	}
-	
+
 
 }
