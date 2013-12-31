@@ -14,7 +14,6 @@ import org.bonitasoft.studio.diagram.test.SharedEditingDomainTests;
 import org.bonitasoft.studio.diagram.test.TestBoundariesCreation;
 import org.bonitasoft.studio.diagram.test.TestBug1640;
 import org.bonitasoft.studio.diagram.test.TestConvertToMessage;
-import org.bonitasoft.studio.diagram.test.TestImportAndOverrideWithEditorOpen;
 import org.bonitasoft.studio.diagram.test.TestMoveBetweenLane;
 import org.bonitasoft.studio.diagram.test.TestSave;
 import org.bonitasoft.studio.engine.test.bar.BarExporterTest;
@@ -69,7 +68,6 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaTestSuite.class)
 @Suite.SuiteClasses({
-    TestImportAndOverrideWithEditorOpen.class,
     TestBug1640.class,
     NewRunTest.class,
     TestBug1682.class,
