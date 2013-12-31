@@ -77,11 +77,6 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
         isInitalized = true;
     }
 
-    @Test
-    @Ignore("Feature Not yet implemented, it is currently using the id.")
-    public void testSingleConnectorOnServiceTask_name() throws IOException, ExecutionException{
-        assertEquals("Connector name is not correct", connectorName, connectorAfterReimport.getName());
-    }
 
     @Test
     public void testSingleConnectorOnServiceTask_version() throws IOException, ExecutionException{
