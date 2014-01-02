@@ -240,7 +240,7 @@ public class PatternExpressionViewer extends Composite {
 		helpDecoration.setDescriptionText(Messages.patternViewerHelp);
 		helpDecoration.setMarginWidth(2);
 		helpDecoration.hide();
-		
+
 		hintDecoration = new ControlDecoration(viewer.getControl(), SWT.TOP | SWT.LEFT,this);
 		hintDecoration.setImage(Pics.getImage(PicsConstants.hint));
 		hintDecoration.setMarginWidth(2);
@@ -382,10 +382,15 @@ public class PatternExpressionViewer extends Composite {
 			filteredExpressions.addAll(Arrays.asList(expressions)) ;
 			if(input != null){
 				for(Expression exp : expressions) {
+					boolean filtered = true;
 					for(ViewerFilter filter : filters){
-						if(filter != null && !filter.select(viewer, input, exp)){
-							filteredExpressions.remove(exp) ;
+						if(filter != null && filter.select(viewer, input, exp)){
+							filtered = false;
+							break;
 						}
+					}
+					if(filtered){
+						filteredExpressions.remove(exp) ;
 					}
 				}
 			}
