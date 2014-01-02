@@ -156,13 +156,13 @@ public class SourceFileStore extends AbstractFileStore {
     }
 
     public void exportAsJar(String absoluteTargetFilePath, boolean includeSources) {
-        final JarPackageData jarPackakeData = new JarPackageData() ;
+        final JarPackageData jarPackakeData = createJarPackageData() ;
         IFile[] elements = Collections.singletonList(getResource()).toArray(new IFile[1]) ;
         jarPackakeData.setJarLocation(new Path(absoluteTargetFilePath)) ;
+        jarPackakeData.setBuildIfNeeded(true);
         jarPackakeData.setElements(elements) ;
-        jarPackakeData.setExportWarnings(false) ;
+        jarPackakeData.setExportWarnings(true) ;
         jarPackakeData.setComment(SourceRepositoryStore.SIGNATURE_FILE_NAME) ;
-        jarPackakeData.setBuildIfNeeded(true) ;
         jarPackakeData.setExportClassFiles(true) ;
         jarPackakeData.setExportJavaFiles(includeSources) ;
         jarPackakeData.setGenerateManifest(true) ;
@@ -176,6 +176,10 @@ public class SourceFileStore extends AbstractFileStore {
             BonitaStudioLog.error(e) ;
         }
     }
+
+	protected JarPackageData createJarPackageData() {
+		return new JarPackageData();
+	}
 
     @Override
     public void rename(String newQualifiedClassName) {
