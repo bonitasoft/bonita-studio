@@ -454,7 +454,7 @@ public abstract class LookNFeelFileStore extends AbstractFileStore implements IE
             }
         };
         try{
-            saveJob.runInWorkspace(new NullProgressMonitor());
+            saveJob.runInWorkspace(Repository.NULL_PROGRESS_MONITOR);
         } catch ( CoreException e ){
             BonitaStudioLog.error(e) ;
         }
