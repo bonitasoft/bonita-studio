@@ -113,6 +113,7 @@ public class PackageFileStore extends AbstractFileStore {
 		jarPackakeData.setCompress(true) ;
 		jarPackakeData.setElements(toExport.toArray(new Object[toExport.size()])) ;
 		jarPackakeData.setExportErrors(true) ;
+		jarPackakeData.setExportWarnings(true);
 		jarPackakeData.setDeprecationAware(true) ;
 		jarPackakeData.setExportClassFiles(true) ;
 		jarPackakeData.setExportJavaFiles(includeSources) ;
