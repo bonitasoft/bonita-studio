@@ -73,8 +73,8 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
     public static String DEST_FILE_PARAMETER_NAME = "__EXPORT_DEST_FILE__"; //$NON-NLS-1$
     private String configurationId;
 
-    private IRepositoryStore processConfStore;
-    private IRepositoryStore diagramStore;
+    private IRepositoryStore<?> processConfStore;
+    private IRepositoryStore<?> diagramStore;
 
     /**
      * @return a List<File> of the all the created bar or proc
@@ -140,7 +140,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
 
                     final File targetBarFile = new File(tmpDir, process.getName()+"--"+process.getVersion()+".bar") ;
                     targetBarFile.delete() ;
-                    BusinessArchive bar =  BarExporter.getInstance().createBusinessArchive(process, configurationId, Collections.EMPTY_SET) ;
+                    BusinessArchive bar =  BarExporter.getInstance().createBusinessArchive(process, configurationId, Collections.<EObject> emptySet()) ;
                     BusinessArchiveFactory.writeBusinessArchiveToFile(bar, targetBarFile) ;
                 } catch (Exception e) {
                     BonitaStudioLog.error(e) ;
