@@ -16,12 +16,13 @@
  */
 package org.bonitasoft.studio.actors.ui.wizard;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
-import org.bonitasoft.studio.actors.ui.wizard.page.SelectFilterDefinitionWizardPage;
+import org.bonitasoft.studio.actors.ui.wizard.page.SelectAdvancedFilterDefinitionWizardPage;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -29,8 +30,9 @@ import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.IConnectorDefinitionContainer;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
+import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.connector.model.implementation.wizard.AbstractDefinitionSelectionImpementationWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.ConnectorWizard;
-import org.bonitasoft.studio.connectors.ui.wizard.page.SelectConnectorDefinitionWizardPage;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
 import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Connector;
@@ -88,7 +90,7 @@ public class FilterWizard extends ConnectorWizard implements IConnectorDefinitio
 	}
 
 	@Override
-	protected SelectConnectorDefinitionWizardPage getSelectionPage(Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
-		return new SelectFilterDefinitionWizardPage(connectorWorkingCopy, resourceProvider);
+	protected AbstractDefinitionSelectionImpementationWizardPage getSelectionPage(Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
+		return new SelectAdvancedFilterDefinitionWizardPage(connectorWorkingCopy, Collections.<ConnectorImplementation>emptyList(), definitions, Messages.selectFilterDefinitionTitle, Messages.selectFilterDefinitionDesc, resourceProvider);
 	}
 }
