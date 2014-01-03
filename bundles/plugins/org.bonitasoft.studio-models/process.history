@@ -7746,6 +7746,12 @@
   </releases>
   <releases date="2013-10-29T12:36:39.611+0100" label="6.1.1-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.startmessageevent.StartMessageEventMigration"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.ConnectorIgnoreErrorMigration">
+      <changes xsi:type="history:CompositeChange">
+        <changes xsi:type="history:Set" element="process.ecore#//Connector/ignoreErrors"
+            featureName="defaultValueLiteral" dataValue="false" oldDataValue="true"/>
+      </changes>
+    </changes>
   </releases>
   <releases>
     <changes xsi:type="history:OperationChange">
