@@ -84,18 +84,6 @@ public class DefaultUserOrganizationWizardPage extends WizardPage {
 
         autoCompletionField = new AutoCompleteField(usernameText, new TextContentAdapter(), new String[]{}) ;
 
-//        final Label passwordLabel = new Label(mainComposite, SWT.NONE) ;
-//        passwordLabel.setLayoutData(GridDataFactory.swtDefaults().align(SWT.END, SWT.CENTER).create()) ;
-//        passwordLabel.setText(Messages.password) ;
-//
-//        final Text passwordText = new Text(mainComposite, SWT.BORDER | SWT.PASSWORD) ;
-//        passwordText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
-
-    
-      
-       // UpdateValueStrategy strategy2 = new UpdateValueStrategy() ;
-       // strategy2.setBeforeSetValidator(new EmptyInputValidator(Messages.password)) ;
-       // context.bindValue(SWTObservables.observeText(passwordText, SWT.Modify), PojoProperties.value(DefaultUserOrganizationWizardPage.class, "password").observe(this),strategy2,null) ;
         createBindings();
         pageSupport = WizardPageSupport.create(this,context) ;
         
