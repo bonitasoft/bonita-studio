@@ -83,6 +83,14 @@
   <eClassifiers xsi:type="ecore:EClass" name="BoundaryMessageEvent" eSuperTypes="#//BoundaryEvent #//AbstractCatchMessageEvent"/>
   <eClassifiers xsi:type="ecore:EClass" name="BoundarySignalEvent" eSuperTypes="#//BoundaryEvent #//SignalEvent"/>
   <eClassifiers xsi:type="ecore:EClass" name="BoundaryTimerEvent" eSuperTypes="#//BoundaryEvent #//AbstractTimerEvent"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BusinessObjectData" eSuperTypes="#//JavaObjectData">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="businessDataRepositoryId"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createNewInstance" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="eClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BusinessObjectType" eSuperTypes="#//DataType"/>
   <eClassifiers xsi:type="ecore:EClass" name="CallActivity" eSuperTypes="#//Activity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="inputMappings" upperBound="-1"
         eType="#//InputMapping" containment="true"/>
