@@ -227,7 +227,7 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 
 			 @Override
 			 public void widgetSelected(SelectionEvent e) {
-				 WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), new ConnectorWizard(getEObject(), getConnectorFeature(), getConnectorFeatureToCheckUniqueID()));
+				 WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), createAddConnectorWizard());
 				 if(wizardDialog.open() == Dialog.OK){
 					 tableViewer.refresh();
 				 }
@@ -241,6 +241,10 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 		 return addData;
 	 }
 
+	 protected ConnectorWizard createAddConnectorWizard() {
+			return new ConnectorWizard(getEObject(), getConnectorFeature(), getConnectorFeatureToCheckUniqueID());
+		}
+	 
 	 private Button createUpdateConnectorButton(final Composite parent) {
 		 Button updateButton = getWidgetFactory().createButton(parent, Messages.update, SWT.FLAT);
 		 updateButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
@@ -264,13 +268,18 @@ public class ConnectorSection extends AbstractBonitaDescriptionSection implement
 			 ConnectorDefRepositoryStore connectorDefStore = (ConnectorDefRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
 			 ConnectorDefinition def = connectorDefStore.getDefinition(connector.getDefinitionId(),connector.getDefinitionVersion()) ;
 			 if(def != null){
-				 WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), new ConnectorWizard(connector,getConnectorFeature(),getConnectorFeatureToCheckUniqueID()));
+				 WizardDialog wizardDialog = new ConnectorDefinitionWizardDialog(Display.getCurrent().getActiveShell(), createEditConnectorWizard(connector));
 				 if(wizardDialog.open() == Dialog.OK){
 					 tableViewer.refresh() ;
 				 }
 			 }
 		 }
 	 }
+
+
+	protected ConnectorWizard createEditConnectorWizard(Connector connector) {
+		return new ConnectorWizard(connector,getConnectorFeature(),getConnectorFeatureToCheckUniqueID());
+	}
 
 	 protected boolean getShowAutoGenerateForm() {
 		 return true;

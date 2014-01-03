@@ -69,35 +69,34 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 public class InitialValueContribution implements IExtensibleGridPropertySectionContribution {
 
 
-    protected TransactionalEditingDomain editingDomain;
-    protected Widget widget;
-    protected ExpressionViewer expressionViewer ;
-    protected EMFDataBindingContext dataBindingContext;
-    protected Composite composite;
-    public static final int MARGIN_WIDTH = 5;
-    public static final int MARGIN_HEIGHT = 0;
-    protected Button allowHtmlButton;
+	protected TransactionalEditingDomain editingDomain;
+	protected Widget widget;
+	protected ExpressionViewer expressionViewer ;
+	protected EMFDataBindingContext dataBindingContext;
+	protected Composite composite;
+	public static final int MARGIN_WIDTH = 5;
+	public static final int MARGIN_HEIGHT = 0;
+	protected Button allowHtmlButton;
+	private InitialValueExpressionFilter initialValueExpressionFilter;
 
-    //private final HiddenExpressionTypeFilter filterVariableType = new HiddenExpressionTypeFilter(new String[]{ExpressionConstants.VARIABLE_TYPE});
+	public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
+		initCreateControl(composite);
+		doCreateControl(widgetFactory);
+		bindWidgets();
+	}
 
-    public void createControl(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory, ExtensibleGridPropertySection extensibleGridPropertySection) {
-        initCreateControl(composite);
-        doCreateControl(widgetFactory);
-        bindWidgets();
-    }
+	protected void doCreateControl(TabbedPropertySheetWidgetFactory widgetFactory) {
+		/*Create control for initial value*/
+		expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, true) ;
+		expressionViewer.addFilter(getExpressionViewerFilter());
+		if(widget instanceof CheckBoxSingleFormField){
+			expressionViewer.setMessage(Messages.data_tooltip_boolean,IStatus.INFO);
+		} else {
+			expressionViewer.setMessage(Messages.data_tooltip_text,IStatus.INFO);
+		}
+		if(widget instanceof DateFormField){
+			expressionViewer.addExpressionValidator(ExpressionConstants.ALL_TYPES, new IExpressionValidator() {
 
-    protected void doCreateControl(TabbedPropertySheetWidgetFactory widgetFactory) {
-        /*Create control for initial value*/
-        expressionViewer = new ExpressionViewer(composite,SWT.BORDER,widgetFactory,editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, true) ;
-        expressionViewer.addFilter(getExpressionViewerFilter()) ;
-        if(widget instanceof CheckBoxSingleFormField){
-            expressionViewer.setMessage(Messages.data_tooltip_boolean,IStatus.INFO);
-        } else {
-            expressionViewer.setMessage(Messages.data_tooltip_text,IStatus.INFO);
-        }
-        if(widget instanceof DateFormField){
-        	expressionViewer.addExpressionValidator(ExpressionConstants.ALL_TYPES, new IExpressionValidator() {
-				
 				private Expression inputExpression;
 
 				public IStatus validate(Object value) {
@@ -109,135 +108,137 @@ public class InitialValueContribution implements IExtensibleGridPropertySectionC
 						return ValidationStatus.warning(Messages.dateWidgetReturnTypeWarning);
 					}
 				}
-				
+
 				public void setInputExpression(Expression inputExpression) {
 					this.inputExpression = inputExpression;
 				}
-				
+
 				public void setDomain(EditingDomain domain) {
-					
+
 				}
-				
+
 				public void setContext(EObject context) {
-					
+
 				}
 			});
-        }
-        expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+		}
+		expressionViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 
-        /*Create checkbox to allow HTML*/
-        createAllowHtmlButton(composite, widgetFactory);
-    }
-
-	protected AvailableExpressionTypeFilter getExpressionViewerFilter() {
-		return new AvailableExpressionTypeFilter(new String[]{
-                ExpressionConstants.VARIABLE_TYPE,
-                ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.CONSTANT_TYPE,
-                ExpressionConstants.PARAMETER_TYPE,
-                ExpressionConstants.SCRIPT_TYPE,
-                ExpressionConstants.DOCUMENT_TYPE,
-                ExpressionConstants.XPATH_TYPE,
-                ExpressionConstants.I18N_TYPE});
+		/*Create checkbox to allow HTML*/
+		createAllowHtmlButton(composite, widgetFactory);
 	}
 
-    private void initCreateControl(Composite composite) {
-        this.composite = composite;
-        composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
-        if(dataBindingContext != null){
-            dataBindingContext.dispose();
-        }
-        dataBindingContext = new EMFDataBindingContext();
-        composite.setLayout(getCompositeLayout());
-    }
+	protected AvailableExpressionTypeFilter getExpressionViewerFilter() {
+		if(initialValueExpressionFilter == null){
+			initialValueExpressionFilter = new InitialValueExpressionFilter(new String[]{
+					ExpressionConstants.VARIABLE_TYPE,
+					ExpressionConstants.SCRIPT_TYPE,
+					ExpressionConstants.CONSTANT_TYPE,
+					ExpressionConstants.PARAMETER_TYPE,
+					ExpressionConstants.SCRIPT_TYPE,
+					ExpressionConstants.DOCUMENT_TYPE,
+					ExpressionConstants.XPATH_TYPE,
+					ExpressionConstants.I18N_TYPE});
+			initialValueExpressionFilter.setWidget(widget);
+		}
+		return initialValueExpressionFilter;
+	}
+
+	private void initCreateControl(Composite composite) {
+		this.composite = composite;
+		composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+		if(dataBindingContext != null){
+			dataBindingContext.dispose();
+		}
+		dataBindingContext = new EMFDataBindingContext();
+		composite.setLayout(getCompositeLayout());
+	}
 
 	protected GridLayout getCompositeLayout() {
 		GridLayout layout = new GridLayout(1, false);
-        layout.marginHeight = MARGIN_HEIGHT;
-        layout.marginWidth = MARGIN_WIDTH;
+		layout.marginHeight = MARGIN_HEIGHT;
+		layout.marginWidth = MARGIN_WIDTH;
 		return layout;
 	}
 
-    protected void createAllowHtmlButton(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory) {
-        //HTML can be an issue only with these two kind of widget
-        if( widget instanceof MessageInfo
-                || widget instanceof TextInfo){
-            allowHtmlButton = widgetFactory.createButton(composite, Messages.GeneralSection_allowHTML, SWT.CHECK);
-        }
-    }
+	protected void createAllowHtmlButton(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory) {
+		//HTML can be an issue only with these two kind of widget
+		if( widget instanceof MessageInfo
+				|| widget instanceof TextInfo){
+			allowHtmlButton = widgetFactory.createButton(composite, Messages.GeneralSection_allowHTML, SWT.CHECK);
+		}
+	}
 
-    protected void bindWidgets() {
-        if(allowHtmlButton != null && !allowHtmlButton.isDisposed()){
-            Expression inputExpression = widget.getInputExpression();
-            if(inputExpression == null){
-                inputExpression = ExpressionFactory.eINSTANCE.createExpression();
-                editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, widget, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, inputExpression));
-            }
-            dataBindingContext.bindValue(SWTObservables.observeSelection(allowHtmlButton), EMFEditObservables.observeValue(editingDomain, inputExpression, ExpressionPackage.Literals.EXPRESSION__HTML_ALLOWED));
-        }
-        updateViewerInput() ;
-    }
-
-
-
-    public void dispose() {
-        if(dataBindingContext!=null) {
-            dataBindingContext.dispose();
-        }
-    }
-
-    public String getLabel() {
-        if(widget instanceof IFrameWidget){
-            return Messages.Action_UrlOfTheIFrame;
-        }else{
-            return Messages.Action_InitialValue;
-        }
-    }
-
-    public boolean isRelevantFor(EObject eObject) {
-        return (eObject instanceof FormField || eObject instanceof Info)
-                && !(eObject instanceof DateFormField)
-                && !(eObject instanceof MultipleValuatedFormField)
-                && !(eObject instanceof FileWidget)
-                && !(eObject instanceof DurationFormField)
-                && !(eObject instanceof HtmlWidget);
-    }
-
-    public void refresh() {
-    }
-
-    public void setEObject(EObject object) {
-        widget = (Widget) object;
-    }
-
-    protected void updateViewerInput(){
-        if(expressionViewer != null && !expressionViewer.getControl().isDisposed()){
-            Expression input = widget.getInputExpression() ;
-            if(input == null){
-                input = ExpressionFactory.eINSTANCE.createExpression() ;
-                editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, widget, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, input));
-            }
-            //            if(ModelHelper.isInEntryPageFlowOnAPool(widget)){
-            //            	expressionViewer.addFilter(filterVariableType);
-            //            } else {
-            //            	expressionViewer.removeFilter(filterVariableType);
-            //            }
-            expressionViewer.setEditingDomain(editingDomain) ;
-            dataBindingContext.bindValue(
-                    ViewersObservables.observeSingleSelection(expressionViewer),
-                    EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION).observe(input));
-            expressionViewer.setInput(widget) ;
-            expressionViewer.setSelection(new StructuredSelection(input)) ;
-        }
-    }
+	protected void bindWidgets() {
+		if(allowHtmlButton != null && !allowHtmlButton.isDisposed()){
+			Expression inputExpression = widget.getInputExpression();
+			if(inputExpression == null){
+				inputExpression = ExpressionFactory.eINSTANCE.createExpression();
+				editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, widget, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, inputExpression));
+			}
+			dataBindingContext.bindValue(SWTObservables.observeSelection(allowHtmlButton), EMFEditObservables.observeValue(editingDomain, inputExpression, ExpressionPackage.Literals.EXPRESSION__HTML_ALLOWED));
+		}
+		updateViewerInput() ;
+	}
 
 
-    public void setEditingDomain(TransactionalEditingDomain editingDomain) {
-        this.editingDomain = editingDomain;
-    }
 
-    public void setSelection(ISelection selection) {
+	public void dispose() {
+		if(dataBindingContext!=null) {
+			dataBindingContext.dispose();
+		}
+	}
 
-    }
+	public String getLabel() {
+		if(widget instanceof IFrameWidget){
+			return Messages.Action_UrlOfTheIFrame;
+		}else{
+			return Messages.Action_InitialValue;
+		}
+	}
+
+	public boolean isRelevantFor(EObject eObject) {
+		return (eObject instanceof FormField || eObject instanceof Info)
+				&& !(eObject instanceof DateFormField)
+				&& !(eObject instanceof MultipleValuatedFormField)
+				&& !(eObject instanceof FileWidget)
+				&& !(eObject instanceof DurationFormField)
+				&& !(eObject instanceof HtmlWidget);
+	}
+
+	public void refresh() {
+	}
+
+	public void setEObject(EObject object) {
+		widget = (Widget) object;
+		if(initialValueExpressionFilter != null){
+			initialValueExpressionFilter.setWidget(widget);
+		}
+	}
+
+	protected void updateViewerInput(){
+		if(expressionViewer != null && !expressionViewer.getControl().isDisposed()){
+			Expression input = widget.getInputExpression() ;
+			if(input == null){
+				input = ExpressionFactory.eINSTANCE.createExpression() ;
+				editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, widget, FormPackage.Literals.WIDGET__INPUT_EXPRESSION, input));
+			}
+			expressionViewer.setEditingDomain(editingDomain) ;
+			dataBindingContext.bindValue(
+					ViewersObservables.observeSingleSelection(expressionViewer),
+					EMFEditProperties.value(editingDomain, FormPackage.Literals.WIDGET__INPUT_EXPRESSION).observe(input));
+			expressionViewer.setInput(widget) ;
+			expressionViewer.setSelection(new StructuredSelection(input)) ;
+		}
+	}
+
+
+	public void setEditingDomain(TransactionalEditingDomain editingDomain) {
+		this.editingDomain = editingDomain;
+	}
+
+	public void setSelection(ISelection selection) {
+
+	}
 
 }

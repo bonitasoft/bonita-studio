@@ -610,10 +610,15 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 			Set<Expression> toRemove = new HashSet<Expression>();
 			if (input != null) {
 				for (Expression exp : filteredExpressions) {
+					boolean isFiltered = true;
 					for (ViewerFilter filter : getFilters()) {
-						if (filter != null && !filter.select(this, input, exp)) {
-							toRemove.add(exp);
+						if (filter != null && filter.select(this, input, exp)) {
+							isFiltered = false;
+							break;
 						}
+					}
+					if(isFiltered){
+						toRemove.add(exp);
 					}
 					if (selectedExpression != null
 							&& !ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
