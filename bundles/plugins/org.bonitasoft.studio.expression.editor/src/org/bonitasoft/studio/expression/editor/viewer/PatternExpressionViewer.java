@@ -189,15 +189,6 @@ public class PatternExpressionViewer extends Composite {
 		return expressionViewer.getControl().isVisible();
 	}
 
-
-	private void bindExpression() {
-		if(context != null){
-			bindPatternExpression();
-			bindExpressionViewer();
-		}
-	}
-
-
 	private void bindExpressionViewer() {
 		expressionViewer.setContext(contextInput);
 		expressionViewer.setInput(contextInput);
