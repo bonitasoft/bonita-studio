@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.connectors.ui.wizard.page;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.expression.editor.operation.OperationsComposite;
 import org.bonitasoft.studio.expression.editor.operation.WizardPageOperationsComposite;
@@ -26,8 +27,11 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Romain Bioteau
@@ -55,7 +59,9 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
                 ExpressionConstants.SCRIPT_TYPE,
                 ExpressionConstants.DOCUMENT_TYPE
         }) ;
-
+        CLabel warningLabel = new CLabel(mainComposite, SWT.NONE) ;
+        warningLabel.setText(Messages.transientDataWarning);
+		warningLabel.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
         lineComposite = new WizardPageOperationsComposite(null, mainComposite, rightFilter, leftFilter,isPageFlowContext()) ;
         lineComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         IExpressionNatureProvider storageExpressionProvider = getStorageExpressionProvider();

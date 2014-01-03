@@ -167,6 +167,8 @@ public class Messages extends NLS {
 	public static String unresolvedExpression;
 
 	public static String deleteConnectorDefinition;
+
+	public static String transientDataWarning;
     /**
      * @param event
      * @return
