@@ -25,7 +25,6 @@ import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.FileWidget;
 import org.bonitasoft.studio.model.form.FormButton;
 import org.bonitasoft.studio.model.form.FormPackage;
-import org.bonitasoft.studio.model.form.ImageWidget;
 import org.bonitasoft.studio.model.form.Info;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
