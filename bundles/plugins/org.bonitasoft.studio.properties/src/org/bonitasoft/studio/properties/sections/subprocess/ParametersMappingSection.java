@@ -219,9 +219,6 @@ public class ParametersMappingSection extends AbstractBonitaDescriptionSection {
                 createOutputMapping(null,null);
                 refreshScrolledComposite(parent);
             }
-
-
-
         });
 
     }
@@ -248,7 +245,35 @@ public class ParametersMappingSection extends AbstractBonitaDescriptionSection {
      * @param object
      */
     protected void addOutputMappingLine(final Composite outputMappingControl, final OutputMapping mapping) {
-        final CCombo subprocessSourceCombo = getWidgetFactory().createCCombo(outputMappingControl, SWT.BORDER);
+        final CCombo subprocessSourceCombo = createSubprocessSourceCombo(outputMappingControl, mapping);
+        final Label assignToLabel = getWidgetFactory().createLabel(outputMappingControl, Messages.assignTo);
+        final ComboViewer processTargetCombo = createProcessTargetCombo(outputMappingControl, mapping);
+
+        // TODO populate combo
+        final Button deleteButton = new Button(outputMappingControl, SWT.FLAT);
+        deleteButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE));
+        deleteButton.addListener(SWT.Selection, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                RemoveCommand command = new RemoveCommand(getEditingDomain(), getSubProcess().getOutputMappings(), mapping);
+                getEditingDomain().getCommandStack().execute(command);
+                processTargetCombo.getControl().setData(MagicComposite.HIDDEN, true);
+                processTargetCombo.getControl().setVisible(false);
+                assignToLabel.setData(MagicComposite.HIDDEN, true);
+                assignToLabel.setVisible(false);
+                subprocessSourceCombo.setData(MagicComposite.HIDDEN, true);
+                subprocessSourceCombo.setVisible(false);
+                deleteButton.setData(MagicComposite.HIDDEN, true);
+                deleteButton.setVisible(false);
+                parent.layout();
+                parent.getParent().layout();
+                tabbedPropertySheetPage.resizeScrolledComposite();
+            }
+        });
+    }
+
+	private CCombo createSubprocessSourceCombo(final Composite outputMappingControl, final OutputMapping mapping) {
+		final CCombo subprocessSourceCombo = getWidgetFactory().createCCombo(outputMappingControl, SWT.BORDER);
         for (String subprocessData : getSubprocessData()) {
             subprocessSourceCombo.add(subprocessData);
         }
@@ -266,10 +291,11 @@ public class ParametersMappingSection extends AbstractBonitaDescriptionSection {
         if (mapping.getSubprocessSource() != null) {
             subprocessSourceCombo.setText(mapping.getSubprocessSource());
         }
+		return subprocessSourceCombo;
+	}
 
-        final Label assignToLabel = getWidgetFactory().createLabel(outputMappingControl, Messages.assignTo);
-
-        final ComboViewer processTargetCombo = new ComboViewer(getWidgetFactory().createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
+	private ComboViewer createProcessTargetCombo(final Composite outputMappingControl, final OutputMapping mapping) {
+		final ComboViewer processTargetCombo = new ComboViewer(getWidgetFactory().createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
         processTargetCombo.setContentProvider(new IStructuredContentProvider() {
             @Override
             public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -298,29 +324,8 @@ public class ParametersMappingSection extends AbstractBonitaDescriptionSection {
         if (mapping.getProcessTarget() != null) {
             processTargetCombo.setSelection(new StructuredSelection(mapping.getProcessTarget()));
         }
-
-        // TODO populate combo
-        final Button deleteButton = new Button(outputMappingControl, SWT.FLAT);
-        deleteButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE));
-        deleteButton.addListener(SWT.Selection, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                RemoveCommand command = new RemoveCommand(getEditingDomain(), getSubProcess().getOutputMappings(), mapping);
-                getEditingDomain().getCommandStack().execute(command);
-                processTargetCombo.getControl().setData(MagicComposite.HIDDEN, true);
-                processTargetCombo.getControl().setVisible(false);
-                assignToLabel.setData(MagicComposite.HIDDEN, true);
-                assignToLabel.setVisible(false);
-                subprocessSourceCombo.setData(MagicComposite.HIDDEN, true);
-                subprocessSourceCombo.setVisible(false);
-                deleteButton.setData(MagicComposite.HIDDEN, true);
-                deleteButton.setVisible(false);
-                parent.layout();
-                parent.getParent().layout();
-                tabbedPropertySheetPage.resizeScrolledComposite();
-            }
-        });
-    }
+		return processTargetCombo;
+	}
 
     /**
      * @param parent
@@ -381,35 +386,7 @@ public class ParametersMappingSection extends AbstractBonitaDescriptionSection {
      * @param object
      */
     protected void addInputMappingLine(final Composite outputMappingControl, final InputMapping mapping) {
-        final ComboViewer srcCombo = new ComboViewer(getWidgetFactory().createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
-        srcCombo.setContentProvider(new IStructuredContentProvider() {
-            @Override
-            public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-            }
-
-            @Override
-            public void dispose() {
-            }
-
-            @Override
-            public Object[] getElements(Object inputElement) {
-                return ModelHelper.getAccessibleData(getSubProcess(),false).toArray();
-            }
-        });
-        srcCombo.setLabelProvider(new EMFFeatureLabelProvider(ProcessPackage.Literals.ELEMENT__NAME));
-        srcCombo.addPostSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                getEditingDomain().getCommandStack().execute(
-                        new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE, ((IStructuredSelection) event
-                                .getSelection()).getFirstElement()));
-            }
-        });
-        srcCombo.setInput(getSubProcess());
-        srcCombo.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
-        if (mapping.getProcessSource() != null) {
-            srcCombo.setSelection(new StructuredSelection(mapping.getProcessSource()));
-        }
+        final ComboViewer srcCombo = createInputMappingSourceCombo(outputMappingControl, mapping);
 
         final Label assignToLabel = getWidgetFactory().createLabel(outputMappingControl, Messages.assignTo);
         final CCombo targetCombo = getWidgetFactory().createCCombo(outputMappingControl, SWT.BORDER);
@@ -451,6 +428,39 @@ public class ParametersMappingSection extends AbstractBonitaDescriptionSection {
             }
         });
     }
+
+	private ComboViewer createInputMappingSourceCombo(final Composite outputMappingControl, final InputMapping mapping) {
+		final ComboViewer srcCombo = new ComboViewer(getWidgetFactory().createCCombo(outputMappingControl, SWT.READ_ONLY | SWT.BORDER));
+        srcCombo.setContentProvider(new IStructuredContentProvider() {
+            @Override
+            public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+            }
+
+            @Override
+            public void dispose() {
+            }
+
+            @Override
+            public Object[] getElements(Object inputElement) {
+                return ModelHelper.getAccessibleData(getSubProcess()).toArray();
+            }
+        });
+        srcCombo.setLabelProvider(new EMFFeatureLabelProvider(ProcessPackage.Literals.ELEMENT__NAME));
+        srcCombo.addPostSelectionChangedListener(new ISelectionChangedListener() {
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                getEditingDomain().getCommandStack().execute(
+                        new SetCommand(getEditingDomain(), mapping, ProcessPackage.Literals.INPUT_MAPPING__PROCESS_SOURCE, ((IStructuredSelection) event
+                                .getSelection()).getFirstElement()));
+            }
+        });
+        srcCombo.setInput(getSubProcess());
+        srcCombo.getControl().setLayoutData(new GridData(SWT.FILL, SWT.DEFAULT, true, false));
+        if (mapping.getProcessSource() != null) {
+            srcCombo.setSelection(new StructuredSelection(mapping.getProcessSource()));
+        }
+		return srcCombo;
+	}
 
     /**
      * @return
