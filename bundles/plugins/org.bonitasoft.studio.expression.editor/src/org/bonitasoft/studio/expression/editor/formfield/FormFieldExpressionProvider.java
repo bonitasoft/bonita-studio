@@ -88,7 +88,8 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 			}
 			// for the Submit button only, add fields of other widgets
 			if(relevantParent instanceof SubmitFormButton){
-				if(relevantParent.eContainer()!= null && relevantParent.eContainer() instanceof Form){
+				if(relevantParent.eContainer()!= null && 
+						(relevantParent.eContainer() instanceof Form || relevantParent.eContainer() instanceof Group)){
 					Form f = ModelHelper.getParentForm(relevantParent);
 					for (Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(f)) {
 						if (w instanceof FormField || w instanceof Group){
