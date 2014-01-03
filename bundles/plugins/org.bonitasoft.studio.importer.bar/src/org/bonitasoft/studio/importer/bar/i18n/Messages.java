@@ -140,6 +140,7 @@ public class Messages extends NLS {
 	public static String connectorMigrationFinishTaskDescription;
 	public static String connectorMigrationUseScriptAndApiDescription;
 	public static String customConnectorMigrationFailureDescription;
+	public static String unsupportedVersionMessage;
 	
 
     static {
