@@ -1074,8 +1074,7 @@ public class BPMNToProc extends ToProcProcessor {
 	 * @param process
 	 * @throws ProcBuilderException
 	 */
-	private int processActivities(List<TFlowElement> flowElements,
-			boolean fromSubProcess) throws ProcBuilderException {
+	private int processActivities(List<TFlowElement> flowElements, boolean fromSubProcess) throws ProcBuilderException {
 		int activityNumber = 0;
 		if (flowElements != null) {
 			for (TFlowElement flowElement : flowElements) {
@@ -1216,55 +1215,8 @@ public class BPMNToProc extends ToProcProcessor {
 									subProcesses.add((TSubProcess) flowNode);
 								} else if (flowNode instanceof TCallActivity) {
 									TCallActivity callActivity = (TCallActivity) flowNode;
-									final QName calledElement = callActivity
-											.getCalledElement();
-									if (calledElement != null) {
-										builder.addCallActivityTargetProcess(
-												calledElement.getLocalPart(),
-												"1.0");
-									}
-
-									for (TDataInputAssociation input : callActivity
-											.getDataInputAssociation()) {
-										for (TAssignment assignment : input
-												.getAssignment()) {
-
-											final String assignmentFromValue = getAssignmentFromValue(assignment);
-											final String fromDataName = dataNameByItemDefinition
-													.get(assignmentFromValue) != null ? dataNameByItemDefinition
-															.get(assignmentFromValue)
-															: assignmentFromValue;
-
-															final String assignmentToValue = getAssignmentToValue(assignment);
-															final String toDataName = dataNameByItemDefinition
-																	.get(assignmentToValue) != null ? dataNameByItemDefinition
-																			.get(assignmentToValue)
-																			: assignmentToValue;
-																			builder.addCallActivityInParameter(
-																					fromDataName, toDataName);
-										}
-									}
-
-									for (TDataOutputAssociation output : callActivity
-											.getDataOutputAssociation()) {
-										for (TAssignment assignment : output
-												.getAssignment()) {
-											final String assignmentFromValue = getAssignmentFromValue(assignment);
-											final String fromDataName = dataNameByItemDefinition
-													.get(assignmentFromValue) != null ? dataNameByItemDefinition
-															.get(assignmentFromValue)
-															: assignmentFromValue;
-
-															final String assignmentToValue = getAssignmentToValue(assignment);
-															final String toDataName = dataNameByItemDefinition
-																	.get(assignmentToValue) != null ? dataNameByItemDefinition
-																			.get(assignmentToValue)
-																			: assignmentToValue;
-
-																			builder.addCallActivityOutParameter(
-																					fromDataName, toDataName);
-										}
-									}
+									fillCalledActivity(callActivity);
+									mapDataForCallActivity(callActivity);
 								}
 							}
 
@@ -1278,6 +1230,76 @@ public class BPMNToProc extends ToProcProcessor {
 			}
 		}
 		return activityNumber;
+	}
+
+	private void fillCalledActivity(TCallActivity callActivity)	throws ProcBuilderException {
+		final QName calledElement = callActivity.getCalledElement();
+		if (calledElement != null) {
+			final String calledElementID = calledElement.getLocalPart();
+			String calledElementName = null;
+			for (TRootElement rootElement : rootElements) {
+				if (rootElement instanceof TProcess) {
+					if(calledElementID.equals(rootElement.getId())){
+						calledElementName = ((TProcess) rootElement).getName();
+						break;
+					}
+				}
+			}
+			builder.addCallActivityTargetProcess(calledElementName != null?calledElementName : calledElementID,	""/*"1.0"*/);
+		}
+	}
+
+	private void mapDataForCallActivity(TCallActivity callActivity)	throws ProcBuilderException {
+		mapInputDataForCallActivity(callActivity);
+		mapOutputDataForCallActivity(callActivity);
+	}
+
+	private void mapOutputDataForCallActivity(TCallActivity callActivity)
+			throws ProcBuilderException {
+		for (TDataOutputAssociation output : callActivity
+				.getDataOutputAssociation()) {
+			for (TAssignment assignment : output
+					.getAssignment()) {
+				final String assignmentFromValue = getAssignmentFromValue(assignment);
+				final String fromDataName = dataNameByItemDefinition
+						.get(assignmentFromValue) != null ? dataNameByItemDefinition
+								.get(assignmentFromValue)
+								: assignmentFromValue;
+
+								final String assignmentToValue = getAssignmentToValue(assignment);
+								final String toDataName = dataNameByItemDefinition
+										.get(assignmentToValue) != null ? dataNameByItemDefinition
+												.get(assignmentToValue)
+												: assignmentToValue;
+
+												builder.addCallActivityOutParameter(
+														fromDataName, toDataName);
+			}
+		}
+	}
+
+	private void mapInputDataForCallActivity(TCallActivity callActivity)
+			throws ProcBuilderException {
+		for (TDataInputAssociation input : callActivity
+				.getDataInputAssociation()) {
+			for (TAssignment assignment : input
+					.getAssignment()) {
+
+				final String assignmentFromValue = getAssignmentFromValue(assignment);
+				final String fromDataName = dataNameByItemDefinition
+						.get(assignmentFromValue) != null ? dataNameByItemDefinition
+								.get(assignmentFromValue)
+								: assignmentFromValue;
+
+								final String assignmentToValue = getAssignmentToValue(assignment);
+								final String toDataName = dataNameByItemDefinition
+										.get(assignmentToValue) != null ? dataNameByItemDefinition
+												.get(assignmentToValue)
+												: assignmentToValue;
+												builder.addCallActivityInParameter(
+														fromDataName, toDataName);
+			}
+		}
 	}
 
 	protected String retrieveDocumentation(TBaseElement baseElement) {

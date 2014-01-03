@@ -1683,10 +1683,20 @@ public class BonitaToBPMN implements IBonitaTransformer {
 			TCallActivity tCallActivity = ModelFactory.eINSTANCE.createTCallActivity();
 			//TODO: construct calledElement ID
 			CallActivity cActivity = (CallActivity) child ;
-			if(cActivity.getCalledActivityName() != null
-					&& cActivity.getCalledActivityName().getType().equals(ExpressionConstants.CONSTANT_TYPE)
-					&& cActivity.getCalledActivityName().getContent() != null){
-				tCallActivity.setCalledElement(QName.valueOf(cActivity.getCalledActivityName().getContent()));
+			final Expression calledActivityName = cActivity.getCalledActivityName();
+			if(calledActivityName != null
+					&& ExpressionConstants.CONSTANT_TYPE.equals(calledActivityName.getType())
+					&& calledActivityName.getContent() != null){
+				final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+				final Expression calledVersion = cActivity.getCalledActivityVersion();
+				String version = null ;
+				if(calledVersion != null && calledVersion.getContent() != null && !calledVersion.getContent().isEmpty()){
+					version = calledVersion.getContent();
+				}
+				final AbstractProcess calledProcess = ModelHelper.findProcess(calledActivityName.getContent(), version, diagramStore.getAllProcesses());
+				if(calledProcess != null){
+					tCallActivity.setCalledElement(QName.valueOf(ModelHelper.getEObjectID(calledProcess)));
+				}
 			}
 			//bpmnSubprocess.set
 			//errors.add(NLS.bind(Messages.subprocessReferenceLost, child.getName()));
