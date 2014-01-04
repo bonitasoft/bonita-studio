@@ -81,7 +81,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 	private Boolean checkOnlyCustom;
 	private Button onlyCustomCheckbox;
 	private final DefinitionResourceProvider messageProvider;
-	private final List<ConnectorDefinition> definitions;
+	protected final List<ConnectorDefinition> definitions;
 	private ViewerFilter customConnectorFilter = new ViewerFilter() {
 
 		@Override

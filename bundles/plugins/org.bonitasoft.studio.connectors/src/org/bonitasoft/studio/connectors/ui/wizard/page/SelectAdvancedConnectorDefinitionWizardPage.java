@@ -46,7 +46,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
  *
  */
 public class SelectAdvancedConnectorDefinitionWizardPage extends
-		AbstractDefinitionSelectionImpementationWizardPage {
+AbstractDefinitionSelectionImpementationWizardPage {
 
 	private Connector workingCopy;
 
@@ -62,7 +62,7 @@ public class SelectAdvancedConnectorDefinitionWizardPage extends
 	protected ITreeContentProvider getContentProvider() {
 		return new UniqueConnectorDefinitionContentProvider();
 	}
-	
+
 	@Override
 	protected ITreeContentProvider getCustomContentProvider() {
 		return new UniqueConnectorDefinitionContentProvider(true);
@@ -71,63 +71,86 @@ public class SelectAdvancedConnectorDefinitionWizardPage extends
 	@Override
 	protected void bindValue() {
 		final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(explorer.getRightTableViewer());
+		final IViewerObservableValue versionObservable = ViewersObservables.observeSingleSelection(versionCombo);
 		final AbstractDefinitionSelectionImpementationWizardPage thisPage = this;
 		observeSingleSelection.addValueChangeListener(new IValueChangeListener() {
 			@Override
 			public void handleValueChange(ValueChangeEvent event) {
-				final Object o = event.getObservableValue().getValue();
-				if(o instanceof ConnectorDefinition){
-					thisPage.setSelectedConnectorDefinition((ConnectorDefinition) o);
-					setPageComplete(true);
-				}
+				updateSelectedConnectorDefinition(observeSingleSelection,versionObservable,	thisPage);
 			}
 		});
 		
-		IValidator selectionValidator = new IValidator() {
-            @Override
-            public IStatus validate(Object value) {
-                return validateSelection(value);
-            }
-
-			
-        } ;
 		
+		versionObservable.addValueChangeListener(new IValueChangeListener() {
+			@Override
+			public void handleValueChange(ValueChangeEvent event) {
+				updateSelectedConnectorDefinition(observeSingleSelection,versionObservable,thisPage);
+			}
+		});
+		
+
+		IValidator selectionValidator = new IValidator() {
+			@Override
+			public IStatus validate(Object value) {
+				return validateSelection(value);
+			}
+		} ;
+
 		UpdateValueStrategy idStrategy = new UpdateValueStrategy() ;
-        idStrategy.setBeforeSetValidator(selectionValidator) ;
-        idStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class) {
+		idStrategy.setBeforeSetValidator(selectionValidator) ;
+		idStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class) {
 
-            @Override
-            public Object convert(Object from) {
-                if(from instanceof ConnectorDefinition){
-                    return ((ConnectorDefinition) from).getId() ;
-                }
-                return null;
-            }
-        }) ;
+			@Override
+			public Object convert(Object from) {
+				if(from instanceof ConnectorDefinition){
+					return ((ConnectorDefinition) from).getId() ;
+				}
+				return null;
+			}
+		}) ;
 
-        UpdateValueStrategy versionStrategy = new UpdateValueStrategy() ;
-        versionStrategy.setBeforeSetValidator(selectionValidator) ;
-        versionStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class) {
+		UpdateValueStrategy versionStrategy = new UpdateValueStrategy() ;
+		versionStrategy.setBeforeSetValidator(selectionValidator) ;
+		versionStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class) {
 
-            @Override
-            public Object convert(Object from) {
-                if(from instanceof ConnectorDefinition){
-                    return ((ConnectorDefinition) from).getVersion() ;
-                }
-                return null;
-            }
-        }) ;
-        context.bindValue(observeSingleSelection, EMFObservables.observeValue(workingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_ID),idStrategy,null)  ;
-        context.bindValue(observeSingleSelection, EMFObservables.observeValue(workingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_VERSION),versionStrategy,null)  ;
-        context.bindValue(observeSingleSelection, EMFObservables.observeValue(workingCopy.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__DEFINITION_ID),idStrategy,null)  ;
-        context.bindValue(observeSingleSelection, EMFObservables.observeValue(workingCopy.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__VERSION),versionStrategy,null)  ;
+			@Override
+			public Object convert(Object from) {
+				if(from instanceof ConnectorDefinition){
+					return ((ConnectorDefinition) from).getVersion() ;
+				}
+				return null;
+			}
+		}) ;
+		context.bindValue(observeSingleSelection, EMFObservables.observeValue(workingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_ID),idStrategy,null)  ;
+		context.bindValue(ViewersObservables.observeSingleSelection(versionCombo), EMFObservables.observeValue(workingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_VERSION))  ;
+		context.bindValue(observeSingleSelection, EMFObservables.observeValue(workingCopy.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__DEFINITION_ID),idStrategy,null)  ;
+		context.bindValue(ViewersObservables.observeSingleSelection(versionCombo), EMFObservables.observeValue(workingCopy.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__VERSION))  ;
 	}
 	
+	protected void updateSelectedConnectorDefinition(
+			final IViewerObservableValue observeSingleSelection,
+			IViewerObservableValue versionObservable, final AbstractDefinitionSelectionImpementationWizardPage thisPage) {
+		final Object o = observeSingleSelection.getValue();
+		if(o instanceof ConnectorDefinition){
+			ConnectorDefinition selectedDef = null;
+			String version = (String) versionObservable.getValue();
+			for(ConnectorDefinition def : definitions){
+				if(((ConnectorDefinition) o).getId().equals(def.getId()) && version.equals(def.getVersion())){
+					selectedDef = def;
+					break;
+				}
+			}
+			
+			thisPage.setSelectedConnectorDefinition(selectedDef);
+			setPageComplete(true);
+		}
+	}
+
 	protected IStatus validateSelection(Object value) {
 		if(value == null || value instanceof Category){
-            return new Status(IStatus.ERROR,ConnectorPlugin.PLUGIN_ID, Messages.selectAConnectorDefWarning);
-        }
-        return Status.OK_STATUS;
+			return new Status(IStatus.ERROR,ConnectorPlugin.PLUGIN_ID, Messages.selectAConnectorDefWarning);
+		}
+		return Status.OK_STATUS;
 	}
 
 }
