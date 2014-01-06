@@ -19,18 +19,13 @@ package org.bonitasoft.studio.intro.actions;
 
 import java.util.Properties;
 
-import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.intro.Messages;
-import org.eclipse.core.commands.Command;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
+import org.bonitasoft.studio.importer.handler.ImportHandler;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 
 /**
- * @author Mickael Istria
+ * @author Romain Bioteau
  *
  */
 public class ImportAction implements IIntroAction {
@@ -39,13 +34,10 @@ public class ImportAction implements IIntroAction {
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
 	public void run(IIntroSite introSite, Properties param) {
-		ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
-		Command cmd = service.getCommand("org.bonitasoft.studio.application.importCommand") ;
 		try {
-			cmd.executeWithChecks(null);
+			new ImportHandler().execute(null);
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
-			new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.importErrorTitle, Messages.importErrorMessage, e).open();
 		}
 	}
 

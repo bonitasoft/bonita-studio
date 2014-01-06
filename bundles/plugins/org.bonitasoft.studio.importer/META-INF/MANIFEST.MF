@@ -32,6 +32,7 @@ Export-Package: org.bonitasoft.studio.importer,
  org.bonitasoft.studio.importer.bonita4,
  org.bonitasoft.studio.importer.bpmn,
  org.bonitasoft.studio.importer.builder,
+ org.bonitasoft.studio.importer.handler,
  org.bonitasoft.studio.importer.processors
 Bundle-ClassPath: .
 Bundle-Localization: plugin
