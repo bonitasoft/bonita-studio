@@ -21,20 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.ExpressionConstants;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.groovy.GroovyUtil;
 import org.bonitasoft.studio.groovy.ScriptVariable;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.form.Form;
-import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.parameter.Parameter;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Connector;
-import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.simulation.SimulationDataContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -87,89 +78,31 @@ public class ComputeScriptDependenciesJob extends Job {
 			}
 
 			final List<EObject> deps = new ArrayList<EObject>();
-			variablesloop: for (final String name : foundVariable) {
-				final AbstractProcess process = ModelHelper.getParentProcess(context);
-				final Expression engineConstantExpression = GroovyUtil.getEngineConstantExpression(name);
-				if (engineConstantExpression != null) {
-					deps.add(EcoreUtil.copy(engineConstantExpression));
-					continue variablesloop;
-				}
-				if (process != null) {
-					for (final Parameter p : process.getParameters()) {
-						if (p.getName().equals(name)) {
-							deps.add(EcoreUtil.copy(p));
-							continue variablesloop;
-						}
-					}
-				}
-
-				if (context instanceof Widget) {
-					if (name.startsWith("field_")) {
-						IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.FORM_FIELD_TYPE);
-						for(Expression exp : provider.getExpressions(context)){
-							if(exp.getName().equals(name)){
-								deps.add(EcoreUtil.copy(exp.getReferencedElements().get(0)));
-								continue variablesloop;
-							}
-						}
-					}
-				}
-				
-				if (context instanceof Form) {
-					if (name.startsWith("field_")) {
-						IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.FORM_FIELD_TYPE);
-						for(Expression exp : provider.getExpressions(context)){
-							if (exp.getName().equals(name)) {
-								deps.add(EcoreUtil.copy(exp.getReferencedElements().get(0)));
-								continue variablesloop;
-							}
-
-						}
-					}
-				}
-				
-				for (final Data d : ModelHelper.getAccessibleData(context, true)) {
-					if (d.getName().equals(name)) {
-						deps.add(EcoreUtil.copy(d));
-						continue variablesloop;
-					}
-				}
-				
-				if (context instanceof Connector) {
-					final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
-					for (final Expression e : provider.getExpressions(context)) {
-						if (e.getName().equals(name)) {
-							deps.add(EcoreUtil.copy(e.getReferencedElements().get(0)));
-							continue variablesloop;
-						}
-					}
-				}
-
-				if (context instanceof SimulationDataContainer) {
-					final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(
-							ExpressionConstants.SIMULATION_VARIABLE_TYPE);
-					if (provider != null) {
-						for (final Expression e : provider.getExpressions(context)) {
-							if (e.getName().equals(name)) {
-								deps.add(EcoreUtil.copy(e.getReferencedElements().get(0)));
-								continue variablesloop;
-							}
-						}
-					}
-				}
-				
-				final IExpressionProvider provider = ExpressionEditorService.getInstance().getExpressionProvider(ExpressionConstants.DOCUMENT_TYPE);
-				for (final Expression e : provider.getExpressions(context)) {
-					if (e.getName().equals(name)) {
-						deps.add(EcoreUtil.copy(e.getReferencedElements().get(0)));
-						continue variablesloop;
-					}
-				}
-
-			}
+			addDependenciesForFoundVariables(foundVariable, deps);
 			cache.put(expression, deps);
 		}
 		return Status.OK_STATUS;
+	}
+
+	protected void addDependenciesForFoundVariables(
+			final Set<String> foundVariable, final List<EObject> deps) {
+		variablesloop: for (final String name : foundVariable) {
+			final Expression engineConstantExpression = GroovyUtil.getEngineConstantExpression(name);
+			if (engineConstantExpression != null) {
+				deps.add(EcoreUtil.copy(engineConstantExpression));
+				continue variablesloop;
+			}
+			for(IExpressionProvider provider : ExpressionEditorService.getInstance().getExpressionProviders()){
+				if(provider.isRelevantFor(context)){
+					for(Expression exp : provider.getExpressions(context)){
+						if(exp.getName().equals(name)){
+							deps.add(EcoreUtil.copy(exp.getReferencedElements().get(0)));
+							continue variablesloop;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private boolean isInAStringExpression(String name, IRegion index,String expression) {

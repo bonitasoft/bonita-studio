@@ -20,10 +20,10 @@ package org.bonitasoft.studio.connectors.ui.wizard.page;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connectors.i18n.Messages;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.process.Connector;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
@@ -41,13 +41,13 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage imple
     private ConnectorDefinition definition;
     protected final EMFDataBindingContext context;
     private Connector connector;
-    private EStructuralFeature outputDataFeature;
     private WizardPageSupport pageSupport;
 	private IWizardPage previousPageBackup;
 	private boolean isPageFlowContext = false;
+	private IExpressionNatureProvider storageExpressionProvider;
 
 
-    public AbstractConnectorOutputWizardPage(){
+	public AbstractConnectorOutputWizardPage(){
         super(AbstractConnectorOutputWizardPage.class.getName());
         setTitle(Messages.outputMapping) ;
         setDescription(Messages.outputMappingDesc);
@@ -81,14 +81,6 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage imple
 
     public void setDefinition(ConnectorDefinition definition) {
         this.definition = definition;
-    }
-
-    public EStructuralFeature getOutputDataFeature() {
-        return outputDataFeature;
-    }
-
-    public void setOutputDataFeature(EStructuralFeature outputDataFeature) {
-        this.outputDataFeature = outputDataFeature;
     }
 
     public Connector getConnector() {
@@ -137,4 +129,13 @@ public abstract class AbstractConnectorOutputWizardPage extends WizardPage imple
     	this.isPageFlowContext=isPageFlowContext;
     	
     }
+
+    public IExpressionNatureProvider getStorageExpressionProvider() {
+  		return storageExpressionProvider;
+  	}
+
+	public void setStorageExpressionProvider(
+			IExpressionNatureProvider storageExpressionProvider) {
+		this.storageExpressionProvider = storageExpressionProvider;
+	}
 }

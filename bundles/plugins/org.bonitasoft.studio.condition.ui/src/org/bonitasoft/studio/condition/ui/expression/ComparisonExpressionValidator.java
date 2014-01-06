@@ -149,10 +149,7 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 		}
 	}
 
-	/**
-	 * @param ref
-	 * @return
-	 */
+
 	private EObject getResolvedDependency(Expression_ProcessRef ref) {
 		EObject dep = resolveProxy(ref.getValue());
 		List<EObject> orignalDep = ModelHelper.getAllItemsOfType( ModelHelper.getMainProcess(context), dep.eClass());

@@ -553,10 +553,12 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 		addColumnButton.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
+				if(!viewerFilters.isEmpty()){
+					viewerFilters.add(viewerFilters.get(viewerFilters.size()-1));
+				}
 				Expression newExp = addColumn(getNbCols());
 				refresh();
 				viewer.editElement(newExp, getNbCols() - 1);
-
 			}
 		});
 
