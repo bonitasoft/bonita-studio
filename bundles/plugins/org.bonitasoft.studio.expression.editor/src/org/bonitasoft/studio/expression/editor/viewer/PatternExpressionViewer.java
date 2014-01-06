@@ -373,15 +373,10 @@ public class PatternExpressionViewer extends Composite {
 			filteredExpressions.addAll(Arrays.asList(expressions)) ;
 			if(input != null){
 				for(Expression exp : expressions) {
-					boolean filtered = true;
 					for(ViewerFilter filter : filters){
-						if(filter != null && filter.select(viewer, input, exp)){
-							filtered = false;
-							break;
+						if(filter != null && !filter.select(viewer, input, exp)){
+							filteredExpressions.remove(exp) ;
 						}
-					}
-					if(filtered){
-						filteredExpressions.remove(exp) ;
 					}
 				}
 			}
