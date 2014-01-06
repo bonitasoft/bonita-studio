@@ -330,7 +330,7 @@
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
 						<Bundle-Name>Bonita Console embedded in Studio</Bundle-Name>
 						<Bundle-Vendor>BonitaSoft S.A.</Bundle-Vendor>
-						<Bundle-Version>6.2.1.qualifier</Bundle-Version>
+						<Bundle-Version>6.2.2.qualifier</Bundle-Version>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Embed-Directory>${lib.dir}</Embed-Directory>
 						<Embed-StripVersion>true</Embed-StripVersion>
