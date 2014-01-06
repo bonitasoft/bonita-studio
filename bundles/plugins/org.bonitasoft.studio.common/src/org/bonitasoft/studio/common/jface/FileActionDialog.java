@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.common.jface;
 
 import org.bonitasoft.studio.common.Messages;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
@@ -138,8 +139,9 @@ public class FileActionDialog {
 
                       @Override
                       public void run() {
-                          answer = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteConfirmationTitle,
-                                  message);
+                    	  String[] buttonLabels = {Messages.delete,IDialogConstants.CANCEL_LABEL};
+                    	  MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(), Messages.deleteConfirmationTitle, null, message, MessageDialog.QUESTION,buttonLabels , 0);
+                          answer = dialog.open() == 0;
                       }
                   }) ;
                   return answer ;
