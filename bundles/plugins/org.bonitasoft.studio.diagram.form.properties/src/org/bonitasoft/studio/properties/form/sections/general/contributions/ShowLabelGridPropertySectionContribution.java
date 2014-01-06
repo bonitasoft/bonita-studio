@@ -32,6 +32,7 @@ import org.bonitasoft.studio.model.form.HtmlWidget;
 import org.bonitasoft.studio.model.form.IFrameWidget;
 import org.bonitasoft.studio.model.form.MessageInfo;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.properties.sections.general.ExpressionNotEmptyValidator;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
@@ -77,13 +78,16 @@ public class ShowLabelGridPropertySectionContribution implements IExtensibleGrid
             dataBindingContext.dispose();
         }
         dataBindingContext = new EMFDataBindingContext();
+		Button enableLabel = null;
 
+		if (!(element instanceof FormButton)) {
         /* Create the checkbox to hide/show the label */
-        Button enableLabel = widgetFactory.createButton(composite, "", SWT.CHECK); //$NON-NLS-1$
+        enableLabel = widgetFactory.createButton(composite, "", SWT.CHECK); //$NON-NLS-1$
         enableLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
         enableLabel.setToolTipText(Messages.GeneralSection_EnableLabel_tooltip);
         dataBindingContext.bindValue(SWTObservables.observeSelection(enableLabel),
                 EMFEditObservables.observeValue(editingDomain, element, FormPackage.Literals.WIDGET__SHOW_DISPLAY_LABEL));
+		}
 
         ExpressionViewer displayLabelViewer = new ExpressionViewer(composite, SWT.BORDER, widgetFactory,editingDomain, FormPackage.Literals.WIDGET__DISPLAY_LABEL);
         displayLabelViewer.addFilter(new AvailableExpressionTypeFilter(new String[]{
@@ -98,6 +102,12 @@ public class ShowLabelGridPropertySectionContribution implements IExtensibleGrid
             displayLabelExpression = ExpressionFactory.eINSTANCE.createExpression();
             editingDomain.getCommandStack().execute(SetCommand.create(editingDomain, element, FormPackage.Literals.WIDGET__DISPLAY_LABEL, displayLabelExpression));
         }
+		
+		// add validator on the show label field when it is a form button - expression can't be empty
+		if (element instanceof FormButton) {
+			displayLabelViewer.addExpressionValidator(ExpressionConstants.CONSTANT_TYPE, new ExpressionNotEmptyValidator());
+		}
+		
         displayLabelViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(300, SWT.DEFAULT).create());
         
         displayLabelViewer.setInput(element);
@@ -112,13 +122,13 @@ public class ShowLabelGridPropertySectionContribution implements IExtensibleGrid
             dataBindingContext.bindValue(SWTObservables.observeSelection(allowHtmlButton),
                     EMFEditObservables.observeValue(editingDomain, element, FormPackage.Literals.WIDGET__ALLOW_HTML_FOR_DISPLAY_LABEL));
             dataBindingContext.bindValue(SWTObservables.observeEnabled(allowHtmlButton), SWTObservables.observeSelection(enableLabel));
-        }
 
         /* Enable/disable the combo for the text and the allow html */
         dataBindingContext.bindValue(SWTObservables.observeEnabled(displayLabelViewer.getControl()), SWTObservables.observeSelection(enableLabel));
         dataBindingContext.bindValue(SWTObservables.observeEnabled(displayLabelViewer.getTextControl()), SWTObservables.observeSelection(enableLabel));
         dataBindingContext.bindValue(SWTObservables.observeEnabled(displayLabelViewer.getButtonControl()), SWTObservables.observeSelection(enableLabel));
     }
+	}
 
     /*
      * (non-Javadoc)
