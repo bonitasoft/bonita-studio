@@ -276,15 +276,10 @@ public class GroovyViewer {
 			filteredExpressions.addAll(Arrays.asList(expressions));
 			if (input != null && filters != null) {
 				for (final Expression exp : expressions) {
-					boolean filtered = true;
 					for (final ViewerFilter filter : filters) {
-						if (filter != null && filter.select(getSourceViewer(), input, exp)) {
-							filtered = false;
-							break;
+						if (filter != null && !filter.select(getSourceViewer(), input, exp)) {
+							filteredExpressions.remove(exp);
 						}
-					}
-					if(filtered){
-						filteredExpressions.remove(exp);
 					}
 				}
 			}
