@@ -942,80 +942,80 @@ public class ModelHelper {
 	}
 
 
-	 /**
-	  * @param subProcessName
-	  * @param version
-	  *            : this is not use by now
-	  * @param elements
-	  * @param processes
-	  */
-	 private static void findProcessRecursivly(String subProcessName, String version, List<? extends Element> elements, List<AbstractProcess> processes) {
-		 // TODO : use the version argument
-		 for (Element item : elements) {
-			 if (item instanceof AbstractProcess) {
-				 AbstractProcess process = (AbstractProcess) item;
-				 if (process.getName().equals(subProcessName)) {
-					 processes.add(process);
-				 } else {
-					 findProcessRecursivly(subProcessName, version, process.getElements(), processes);
-				 }
-			 }
-		 }
-	 }
-	 
-	 
-	 
-	 public static List<Expression> findAllScriptAndConditionsExpressionWithReferencedElement(EObject container,EObject element){
-		 List<Expression> result = new ArrayList<Expression>();
-		 for (EObject o:ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION)){
-			 Expression expr = (Expression)o;
-			 if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType())){
-				 if (isElementIsReferencedInScript(expr, element)){
-					 
-					 result.add(expr);
-				 }
-			 }
-		 }
-		 return result;
-		 
-	 }
-	 
-	 
-	 private static boolean isElementIsReferencedInScript(Expression expr,EObject element){
-		 if (!expr.getReferencedElements().isEmpty()){
-			 for (EObject o:expr.getReferencedElements()){
-				 if ( element instanceof Element && o instanceof Element && ((Element)element).getName().equals(((Element)o).getName())){
-					 return (true && !isAExpressionReferencedElement(expr));
-				 } else {
-					 if (element instanceof Parameter && o instanceof Parameter && ((Parameter)element).getName().equals(((Parameter)o).getName())){
-						 return true && !isAExpressionReferencedElement(expr);
-					 }
-				 }
-			 }
-		 }
-		 return false;
-	 }
-	 
-	 public static boolean isAExpressionReferencedElement(EObject target) {
-		 EObject container = target.eContainer();
-		 while (container!=null ){
-			 if (container instanceof Expression){
-				 return true;
-			 }
-			 container = container.eContainer();
-		 }
-		 return false;
-//			if(target != null){
-//				EObject current = target;
-//				EReference ref = current.eContainmentFeature();
-//				while (ref != null && !ref.equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
-//					current = current.eContainer();
-//					ref = current.eContainmentFeature();
-//				}
-//				return ref != null;
-//			}
-//			return false;
+	/**
+	 * @param subProcessName
+	 * @param version
+	 *            : this is not use by now
+	 * @param elements
+	 * @param processes
+	 */
+	private static void findProcessRecursivly(String subProcessName, String version, List<? extends Element> elements, List<AbstractProcess> processes) {
+		// TODO : use the version argument
+		for (Element item : elements) {
+			if (item instanceof AbstractProcess) {
+				AbstractProcess process = (AbstractProcess) item;
+				if (process.getName().equals(subProcessName)) {
+					processes.add(process);
+				} else {
+					findProcessRecursivly(subProcessName, version, process.getElements(), processes);
+				}
+			}
 		}
+	}
+
+
+
+	public static List<Expression> findAllScriptAndConditionsExpressionWithReferencedElement(EObject container,EObject element){
+		List<Expression> result = new ArrayList<Expression>();
+		for (EObject o:ModelHelper.getAllItemsOfType(container, ExpressionPackage.Literals.EXPRESSION)){
+			Expression expr = (Expression)o;
+			if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType()) || ExpressionConstants.CONDITION_TYPE.equals(expr.getType())){
+				if (isElementIsReferencedInScript(expr, element)){
+
+					result.add(expr);
+				}
+			}
+		}
+		return result;
+
+	}
+
+
+	private static boolean isElementIsReferencedInScript(Expression expr,EObject element){
+		if (!expr.getReferencedElements().isEmpty()){
+			for (EObject o:expr.getReferencedElements()){
+				if ( element instanceof Element && o instanceof Element && ((Element)element).getName().equals(((Element)o).getName())){
+					return (true && !isAExpressionReferencedElement(expr));
+				} else {
+					if (element instanceof Parameter && o instanceof Parameter && ((Parameter)element).getName().equals(((Parameter)o).getName())){
+						return true && !isAExpressionReferencedElement(expr);
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean isAExpressionReferencedElement(EObject target) {
+		EObject container = target.eContainer();
+		while (container!=null ){
+			if (container instanceof Expression){
+				return true;
+			}
+			container = container.eContainer();
+		}
+		return false;
+		//			if(target != null){
+		//				EObject current = target;
+		//				EReference ref = current.eContainmentFeature();
+		//				while (ref != null && !ref.equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
+		//					current = current.eContainer();
+		//					ref = current.eContainmentFeature();
+		//				}
+		//				return ref != null;
+		//			}
+		//			return false;
+	}
 
 	public static Set<Form> getAllFormsContainedIn(EObject copiedElement) {
 		// TODO : improve algo
@@ -1550,7 +1550,7 @@ public class ModelHelper {
 	 * 
 	 * @param widget
 	 */
-	public static void removedReferencedEObjects(EObject eObject) {
+	public static void removedReferencedEObjects(EObject eObject,EObject targetContainer) {
 
 		Set<EObject> containedEObjects = new HashSet<EObject>();
 		// get all contained EObjects
@@ -1563,7 +1563,7 @@ public class ModelHelper {
 					EObject child = (EObject) o;
 					//keep enum reference from the same diagram
 					if(child instanceof Data && ((Data) child).getDataType() instanceof EnumType){
-						MainProcess mainProcess = ModelHelper.getMainProcess(eObject);
+						MainProcess mainProcess = ModelHelper.getMainProcess(targetContainer);
 						MainProcess childMainProcess = ModelHelper.getMainProcess(child);
 						if(mainProcess != null
 								&& childMainProcess != null
@@ -1574,13 +1574,25 @@ public class ModelHelper {
 						}
 					}
 					if (!containedEObjects.contains(child)) {
-						// referenced outside: we unset it
-						toCheck.eUnset(reference);
-						// must not be the main eobject
-						if (reference.isRequired() && !toCheck.equals(eObject)) {
-							// field is required: we remove it
-							EcoreUtil.remove(toCheck);
-							break;
+						boolean removeReference = true;
+						if(child instanceof DataType){ //retrieve the equivalent Data Type in the target MainProcess
+							MainProcess mainProcess = ModelHelper.getMainProcess(targetContainer);
+							MainProcess childMainProcess = ModelHelper.getMainProcess(child);
+							if(mainProcess != null
+									&& childMainProcess != null
+									&& mainProcess.equals(childMainProcess)){
+								removeReference = false;
+							}
+						}
+						if(removeReference){
+							// referenced outside: we unset it
+							toCheck.eUnset(reference);
+							// must not be the main eobject
+							if (reference.isRequired() && !toCheck.equals(eObject)) {
+								// field is required: we remove it
+								EcoreUtil.remove(toCheck);
+								break;
+							}
 						}
 					}
 				}
