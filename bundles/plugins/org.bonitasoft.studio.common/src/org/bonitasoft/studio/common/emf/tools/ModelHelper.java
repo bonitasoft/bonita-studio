@@ -703,6 +703,13 @@ public class ModelHelper {
 		return datas;
 	}
 
+	/**
+	 * It searches inside the same Diagram
+	 * 
+	 * @param element
+	 * @param eventName
+	 * @return
+	 */
 	public static Message findEvent(Element element, String eventName) {
 		List<Message> events = new ArrayList<Message>();
 		findAllEvents(ModelHelper.getMainProcess(element), events);
