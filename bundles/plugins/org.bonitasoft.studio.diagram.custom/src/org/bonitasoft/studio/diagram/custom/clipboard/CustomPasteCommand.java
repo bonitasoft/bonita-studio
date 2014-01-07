@@ -324,7 +324,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 				AbstractProcess targetProcess = ModelHelper.getParentProcess(targetElement);
 				AbstractProcess sourceProcess = ModelHelper.getParentProcess(res);
 				if(targetProcess == null || !targetProcess.equals(sourceProcess)){
-					ModelHelper.removedReferencedEObjects(res);//REMOVE DANDLING REFS !
+					ModelHelper.removedReferencedEObjects(res,targetElement);//REMOVE DANDLING REFS !
 				}
 			}
 
@@ -350,7 +350,7 @@ public class CustomPasteCommand extends AbstractTransactionalCommand {
 			AbstractProcess targetProcess = ModelHelper.getParentProcess(targetElement);
 			AbstractProcess sourceProcess = ModelHelper.getParentProcess(form);
 			if(targetProcess == null || !targetProcess.equals(sourceProcess)){
-				ModelHelper.removedReferencedEObjects(form);
+				ModelHelper.removedReferencedEObjects(form,targetElement);
 			}
 			final Diagram diagram = ViewService.createDiagram(form, FormEditPart.MODEL_ID, FormDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
 			targetElement.eResource().getContents().add(diagram);
