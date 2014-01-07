@@ -278,7 +278,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 	 */
 	protected void createListOfValidators(Composite mainComposite) {
 		// ----------------left panel : tree + buttons
-		tableViewer = new TableViewer(mainComposite, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
+		tableViewer = new TableViewer(mainComposite, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
 		getWidgetFactory().adapt(tableViewer.getTable(), false, false);
 		GridData gridData = new GridData(SWT.CENTER, SWT.TOP, false, false);
 		gridData.widthHint = 300 ;
@@ -291,14 +291,10 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 
 			@Override
 			public void inputChanged(Viewer arg0, Object arg1, Object arg2) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void dispose() {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
