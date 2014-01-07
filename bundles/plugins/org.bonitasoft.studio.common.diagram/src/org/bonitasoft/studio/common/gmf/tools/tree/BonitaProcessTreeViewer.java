@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2011-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,8 +64,9 @@ public class BonitaProcessTreeViewer extends BonitaTreeViewer {
 		TreeItem[] ties = tree.getSelection();
 		List<Object> newSelection = new ArrayList<Object>() ;
 		for (int i = 0; i < ties.length; i++){
-			if(ties[i].getData() instanceof EObject){
-				EObject elem =	(EObject) ties[i].getData() ;
+			final Object tieData = ties[i].getData();
+			if(tieData instanceof EObject){
+				EObject elem =	(EObject) tieData ;
 				IGraphicalEditPart foundEp = findEditPartFor(elem);
 				if(foundEp!= null){
 					newSelection.add(foundEp);
@@ -81,7 +82,7 @@ public class BonitaProcessTreeViewer extends BonitaTreeViewer {
 				return;
 			}
 			editor.getDiagramGraphicalViewer().select(selectableEP) ;
-			BonitaProcessTreeSelectionProvider.getInstance().fireSelectionChanged(selectableEP,(EObject) ties[0].getData()) ;
+			BonitaProcessTreeSelectionProvider.getInstance().fireSelectionChanged(selectableEP,(EObject) tree.getSelection()[0].getData()) ;
 			scrollDiagram(selectableEP) ;
 		}
 

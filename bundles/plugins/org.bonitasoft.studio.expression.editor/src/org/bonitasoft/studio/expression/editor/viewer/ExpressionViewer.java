@@ -244,7 +244,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 		}
 	}
 
-	protected ToolItem createEditToolItem(ToolBar tb) {
+	protected ToolItem createEditToolItem(final ToolBar tb) {
 		final ToolItem editControl = new ToolItem(tb, SWT.PUSH | SWT.NO_FOCUS);
 		editControl.setImage(Pics.getImage(PicsConstants.edit));
 		editControl.setToolTipText(Messages.editAndContinue);
@@ -254,7 +254,19 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 		editControl.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				openEditDialog();
+				boolean connectorEdit = false;
+				if(tb != null && withConnector && selectedExpression != null && ExpressionConstants.CONNECTOR_TYPE.equals(selectedExpression.getType())){
+					for(ToolItem ti : tb.getItems()){
+						Object data = ti.getData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY);
+						if(data != null && data.equals(SWTBotConstants.SWTBOT_ID_CONNECTORBUTTON)){
+							connectorEdit = true;
+							ti.notifyListeners(SWT.Selection, event);
+						}
+					}
+				}
+				if(!connectorEdit){
+					openEditDialog();
+				}
 			}
 		});
 
@@ -283,7 +295,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 					type = ExpressionConstants.CONSTANT_TYPE;
 				}
 				if (editingDomain != null) {
-					
+
 					CompoundCommand cc=new CompoundCommand();
 					cc.append(SetCommand.create(editingDomain, selectedExpression,
 							ExpressionPackage.Literals.EXPRESSION__TYPE, type));
@@ -307,7 +319,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 					selectedExpression.getReferencedElements().clear();
 					selectedExpression.getConnectors().clear();
 				}
-				
+
 				textControl.setText("");
 				validate();
 				refresh();
@@ -393,7 +405,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 			updateSelection(newExpression);
 			setSelection(new StructuredSelection(selectedExpression));
 			if (editingDomain == null) {
-				
+
 				selectedExpression.setReturnType(newExpression.getReturnType());
 				selectedExpression.setType(newExpression.getType());
 			} else {
@@ -404,7 +416,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 						SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE,
 								newExpression.getType()));
 			}
-		
+
 			refresh();
 			fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression)));
 		}
@@ -924,7 +936,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 				}
 			}
 			refreshMessageDecoration();
-			
+
 		}
 
 	}
@@ -1246,7 +1258,7 @@ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContex
 			} catch (InterruptedException e) {
 				BonitaStudioLog.error(e);
 			}
-		
+
 		}
 		return isExecuted;
 	}

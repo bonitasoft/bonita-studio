@@ -1459,10 +1459,10 @@ public class BonitaToBPMN implements IBonitaTransformer {
 			CatchLinkEvent bonitaEvent = (CatchLinkEvent)child;
 			TIntermediateCatchEvent bpmnEvent = ModelFactory.eINSTANCE.createTIntermediateCatchEvent();
 			createTLinkEventDefinition(bonitaEvent, bpmnEvent);
-			final EList<ThrowLinkEvent> fromLinkEvent = bonitaEvent.getFrom();
-			for(ThrowLinkEvent from : fromLinkEvent){
-				bpmnEvent.getEventDefinitionRef().add(QName.valueOf(from.getName()));
-			}
+//			final EList<ThrowLinkEvent> fromLinkEvent = bonitaEvent.getFrom();
+//			for(ThrowLinkEvent from : fromLinkEvent){
+//				bpmnEvent.getEventDefinitionRef().add(QName.valueOf(ModelHelper.getEObjectID(from)));
+//			}
 			res = bpmnEvent;
 		} else if (child instanceof ThrowLinkEvent) {
 			ThrowLinkEvent bonitaEvent = (ThrowLinkEvent)child;
@@ -1471,9 +1471,9 @@ public class BonitaToBPMN implements IBonitaTransformer {
 			final CatchLinkEvent to = bonitaEvent.getTo();
 			if(to != null){
 				final String targetName = to.getName();
-				eventDef.setId(targetName);
+				eventDef.setId(EcoreUtil.generateUUID());
 				eventDef.setName(to.getName() != null ? to.getName() : targetName);
-				eventDef.setTarget(QName.valueOf(targetName));
+				eventDef.setTarget(QName.valueOf(ModelHelper.getEObjectID(to)));
 			} else {
 				eventDef.setId(EcoreUtil.generateUUID());
 			}
@@ -1621,7 +1621,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 		final EList<ThrowLinkEvent> fromLinkEvent = bonitaEvent.getFrom();
 		final EList<QName> sourceLink = eventDef.getSource();
 		for(ThrowLinkEvent from : fromLinkEvent){
-			sourceLink.add((QName.valueOf(from.getName())));
+			sourceLink.add((QName.valueOf(ModelHelper.getEObjectID(from))));
 		}
 		bpmnEvent.getEventDefinition().add(eventDef);
 		return eventDef;
@@ -1683,10 +1683,20 @@ public class BonitaToBPMN implements IBonitaTransformer {
 			TCallActivity tCallActivity = ModelFactory.eINSTANCE.createTCallActivity();
 			//TODO: construct calledElement ID
 			CallActivity cActivity = (CallActivity) child ;
-			if(cActivity.getCalledActivityName() != null
-					&& cActivity.getCalledActivityName().getType().equals(ExpressionConstants.CONSTANT_TYPE)
-					&& cActivity.getCalledActivityName().getContent() != null){
-				tCallActivity.setCalledElement(QName.valueOf(cActivity.getCalledActivityName().getContent()));
+			final Expression calledActivityName = cActivity.getCalledActivityName();
+			if(calledActivityName != null
+					&& ExpressionConstants.CONSTANT_TYPE.equals(calledActivityName.getType())
+					&& calledActivityName.getContent() != null){
+				final DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+				final Expression calledVersion = cActivity.getCalledActivityVersion();
+				String version = null ;
+				if(calledVersion != null && calledVersion.getContent() != null && !calledVersion.getContent().isEmpty()){
+					version = calledVersion.getContent();
+				}
+				final AbstractProcess calledProcess = ModelHelper.findProcess(calledActivityName.getContent(), version, diagramStore.getAllProcesses());
+				if(calledProcess != null){
+					tCallActivity.setCalledElement(QName.valueOf(ModelHelper.getEObjectID(calledProcess)));
+				}
 			}
 			//bpmnSubprocess.set
 			//errors.add(NLS.bind(Messages.subprocessReferenceLost, child.getName()));

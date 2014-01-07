@@ -112,12 +112,12 @@ public class PackageFileStore extends AbstractFileStore {
         	jarPackakeData.setCompress(true) ;
         	jarPackakeData.setElements(toExport.toArray(new Object[toExport.size()])) ;
         	jarPackakeData.setExportErrors(true) ;
+        	jarPackakeData.setExportWarnings(true);
         	jarPackakeData.setDeprecationAware(true) ;
         	jarPackakeData.setExportClassFiles(true) ;
         	jarPackakeData.setExportJavaFiles(includeSources) ;
         	jarPackakeData.setGenerateManifest(true) ;
         	jarPackakeData.setOverwrite(true) ;
-
         	final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null) ;
         	try {
         		runnable.run(Repository.NULL_PROGRESS_MONITOR) ;
@@ -126,6 +126,7 @@ public class PackageFileStore extends AbstractFileStore {
         	}
         
     }
+
 
     public IPackageFragment getPackageFragment() {
         IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;

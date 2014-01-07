@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.importer.bar.exception;
 
+import org.bonitasoft.studio.importer.bar.i18n.Messages;
+
 
 /**
  * @author Romain Bioteau
@@ -34,6 +36,6 @@ public class IncompatibleVersionException extends Exception {
 
     @Override
     public String getMessage() {
-        return "The source version of your process is "+sourceVersion+". Migration is supported for "+supportedVersion+" version.";
+        return Messages.bind(Messages.unsupportedVersionMessage, sourceVersion,supportedVersion);
     }
 }

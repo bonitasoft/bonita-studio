@@ -33,6 +33,7 @@ import org.bonitasoft.studio.model.form.AbstractTable;
 import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
+import org.bonitasoft.studio.properties.form.sections.actions.contributions.InitialValueExpressionFilter;
 import org.bonitasoft.studio.properties.form.sections.actions.contributions.OutputSectionContribution;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
@@ -91,6 +92,7 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
     private MagicComposite magicComposite;
     private Composite headersComposite;
     private Composite headersValueComposite;
+	private InitialValueExpressionFilter initialValueExpressionFilter;
 
 
     public AbstractTableDataPropertySection() {
@@ -102,6 +104,10 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
         disposeDataBinding();
         if (tableViewer != null) {
             final AbstractTable table = getEObject() ;
+            if(initialValueExpressionFilter != null){
+                initialValueExpressionFilter.setWidget(table);
+            }
+      
             if(expressionModeListener != null){
                 tableViewer.removeExpressionModeListener(expressionModeListener) ;
             }
@@ -173,7 +179,9 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
 
         tableViewer = new ExpressionCollectionViewer(mainComposite,0,false,2,false,null,widgetFactory,getEditingDomain(), true, false,true) ;
         tableViewer.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).span(2, 1).create()) ;
-
+        tableViewer.addFilter(getExpressionViewerFilter());
+        tableViewer.addFilter(getExpressionViewerFilter());
+        
         magicComposite = new MagicComposite(mainComposite, SWT.NONE) ;
         magicComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(2,1).create());
         magicComposite.setLayout(new GridLayout(1, false)) ;
@@ -250,6 +258,22 @@ public abstract class AbstractTableDataPropertySection extends AbstractBonitaDes
         rightHeaderButton = widgetFactory.createButton(tableVerticalHeadersComposite, "", SWT.TOGGLE);//$NON-NLS-1$
         rightHeaderButton.setImage(Pics.getImage(PicsConstants.headingRight));
     }
+    
+    protected AvailableExpressionTypeFilter getExpressionViewerFilter() {
+		if(initialValueExpressionFilter == null){
+			initialValueExpressionFilter = new InitialValueExpressionFilter(new String[]{
+					ExpressionConstants.VARIABLE_TYPE,
+					ExpressionConstants.SCRIPT_TYPE,
+					ExpressionConstants.CONSTANT_TYPE,
+					ExpressionConstants.PARAMETER_TYPE,
+					ExpressionConstants.SCRIPT_TYPE,
+					ExpressionConstants.DOCUMENT_TYPE,
+					ExpressionConstants.XPATH_TYPE,
+					ExpressionConstants.I18N_TYPE});
+			initialValueExpressionFilter.setWidget(getEObject());
+		}
+		return initialValueExpressionFilter;
+	}
 
     protected abstract boolean isOuputActivated();
 

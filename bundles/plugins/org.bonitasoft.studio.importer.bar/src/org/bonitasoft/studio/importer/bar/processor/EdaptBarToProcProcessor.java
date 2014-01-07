@@ -45,7 +45,6 @@ import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.ModelVersion;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -70,7 +69,6 @@ import org.bonitasoft.studio.migration.preferences.BarImporterPreferenceConstant
 import org.bonitasoft.studio.migration.ui.wizard.MigrationWarningWizard;
 import org.bonitasoft.studio.migration.utils.DeadlineMigrationStore;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
@@ -212,7 +210,6 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 			nextMigrator.migrateAndSave(
 					Collections.singletonList(resourceURI),getAlphaRelease(nextMigrator),
 					null, Repository.NULL_PROGRESS_MONITOR);
-			migrateConnectorErrorHandle(resourceURI,progressMonitor);
 			addMigrationReport(migrator,resourceURI,(String) sourceVersion,progressMonitor);
 			DeadlineMigrationStore.clearDeadlines();
 		}else{
@@ -223,42 +220,6 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 		return barProcFile;
 	}
 
-	private void migrateConnectorErrorHandle(URI resourceURI,
-			IProgressMonitor monitor) throws MigrationException {
-		final TransactionalEditingDomain editingDomain = GMFEditingDomainFactory.INSTANCE.createEditingDomain();
-		final Resource resource = editingDomain.getResourceSet().createResource(resourceURI);
-		try {
-			resource.load(Collections.EMPTY_MAP);
-			AbstractEMFOperation emfOperation = new AbstractEMFOperation(editingDomain, "Update report") {
-
-				@Override
-				protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info)
-						throws ExecutionException {
-					for(EObject root : resource.getContents()){
-						if(root instanceof MainProcess){
-							List<org.bonitasoft.studio.model.process.Connector> connectors =  ModelHelper.getAllItemsOfType(root, ProcessPackage.Literals.CONNECTOR);
-							for(org.bonitasoft.studio.model.process.Connector c :connectors){
-								c.setIgnoreErrors(!c.isIgnoreErrors());
-							}
-						}
-					}
-				
-					return Status.OK_STATUS;
-				}
-			};
-			IOperationHistory history = PlatformUI.getWorkbench().getOperationSupport().getOperationHistory();
-			try {
-				history.execute(emfOperation, monitor, null);
-			} catch (ExecutionException e) {
-				BonitaStudioLog.error(e);
-			}
-			resource.save(Collections.emptyMap());
-			resource.unload();
-			editingDomain.dispose();
-		} catch (IOException e) {
-			throw new MigrationException("Model could not be loaded", e);
-		}
-	}
 
 	private void importCustomConnectors(File archiveFile,IProgressMonitor progressMonitor) throws Exception {
 		connectorsJars.clear();
@@ -324,7 +285,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 	 * @throws FileNotFoundException
 	 */
 	protected URLClassLoader createBarClassloader(File archiveFile, File tmpConnectorJarFile) throws MalformedURLException,
-			ZipException, IOException, FileNotFoundException {
+	ZipException, IOException, FileNotFoundException {
 		List<URL> urls = new ArrayList<URL>();
 		urls.add(tmpConnectorJarFile.toURI().toURL());
 		Enumeration<URL> urlEnum = BarImporterPlugin.getDefault().getBundle().findEntries("lib/", "*.jar", true);
@@ -350,7 +311,7 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 			}
 		}
 		zipfile.close();
-		
+
 		final URLClassLoader customURLClassLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),getClass().getClassLoader());
 		return customURLClassLoader;
 	}
@@ -553,29 +514,39 @@ public class EdaptBarToProcProcessor extends ToProcProcessor {
 
 
 	private File getProcFormBar(File archiveFile) throws Exception {
-		final ZipInputStream zin = new ZipInputStream(new FileInputStream(archiveFile));
-		ZipEntry zipEntry = zin.getNextEntry();
-		while (zipEntry != null && !zipEntry.getName().endsWith(".proc")) {
-			zipEntry = zin.getNextEntry();
+		ZipInputStream zin = null;
+		FileOutputStream out = null;
+		try{
+			zin = new ZipInputStream(new FileInputStream(archiveFile));
+			ZipEntry zipEntry = zin.getNextEntry();
+			while (zipEntry != null && !zipEntry.getName().endsWith(".proc")) {
+				zipEntry = zin.getNextEntry();
+			}
+			if (zipEntry == null) {
+				throw new FileNotFoundException(Messages.bind(Messages.invalidArchiveStructure, archiveFile.getName()));
+			}
+			String entryName = zipEntry.getName();
+			if(entryName.indexOf("/") != -1){
+				entryName.substring(entryName.lastIndexOf("/"));
+			}
+			final File tempFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), entryName) ;
+			byte[] buf = new byte[1024];
+			tempFile.delete();
+			int len;
+			out = new FileOutputStream(tempFile);
+			while ((len = zin.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			return tempFile;
+		}finally{
+			if(zin != null){
+				zin.close();
+			}
+			if(out != null){
+				out.close();
+			}
 		}
-		if (zipEntry == null) {
-			throw new FileNotFoundException(Messages.bind(Messages.invalidArchiveStructure, archiveFile.getName()));
-		}
-		String entryName = zipEntry.getName();
-		if(entryName.indexOf("/") != -1){
-			entryName.substring(entryName.lastIndexOf("/"));
-		}
-		final File tempFile = new File(ProjectUtil.getBonitaStudioWorkFolder(), entryName) ;
-		byte[] buf = new byte[1024];
-		tempFile.delete();
-		int len;
-		FileOutputStream out = new FileOutputStream(tempFile);
-		while ((len = zin.read(buf)) > 0) {
-			out.write(buf, 0, len);
-		}
-		zin.close();
-		out.close();
-		return tempFile;
+
 	}
 
 	/* (non-Javadoc)
