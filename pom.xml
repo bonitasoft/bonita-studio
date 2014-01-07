@@ -17,7 +17,6 @@
 		<engine.version>6.2.2-SNAPSHOT</engine.version>
 		<connector.version>6.1.1</connector.version>
 		<simulation.version>6.1.0</simulation.version>
-zsh:1: command not found: q
 		<theme.builder.version>6.1.0</theme.builder.version>
 		<watchdog.version>6.0.1</watchdog.version>
 		<p2MirrorUrl>http://repositories.rd.lan/p2/6.2</p2MirrorUrl>
