@@ -222,8 +222,13 @@ public class TimerConditionWizardPage extends WizardPage {
 				stackLayout.topControl = calendarEditor;
 			}
 		}else if(condition.getReturnType().equals(String.class.getName())){
-			cycleButton.setSelection(true);
-			stackLayout.topControl = editor.getParent();
+			if(enableCycles){
+				cycleButton.setSelection(true);
+				stackLayout.topControl = editor.getParent();
+			}else{
+				fixedDateButton.setSelection(true);
+				stackLayout.topControl = calendarEditor;
+			}
 		}else if(condition.getReturnType().equals(Long.class.getName())){
 			durationButton.setSelection(true);
 			stackLayout.topControl = durationEditor;
