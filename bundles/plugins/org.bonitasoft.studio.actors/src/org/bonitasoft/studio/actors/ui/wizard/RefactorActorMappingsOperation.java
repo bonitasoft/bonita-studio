@@ -88,7 +88,7 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 		List<ActorMappingsType> actorMappings = getAllActorMappings(confStore, diagramStore);
 
 		// Matching model elements
-		MatchModel match = MatchService.doMatch(oldOrganization, newOrganization, Collections.<String, Object> emptyMap());
+		MatchModel match = MatchService.doMatch(newOrganization,oldOrganization, Collections.<String, Object> emptyMap());
 		// Computing differences
 		DiffModel diff = DiffService.doDiff(match, false);
 		// Merges all differences from model1 to model2
@@ -96,16 +96,25 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 		for(DiffElement difference : differences){
 			List<UpdateAttribute> updatedAttributes = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.UPDATE_ATTRIBUTE);
 			for(UpdateAttribute updatedAttribute : updatedAttributes){
+				EObject oldElement = updatedAttribute.getRightElement();
+				EObject newElement = updatedAttribute.getLeftElement();
 				if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.GROUP__NAME)){
-					refactorGroup((Group)updatedAttribute.getLeftElement(),(Group)updatedAttribute.getRightElement(),actorMappings);
-					refactorMembership((Group)updatedAttribute.getLeftElement(),(Group)updatedAttribute.getRightElement(),actorMappings);
+					refactorGroup((Group)oldElement,(Group)newElement,actorMappings);
+					refactorMembership((Group)oldElement,(Group)newElement,actorMappings);
 				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.ROLE__NAME)){
-					refactorRole((Role)updatedAttribute.getLeftElement(),(Role)updatedAttribute.getRightElement(),actorMappings);
-					refactorMembership((Role)updatedAttribute.getLeftElement(),(Role)updatedAttribute.getRightElement(),actorMappings);
+					refactorRole((Role)oldElement,(Role)newElement,actorMappings);
+					refactorMembership((Role)oldElement,(Role)newElement,actorMappings);
 				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.USER__USER_NAME)){
-					refactorUsername((User)updatedAttribute.getLeftElement(),(User)updatedAttribute.getRightElement(),actorMappings);
+					refactorUsername((User)oldElement,(User)newElement,actorMappings);
 				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__USER_NAME)){
-					refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership)updatedAttribute.getLeftElement(),(org.bonitasoft.studio.actors.model.organization.Membership)updatedAttribute.getRightElement(),actorMappings);
+					refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
+				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_NAME)){
+					refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
+				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.GROUP__PARENT_PATH)){
+					refactorGroup((Group)oldElement,(Group)newElement,actorMappings);
+					refactorMembership((Group)oldElement,(Group)newElement,actorMappings);
+				}else if(updatedAttribute.getAttribute().equals(OrganizationPackage.Literals.MEMBERSHIP__GROUP_PARENT_PATH)){
+					refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
 				}
 			}
 			List<ModelElementChangeLeftTarget> newElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET);
@@ -128,6 +137,7 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 				}
 				if(newEObject instanceof Membership && oldEObject instanceof Membership){
 					refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership)oldEObject,(org.bonitasoft.studio.actors.model.organization.Membership)newEObject,actorMappings);
+					refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldEObject,(org.bonitasoft.studio.actors.model.organization.Membership)newEObject,actorMappings);
 				}
 			}
 		}
@@ -229,6 +239,21 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 			}
 		}
 	}
+	
+	protected void refactorGroup(org.bonitasoft.studio.actors.model.organization.Membership oldMembership, org.bonitasoft.studio.actors.model.organization.Membership newMembership, List<ActorMappingsType> actorMappings) {
+		for(ActorMappingsType ac :actorMappings){
+			if(!ac.getActorMapping().isEmpty()){
+				Groups groups = ac.getActorMapping().get(0).getGroups();
+				if(groups != null){
+					if(groups.getGroup().remove(GroupContentProvider.getGroupPath(oldMembership.getGroupName(),oldMembership.getGroupParentPath()))){
+						groups.getGroup().add(GroupContentProvider.getGroupPath(newMembership.getGroupName(),newMembership.getGroupParentPath()));
+						saveChange(ac);
+					}
+				}
+			}
+		}
+	}
+
 
 	private void saveChange(ActorMappingsType ac) {
 		try {
