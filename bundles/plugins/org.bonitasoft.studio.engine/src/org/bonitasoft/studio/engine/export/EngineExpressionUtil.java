@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -273,6 +273,11 @@ public class EngineExpressionUtil {
 				expressions.add(createExpression);
 				expressionNames.append(createExpression.getName());
 				expressionNames.append(",");
+			} else {
+				final Expression nullExpression = createNullExpression();
+				expressions.add(nullExpression);
+				expressionNames.append(nullExpression.getName());
+				expressionNames.append(",");
 			}
 		}
 		expressionNames.append(").");
@@ -325,6 +330,22 @@ public class EngineExpressionUtil {
 			}
 		} else {
 			return null;
+		}
+	}
+
+	private static Expression createNullExpression() {
+		final ExpressionBuilder exp = new ExpressionBuilder();
+		exp.createNewInstance("ExpressionNotDefinedSetAsNull");
+		exp.setContent("null");
+		exp.setName("ExpressionNotDefinedSetAsNull");
+		exp.setExpressionType(ExpressionConstants.SCRIPT_TYPE);
+		exp.setInterpreter(ExpressionConstants.GROOVY);
+		exp.setReturnType(Object.class.getName());
+		try {
+			return exp.done();
+		} catch (final InvalidExpressionException e) {
+			BonitaStudioLog.error(e);
+			throw new RuntimeException(e);
 		}
 	}
 
