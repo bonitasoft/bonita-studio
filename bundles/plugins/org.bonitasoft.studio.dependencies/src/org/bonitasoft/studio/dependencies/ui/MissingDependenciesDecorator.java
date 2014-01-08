@@ -18,6 +18,7 @@ package org.bonitasoft.studio.dependencies.ui;
 
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
@@ -139,11 +140,19 @@ public class MissingDependenciesDecorator implements ILabelDecorator {
 	}
 
 	protected boolean isInRuntimeContainerWithAnotherVersion(String lib,Fragment fragment) {
+		DependencyFileStore fileStore = store.getChild(lib);
+		if(fileStore != null){
+			return fileStore.existsInRuntimeContainerWithAnotherVersion();
+		}
 		return false;
 	}
 
 	protected boolean isInRuntimeContainer(String lib, Fragment fragment) {
-		return true;
+		DependencyFileStore fileStore = store.getChild(lib);
+		if(fileStore != null){
+			return fileStore.existsInRuntimeContainer();
+		}
+		return false;
 	}
 
 	protected boolean isDependencyMissing(String libName, Fragment fragment) {
