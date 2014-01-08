@@ -87,7 +87,6 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		@Override
 		public boolean select(Viewer viewer, Object parentElement, Object element) {
 			if(element instanceof ConnectorDefinition){
-
 				final Resource eResource = ((ConnectorDefinition) element).eResource();
 				if(eResource != null){
 					IPath rootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
@@ -107,7 +106,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		this.definitions = definitions ;
 		checkOnlyCustom = true;
 	}
-	
+
 	public AbstractDefinitionSelectionImpementationWizardPage(List<ConnectorImplementation> existingImpl,List<ConnectorDefinition> definitions,String pageTitle,String pageDescription,DefinitionResourceProvider messageProvider) {
 		super(true,AbstractDefinitionSelectionImpementationWizardPage.class.getName());
 		setTitle(pageTitle);
@@ -218,7 +217,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 				}
 			}
 		});
-		
+
 		defIdStrategy = new UpdateValueStrategy() ;
 		defIdStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class){
 
@@ -263,7 +262,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
 		bindValue();
 		updateOnlyCustomCheckbox();
-		
+
 		setControl(mainComposite);
 	}
 
@@ -334,16 +333,16 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		explorer.getRightTableViewer().setInput(flattenTree);
 		return explorer;
 	}
-	
+
 	private void updateOnlyCustomCheckbox(){
-			final ITreeContentProvider customContentProvider = getCustomContentProvider();
-			final ITreeContentProvider contentProvider = getContentProvider();
+		final ITreeContentProvider customContentProvider = getCustomContentProvider();
+		final ITreeContentProvider contentProvider = getContentProvider();
 		if(onlyCustomCheckbox.getSelection()){
 			explorer.setContentProvider(customContentProvider);
 			explorer.addRightTreeFilter(customConnectorFilter);
 		}else{
 			explorer.setContentProvider(contentProvider);
-			explorer.removeTreeFilter(customConnectorFilter);
+			explorer.removeRightTreeFilter(customConnectorFilter);
 		}
 		explorer.setInput(new Object());
 		explorer.geLeftTreeViewer().setExpandedElements(new Object[]{AbstractUniqueDefinitionContentProvider.ROOT});
@@ -391,7 +390,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
-		
+
 	}
 
 	protected abstract ITreeContentProvider getCustomContentProvider();
@@ -401,7 +400,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 	public void setSelectedConnectorDefinition(ConnectorDefinition selectedDefinition){
 		this.selectedDefinition = selectedDefinition;
 	}
-	
+
 	public ConnectorDefinition getSelectedConnectorDefinition(){
 		return selectedDefinition;
 	}
