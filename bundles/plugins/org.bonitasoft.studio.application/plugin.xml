@@ -565,7 +565,6 @@
                   definitionId="isActiveEditorAnInstanceOfBonitaEditor">
             </reference>
          </enabledWhen>
-         <activeWhen></activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.application.actions.FindHandler"
