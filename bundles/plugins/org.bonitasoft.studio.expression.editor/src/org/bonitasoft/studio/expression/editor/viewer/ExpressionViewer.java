@@ -130,7 +130,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * 
  */
 public class ExpressionViewer extends ContentViewer implements ExpressionConstants, SWTBotConstants,
-IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
+ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
 
 	protected Composite control;
 	private Text textControl;

@@ -155,6 +155,9 @@ implements IExpressionEditor {
 		for (Expression e1 : expressions) {
 			input.add((Document) e1.getReferencedElements().get(0));
 		}
+		if(editorInputExpression.isReturnTypeFixed() && !editorInputExpression.getReturnType().equals(String.class.getName())){
+			input.clear();
+		}
 		viewer.setInput(input);
 	}
 
@@ -292,13 +295,11 @@ implements IExpressionEditor {
 
 	@Override
 	public boolean isPageFlowContext() {
-		
 		return isPageFlowContext;
 	}
 
 	@Override
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
-		
 	}
 }

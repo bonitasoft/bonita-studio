@@ -26,6 +26,8 @@ import org.bonitasoft.studio.common.gmf.tools.PaletteToolTransferDropTargetListe
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.SequenceFlow;
+import org.eclipse.core.commands.operations.IUndoableOperation;
+import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
@@ -48,6 +50,7 @@ import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest.ViewAndElementDescriptor;
@@ -203,7 +206,7 @@ public class BonitaUnspecifiedTypeCreationTool extends UnspecifiedTypeCreationTo
 		}
 
 	}
-	
+
 	protected Insets getInsetsFor(CreateUnspecifiedTypeRequest request) {
 		IElementType type = (IElementType) request.getElementTypes().get(0);
 		final String id = type.getId();
@@ -551,7 +554,7 @@ public class BonitaUnspecifiedTypeCreationTool extends UnspecifiedTypeCreationTo
 			}
 		}
 	}
-	
+
 	@Override
 	protected boolean handleDoubleClick(int button) {
 		return false;

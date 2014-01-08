@@ -1545,7 +1545,7 @@ public class ModelHelper {
 	 * 
 	 * @param widget
 	 */
-	public static void removedReferencedEObjects(EObject eObject) {
+	public static void removedReferencedEObjects(EObject eObject,EObject targetContainer) {
 
 		Set<EObject> containedEObjects = new HashSet<EObject>();
 		// get all contained EObjects
@@ -1558,7 +1558,7 @@ public class ModelHelper {
 					EObject child = (EObject) o;
 					//keep enum reference from the same diagram
 					if(child instanceof Data && ((Data) child).getDataType() instanceof EnumType){
-						MainProcess mainProcess = ModelHelper.getMainProcess(eObject);
+						MainProcess mainProcess = ModelHelper.getMainProcess(targetContainer);
 						MainProcess childMainProcess = ModelHelper.getMainProcess(child);
 						if(mainProcess != null
 								&& childMainProcess != null
@@ -1569,13 +1569,25 @@ public class ModelHelper {
 						}
 					}
 					if (!containedEObjects.contains(child)) {
-						// referenced outside: we unset it
-						toCheck.eUnset(reference);
-						// must not be the main eobject
-						if (reference.isRequired() && !toCheck.equals(eObject)) {
-							// field is required: we remove it
-							EcoreUtil.remove(toCheck);
-							break;
+						boolean removeReference = true;
+						if(child instanceof DataType){ //retrieve the equivalent Data Type in the target MainProcess
+							MainProcess mainProcess = ModelHelper.getMainProcess(targetContainer);
+							MainProcess childMainProcess = ModelHelper.getMainProcess(child);
+							if(mainProcess != null
+									&& childMainProcess != null
+									&& mainProcess.equals(childMainProcess)){
+								removeReference = false;
+							}
+						}
+						if(removeReference){
+							// referenced outside: we unset it
+							toCheck.eUnset(reference);
+							// must not be the main eobject
+							if (reference.isRequired() && !toCheck.equals(eObject)) {
+								// field is required: we remove it
+								EcoreUtil.remove(toCheck);
+								break;
+							}
 						}
 					}
 				}
