@@ -551,20 +551,21 @@
       <handler
             class="org.bonitasoft.studio.application.actions.UndoCommandHandler"
             commandId="org.eclipse.ui.edit.undo">
-         <activeWhen>
+         <enabledWhen>
             <reference
                   definitionId="isActiveEditorAnInstanceOfBonitaEditor">
             </reference>
-         </activeWhen>
+         </enabledWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.application.actions.RedoCommandHandler"
             commandId="org.eclipse.ui.edit.redo">
-         <activeWhen>
+         <enabledWhen>
             <reference
                   definitionId="isActiveEditorAnInstanceOfBonitaEditor">
             </reference>
-         </activeWhen>
+         </enabledWhen>
+         <activeWhen></activeWhen>
       </handler>
       <handler
             class="org.bonitasoft.studio.application.actions.FindHandler"
