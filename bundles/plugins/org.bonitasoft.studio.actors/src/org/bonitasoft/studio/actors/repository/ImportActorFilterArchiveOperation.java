@@ -41,19 +41,19 @@ public class ImportActorFilterArchiveOperation extends ImportConnectorArchiveOpe
     }
 
     @Override
-    protected IRepositoryStore getImplementationStore() {
+    protected IRepositoryStore<?> getImplementationStore() {
         return RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
     }
 
     @Override
-    protected IRepositoryStore getDefinitionStore() {
+    protected IRepositoryStore<?> getDefinitionStore() {
         return RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
     }
 
 
     @Override
-    protected SourceRepositoryStore getSourceStore() {
-        return (SourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
+    protected SourceRepositoryStore<?> getSourceStore() {
+        return (SourceRepositoryStore<?>) RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
     }
 
 }
