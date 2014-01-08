@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.common.jface;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -190,11 +191,17 @@ public class TreeExplorer extends Composite implements SWTBotConstants{
 	}
 
 	public void addRightTreeFilter(ViewerFilter filter){
-		rightTable.addFilter(filter);
+		if(!Arrays.asList(rightTable.getFilters()).contains(filter)){
+			rightTable.addFilter(filter);
+		}
 	}
 
-	public void removeTreeFilter(ViewerFilter filter) {
+	public void removeRightTreeFilter(ViewerFilter filter) {
 		rightTable.removeFilter(filter);
+	}
+	
+	public void removeLeftTreeFilter(ViewerFilter filter) {
+		leftTree.removeFilter(filter);
 	}
 
 	
