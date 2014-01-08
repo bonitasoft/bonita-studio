@@ -85,7 +85,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 							return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,typeLabelProvider.getText(dataExpression.getType()),operatorLabelProvider.getText(operation.getOperator())));
 						}
 						if(ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType())
-								&& dataExpression.getReferencedElements().get(0) instanceof BusinessObjectData){
+								&&  (!dataExpression.getReferencedElements().isEmpty() && dataExpression.getReferencedElements().get(0) instanceof BusinessObjectData)){
 							return ValidationStatus.error(Messages.bind(Messages.businessDataNotCompatibleForOperator,operatorLabelProvider.getText(operation.getOperator())));
 						}
 					}
