@@ -308,7 +308,6 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
     		observeActorsNameList.removeChangeListener(actorListener);
     		observeActorsList.dispose();
     	} 
-    	AbstractProcess process = (AbstractProcess) getEObject() ;
 		IEMFEditListProperty list = EMFEditProperties.list(getEditingDomain(), getActorFeature());
 		observeActorsList = list.observe(getEObject());
 		observeActorsNameList = list.values(ProcessPackage.Literals.ELEMENT__NAME).observe(getEObject());

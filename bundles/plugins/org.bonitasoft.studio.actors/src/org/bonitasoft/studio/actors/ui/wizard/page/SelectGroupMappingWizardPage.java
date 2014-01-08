@@ -130,7 +130,7 @@ public class SelectGroupMappingWizardPage extends SelectOrganizationWizardPage {
 	private boolean groupSelectionIsValid(IObservableSet checkedElementsObservable) {
 		List<Object> list1 = new ArrayList<Object>();
 		List<Object> list2 = new ArrayList<Object>();
-		Iterator<Object> it = checkedElementsObservable.iterator();
+		Iterator<?> it = checkedElementsObservable.iterator();
 		while(it.hasNext()){
 			Object obj = it.next();
 			list1.add(obj);

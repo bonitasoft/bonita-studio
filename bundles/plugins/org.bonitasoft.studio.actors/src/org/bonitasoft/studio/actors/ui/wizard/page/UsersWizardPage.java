@@ -99,7 +99,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 
 	private static final String DEFAULT_USER_PASSWORD = "bpm";
-	private static final int TABFOLDER_HEIGHT = 240;
 	private static final int MIN_SC_WIDTH = 426;
 	private static final int MIN_SC_HEIGHT = 268;
 	private Text usernameText;
