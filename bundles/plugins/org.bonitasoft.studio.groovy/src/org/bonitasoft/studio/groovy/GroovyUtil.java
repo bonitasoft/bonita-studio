@@ -25,8 +25,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.bonitasoft.engine.expression.ExpressionConstants;
+import org.bonitasoft.forms.server.api.IFormExpressionsAPI;
 import org.bonitasoft.forms.server.validator.AbstractFormValidator;
-import org.bonitasoft.forms.server.api.*;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.exporter.ExporterTools;
@@ -56,7 +56,6 @@ import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.PageFlow;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.RecapFlow;
 import org.bonitasoft.studio.model.process.SequenceFlow;
