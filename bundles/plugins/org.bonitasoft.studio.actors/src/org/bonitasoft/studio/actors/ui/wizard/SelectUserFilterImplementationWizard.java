@@ -45,12 +45,12 @@ public class SelectUserFilterImplementationWizard extends AbstractSelectImplemen
     }
 
     @Override
-    protected SourceRepositoryStore getSourceStore() {
-        return (SourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
+    protected SourceRepositoryStore<?> getSourceStore() {
+        return (SourceRepositoryStore<?>) RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
     }
 
     @Override
-    protected IRepositoryStore getImplementationStore() {
+    protected IRepositoryStore<?> getImplementationStore() {
         return  RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
     }
 

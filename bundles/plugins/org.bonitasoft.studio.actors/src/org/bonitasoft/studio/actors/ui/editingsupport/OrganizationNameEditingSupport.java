@@ -59,7 +59,7 @@ public class OrganizationNameEditingSupport extends EditingSupport {
 				if(input == null || input.toString().isEmpty()){
 					return Messages.nameIsEmpty ;
 				}
-				IRepositoryStore store = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
+				IRepositoryStore<?> store = RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class) ;
 				if(store.getChild(input.toString()+"."+OrganizationRepositoryStore.ORGANIZATION_EXT) != null){
 					return Messages.nameAlreadyExists ;
 				}

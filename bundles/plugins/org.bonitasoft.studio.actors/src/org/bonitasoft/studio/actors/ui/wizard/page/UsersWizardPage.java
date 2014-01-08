@@ -41,7 +41,6 @@ import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.jface.databinding.WizardPageSupportWithoutMessages;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -99,7 +98,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 
 	private static final String DEFAULT_USER_PASSWORD = "bpm";
-	private static final int TABFOLDER_HEIGHT = 240;
 	private static final int MIN_SC_WIDTH = 426;
 	private static final int MIN_SC_HEIGHT = 268;
 	private Text usernameText;
@@ -261,7 +259,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 				@Override
 				public void handleValueChange(ValueChangeEvent event) {
 					User user = (User) ((EObjectObservableValue)event.getObservable()).getObserved();
-					String oldUserValue = event.diff.getOldValue().toString();
 					for(Membership m : userMemberShips){
 						m.setUserName(user.getUserName()) ;
 					}
