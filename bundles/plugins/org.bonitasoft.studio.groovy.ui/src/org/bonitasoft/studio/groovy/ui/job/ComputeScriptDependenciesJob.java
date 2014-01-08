@@ -95,7 +95,7 @@ public class ComputeScriptDependenciesJob extends Job {
 			for(IExpressionProvider provider : ExpressionEditorService.getInstance().getExpressionProviders()){
 				if(provider.isRelevantFor(context)){
 					for(Expression exp : provider.getExpressions(context)){
-						if(exp.getName().equals(name)){
+						if(exp.getName().equals(name) && !exp.getReferencedElements().isEmpty()){
 							deps.add(EcoreUtil.copy(exp.getReferencedElements().get(0)));
 							continue variablesloop;
 						}
