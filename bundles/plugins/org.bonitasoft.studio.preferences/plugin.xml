@@ -51,6 +51,15 @@
                id="org.bonitasoft.studio.preferences.keyword.run">
          </keywordReference>
       </page>
+      <page
+            category="org.eclipse.ui.preferencePages.Workbench"
+            class="org.bonitasoft.studio.preferences.pages.CustomProxyPreferencePage"
+            id="org.eclipse.ui.net.custom.NetPreferences"
+            name="Network Connections">
+         <keywordReference
+               id="org.eclipse.ui.net.proxy">
+         </keywordReference>
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">
