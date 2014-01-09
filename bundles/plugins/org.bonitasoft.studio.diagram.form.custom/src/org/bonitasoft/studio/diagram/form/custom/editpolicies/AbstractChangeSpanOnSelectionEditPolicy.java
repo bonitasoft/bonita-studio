@@ -175,10 +175,9 @@ public abstract class AbstractChangeSpanOnSelectionEditPolicy extends SelectionE
 			WidgetLayoutInfo wLInfo = w.getWidgetLayoutInfo();
 			for (int i = 0; i < wLInfo.getHorizontalSpan(); i++) {
 				for (int j = 0; j < wLInfo.getVerticalSpan(); j++) {
-					//avoid IndexOutOfBoundException
 					int columnIndex = wLInfo.getColumn() + i;
 					int lineIndex = wLInfo.getLine() + j;
-					if(map.indexOf(columnIndex) != -1 && map.get(columnIndex).size() > lineIndex)
+					if(map.size() > columnIndex && map.get(columnIndex).size() > lineIndex)
 						map.get(columnIndex).set(lineIndex, Boolean.TRUE);
 				}
 			}
