@@ -41,6 +41,9 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
 
 
     private OperationsComposite lineComposite;
+   
+    
+   
 
 
 	@Override
@@ -60,8 +63,10 @@ public class ConnectorOutputWizardPage extends AbstractConnectorOutputWizardPage
                 ExpressionConstants.DOCUMENT_TYPE
         }) ;
         CLabel warningLabel = new CLabel(mainComposite, SWT.NONE) ;
-        warningLabel.setText(Messages.transientDataWarning);
-		warningLabel.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
+        if (!isPageFlowContext()){
+        	warningLabel.setText(Messages.transientDataWarning);
+        	warningLabel.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
+        }
         lineComposite = new WizardPageOperationsComposite(null, mainComposite, rightFilter, leftFilter,isPageFlowContext()) ;
         lineComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).create()) ;
         IExpressionNatureProvider storageExpressionProvider = getStorageExpressionProvider();

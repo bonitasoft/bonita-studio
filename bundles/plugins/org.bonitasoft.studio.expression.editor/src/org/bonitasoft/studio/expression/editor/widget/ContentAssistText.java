@@ -19,6 +19,7 @@ package org.bonitasoft.studio.expression.editor.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
 import org.bonitasoft.studio.expression.editor.autocompletion.IBonitaContentProposalListener2;
@@ -209,5 +210,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	public void addContentAssistListener(IBonitaContentProposalListener2 listener) {
 		contentAssistListerners.add(listener);
 	}
+
+	
 
 }

@@ -31,6 +31,9 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ProposalListener implements IProposalListener {
 
+	private boolean isPageFlowContext=false;
+	private EStructuralFeature feature;
+
 	public ProposalListener() {
 	}
 
@@ -40,11 +43,13 @@ public class ProposalListener implements IProposalListener {
 		while (!(context instanceof AbstractProcess || context instanceof Activity))  {
 			context = context.eContainer();
 		}
-		EStructuralFeature feat = ProcessPackage.Literals.DATA_AWARE__DATA;
+		if (feature == null){
+			feature = ProcessPackage.Literals.DATA_AWARE__DATA;
+		} 
 		Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
-		res.add(ProcessPackage.Literals.DATA_AWARE__DATA);
-		
-		final DataWizard newWizard = new DataWizard(context, feat, res, true, fixedReturnType);
+		res.add(feature);
+		final DataWizard newWizard = new DataWizard(context, feature, res, true, fixedReturnType);
+		newWizard.setIsPageFlowContext(isPageFlowContext);
 		final DataWizardDialog wizardDialog = new DataWizardDialog(Display
 				.getCurrent().getActiveShell().getParent().getShell(),
 				newWizard, null);
@@ -60,6 +65,32 @@ public class ProposalListener implements IProposalListener {
 	
 		return null;
 
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#isPageFlowContext()
+	 */
+	@Override
+	public boolean isPageFlowContext() {
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.IBonitaVariableContext#setIsPageFlowContext(boolean)
+	 */
+	@Override
+	public void setIsPageFlowContext(boolean isPageFlowContext) {
+		this.isPageFlowContext=isPageFlowContext;
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.expression.editor.provider.IProposalListener#setEStructuralFeature(org.eclipse.emf.ecore.EStructuralFeature)
+	 */
+	@Override
+	public void setEStructuralFeature(EStructuralFeature feature) {
+		this.feature = feature;
+		
 	}
 
 }

@@ -53,6 +53,8 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  *
  */
 public class ReadOnlyExpressionViewer extends ExpressionViewer {
+	
+
 
 	public ReadOnlyExpressionViewer(Composite composite, int style,
 			TabbedPropertySheetWidgetFactory widgetFactory,
