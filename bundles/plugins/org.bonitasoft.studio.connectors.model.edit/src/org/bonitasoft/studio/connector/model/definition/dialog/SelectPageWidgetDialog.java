@@ -991,4 +991,4 @@ public class SelectPageWidgetDialog extends Dialog {
         this.description = description;
     }
 }
->>>>>>> fdfe551 BS-2897 Add error message decorators
+
