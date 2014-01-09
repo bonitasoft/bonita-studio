@@ -84,7 +84,7 @@ public class BonitaPreferenceDialog extends Dialog {
     public static final String DB_CONNECTORS_PAGE_ID = "org.bonitasoft.studio.preferences.dbconnectors";//$NON-NLS-1$
     public static final String REMOTE_ENGINE_PAGE_ID = "org.bonitasoft.studio.preferences.remoteEngine"; //$NON-NLS-1$
     public static final String WEB_BROWSER_PAGE_ID = "org.eclipse.ui.browser.preferencePage"; //$NON-NLS-1$
-    public static final String PROXY_PAGE_ID = "org.eclipse.ui.net.NetPreferences"; //$NON-NLS-1$
+    public static final String PROXY_PAGE_ID = "org.eclipse.ui.net.custom.NetPreferences"; //$NON-NLS-1$
     public static final String ADVANCED_PAGE_ID = "org.bonitasoft.studio.preferences.advanced"; //$NON-NLS-1$
     public static final String USER_PROFILE_PAGE_ID = "org.bonitasoft.studio.preferences.profiles"; //$NON-NLS-1$;
     public static final String ECLIPSE_PAGE_ID = "eclipse.page"; //$NON-NLS-1$;
