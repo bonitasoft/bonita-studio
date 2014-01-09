@@ -58,6 +58,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -160,7 +161,7 @@ public class SelectPageWidgetDialog extends Dialog {
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).hint(400, SWT.DEFAULT).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2)
-                .margins(15, 10).create());
+                .margins(15, 10).spacing(15, 5).create());
 
         context = new DataBindingContext();
         if (component == null) {
@@ -338,12 +339,12 @@ public class SelectPageWidgetDialog extends Dialog {
             });
 
 
-            context.bindValue(inputSelectionObservable,
+            ControlDecorationSupport.create(context.bindValue(inputSelectionObservable,
                     EMFObservables
                     .observeValue(
                             component,
                             ConnectorDefinitionPackage.Literals.WIDGET_COMPONENT__INPUT_NAME),
-                            targetToModel, modelToTarget);
+                            targetToModel, modelToTarget),SWT.LEFT);
         }
     }
 
@@ -378,10 +379,10 @@ public class SelectPageWidgetDialog extends Dialog {
         }
 
         context.removeBinding(toRemove);
-        context.bindValue(idTextObservable,
+        ControlDecorationSupport.create(context.bindValue(idTextObservable,
                 EMFObservables.observeValue(component,
                         ConnectorDefinitionPackage.Literals.COMPONENT__ID),
-                        idStrategy, null);
+                        idStrategy, null),SWT.LEFT);
     }
 
     @Override
@@ -990,3 +991,4 @@ public class SelectPageWidgetDialog extends Dialog {
         this.description = description;
     }
 }
+>>>>>>> fdfe551 BS-2897 Add error message decorators
