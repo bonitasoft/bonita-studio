@@ -1,3 +1,5 @@
+
+
 /**
  * 
  */
@@ -5,6 +7,7 @@ package org.bonitasoft.studio.expression.editor.autocompletion;
 
 import java.util.ArrayList;
 
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.expression.editor.provider.ExpressionLabelProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.ecore.EObject;
@@ -13,7 +16,7 @@ import org.eclipse.jface.fieldassist.IContentProposalListener;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
 import org.eclipse.swt.widgets.Control;
 
-public class AutoCompletionField {
+public class AutoCompletionField  {
 
 	private final ExpressionProposalProvider contentProposalProvider;
 	private final BonitaContentProposalAdapter contentProposalAdapter;
