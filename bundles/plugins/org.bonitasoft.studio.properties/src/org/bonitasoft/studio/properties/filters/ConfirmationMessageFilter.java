@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.properties.filters;
 
+import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -35,6 +36,9 @@ public class ConfirmationMessageFilter implements IFilter {
             Object model = editPart.resolveSemanticElement();
             if(model instanceof MainProcess) {
                 return false ;
+            }
+            if(model instanceof Lane){
+            	model = ((Lane) model).eContainer();
             }
             return model instanceof PageFlow ;
         }
