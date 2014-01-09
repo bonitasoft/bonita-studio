@@ -88,7 +88,6 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation  {
 					//update name and content
 					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME,"field_"+newName));
 					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, "field_"+newName));
-					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE  , widget.getAssociatedReturnType()));
 					cc.append(RemoveCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS  , exp.getReferencedElements()));
 					cc.append(AddCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,EcoreUtil.copy(widgetCopy)));
 				}
