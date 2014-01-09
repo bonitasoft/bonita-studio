@@ -19,7 +19,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -73,13 +72,12 @@ import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.Task;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.bonitasoft.studio.model.process.XMLType;
-import org.bonitasoft.studio.model.process.impl.DataTypeImpl;
-import org.bonitasoft.studio.model.process.impl.StringTypeImpl;
 import org.bonitasoft.studio.model.process.util.ProcessSwitch;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.xml.repository.XSDFileStore;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -256,7 +254,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 		this.showAutoGenerateform = showAutoGenerateform;
 		this.fixedReturnType = fixedReturnType;
 	}
-	
+
 	private String getCurrentDataAwareContextName(){
 		String name = "---";
 		EObject context = container;
@@ -349,7 +347,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 		createDataOptions(mainComposite);
 
 		updateDatabinding();
-		
+
 		if(fixedReturnType!=null){
 			for (Object object : (EObjectContainmentEList)typeCombo.getInput()) {
 				final DataType type = (DataType) object;
@@ -362,7 +360,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 				}
 			}			
 		} else {
-			
+
 		}
 		setControl(mainComposite);
 	}
@@ -388,7 +386,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 				emfDatabindingContext.dispose();
 			}
 			emfDatabindingContext = new EMFDataBindingContext();
-
+			pageSupport = WizardPageSupport.create(this, emfDatabindingContext);
 			bindNameAndDescription();
 			bindGenerateDataCheckbox();
 			bindDataTypeCombo();
@@ -397,7 +395,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 			bindTransientButton();
 			bindDefaultValueViewer();
 			bindIsMultipleData();
-			
+
 			typeDescriptionDecorator.setDescriptionText(getHintFor(data.getDataType()));
 
 			MultiValidator returnTypeValidator = new MultiValidator() {
@@ -487,7 +485,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 				}
 			};
 			emfDatabindingContext.addValidationStatusProvider(returnTypeValidator);
-			pageSupport = WizardPageSupport.create(this, emfDatabindingContext);
+			
 		}
 	}
 
@@ -558,9 +556,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 				/* Search above level */
 				List<Data> allData = null;
 				if( container instanceof AbstractProcess){
-					 allData = ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(container), ProcessPackage.Literals.DATA);
+					allData = ModelHelper.getAllItemsOfType(ModelHelper.getParentProcess(container), ProcessPackage.Literals.DATA);
 				}else{
-				//	 allData = ModelHelper.getAccessibleData(container, true);
+					//	 allData = ModelHelper.getAccessibleData(container, true);
 					allData = getAllAccessibleDatas(container);
 				}
 				for (final Data object : allData) {
@@ -575,7 +573,7 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
 				return new GroovyReferenceValidator(Messages.name).validate(value);
 			}
-			
+
 			private List<Data> getAllAccessibleDatas(EObject container){
 				List<Data> allDatas = ModelHelper.getAccessibleData(container, true);
 				for (Object o:ModelHelper.getAllItemsOfType(container, ProcessPackage.Literals.DATA)){
@@ -585,21 +583,29 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 						}
 					}
 				}
-				
+
 				return allDatas;
 			}
 		});
 
-	
+
 
 		UpdateValueStrategy descTargetToModel = new UpdateValueStrategy();
 		descTargetToModel.setAfterGetValidator(new InputLengthValidator(Messages.dataDescriptionLabel, 255));
-		emfDatabindingContext.bindValue(SWTObservables.observeText(nameText, SWT.Modify),
+		String previousName = null;
+		if(nameText != null && !nameText.isDisposed() && nameText.getText() != null){
+			previousName = nameText.getText();
+		}
+		ISWTObservableValue observeText = SWTObservables.observeText(nameText, SWT.Modify);
+		Binding bindValue = emfDatabindingContext.bindValue(observeText,
 				EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__NAME), nameStrategy, null);
 		emfDatabindingContext.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify),
 				EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),
 				descTargetToModel,
 				null);
+		if(previousName!= null){
+			observeText.setValue(previousName);
+		}
 	}
 
 	protected void bindDataTypeCombo() {
@@ -830,9 +836,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 			}
 		});
 
-		
+
 		refreshDataNames();
-		
+
 		defaultValueViewer.addFilter(new AvailableExpressionTypeFilter(new String[] {ExpressionConstants.VARIABLE_TYPE,ExpressionConstants.CONSTANT_TYPE, ExpressionConstants.SCRIPT_TYPE,
 				ExpressionConstants.PARAMETER_TYPE }){
 			@Override
@@ -1275,25 +1281,25 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 
 	@Override
 	public boolean isPageFlowContext() {
-		
+
 		return isPageFlowContext;
 	}
 
 	@Override
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
-		
+
 	}
-	
+
 	public void refreshDataNames(){
 		if(!(container instanceof AbstractProcess)){
 			List<Data> availableData = ModelHelper.getAccessibleData(ModelHelper.getParentProcess(container));
 			if(isPageFlowContext && container instanceof Task){
 				availableData.addAll(((Task)container).getData());
 			}
-				for(Data d : availableData){
-					availableDataNames.add(d.getName());
-				}
+			for(Data d : availableData){
+				availableDataNames.add(d.getName());
+			}
 		}
 	}
 }
