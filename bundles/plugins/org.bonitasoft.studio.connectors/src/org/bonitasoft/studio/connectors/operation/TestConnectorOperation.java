@@ -167,7 +167,7 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 			configuration.setName("TestConnectorConfiguration");
 			new ConfigurationSynchronizer(proc, configuration).synchronize();
 			configureProcess(configuration,implementation);
-			final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,configuration,Collections.EMPTY_SET);
+			final BusinessArchive businessArchive = BarExporter.getInstance().createBusinessArchive(proc,configuration,Collections.<EObject>emptySet());
 
 			undeployProcess(proc, processApi);
 			ProcessDefinition def = processApi.deploy(businessArchive);
@@ -324,12 +324,11 @@ public class TestConnectorOperation implements IRunnableWithProgress {
 		Expression exp =  EngineExpressionUtil.createExpression(expression) ;
 		if(exp != null){
 			inputParameters.put(inputName,exp) ;
-			inputValues.put(inputName,Collections.EMPTY_MAP);
+			inputValues.put(inputName,Collections.<String,Serializable>emptyMap());
 		}
 	}
 
 	protected void addOutput(Operation operation, int cpt){
-		org.bonitasoft.studio.model.expression.Expression exp = operation.getRightOperand();
 		Operation operationCopy = EcoreUtil.copy(operation);
 		operationCopy.getLeftOperand().setType(ExpressionConstants.VARIABLE_TYPE);
 		operationCopy.getLeftOperand().setReturnType(operation.getRightOperand().getReturnType());

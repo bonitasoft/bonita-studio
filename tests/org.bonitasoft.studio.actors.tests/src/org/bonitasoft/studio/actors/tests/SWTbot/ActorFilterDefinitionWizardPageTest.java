@@ -59,6 +59,8 @@ public class ActorFilterDefinitionWizardPageTest extends SWTBotGefTestCase {
 		SWTBotTable table = bot.table();
 		bot.button("Add...").click();
 		bot.button("Add...").click();
+		bot.button("Add...").click();
+		bot.button("Add...").click();
 		table.click(1, 2);
 		bot.ccomboBox().setSelection(packageLang + "Boolean");
 		key.pressShortcut(Keystrokes.CR);
@@ -104,11 +106,12 @@ public class ActorFilterDefinitionWizardPageTest extends SWTBotGefTestCase {
 		assertTrue("button Apply should be disabled", bot.button("Apply")
 				.isEnabled());
 		createWidget(widgetId0, "Text", 0);
-		createWidget(widgetId1, "Password", 0);
-		createWidget(widgetId2, "Checkbox", 1);
-		createWidget(widgetId3, "Select", 2);
-		createWidget(widgetId4, "Radio group", 1);
-		createWidget(widgetId5, "Group", 5);
+		createWidget(widgetId1, "Password", 1);
+		createWidget(widgetId2, "Checkbox", 3);
+		createWidget(widgetId3, "Select", 4);
+		createWidget(widgetId4, "Radio group", 5);
+		createWidget(widgetId5, "Group", 7);
+
 		bot.button("Apply").click();
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)));
 		bot.button(IDialogConstants.FINISH_LABEL).click();
