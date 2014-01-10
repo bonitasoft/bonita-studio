@@ -40,6 +40,7 @@ import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.RadioGroup;
 import org.bonitasoft.studio.connector.model.definition.ScriptEditor;
 import org.bonitasoft.studio.connector.model.definition.Select;
+import org.bonitasoft.studio.connector.model.definition.Widget;
 import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.definition.dialog.suport.CaptionEditingSupport;
 import org.bonitasoft.studio.connector.model.definition.dialog.suport.RadioGroupItemEditingSupport;
@@ -104,12 +105,14 @@ public class SelectPageWidgetDialog extends Dialog {
 
     private Section section;
     private final Set<String> existingWidgetIds;
+	private Set<String> alreadyBoundInputs;
     private static List<EClass> widgetTypes;
     private List<Orientation> orientations;
     private final List<Input> inputs = new ArrayList<Input>();
     private DialogSupport dialogSupport;
     private ISWTObservableValue idTextObservable;
     private IViewerObservableValue inputSelectionObservable;
+
     static {
         widgetTypes = new ArrayList<EClass>();
         widgetTypes.add(ConnectorDefinitionPackage.Literals.TEXT);
@@ -141,6 +144,16 @@ public class SelectPageWidgetDialog extends Dialog {
         }
         if(original != null && original.getId() != null){
             existingWidgetIds.remove(original.getId().toLowerCase());
+        }
+        alreadyBoundInputs = new HashSet<String>();
+        for (Component c : allComponents) {
+        	if(c instanceof WidgetComponent){
+        		alreadyBoundInputs.add(((Widget)c).getInputName());
+        	}
+        	
+        }
+        if(original != null && original instanceof WidgetComponent && ((WidgetComponent) original).getInputName() != null){
+        	alreadyBoundInputs.remove(((WidgetComponent) original).getInputName());
         }
         orientations = new ArrayList<Orientation>();
         orientations.add(Orientation.HORIZONTAL);
@@ -319,6 +332,9 @@ public class SelectPageWidgetDialog extends Dialog {
                     }
                     if (value == null || value.toString().isEmpty()) {
                         return ValidationStatus.error(Messages.inputIsEmpty);
+                    }
+                    if(alreadyBoundInputs.contains(value.toString())){
+                    	return ValidationStatus.error(Messages.inputAlreadyUseInAnotherWidget);
                     }
                     return Status.OK_STATUS;
                 }
