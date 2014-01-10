@@ -110,6 +110,7 @@ public class Repository implements IRepository {
 	private String name;
 	private IProject project;
 	private SortedMap<Class<?>, IRepositoryStore<? extends IRepositoryFileStore>> stores;
+	private IProgressMonitor monitor;
 
 	public Repository() {}
 
@@ -242,7 +243,9 @@ public class Repository implements IRepository {
 	protected IRepositoryStore<? extends IRepositoryFileStore> createRepositoryStore(
 			IConfigurationElement configuration) throws CoreException {
 		final IRepositoryStore<? extends IRepositoryFileStore> store = (IRepositoryStore<?>) configuration.createExecutableExtension(CLASS) ;
+		monitorSubtask(Messages.bind(Messages.creatingStore,store.getDisplayName()));
 		store.createRepositoryStore(this) ;
+		monitorWorked(1);
 		return store;
 	}
 
@@ -281,12 +284,14 @@ public class Repository implements IRepository {
 	}
 
 	protected void createJavaProject(IProject project) {
+		monitorSubtask(Messages.initializingJavaProject);
 		final IJavaProject javaProject = JavaCore.create(project);
 		javaProject.setOption(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
 		javaProject.setOption(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
 		javaProject.setOption(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
 		javaProject.setOption(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH, "ignore");
 		CompilerUtils.setCompilerLevel(project,SpecifiedVersion._18);
+		monitorWorked(1);
 	}
 
 	protected void createProjectDescriptor(IProject project) throws CoreException {
@@ -359,6 +364,7 @@ public class Repository implements IRepository {
 	}
 
 	protected void initClasspath(IProject extensionsProject) throws Exception {
+		monitorSubtask(Messages.initializingProjectClasspath);
 		createProjectManifest(extensionsProject);
 
 		final IJavaProject javaProject = getJavaProject();
@@ -366,6 +372,7 @@ public class Repository implements IRepository {
 
 		addSpecificEntriesForDevMode(entries);
 		javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]),true,Repository.NULL_PROGRESS_MONITOR);
+		monitorWorked(1);
 	}
 
 	protected void addSpecificEntriesForDevMode(final List<IClasspathEntry> entries) throws IOException, MalformedURLException {
@@ -750,6 +757,22 @@ public class Repository implements IRepository {
 			store.migrate();
 		}
 		project.getDescription().setComment(ProductVersion.CURRENT_VERSION) ;
+	}
+	
+	public void setProgressMonitor(IProgressMonitor monitor){
+		this.monitor = monitor;
+	}
+	
+	protected void monitorWorked(int work){
+		if(monitor != null){
+			monitor.worked(work);
+		}
+	}
+	
+	protected void monitorSubtask(String subtask){
+		if(monitor != null && subtask != null){
+			monitor.subTask(subtask);
+		}
 	}
 
 }
