@@ -33,7 +33,7 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
 		super() ;
 		this.targetPath = targetPath ;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.application.advisor.InstallerApplicationWorkbenchAdvisor#preStartup()
 	 */
@@ -51,7 +51,7 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
 			MessageDialog.openError(Display.getCurrent().getActiveShell(),Messages.invalidWorkspaceTitle, Messages.invalidWorkspace);
 			PlatformUI.getWorkbench().close() ; 
 		}
-		
+
 	}
 
 
@@ -62,20 +62,15 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
 	protected void executePostStartupHandler() {
 		for(IRepository repo : RepositoryManager.getInstance().getAllRepositories()){
 			if(!repo.isShared()){
-				boolean hasBeenOpened = false;
-				if(!repo.getProject().isOpen()){
-					repo.open();
-					hasBeenOpened = true;
-				}
+				RepositoryManager.getInstance().setRepository(repo.getName());
 				repo.exportToArchive(targetPath+File.separatorChar+repo.getName()+".bos") ;
-				if(hasBeenOpened){
-					repo.close();
-				}
+				RepositoryManager.getInstance().getCurrentRepository().close();
 			}
 		}
+		RepositoryManager.getInstance().setRepository("default");
 		PlatformUI.getWorkbench().close() ; //close application
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.application.advisor.InstallerApplicationWorkbenchAdvisor#postStartup()
 	 */
