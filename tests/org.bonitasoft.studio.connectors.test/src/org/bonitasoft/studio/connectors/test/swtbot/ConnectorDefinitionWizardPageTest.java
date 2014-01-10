@@ -58,6 +58,8 @@ public class ConnectorDefinitionWizardPageTest extends SWTBotGefTestCase {
         SWTBotTable table = bot.table();
         bot.button("Add...").click();
         bot.button("Add...").click();
+        bot.button("Add...").click();
+        bot.button("Add...").click();
         table.click(1, 2);
         bot.ccomboBox().setSelection(packageLang + "Boolean");
         key.pressShortcut(Keystrokes.CR);
@@ -102,12 +104,12 @@ public class ConnectorDefinitionWizardPageTest extends SWTBotGefTestCase {
         bot.textWithLabel("Page id *").setText(pageId);
         assertTrue("button Apply should be disabled", bot.button(Messages.apply)
                 .isEnabled());
-        createWidget(widgetId0, "Text", 0);
-        createWidget(widgetId1, "Password", 0);
-        createWidget(widgetId2, "Checkbox", 1);
-        createWidget(widgetId3, "Select", 2);
-        createWidget(widgetId4, "Radio group", 1);
-        createWidget(widgetId5, "Group", 5);
+		createWidget(widgetId0, "Text", 0);
+		createWidget(widgetId1, "Password", 1);
+		createWidget(widgetId2, "Checkbox", 3);
+		createWidget(widgetId3, "Select", 4);
+		createWidget(widgetId4, "Radio group", 5);
+		createWidget(widgetId5, "Group", 7);
         bot.button(Messages.apply).click();
         bot.button(IDialogConstants.FINISH_LABEL).click();
         ConnectorDefRepositoryStore store = (ConnectorDefRepositoryStore) RepositoryManager
