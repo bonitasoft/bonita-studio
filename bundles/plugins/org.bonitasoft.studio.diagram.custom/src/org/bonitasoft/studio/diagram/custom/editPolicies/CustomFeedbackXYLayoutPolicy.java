@@ -338,11 +338,8 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
 						getHostFigure().translateToAbsolute(bounds) ;
 						int yDelta = 0 ;
 						if(bounds.height + bounds.y + 30 > containerBounds.y + containerBounds.height){
-							System.out.println("Increase lane");
 							yDelta = ((bounds.height + bounds.y)  + 50 - (containerBounds.y + containerBounds.height)) ;
 							req.setResizeDirection(PositionConstants.SOUTH) ;
-						}else{
-							System.out.println("Not Increase lane");
 						}
 
 						int xDelta = 0 ;
