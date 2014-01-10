@@ -61,8 +61,10 @@ public final class Messages extends NLS {
 	public static String warningDuplicateDialogTitle;
 
 	public static String importErrorTitle;
-
 	public static String incompatibleProductVersion;
+	public static String initializingJavaProject;
+	public static String creatingStore;
+	public static String initializingProjectClasspath;
 
     private Messages() {
         // Do not instantiate

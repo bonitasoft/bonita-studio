@@ -63,7 +63,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -153,16 +152,7 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 			BonitaStudioLog.log("Progress Monitor is null") ;
 			monitor = Repository.NULL_PROGRESS_MONITOR ;
 		}
-
-		workload = 20 ;
-		try {
-			if(ResourcesPlugin.getWorkspace().getRoot().members().length == 0){
-				workload = 40;
-			}
-		} catch (CoreException e3) {
-			BonitaStudioLog.error(e3) ;
-		}
-		monitor.beginTask(BOSSplashHandler.BONITA_TASK, workload+30) ;
+		monitor.beginTask(BOSSplashHandler.BONITA_TASK, 50) ;
 		monitor.subTask(Messages.initializingCurrentRepository);
 
 
@@ -270,7 +260,8 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 				monitor.worked(1) ;
 				FileUtil.deleteDir(ProjectUtil.getBonitaStudioWorkFolder());
 				monitor.worked(1) ;
-				IRepository repository = RepositoryManager.getInstance().getCurrentRepository() ;
+				Repository repository = (Repository) RepositoryManager.getInstance().getCurrentRepository() ;
+				repository.setProgressMonitor(monitor);
 				monitor.worked(1) ;
 				if(!repository.getProject().exists()){
 					repository.create() ;

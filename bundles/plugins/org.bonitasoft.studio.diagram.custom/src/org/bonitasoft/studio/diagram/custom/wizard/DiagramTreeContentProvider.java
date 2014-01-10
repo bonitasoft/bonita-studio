@@ -17,9 +17,7 @@
 package org.bonitasoft.studio.diagram.custom.wizard;
 
 import org.bonitasoft.studio.common.repository.RepositoryManager;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -36,17 +34,12 @@ public class DiagramTreeContentProvider implements ITreeContentProvider {
 	}
 	
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void inputChanged(Viewer arg0, Object arg1, Object arg2) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public Object[] getChildren(Object arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -55,7 +48,6 @@ public class DiagramTreeContentProvider implements ITreeContentProvider {
 	}
 
 	public Object getParent(Object arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -20,11 +20,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.CancellationException;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.repository.OrganizationFileStore;
 import org.bonitasoft.studio.actors.repository.OrganizationRepositoryStore;
 import org.bonitasoft.studio.common.jface.BonitaErrorDialog;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.eclipse.core.commands.AbstractHandler;
@@ -67,16 +69,19 @@ public class ImportOrganizationHandler extends AbstractHandler {
 						try {
 							fis = new FileInputStream(filePath);
 							String id =	new File(filePath).getName() ;
+							FileActionDialog.setThrowExceptionOnCancel(true);
 							OrganizationFileStore file = organizationStore.importInputStream(id, fis) ;
 							if(file != null && file.isCorrectlySyntaxed()){
 								MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.importOrganizationSuccessfullTitle, Messages.importOrganizationSuccessfullMessage);
 							} else {
+								fis.close();
 								if( file != null){
-									fis.close();
 									file.delete();
-									MessageDialog.openError(Display.getDefault().getActiveShell(),  Messages.importOrganizationFailedTitle, Messages.importOrganizationFailedMessage);
 								}
+								MessageDialog.openError(Display.getDefault().getActiveShell(),  Messages.importOrganizationFailedTitle, Messages.importOrganizationFailedMessage);
 							}
+						} catch(CancellationException ce) {
+							MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.importOrganizationCancelledTitle, Messages.importOrganizationCancelledMessage);
 						} catch (Exception e) {
 							BonitaStudioLog.error(e) ; 
 							OrganizationFileStore file = organizationStore.getChild(new File(filePath).getName().replace(".xml", "."+OrganizationRepositoryStore.ORGANIZATION_EXT));
@@ -85,6 +90,7 @@ public class ImportOrganizationHandler extends AbstractHandler {
 							}
 							new BonitaErrorDialog(Display.getDefault().getActiveShell(), Messages.importOrganizationFailedTitle, Messages.importOrganizationFailedMessage,e).open();
 						}finally{
+							FileActionDialog.setThrowExceptionOnCancel(false);
 							if(fis != null){
 								try {
 									fis.close() ;
@@ -98,7 +104,9 @@ public class ImportOrganizationHandler extends AbstractHandler {
 				});
 			} catch (Exception e) {
 				BonitaStudioLog.error(e) ;
-			} 
+			} finally {
+				FileActionDialog.setThrowExceptionOnCancel(false);
+			}
 
 		}
 
