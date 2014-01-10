@@ -62,7 +62,15 @@ public class RecoverWorkspaceAdvisor extends InstallerApplicationWorkbenchAdviso
 	protected void executePostStartupHandler() {
 		for(IRepository repo : RepositoryManager.getInstance().getAllRepositories()){
 			if(!repo.isShared()){
+				boolean hasBeenOpened = false;
+				if(!repo.getProject().isOpen()){
+					repo.open();
+					hasBeenOpened = true;
+				}
 				repo.exportToArchive(targetPath+File.separatorChar+repo.getName()+".bos") ;
+				if(hasBeenOpened){
+					repo.close();
+				}
 			}
 		}
 		PlatformUI.getWorkbench().close() ; //close application
