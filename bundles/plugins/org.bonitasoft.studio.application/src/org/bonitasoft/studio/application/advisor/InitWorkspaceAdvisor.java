@@ -45,6 +45,7 @@ public class InitWorkspaceAdvisor extends InstallerApplicationWorkbenchAdvisor {
 					}
 				}
 			}
+			RepositoryManager.getInstance().setRepository("default") ;
 		}
 
 		PlatformUI.getWorkbench().close() ;
