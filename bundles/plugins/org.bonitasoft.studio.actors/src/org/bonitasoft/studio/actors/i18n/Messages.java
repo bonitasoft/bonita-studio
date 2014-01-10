@@ -239,6 +239,8 @@ public class Messages extends NLS {
 	public static String updateActorReferences;
 	public static String refactoringActorMappings;
 	public static String noActorDefinedAtLaneLevel;
+	public static String importOrganizationCancelledMessage;
+	public static String importOrganizationCancelledTitle;
 
 
 

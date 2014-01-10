@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.common.jface;
 
+import java.util.concurrent.CancellationException;
+
 import org.bonitasoft.studio.common.Messages;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -28,10 +30,15 @@ public class FileActionDialog {
     protected static boolean YES_NO_TO_ALL = false;
     protected static boolean DISABLE_POPUP = false ; //Tests purpose
     private static boolean answer;
+    private static boolean THROW_EXCEPTION_ON_CANCEL = false;
 
 
     public static void setDisablePopup(boolean disablePopup) {
         DISABLE_POPUP = disablePopup ;
+    }
+    
+    public static void setThrowExceptionOnCancel(boolean throwExceptionOnCancel){
+    	THROW_EXCEPTION_ON_CANCEL = throwExceptionOnCancel;
     }
 
     public static boolean overwriteQuestion(final String fileName) {
@@ -65,7 +72,9 @@ public class FileActionDialog {
                                 Messages.bind(Messages.overwriteMessage, fileName));
                     }
                 }) ;
-
+                if(THROW_EXCEPTION_ON_CANCEL && !answer){
+                	throw new CancellationException();
+                }
                 return answer ;
             }
         }
