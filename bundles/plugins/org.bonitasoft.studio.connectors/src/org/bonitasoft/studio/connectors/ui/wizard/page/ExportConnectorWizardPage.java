@@ -1,3 +1,4 @@
+
 /**
  * Copyright (C) 2009 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
@@ -56,6 +57,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
@@ -70,12 +72,16 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
     private ConnectorImplementation selectedImplementation;
     private Button removeButton;
     private String destFilePath ;
+    private String destFileName ;
     private boolean includeSources =true ;
     private boolean addDependencies = true ;
     private final IContentProvider contentProvider;
     private final LabelProvider labelProvider;
     private final IDefinitionRepositoryStore defStore;
     private final List<ConnectorDefinition> definitions;
+	private TableViewer tableViewer;
+	private Text destFileNameText;
+	
 
     public ExportConnectorWizardPage(String pageTitle,String pageDesc,IContentProvider contentProvider,LabelProvider labelProvider,IDefinitionRepositoryStore defStore) {
         super(ExportConnectorWizardPage.class.getName());
@@ -99,7 +105,7 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
         serachBox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(3, 1).create());
         serachBox.setMessage(Messages.search);
 
-        final TableViewer tableViewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
+        tableViewer = new TableViewer(composite, SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION);
         tableViewer.getTable().setLayoutData(GridDataFactory.fillDefaults().grab(true,true).span(3, 1).hint(SWT.DEFAULT, 280).create()) ;
         tableViewer.setContentProvider(contentProvider);
         tableViewer.setLabelProvider(labelProvider);
@@ -115,6 +121,7 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
         });
         tableViewer.setInput(new Object());
         tableViewer.getTable().setFocus();
+  
         serachBox.addModifyListener(new ModifyListener() {
 
             @Override
@@ -171,31 +178,33 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
         final Button addDependenciesCheckbox = new Button(composite,SWT.CHECK) ;
         addDependenciesCheckbox.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create()) ;
 
-        final Label destFileLabel = new Label(composite, SWT.NONE);
-        destFileLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
-        destFileLabel.setText(Messages.destinationLabel+" *");
+        final Label destDirectoryLabel = new Label(composite, SWT.NONE);
+        destDirectoryLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
+        destDirectoryLabel.setText(Messages.destinationLabel+" *");
 
-        final Text destFileText = new Text(composite, SWT.BORDER);
-        destFileText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true,false).create());
+        final Text destDirectoryText = new Text(composite, SWT.BORDER);
+        destDirectoryText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true,false).create());
 
+        
         Button destFileButton = new Button(composite, SWT.PUSH);
         destFileButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
         destFileButton.setText(Messages.browsePackages);
         destFileButton.addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(Event event) {
-                ConnectorImplementation impl = (ConnectorImplementation) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement() ;
-                String defaultName = "" ;
-                if(impl != null){
-                    defaultName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false) + ".zip" ;
-                }
-                selectZip(destFileText,defaultName);
+            	String defaultName = generateDefaultName();
+                selectDirectory(destDirectoryText,defaultName);
             }
         });
-
-        UpdateValueStrategy startegy = new UpdateValueStrategy() ;
+        Label destFileNameLabel = new Label(composite,SWT.NONE);
+        destFileNameLabel.setLayoutData(GridDataFactory.fillDefaults().align(SWT.END, SWT.CENTER).create()) ;
+        destFileNameLabel.setText(Messages.destFileNameLabel);
+        destFileNameText = new Text(composite,SWT.BORDER);
+        destFileNameText.setText(generateDefaultName());
+        destFileNameText.setLayoutData(GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true,false).create());
+        UpdateValueStrategy pathStrategy = new UpdateValueStrategy() ;
         final EmptyInputValidator emptyValidator = new EmptyInputValidator(Messages.destinationLabel);
-        startegy.setBeforeSetValidator(new IValidator() {
+        pathStrategy.setBeforeSetValidator(new IValidator() {
 
             @Override
             public IStatus validate(Object value) {
@@ -203,23 +212,30 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
                 if(!status.isOK()){
                     return status;
                 }
-                File target = new File(value.toString()) ;
-                File parentFile = target.getParentFile() ;
-                if(parentFile == null || !parentFile.exists() || !value.toString().endsWith(".zip") ){
+                File target = new File((String)value) ;
+                if(!target.exists()){
                     return new Status(IStatus.ERROR, ConnectorPlugin.PLUGIN_ID, Messages.targetPathIsInvalid) ;
-                }
-
-                if(target.exists()){
-                    return new Status(IStatus.WARNING, ConnectorPlugin.PLUGIN_ID, Messages.existingFileWillBeOverwrite) ;
                 }
                 return Status.OK_STATUS;
             }
         }) ;
-
+        
+        UpdateValueStrategy nameStrategy = new UpdateValueStrategy();
+        nameStrategy.setBeforeSetValidator(new IValidator() {
+			
+			@Override
+			public IStatus validate(Object value) {
+				if (!value.toString().endsWith(".zip")){
+					return new Status(IStatus.ERROR,ConnectorPlugin.PLUGIN_ID,Messages.notAZipFile);
+				}
+				return Status.OK_STATUS;
+			}
+		});
         context.bindValue(ViewersObservables.observeSingleSelection(tableViewer), PojoProperties.value(ExportConnectorWizardPage.class, "selectedImplementation").observe(this),selectionStrategy,null)  ;
         context.bindValue(SWTObservables.observeSelection(includeSourceCheckbox), PojoProperties.value(ExportConnectorWizardPage.class, "includeSources").observe(this)) ;
         context.bindValue(SWTObservables.observeSelection(addDependenciesCheckbox), PojoProperties.value(ExportConnectorWizardPage.class, "addDependencies").observe(this)) ;
-        context.bindValue(SWTObservables.observeText(destFileText, SWT.Modify), PojoProperties.value(ExportConnectorWizardPage.class, "destFilePath").observe(this),startegy,null) ;
+        context.bindValue(SWTObservables.observeText(destDirectoryText, SWT.Modify), PojoProperties.value(ExportConnectorWizardPage.class, "destFilePath").observe(this),pathStrategy,null) ;
+        context.bindValue(SWTObservables.observeText(destFileNameText, SWT.Modify), PojoProperties.value(ExportConnectorWizardPage.class, "destFileName").observe(this),nameStrategy,null) ;
 
         pageSupport = WizardPageSupport.create(this, context) ;
 
@@ -233,22 +249,22 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
     }
 
 
-    protected void selectZip(Text destFileText,String defualtFileName) {
-        FileDialog fileDialog = new FileDialog(getShell(), SWT.SAVE);
-        fileDialog.setFilterExtensions(new String[] { "*.zip" });
+    protected void selectDirectory(Text destFileText,String defualtFileName) {
+        DirectoryDialog directoryDialog = new DirectoryDialog(getShell(), SWT.SAVE);
+      //  directoryDialog.setFilterExtensions(new String[] { "*.zip" });
         if (destFileText.getText() != null && !destFileText.getText().isEmpty()) {
             File beforeFile = new File(destFileText.getText());
-            fileDialog.setFilterPath(beforeFile.getParent());
-            fileDialog.setFileName(beforeFile.getName());
+            directoryDialog.setFilterPath(beforeFile.getParent());
+         //   directoryDialog.setFileName(beforeFile.getName());
         } else {
-            fileDialog.setFilterPath(System.getProperty("user.home"));
-            fileDialog.setFileName(defualtFileName) ;
+            directoryDialog.setFilterPath(System.getProperty("user.home"));
+          //  directoryDialog.setFileName(defualtFileName) ;
         }
-        String res = fileDialog.open();
+        String res = directoryDialog.open();
         if (res != null) {
-            if (!res.endsWith(".zip")) {
-                res += ".zip";
-            }
+         //   if (!res.endsWith(".zip")) {
+         //       res += ".zip";
+         //   }
             destFileText.setText(res);
         }
     }
@@ -268,6 +284,9 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
     @Override
     public void selectionChanged(SelectionChangedEvent event) {
         Object selection =  ((IStructuredSelection) event.getSelection()).getFirstElement() ;
+        if (destFileNameText!=null){
+			destFileNameText.setText(generateDefaultName());
+		}
         if(removeButton != null && selection instanceof ConnectorImplementation){
             removeButton.setEnabled(true) ;
         }
@@ -325,8 +344,29 @@ public class ExportConnectorWizardPage extends WizardPage implements ISelectionC
     public void setAddDependencies(boolean addDependencies) {
         this.addDependencies = addDependencies;
     }
+    
+    
+    
+
+    public String getDestFileName() {
+		return destFileName;
+	}
 
 
+	public void setDestFileName(String destFileName) {
+		this.destFileName = destFileName;
+	}
+
+
+	private String generateDefaultName(){
+    	  ConnectorImplementation impl = (ConnectorImplementation) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement() ;
+          String defaultName = "" ;
+          if(impl != null){
+              defaultName = NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false) + ".zip" ;
+          }
+          return defaultName;
+    }
 
 
 }
+
