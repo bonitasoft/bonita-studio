@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.connectors.ui.wizard;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -92,7 +93,12 @@ public class ExportConnectorWizard extends Wizard {
                 @Override
                 public void run(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
                     progressMonitor.beginTask(Messages.exporting, IProgressMonitor.UNKNOWN) ;
-                    final ExportConnectorArchiveOperation operation = createExportOperation(exportConnectorWizardPage.getSelectedImplementation(), exportConnectorWizardPage.isIncludeSources(), exportConnectorWizardPage.isAddDependencies(), exportConnectorWizardPage.getDestFilePath()) ;
+                     String destPathFile=exportConnectorWizardPage.getDestFilePath();
+                    if (destPathFile.endsWith(File.separator)){
+                    	destPathFile=destPathFile+exportConnectorWizardPage.getDestFileName();
+                    } else {
+                    	destPathFile=destPathFile+File.separator+exportConnectorWizardPage.getDestFileName();                  }
+                    final ExportConnectorArchiveOperation operation = createExportOperation(exportConnectorWizardPage.getSelectedImplementation(), exportConnectorWizardPage.isIncludeSources(), exportConnectorWizardPage.isAddDependencies(), destPathFile) ;
                     final IStatus status = operation.run(progressMonitor) ;
                     displayResult(status) ;
                 }
