@@ -77,7 +77,6 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.xml.repository.XSDFileStore;
 import org.bonitasoft.studio.xml.repository.XSDRepositoryStore;
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -597,13 +596,13 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 			previousName = nameText.getText();
 		}
 		ISWTObservableValue observeText = SWTObservables.observeText(nameText, SWT.Modify);
-		Binding bindValue = emfDatabindingContext.bindValue(observeText,
+		emfDatabindingContext.bindValue(observeText,
 				EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__NAME), nameStrategy, null);
 		emfDatabindingContext.bindValue(SWTObservables.observeText(descriptionText, SWT.Modify),
 				EMFObservables.observeValue(data, ProcessPackage.Literals.ELEMENT__DOCUMENTATION),
 				descTargetToModel,
 				null);
-		if(previousName!= null){
+		if(previousName!= null && !previousName.isEmpty()){
 			observeText.setValue(previousName);
 		}
 	}
