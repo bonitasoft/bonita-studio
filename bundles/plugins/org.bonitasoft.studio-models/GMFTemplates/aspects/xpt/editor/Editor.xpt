@@ -60,7 +60,7 @@ private org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer too
 	/**
 	 * @generated BonitaSoft
 	 */
-	protected PaletteRoot createPaletteRoot(PaletteRoot existingPaletteRoot) {
+	protected org.eclipse.gef.palette.PaletteRoot createPaletteRoot(org.eclipse.gef.palette.PaletteRoot existingPaletteRoot) {
 		//#### COPY-PASTED from parent
 		org.eclipse.gef.palette.PaletteRoot paletteRoot;
 		if (existingPaletteRoot == null) {
