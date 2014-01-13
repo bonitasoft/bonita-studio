@@ -42,7 +42,8 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.bonitasoft.studio.engine,
  org.eclipse.jdt.launching;bundle-version="3.6.1",
  org.bonitasoft.studio.form.preview,
- org.bonitasoft.studio.debug
+ org.bonitasoft.studio.debug,
+ org.bonitasoft.studio.validation;bundle-version="6.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.application,
