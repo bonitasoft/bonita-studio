@@ -226,6 +226,7 @@ public class Connector5Descriptor {
 		for(Instance variable : model.getAllInstances("process.Data")){
 			String varName = (String) variable.get("name");
 			if(varName!=null && varName.equals(variableToSet)){
+				System.out.println("toto");
 				return variable;
 			}
 		}
@@ -238,15 +239,7 @@ public class Connector5Descriptor {
 
 	private void addOutputs(Model model, Instance connectorInstance, StringToExpressionConverter converter) {
 		for(Entry<String, Object> output : outputs.entrySet()){
-			String outputReturnType = String.class.getName();
-			List<Instance> datas = model.getAllInstances("process.Data");
-			for(Instance data : datas){
-				if ( output.getKey().equals(data.get("name"))){
-					outputReturnType=StringToExpressionConverter.getDataReturnType(data);
-				}
-			}
-			
-			final Instance operation = converter.parseOperation(outputReturnType, false, (String) output.getValue(), output.getKey());
+			final Instance operation = converter.parseOperation(String.class.getName(), false, (String) output.getValue(), output.getKey());
 			connectorInstance.add(OUTPUTS, operation);
 		}
 	}

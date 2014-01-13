@@ -103,7 +103,7 @@ public class StringToExpressionConverter {
 			boolean fixedReturnType, String expressionScript,
 			final String setVarScript) {
 		Instance operation = model.newInstance("expression.Operation");
-		final Instance actionExpression = parseOutput(expressionScript, returnType, fixedReturnType);
+		final Instance actionExpression = parse(expressionScript, returnType, fixedReturnType);
 		operation.set("rightOperand", actionExpression);
 
 		Instance leftOperand = null;
@@ -191,11 +191,6 @@ public class StringToExpressionConverter {
 		return parse(stringToParse, returnType, fixedReturnType, null);
 	}
 
-	public Instance parseOutput(String stringToParse,String returnType,boolean fixedReturnType) {
-		Instance output = parse( stringToParse, returnType, fixedReturnType, ExpressionConstants.CONNECTOR_OUTPUT_TYPE);
-		return output;
-	}
-	
 	public Instance parse(String stringToParse,String returnType,boolean fixedReturnType,String expressionType) {
 		if(returnType == null || returnType.isEmpty()){//Default return type is String
 			returnType = String.class.getName();
@@ -219,10 +214,6 @@ public class StringToExpressionConverter {
 			final Instance expression = createExpressionInstance(model,content, content, returnType, ExpressionConstants.PATTERN_TYPE, fixedReturnType);
 			resolvePatternDependencies(expression);
 			return expression;
-		}else if(ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(expressionType)){
-			final Instance expression = createExpressionInstance(model,content, content, returnType, ExpressionConstants.CONNECTOR_OUTPUT_TYPE, fixedReturnType);
-			resolveOutputDependencies(expression, content, returnType );
-			return expression;
 		}else{
 			final Instance exp = createExpressionInstance(model,content, content, returnType, expressionType, fixedReturnType);
 			if(ExpressionConstants.VARIABLE_TYPE.equals(expressionType) || ExpressionConstants.SIMULATION_VARIABLE_TYPE.equals(expressionType)){
@@ -236,14 +227,6 @@ public class StringToExpressionConverter {
 		}
 	}
 	
-
-
-	private void resolveOutputDependencies(Instance expression, String name, String expressionType) {
-		final Instance instance = model.newInstance("expression.Expression");
-		instance.set("name", name);
-		instance.set("type", expressionType);
-		expression.add("referencedElements", instance);
-	}
 
 
 	public void resolveDocumentDependencies(Instance expression) {
