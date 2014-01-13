@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
-import org.bonitasoft.studio.common.repository.Repository;
-import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider;
@@ -33,7 +31,6 @@ import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -146,7 +143,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 
 
 	public IStatus getResult() {
-		final MultiStatus result = new MultiStatus(Activator.PLUGIN_ID, IStatus.OK, "", null);
+		final MultiStatus result = new MultiStatus(ValidationPlugin.PLUGIN_ID, IStatus.OK, "", null);
 		fileProcessed.clear();
 		for(Diagram d : toValidate){
 			EObject element = d.getElement();
@@ -175,7 +172,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 				String message = (String) m.getAttribute(IMarker.MESSAGE);
 				String fullMessage = fileName + ":" +location +" : " + message;
 				if(!statusExists(result,fullMessage)){
-					result.add(new Status(toStatusSeverity(severity), Activator.PLUGIN_ID, fullMessage));
+					result.add(new Status(toStatusSeverity(severity), ValidationPlugin.PLUGIN_ID, fullMessage));
 				}
 			}
 		}
@@ -186,7 +183,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 				String location =  (String) m.getAttribute(IMarker.LOCATION);
 				String fullMessage = fileName + ":" +location +" : " + message;
 				if(!statusExists(result, fullMessage)){
-					result.add(new Status(toStatusSeverity(severity), Activator.PLUGIN_ID, fullMessage));
+					result.add(new Status(toStatusSeverity(severity), ValidationPlugin.PLUGIN_ID, fullMessage));
 				}
 			}
 		}

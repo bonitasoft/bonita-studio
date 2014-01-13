@@ -231,7 +231,7 @@ public class TokenDispatcher {
 				sb.append(sf.getSource().getName()+"->"+sf.getTarget().getName()+"="+sf.getPathToken());
 				sb.append("\n");
 			}
-			BonitaStudioLog.debug(sb.toString(), Activator.PLUGIN_ID);
+			BonitaStudioLog.debug(sb.toString(), ValidationPlugin.PLUGIN_ID);
 		}
 	}
 
