@@ -107,3 +107,4 @@ public class Messages extends NLS {
     }
 
 }
+

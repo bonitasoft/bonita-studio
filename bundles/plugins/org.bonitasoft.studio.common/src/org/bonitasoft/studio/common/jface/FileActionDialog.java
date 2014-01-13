@@ -16,7 +16,10 @@
  */
 package org.bonitasoft.studio.common.jface;
 
+import java.util.concurrent.CancellationException;
+
 import org.bonitasoft.studio.common.Messages;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
@@ -28,11 +31,18 @@ public class FileActionDialog {
 	protected static boolean DISABLE_POPUP = false ; //Tests purpose
 	private static boolean answer;
 	private static int returnCode;
+    private static boolean THROW_EXCEPTION_ON_CANCEL = false;
 
 
 	public static void setDisablePopup(boolean disablePopup) {
 		DISABLE_POPUP = disablePopup ;
 	}
+
+    
+    public static void setThrowExceptionOnCancel(boolean throwExceptionOnCancel){
+    	THROW_EXCEPTION_ON_CANCEL = throwExceptionOnCancel;
+    }
+
 
 	public static boolean overwriteQuestion(final String fileName) {
 		if (DISABLE_POPUP && NO_TO_ALL) {
@@ -54,7 +64,6 @@ public class FileActionDialog {
 						returnCode = new YesNoToAllDialog(Display.getDefault().getActiveShell(), Messages.overwriteTitle, Messages.bind(Messages.overwriteMessage, fileName)).open();
 					}
 				});
-
 				if (returnCode == YesNoToAllDialog.YES_TO_ALL) {
 					YES_TO_ALL = true;
 				}
@@ -65,18 +74,21 @@ public class FileActionDialog {
 			}else{
 
 				Display.getDefault().syncExec(new Runnable() {
+                    @Override
+                    public void run() {
+                        answer =  MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.overwriteTitle,
+                                Messages.bind(Messages.overwriteMessage, fileName));
+                    }
+                }) ;
+                if(THROW_EXCEPTION_ON_CANCEL && !answer){
+                	throw new CancellationException();
+                }
+                return answer ;
+            }
+        }
+    }
 
-					@Override
-					public void run() {
-						answer =  MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.overwriteTitle,
-								Messages.bind(Messages.overwriteMessage, fileName));
-					}
-				}) ;
-
-				return answer ;
-			}
-		}
-	}
+				
 
 	public static boolean getDisablePopup() {
 		return DISABLE_POPUP;
@@ -96,13 +108,13 @@ public class FileActionDialog {
 					return false;
 				}
 				Display.getDefault().syncExec(new Runnable() {
-
 					@Override
 					public void run() {
 						returnCode = new YesNoToAllDialog(Display.getDefault().getActiveShell(),  Messages.deleteConfirmationTitle,
 								Messages.bind(Messages.deleteConfirmationMsg, fileName)).open();
 					}
 				});
+
 
 				if (returnCode == YesNoToAllDialog.YES_TO_ALL) {
 					YES_TO_ALL = true;

@@ -295,13 +295,11 @@ implements IExpressionEditor {
 
 	@Override
 	public boolean isPageFlowContext() {
-
 		return isPageFlowContext;
 	}
 
 	@Override
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
-
 	}
 }

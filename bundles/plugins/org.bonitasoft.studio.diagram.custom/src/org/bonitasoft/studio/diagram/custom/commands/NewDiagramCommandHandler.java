@@ -507,9 +507,6 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 		}
 	}
 
-
-
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
 	 */

@@ -69,7 +69,7 @@ public class RemoveWidgetReferencesOperation extends AbstractRefactorOperation {
 	}
 
 	public void updateReferencesInScripts(){
-		scriptExpressions = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(widgetToRemove.eContainer(),widgetToRemove);
+		scriptExpressions = ModelHelper.findAllScriptAndConditionsExpressionWithReferencedElement(ModelHelper.getPageFlow(widgetToRemove),widgetToRemove);
 		if (!scriptExpressions.isEmpty() && !widgetToRemove.getName().equals(EMPTY_VALUE)){
 			BonitaGroovyRefactoringAction renameAction;
 			try {

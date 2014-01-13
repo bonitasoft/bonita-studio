@@ -1074,8 +1074,7 @@ public class BPMNToProc extends ToProcProcessor {
 	 * @param process
 	 * @throws ProcBuilderException
 	 */
-	private int processActivities(List<TFlowElement> flowElements,
-			boolean fromSubProcess) throws ProcBuilderException {
+	private int processActivities(List<TFlowElement> flowElements, boolean fromSubProcess) throws ProcBuilderException {
 		int activityNumber = 0;
 		if (flowElements != null) {
 			for (TFlowElement flowElement : flowElements) {
@@ -1216,55 +1215,8 @@ public class BPMNToProc extends ToProcProcessor {
 									subProcesses.add((TSubProcess) flowNode);
 								} else if (flowNode instanceof TCallActivity) {
 									TCallActivity callActivity = (TCallActivity) flowNode;
-									final QName calledElement = callActivity
-											.getCalledElement();
-									if (calledElement != null) {
-										builder.addCallActivityTargetProcess(
-												calledElement.getLocalPart(),
-												"1.0");
-									}
-
-									for (TDataInputAssociation input : callActivity
-											.getDataInputAssociation()) {
-										for (TAssignment assignment : input
-												.getAssignment()) {
-
-											final String assignmentFromValue = getAssignmentFromValue(assignment);
-											final String fromDataName = dataNameByItemDefinition
-													.get(assignmentFromValue) != null ? dataNameByItemDefinition
-															.get(assignmentFromValue)
-															: assignmentFromValue;
-
-															final String assignmentToValue = getAssignmentToValue(assignment);
-															final String toDataName = dataNameByItemDefinition
-																	.get(assignmentToValue) != null ? dataNameByItemDefinition
-																			.get(assignmentToValue)
-																			: assignmentToValue;
-																			builder.addCallActivityInParameter(
-																					fromDataName, toDataName);
-										}
-									}
-
-									for (TDataOutputAssociation output : callActivity
-											.getDataOutputAssociation()) {
-										for (TAssignment assignment : output
-												.getAssignment()) {
-											final String assignmentFromValue = getAssignmentFromValue(assignment);
-											final String fromDataName = dataNameByItemDefinition
-													.get(assignmentFromValue) != null ? dataNameByItemDefinition
-															.get(assignmentFromValue)
-															: assignmentFromValue;
-
-															final String assignmentToValue = getAssignmentToValue(assignment);
-															final String toDataName = dataNameByItemDefinition
-																	.get(assignmentToValue) != null ? dataNameByItemDefinition
-																			.get(assignmentToValue)
-																			: assignmentToValue;
-
-																			builder.addCallActivityOutParameter(
-																					fromDataName, toDataName);
-										}
-									}
+									fillCalledActivity(callActivity);
+									mapDataForCallActivity(callActivity);
 								}
 							}
 
@@ -1278,6 +1230,76 @@ public class BPMNToProc extends ToProcProcessor {
 			}
 		}
 		return activityNumber;
+	}
+
+	private void fillCalledActivity(TCallActivity callActivity)	throws ProcBuilderException {
+		final QName calledElement = callActivity.getCalledElement();
+		if (calledElement != null) {
+			final String calledElementID = calledElement.getLocalPart();
+			String calledElementName = null;
+			for (TRootElement rootElement : rootElements) {
+				if (rootElement instanceof TProcess) {
+					if(calledElementID.equals(rootElement.getId())){
+						calledElementName = ((TProcess) rootElement).getName();
+						break;
+					}
+				}
+			}
+			builder.addCallActivityTargetProcess(calledElementName != null?calledElementName : calledElementID,	""/*"1.0"*/);
+		}
+	}
+
+	private void mapDataForCallActivity(TCallActivity callActivity)	throws ProcBuilderException {
+		mapInputDataForCallActivity(callActivity);
+		mapOutputDataForCallActivity(callActivity);
+	}
+
+	private void mapOutputDataForCallActivity(TCallActivity callActivity)
+			throws ProcBuilderException {
+		for (TDataOutputAssociation output : callActivity
+				.getDataOutputAssociation()) {
+			for (TAssignment assignment : output
+					.getAssignment()) {
+				final String assignmentFromValue = getAssignmentFromValue(assignment);
+				final String fromDataName = dataNameByItemDefinition
+						.get(assignmentFromValue) != null ? dataNameByItemDefinition
+								.get(assignmentFromValue)
+								: assignmentFromValue;
+
+								final String assignmentToValue = getAssignmentToValue(assignment);
+								final String toDataName = dataNameByItemDefinition
+										.get(assignmentToValue) != null ? dataNameByItemDefinition
+												.get(assignmentToValue)
+												: assignmentToValue;
+
+												builder.addCallActivityOutParameter(
+														fromDataName, toDataName);
+			}
+		}
+	}
+
+	private void mapInputDataForCallActivity(TCallActivity callActivity)
+			throws ProcBuilderException {
+		for (TDataInputAssociation input : callActivity
+				.getDataInputAssociation()) {
+			for (TAssignment assignment : input
+					.getAssignment()) {
+
+				final String assignmentFromValue = getAssignmentFromValue(assignment);
+				final String fromDataName = dataNameByItemDefinition
+						.get(assignmentFromValue) != null ? dataNameByItemDefinition
+								.get(assignmentFromValue)
+								: assignmentFromValue;
+
+								final String assignmentToValue = getAssignmentToValue(assignment);
+								final String toDataName = dataNameByItemDefinition
+										.get(assignmentToValue) != null ? dataNameByItemDefinition
+												.get(assignmentToValue)
+												: assignmentToValue;
+												builder.addCallActivityInParameter(
+														fromDataName, toDataName);
+			}
+		}
 	}
 
 	protected String retrieveDocumentation(TBaseElement baseElement) {
@@ -1574,119 +1596,157 @@ public class BPMNToProc extends ToProcProcessor {
 
 	protected void populateEvent(TFlowNode flowNode, EventType eventType)
 			throws ProcBuilderException {
-		String errorCode = null;
 		if (eventType == EventType.ERROR_BOUNDARY
 				|| eventType == EventType.END_ERROR
 				|| eventType == EventType.START_ERROR) {
-			if (flowNode instanceof TCatchEvent) {
-				final QName errorRef = ((TErrorEventDefinition) ((TCatchEvent) flowNode)
-						.getEventDefinition().get(0)).getErrorRef();
-				if (errorRef != null) {
-					errorCode = errorRef.getLocalPart();
-				}
-			} else {
-				final QName errorRef = ((TErrorEventDefinition) ((TThrowEvent) flowNode)
-						.getEventDefinition().get(0)).getErrorRef();
-				if (errorRef != null) {
-					errorCode = errorRef.getLocalPart();
-				}
-			}
-			if (errorCode != null) {
-				builder.addErrorCode(errorCode);
-			}
-
+			populateErrorEvent(flowNode);
 		} else if (eventType == EventType.SIGNAL_BOUNDARY
 				|| eventType == EventType.INTERMEDIATE_CATCH_SIGNAL
 				|| eventType == EventType.INTERMEDIATE_THROW_SIGNAL
 				|| eventType == EventType.END_SIGNAL) {
-			String signalRef = null;
-			if (flowNode instanceof TCatchEvent) {
-				final QName signalRef2 = ((TSignalEventDefinition) ((TCatchEvent) flowNode)
-						.getEventDefinition().get(0)).getSignalRef();
-				if (signalRef2 != null) {
-					signalRef = signalRef2.getLocalPart();
-				}
-			} else {
-				final QName signalRef2 = ((TSignalEventDefinition) ((TThrowEvent) flowNode)
-						.getEventDefinition().get(0)).getSignalRef();
-				if (signalRef2 != null) {
-					signalRef = signalRef2.getLocalPart();
-				}
-			}
-			if (signalRef != null) {
-				for (TRootElement rootElem : definitions.getRootElement()) {
-					if (rootElem instanceof TSignal) {
-						TSignal signal = (TSignal) rootElem;
-						if (signal.getId().equals(signalRef)) {
-							final String signalName = signal.getName();
-							if (signalName != null && signalName.length() != 0) {
-								builder.addSignalCode(signalName);
-							} else {
-								builder.addSignalCode(signal.getId());
-							}
-							break;
-						}
-					}
-				}
-			}
+			populateSignalEvent(flowNode);
 		} else if (eventType == EventType.TIMER_BOUNDARY
 				|| eventType == EventType.INTERMEDIATE_CATCH_TIMER
 				|| eventType == EventType.START_TIMER) {
-			TTimerEventDefinition timerEventDefinition;
-			if (flowNode instanceof TCatchEvent) {
-				timerEventDefinition = ((TTimerEventDefinition) ((TCatchEvent) flowNode)
-						.getEventDefinition().get(0));
-			} else {
-				timerEventDefinition = ((TTimerEventDefinition) ((TThrowEvent) flowNode)
-						.getEventDefinition().get(0));
-			}
-			final TExpression timeDate = timerEventDefinition.getTimeDate();
-			if (timeDate != null) {
-				FeatureMap mixedTimedate = timeDate.getMixed();
-				if (mixedTimedate != null && mixedTimedate.size() != 0
-						&& mixedTimedate.getValue(0) != null) {
-					builder.addTimerEventCondition(mixedTimedate.getValue(0)
-							.toString());
-				}
-			} else {
-				final TExpression timeDuration = timerEventDefinition
-						.getTimeDuration();
-				if (timeDuration != null) {
-					final FeatureMap mixedTimeDuration = timeDuration
-							.getMixed();
-					if (mixedTimeDuration != null
-							&& mixedTimeDuration.size() != 0
-							&& mixedTimeDuration.getValue(0) != null) {
-						builder.addTimerEventCondition(mixedTimeDuration
-								.getValue(0).toString());
-					}
-				} else {
-					final TExpression timeCycle = timerEventDefinition
-							.getTimeCycle();
-					if (timeCycle != null) {
-						final FeatureMap mixedTimeCycle = timeCycle.getMixed();
-						if (mixedTimeCycle != null
-								&& mixedTimeCycle.size() != 0
-								&& mixedTimeCycle.getValue(0) != null) {
-							builder.addTimerEventCondition(mixedTimeCycle
-									.getValue(0).toString());
-						}
-					}
-				}
-			}
+			populateTimerEvent(flowNode);
 		} else if (eventType == EventType.INTERMEDIATE_THROW_LINK) {
+			populateThrowLinkEvent(flowNode);
+		}
+	}
 
-			if (flowNode instanceof TThrowEvent) {
-				for (TEventDefinition eventDef : ((TThrowEvent) flowNode)
-						.getEventDefinition()) {
-					if (eventDef instanceof TLinkEventDefinition) {
-						builder.addThrowLinkEventTarget(eventDef.getId());
+	private void populateErrorEvent(TFlowNode flowNode)
+			throws ProcBuilderException {
+		String errorCode = null;
+		if (flowNode instanceof TCatchEvent) {
+			final QName errorRef = ((TErrorEventDefinition) ((TCatchEvent) flowNode)
+					.getEventDefinition().get(0)).getErrorRef();
+			if (errorRef != null) {
+				errorCode = errorRef.getLocalPart();
+			}
+		} else {
+			final QName errorRef = ((TErrorEventDefinition) ((TThrowEvent) flowNode)
+					.getEventDefinition().get(0)).getErrorRef();
+			if (errorRef != null) {
+				errorCode = errorRef.getLocalPart();
+			}
+		}
+		if (errorCode != null) {
+			builder.addErrorCode(errorCode);
+		}
+	}
+
+	private void populateThrowLinkEvent(TFlowNode flowNode)
+			throws ProcBuilderException {
+		if (flowNode instanceof TThrowEvent) {
+			for (TEventDefinition eventDef : ((TThrowEvent) flowNode)
+					.getEventDefinition()) {
+				if (eventDef instanceof TLinkEventDefinition) {
+					QName sourceQname = ((TLinkEventDefinition) eventDef).getTarget();
+					if(sourceQname != null){
+						builder.addThrowLinkEventTarget(sourceQname.getLocalPart());
 						break;
 						// it should have only one TLinkEventDefinition
 					}
 				}
 			}
 		}
+	}
+
+	private void populateSignalEvent(TFlowNode flowNode)
+			throws ProcBuilderException {
+		String signalRef = null;
+		if (flowNode instanceof TCatchEvent) {
+			final QName signalRef2 = ((TSignalEventDefinition) ((TCatchEvent) flowNode)
+					.getEventDefinition().get(0)).getSignalRef();
+			if (signalRef2 != null) {
+				signalRef = signalRef2.getLocalPart();
+			}
+		} else {
+			final QName signalRef2 = ((TSignalEventDefinition) ((TThrowEvent) flowNode)
+					.getEventDefinition().get(0)).getSignalRef();
+			if (signalRef2 != null) {
+				signalRef = signalRef2.getLocalPart();
+			}
+		}
+		if (signalRef != null) {
+			for (TRootElement rootElem : definitions.getRootElement()) {
+				if (rootElem instanceof TSignal) {
+					TSignal signal = (TSignal) rootElem;
+					if (signal.getId().equals(signalRef)) {
+						final String signalName = signal.getName();
+						if (signalName != null && signalName.length() != 0) {
+							builder.addSignalCode(signalName);
+						} else {
+							builder.addSignalCode(signal.getId());
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	private void populateTimerEvent(TFlowNode flowNode)
+			throws ProcBuilderException {
+		TTimerEventDefinition timerEventDefinition;
+		if (flowNode instanceof TCatchEvent) {
+			timerEventDefinition = ((TTimerEventDefinition) ((TCatchEvent) flowNode)
+					.getEventDefinition().get(0));
+		} else {
+			timerEventDefinition = ((TTimerEventDefinition) ((TThrowEvent) flowNode)
+					.getEventDefinition().get(0));
+		}
+		final TExpression timeDate = timerEventDefinition.getTimeDate();
+		if (timeDate != null) {
+			FeatureMap mixedTimedate = timeDate.getMixed();
+			if (mixedTimedate != null && mixedTimedate.size() != 0
+					&& mixedTimedate.getValue(0) != null) {
+				builder.addTimerEventCondition(mixedTimedate.getValue(0)
+						.toString());
+			}
+		} else {
+			final TExpression timeDuration = timerEventDefinition
+					.getTimeDuration();
+			if (timeDuration != null) {
+				final FeatureMap mixedTimeDuration = timeDuration
+						.getMixed();
+				if (mixedTimeDuration != null
+						&& mixedTimeDuration.size() != 0
+						&& mixedTimeDuration.getValue(0) != null) {
+					builder.addTimerEventCondition(mixedTimeDuration
+							.getValue(0).toString());
+				}
+			} else {
+				final TExpression timeCycle = timerEventDefinition
+						.getTimeCycle();
+				if (timeCycle != null) {
+					final FeatureMap mixedTimeCycle = timeCycle.getMixed();
+					if (mixedTimeCycle != null
+							&& mixedTimeCycle.size() != 0
+							&& mixedTimeCycle.getValue(0) != null) {
+						builder.addTimerEventCondition(mixedTimeCycle
+								.getValue(0).toString());
+					}
+				}
+			}
+		}
+	}
+
+	private TBaseElement retrieveElementWithID(String id) {
+		if(id != null && !id.isEmpty()){
+			for(TRootElement rootElement : rootElements){
+				TreeIterator<EObject> eAllContents = rootElement.eAllContents();
+				while(eAllContents.hasNext()){
+					EObject element = eAllContents.next();
+					if(element instanceof TBaseElement){
+						if(id.equals(((TBaseElement) element).getId())){
+							return (TBaseElement) element;
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

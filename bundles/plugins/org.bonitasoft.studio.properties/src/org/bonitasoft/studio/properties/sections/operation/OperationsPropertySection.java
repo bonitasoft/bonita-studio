@@ -28,8 +28,13 @@ import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 
@@ -50,8 +55,8 @@ public class OperationsPropertySection extends AbstractBonitaDescriptionSection 
 		final Composite  mainComposite = getWidgetFactory().createComposite(super.composite);
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(1).margins(15, 15).create());
 		mainComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,true).create());
-		//getWidgetFactory().createLabel(mainComposite, Messages.operationExplanation) ;
-
+		CLabel warningLabel = getWidgetFactory().createCLabel(mainComposite, Messages.transientDataWarning) ;
+		warningLabel.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK));
 		operationComposite = createActionLinesComposite(mainComposite);
 		operationComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
 	}

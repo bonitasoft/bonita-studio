@@ -94,5 +94,4 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
         FormsUtils.openDiagram(form,getEditingDomain());
         return CommandResult.newOKCommandResult(form);
     }
-
 }

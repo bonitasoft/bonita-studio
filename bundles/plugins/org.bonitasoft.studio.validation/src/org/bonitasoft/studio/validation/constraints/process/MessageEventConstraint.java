@@ -135,3 +135,4 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
 	}
 
 }
+

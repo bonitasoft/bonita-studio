@@ -408,5 +408,5 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
         return super.canRedo();
     }
 
-
 }
+

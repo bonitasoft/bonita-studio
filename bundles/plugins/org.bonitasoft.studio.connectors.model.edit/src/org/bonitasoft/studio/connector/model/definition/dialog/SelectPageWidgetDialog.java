@@ -1007,3 +1007,4 @@ public class SelectPageWidgetDialog extends Dialog {
         this.description = description;
     }
 }
+

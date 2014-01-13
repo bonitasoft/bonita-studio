@@ -88,7 +88,7 @@ public class GroovyFileStore extends AbstractFileStore {
             }
             try{
                 String scriptContent = (String) content ;
-                InputStream is = new ByteArrayInputStream(scriptContent.getBytes());
+                InputStream is = new ByteArrayInputStream(scriptContent.getBytes(UTF_8));
                 IFile sourceFile = getResource() ;
                 if(sourceFile.exists() && FileActionDialog.overwriteQuestion(getName())){
                     sourceFile.setContents(is, IResource.FOLDER, Repository.NULL_PROGRESS_MONITOR) ;

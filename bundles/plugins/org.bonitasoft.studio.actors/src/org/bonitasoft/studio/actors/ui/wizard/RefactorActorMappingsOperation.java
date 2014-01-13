@@ -140,6 +140,30 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 					refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldEObject,(org.bonitasoft.studio.actors.model.organization.Membership)newEObject,actorMappings);
 				}
 			}
+
+			List<ModelElementChangeLeftTarget> newElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET);
+			List<ModelElementChangeRightTarget> oldElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET);
+			if(!newElementChange.isEmpty() && !oldElementChange.isEmpty()){
+				ModelElementChangeLeftTarget leftTarget = newElementChange.get(0);
+				ModelElementChangeRightTarget rightTarget = oldElementChange.get(0);
+				EObject newEObject = leftTarget.getLeftElement();
+				EObject oldEObject = rightTarget.getRightElement();
+				if(newEObject instanceof Group && oldEObject instanceof Group){
+					refactorGroup((Group)oldEObject,(Group)newEObject,actorMappings);
+					refactorMembership((Group)oldEObject,(Group)newEObject,actorMappings);
+				}
+				if(newEObject instanceof Role && oldEObject instanceof Role){
+					refactorRole((Role)oldEObject,(Role)newEObject,actorMappings);
+					refactorMembership((Role)oldEObject,(Role)newEObject,actorMappings);
+				}
+				if(newEObject instanceof User && oldEObject instanceof User){
+					refactorUsername((User)oldEObject,(User)newEObject,actorMappings);
+				}
+				if(newEObject instanceof Membership && oldEObject instanceof Membership){
+					refactorUsername((org.bonitasoft.studio.actors.model.organization.Membership)oldEObject,(org.bonitasoft.studio.actors.model.organization.Membership)newEObject,actorMappings);
+					refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldEObject,(org.bonitasoft.studio.actors.model.organization.Membership)newEObject,actorMappings);
+				}
+			}
 		}
 		diagramStore.refresh();
 	}
