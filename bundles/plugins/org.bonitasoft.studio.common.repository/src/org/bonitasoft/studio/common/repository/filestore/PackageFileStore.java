@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 Bonitasoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -28,6 +28,8 @@ import org.bonitasoft.studio.pics.Pics;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -47,7 +49,7 @@ public class PackageFileStore extends AbstractFileStore {
 
     private final String packageName;
 
-    public PackageFileStore(String packageName, IRepositoryStore parentStore) {
+    public PackageFileStore(String packageName, IRepositoryStore<?> parentStore) {
         super("", parentStore);
         this.packageName = packageName ;
     }
@@ -182,6 +184,41 @@ public class PackageFileStore extends AbstractFileStore {
     protected void doClose() {
 
     }
+    
+    @Override
+    protected void doDelete() {
+    	IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
+    	try {
+			deleteRecursivelyEmptyPackages(project, getPackageFragment());
+		} catch (JavaModelException e) {
+			BonitaStudioLog.error(e);
+			super.doDelete();
+		}
+    }
+    
+	private void deleteRecursivelyEmptyPackages(IJavaProject project, IPackageFragment packageFragment) throws JavaModelException {
+		if(packageFragment != null){
+			packageFragment.delete(true, new NullProgressMonitor());//delete the first one, we have only one package per Type
+			packageFragment = retrieveParentPackageFragment(project, packageFragment);
+			while(!packageFragment.hasChildren()){
+				//I don't find another way than passing through IResource, directly using IJavaElement seems not possible.
+				IPackageFragment parent = retrieveParentPackageFragment(project, packageFragment);
+				packageFragment.delete(true, new NullProgressMonitor());
+				if(parent instanceof IPackageFragment && !parent.isDefaultPackage()){
+					packageFragment = (IPackageFragment) parent;
+				} else {
+					return;
+				}
+			}
+		}
+	}
 
+	private IPackageFragment retrieveParentPackageFragment(IJavaProject project,
+			IPackageFragment packageFragment) throws JavaModelException {
+		final IPath pathOfParentPackageFragment = packageFragment.getResource().getParent().getFullPath();
+		IPackageFragment parent = project.findPackageFragment(pathOfParentPackageFragment);
+		return parent;
+	}
+    
 
 }
