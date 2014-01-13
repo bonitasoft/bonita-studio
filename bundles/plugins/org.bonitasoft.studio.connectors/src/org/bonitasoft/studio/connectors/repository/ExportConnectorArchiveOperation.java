@@ -185,7 +185,7 @@ public class ExportConnectorArchiveOperation {
 		return status;
 	}
 
-	protected IStatus addImplementationJar(ConnectorImplementation implementation, IFolder classpathFolder, SourceRepositoryStore sourceStore, IRepositoryStore implStore, List<IResource> resourcesToExport) throws CoreException {
+	protected IStatus addImplementationJar(ConnectorImplementation implementation, IFolder classpathFolder, SourceRepositoryStore sourceStore, IRepositoryStore implStore, List<IResource> resourcesToExport) throws CoreException, InvocationTargetException, InterruptedException {
 		final String connectorJarName = NamingUtils.toConnectorImplementationFilename(implementation.getImplementationId(), implementation.getImplementationVersion(),false) +".jar";
 		final IFile jarFile = classpathFolder.getFile(Path.fromOSString(connectorJarName)) ;
 		String qualifiedClassName = impl.getImplementationClassname() ;
