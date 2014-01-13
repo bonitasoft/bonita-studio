@@ -146,7 +146,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 
 
 	public IStatus getResult() {
-		final MultiStatus result = new MultiStatus(Activator.PLUGIN_ID, IStatus.OK, "", null);
+		final MultiStatus result = new MultiStatus(ValidationPlugin.PLUGIN_ID, IStatus.OK, "", null);
 		fileProcessed.clear();
 		for(Diagram d : toValidate){
 			EObject element = d.getElement();
@@ -175,7 +175,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 				String message = (String) m.getAttribute(IMarker.MESSAGE);
 				String fullMessage = fileName + ":" +location +" : " + message;
 				if(!statusExists(result,fullMessage)){
-					result.add(new Status(toStatusSeverity(severity), Activator.PLUGIN_ID, fullMessage));
+					result.add(new Status(toStatusSeverity(severity), ValidationPlugin.PLUGIN_ID, fullMessage));
 				}
 			}
 		}
@@ -186,7 +186,7 @@ public class BatchValidationOperation implements IRunnableWithProgress {
 				String location =  (String) m.getAttribute(IMarker.LOCATION);
 				String fullMessage = fileName + ":" +location +" : " + message;
 				if(!statusExists(result, fullMessage)){
-					result.add(new Status(toStatusSeverity(severity), Activator.PLUGIN_ID, fullMessage));
+					result.add(new Status(toStatusSeverity(severity), ValidationPlugin.PLUGIN_ID, fullMessage));
 				}
 			}
 		}
