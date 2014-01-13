@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2010-2012 BonitaSoft S.A.
+ * Copyright (C) 2010-2014 Bonitasoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
@@ -124,8 +124,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 			}
 		}
 	};
-
-
+	private LineTableCreator lineTableCreator;
 
 	public void setEditingDomain(EditingDomain editingDomain) {
 		this.editingDomain = editingDomain;
@@ -175,8 +174,12 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 		this.allowSwitchTableMode = allowSwitchTableMode;
 		this.allowRowSort = allowRowSort;
 		this.withConnectors  = withConnectors;
+		this.lineTableCreator = new LineTableCreator();
 		createComposite(composite, widgetFactory);
-
+	}
+	
+	public void setLineTableCreator(LineTableCreator lineTableCreator){
+		this.lineTableCreator = lineTableCreator;
 	}
 
 	private void createComposite(Composite parent,
@@ -483,42 +486,49 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 		Object expressionInput = viewer.getInput();
 		AbstractExpression newExpression = null;
 		if (expressionInput instanceof ListExpression) {
-			newExpression = ExpressionFactory.eINSTANCE
-					.createExpression();
-			((ListExpression) expressionInput).getExpressions().add(
-					(Expression) newExpression);
-
+			newExpression = addElementInListExpression(expressionInput);
 		} else if (expressionInput instanceof TableExpression) {
-			ListExpression rowExp = ExpressionFactory.eINSTANCE
-					.createListExpression();
-			EList<Expression> expressions = rowExp.getExpressions();
-			for (int i = 0; i < Math.max(getNbCols(), minNbCol); i++) {
-				Expression cellExpression = ExpressionFactory.eINSTANCE
-						.createExpression();
-				expressions.add(cellExpression);
-			}
-			if (editingDomain == null) {
-				editingDomain = TransactionUtil
-						.getEditingDomain(expressionInput);
-			}
-			if (editingDomain != null) {
-				editingDomain
-				.getCommandStack()
-				.execute(
-						AddCommand
-						.create(editingDomain,
-								expressionInput,
-								ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS,
-								rowExp));
-			} else {
-				((TableExpression) expressionInput).getExpressions()
-				.add(rowExp);
-
-			}
-			newExpression = rowExp;
+			newExpression = addLineInTableExpression(expressionInput);
 		}
 
 		refresh();
+		putCursorOnNewElement(colIndexToEdit, newExpression);
+	}
+
+	private AbstractExpression addElementInListExpression(Object expressionInput) {
+		AbstractExpression newExpression;
+		newExpression = ExpressionFactory.eINSTANCE.createExpression();
+		((ListExpression) expressionInput).getExpressions().add((Expression) newExpression);
+		return newExpression;
+	}
+
+	private AbstractExpression addLineInTableExpression(Object expressionInput) {
+		AbstractExpression newExpression;
+		ListExpression rowExp = createListExpressionForNewLineInTable();
+		if (editingDomain == null) {
+			editingDomain = TransactionUtil.getEditingDomain(expressionInput);
+		}
+		if (editingDomain != null) {
+			editingDomain
+			.getCommandStack()
+			.execute(
+					AddCommand
+					.create(editingDomain,
+							expressionInput,
+							ExpressionPackage.Literals.TABLE_EXPRESSION__EXPRESSIONS,
+							rowExp));
+		} else {
+			((TableExpression) expressionInput).getExpressions().add(rowExp);
+		}
+		newExpression = rowExp;
+		return newExpression;
+	}
+
+	private ListExpression createListExpressionForNewLineInTable() {
+		return lineTableCreator.createListExpressionForNewLineInTable(Math.max(getNbCols(), minNbCol));
+	}
+
+	private void putCursorOnNewElement(final int colIndexToEdit, AbstractExpression newExpression) {
 		final AbstractExpression expressionToEdit= newExpression;
 		Display.getDefault().asyncExec(new Runnable() {
 
@@ -1060,7 +1070,7 @@ public class ExpressionCollectionViewer implements IBonitaVariableContext {
 
 	@Override
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
-	this.isPageFlowContext = isPageFlowContext;
+		this.isPageFlowContext = isPageFlowContext;
 	}
 
 }
