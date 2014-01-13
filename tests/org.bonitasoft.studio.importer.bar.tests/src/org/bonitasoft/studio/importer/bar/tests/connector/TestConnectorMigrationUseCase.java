@@ -454,6 +454,22 @@ public class TestConnectorMigrationUseCase {
 			}
 		}
 	}
+	
+	@Test
+	public void testConnectorOutputMigration() throws Exception {
+		final MainProcess mainProc = importBar("ConnectorWithOutputs--1.0.bar");
+		final List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
+		assertEquals("Invalid number of connector", 1, connectors.size());
+
+		Connector connector = connectors.get(0);
+		assertEquals("Invalid number of connector", 1, connector.getOutputs().size());
+
+		Operation ope =  connector.getOutputs().get(0);
+		assertNotNull("ReferencedElement should not be null", ope.getRightOperand().getReferencedElements());
+		assertEquals("Wrong name of of right operand", ope.getRightOperand().getName(),"p1");
+		assertEquals("Wrong return type of right operand", ope.getRightOperand().getReturnType(),Boolean.class.getName());
+
+	}
 
 	private MainProcess importBar(final String barName) throws Exception {
 		final URL url = TestConnectorMigrationUseCase.class.getResource(barName);
