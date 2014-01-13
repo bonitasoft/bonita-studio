@@ -189,6 +189,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		this(composite, style, widgetFactory, editingDomain, expressionReference, false);
 
 	}
+	
 
 	public ExpressionViewer(Composite composite, int style, TabbedPropertySheetWidgetFactory widgetFactory,
 			EditingDomain editingDomain, EReference expressionReference, boolean withConnector) {
@@ -401,7 +402,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		dialog.setIsPageFlowContext(isPageFlowContext);
 		if (dialog.open() == Dialog.OK) {
 			Expression newExpression = dialog.getExpression();
-			boolean hasBeenExecuted = executeOperation(newExpression.getName());
+			executeOperation(newExpression.getName());
 			updateSelection(newExpression);
 			setSelection(new StructuredSelection(selectedExpression));
 			if (editingDomain == null) {
@@ -631,7 +632,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 							&& !ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
 						if (selectedExpression != null && selectedExpression.isReturnTypeFixed()
 								&& selectedExpression.getReturnType() != null) {
-							if (!compatibleReturnTypes(exp)) {
+							if (!compatibleReturnTypes(selectedExpression,exp)) {
 								toRemove.add(exp);
 							}
 						}
@@ -643,18 +644,18 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		return filteredExpressions;
 	}
 
-	protected boolean compatibleReturnTypes(Expression exp) {
-		final String currentReturnType = selectedExpression.getReturnType();
-		final String expressionReturnType = exp.getReturnType();
-		if (currentReturnType.equals(expressionReturnType)) {
+	protected boolean compatibleReturnTypes(Expression currentExpression,Expression targetExpression) {
+		final String currentReturnType = currentExpression.getReturnType();
+		final String targetReturnType = targetExpression.getReturnType();
+		if (currentReturnType.equals(targetReturnType)) {
 			return true;
 		}
 		try {
 			Class<?> currentReturnTypeClass = Class.forName(currentReturnType);
-			Class<?> expressionReturnTypeClass = Class.forName(expressionReturnType);
-			return currentReturnTypeClass.isAssignableFrom(expressionReturnTypeClass);
-		} catch (Exception e) {
-			BonitaStudioLog.warning("Failed to determine the compatibility between " + expressionReturnType + " and "
+			Class<?> targetReturnTypeClass = Class.forName(targetReturnType);
+			return currentReturnTypeClass.isAssignableFrom(targetReturnTypeClass);
+		} catch (ClassNotFoundException e) {
+			BonitaStudioLog.warning("Failed to determine the compatibility between " + targetReturnType + " and "
 					+ currentReturnType, ExpressionEditorPlugin.PLUGIN_ID);
 		}
 		return true;
