@@ -38,7 +38,6 @@
 		<module>org.bonitasoft.studio.diagram.form.properties.nl_ja</module>
 		<module>org.bonitasoft.studio.document.nl_ja</module>
 		<module>org.bonitasoft.studio.engine.nl_ja</module>
-		<module>org.bonitasoft.studio.examples.nl_ja</module>
 		<module>org.bonitasoft.studio.exporter.nl_ja</module>
 		<module>org.bonitasoft.studio.expression.editor.nl_ja</module>
 		<module>org.bonitasoft.studio.form.preview.nl_ja</module>
