@@ -65,6 +65,8 @@ public abstract class AbstractFormPreviewInitialization {
 	protected ApplicationLookNFeelFileStore lookNFeel;
 	protected IBrowserDescriptor browser;
 	public static final String VERSION ="1.0";
+	private static final String EMPTY_LIST = "empty_list";
+	private static final String GROOVY_SCRIPT_EMPTY_LIST= "[]";
 	protected boolean isOnTask = false;
 	protected boolean canPreview = true;
 
@@ -188,12 +190,14 @@ public abstract class AbstractFormPreviewInitialization {
 			handleVariableExpression(form, expr);
 		} else if (ExpressionConstants.PARAMETER_TYPE.equals(expr.getType())){
 			handleParameterExpression(expr);
-		} else if(!ExpressionConstants.CONSTANT_TYPE.equals(expr.getType())){
+		} else if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())){
+			handleScriptExpression(expr);
+		}
+		else if(!ExpressionConstants.CONSTANT_TYPE.equals(expr.getType())){
 			toEmptyConstantExpression(expr);
 		}
 		return expr;
 	}
-
 
 	protected void toEmptyConstantExpression(Expression expr) {
 		expr.setType(ExpressionConstants.CONSTANT_TYPE);
@@ -209,6 +213,16 @@ public abstract class AbstractFormPreviewInitialization {
 		expr.setContent(parameter.getValue());
 	}
 
+	
+	protected void handleScriptExpression(Expression expr){
+		if (expr.getReferencedElements()==null || expr.getReferencedElements().isEmpty()){
+			if (EMPTY_LIST.equals(expr.getName()) && GROOVY_SCRIPT_EMPTY_LIST.equals(expr.getContent())){
+				toEmptyConstantExpression(expr);
+			}
+		} if (expr.getReferencedElements()!=null && !expr.getReferencedElements().isEmpty()){
+			toEmptyConstantExpression(expr);
+		}
+	}
 
 	protected void handleVariableExpression(Form form, Expression expr) {
 		Data data = getReferencedData(form, expr);
