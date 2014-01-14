@@ -76,7 +76,6 @@ private org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer too
 		root = paletteRoot;//required because root is used in configurePaletteViewer
 		return paletteRoot;
 	}
-}
 «ENDAROUND»
 
 «AROUND configureGraphicalViewer FOR gmfgen::GenEditorView-»
