@@ -35,10 +35,8 @@ import org.bonitasoft.studio.engine.test.TestSubprocessEventExport;
 import org.bonitasoft.studio.exporter.tests.api.TestBonitaExportModel;
 import org.bonitasoft.studio.exporter.tests.autologin.TestAutoLogin;
 import org.bonitasoft.studio.groovy.tests.TestFunctionRepository;
-import org.bonitasoft.studio.importer.jpdl.tests.TestBug1618;
 import org.bonitasoft.studio.importer.jpdl.tests.TestJBPMImport;
 import org.bonitasoft.studio.importer.test.api.ProcBuilderTests;
-import org.bonitasoft.studio.importer.test.bonita4.TestBug1625;
 import org.bonitasoft.studio.importer.test.bonita4.TestImportXPDL;
 import org.bonitasoft.studio.importer.test.bpmn2.TestImportBPMN2;
 import org.bonitasoft.studio.importer.test.extensions.TestImportExtensionPoint;
@@ -59,7 +57,6 @@ import org.bonitasoft.studio.tests.TestBugSave;
 import org.bonitasoft.studio.tests.TestFullScenario;
 import org.bonitasoft.studio.tests.TestPathSize;
 import org.bonitasoft.studio.tests.TestURLs;
-import org.bonitasoft.studio.tests.TestVersion;
 import org.bonitasoft.studio.tests.conditions.TestConditions;
 import org.bonitasoft.studio.tests.subprocess.TestSubprocess;
 import org.bonitasoft.studio.util.test.BonitaJunit4TestSuite;
@@ -108,15 +105,12 @@ import org.junit.runners.Suite;
     TestSimulationLoadProfileRepository.class,
     TestSimulationExporter.class,
     TestBugSave.class,
-    TestVersion.class,
     TestImportExtensionPoint.class,
     ProcBuilderTests.class,
     TestImportXPDL.class,
     TestImportRepository.class,
-    TestBug1625.class,
     TestImportBPMN2.class,
     TestJBPMImport.class,
-    TestBug1618.class,
     TestAddJar.class,
     TestJavaDoc.class,
     TestOperationHistory.class,

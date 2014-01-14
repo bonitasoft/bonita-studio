@@ -33,8 +33,16 @@ import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.databinding.ObservablesManager;
+import org.eclipse.core.databinding.observable.ChangeEvent;
+import org.eclipse.core.databinding.observable.IChangeListener;
+import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
+import org.eclipse.emf.databinding.edit.EMFEditProperties;
+import org.eclipse.emf.databinding.edit.IEMFEditListProperty;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -79,6 +87,11 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
     private ActorNameEditingSupport nameEditingSupport;
     private ActorDescripitonEditingSupport descripitonEditingSupport;
     private Button setAsInitiatorButton;
+    protected ObservablesManager observablesManager = new ObservablesManager();
+    private IChangeListener actorListener;
+    private IObservableList observeActorsList;
+	private IObservableList observeActorsNameList;
+    
 
     @Override
     public void createControls(Composite parent,TabbedPropertySheetPage aTabbedPropertySheetPage) {
@@ -286,6 +299,28 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
     }
 
 
+    private void bindActorList(){
+    	if (observeActorsList != null 
+				&& actorListener!=null 
+				&& observeActorsNameList!=null ){
+    		observeActorsList.removeChangeListener(actorListener);
+    		observeActorsList.dispose();
+    		observeActorsNameList.removeChangeListener(actorListener);
+    		observeActorsList.dispose();
+    	} 
+		IEMFEditListProperty list = EMFEditProperties.list(getEditingDomain(), getActorFeature());
+		observeActorsList = list.observe(getEObject());
+		observeActorsNameList = list.values(ProcessPackage.Literals.ELEMENT__NAME).observe(getEObject());
+		actorListener = new IChangeListener() {
+
+			@Override
+			public void handleChange(ChangeEvent event) {
+				actorsViewer.refresh();
+			}
+		};
+		observeActorsList.addChangeListener(actorListener);
+		observeActorsNameList.addChangeListener(actorListener);
+    }
 
 
     @Override
@@ -295,6 +330,7 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
             AbstractProcess process = (AbstractProcess) getEObject() ;
             actorsViewer.setInput(EMFEditObservables.observeList(getEditingDomain(), process, ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS)) ;
             updateButtons() ;
+            bindActorList();
         }
     }
 
@@ -337,9 +373,18 @@ public class ProcessActorsPropertySection extends AbstractBonitaDescriptionSecti
 
     }
 
+    protected EStructuralFeature getActorFeature(){
+    	return ProcessPackage.Literals.ABSTRACT_PROCESS__ACTORS;
+    }
 
     @Override
     public String getSectionDescription() {
         return Messages.addRemoveActors;
     }
+    
+    @Override
+	public void setEObject(EObject object) {
+		super.setEObject(object);
+		bindActorList();
+	}
 }

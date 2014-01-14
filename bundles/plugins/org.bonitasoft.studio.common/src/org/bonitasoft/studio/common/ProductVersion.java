@@ -27,13 +27,13 @@ public class ProductVersion {
 	//OEM Variable to be use for redirect urls
 	public static final String REDIRECT_URL_PRODUCT_ID = "bos";
     public static final String VERSION_6_0_0_ALPHA = "6.0.0-Alpha";
-
-	public static final String CURRENT_VERSION = "6.2.0";
+    public static final String CURRENT_VERSION = "6.3.0";
 
 
     public static boolean sameVersion(String version){
         return CURRENT_VERSION.equals(version);
     }
+
 
     public static boolean sameMinorVersion(String version){
         if(version == null){

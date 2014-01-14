@@ -30,6 +30,7 @@ import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarker
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 
@@ -59,7 +60,7 @@ public class UniqueContainerIdConstraint extends AbstractLiveValidationMarkerCon
 			final DiagramRepositoryStore diagramStore =  (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 			final List<AbstractProcess> allProcesses = diagramStore.getAllProcesses();
 			for (AbstractProcess other_p : allProcesses) {
-				if(!p.equals(other_p) && p.getName().equals(other_p.getName()) && p.getVersion().equals(other_p.getVersion())){
+				if(!EcoreUtil.equals(p,other_p) && p.getName().equals(other_p.getName()) && p.getVersion().equals(other_p.getVersion())){
 					return ctx.createFailureStatus(new Object[] { Messages.bind(Messages.Validation_Duplicate_Process , p.getName(), p.getVersion())});
 				}
 			}

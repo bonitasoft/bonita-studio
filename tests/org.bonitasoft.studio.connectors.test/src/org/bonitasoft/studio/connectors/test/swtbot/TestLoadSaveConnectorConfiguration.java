@@ -82,7 +82,14 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 		SWTBotTestUtil.createNewDiagram(bot);
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
 		createData(dataName);
-		SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorDefId,version, new String[]{"Uncategorized"},name);
+		//SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorDefId,version, new String[]{"Uncategorized"},name);
+		SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
+		bot.button("Add...").click();
+		bot.text().setText(connectorDefId);
+		bot.table().select(connectorDefId);
+		bot.button(IDialogConstants.NEXT_LABEL).click();
+		//SWTBotConnectorTestUtil.addConnectorToPool(bot, connectorLabel,connectorVersion,dbCategoryLabel, connectorName);
+		bot.textWithLabel("Name *").setText(name);
         bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.textWithLabel("text").setText("hello world");
         bot.sleep(1000); // Due to delayed observable on databinding
@@ -102,8 +109,10 @@ public class TestLoadSaveConnectorConfiguration extends SWTBotGefTestCase {
 		//add a new connector and load previous configuration connector
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "Connectors");
 		bot.button("Add...").click();
-		bot.tree().setFocus();
-		bot.tree().expandNode("Uncategorized").select(connectorDefId + " (" + version + ")");
+		//bot.tree().setFocus();
+		//bot.tree().expandNode("Uncategorized").select(connectorDefId + " (" + version + ")");
+		bot.text().setText(connectorDefId);
+		bot.table().select(connectorDefId);
 		bot.button(IDialogConstants.NEXT_LABEL).click();
 		bot.textWithLabel("Name *").setText(name2);
 		bot.button(IDialogConstants.NEXT_LABEL).click();

@@ -46,7 +46,6 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -65,7 +64,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -83,6 +81,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
 	public static final Object FORCE_OVERRITE = null;
 	protected static final String APPLI_PATH = "/bonita?"; //$NON-NLS-1$;
+	public static final String PROCESS = "process";
 
 	protected boolean runSynchronously;
 	private boolean hasInitiator;
@@ -93,25 +92,28 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 	private URL url;
 
 	public RunProcessCommand() {
-		this(null,false);
+		this(false);
 	}
 
-
-	public RunProcessCommand(AbstractProcess proc,boolean runSynchronously) {
+	public RunProcessCommand(boolean runSynchronously) {
 		this.runSynchronously = runSynchronously;
 		excludedObject = new HashSet<EObject>();
+	}
+
+	public RunProcessCommand(AbstractProcess proc,boolean runSynchronously) {
+		this(runSynchronously);
 		selectedProcess = proc ;
 	}
 
+	
+	public RunProcessCommand(Set<EObject> excludedObject) {
+		new RunProcessCommand(excludedObject, false);
+	}
 
- 
-	public RunProcessCommand(AbstractProcess proc,Set<EObject> excludedObject,boolean runSynchronously) {
-		this(proc,runSynchronously);
+	public RunProcessCommand(Set<EObject> excludedObject, boolean runSynchronously) {
+		this(runSynchronously);
 		this.excludedObject = excludedObject ;
-}
-
-		
-
+	}
 
 
 	/* (non-Javadoc)
@@ -148,7 +150,6 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 					if(!FileActionDialog.getDisablePopup()){
 						String errorMessage = Messages.errorValidationMessage +PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle()+Messages.errorValidationContinueAnywayMessage ;
 						int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,errorMessage, ValidationDialog.YES_NO_SEEDETAILS).open();
-
 						if(result == ValidationDialog.NO){
 							return null;
 						}else if(result == ValidationDialog.SEE_DETAILS){
@@ -221,14 +222,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 					return ;
 				}
 
-				AbstractProcess p = null;
-				try {
-					p = getProcessToRun(event);
-				} catch (ExecutionException e1) {
-					status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,e1.getMessage(),e1);
-					BonitaStudioLog.error(e1) ;
-				}
-
+				final AbstractProcess p = getProcessToRun(event) ;
 				hasInitiator= hasInitiator(p);
 
 
@@ -238,7 +232,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 						if(!runSynchronously){
 							BOSWebServerManager.getInstance().startServer(monitor) ;
 							if (hasInitiator){
-							new OpenBrowserCommand(url, BonitaPreferenceConstants.APPLICATION_BROWSER_ID, "Bonita Application").execute(null) ;
+								new OpenBrowserCommand(url, BonitaPreferenceConstants.APPLICATION_BROWSER_ID, "Bonita Application").execute(null) ;
 							} else {
 								final AbstractProcess proc=p;
 								Display.getDefault().syncExec(new Runnable() {
@@ -248,7 +242,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 										String pref =preferenceStore.getString(EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR);
 										if (MessageDialogWithToggle.NEVER.equals(pref)){
 											MessageDialogWithToggle mdwt = MessageDialogWithToggle.openWarning(Display.getDefault().getActiveShell(), Messages.noInitiatorDefinedTitle, Messages.bind(Messages.noInitiatorDefinedMessage,
-													proc.getName()), 
+													p.getName()), 
 													Messages.dontaskagain, 
 													false, preferenceStore, EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR);
 										} 
@@ -257,7 +251,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 								});
 
 								status=openConsole();
-						}
+							}
 						}
 					}catch (Exception e) {
 						status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,e.getMessage(),e);
@@ -331,9 +325,9 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 		return false;
 	}
 
-	protected AbstractProcess getProcessToRun(ExecutionEvent event) throws ExecutionException {
-		if(selectedProcess !=null && selectedProcess instanceof Pool){
-			return selectedProcess;
+	protected AbstractProcess getProcessToRun(ExecutionEvent event) {
+		if(event !=null && event.getParameters().get(PROCESS) != null){
+			return (AbstractProcess) event.getParameters().get(PROCESS) ;
 		}else{
 			IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor() ;
 			boolean isADiagram = editor != null && editor instanceof DiagramEditor;
@@ -365,7 +359,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 		return configurationId;
 	}
 
-	protected Set<AbstractProcess> getProcessesToDeploy(ExecutionEvent event) throws ExecutionException{
+	protected Set<AbstractProcess> getProcessesToDeploy(ExecutionEvent event){
+
 		Set<AbstractProcess> result = new TreeSet<AbstractProcess>(new Comparator<AbstractProcess>() {
 
 			@Override
@@ -375,7 +370,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 				return  s1.compareTo(s2) ;
 			}
 		});
-		if(selectedProcess != null && selectedProcess instanceof Pool){
+		if(event != null && event.getParameters().get(PROCESS) != null){
+			selectedProcess = (AbstractProcess) event.getParameters().get(PROCESS) ;
 			Set<AbstractProcess> calledProcesses = new HashSet<AbstractProcess>();
 			findCalledProcesses(selectedProcess,calledProcesses);
 			if(!calledProcesses.isEmpty()){

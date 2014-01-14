@@ -20,8 +20,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
-import org.bonitasoft.studio.importer.ToProcProcessor;
+import org.bonitasoft.studio.importer.processors.ToProcProcessor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 
@@ -33,7 +34,9 @@ public class BosArchiveProcessor extends ToProcProcessor {
 
 
 
-    public BosArchiveProcessor(String resourceName) {
+    private ImportBosArchiveOperation operation;
+
+	public BosArchiveProcessor(String resourceName) {
 
     }
 
@@ -43,11 +46,9 @@ public class BosArchiveProcessor extends ToProcProcessor {
     @Override
     public File createDiagram(URL sourceFileURL, IProgressMonitor progressMonitor) throws Exception {
         final File archiveFile = new File(URI.decode(sourceFileURL.getFile())) ;
-
-        final ImportBosArchiveOperation operation = new ImportBosArchiveOperation() ;
+        operation = new ImportBosArchiveOperation() ;
         operation.setArchiveFile(archiveFile.getAbsolutePath());
         operation.run(progressMonitor) ;
-
         return null ;
     }
 
@@ -59,6 +60,11 @@ public class BosArchiveProcessor extends ToProcProcessor {
     @Override
     public List<File> getResources() {
         return null;
+    }
+    
+    @Override
+    public List<IRepositoryFileStore> getDiagramFileStoresToOpen() {
+    	return operation.getFileStoresToOpen();
     }
 
     /* (non-Javadoc)

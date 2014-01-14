@@ -83,5 +83,7 @@ public class Messages extends NLS {
 	public static String GridRulerPreferencePage_snapToGeometry_label;
 	public static String GridRulerPreferencePage_gridSpacing_label_cm;
 	public static String extractAsSubprocessNewPoolName;
+	public static String warningDuplicateDialogTitle;
+	public static String poolAlreadyExistWarningMessage;
 
 }

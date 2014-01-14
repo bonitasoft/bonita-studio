@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Import from other models to BOS
 Bundle-SymbolicName: org.bonitasoft.studio.importer;singleton:=true
-Bundle-Version: 6.2.0.qualifier
-Bundle-Activator: org.bonitasoft.studio.importer.Activator
+Bundle-Activator: org.bonitasoft.studio.importer.ImporterPlugin
+Bundle-Version: 6.3.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -17,18 +17,23 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.model;bundle-version="1.0.0",
  org.eclipse.gmf.runtime.notation;bundle-version="1.2.0",
  org.eclipse.gmf.runtime.diagram.core;bundle-version="1.2.1",
+ org.bonitasoft.studio.common;bundle-version="6.2.0",
  org.bonitasoft.studio.diagram;bundle-version="1.0.0",
  org.bonitasoft.studio.xpdl;bundle-version="1.0.0",
  org.eclipse.gmf.runtime.diagram.ui;bundle-version="1.2.1",
  org.omg.schema.spec.bpmn;bundle-version="1.0.0",
  org.bonitasoft.studio.expression.editor;bundle-version="1.0.0",
- org.bonitasoft.studio.data;bundle-version="1.0.0"
+ org.bonitasoft.studio.data;bundle-version="1.0.0",
+ org.bonitasoft.studio.common.repository;bundle-version="6.2.0",
+ org.bonitasoft.studio.diagram.custom;bundle-version="6.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.importer,
  org.bonitasoft.studio.importer.bonita4,
  org.bonitasoft.studio.importer.bpmn,
- org.bonitasoft.studio.importer.builder
+ org.bonitasoft.studio.importer.builder,
+ org.bonitasoft.studio.importer.handler,
+ org.bonitasoft.studio.importer.processors
 Bundle-ClassPath: .
 Bundle-Localization: plugin
 Import-Package: org.bonitasoft.engine.bpm.connector

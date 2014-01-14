@@ -17,6 +17,8 @@
  */
 package org.bonitasoft.studio.groovy.tests;
 
+import static org.bonitasoft.studio.dependencies.i18n.Messages.selectMissingJarTitle;
+
 import java.io.IOException;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
@@ -27,11 +29,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.bonitasoft.studio.dependencies.i18n.Messages.selectMissingJarTitle;
 /**
  * @author Aurelien Pupier
  */
@@ -74,6 +76,15 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
         if(!FileActionDialog.getDisablePopup()){
             bot.button(IDialogConstants.OK_LABEL).click();
         }
+        
+    }
+    
+    @After
+    public void closeDialog() throws Exception{
+    	SWTBotButton button = bot.button(IDialogConstants.CANCEL_LABEL);
+		if(button.isEnabled()){
+    		button.click();
+    	}
     }
 
 }

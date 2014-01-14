@@ -77,11 +77,6 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
         isInitalized = true;
     }
 
-    @Test
-    @Ignore
-    public void testSingleConnectorOnServiceTask_name() throws IOException, ExecutionException{
-        assertEquals("Connector name is not correct", connectorName, connectorAfterReimport.getName());
-    }
 
     @Test
     public void testSingleConnectorOnServiceTask_version() throws IOException, ExecutionException{
@@ -194,9 +189,9 @@ public class BPMNConnectorExportImportTest extends SWTBotGefTestCase {
     }
 
 
-    //check connector parameter mapping with variable
-    //check connector parameter mapping with groovy script
-    //check connector output mapping
+    //TODO check connector parameter mapping with variable
+    //TODO check connector parameter mapping with groovy script
+    //TODO check connector output mapping
 
     protected void prepareTest() throws IOException {
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "diagramToTestConnectorBPMNImportExport-1.0.bos", "Bonita 6.x", "diagramToTestConnectorBPMNImportExport", BPMNConnectorExportImportTest.class, false);

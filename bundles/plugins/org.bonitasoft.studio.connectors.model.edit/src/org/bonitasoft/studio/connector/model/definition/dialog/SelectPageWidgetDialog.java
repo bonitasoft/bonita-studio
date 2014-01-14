@@ -40,6 +40,7 @@ import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.RadioGroup;
 import org.bonitasoft.studio.connector.model.definition.ScriptEditor;
 import org.bonitasoft.studio.connector.model.definition.Select;
+import org.bonitasoft.studio.connector.model.definition.Widget;
 import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
 import org.bonitasoft.studio.connector.model.definition.dialog.suport.CaptionEditingSupport;
 import org.bonitasoft.studio.connector.model.definition.dialog.suport.RadioGroupItemEditingSupport;
@@ -58,6 +59,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.jface.databinding.fieldassist.ControlDecorationSupport;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -103,12 +105,14 @@ public class SelectPageWidgetDialog extends Dialog {
 
     private Section section;
     private final Set<String> existingWidgetIds;
+	private Set<String> alreadyBoundInputs;
     private static List<EClass> widgetTypes;
     private List<Orientation> orientations;
     private final List<Input> inputs = new ArrayList<Input>();
     private DialogSupport dialogSupport;
     private ISWTObservableValue idTextObservable;
     private IViewerObservableValue inputSelectionObservable;
+
     static {
         widgetTypes = new ArrayList<EClass>();
         widgetTypes.add(ConnectorDefinitionPackage.Literals.TEXT);
@@ -141,6 +145,16 @@ public class SelectPageWidgetDialog extends Dialog {
         if(original != null && original.getId() != null){
             existingWidgetIds.remove(original.getId().toLowerCase());
         }
+        alreadyBoundInputs = new HashSet<String>();
+        for (Component c : allComponents) {
+        	if(c instanceof WidgetComponent){
+        		alreadyBoundInputs.add(((Widget)c).getInputName());
+        	}
+        	
+        }
+        if(original != null && original instanceof WidgetComponent && ((WidgetComponent) original).getInputName() != null){
+        	alreadyBoundInputs.remove(((WidgetComponent) original).getInputName());
+        }
         orientations = new ArrayList<Orientation>();
         orientations.add(Orientation.HORIZONTAL);
         orientations.add(Orientation.VERTICAL);
@@ -160,7 +174,7 @@ public class SelectPageWidgetDialog extends Dialog {
         mainComposite.setLayoutData(GridDataFactory.fillDefaults()
                 .grab(true, true).hint(400, SWT.DEFAULT).create());
         mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2)
-                .margins(15, 10).create());
+                .margins(15, 10).spacing(15, 5).create());
 
         context = new DataBindingContext();
         if (component == null) {
@@ -319,6 +333,9 @@ public class SelectPageWidgetDialog extends Dialog {
                     if (value == null || value.toString().isEmpty()) {
                         return ValidationStatus.error(Messages.inputIsEmpty);
                     }
+                    if(alreadyBoundInputs.contains(value.toString())){
+                    	return ValidationStatus.error(Messages.inputAlreadyUseInAnotherWidget);
+                    }
                     return Status.OK_STATUS;
                 }
             });
@@ -338,12 +355,12 @@ public class SelectPageWidgetDialog extends Dialog {
             });
 
 
-            context.bindValue(inputSelectionObservable,
+            ControlDecorationSupport.create(context.bindValue(inputSelectionObservable,
                     EMFObservables
                     .observeValue(
                             component,
                             ConnectorDefinitionPackage.Literals.WIDGET_COMPONENT__INPUT_NAME),
-                            targetToModel, modelToTarget);
+                            targetToModel, modelToTarget),SWT.LEFT);
         }
     }
 
@@ -378,10 +395,10 @@ public class SelectPageWidgetDialog extends Dialog {
         }
 
         context.removeBinding(toRemove);
-        context.bindValue(idTextObservable,
+        ControlDecorationSupport.create(context.bindValue(idTextObservable,
                 EMFObservables.observeValue(component,
                         ConnectorDefinitionPackage.Literals.COMPONENT__ID),
-                        idStrategy, null);
+                        idStrategy, null),SWT.LEFT);
     }
 
     @Override
@@ -990,3 +1007,4 @@ public class SelectPageWidgetDialog extends Dialog {
         this.description = description;
     }
 }
+

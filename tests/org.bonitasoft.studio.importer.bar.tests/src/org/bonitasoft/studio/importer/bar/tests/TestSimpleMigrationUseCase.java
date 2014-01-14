@@ -28,6 +28,7 @@ import java.util.List;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
@@ -52,16 +53,18 @@ import org.bonitasoft.studio.model.process.ActorFilter;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.CorrelationTypeActive;
 import org.bonitasoft.studio.model.process.DataType;
+import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.NonInterruptingBoundaryTimerEvent;
 import org.bonitasoft.studio.model.process.ProcessPackage;
+import org.bonitasoft.studio.model.process.StartMessageEvent;
 import org.bonitasoft.studio.model.simulation.SimulationData;
 import org.bonitasoft.studio.model.simulation.SimulationPackage;
 import org.bonitasoft.studio.validators.descriptor.validator.ValidatorDescriptor;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorFileStore;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
-import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.core.IJavaProject;
 import org.junit.AfterClass;
@@ -300,18 +303,40 @@ public class TestSimpleMigrationUseCase {
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
 		List<Message> messages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.MESSAGE);
+		List<EObject> startMessageEventList = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.START_MESSAGE_EVENT);
 		for(Message message : messages){
 			assertFalse("Message content should not be empty",message.getMessageContent().getExpressions().isEmpty());
 			assertFalse("Message target processs hould not be empty",message.getTargetProcessExpression().getContent().isEmpty());
 			assertFalse("Message target element should not be empty",message.getTargetElementExpression().getContent().isEmpty());
-			assertEquals("Invalid correlation type",CorrelationTypeActive.KEYS,message.getCorrelation().getCorrelationType());
+			Expression target = message.getTargetElementExpression();
+
+			if (isTargetIsStartMessageEvent(startMessageEventList, target.getName())) {
+				assertEquals("Invalid correlation type",CorrelationTypeActive.INACTIVE,message.getCorrelation().getCorrelationType());
+			} else {
+				assertEquals("Invalid correlation type",CorrelationTypeActive.KEYS,message.getCorrelation().getCorrelationType());
+			}
 			assertFalse("Invalid correlation association",message.getCorrelation().getCorrelationAssociation().getExpressions().isEmpty());
 		}
 		List<AbstractCatchMessageEvent> catchMessages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ABSTRACT_CATCH_MESSAGE_EVENT);
 		for(AbstractCatchMessageEvent message : catchMessages){
-			assertFalse("Invalid correlation association",message.getCorrelation().getExpressions().isEmpty());
+			if (!(message instanceof StartMessageEvent)){
+				assertFalse("Invalid correlation association",message.getCorrelation().getExpressions().isEmpty());
+			}
+			else {
+				assertTrue("startMessageEvent should not contain correlation Keis", message.getCorrelation()==null);
+			}
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+
+	private boolean isTargetIsStartMessageEvent(List<EObject> allStartMessagesEvent, String name){
+		for (EObject messageEvent:allStartMessagesEvent){
+			StartMessageEvent sme = (StartMessageEvent)messageEvent;
+			if (sme.getName().equals(name)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Test
@@ -422,9 +447,9 @@ public class TestSimpleMigrationUseCase {
 		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
 		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
 		List<Validator> validators = ModelHelper.getAllItemsOfType(mainProc, FormPackage.Literals.VALIDATOR);
+		RepositoryManager.getInstance().getCurrentRepository().refresh(Repository.NULL_PROGRESS_MONITOR);
 		final IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
 		final ValidatorDescriptorRepositoryStore validatorDescriptorStore = (ValidatorDescriptorRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ValidatorDescriptorRepositoryStore.class);
-		final ValidatorSourceRepositorySotre validatorSourceStore = (ValidatorSourceRepositorySotre)RepositoryManager.getInstance().getRepositoryStore(ValidatorSourceRepositorySotre.class);
 		for(Validator validator : validators){
 			if(!(ModelHelper.getParentWidget(validator).eContainer() instanceof Expression)){
 				assertNotNull("Validator error message is missing",validator.getDisplayName());
@@ -434,10 +459,6 @@ public class TestSimpleMigrationUseCase {
 				assertNotNull("Validator descriptor is missing",validatorDescriptor);
 				final ValidatorDescriptorFileStore filseSotre = (ValidatorDescriptorFileStore) validatorDescriptorStore.getChild(validatorDescriptor.getName()+"."+ValidatorDescriptorRepositoryStore.VALIDATOR_EXT);
 				assertNotNull("Validator descriptor file store is missing",filseSotre);
-//				UNCOMMENT WHEN IMPLEMENTED
-//				if(!filseSotre.isReadOnly()){ //Not a provided validator descriptor
-//					assertNotNull("Custom validator source file is missing",validatorSourceStore.getChild(validator.getValidatorClass()));
-//				}
 			}
 		}
 
@@ -559,7 +580,7 @@ public class TestSimpleMigrationUseCase {
 		}
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
 	}
-	
+
 	@Test
 	public void testSendTaskMigration() throws Exception{
 		final URL url = TestSimpleMigrationUseCase.class.getResource("TestSendTaskMigration--1.0.bar");
@@ -571,6 +592,46 @@ public class TestSimpleMigrationUseCase {
 		List<AbstractKPIBinding> messages = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.MESSAGE);
 		assertTrue("Send Task should have one message only",messages.size() == 1);
 		BarImporterTestUtil.assertViewsAreConsistent(resource);
+	}
+
+	@Test
+	public void testConnectorIgnoreErrorMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("TestConnectorIgnoreErrorMigration--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<Connector> connectors = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.CONNECTOR);
+		for(Connector c : connectors){
+			String name = c.getName();
+			if(name.equals("ignoreError")){
+				assertTrue(c.isIgnoreErrors());
+			}else if(name.equals("putInFailedState")){
+				assertFalse(c.isIgnoreErrors());
+			}else if(name.equals("throwEvent")){
+				assertFalse(c.isIgnoreErrors());
+				assertTrue(c.isThrowErrorEvent());
+			}
+		}
+	}
+
+	@Test
+	public void testDescriptionMaxLenghtMigration() throws Exception{
+		final URL url = TestSimpleMigrationUseCase.class.getResource("MigrationDefect1--1.0.bar");
+		final File migratedProc =  BarImporterTestUtil.migrateBar(url);
+		assertNotNull("Fail to migrate bar file", migratedProc);
+		assertNotNull("Fail to migrate bar file", migratedProc.exists());
+		final Resource resource = BarImporterTestUtil.assertIsLoadable(migratedProc);
+
+		final MainProcess mainProc = BarImporterTestUtil.getMainProcess(resource);
+		List<Element> elements = ModelHelper.getAllItemsOfType(mainProc, ProcessPackage.Literals.ELEMENT);
+		for(Element e : elements){
+			String documentation = e.getDocumentation();
+			assertTrue(documentation.length() < 255);
+		}
+
 	}
 
 }

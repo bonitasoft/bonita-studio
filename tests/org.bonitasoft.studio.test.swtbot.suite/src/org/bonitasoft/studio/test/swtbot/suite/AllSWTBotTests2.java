@@ -8,15 +8,12 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.test.swtbot.TestProcessDependencies;
-import org.bonitasoft.studio.connectors.test.swtbot.ConnectorConfigurationTest;
 import org.bonitasoft.studio.data.test.DataSWTBotTests;
-import org.bonitasoft.studio.diagram.form.custom.tests.TestBug1682;
 import org.bonitasoft.studio.diagram.test.NewRunTest;
 import org.bonitasoft.studio.diagram.test.SharedEditingDomainTests;
 import org.bonitasoft.studio.diagram.test.TestBoundariesCreation;
 import org.bonitasoft.studio.diagram.test.TestBug1640;
 import org.bonitasoft.studio.diagram.test.TestConvertToMessage;
-import org.bonitasoft.studio.diagram.test.TestImportAndOverrideWithEditorOpen;
 import org.bonitasoft.studio.diagram.test.TestMoveBetweenLane;
 import org.bonitasoft.studio.diagram.test.TestSave;
 import org.bonitasoft.studio.engine.test.bar.BarExporterTest;
@@ -37,6 +34,7 @@ import org.bonitasoft.studio.tests.attachment.TestRunWithDocument;
 import org.bonitasoft.studio.tests.dialog.OpenNameAndVersionForDiagramDialogTest;
 import org.bonitasoft.studio.tests.dialog.TestDuplicate;
 import org.bonitasoft.studio.tests.draw2d.TestLifeCycleWidget;
+import org.bonitasoft.studio.tests.form.TestBug1682;
 import org.bonitasoft.studio.tests.timer.TestTimer;
 import org.bonitasoft.studio.util.test.BonitaTestSuite;
 import org.bonitasoft.studio.validators.test.swtbot.TestCreateValidatorWizard;
@@ -70,7 +68,6 @@ import org.junit.runners.Suite;
 
 @RunWith(BonitaTestSuite.class)
 @Suite.SuiteClasses({
-    TestImportAndOverrideWithEditorOpen.class,
     TestBug1640.class,
     NewRunTest.class,
     TestBug1682.class,
@@ -87,7 +84,6 @@ import org.junit.runners.Suite;
     CopyPasteTests.class,
     TestCreateValidatorWizard.class,
     TestLifeCycleWidget.class,
-    ConnectorConfigurationTest.class,
     TestConnectorExpression.class,
     TestMultiInstantiation.class,
     BPMNConnectorExportImportTest.class,

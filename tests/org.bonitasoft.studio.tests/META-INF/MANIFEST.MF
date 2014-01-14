@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: General and master tests for BonitaStudio
 Bundle-SymbolicName: org.bonitasoft.studio.tests;singleton:=true
-Bundle-Version: 6.2.0.qualifier
+Bundle-Version: 6.3.0.qualifier
 Bundle-Vendor: BonitaSoft S.A.
 Eclipse-BundleShape: dir
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -21,7 +21,6 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.gmf.runtime.diagram.ui.resources.editor,
  org.bonitasoft.studio.engine,
  org.bonitasoft.studio.exporter.tests,
- org.bonitasoft.studio.diagram.form.custom.tests,
  org.bonitasoft.studio.importer.tests;bundle-version="1.0.0",
  org.bonitasoft.studio.properties;bundle-version="1.0.0",
  org.bonitasoft.studio.diagram.form;bundle-version="1.0.0",
@@ -61,7 +60,9 @@ Require-Bundle: org.junit;bundle-version="4.8.2",
  org.bonitasoft.studio.expressions.test;bundle-version="1.0.0",
  org.bonitasoft.studio.dependencies;bundle-version="1.0.0",
  org.bonitasoft.studio.xml;bundle-version="1.0.0",
- org.bonitasoft.studio.debug;bundle-version="6.0.0"
+ org.bonitasoft.studio.debug;bundle-version="6.0.0",
+ org.bonitasoft.studio.diagram.form.custom,
+ org.eclipse.emf.common.ui
 Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.api,
  org.bonitasoft.studio.tests.attachment,
@@ -72,6 +73,7 @@ Export-Package: org.bonitasoft.studio.tests,
  org.bonitasoft.studio.tests.debug,
  org.bonitasoft.studio.tests.dialog,
  org.bonitasoft.studio.tests.draw2d,
+ org.bonitasoft.studio.tests.form,
  org.bonitasoft.studio.tests.pagetemplate,
  org.bonitasoft.studio.tests.perspectives,
  org.bonitasoft.studio.tests.processzoo,

@@ -17,6 +17,7 @@
  */
 package org.bonitasoft.studio.expression.editor.viewer;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.bonitasoft.studio.common.AbstractRefactorOperation;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -51,6 +53,7 @@ import org.bonitasoft.studio.expression.editor.widget.ContentAssistText;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
+import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.pics.Pics;
@@ -69,6 +72,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFProperties;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
@@ -118,6 +122,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -125,7 +130,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
  * 
  */
 public class ExpressionViewer extends ContentViewer implements ExpressionConstants, SWTBotConstants,
-		IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
+ IContentProposalListener, IBonitaContentProposalListener2, IBonitaVariableContext {
 
 	protected Composite control;
 	private Text textControl;
@@ -147,6 +152,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	private List<IExpressionValidationListener> validationListeners = new ArrayList<IExpressionValidationListener>();
 	private ToolItem eraseControl;
 	private boolean isPageFlowContext = false;
+	private AbstractRefactorOperation operation;
+	private AbstractRefactorOperation  removeOperation;
 
 	protected final DisposeListener disposeListener = new DisposeListener() {
 
@@ -182,6 +189,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		this(composite, style, widgetFactory, editingDomain, expressionReference, false);
 
 	}
+	
 
 	public ExpressionViewer(Composite composite, int style, TabbedPropertySheetWidgetFactory widgetFactory,
 			EditingDomain editingDomain, EReference expressionReference, boolean withConnector) {
@@ -237,7 +245,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		}
 	}
 
-	protected ToolItem createEditToolItem(ToolBar tb) {
+	protected ToolItem createEditToolItem(final ToolBar tb) {
 		final ToolItem editControl = new ToolItem(tb, SWT.PUSH | SWT.NO_FOCUS);
 		editControl.setImage(Pics.getImage(PicsConstants.edit));
 		editControl.setToolTipText(Messages.editAndContinue);
@@ -247,7 +255,19 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		editControl.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				openEditDialog();
+				boolean connectorEdit = false;
+				if(tb != null && withConnector && selectedExpression != null && ExpressionConstants.CONNECTOR_TYPE.equals(selectedExpression.getType())){
+					for(ToolItem ti : tb.getItems()){
+						Object data = ti.getData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY);
+						if(data != null && data.equals(SWTBotConstants.SWTBOT_ID_CONNECTORBUTTON)){
+							connectorEdit = true;
+							ti.notifyListeners(SWT.Selection, event);
+						}
+					}
+				}
+				if(!connectorEdit){
+					openEditDialog();
+				}
 			}
 		});
 
@@ -276,22 +296,23 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 					type = ExpressionConstants.CONSTANT_TYPE;
 				}
 				if (editingDomain != null) {
-					editingDomain.getCommandStack().execute(
-							SetCommand.create(editingDomain, selectedExpression,
-									ExpressionPackage.Literals.EXPRESSION__TYPE, type));
-					editingDomain.getCommandStack().execute(
-							SetCommand.create(editingDomain, selectedExpression,
-									ExpressionPackage.Literals.EXPRESSION__NAME, ""));
-					editingDomain.getCommandStack().execute(
-							SetCommand.create(editingDomain, selectedExpression,
-									ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
-					editingDomain.getCommandStack().execute(
-							RemoveCommand.create(editingDomain, selectedExpression,
-									ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
-									selectedExpression.getReferencedElements()));
-					editingDomain.getCommandStack().execute(
-							RemoveCommand.create(editingDomain, selectedExpression,
-									ExpressionPackage.Literals.EXPRESSION__CONNECTORS, selectedExpression.getConnectors()));
+
+					CompoundCommand cc=new CompoundCommand();
+					cc.append(SetCommand.create(editingDomain, selectedExpression,
+							ExpressionPackage.Literals.EXPRESSION__TYPE, type));
+					cc.append(SetCommand.create(editingDomain, selectedExpression,
+							ExpressionPackage.Literals.EXPRESSION__NAME, ""));
+					cc.append(SetCommand.create(editingDomain, selectedExpression,
+							ExpressionPackage.Literals.EXPRESSION__CONTENT, ""));
+					cc.append(RemoveCommand.create(editingDomain, selectedExpression,
+							ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,
+							selectedExpression.getReferencedElements()));
+					cc.append(RemoveCommand.create(editingDomain, selectedExpression,
+							ExpressionPackage.Literals.EXPRESSION__CONNECTORS, selectedExpression.getConnectors()));
+					boolean hasBeenExecuted = executeRemoveOperation(cc);
+					if (!hasBeenExecuted){
+						editingDomain.getCommandStack().execute(cc);
+					}
 				} else {
 					selectedExpression.setType(type);
 					selectedExpression.setName("");
@@ -299,11 +320,13 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 					selectedExpression.getReferencedElements().clear();
 					selectedExpression.getConnectors().clear();
 				}
+
 				textControl.setText("");
 				validate();
 				refresh();
 			}
 		});
+
 
 		eraseControl.addDisposeListener(disposeListener);
 		return eraseControl;
@@ -379,9 +402,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		dialog.setIsPageFlowContext(isPageFlowContext);
 		if (dialog.open() == Dialog.OK) {
 			Expression newExpression = dialog.getExpression();
+			executeOperation(newExpression.getName());
 			updateSelection(newExpression);
 			setSelection(new StructuredSelection(selectedExpression));
 			if (editingDomain == null) {
+
 				selectedExpression.setReturnType(newExpression.getReturnType());
 				selectedExpression.setType(newExpression.getType());
 			} else {
@@ -392,6 +417,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 						SetCommand.create(editingDomain, selectedExpression, ExpressionPackage.Literals.EXPRESSION__TYPE,
 								newExpression.getType()));
 			}
+
 			refresh();
 			fireExpressionEditorChanged(new SelectionChangedEvent(this, new StructuredSelection(selectedExpression)));
 		}
@@ -518,7 +544,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		autoCompletion.setContext(expressionNatureProvider.getContext());
 		final Set<Expression> filteredExpressions = getFilteredExpressions();
 		autoCompletion.setProposals(filteredExpressions.toArray(new Expression[filteredExpressions.size()]));
-		
+
 		final ArrayList<String> filteredExpressionType = getFilteredExpressionType();
 		autoCompletion.setFilteredExpressionType(filteredExpressionType);
 		if((filteredExpressionType.contains(ExpressionConstants.VARIABLE_TYPE) 
@@ -535,7 +561,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		final ArrayList<String> filteredExpressions = new ArrayList<String>();
 		final Set<ViewerFilter> fitlers = getFilters();
 		final EObject input = expressionNatureProvider.getContext();
-		
+
 		Expression exp = ExpressionFactory.eINSTANCE.createExpression();
 		exp.setName("");
 		if (filters != null && expressionNatureProvider != null && input!=null) {
@@ -606,7 +632,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 							&& !ExpressionConstants.CONDITION_TYPE.equals(selectedExpression.getType())) {
 						if (selectedExpression != null && selectedExpression.isReturnTypeFixed()
 								&& selectedExpression.getReturnType() != null) {
-							if (!compatibleReturnTypes(exp)) {
+							if (!compatibleReturnTypes(selectedExpression,exp)) {
 								toRemove.add(exp);
 							}
 						}
@@ -618,18 +644,18 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 		return filteredExpressions;
 	}
 
-	protected boolean compatibleReturnTypes(Expression exp) {
-		final String currentReturnType = selectedExpression.getReturnType();
-		final String expressionReturnType = exp.getReturnType();
-		if (currentReturnType.equals(expressionReturnType)) {
+	protected boolean compatibleReturnTypes(Expression currentExpression,Expression targetExpression) {
+		final String currentReturnType = currentExpression.getReturnType();
+		final String targetReturnType = targetExpression.getReturnType();
+		if (currentReturnType.equals(targetReturnType)) {
 			return true;
 		}
 		try {
 			Class<?> currentReturnTypeClass = Class.forName(currentReturnType);
-			Class<?> expressionReturnTypeClass = Class.forName(expressionReturnType);
-			return currentReturnTypeClass.isAssignableFrom(expressionReturnTypeClass);
-		} catch (Exception e) {
-			BonitaStudioLog.warning("Failed to determine the compatbility between " + expressionReturnType + " and "
+			Class<?> targetReturnTypeClass = Class.forName(targetReturnType);
+			return currentReturnTypeClass.isAssignableFrom(targetReturnTypeClass);
+		} catch (ClassNotFoundException e) {
+			BonitaStudioLog.warning("Failed to determine the compatibility between " + targetReturnType + " and "
 					+ currentReturnType, ExpressionEditorPlugin.PLUGIN_ID);
 		}
 		return true;
@@ -811,12 +837,13 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 	}
 
 	protected String getContentFromInput(String input) {
-		if (selectedExpression.getType().equals(ExpressionConstants.SCRIPT_TYPE)
-				|| selectedExpression.getType().equals(ExpressionConstants.PATTERN_TYPE)
-				|| selectedExpression.getType().equals(ExpressionConstants.XPATH_TYPE)
-				|| selectedExpression.getType().equals(ExpressionConstants.JAVA_TYPE)) {
+		final String selectedExpressionType = selectedExpression.getType();
+		if (ExpressionConstants.SCRIPT_TYPE.equals(selectedExpressionType)
+				|| ExpressionConstants.PATTERN_TYPE.equals(selectedExpressionType)
+				|| ExpressionConstants.XPATH_TYPE.equals(selectedExpressionType)
+				|| ExpressionConstants.JAVA_TYPE.equals(selectedExpressionType)) {
 			return selectedExpression.getContent(); // NO CONTENT UPDATE WHEN
-													// THOSES TYPES
+			// THOSES TYPES
 		}
 
 		Set<String> cache = new HashSet<String>();
@@ -861,6 +888,8 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 			return ExpressionConstants.XPATH_TYPE;
 		} else if (ExpressionConstants.URL_ATTRIBUTE_TYPE.equals(expressionType)) {
 			return ExpressionConstants.URL_ATTRIBUTE_TYPE;
+		} else if (ExpressionConstants.SEARCH_INDEX_TYPE.equals(expressionType)){
+			return ExpressionConstants.SEARCH_INDEX_TYPE;
 		}
 
 		Set<String> cache = new HashSet<String>();
@@ -908,6 +937,7 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				}
 			}
 			refreshMessageDecoration();
+
 		}
 
 	}
@@ -1094,14 +1124,17 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 			@Override
 			public Object convert(Object fromObject) {
+				int caretPosition = textControl.getCaretPosition();
 				String input = (String) fromObject;
 				updateContentType(getContentTypeFromInput(input));
 				updateContent(getContentFromInput(input));
+				boolean hasBeenExecuted = executeOperation(input);
 				refresh();
-
+				if (hasBeenExecuted){
+					textControl.setSelection(caretPosition, caretPosition);
+				}
 				return fromObject;
 			}
-
 		};
 		return nameConverter;
 	}
@@ -1141,8 +1174,11 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 				if (parent instanceof Widget) {
 					final Widget w = (Widget) parent;
 					if (w != null && w instanceof TextFormField && copy.getName().equals("field_" + w.getName())) {
-						final String returnTypeModifier = w.getReturnTypeModifier();
+						String returnTypeModifier = w.getReturnTypeModifier();
 						if (returnTypeModifier != null) {
+							if(w instanceof Duplicable && ((Duplicable) w).isDuplicate()){
+								returnTypeModifier = List.class.getName();
+							}
 							if (!copy.isReturnTypeFixed()) {
 								copy.setReturnType(returnTypeModifier);
 							}
@@ -1174,13 +1210,58 @@ public class ExpressionViewer extends ContentViewer implements ExpressionConstan
 
 	@Override
 	public boolean isPageFlowContext() {
-		
+
 		return isPageFlowContext;
 	}
 
 	@Override
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
-		
+
 	}
+
+	public void setRefactorOperationToExecuteWhenUpdatingContent(AbstractRefactorOperation operation){
+		this.operation = operation;
+	}
+
+	private boolean executeOperation(String newValue){
+		boolean hasBeenExecuted = false;
+		if (operation!=null){
+			operation.setNewValue(newValue);
+			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+			try {
+				service.busyCursorWhile(operation);
+				hasBeenExecuted =true;
+			} catch (InvocationTargetException e) {
+				BonitaStudioLog.error(e);
+			} catch (InterruptedException e) {
+				BonitaStudioLog.error(e);
+			}
+
+		}
+		return hasBeenExecuted;
+	}
+
+	public void setRemoveOperation(AbstractRefactorOperation removeOperation){
+		this.removeOperation = removeOperation;
+	}
+
+	private boolean executeRemoveOperation(CompoundCommand cc){
+		boolean isExecuted=false;
+		if (removeOperation !=null){
+			removeOperation.setCompoundCommand(cc);
+			IProgressService service = PlatformUI.getWorkbench().getProgressService();
+			try {
+				service.busyCursorWhile(removeOperation);
+				isExecuted = true;
+			} catch (InvocationTargetException e) {
+				BonitaStudioLog.error(e);
+			} catch (InterruptedException e) {
+				BonitaStudioLog.error(e);
+			}
+
+		}
+		return isExecuted;
+	}
+
 }

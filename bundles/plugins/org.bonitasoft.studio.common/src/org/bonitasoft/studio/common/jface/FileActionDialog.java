@@ -16,150 +16,182 @@
  */
 package org.bonitasoft.studio.common.jface;
 
+import java.util.concurrent.CancellationException;
+
 import org.bonitasoft.studio.common.Messages;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
 public class FileActionDialog {
 
-    protected static boolean YES_TO_ALL = false;
-    protected static boolean NO_TO_ALL = false;
-    protected static boolean YES_NO_TO_ALL = false;
-    protected static boolean DISABLE_POPUP = false ; //Tests purpose
-    private static boolean answer;
+	protected static boolean YES_TO_ALL = false;
+	protected static boolean NO_TO_ALL = false;
+	protected static boolean YES_NO_TO_ALL = false;
+	protected static boolean DISABLE_POPUP = false ; //Tests purpose
+	private static boolean answer;
+	private static int returnCode;
+    private static boolean THROW_EXCEPTION_ON_CANCEL = false;
 
 
-    public static void setDisablePopup(boolean disablePopup) {
-        DISABLE_POPUP = disablePopup ;
+	public static void setDisablePopup(boolean disablePopup) {
+		DISABLE_POPUP = disablePopup ;
+	}
+
+    
+    public static void setThrowExceptionOnCancel(boolean throwExceptionOnCancel){
+    	THROW_EXCEPTION_ON_CANCEL = throwExceptionOnCancel;
     }
 
-    public static boolean overwriteQuestion(final String fileName) {
-        if (DISABLE_POPUP && NO_TO_ALL) {
-            return false;
-        } else if(DISABLE_POPUP){
-            return true;
-        }else {
-            if(YES_NO_TO_ALL){
-                if(YES_TO_ALL){
-                    return true;
-                }
-                if (NO_TO_ALL) {
-                    return false;
-                }
-                final int returnCode = new YesNoToAllDialog(Display.getDefault().getActiveShell(), Messages.overwriteTitle, Messages.bind(Messages.overwriteMessage, fileName)).open();
-                if (returnCode == YesNoToAllDialog.YES_TO_ALL) {
-                    YES_TO_ALL = true;
-                }
-                if (returnCode == YesNoToAllDialog.NO_TO_ALL) {
-                    NO_TO_ALL = true;
-                }
-                return returnCode == YesNoToAllDialog.YES || returnCode == YesNoToAllDialog.YES_TO_ALL;
-            }else{
 
-                Display.getDefault().syncExec(new Runnable() {
+	public static boolean overwriteQuestion(final String fileName) {
+		if (DISABLE_POPUP && NO_TO_ALL) {
+			return false;
+		} else if(DISABLE_POPUP){
+			return true;
+		}else {
+			if(YES_NO_TO_ALL){
+				if(YES_TO_ALL){
+					return true;
+				}
+				if (NO_TO_ALL) {
+					return false;
+				}
+				Display.getDefault().syncExec(new Runnable() {
 
+					@Override
+					public void run() {
+						returnCode = new YesNoToAllDialog(Display.getDefault().getActiveShell(), Messages.overwriteTitle, Messages.bind(Messages.overwriteMessage, fileName)).open();
+					}
+				});
+				if (returnCode == YesNoToAllDialog.YES_TO_ALL) {
+					YES_TO_ALL = true;
+				}
+				if (returnCode == YesNoToAllDialog.NO_TO_ALL) {
+					NO_TO_ALL = true;
+				}
+				return returnCode == YesNoToAllDialog.YES || returnCode == YesNoToAllDialog.YES_TO_ALL;
+			}else{
+
+				Display.getDefault().syncExec(new Runnable() {
                     @Override
                     public void run() {
                         answer =  MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.overwriteTitle,
                                 Messages.bind(Messages.overwriteMessage, fileName));
                     }
                 }) ;
-
+                if(THROW_EXCEPTION_ON_CANCEL && !answer){
+                	throw new CancellationException();
+                }
                 return answer ;
             }
         }
     }
 
-    public static boolean getDisablePopup() {
-        return DISABLE_POPUP;
-    }
+				
 
-    public static boolean confirmDeletionQuestion(final String fileName) {
-        if (DISABLE_POPUP && NO_TO_ALL) {
-            return false;
-        } else if(DISABLE_POPUP){
-            return true;
-        }else {
-            if(YES_NO_TO_ALL){
-                if(YES_TO_ALL){
-                    return true;
-                }
-                if (NO_TO_ALL) {
-                    return false;
-                }
-                final int returnCode = new YesNoToAllDialog(Display.getDefault().getActiveShell(),  Messages.deleteConfirmationTitle,
-                        Messages.bind(Messages.deleteConfirmationMsg, fileName)).open();
-                if (returnCode == YesNoToAllDialog.YES_TO_ALL) {
-                    YES_TO_ALL = true;
-                }
-                if (returnCode == YesNoToAllDialog.NO_TO_ALL) {
-                    NO_TO_ALL = true;
-                }
-                return returnCode == YesNoToAllDialog.YES || returnCode == YesNoToAllDialog.YES_TO_ALL;
-            }else{
-                Display.getDefault().syncExec(new Runnable() {
+	public static boolean getDisablePopup() {
+		return DISABLE_POPUP;
+	}
 
-                    @Override
-                    public void run() {
-                        answer = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteConfirmationTitle,
-                                Messages.bind(Messages.deleteConfirmationMsg, fileName));
-                    }
-                }) ;
-                return answer ;
-            }
-        }
+	public static boolean confirmDeletionQuestion(final String fileName) {
+		if (DISABLE_POPUP && NO_TO_ALL) {
+			return false;
+		} else if(DISABLE_POPUP){
+			return true;
+		}else {
+			if(YES_NO_TO_ALL){
+				if(YES_TO_ALL){
+					return true;
+				}
+				if (NO_TO_ALL) {
+					return false;
+				}
+				Display.getDefault().syncExec(new Runnable() {
+					@Override
+					public void run() {
+						returnCode = new YesNoToAllDialog(Display.getDefault().getActiveShell(),  Messages.deleteConfirmationTitle,
+								Messages.bind(Messages.deleteConfirmationMsg, fileName)).open();
+					}
+				});
 
-    }
-    
-    public static boolean confirmDeletionQuestionWithCustomMessage(final String message){
-    	  if (DISABLE_POPUP && NO_TO_ALL) {
-              return false;
-          } else if(DISABLE_POPUP){
-              return true;
-          }else {
-              if(YES_NO_TO_ALL){
-                  if(YES_TO_ALL){
-                      return true;
-                  }
-                  if (NO_TO_ALL) {
-                      return false;
-                  }
-                  final int returnCode = new YesNoToAllDialog(Display.getDefault().getActiveShell(),  Messages.deleteConfirmationTitle,
-                         message).open();
-                  if (returnCode == YesNoToAllDialog.YES_TO_ALL) {
-                      YES_TO_ALL = true;
-                  }
-                  if (returnCode == YesNoToAllDialog.NO_TO_ALL) {
-                      NO_TO_ALL = true;
-                  }
-                  return returnCode == YesNoToAllDialog.YES || returnCode == YesNoToAllDialog.YES_TO_ALL;
-              }else{
-                  Display.getDefault().syncExec(new Runnable() {
+				if (returnCode == YesNoToAllDialog.YES_TO_ALL) {
+					YES_TO_ALL = true;
+				}
+				if (returnCode == YesNoToAllDialog.NO_TO_ALL) {
+					NO_TO_ALL = true;
+				}
+				return returnCode == YesNoToAllDialog.YES || returnCode == YesNoToAllDialog.YES_TO_ALL;
+			}else{
+				Display.getDefault().syncExec(new Runnable() {
 
-                      @Override
-                      public void run() {
-                          answer = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteConfirmationTitle,
-                                  message);
-                      }
-                  }) ;
-                  return answer ;
-              }
-          }
-    	
-    }
+					@Override
+					public void run() {
+						answer = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteConfirmationTitle,
+								Messages.bind(Messages.deleteConfirmationMsg, fileName));
+					}
+				}) ;
+				return answer ;
+			}
+		}
 
-    public static void activateYesNoToAll(){
-        YES_NO_TO_ALL = true ;
-    }
+	}
 
-    public static void deactivateYesNoToAll(){
-        YES_NO_TO_ALL = false ;
-        YES_TO_ALL = false ;
-        NO_TO_ALL = false ;
-    }
+	public static boolean confirmDeletionQuestionWithCustomMessage(final String message){
+		if (DISABLE_POPUP && NO_TO_ALL) {
+			return false;
+		} else if(DISABLE_POPUP){
+			return true;
+		}else {
+			if(YES_NO_TO_ALL){
+				if(YES_TO_ALL){
+					return true;
+				}
+				if (NO_TO_ALL) {
+					return false;
+				}
+				Display.getDefault().syncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						returnCode = new YesNoToAllDialog(Display.getDefault().getActiveShell(),  Messages.deleteConfirmationTitle,
+								message).open();
+					}
+				});
+				
+				if (returnCode == YesNoToAllDialog.YES_TO_ALL) {
+					YES_TO_ALL = true;
+				}
+				if (returnCode == YesNoToAllDialog.NO_TO_ALL) {
+					NO_TO_ALL = true;
+				}
+				return returnCode == YesNoToAllDialog.YES || returnCode == YesNoToAllDialog.YES_TO_ALL;
+			}else{
+				Display.getDefault().syncExec(new Runnable() {
 
-    public static void setNoToAll() {
-        NO_TO_ALL = true ;
-        YES_TO_ALL = false ;
-    }
+					@Override
+					public void run() {
+						answer = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.deleteConfirmationTitle,
+								message);
+					}
+				}) ;
+				return answer ;
+			}
+		}
+
+	}
+
+	public static void activateYesNoToAll(){
+		YES_NO_TO_ALL = true ;
+	}
+
+	public static void deactivateYesNoToAll(){
+		YES_NO_TO_ALL = false ;
+		YES_TO_ALL = false ;
+		NO_TO_ALL = false ;
+	}
+
+	public static void setNoToAll() {
+		NO_TO_ALL = true ;
+		YES_TO_ALL = false ;
+	}
 }

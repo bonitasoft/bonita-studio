@@ -62,18 +62,30 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
 	private AdapterFactoryLabelProvider labelProvider;
 	private final ComposedAdapterFactory adapterFactory;
 	private Migrator migrator;
+
 	public AbstractEMFRepositoryStore(){
 		super();
 		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
 		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 		addAdapterFactory(adapterFactory);
-		final URI migratorURI = URI.createPlatformPluginURI("/" + Platform.getBundle("org.bonitasoft.studio-models").getSymbolicName() + "/" + MIGRATION_HISTORY_PATH, true);
-		try {
-			migrator =  new Migrator(migratorURI,new BundleClassLoader(MigrationPlugin.getDefault().getBundle()));
-		} catch (MigrationException e) {
-			BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+
+	}
+
+	protected Migrator initializeMigrator() {
+		if(migrator == null){
+			final URI migratorURI = URI.createPlatformPluginURI(getMigrationHistoryPath(), true);
+			try {
+				migrator =  new Migrator(migratorURI,new BundleClassLoader(MigrationPlugin.getDefault().getBundle()));
+			} catch (MigrationException e) {
+				BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
+			}
 		}
+		return migrator;
+	}
+
+	protected String getMigrationHistoryPath() {
+		return "/" + Platform.getBundle("org.bonitasoft.studio-models").getSymbolicName() + "/" + MIGRATION_HISTORY_PATH;
 	}
 
 	public AdapterFactoryLabelProvider getLabelProvider(){
@@ -113,13 +125,13 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
 		final URI resourceURI = resource.getURI();
 		final File tmpFile = new File(resource.getURI().toFileString());
 		String nsURI = ReleaseUtils.getNamespaceURI(resourceURI);
-		
+
 		if(nsURI==null){
 			tmpFile.delete();
 			copyIs.close();
 			throw new IOException(fileName);
 		}
-		
+
 		Migrator targetMigrator = getMigrator(nsURI);
 		if (targetMigrator != null) {
 			Release release =  getRelease(targetMigrator,resource);
@@ -164,7 +176,7 @@ public abstract class AbstractEMFRepositoryStore<T extends EMFFileStore> extends
 	 * @return
 	 */
 	public Migrator getMigrator(String nsURI) {
-		Migrator targetMigrator = migrator;
+		Migrator targetMigrator = initializeMigrator();
 		if(migrator.getNsURIs().contains(nsURI) ){
 			targetMigrator = migrator;
 		}else{

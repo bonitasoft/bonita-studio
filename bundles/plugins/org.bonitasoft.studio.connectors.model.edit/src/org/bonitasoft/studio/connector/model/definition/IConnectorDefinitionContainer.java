@@ -27,6 +27,5 @@ public interface IConnectorDefinitionContainer {
 
     void recreateConnectorConfigurationPages(ConnectorDefinition definition,boolean clearConfiguration);
     
-    void buildExtendedWizard();
 
 }

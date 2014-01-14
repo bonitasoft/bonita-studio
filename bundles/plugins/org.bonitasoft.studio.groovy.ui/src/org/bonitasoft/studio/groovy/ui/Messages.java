@@ -78,6 +78,7 @@ public final class Messages extends NLS {
 
 	public static String wrongNameLowCase;
 
+
     private Messages() {
         // Do not instantiate
     }

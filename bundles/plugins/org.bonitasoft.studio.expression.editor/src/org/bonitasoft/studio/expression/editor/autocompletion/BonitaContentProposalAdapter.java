@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -13,12 +14,16 @@ package org.bonitasoft.studio.expression.editor.autocompletion;
 
 import java.util.ArrayList;
 
+import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.expression.editor.provider.DataExpressionNatureProvider;
+import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.core.runtime.Assert;
@@ -26,6 +31,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.jface.fieldassist.IContentProposal;
@@ -82,7 +88,7 @@ import org.eclipse.swt.widgets.Text;
  * 
  * @since 3.2
  */
-public class BonitaContentProposalAdapter implements SWTBotConstants {
+public class BonitaContentProposalAdapter implements SWTBotConstants{
 
 	public ArrayList<Link> linkList;
 
@@ -721,11 +727,17 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 								public void widgetSelected(SelectionEvent e) {
 									linkClicked = true;
 									String fixedReturnType = null;
+									EStructuralFeature dataFeature=null;
 									final Object[] listenerArray = proposalListeners.getListeners();
 									for (int i = 0; i < listenerArray.length; i++) {
 										IContentProposalListener listener = (IContentProposalListener) listenerArray[i];
 										if (listener instanceof ExpressionViewer) {
 											ExpressionViewer expViewer = (ExpressionViewer) listener;
+											isPageFlowContext = expViewer.isPageFlowContext();
+											IExpressionNatureProvider expressionNatureProvider=expViewer.getExpressionNatureProvider();
+											if (expressionNatureProvider instanceof DataExpressionNatureProvider){
+												dataFeature = ((DataExpressionNatureProvider) expressionNatureProvider).getDataFeature();
+											}
 											Expression exp = null;
 											if(expViewer.getInput() instanceof Expression){
 												exp = (Expression) expViewer.getInput();
@@ -738,6 +750,10 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 												fixedReturnType = exp.getReturnType();
 											}
 										}
+									}
+									listener.setIsPageFlowContext(isPageFlowContext);
+									if (dataFeature!=null){
+										listener.setEStructuralFeature(dataFeature);
 									}
 									final String newObjectLabel = listener.handleEvent(context, fixedReturnType);
 									updateExpressionField(newObjectLabel);
@@ -1375,6 +1391,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	protected EObject context;
 	
 	protected ArrayList<String> filteredExpressionType;
+
+	private boolean isPageFlowContext;
 
 	/**
 	 * Construct a content proposal adapter that can assist the user with
@@ -2324,4 +2342,6 @@ public class BonitaContentProposalAdapter implements SWTBotConstants {
 	public void setFilteredExpressionType(ArrayList<String> filteredExpressionType) {
 		this.filteredExpressionType = filteredExpressionType;
 	}
+
+
 }

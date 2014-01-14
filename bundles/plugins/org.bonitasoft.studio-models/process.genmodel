@@ -525,6 +525,12 @@
     <genClasses ecoreClass="process.ecore#//BoundaryMessageEvent"/>
     <genClasses ecoreClass="process.ecore#//BoundarySignalEvent"/>
     <genClasses ecoreClass="process.ecore#//BoundaryTimerEvent"/>
+    <genClasses ecoreClass="process.ecore#//BusinessObjectData">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//BusinessObjectData/businessDataRepositoryId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//BusinessObjectData/createNewInstance"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute process.ecore#//BusinessObjectData/eClassName"/>
+    </genClasses>
+    <genClasses ecoreClass="process.ecore#//BusinessObjectType"/>
     <genClasses ecoreClass="process.ecore#//CallActivity">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//CallActivity/inputMappings"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference process.ecore#//CallActivity/outputMappings"/>

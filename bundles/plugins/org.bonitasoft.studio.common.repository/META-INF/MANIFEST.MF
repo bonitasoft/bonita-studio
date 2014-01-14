@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Repository Common Plugin
 Bundle-SymbolicName: org.bonitasoft.studio.common.repository;singleton:=true
-Bundle-Version: 6.2.0.qualifier
+Bundle-Version: 6.3.0.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.common.repository.CommonRepositoryPlugin
 Bundle-Vendor: BonitaSoft S.A.
@@ -28,7 +28,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.edapt.migration;bundle-version="0.3.0";visibility:=reexport,
  org.eclipse.emf.edapt.history;bundle-version="0.3.0";visibility:=reexport,
  org.bonitasoft.studio.migration;bundle-version="1.0.0",
- org.codehaus.groovy.eclipse.core
+ org.codehaus.groovy.eclipse.core,
+ javax.persistence;bundle-version="2.0.3",
+ org.junit;bundle-version="4.8.2";resolution:=optional,
+ org.fest-assert;bundle-version="1.4.2";resolution:=optional,
+ org.mockito;bundle-version="1.9.5";resolution:=optional,
+ org.eclipse.ltk.core.refactoring;bundle-version="3.5.201"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.apache.xbean.classloader,

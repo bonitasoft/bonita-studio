@@ -35,6 +35,7 @@ public class DataTypeLabels extends NLS {
     public static String xmlDataType;
     public static String longDataType;
     public static String doubleDataType;
+	public static String businessObjectType;
 
     static {
         initializeMessages("dataTypes", DataTypeLabels.class);

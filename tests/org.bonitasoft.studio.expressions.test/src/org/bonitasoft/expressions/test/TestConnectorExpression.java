@@ -25,6 +25,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -94,8 +95,13 @@ public class TestConnectorExpression extends SWTBotGefTestCase implements SWTBot
     public void testConnectorExpression(){
         final String id="connectorExpressionTest";
         createConnectorDefinition(id);
-        SWTBotConnectorTestUtil.activateConnectorTestWizard(bot);        
-        SWTBotConnectorTestUtil.selectDefinitionInConnectorShell(bot, id);
+        SWTBotConnectorTestUtil.activateConnectorTestWizard(bot);
+        bot.text().setText(id);
+        bot.table().select(id);
+    //    bot.tree().select("Uncategorized");
+      //  bot.table().select(id);
+        //bot.table().select(indices);
+        bot.button(IDialogConstants.NEXT_LABEL).click();
         bot.toolbarButtonWithId(SWTBOT_ID_EDITBUTTON,0).click();
         bot.table().select("Constant");
         bot.text().setText("Hello World");

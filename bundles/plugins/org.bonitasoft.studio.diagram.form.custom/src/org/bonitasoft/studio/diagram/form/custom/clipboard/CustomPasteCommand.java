@@ -150,7 +150,7 @@ public class CustomPasteCommand extends AbstractCommand {
 									// where the paste was done
 									if (targetEditPart instanceof CustomFormEditPart) {
 										if (targetEditPart.getFigure().getLayoutManager() instanceof GridLayoutManager) {
-											ModelHelper.removedReferencedEObjects(w);
+											ModelHelper.removedReferencedEObjects(w,targetElement);
 											int margin = ((GridLayer) targetEditPart.getFigure()).getMargin();
 											GridLayoutManager layoutManager = (GridLayoutManager) targetEditPart.getFigure().getLayoutManager();
 											org.eclipse.draw2d.geometry.Point newLoc;

@@ -40,7 +40,6 @@ import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DateType;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.Lane;
@@ -59,8 +58,8 @@ import org.eclipse.ui.internal.browser.IBrowserDescriptor;
  *
  */
 public abstract class AbstractFormPreviewInitialization {
-	
-	
+
+
 	protected Form form;
 	protected Form formCopy;
 	protected ApplicationLookNFeelFileStore lookNFeel;
@@ -68,9 +67,9 @@ public abstract class AbstractFormPreviewInitialization {
 	public static final String VERSION ="1.0";
 	protected boolean isOnTask = false;
 	protected boolean canPreview = true;
-	
-	
-	
+
+
+
 
 	public AbstractFormPreviewInitialization(Form form,ApplicationLookNFeelFileStore lookNFeel,IBrowserDescriptor browser) {
 		this.form = form;
@@ -79,8 +78,8 @@ public abstract class AbstractFormPreviewInitialization {
 		initializeForm();
 		initializeAllWidgets(formCopy);
 	}
-	
-	
+
+
 	public AbstractProcess createAbstractProcess(Configuration configuration){
 		AbstractProcess proc = ProcessFactory.eINSTANCE.createPool();
 		proc.setName(form.getName()+" preview");
@@ -168,7 +167,7 @@ public abstract class AbstractFormPreviewInitialization {
 		previewConfiguration.setActorMappings(actorMapping);
 
 	}
-	
+
 	private void initializeForm(){
 		formCopy = EcoreUtil.copy(form);
 		List<Expression> exprs = ModelHelper.getAllItemsOfType(formCopy, ExpressionPackage.Literals.EXPRESSION);
@@ -186,84 +185,59 @@ public abstract class AbstractFormPreviewInitialization {
 
 	private Expression initializeExpression(Form form,Expression expr){
 		if (ExpressionConstants.VARIABLE_TYPE.equals(expr.getType())){
-			Data data =getReferencedData(form, expr);
-			if (data !=null && data.getDefaultValue()!=null && data.getDefaultValue().getContent()!=null && !data.getDefaultValue().getContent().isEmpty()){
-				if (data.getDataType() instanceof JavaType ) {
-					expr.setType(ExpressionConstants.SCRIPT_TYPE);
-					expr.setInterpreter(ExpressionConstants.GROOVY);
-					if (data.getDefaultValue().getReferencedElements().isEmpty()){
-						expr.setContent(data.getDefaultValue().getContent());
-						expr.getReferencedElements().clear();
-					} else {
-						expr.setType(ExpressionConstants.CONSTANT_TYPE);
-						expr.setContent("");
-						expr.setName("");
-
-					}
-				} else {
-					if (data.getDataType() instanceof XMLData){
-						expr.setType(ExpressionConstants.CONSTANT_TYPE);
-						expr.setContent("");
-						expr.setName("");
-							
-					} else {
-						String defaultValueType = data.getDefaultValue().getType();
-						if (defaultValueType.equals(ExpressionConstants.SCRIPT_TYPE) || defaultValueType.equals(ExpressionConstants.CONSTANT_TYPE)  ){
-							expr.setType(data.getDefaultValue().getType());
-							expr.setInterpreter(data.getDefaultValue().getInterpreter());
-							expr.setContent(data.getDefaultValue().getContent());
-							expr.getReferencedElements().clear();
-						} else {
-							expr.setType(ExpressionConstants.CONSTANT_TYPE);
-							expr.setContent("");
-							expr.setName("");
-						}
-					}
-				}
-			} else {
-				expr.setType(ExpressionConstants.CONSTANT_TYPE);
-				expr.setContent("");
-				expr.setName("");
-				expr.getReferencedElements().clear();
-			}
-
-		} else {
-			if (ExpressionConstants.PARAMETER_TYPE.equals(expr.getType())){
-				Parameter parameter = (Parameter) expr.getReferencedElements().get(0);
-				expr.setType(ExpressionConstants.CONSTANT_TYPE);
-				expr.setContent(parameter.getValue());
-			} else {
-				if (ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(expr.getType())) {
-					expr.setType(ExpressionConstants.CONSTANT_TYPE);
-					expr.setContent("");
-					expr.setName("");
-				} else {
-					if (ExpressionConstants.CONNECTOR_TYPE.equals(expr.getType())) {
-						expr.setType(ExpressionConstants.CONSTANT_TYPE);
-						expr.setContent("");
-						expr.setName("");
-					} else {
-						if (ExpressionConstants.SCRIPT_TYPE.equals(expr.getType())){
-							if (!expr.getReferencedElements().isEmpty()){
-								expr.setType(ExpressionConstants.CONSTANT_TYPE);
-								expr.setContent("");
-								expr.setName("");
-								expr.getReferencedElements().clear();
-							} 
-						} else {
-							if (ExpressionConstants.DOCUMENT_TYPE.equals(expr.getType()) || ExpressionConstants.DOCUMENT_REF_TYPE.equals(expr.getType())){
-								expr.setContent("");
-								expr.setName("");
-								expr.getReferencedElements().clear();
-							} else {
-								expr.setType(ExpressionConstants.CONSTANT_TYPE);
-							}
-						}
-					}
-				}
-			}	
+			handleVariableExpression(form, expr);
+		} else if (ExpressionConstants.PARAMETER_TYPE.equals(expr.getType())){
+			handleParameterExpression(expr);
+		} else if(!ExpressionConstants.CONSTANT_TYPE.equals(expr.getType())){
+			toEmptyConstantExpression(expr);
 		}
 		return expr;
+	}
+
+
+	protected void toEmptyConstantExpression(Expression expr) {
+		expr.setType(ExpressionConstants.CONSTANT_TYPE);
+		expr.setContent("");
+		expr.setName("");
+		expr.getReferencedElements().clear();
+	}
+
+
+	protected void handleParameterExpression(Expression expr) {
+		Parameter parameter = (Parameter) expr.getReferencedElements().get(0);
+		expr.setType(ExpressionConstants.CONSTANT_TYPE);
+		expr.setContent(parameter.getValue());
+	}
+
+
+	protected void handleVariableExpression(Form form, Expression expr) {
+		Data data = getReferencedData(form, expr);
+		if (data !=null && data.getDefaultValue()!=null && data.getDefaultValue().getContent()!=null && !data.getDefaultValue().getContent().isEmpty()){
+			if (data.getDataType() instanceof JavaType) {
+				expr.setType(ExpressionConstants.SCRIPT_TYPE);
+				expr.setInterpreter(ExpressionConstants.GROOVY);
+				if (data.getDefaultValue().getReferencedElements().isEmpty()){
+					expr.setContent(data.getDefaultValue().getContent());
+					expr.getReferencedElements().clear();
+				} else {
+					toEmptyConstantExpression(expr);
+				}
+			} else if (data.getDataType() instanceof XMLData){
+				toEmptyConstantExpression(expr);
+			} else {
+				String defaultValueType = data.getDefaultValue().getType();
+				if (defaultValueType.equals(ExpressionConstants.SCRIPT_TYPE) || defaultValueType.equals(ExpressionConstants.CONSTANT_TYPE)  ){
+					expr.setType(data.getDefaultValue().getType());
+					expr.setInterpreter(data.getDefaultValue().getInterpreter());
+					expr.setContent(data.getDefaultValue().getContent());
+					expr.getReferencedElements().clear();
+				} else {
+					toEmptyConstantExpression(expr);
+				}
+			}
+		} else {
+			toEmptyConstantExpression(expr);
+		}
 	}
 
 	private Data getReferencedData(Form form,Expression expr){
@@ -275,22 +249,22 @@ public abstract class AbstractFormPreviewInitialization {
 		}
 		return null;
 	}
-	
-	
+
+
 	private void copyActors(AbstractProcess proc,AbstractProcess procCopy){
 		List<Actor> actors = proc.getActors();
 		for (Actor actor:actors){
 			procCopy.getActors().add((Actor)EcoreUtil.copy(actor));
 		}
 	}
-	
+
 	protected void deleteAllOperations(Widget widget){
 		List<Operation> operations = ModelHelper.getAllItemsOfType(widget, ExpressionPackage.Literals.OPERATION);
 		for (Operation operation:operations){
 			EcoreUtil.delete(operation);
 		}
 	}
-	
+
 	/**
 	 * @return the form
 	 */

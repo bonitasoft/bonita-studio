@@ -246,6 +246,12 @@ public class Messages extends NLS {
 	
 	public static String widgetNameAllreadyExistError;
 
+	public static String widgetEditMessage;
+
+	public static String editWidgetNameTitle;
+
+	public static String removingWidgetReferences;
+
 
 
     static {

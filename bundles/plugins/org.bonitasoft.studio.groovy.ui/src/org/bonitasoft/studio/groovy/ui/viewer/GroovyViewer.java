@@ -102,8 +102,8 @@ public class GroovyViewer {
 	private HashSet<String> knowVariables;
 	private boolean isPageFlowContext;
 
-	
-	
+
+
 	public GroovyViewer(final Composite mainComposite) {
 		this(mainComposite, null);
 	}
@@ -111,14 +111,14 @@ public class GroovyViewer {
 	public GroovyViewer(final Composite mainComposite,boolean isPageFlowContext){
 		this(mainComposite,null,isPageFlowContext);
 	}
-	
-	
+
+
 	public GroovyViewer(final Composite mainComposite,final IEditorInput input,boolean isPageFlowContext){
 		this(mainComposite,input);
 		this.isPageFlowContext=isPageFlowContext;
 	}
-	
-	
+
+
 	public GroovyViewer(final Composite mainComposite, final IEditorInput input) {
 		IPreferenceStore groovyStore = org.codehaus.groovy.eclipse.GroovyPlugin.getDefault().getPreferenceStore();
 		groovyStore.setDefault(PreferenceConstants.GROOVY_SEMANTIC_HIGHLIGHTING,false) ;
@@ -202,7 +202,7 @@ public class GroovyViewer {
 						final IAnnotationModel model = getSourceViewer().getAnnotationModel();
 						final List<ScriptVariable> emptyList = Collections.emptyList();
 						final Map<String, Serializable> result = TestGroovyScriptUtil.createVariablesMap(getGroovyCompilationUnit(), emptyList);
-						
+
 						final Iterator<?> it = model.getAnnotationIterator();
 						while (it.hasNext()) {
 							final Object annotation = it.next();
@@ -265,7 +265,7 @@ public class GroovyViewer {
 
 		IExpressionNatureProvider provider = expressionProvider;
 		if(!(provider instanceof ICustomExpressionNatureProvider)){
-			 provider = new ExpressionContentProvider();
+			provider = new ExpressionContentProvider();
 		}
 		provider.setContext(context);
 
@@ -312,7 +312,7 @@ public class GroovyViewer {
 		final List<String> bonitaKeyWords = GroovyUtil.getBonitaKeyWords(context,filters,isPageFlowContext);
 		getSourceViewer().getTextWidget().setData(BONITA_KEYWORDS_DATA_KEY, bonitaKeyWords);
 		getSourceViewer().getTextWidget().setData(CONTEXT_DATA_KEY, context);
-		
+
 		knowVariables = new HashSet<String>();
 		if (nodes != null) {
 			for (final ScriptVariable n : nodes) {
@@ -320,7 +320,7 @@ public class GroovyViewer {
 			}
 		}
 		knowVariables.addAll(bonitaKeyWords);
-		
+
 		contextInitialized  = true;
 	}
 

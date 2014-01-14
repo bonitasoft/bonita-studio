@@ -108,41 +108,32 @@ IExtensibleGridPropertySectionContribution {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				if(element instanceof EventObject){
-					if(eObject != null && ((Message) element).getSource() != null 
-							&& ModelHelper.getParentProcess(((Message) element).getSource()) != null 
-							&& ModelHelper.getParentProcess(((Message) element).getSource()).equals(ModelHelper.getParentProcess(eObject))){
-						return false ;
-					}else{
-						return true ;
+					final ThrowMessageEvent source = ((Message) element).getSource();
+					if(eObject != null){
+						if(source != null){ 
+							final AbstractProcess parentProcessOfSourceMessage = ModelHelper.getParentProcess(source);
+							if(parentProcessOfSourceMessage != null 
+									&& parentProcessOfSourceMessage.equals(ModelHelper.getParentProcess(eObject))){
+								return false ;
+							}
+						}
 					}
 				}
 				return true;
 			}
 		});
-		List<Message> events = new ArrayList<Message>();
-		ModelHelper.findAllEvents(ModelHelper.getMainProcess(eObject),events);
-		
-		// remove messages that source(throwMessage) are on the same process as eObject(catchMessage)
-		AbstractProcess parentProcess = ModelHelper.getParentProcess(eObject);
-		List<Message> eventsToRemove = new ArrayList<Message>();
-		for(Message message : events){
-			if(ModelHelper.getParentProcess(message).equals(parentProcess)){
-				eventsToRemove.add(message);
-			}
-		}
-		events.removeAll(eventsToRemove);
-		
+		List<Message> events = retrievePossibleMessageEvents();
+
 		combo.setInput(events);
 		if(eObject.getEvent() != null){
 			combo.getCombo().setText(eObject.getEvent());
 			oldEventName = combo.getCombo().getText() ;
 		}
-			combo.addSelectionChangedListener(new ISelectionChangedListener() {
+		combo.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			@Override
 			public void selectionChanged(SelectionChangedEvent arg0) {
 				handleSelectionChanged();
-
 			}
 		});
 
@@ -153,8 +144,27 @@ IExtensibleGridPropertySectionContribution {
 				handleSelectionChanged();
 			}
 		});
+	}
 
+	private List<Message> retrievePossibleMessageEvents() {
+		List<Message> events = new ArrayList<Message>();
+		ModelHelper.findAllEvents(ModelHelper.getMainProcess(eObject),events);
 
+		// remove messages that source(throwMessage) are on the same process as eObject(catchMessage)
+		AbstractProcess parentProcess = ModelHelper.getParentProcess(eObject);
+		List<Message> eventsToRemove = retrieveMessageEventsFromThePool(events, parentProcess);
+		events.removeAll(eventsToRemove);
+		return events;
+	}
+
+	private List<Message> retrieveMessageEventsFromThePool(List<Message> events, AbstractProcess parentProcess) {
+		List<Message> eventsToRemove = new ArrayList<Message>();
+		for(Message message : events){
+			if(ModelHelper.getParentProcess(message).equals(parentProcess)){
+				eventsToRemove.add(message);
+			}
+		}
+		return eventsToRemove;
 	}
 
 	protected void handleSelectionChanged() {

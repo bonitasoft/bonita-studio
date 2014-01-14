@@ -41,6 +41,7 @@ import org.bonitasoft.studio.common.jface.TableColumnSorter;
 import org.bonitasoft.studio.common.jface.databinding.WizardPageSupportWithoutMessages;
 import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValidator;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -98,7 +99,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 
 	private static final String DEFAULT_USER_PASSWORD = "bpm";
-	private static final int TABFOLDER_HEIGHT = 240;
 	private static final int MIN_SC_WIDTH = 426;
 	private static final int MIN_SC_HEIGHT = 268;
 	private Text usernameText;
@@ -112,7 +112,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 	private TabItem generalTab;
 	private TabItem personalTab;
 	private TabItem profesionnalTab;
-	private TabItem metadataTab;
 	private TabFolder tab;
 	private final List<Membership> userMemberShips = new ArrayList<Membership>();
 	private Combo managerNameCombo;
@@ -221,6 +220,22 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 
 			UpdateValueStrategy strategy = new UpdateValueStrategy() ;
+			
+			strategy.setConverter(new Converter(String.class, String.class){
+
+				@Override
+				public Object convert(Object fromObject) {
+					if (userList!=null){
+						for (User u:userList){
+							if (selectedUser!=null && u.getManager()!=null && u.getManager().equals(selectedUser.getUserName())){
+								u.setManager((String)fromObject);
+							}
+						}
+					}
+					return fromObject;
+				}
+				
+			});
 			userNameValidator.setValidator(new IValidator() {
 
 				@Override
@@ -245,18 +260,16 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 				@Override
 				public void handleValueChange(ValueChangeEvent event) {
 					User user = (User) ((EObjectObservableValue)event.getObservable()).getObserved();
+					String oldUserValue = event.diff.getOldValue().toString();
 					for(Membership m : userMemberShips){
 						m.setUserName(user.getUserName()) ;
 					}
-					managerNameCombo.removeAll() ;
-					managerNameCombo.add("") ;
-					for(User u : userList){
-						if(!u.getUserName().equals(user.getUserName())){
-							managerNameCombo.add(u.getUserName()) ;
-						}
-					}
+//					managerNameCombo.removeAll() ;
+//					managerNameCombo.add("") ;
+					
 					updateDelegueeMembership(event.diff.getOldValue().toString(),event.diff.getNewValue().toString()) ;
 					getViewer().refresh(user) ;
+					
 				}
 			}) ;
 
@@ -280,8 +293,9 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 					password.setEncrypted(false);
 				}
 			});
-			context.bindValue(SWTObservables.observeText(managerNameCombo), EMFObservables.observeValue(selectedUser,  OrganizationPackage.Literals.USER__MANAGER)) ;
-
+			
+			context.bindValue(SWTObservables.observeSelection(managerNameCombo), EMFObservables.observeValue(selectedUser,  OrganizationPackage.Literals.USER__MANAGER));
+			
 			for(Entry<EAttribute, Control> entry : generalWidgetMap.entrySet()){
 				EAttribute attributre = entry.getKey() ;
 				Control control =  entry.getValue() ;
@@ -501,12 +515,7 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 					sc.setContent(control);
 					profesionnalTab.setControl(sc) ;
 				}
-//				else if(item.equals(metadataTab)){
-//					final ScrolledComposite sc = createScrolledComposite();
-//					control = createMetadataControl(sc,metadataWidgetMap);
-//					sc.setContent(control);
-//					metadataTab.setControl(sc) ;
-//				}
+
 				else if(item.equals(memberShipTab)){
 					final ScrolledComposite sc = createScrolledComposite();
 					control = createMembershipControl(sc,membershipWidgetMap);
@@ -538,9 +547,6 @@ public class UsersWizardPage extends AbstractOrganizationWizardPage {
 
 		profesionnalTab = new TabItem(tab, SWT.NONE) ;
 		profesionnalTab.setText(Messages.professionalData) ;
-
-//		metadataTab = new TabItem(tab, SWT.NONE) ;
-//		metadataTab.setText(Messages.metadata) ;
 
 		getViewer().setSelection(new StructuredSelection()) ;
 		refreshBinding(null) ;

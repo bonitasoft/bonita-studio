@@ -73,7 +73,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.internal.properties.Properties;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ChangePropertyValueRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequestFactory;
@@ -148,12 +147,14 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
         activityRequest.getExtendedData().put("convertOperation", "true");
         Command command = parentEditPart.getCommand(activityRequest);
 
-        final IDiagramEditDomain diagramEditDomain = node.getDiagramEditDomain();
-        diagramEditDomain.getDiagramCommandStack().execute(command);
-
+        command.execute();
+        command.dispose();
+        
         IAdaptable targetAdapter = (IAdaptable) ((List<?>) activityRequest.getNewObject()).get(0);
         Node newNode = (Node) targetAdapter.getAdapter(EObject.class);
 
+      
+        
         /* Need a refresh when we are in OffscreenEditPart */
         parentEditPart.refresh();
 
@@ -407,5 +408,5 @@ public class ConvertBPMNTypeCommand extends AbstractTransactionalCommand {
         return super.canRedo();
     }
 
-
 }
+

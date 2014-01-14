@@ -134,11 +134,15 @@ public class GroupContentProvider implements ITreeContentProvider {
     }
 
     public static String getGroupPath(Group group) {
-        String groupPath = null ;
-        if(group.getParentPath() == null){
-            groupPath = GROUP_SEPARATOR + group.getName() ;
+        return getGroupPath(group.getName(), group.getParentPath());
+    }
+    
+    public static String getGroupPath(String groupName,String parentPath) {
+    	String groupPath = null;
+        if(parentPath == null){
+            groupPath = GROUP_SEPARATOR + groupName ;
         }else{
-            groupPath = group.getParentPath() + GROUP_SEPARATOR + group.getName() ;
+            groupPath = parentPath + GROUP_SEPARATOR + groupName;
         }
         return groupPath;
     }

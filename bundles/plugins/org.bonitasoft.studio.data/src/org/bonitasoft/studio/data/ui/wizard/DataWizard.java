@@ -27,6 +27,7 @@ import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.refactoring.BonitaGroovyRefactoringAction;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.DataPlugin;
 import org.bonitasoft.studio.data.i18n.Messages;
@@ -81,7 +82,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 		this.featureToCheckForUniqueID.add(dataContainmentFeature);
 		setWindowTitle(Messages.newVariable);
 	}
-	
+
 	public DataWizard(EObject container,EStructuralFeature dataContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID, boolean showAutogenerateForm, String fixedReturnType){
 		initDataWizard(dataContainmentFeature, showAutogenerateForm);
 		this.container = container ;
@@ -105,7 +106,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 		this.featureToCheckForUniqueID = featureToCheckForUniqueID ;
 		setWindowTitle(Messages.editVariable);
 	}
-	
+
 	private void initDataWizard(EStructuralFeature dataContainmentFeature, boolean showAutogenerateForm){
 		setDefaultPageImageDescriptor(Pics.getWizban()) ;
 		this.dataContainmentFeature = dataContainmentFeature ;//the default add data on this feature
@@ -119,16 +120,25 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 	}
 
 	protected DataWizardPage getWizardPage() {
+		DataWizardPage page = null;
 		if(!dataContainmentFeature.equals(ProcessPackage.Literals.DATA_AWARE__DATA)){
-			DataWizardPage page = new DataWizardPage(dataWorkingCopy,container,false,false,false, showAutogenerateForm,featureToCheckForUniqueID, fixedReturnType);
+			page = new DataWizardPage(dataWorkingCopy,container,false,false,false, showAutogenerateForm,featureToCheckForUniqueID, fixedReturnType);
 			page.setIsPageFlowContext(isPageFlowContext);
+			if (editMode){
+				page.setTitle(Messages.editVariableTitle);
+				page.setDescription(Messages.editVariableDescription);
+			}
 			return  page ;
 		}else{
 			boolean isOnActivity = container instanceof Activity;
-			DataWizardPage page = new DataWizardPage(dataWorkingCopy,container,true, true, isOnActivity, showAutogenerateForm, featureToCheckForUniqueID, fixedReturnType);
+			page = new DataWizardPage(dataWorkingCopy,container,true, true, isOnActivity, showAutogenerateForm, featureToCheckForUniqueID, fixedReturnType);
 			page.setIsPageFlowContext(isPageFlowContext);
-			return  page;
 		}
+		if (editMode){
+			page.setTitle(Messages.editVariableTitle);
+			page.setDescription(Messages.editVariableDescription);
+		}
+		return  page;
 	}
 
 
@@ -142,32 +152,42 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 		setDatasourceId(workingCopy,dataContainmentFeature) ;
 		if(editMode){
 			AbstractProcess process = ModelHelper.getParentProcess(container) ;
-			final RefactorDataOperation op = new RefactorDataOperation() ;
+			CompoundCommand cc = new CompoundCommand();
+			final RefactorDataOperation op = new RefactorDataOperation(BonitaGroovyRefactoringAction.REFACTOR_OPERATION) ;
+			op.setCompoundCommand(cc);
 			op.setEditingDomain(editingDomain);
 			op.setContainer(process) ;
 			op.setNewData(workingCopy) ;
 			op.setOldData(originalData) ;
+			op.updateReferencesInScripts();
 			final boolean switchingDataeClass = !originalData.eClass().equals(workingCopy.eClass());
 			op.setUpdateDataReferences(switchingDataeClass);
-			try {
-				getContainer().run(true, false, op) ;
-			} catch (InvocationTargetException e) {
-				BonitaStudioLog.error(e);
-			} catch (InterruptedException e) {
-				BonitaStudioLog.error(e);
-			}
-			CompoundCommand cc = new CompoundCommand();
-			if(switchingDataeClass){
-				List<?> dataList =  (List<?>) container.eGet(dataContainmentFeature) ;
-				int index = dataList.indexOf(originalData) ;
-				cc.append(RemoveCommand.create(editingDomain, container, dataContainmentFeature, originalData)) ;
-				cc.append(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy,index)) ;
-			}else{
-				for(EStructuralFeature feature : originalData.eClass().getEAllStructuralFeatures()){
-					cc.append(SetCommand.create(editingDomain, originalData, feature, workingCopy.eGet(feature)));
+			if (op.isCanExecute()){
+				try {
+
+					getContainer().run(true, false, op) ;
+
+				} catch (InvocationTargetException e) {
+					BonitaStudioLog.error(e);
+				} catch (InterruptedException e) {
+					BonitaStudioLog.error(e);
 				}
+
+				if(switchingDataeClass){
+					List<?> dataList =  (List<?>) container.eGet(dataContainmentFeature) ;
+					int index = dataList.indexOf(originalData) ;
+					cc.append(RemoveCommand.create(editingDomain, container, dataContainmentFeature, originalData)) ;
+					cc.append(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy,index)) ;
+				}else{
+					for(EStructuralFeature feature : originalData.eClass().getEAllStructuralFeatures()){
+						cc.append(SetCommand.create(editingDomain, originalData, feature, workingCopy.eGet(feature)));
+					}
+				}
+
+				editingDomain.getCommandStack().execute(cc) ;
+			} else {
+				cc.dispose();
 			}
-			editingDomain.getCommandStack().execute(cc) ;
 		}else{
 			editingDomain.getCommandStack().execute(AddCommand.create(editingDomain, container, dataContainmentFeature, workingCopy)) ;
 		}
@@ -176,10 +196,10 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 		} catch (CoreException e) {
 			BonitaStudioLog.error(e, DataPlugin.PLUGIN_ID);
 		}
-		
+
 		return true;
 	}
-	
+
 	public Data getWorkingCopy(){
 		return page.getWorkingCopy();	
 	}
@@ -208,7 +228,7 @@ public class DataWizard extends Wizard implements IBonitaVariableContext {
 	@Override
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
-		
+
 	}
 
 }

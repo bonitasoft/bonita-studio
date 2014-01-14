@@ -2,7 +2,7 @@
 <feature
       id="tests-common-feature"
       label="Feature for BonitaStudio tests"
-      version="6.2.0.qualifier"
+      version="6.3.0.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
@@ -18,83 +18,8 @@
    </license>
 
    <includes
-         id="org.eclipse.swtbot"
+         id="tests-dependencies-feature"
          version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.swtbot.eclipse"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.swtbot.eclipse.gef"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.swtbot.eclipse.test.junit"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.swtbot.forms"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.xtext.sdk"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.rcp"
-         version="4.3.0.v20130605-2100"/>
-
-   <requires>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.equinox.app"/>
-      <import plugin="org.eclipse.osgi"/>
-      <import plugin="org.eclipse.swt"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui.workbench"/>
-      <import plugin="org.eclipse.update.configurator" version="3.1.100" match="compatible"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.emf.edit"/>
-      <import plugin="org.eclipse.gmf.runtime.diagram.ui"/>
-      <import plugin="org.eclipse.gmf.runtime.diagram.ui.resources.editor"/>
-      <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.ui.browser" version="3.2.300" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.equinox.common"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.core.commands" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.transaction" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.commands" version="3.6.0" match="greaterOrEqual"/>
-      <import plugin="org.hamcrest.core" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.common.ui" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.ecore" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.gmf.runtime.emf.commands.core" version="1.2.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.gmf.runtime.diagram.core" version="1.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jdt.junit.runtime"/>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.draw2d"/>
-      <import plugin="org.eclipse.gef"/>
-      <import plugin="org.apache.log4j" version="1.2.13" match="greaterOrEqual"/>
-      <import plugin="org.junit" version="4.8.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.jobs"/>
-      <import plugin="org.hamcrest.library" version="1.1.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.views.properties.tabbed" version="3.5.201" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xsd" version="2.6.0" match="greaterOrEqual"/>
-   </requires>
-
-   <plugin
-         id="org.eclipse.core.runtime.compatibility"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.hamcrest.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio.tests"
@@ -139,26 +64,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.junit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.ant"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.bonitasoft.studio.diagram.form.custom.tests"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.importer.tests"
          download-size="0"
          install-size="0"
@@ -167,13 +72,6 @@
 
    <plugin
          id="org.bonitasoft.studio.diagram.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.log4j"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -216,13 +114,6 @@
 
    <plugin
          id="org.bonitasoft.studio.tests.hotspot"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.hamcrest.library"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -292,39 +183,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.pde.launching"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.junit.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.pde.build"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.pde.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.jdt.debug"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.bonitasoft.studio.test.suite"
          download-size="0"
          install-size="0"
@@ -380,6 +238,5 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
 
 </feature>

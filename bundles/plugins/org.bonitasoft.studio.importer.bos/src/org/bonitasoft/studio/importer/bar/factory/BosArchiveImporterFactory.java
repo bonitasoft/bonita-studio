@@ -19,7 +19,7 @@ package org.bonitasoft.studio.importer.bar.factory;
 import java.io.InputStream;
 
 import org.bonitasoft.studio.importer.ImporterFactory;
-import org.bonitasoft.studio.importer.ToProcProcessor;
+import org.bonitasoft.studio.importer.processors.ToProcProcessor;
 
 /**
  * @author Romain Bioteau

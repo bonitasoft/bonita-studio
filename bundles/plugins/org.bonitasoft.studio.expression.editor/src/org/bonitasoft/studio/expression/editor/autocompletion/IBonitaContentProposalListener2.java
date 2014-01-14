@@ -16,7 +16,6 @@
  */
 package org.bonitasoft.studio.expression.editor.autocompletion;
 
-import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 
 public interface IBonitaContentProposalListener2 {
 

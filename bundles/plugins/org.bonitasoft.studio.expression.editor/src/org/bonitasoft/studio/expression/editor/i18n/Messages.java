@@ -92,6 +92,10 @@ public class Messages extends NLS {
 	public static String formVariable;
 
 
+	public static String createBusinessData;
+	public static String businessDataNotCompatibleForOperator;
+
+
 
 
     private Messages() {
@@ -103,3 +107,4 @@ public class Messages extends NLS {
     }
 
 }
+

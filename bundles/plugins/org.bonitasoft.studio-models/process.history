@@ -7746,6 +7746,148 @@
   </releases>
   <releases date="2013-10-29T12:36:39.611+0100" label="6.1.1-001">
     <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.startmessageevent.StartMessageEventMigration"/>
+    <changes xsi:type="history:MigrationChange" migration="org.bonitasoft.studio.migration.custom.migration.connector.ConnectorIgnoreErrorMigration">
+      <changes xsi:type="history:CompositeChange">
+        <changes xsi:type="history:Set" element="process.ecore#//Connector/ignoreErrors"
+            featureName="defaultValueLiteral" dataValue="false" oldDataValue="true"/>
+      </changes>
+    </changes>
   </releases>
-  <releases/>
+  <releases>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+          element="process.ecore#//BusinessObjectData">
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData"
+            featureName="name" dataValue="BusinessObjectData"/>
+        <changes xsi:type="history:Add" element="process.ecore#//BusinessObjectData"
+            featureName="eSuperTypes" referenceValue="process.ecore#//JavaObjectData"/>
+      </changes>
+      <operation name="newClass">
+        <parameters name="ePackage">
+          <referenceValue element="process.ecore#/"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>BusinessObjectData</dataValue>
+        </parameters>
+        <parameters name="superClasses">
+          <referenceValue element="process.ecore#//Data"/>
+        </parameters>
+        <parameters name="abstr">
+          <dataValue>false</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#/" referenceName="eClassifiers"
+          element="process.ecore#//BusinessObjectType">
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectType"
+            featureName="name" dataValue="BusinessObjectType"/>
+        <changes xsi:type="history:Add" element="process.ecore#//BusinessObjectType"
+            featureName="eSuperTypes" referenceValue="process.ecore#//DataType"/>
+      </changes>
+      <operation name="newClass">
+        <parameters name="ePackage">
+          <referenceValue element="process.ecore#/"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>BusinessObjectType</dataValue>
+        </parameters>
+        <parameters name="superClasses">
+          <referenceValue element="process.ecore#//DataType"/>
+        </parameters>
+        <parameters name="abstr">
+          <dataValue>false</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//BusinessObjectData"
+          referenceName="eStructuralFeatures" element="process.ecore#//BusinessObjectData/businessDataRepositoryId">
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/businessDataRepositoryId"
+            featureName="name" dataValue="businessDataRepositoryId"/>
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/businessDataRepositoryId"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//BusinessObjectData"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>businessObjectDefinitionId</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//BusinessObjectData"
+          referenceName="eStructuralFeatures" element="process.ecore#//BusinessObjectData/createNewInstance">
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/createNewInstance"
+            featureName="name" dataValue="createNewInstance"/>
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/createNewInstance"
+            featureName="defaultValueLiteral" dataValue="true"/>
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/createNewInstance"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//BusinessObjectData"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>createNewInstance</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue>true</dataValue>
+        </parameters>
+      </operation>
+    </changes>
+    <changes xsi:type="history:OperationChange">
+      <changes xsi:type="history:Create" target="process.ecore#//BusinessObjectData"
+          referenceName="eStructuralFeatures" element="process.ecore#//BusinessObjectData/eClassName">
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/eClassName"
+            featureName="name" dataValue="eClassName"/>
+        <changes xsi:type="history:Set" element="process.ecore#//BusinessObjectData/eClassName"
+            featureName="eType" referenceValue="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </changes>
+      <operation name="newAttribute">
+        <parameters name="eClass">
+          <referenceValue element="process.ecore#//BusinessObjectData"/>
+        </parameters>
+        <parameters name="name">
+          <dataValue>eClassName</dataValue>
+        </parameters>
+        <parameters name="type">
+          <referenceValue element="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        </parameters>
+        <parameters name="lowerBound">
+          <dataValue>0</dataValue>
+        </parameters>
+        <parameters name="upperBound">
+          <dataValue>1</dataValue>
+        </parameters>
+        <parameters name="defaultValue">
+          <dataValue xsi:nil="true"/>
+        </parameters>
+      </operation>
+    </changes>
+  </releases>
 </history:History>

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
+ * Copyright (C) 2012-2013 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,6 +37,7 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.After;
 import org.junit.Before;
@@ -140,7 +141,6 @@ public class ConnectorImplementationTest extends SWTBotGefTestCase implements SW
         assertFalse("finish button should be desabled",
                 bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
         bot.button(IDialogConstants.CANCEL_LABEL).click();
-
     }
 
     @Test
@@ -153,10 +153,17 @@ public class ConnectorImplementationTest extends SWTBotGefTestCase implements SW
         bot.textWithLabel(Messages.implementationId+" *").setText(id);
         bot.textWithLabel("Package *").setText(packageName);
         bot.textWithLabel(Messages.classNameLabel+" *").setText("MyConnector.Implsfgsdf");
-        bot.sleep(5000);
-        assertFalse("finish button should be disabled", bot.button(IDialogConstants.FINISH_LABEL).isEnabled());
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {
+				return !bot.button(IDialogConstants.FINISH_LABEL).isEnabled();
+			}
+			
+			public String getFailureMessage() {
+				return "finish button should be disabled";
+			}
+		});
         bot.button(IDialogConstants.CANCEL_LABEL).click();
-
     }
     
     @Test
@@ -328,14 +335,17 @@ public class ConnectorImplementationTest extends SWTBotGefTestCase implements SW
         bot.waitUntil(new ICondition(){
 
 			public boolean test() throws Exception {
+				
 				return bot.editors().isEmpty();
 			}
 
 			public void init(SWTBot bot) {
+				// TODO Auto-generated method stub
 				
 			}
 
 			public String getFailureMessage() {
+				// TODO Auto-generated method stub
 				return null;
 			}
         	

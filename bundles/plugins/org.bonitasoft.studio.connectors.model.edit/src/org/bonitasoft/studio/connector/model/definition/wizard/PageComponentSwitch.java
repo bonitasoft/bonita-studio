@@ -70,6 +70,7 @@ import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -83,6 +84,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.Section;
@@ -415,9 +418,18 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
 		if(parameter != null){
-			createFieldLabel(composite,SWT.TOP,object.getId(),input.isMandatory()) ;
+			Label labelField = createFieldLabel(composite,SWT.TOP,object.getId(),input.isMandatory()) ;
+			String desc = messageProvider.getFieldDescription(definition, object.getId()) ;
+			if(desc != null && !desc.isEmpty()){
+				createDescriptionDecorator(composite, labelField, desc);
+			}
+			
 			final ExpressionCollectionViewer viewer = new ExpressionCollectionViewer(composite,0,object.isFixedRows(),object.getCols().intValue(),object.isFixedCols(),object.getColsCaption(),true,false) ;
-			viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+			if(desc != null && !desc.isEmpty()){
+				viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create()) ;
+			}else{
+				viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+			}
 			for(int i =0 ; i< object.getCols().intValue() ;i++){
 				viewer.addFilter(connectorExpressionContentTypeFilter);
 			}
@@ -478,10 +490,19 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 		final ConnectorParameter parameter = getConnectorParameter(object.getInputName(),object,input) ;
 
 		if(parameter != null){
-			createFieldLabel(composite,SWT.TOP,object.getId(),input.isMandatory()) ;
+			Label labelField = createFieldLabel(composite,SWT.TOP,object.getId(),input.isMandatory()) ;
+			String desc = messageProvider.getFieldDescription(definition, object.getId()) ;
+			if(desc != null && !desc.isEmpty()){
+				createDescriptionDecorator(composite, labelField, desc);
+			}
+			
 			@SuppressWarnings("unchecked")
 			final ExpressionCollectionViewer viewer = new ExpressionCollectionViewer(composite,0,false,1,true,Collections.EMPTY_LIST,true,false) ;
-			viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+			if(desc != null && !desc.isEmpty()){
+				viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).indent(10, 0).create()) ;
+			}else{
+				viewer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create()) ;
+			}
 
 			if(object.isShowDocuments()){
 				Set<String> contentTypes = new HashSet<String>(connectorExpressionContentTypeFilter.getContentTypes());
@@ -535,6 +556,17 @@ public class PageComponentSwitch extends ConnectorDefinitionSwitch<Component> im
 		}
 		return null;
 
+	}
+
+	protected void createDescriptionDecorator(Composite composite,
+			Label labelField, String desc) {
+		ControlDecoration descriptionDecoration = new ControlDecoration(labelField, SWT.RIGHT ,composite);
+		descriptionDecoration.setMarginWidth(0);
+		descriptionDecoration.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK));
+		descriptionDecoration.setDescriptionText(desc);
+		descriptionDecoration.setShowOnlyOnFocus(false);
+		descriptionDecoration.setShowHover(true);
+		descriptionDecoration.show();
 	}
 
 	protected ExpressionViewer createPasswordControl(Composite composite, Password object) {

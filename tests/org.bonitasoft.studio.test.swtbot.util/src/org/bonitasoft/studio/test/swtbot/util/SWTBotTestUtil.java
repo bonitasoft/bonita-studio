@@ -156,7 +156,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		});
 		Assert.assertFalse(runnableEPs.isEmpty());
 		gmfEditor.select(runnableEPs.get(0));
-		RunProcessCommand cmd =  new RunProcessCommand(null,true);
+		RunProcessCommand cmd =  new RunProcessCommand(true);
 		return (IStatus) cmd.execute(null);
 	}
 
@@ -223,7 +223,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		BonitaStudioLog.log("SWTBot begin to import "+ resourceNameInClasspath + " in mode " +importName);
 		boolean disable = FileActionDialog.getDisablePopup();
 		FileActionDialog.setDisablePopup(true);
-		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")),10000);
+		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
 		SWTBotMenu menu = bot.menu("Diagram");
 		menu.menu("Import...").click();
 
@@ -233,7 +233,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		File file = new File(url.getFile());
 		bot.text().setText(file.getAbsolutePath());
 		bot.table().select(importName);
-		bot.button(IDialogConstants.FINISH_LABEL).click();
+		bot.button("Import").click();
 		bot.waitUntil(new ICondition() {
 			@Override
 			public boolean test() throws Exception {
@@ -254,7 +254,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 			public String getFailureMessage() {
 				return "no active editor";
 			}
-		},35000);
+		},55000);
 		FileActionDialog.setDisablePopup(disable);
 		BonitaStudioLog.log("SWTBot has imported "+ resourceNameInClasspath + " in mode " +importName);
 	}
@@ -891,19 +891,20 @@ public class SWTBotTestUtil implements SWTBotConstants{
 	public static void editConnector(SWTGefBot bot, String connectorType, String connectorTool){
 
 		bot.waitUntil(Conditions.shellIsActive("Connectors"));
-		SWTBotTree tree = bot.tree();
-		tree.expandNode(connectorType);
-		SWTBotTreeItem theItem = tree.getTreeItem(connectorType);
-		Assert.assertNotNull("Error : No item "+connectorType+" found in the tree.", theItem);
-		for( SWTBotTreeItem item : theItem.getItems()){
-			System.out.println("item = "+item.getText());
-			if(item.getText().startsWith(connectorTool)){
-				item.select();
-				item.click();
-				break;
-			}
-		}
-
+//		SWTBotTree tree = bot.tree();
+//		tree.expandNode(connectorType);
+//		SWTBotTreeItem theItem = tree.getTreeItem(connectorType);
+//		Assert.assertNotNull("Error : No item "+connectorType+" found in the tree.", theItem);
+//		for( SWTBotTreeItem item : theItem.getItems()){
+//			System.out.println("item = "+item.getText());
+//			if(item.getText().startsWith(connectorTool)){
+//				item.select();
+//				item.click();
+//				break;
+//			}
+//		}
+		bot.text().setText(connectorTool);
+		bot.table().select(0);
 		Assert.assertTrue("Error : No "+ connectorTool +" "+connectorType +" found in the connector list", bot.button(IDialogConstants.NEXT_LABEL).isEnabled());
 
 		bot.button(IDialogConstants.NEXT_LABEL).click();

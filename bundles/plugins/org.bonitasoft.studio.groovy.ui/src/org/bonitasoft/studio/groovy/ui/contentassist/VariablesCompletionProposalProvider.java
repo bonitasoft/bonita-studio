@@ -16,7 +16,9 @@ package org.bonitasoft.studio.groovy.ui.contentassist;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.groovy.ScriptVariable;
@@ -72,6 +74,7 @@ public class VariablesCompletionProposalProvider implements IJavaCompletionPropo
                 } catch (final BadLocationException e) {
                     BonitaStudioLog.error(e);
                 }
+                Set<String> addedProposal = new HashSet<String>();
                 if (nodes != null) {
                     for (final ScriptVariable f : nodes) {
                         final String name = f.getName();
@@ -82,13 +85,14 @@ public class VariablesCompletionProposalProvider implements IJavaCompletionPropo
                             }
                         }
                         if (name.startsWith(prefix.toString())) {
+                        	addedProposal.add(name);
                             list.add(getProposalFor(context, fLabelProvider, prefix,  name, typeName));
                         }
                     }
                 }
                 if(keyWords != null){
                     for (final String name : keyWords) {
-                        if (name.startsWith(prefix.toString())) {
+                        if (!addedProposal.contains(name) && name.startsWith(prefix.toString())) {
                             final Class<?> typeForKeyWord = BonitaSyntaxHighlighting.getTypeForKeyWord(name);
                             String typeName = null;
                             if (typeForKeyWord != null) {

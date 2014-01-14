@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.common.repository.filestore;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,142 +46,143 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class PackageFileStore extends AbstractFileStore {
 
-    private final String packageName;
+	private final String packageName;
 
-    public PackageFileStore(String packageName, IRepositoryStore parentStore) {
-        super("", parentStore);
-        this.packageName = packageName ;
-    }
+	public PackageFileStore(String packageName, IRepositoryStore parentStore) {
+		super("", parentStore);
+		this.packageName = packageName ;
+	}
 
-    @Override
-    public String getName() {
-        return packageName;
-    }
+	@Override
+	public String getName() {
+		return packageName;
+	}
 
-    @Override
-    public String getDisplayName() {
-        return getName() ;
-    }
+	@Override
+	public String getDisplayName() {
+		return getName() ;
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
-     */
-    @Override
-    public Image getIcon() {
-        return Pics.getImage("package.gif", CommonRepositoryPlugin.getDefault());
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getIcon()
+	 */
+	@Override
+	public Image getIcon() {
+		return Pics.getImage("package.gif", CommonRepositoryPlugin.getDefault());
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
-     */
-    @Override
-    public IFolder getContent() {
-        return getResource();
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getContent()
+	 */
+	@Override
+	public IFolder getContent() {
+		return getResource();
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getResource()
-     */
-    @Override
-    public IFolder getResource() {
-        final IPackageFragment packageFragment = getPackageFragment();
-        if(packageFragment != null){
-            return (IFolder) packageFragment.getResource() ;
-        }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.model.IRepositoryFileStore#getResource()
+	 */
+	@Override
+	public IFolder getResource() {
+		final IPackageFragment packageFragment = getPackageFragment();
+		if(packageFragment != null){
+			return (IFolder) packageFragment.getResource() ;
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public void exportAsJar(String absoluteTargetFilePath, boolean includeSources) {
-        final JarPackageData jarPackakeData = new JarPackageData() ;
-        final IPackageFragment packageFragment = getPackageFragment() ;
-        if(packageFragment==null){
-        	throw new RuntimeException("Error while exporting as JAR : package Fragment is null");
-        }
-        
-        	final List<Object> toExport = new ArrayList<Object>() ;
-        	try {
-        		for(ICompilationUnit cunit : packageFragment.getCompilationUnits()){
-        			toExport.add(cunit) ;
-        		}
-        	} catch (Exception e2) {
-        		BonitaStudioLog.error(e2) ;
-        	}
+	public void exportAsJar(String absoluteTargetFilePath, boolean includeSources) throws InvocationTargetException, InterruptedException {
+		final JarPackageData jarPackakeData = new JarPackageData() ;
+		final IPackageFragment packageFragment = getPackageFragment() ;
+		if(packageFragment==null){
+			throw new RuntimeException("Error while exporting as JAR : package Fragment is null");
+		}
 
-        	jarPackakeData.setBuildIfNeeded(true) ;
-        	jarPackakeData.setJarLocation(Path.fromOSString(absoluteTargetFilePath)) ;
-        	jarPackakeData.setCompress(true) ;
-        	jarPackakeData.setElements(toExport.toArray(new Object[toExport.size()])) ;
-        	jarPackakeData.setExportErrors(true) ;
-        	jarPackakeData.setDeprecationAware(true) ;
-        	jarPackakeData.setExportClassFiles(true) ;
-        	jarPackakeData.setExportJavaFiles(includeSources) ;
-        	jarPackakeData.setGenerateManifest(true) ;
-        	jarPackakeData.setOverwrite(true) ;
+		final List<Object> toExport = new ArrayList<Object>() ;
+		try {
+			for(ICompilationUnit cunit : packageFragment.getCompilationUnits()){
+				toExport.add(cunit) ;
+			}
+		} catch (Exception e2) {
+			BonitaStudioLog.error(e2) ;
+		}
 
-        	final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null) ;
-        	try {
-        		runnable.run(Repository.NULL_PROGRESS_MONITOR) ;
-        	} catch (Exception e){
-        		BonitaStudioLog.error(e) ;
-        	}
-        
-    }
+		jarPackakeData.setBuildIfNeeded(true) ;
+		jarPackakeData.setJarLocation(Path.fromOSString(absoluteTargetFilePath)) ;
+		jarPackakeData.setCompress(true) ;
+		jarPackakeData.setElements(toExport.toArray(new Object[toExport.size()])) ;
+		jarPackakeData.setExportErrors(true) ;
+		jarPackakeData.setExportWarnings(true);
+		jarPackakeData.setDeprecationAware(true) ;
+		jarPackakeData.setExportClassFiles(true) ;
+		jarPackakeData.setExportJavaFiles(includeSources) ;
+		jarPackakeData.setGenerateManifest(true) ;
+		jarPackakeData.setOverwrite(true) ;
+		final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null) ;
+		try {
+			runnable.run(Repository.NULL_PROGRESS_MONITOR) ;
+		} catch (Exception e){
+			BonitaStudioLog.error(e) ;
+		}
 
-    public IPackageFragment getPackageFragment() {
-        IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
-        try {
-            return project.findPackageFragment(getParentStore().getResource().getFullPath().append(packageName.replace(".", "/")));
+	}
 
-        } catch (JavaModelException e) {
-            BonitaStudioLog.error(e) ;
-        }
-        return null;
-    }
 
-    public List<IFile> getChildren() {
-        List<IFile> result = new ArrayList<IFile>() ;
-        retrieveChildren(getResource(),result) ;
-        return result ;
-    }
 
-    private void retrieveChildren(IResource resource, List<IFile> result) {
-        try{
-            if(resource instanceof IFolder){
-                for(IResource r : ((IFolder) resource).members()){
-                    retrieveChildren(r, result) ;
-                }
-            }else if(resource instanceof IFile){
-                result.add((IFile) resource) ;
-            }
-        }catch (Exception e) {
-            BonitaStudioLog.error(e) ;
-        }
-    }
+	public IPackageFragment getPackageFragment() {
+		IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
+		try {
+			return project.findPackageFragment(getParentStore().getResource().getFullPath().append(packageName.replace(".", "/")));
+		} catch (JavaModelException e) {
+			BonitaStudioLog.error(e) ;
+		}
+		return null;
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
-     */
-    @Override
-    protected void doSave(Object content) {
+	public List<IFile> getChildren() {
+		List<IFile> result = new ArrayList<IFile>() ;
+		retrieveChildren(getResource(),result) ;
+		return result ;
+	}
 
-    }
+	private void retrieveChildren(IResource resource, List<IFile> result) {
+		try{
+			if(resource instanceof IFolder){
+				for(IResource r : ((IFolder) resource).members()){
+					retrieveChildren(r, result) ;
+				}
+			}else if(resource instanceof IFile){
+				result.add((IFile) resource) ;
+			}
+		}catch (Exception e) {
+			BonitaStudioLog.error(e) ;
+		}
+	}
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doOpen()
-     */
-    @Override
-    protected IWorkbenchPart doOpen() {
-        return null;
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doSave(java.lang.Object)
+	 */
+	@Override
+	protected void doSave(Object content) {
 
-    /* (non-Javadoc)
-     * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doClose()
-     */
-    @Override
-    protected void doClose() {
+	}
 
-    }
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doOpen()
+	 */
+	@Override
+	protected IWorkbenchPart doOpen() {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bonitasoft.studio.common.repository.filestore.AbstractFileStore#doClose()
+	 */
+	@Override
+	protected void doClose() {
+
+	}
 
 
 }

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SWBOT Util plugin
 Bundle-SymbolicName: org.bonitasoft.studio.test.swtbot.util;singleton:=true
-Bundle-Version: 6.2.0.qualifier
+Bundle-Version: 6.3.0.qualifier
 Bundle-Activator: org.bonitasoft.studio.test.swtbot.util.SWBOTUtilPlugin
 Bundle-Vendor: BonitaSoft S.A.
 Require-Bundle: org.eclipse.core.runtime,
@@ -27,9 +27,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.properties;bundle-version="1.0.0",
  org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.bonitasoft.studio.data;bundle-version="6.0.0",
- org.eclipse.xtext.ui;bundle-version="2.3.1"
+ org.eclipse.xtext.ui;bundle-version="2.3.1",
+ org.eclipse.ui.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bonitasoft.studio.test.swtbot.util
+Export-Package: org.bonitasoft.studio.test.swtbot.util,
+ org.bonitasoft.studio.test.swtbot.util.conditions
 Bundle-ActivationPolicy: lazy
 Import-Package: org.bonitasoft.studio.actors.i18n,
  org.bonitasoft.studio.expression.editor.i18n,

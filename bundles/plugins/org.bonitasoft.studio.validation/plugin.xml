@@ -667,7 +667,7 @@
                   class="org.bonitasoft.studio.validation.constraints.process.OpeartionReturnTypeWarningConstraint"
                   id="org.bonitasoft.studio.validation.constraints.operationreturntype"
                   lang="Java"
-                  mode="Live"
+                  mode="Batch"
                   name="%IncompatibleReturnTypeInOperation"
                   severity="WARNING"
                   statusCode="1">
@@ -898,6 +898,21 @@
                </message>
                <target
                      class="Connector">
+                      </target>
+             </constraint>
+              <constraint
+                  class="org.bonitasoft.studio.validation.constraints.process.ParalellMergeGatewayConstraint"
+                  id="org.bonitasoft.studio.validation.constraints.paralellMerge"
+                  lang="java"
+                  mode="Batch"
+                  name="Paralell merge"
+                  severity="WARNING"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="ANDGateway">
                </target>
             </constraint>
          </constraints>
@@ -937,7 +952,7 @@
                   class="org.bonitasoft.studio.validation.constraints.form.ValidatorErrorMessageConstraint"
                   id="org.bonitasoft.studio.validation.constraint.ValidatorErrorMessage"
                   lang="Java"
-                  mode="Live"
+                  mode="Batch"
                   name="%ValidatorErrorMessage"
                   severity="WARNING"
                   statusCode="1">
@@ -1009,7 +1024,7 @@
                   class="org.bonitasoft.studio.validation.constraints.form.ValidatorTypeConstraint"
                   id="org.bonitasoft.studio.validation.constraint.ValidatorType"
                   lang="Java"
-                  mode="Live"
+                  mode="Batch"
                   name="%ValidatorType"
                   severity="WARNING"
                   statusCode="1">
@@ -1118,7 +1133,6 @@
       <extension
             point="org.eclipse.ui.commands">
             <command
-            defaultHandler="org.bonitasoft.studio.validation.BatchValidationHandler"
             id="org.bonitasoft.studio.validation.batchValidation"
             name="%batchValidationAction_Label">
                <commandParameter
@@ -1144,5 +1158,14 @@
                name="%ValidationView"
                restorable="true">
          </view>
+      </extension>
+      <extension
+            point="org.eclipse.ui.handlers">
+         <handler
+               commandId="org.bonitasoft.studio.validation.batchValidation">
+            <class
+                  class="org.bonitasoft.studio.validation.BatchValidationHandler">
+            </class>
+         </handler>
       </extension>
 </plugin>

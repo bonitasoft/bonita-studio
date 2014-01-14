@@ -32,6 +32,7 @@ import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -67,13 +68,19 @@ public class TestDeployCommand {
 		URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource("ProcessForSubProcessLoopTest-1-1.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
 		op.run(new NullProgressMonitor());
+		for(IRepositoryFileStore f : op.getFileStoresToOpen()){
+			f.open();
+		}
 		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		MainProcess mainProcess=(MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
 
 		URL fileURL2 = FileLocator.toFileURL(TestDeployCommand.class.getResource("ProcessForSubProcessLoopTest-2-1.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
 		op.run(new NullProgressMonitor());
-
+		for(IRepositoryFileStore f : op.getFileStoresToOpen()){
+			f.open();
+		}
+		
 		/*And deploy it twice*/
 		final RunProcessCommand runProcessCommand = new RunProcessCommand( (AbstractProcess) mainProcess.getElements().get(0), true);
 		runProcessCommand.execute(null);
@@ -139,6 +146,9 @@ public class TestDeployCommand {
 		URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource(processResourceName)); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
 		op.run(new NullProgressMonitor());
+		for(IRepositoryFileStore f : op.getFileStoresToOpen()){
+			f.open();
+		}
 		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		return processEditor;
 	}

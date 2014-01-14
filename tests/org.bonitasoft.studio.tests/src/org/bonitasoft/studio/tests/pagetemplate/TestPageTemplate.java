@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2011-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,16 +20,15 @@ package org.bonitasoft.studio.tests.pagetemplate;
 import org.bonitasoft.studio.form.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**
  * @author Aurelien Pupier
@@ -60,7 +59,7 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         bot.text("Checkbox1").setText("CheckboxModified");
         bot.button(IDialogConstants.OK_LABEL).click();
         bot.activeEditor().save();
-
+        saveEditorAndWaitNoMoreDirtyState();
 
         /*check it has opened, content and close it to come back to form editor*/
         formGefEditor.mainEditPart().click();
@@ -88,7 +87,7 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         formGefEditor.clickContextMenu("Delete");
         bot.waitUntil(Conditions.shellIsActive("Warning"));
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.activeEditor().save();
+        saveEditorAndWaitNoMoreDirtyState();
         /*check it has opened, content and close it to come back to form editor*/
         formGefEditor.mainEditPart().select();
         checkTextInsideHtml("<div id=\"Date1\">");
@@ -99,30 +98,44 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         bot.button(Messages.Clear).click();
         bot.waitUntil(Conditions.shellIsActive(Messages.confirm_title));
         bot.button(IDialogConstants.OK_LABEL).click();
-        bot.activeEditor().save();
-
-        assertFalse(bot.button(Messages.Edit).isEnabled());
-        assertFalse(bot.button(Messages.Clear).isEnabled());
-
-
-
+        saveEditorAndWaitNoMoreDirtyState();
+        
+        assertFalse("Edit button is still enabled", bot.button(Messages.Edit).isEnabled());
+        assertFalse("Clear button is still enabled", bot.button(Messages.Clear).isEnabled());
     }
+
+	private SWTGefBot saveEditorAndWaitNoMoreDirtyState() {
+		final SWTGefBot gefBot = bot;
+		gefBot.activeEditor().save();
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {				
+				return !gefBot.activeEditor().isDirty();
+			}
+			
+			public String getFailureMessage() {
+				return "The editor is still dirty after the save.";
+			}
+		});
+		return gefBot;
+	}
 
     private void checkTextInsideHtml(final String textToCheck) {
         bot.button(Messages.Edit).click();
-        StructuredTextEditor editorPart;
-        editorPart = (StructuredTextEditor) bot.activeEditor().getReference().getEditor(false);
-        final StyledText textWidget2 = editorPart.getTextViewer().getTextWidget();
-
-        Display.getDefault().syncExec(new Runnable() {
-
-            public void run() {
-                editorTextContent = textWidget2.getText();
-            }
-        });
-        /*Check the content*/
-        System.out.println(editorTextContent);
-        assertTrue("The generated html is not well-formed",editorTextContent.contains(textToCheck));
+        bot.waitUntil(new ICondition() {
+			
+			public boolean test() throws Exception {
+				editorTextContent = bot.styledText().getText();
+				return editorTextContent.contains(textToCheck);
+			}
+			
+			public void init(SWTBot bot) {
+			}
+			
+			public String getFailureMessage() {
+				return "The generated html is not well-formed. It doesn't contain "+textToCheck+"\nCurrent text:\n"+editorTextContent;
+			}
+		},10000,500);
         bot.activeEditor().close();
     }
 
@@ -131,12 +144,10 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         bot.waitUntil(new ICondition() {
 
             public boolean test() throws Exception {
-                return bot.editors().size() == 0;
+                return bot.editors().isEmpty();
             }
 
             public void init(SWTBot bot) {
-                // TODO Auto-generated method stub
-
             }
 
             public String getFailureMessage() {
@@ -157,22 +168,8 @@ public class TestPageTemplate extends SWTBotGefTestCase {
         bot.button(Messages.Restore).click();
 
         /*There is a long-running operation before so need a waituntil*/
-        bot.waitUntil(new ICondition() {
-
-            public boolean test() throws Exception {
-                return bot.button(Messages.Edit).isEnabled();
-            }
-
-            public void init(SWTBot bot) {
-            }
-
-            public String getFailureMessage() {
-                return "Edit button never goes enable.";
-            }
-        },15000,100);
-        /*Check that edit and clear button are enabled*/
-        assertTrue(bot.button(Messages.Edit).isEnabled());
-        assertTrue(bot.button(Messages.Clear).isEnabled());
+        bot.waitUntil(Conditions.widgetIsEnabled(bot.button(Messages.Edit)),20000,100);
+        assertTrue("Clear button is not enabled", bot.button(Messages.Clear).isEnabled());
         return formGefEditor;
     }
 

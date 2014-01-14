@@ -19,13 +19,13 @@ package org.bonitasoft.studio.intro.actions;
 
 import java.util.Properties;
 
-import org.bonitasoft.studio.application.actions.ImportFileCommand;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.importer.handler.ImportHandler;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 
 /**
- * @author Mickael Istria
+ * @author Romain Bioteau
  *
  */
 public class ImportAction implements IIntroAction {
@@ -35,9 +35,9 @@ public class ImportAction implements IIntroAction {
 	 */
 	public void run(IIntroSite introSite, Properties param) {
 		try {
-			new ImportFileCommand().execute(null);
-		} catch (Exception ex) {
-			BonitaStudioLog.error(ex);
+			new ImportHandler().execute(null);
+		} catch (Exception e) {
+			BonitaStudioLog.error(e);
 		}
 	}
 

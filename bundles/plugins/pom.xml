@@ -6,11 +6,11 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>bundles</artifactId>
-		<version>6.2.0-SNAPSHOT</version>
+		<version>6.3.0-SNAPSHOT</version>
 	</parent>
 	<groupId>org.bonitasoft.studio.bundles</groupId>
 	<artifactId>plugins</artifactId>
-	<version>6.2.0-SNAPSHOT</version>
+	<version>6.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 
@@ -44,7 +44,6 @@
 		<module>org.bonitasoft.studio.diagram.form.properties</module>
 		<module>org.bonitasoft.studio.document</module>
 		<module>org.bonitasoft.studio.engine</module>
-		<module>org.bonitasoft.studio.examples</module>
 		<module>org.bonitasoft.studio.exporter</module>
 		<module>org.bonitasoft.studio.expression.editor</module>
 		<module>org.bonitasoft.studio.expression.editor.win32</module>
@@ -77,5 +76,61 @@
 		<module>org.bonitasoft.studio.logging.extension</module>
 		<module>org.bonitasoft.studio-product</module>
 	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<testSourceDirectory>src-test/java</testSourceDirectory>
+		<testResources>
+			<testResource>
+				<directory>src-test/resources</directory>
+			</testResource>
+		</testResources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>test</phase>
+						<configuration>
+							<systemProperties>
+								<osgi.nls.warnings>ignore</osgi.nls.warnings>
+							</systemProperties>
+							<includes>
+								<include>**/*Test.java</include>
+							</includes>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>compiletests</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
 
 </project>

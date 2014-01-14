@@ -56,6 +56,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.intro.impl.IntroPlugin;
 import org.eclipse.ui.internal.intro.impl.model.IntroModelRoot;
 import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.ui.intro.config.CustomizableIntroPart;
 import org.osgi.framework.Bundle;
 
 /**
@@ -124,21 +125,26 @@ public class PlatformUtil {
 	 * open the intro
 	 */
 	public static void openIntroIfNoOtherEditorOpen(){
-		if(PlatformUI.isWorkbenchRunning() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null){
-			final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if(activePage != null){
-				/*Open intro if there is no other editor opened*/
-				final IEditorReference[] editors = activePage.getEditorReferences();
-				if (editors.length == 0){//if there is no other editor opened
-					final String productId = Platform.getProduct().getId();
-					if (isABonitaProduct(productId)) {//and that we are in BOS or BOS-SP
-						openIntro();
-					}else{
-						closeIntro();
+		Display.getDefault().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				if(PlatformUI.isWorkbenchRunning()){
+					final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+					if(activePage != null){
+						/*Open intro if there is no other editor opened*/
+						final IEditorReference[] editors = activePage.getEditorReferences();
+						if (editors.length == 0){//if there is no other editor opened
+							final String productId = Platform.getProduct().getId();
+							if (isABonitaProduct(productId)) {//and that we are in BOS or BOS-SP
+								openIntro();
+							}else{
+								closeIntro();
+							}
+						}
 					}
 				}
 			}
-		}
+		});
 	}
 
 	/**
@@ -152,7 +158,7 @@ public class PlatformUtil {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
 				final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
-				if(model != null) {
+				if(model != null &&  introManager.getIntro() != null && ((CustomizableIntroPart)introManager.getIntro()).getControl() != null) {
 					model.getPresentation().navigateHome();
 				}
 				introManager.showIntro(

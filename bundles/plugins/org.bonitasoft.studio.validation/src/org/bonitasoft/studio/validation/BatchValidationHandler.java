@@ -60,7 +60,7 @@ public class BatchValidationHandler extends AbstractHandler {
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
+
 		if(PlatformUI.isWorkbenchRunning()){
 			Map<?,?> parameters = event.getParameters();
 			Set<Diagram> toValidate = new HashSet<Diagram>();
@@ -80,7 +80,7 @@ public class BatchValidationHandler extends AbstractHandler {
 								}
 							}
 						}else{
-							BonitaStudioLog.debug("Proc file : "+fileName.trim()+" not found in repository!", Activator.PLUGIN_ID);
+							BonitaStudioLog.debug("Proc file : "+fileName.trim()+" not found in repository!", ValidationPlugin.PLUGIN_ID);
 						}
 					}
 				}
@@ -198,4 +198,14 @@ public class BatchValidationHandler extends AbstractHandler {
 		return false;
 	}
 
+
+	@Override
+	public boolean isEnabled() {
+		if(PlatformUI.isWorkbenchRunning()){
+			IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+			return part instanceof DiagramEditor;
+		}
+		return false;
+	}
+	
 }

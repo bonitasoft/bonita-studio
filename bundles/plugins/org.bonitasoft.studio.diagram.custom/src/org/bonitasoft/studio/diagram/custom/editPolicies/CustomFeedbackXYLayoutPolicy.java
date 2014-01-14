@@ -251,7 +251,9 @@ public class CustomFeedbackXYLayoutPolicy extends XYLayoutEditPolicy implements 
 				if (location != null) {
 					Point newLoc = location ;
 					if(FiguresHelper.AVOID_OVERLAP_ENABLE){ 
-						newLoc = FiguresHelper.handleCompartmentMargin((GraphicalEditPart) child, location.x, location.y,getHost() instanceof CustomSubprocessEventCompartmentEditPart)  ;	
+						do{
+							newLoc = FiguresHelper.handleCompartmentMargin((GraphicalEditPart) child, newLoc.x, newLoc.y,getHost() instanceof CustomSubprocessEventCompartmentEditPart)  ;	
+						}while(!newLoc.equals(FiguresHelper.handleCompartmentMargin((GraphicalEditPart) child, newLoc.x, newLoc.y,getHost() instanceof CustomSubprocessEventCompartmentEditPart)));
 					}
 					ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_X(), Integer.valueOf(newLoc.x));
 					ViewUtil.setStructuralFeatureValue(view,NotationPackage.eINSTANCE.getLocation_Y(), Integer.valueOf(newLoc.y));

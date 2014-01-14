@@ -463,6 +463,9 @@ public class StringToExpressionConverter {
 	}
 
 	public static String getDataReturnType(Instance data) {
+		if(data.get("multiple")){
+			return List.class.getName();
+		}
 		final Instance dataype = data.get("dataType");
 		if(dataype.instanceOf("process.IntegerType")){
 			return Integer.class.getName();

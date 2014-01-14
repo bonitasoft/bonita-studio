@@ -168,6 +168,11 @@ public class Messages extends NLS {
 	public static String unresolvedExpression;
 
 	public static String deleteConnectorDefinition;
+	public static String transientDataWarning;
+	public static String destFileNameLabel;
+	public static String notAZipFile;
+	public static String connectorOutput;
+
     /**
      * @param event
      * @return

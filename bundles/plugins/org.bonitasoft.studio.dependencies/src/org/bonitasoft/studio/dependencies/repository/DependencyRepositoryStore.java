@@ -16,13 +16,17 @@
  */
 package org.bonitasoft.studio.dependencies.repository;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.repository.store.AbstractRepositoryStore;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -37,6 +41,9 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     static{
         extensions.add("jar") ;
     }
+    
+    private Map<String,String> runtimeDependencies ;
+
 
     /* (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#createRepositoryFileStore(java.lang.String)
@@ -46,7 +53,22 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
         return new DependencyFileStore(fileName,this);
     }
 
-    /* (non-Javadoc)
+    protected static Set<String> retriveAllJarFilesFrom(File root) {
+    	Set<String> allJarFiles = new HashSet<String>();
+		File[] listFiles = root.listFiles();
+		if(listFiles != null){
+			for(File f : listFiles){
+				if(f.isDirectory()){
+					allJarFiles.addAll(retriveAllJarFilesFrom(f));
+				}else if(f.getName().endsWith(".jar")){
+					allJarFiles.add(f.getName());
+				}
+			}
+		}
+		return allJarFiles;
+	}
+
+	/* (non-Javadoc)
      * @see org.bonitasoft.studio.common.repository.model.IRepositoryStore#getName()
      */
     @Override
@@ -77,5 +99,57 @@ public class DependencyRepositoryStore extends AbstractRepositoryStore<Dependenc
     public Set<String> getCompatibleExtensions() {
         return extensions;
     }
+
+	public Map<String,String> getRuntimeDependencies() {
+		if(runtimeDependencies == null){
+			runtimeDependencies = new  HashMap<String, String>();
+	    	File tomcatRoot = getTomcatRootFile();
+	    	Set<String> allJarFiles = retriveAllJarFilesFrom(new File(tomcatRoot,"lib"));
+	    	allJarFiles.addAll(retriveAllJarFilesFrom(new File(tomcatRoot,"webapps")));
+	    	for(String jarName : allJarFiles){
+	    		runtimeDependencies.put(getLibName(jarName), getLibVersion(jarName));
+	    	}
+		}
+		return runtimeDependencies;
+	}
+
+	protected String getLibVersion(String jarName) {
+		if(jarName.endsWith(".jar")){
+			jarName = jarName.replace(".jar", "");
+		}
+		String libVersion = "";
+		boolean appendSnapshot = false;
+		if(jarName.indexOf("-SNAPSHOT") != -1) {
+			jarName = jarName.substring(0,jarName.lastIndexOf("-SNAPSHOT"));
+			 appendSnapshot = true;
+		}
+		if(jarName.indexOf("-") != -1 && Character.isDigit(jarName.charAt(jarName.lastIndexOf("-")+1))){
+			 libVersion = jarName.substring(jarName.lastIndexOf("-")+1,jarName.length());
+		}
+		if(appendSnapshot){
+			libVersion = libVersion + "-SNAPSHOT";
+		}
+		return libVersion;
+	}
+
+	protected String getLibName(String jarName) {
+		if(jarName.endsWith(".jar")){
+			jarName = jarName.replace(".jar", "");
+		}
+		String libName = "";
+		if(jarName.indexOf("-SNAPSHOT") != -1) {
+			jarName = jarName.substring(0,jarName.lastIndexOf("-SNAPSHOT"));
+		}
+		if(jarName.indexOf("-") != -1 && Character.isDigit(jarName.charAt(jarName.lastIndexOf("-")+1))){
+			 libName = jarName.substring(0,jarName.lastIndexOf("-"));
+		}else{
+			libName = jarName;
+		}
+		return libName;
+	}
+
+	protected File getTomcatRootFile() {
+		return new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),"tomcat");
+	}
 
 }

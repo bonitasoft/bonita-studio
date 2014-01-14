@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -32,6 +32,7 @@ import org.bonitasoft.engine.operation.OperatorType;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.DatasourceConstants;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.exporter.ExporterTools;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -39,6 +40,7 @@ import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
 import org.bonitasoft.studio.condition.conditionModel.Operation_NotUnary;
 import org.bonitasoft.studio.condition.conditionModel.Unary_Operation;
 import org.bonitasoft.studio.condition.conditionModel.util.ConditionModelSwitch;
+import org.bonitasoft.studio.condition.scoping.ConditionModelGlobalScopeProvider;
 import org.bonitasoft.studio.condition.ui.internal.ConditionModelActivator;
 import org.bonitasoft.studio.connector.model.definition.Output;
 import org.bonitasoft.studio.engine.EnginePlugin;
@@ -50,6 +52,7 @@ import org.bonitasoft.studio.model.form.Duplicable;
 import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.eclipse.emf.common.util.EList;
@@ -60,6 +63,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.resource.XtextResourceSetProvider;
 import org.eclipse.xtext.util.StringInputStream;
+import org.eclipse.xtext.validation.CheckMode;
+import org.eclipse.xtext.validation.IResourceValidator;
 
 import com.google.inject.Injector;
 
@@ -268,6 +273,11 @@ public class EngineExpressionUtil {
 				expressions.add(createExpression);
 				expressionNames.append(createExpression.getName());
 				expressionNames.append(",");
+			} else {
+				final Expression nullExpression = createNullExpression();
+				expressions.add(nullExpression);
+				expressionNames.append(nullExpression.getName());
+				expressionNames.append(",");
 			}
 		}
 		expressionNames.append(").");
@@ -323,6 +333,22 @@ public class EngineExpressionUtil {
 		}
 	}
 
+	private static Expression createNullExpression() {
+		final ExpressionBuilder exp = new ExpressionBuilder();
+		exp.createNewInstance("ExpressionNotDefinedSetAsNull");
+		exp.setContent("null");
+		exp.setName("ExpressionNotDefinedSetAsNull");
+		exp.setExpressionType(ExpressionConstants.SCRIPT_TYPE);
+		exp.setInterpreter(ExpressionConstants.GROOVY);
+		exp.setReturnType(Object.class.getName());
+		try {
+			return exp.done();
+		} catch (final InvalidExpressionException e) {
+			BonitaStudioLog.error(e);
+			throw new RuntimeException(e);
+		}
+	}
+
 	public static Expression createDocumentExpression(ExpressionBuilder exp,
 			org.bonitasoft.studio.model.expression.Expression simpleExpression) {
 		Expression expression = null;
@@ -372,7 +398,7 @@ public class EngineExpressionUtil {
 		}
 		try {
 			final String content = simpleExpression.getContent();
-			Operation_Compare compare = parseConditionExpression(content);
+			Operation_Compare compare = parseConditionExpression(content,simpleExpression.eContainer());
 			EObject op = compare.getOp();
 			if(op instanceof Unary_Operation){
 				org.bonitasoft.studio.condition.conditionModel.Expression conditionExp = ((Unary_Operation)op).getValue();
@@ -406,18 +432,33 @@ public class EngineExpressionUtil {
 		return null;
 	}
 
-	public static Operation_Compare parseConditionExpression(String content) {
+	public static Operation_Compare parseConditionExpression(String content,EObject context) {
 		final Injector injector = ConditionModelActivator.getInstance().getInjector(ConditionModelActivator.ORG_BONITASOFT_STUDIO_CONDITION_CONDITIONMODEL);
+		final IResourceValidator xtextResourceChecker =	injector.getInstance(IResourceValidator.class);
 		final XtextResourceSetProvider xtextResourceSetProvider = injector.getInstance(XtextResourceSetProvider.class);
 		final ResourceSet resourceSet = xtextResourceSetProvider.get(RepositoryManager.getInstance().getCurrentRepository().getProject());
 		final XtextResource resource = (XtextResource) resourceSet.createResource(URI.createURI("somefile.cmodel"));
 		try {
 			resource.load(new StringInputStream(content, "UTF-8"), Collections.emptyMap());
 		} catch (UnsupportedEncodingException e1) {
-			BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
+			BonitaStudioLog.error(e1);
 		} catch (IOException e1) {
-			BonitaStudioLog.error(e1, EnginePlugin.PLUGIN_ID);
+			BonitaStudioLog.error(e1);
 		}
+		final ConditionModelGlobalScopeProvider globalScopeProvider = injector.getInstance(ConditionModelGlobalScopeProvider.class);
+		final List<String> accessibleObjects = new ArrayList<String>();
+		for(Data d : ModelHelper.getAccessibleData(context)){
+			accessibleObjects.add(ModelHelper.getEObjectID(d));
+		}
+
+		AbstractProcess process =  ModelHelper.getParentProcess(context);
+		if(process != null){
+			for(Parameter p : process.getParameters()){
+				accessibleObjects.add(ModelHelper.getEObjectID(p));
+			}
+		}
+		globalScopeProvider.setAccessibleEObjects(accessibleObjects);
+		xtextResourceChecker.validate(resource, CheckMode.FAST_ONLY, null);
 		return (Operation_Compare) resource.getContents().get(0);
 	}
 
@@ -428,6 +469,9 @@ public class EngineExpressionUtil {
 		}
 		if(ExpressionConstants.DOCUMENT_REF_TYPE.equals(type)){
 			return ExpressionConstants.CONSTANT_TYPE;
+		}
+		if(ExpressionConstants.GROUP_ITERATOR_TYPE.equals(type)){
+			return ExpressionConstants.FORM_FIELD_TYPE;
 		}
 		if (ExpressionConstants.VARIABLE_TYPE.equals(type) &&  !expression.getReferencedElements().isEmpty()) {
 			final Data data = (Data) expression.getReferencedElements().get(0);

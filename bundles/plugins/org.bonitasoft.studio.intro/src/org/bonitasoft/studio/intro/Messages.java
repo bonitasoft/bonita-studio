@@ -1,8 +1,3 @@
-package org.bonitasoft.studio.intro;
-import java.lang.reflect.Field;
-
-import org.eclipse.osgi.util.NLS;
-
 /**
  * Copyright (C) 2010 BonitaSoft S.A.
  * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
@@ -20,6 +15,11 @@ import org.eclipse.osgi.util.NLS;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.bonitasoft.studio.intro;
+
+import java.lang.reflect.Field;
+import org.eclipse.osgi.util.NLS;
+
 
 /**
  * @author Mickael Istria
@@ -49,6 +49,8 @@ public class Messages extends NLS {
 	public static String examples;
 	public static String resources2;
 	public static String migrationOngoing;
+	public static String importErrorTitle;
+	public static String importErrorMessage;
 	
 	/**
 	 * @param id

@@ -2,7 +2,7 @@
 <feature
       id="studio-feature"
       label="Studio"
-      version="6.2.0.qualifier"
+      version="6.3.0.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
@@ -17,13 +17,18 @@
       [Enter License Description here.]
    </license>
 
-   <includes
-         id="org.eclipse.platform"
-         version="4.3.0.v20130605-2100"/>
-
    <requires>
-      <import feature="platform-specific-feature" version="6.2.0" match="equivalent"/>
+      <import feature="org.eclipse.rcp" version="4.3.1.v20130911-1000" match="greaterOrEqual"/>
+      <import feature="org.eclipse.wst.web_ui.feature"/>
+      <import feature="platform-specific-feature" version="6.3.0" match="equivalent"/>
    </requires>
+
+   <plugin
+         id="org.eclipse.jdt.groovy.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.edapt.migration"
@@ -90,6 +95,13 @@
 
    <plugin
          id="org.bonitasoft.studio.engine"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bonitasoft.studio.presentation"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -292,13 +304,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.examples"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.validators"
          download-size="0"
          install-size="0"
@@ -405,6 +410,13 @@
          fragment="true"/>
 
    <plugin
+         id="javax.servlet"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.ui.net"
          download-size="0"
          install-size="0"
@@ -440,7 +452,7 @@
          id="org.codehaus.groovy"
          download-size="0"
          install-size="0"
-         version="1.8.6.xx-20130703-1600-e43-RELEASE"/>
+         version="1.8.6.xx-20130703-1500-e37-RELEASE"/>
 
    <plugin
          id="org.eclipse.ui.views.properties.tabbed"
@@ -455,5 +467,4 @@
          install-size="0"
          version="3.105.0.v20130529-1500"
          unpack="false"/>
-
 </feature>

@@ -48,6 +48,7 @@ public class AvailableExpressionTypeFilter extends ViewerFilter {
 		if(this.contentTypes.contains(ExpressionConstants.VARIABLE_TYPE)){
 			this.contentTypes.add(ExpressionConstants.JAVA_TYPE);
 			this.contentTypes.add(ExpressionConstants.XPATH_TYPE);
+			this.contentTypes.add(ExpressionConstants.GROUP_ITERATOR_TYPE);
 		}
 		if(element instanceof Expression){
 			return contentTypes.contains(((Expression)element).getType());

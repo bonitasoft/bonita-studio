@@ -19,6 +19,7 @@ package org.bonitasoft.studio.connectors.ui.wizard;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,20 +55,18 @@ import org.bonitasoft.studio.connectors.ConnectorPlugin;
 import org.bonitasoft.studio.connectors.extension.CustomWizardExtension;
 import org.bonitasoft.studio.connectors.i18n.Messages;
 import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
-import org.bonitasoft.studio.connectors.ui.provider.UniqueConnectorDefinitionContentProvider;
 import org.bonitasoft.studio.connectors.ui.wizard.page.AbstractConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.ConnectorOutputWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorConstants;
 import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorDriversWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.DatabaseConnectorOutputWizardPage;
-import org.bonitasoft.studio.connectors.ui.wizard.page.SelectConnectorDefinitionWizardPage;
+import org.bonitasoft.studio.connectors.ui.wizard.page.SelectAdvancedConnectorDefinitionWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectDatabaseOutputTypeWizardPage;
 import org.bonitasoft.studio.connectors.ui.wizard.page.SelectEventConnectorNameAndDescWizardPage;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfiguration;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationFactory;
-import org.bonitasoft.studio.model.connectorconfiguration.ConnectorConfigurationPackage;
 import org.bonitasoft.studio.model.connectorconfiguration.ConnectorParameter;
 import org.bonitasoft.studio.model.expression.AbstractExpression;
 import org.bonitasoft.studio.model.expression.Expression;
@@ -82,21 +81,12 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.ProcessFactory;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
-import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.Converter;
-import org.eclipse.core.databinding.observable.value.IValueChangeListener;
-import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -104,10 +94,7 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.wizard.IWizardPage;
 
 /**
@@ -147,7 +134,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 			ExpressionConstants.PARAMETER_TYPE,
 			ExpressionConstants.FORM_FIELD_TYPE
 	}) ;
-	private List<ConnectorDefinition> definitions;
+	protected List<ConnectorDefinition> definitions;
 
 	public ConnectorWizard(EObject container,EStructuralFeature connectorContainmentFeature ,Set<EStructuralFeature> featureToCheckForUniqueID){
 		this.container = container ;
@@ -228,7 +215,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	@Override
 	public void addPages() {
 		if(!editMode){
-			selectionPage = getNewSelectionPage(connectorWorkingCopy,messageProvider) ;
+			selectionPage = getSelectionPage(connectorWorkingCopy,messageProvider) ;
 			addPage(selectionPage) ;
 		}
 		addNameAndDescriptionPage();
@@ -246,78 +233,9 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	}
 
-	protected AbstractDefinitionSelectionImpementationWizardPage getNewSelectionPage(final Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
-		
-		final List<ConnectorImplementation> existingImplementation = new ArrayList<ConnectorImplementation>();
-		return new AbstractDefinitionSelectionImpementationWizardPage(existingImplementation, definitions, Messages.selectConnectorDefinitionTitle, Messages.selectConnectorDefinitionDesc, resourceProvider) {
-			@Override
-			protected ITreeContentProvider getContentProvider() {
-				return new UniqueConnectorDefinitionContentProvider();
-			}
-			
-			@Override
-			protected ITreeContentProvider getCustomContentProvider() {
-				return new UniqueConnectorDefinitionContentProvider(true);
-			}
-
-			@Override
-			protected void bindValue() {
-				final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(explorer.getRightTableViewer());
-				final AbstractDefinitionSelectionImpementationWizardPage thisPage = this;
-				observeSingleSelection.addValueChangeListener(new IValueChangeListener() {
-					@Override
-					public void handleValueChange(ValueChangeEvent event) {
-						final Object o = event.getObservableValue().getValue();
-						if(o instanceof ConnectorDefinition){
-							thisPage.setSelectedConnectorDefinition((ConnectorDefinition) o);
-						}
-					}
-				});
-				
-				IValidator selectionValidator = new IValidator() {
-		            @Override
-		            public IStatus validate(Object value) {
-		                if(value == null || value instanceof Category){
-		                    return new Status(IStatus.ERROR,ConnectorPlugin.PLUGIN_ID, Messages.selectAConnectorDefWarning);
-		                }
-		                return Status.OK_STATUS;
-		            }
-		        } ;
-				
-				UpdateValueStrategy idStrategy = new UpdateValueStrategy() ;
-		        idStrategy.setBeforeSetValidator(selectionValidator) ;
-		        idStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class) {
-
-		            @Override
-		            public Object convert(Object from) {
-		                if(from instanceof ConnectorDefinition){
-		                    return ((ConnectorDefinition) from).getId() ;
-		                }
-		                return null;
-		            }
-		        }) ;
-
-		        UpdateValueStrategy versionStrategy = new UpdateValueStrategy() ;
-		        versionStrategy.setBeforeSetValidator(selectionValidator) ;
-		        versionStrategy.setConverter(new Converter(ConnectorDefinition.class,String.class) {
-
-		            @Override
-		            public Object convert(Object from) {
-		                if(from instanceof ConnectorDefinition){
-		                    return ((ConnectorDefinition) from).getVersion() ;
-		                }
-		                return null;
-		            }
-		        }) ;
-		        context.bindValue(observeSingleSelection, EMFObservables.observeValue(connectorWorkingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_ID),idStrategy,null)  ;
-		        context.bindValue(observeSingleSelection, EMFObservables.observeValue(connectorWorkingCopy, ProcessPackage.Literals.CONNECTOR__DEFINITION_VERSION),versionStrategy,null)  ;
-		        context.bindValue(observeSingleSelection, EMFObservables.observeValue(connectorWorkingCopy.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__DEFINITION_ID),idStrategy,null)  ;
-		        context.bindValue(observeSingleSelection, EMFObservables.observeValue(connectorWorkingCopy.getConfiguration(), ConnectorConfigurationPackage.Literals.CONNECTOR_CONFIGURATION__VERSION),versionStrategy,null)  ;
-			}
-		};
+	protected AbstractDefinitionSelectionImpementationWizardPage getSelectionPage(final Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
+		return new SelectAdvancedConnectorDefinitionWizardPage(connectorWorkingCopy, Collections.<ConnectorImplementation>emptyList(), definitions,  Messages.selectConnectorDefinitionTitle, Messages.selectConnectorDefinitionDesc, resourceProvider);
 	}
-	
-	
 	
 	protected void addNameAndDescriptionPage() {
 		if(useEvents ){
@@ -336,9 +254,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		return (IDefinitionRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class);
 	}
 
-	protected SelectConnectorDefinitionWizardPage getSelectionPage(Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
-		return new SelectConnectorDefinitionWizardPage(connectorWorkingCopy,resourceProvider);
-	}
 
 	protected void addOuputPage(ConnectorDefinition definition) {
 		final IWizardPage outputPage = getOutputPageFor(definition) ;
@@ -404,6 +319,14 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	@Override
 	public IWizardPage getNextPage(IWizardPage page) {
+		if(page.equals(selectionPage)){
+			final ConnectorDefinition definition = selectionPage.getSelectedConnectorDefinition();
+			if(definition!=null){
+				checkDefinitionDependencies(definition) ;
+				extension = findCustomWizardExtension(definition) ;
+				recreateConnectorConfigurationPages(definition,true);
+			}
+		}
 		return super.getNextPage(page);
 	}
 
@@ -623,12 +546,12 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	protected boolean supportsDatabaseOutputMode(ConnectorDefinition def) {
 		boolean containsOutputModeInput = false;
 		if(def!=null){
-		for (Input input : def.getInput()){
-			if(DatabaseConnectorConstants.OUTPUT_TYPE_KEY.equals(input.getName())){
-				containsOutputModeInput = true;
-				break;
+			for (Input input : def.getInput()){
+				if(DatabaseConnectorConstants.OUTPUT_TYPE_KEY.equals(input.getName())){
+					containsOutputModeInput = true;
+					break;
+				}
 			}
-		}
 		}
 		if(containsOutputModeInput){
 			boolean hasSingleOutput = false;
@@ -724,6 +647,9 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	@Override
 	public IWizardPage getPreviousPage(IWizardPage page) {
 		IWizardPage previousPage = super.getPreviousPage(page);
+		if(previousPage != null && previousPage.equals(selectionPage)){
+			return null;
+		}
 		return previousPage;
 	}
 
@@ -742,22 +668,13 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	}
 
 	@Override
-	public void buildExtendedWizard() {
-		final ConnectorDefinition definition = selectionPage.getSelectedConnectorDefinition();
-		if(definition!=null){
-			checkDefinitionDependencies(definition) ;
-			extension = findCustomWizardExtension(definition) ;
-			recreateConnectorConfigurationPages(definition,true);
-		}
-	}
-		
 	public boolean isPageFlowContext() {
-		
 		return isPageFlowContext;
 	}
 
 	@Override
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
-		this.isPageFlowContext=isPageFlowContext;	
+		this.isPageFlowContext=isPageFlowContext;
+		
 	}
 }

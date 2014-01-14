@@ -206,6 +206,7 @@ public class BonitaPreferenceConstants {
 	public static final String ALWAYS_USE_SCRIPTING_MODE = "useScriptingMode";
 	public static final String TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION="toggleStateForPublishOrganization";
 	public static final String PUBLISH_ORGANIZATION="publishOrganization";
+	public static final String DEFAULT_STUDIO_LOCALE = "defaultLocale";
 
     /**
      * @param locales2 TODO

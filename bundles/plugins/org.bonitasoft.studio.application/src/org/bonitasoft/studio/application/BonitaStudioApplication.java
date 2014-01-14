@@ -122,8 +122,10 @@ public class BonitaStudioApplication implements IApplication {
                     BonitaStudioLog.error(e);
                 }
             }
+            //avoid the execution of AutoBuild job during startup
+           // ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ResourcesPlugin.PREF_AUTO_BUILDING, false);
         }
-        ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ResourcesPlugin.PREF_AUTO_BUILDING, false);
+       
     }
 
 

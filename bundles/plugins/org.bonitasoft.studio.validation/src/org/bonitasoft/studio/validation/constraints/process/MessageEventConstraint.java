@@ -33,7 +33,7 @@ import org.bonitasoft.studio.model.process.CorrelationTypeActive;
 import org.bonitasoft.studio.model.process.Message;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.providers.ProcessMarkerNavigationProvider;
-import org.bonitasoft.studio.validation.Activator;
+import org.bonitasoft.studio.validation.ValidationPlugin;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
@@ -101,7 +101,7 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
 											targetKeyList.add(listExpression.getExpressions().get(0).getContent());
 										}
 									}
-									final MultiStatus multi =  new MultiStatus(Activator.PLUGIN_ID, IStatus.OK, "", null);
+									final MultiStatus multi =  new MultiStatus(ValidationPlugin.PLUGIN_ID, IStatus.OK, "", null);
 									final List<String> eventKeyList = new ArrayList<String>();
 									for (ListExpression listExpression : event.getCorrelation().getCorrelationAssociation().getExpressions()) {
 										if(listExpression.getExpressions().size()>0){
@@ -135,3 +135,4 @@ public class MessageEventConstraint extends AbstractLiveValidationMarkerConstrai
 	}
 
 }
+

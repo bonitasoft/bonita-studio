@@ -2,7 +2,7 @@
 <feature
       id="studio-bos-specific-feature"
       label="BOS specific bundles"
-      version="6.2.0.qualifier"
+      version="6.3.0.qualifier"
       provider-name="BonitaSoft S.A.">
 
    <description url="http://www.example.com/description">
@@ -11,7 +11,7 @@
 
    <copyright url="http://www.gnu.org/licenses/">
       Bonita Studio
-Copyright (c) BonitaSoft S.A., 2009-2013
+Copyright (c) BonitaSoft S.A., 2009-2014
 All right reserved
 
 This software is licensed under GPL v2.
@@ -22,7 +22,7 @@ This software is licensed under GPL v2.
    </license>
 
    <requires>
-      <import feature="studio-feature" version="6.2.0" match="equivalent"/>
+      <import feature="studio-feature" version="6.3.0" match="equivalent"/>
    </requires>
 
    <plugin

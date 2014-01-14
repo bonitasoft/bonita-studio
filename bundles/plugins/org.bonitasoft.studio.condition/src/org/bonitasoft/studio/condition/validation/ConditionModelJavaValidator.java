@@ -1,17 +1,13 @@
 package org.bonitasoft.studio.condition.validation;
 
-import org.bonitasoft.studio.condition.conditionModel.ConditionModelFactory;
 import org.bonitasoft.studio.condition.conditionModel.ConditionModelPackage;
 import org.bonitasoft.studio.condition.conditionModel.Expression;
 import org.bonitasoft.studio.condition.conditionModel.Expression_Boolean;
 import org.bonitasoft.studio.condition.conditionModel.Expression_ProcessRef;
 import org.bonitasoft.studio.condition.conditionModel.Operation;
 import org.bonitasoft.studio.condition.conditionModel.Operation_Compare;
-import org.bonitasoft.studio.condition.conditionModel.Unary_Operation;
-import org.bonitasoft.studio.condition.conditionModel.impl.ConditionModelPackageImpl;
 import org.bonitasoft.studio.condition.conditionModel.util.ConditionModelSwitch;
 import org.bonitasoft.studio.condition.i18n.Messages;
-import org.bonitasoft.studio.condition.services.ConditionModelGrammarAccess.Operation_CompareElements;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.BooleanType;
 import org.bonitasoft.studio.model.process.Data;
@@ -24,9 +20,7 @@ import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -115,34 +109,7 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
 	}
 
 	private String getDataType(Expression_ProcessRef e) {
-		EObject proxy = e.getValue();
-		rSet = null;
-		if (proxy.eIsProxy() && EcoreUtil.getURI(proxy).lastSegment().endsWith(".proc")) {
-			Display.getDefault().syncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-							.getActivePage().getActiveEditor();
-					if (editor != null) {
-						final DiagramEditPart diagramEditPart = editor.getDiagramEditPart();
-						if (diagramEditPart != null) {
-							final EObject resolveSemanticElement = diagramEditPart.resolveSemanticElement();
-							if (resolveSemanticElement != null) {
-								final Resource eResource = resolveSemanticElement.eResource();
-								if (eResource != null) {
-									rSet = eResource.getResourceSet();
-								}
-							}
-						}
-					}
-				}
-			});
-		}
-		EObject data = EcoreUtil2.resolve(proxy, rSet);
-		if (rSet != null) {
-			rSet.getResources().remove(e.eResource());
-		}
+		EObject data = resolveProxyReferenceOnCurrentResourceSet(e);
 		if (data instanceof JavaObjectData) {
 			JavaObjectData javaData = (JavaObjectData) data;
 			String className = javaData.getClassName();
@@ -211,5 +178,49 @@ public class ConditionModelJavaValidator extends AbstractConditionModelJavaValid
 			}
 		}
 		return null;
+	}
+
+	
+	protected EObject resolveProxyReferenceOnCurrentResourceSet(
+			Expression_ProcessRef e) {
+		EObject proxy = (EObject) e.eGet(ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF__VALUE , false);
+		rSet = getCurrentResourceSet(proxy);
+		EObject data = EcoreUtil2.resolve(proxy, rSet);
+		e.setValue(data);
+		if (rSet != null) {
+			rSet.getResources().remove(e.eResource());
+		}
+		return data;
+	}
+
+	/**
+	 * @param proxy
+	 * @return 
+	 */
+	private ResourceSet getCurrentResourceSet(EObject proxy) {
+		rSet = null;
+		if (proxy.eIsProxy() && EcoreUtil.getURI(proxy).lastSegment().endsWith(".proc")) {
+			Display.getDefault().syncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					DiagramEditor editor = (DiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+							.getActivePage().getActiveEditor();
+					if (editor != null) {
+						final DiagramEditPart diagramEditPart = editor.getDiagramEditPart();
+						if (diagramEditPart != null) {
+							final EObject resolveSemanticElement = diagramEditPart.resolveSemanticElement();
+							if (resolveSemanticElement != null) {
+								final Resource eResource = resolveSemanticElement.eResource();
+								if (eResource != null) {
+									rSet = eResource.getResourceSet();
+								}
+							}
+						}
+					}
+				}
+			});
+		}
+		return rSet;
 	}
 }

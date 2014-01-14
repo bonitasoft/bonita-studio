@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2010 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2010-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,16 +23,22 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.bonitasoft.studio.test.swtbot.util.conditions.EditorOpenCondition;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
-import org.eclipse.swtbot.swt.finder.SWTBot;
+import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.junit.After;
 import org.junit.Before;
@@ -47,7 +53,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
      * @author Mickael Istria
      *
      */
-    public class OneMoreEditor implements ICondition {
+    public class OneMoreEditor extends DefaultCondition {
 
         private final SWTGefBot bot;
         private final int size;
@@ -66,17 +72,9 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
          */
         public boolean test() throws Exception {
             if (bot.activeShell().getText().toLowerCase().startsWith("overwrite")) {
-                bot.button("OK").click();
+                bot.button(IDialogConstants.OK_LABEL).click();
             }
             return bot.editors().size() > size;
-        }
-
-        /* (non-Javadoc)
-         * @see org.eclipse.swtbot.swt.finder.waits.ICondition#init(org.eclipse.swtbot.swt.finder.SWTBot)
-         */
-        public void init(SWTBot bot) {
-            // TODO Auto-generated method stub
-
         }
 
         /* (non-Javadoc)
@@ -87,6 +85,9 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         }
 
     }
+    
+    private DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    
 
     @Override
     @Before
@@ -168,10 +169,21 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         SWTBotGefEditPart error1Part = editor1.getEditPart("Error1").parent();
         editor1.select(step1Part, step2Part, error1Part);
         final SWTBotGefEditPart poolPart = step1Part.parent().parent();
+        bot.sleep(100);
         editor1.clickContextMenu("Extract subprocess");
 
-        Lane lane = (Lane) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
-        assertEquals("Not same number of nodes in main as expected", 2, lane.getElements().size());
+        final Lane lane = (Lane) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
+        //use a waitUntil in order to wait UI operation to finish
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {
+				return 2 == lane.getElements().size();
+			}
+			
+			public String getFailureMessage() {
+				return "Not same number of nodes in main as expected";
+			}
+		});
         assertEquals("Not same number of transitions in main as expected", 1, ((Pool)lane.eContainer()).getConnections().size());
         Pool subprocessPool = (Pool) ModelHelper.getMainProcess(lane).getElements().get(1);
         assertEquals("Not same number of nodes as expected", 2, subprocessPool.getElements().size());
@@ -188,11 +200,22 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         SWTBotGefEditPart step2Part = editor1.getEditPart("Step2").parent();
         editor1.select(step1Part, step2Part);
         final SWTBotGefEditPart poolPart = step1Part.parent().parent();
+        bot.sleep(100);
         editor1.clickContextMenu("Extract subprocess");
 
-        Lane lane = (Lane) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
+        final Lane lane = (Lane) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
 
-        assertEquals("Not same number of nodes in main as expected", 2, lane.getElements().size());
+        //use a waitUntil in order to wait UI operation to finish
+        bot.waitUntil(new DefaultCondition() {
+			
+			public boolean test() throws Exception {
+				return 2 == lane.getElements().size();
+			}
+			
+			public String getFailureMessage() {
+				return "Not same number of nodes in main as expected";
+			}
+		});
         assertEquals("Not same number of transitions in main as expected", 1,((Pool)lane.eContainer()).getConnections().size());
         Pool subprocessPool = (Pool) ModelHelper.getMainProcess(lane).getElements().get(1);
         assertEquals("Not same number of nodes as expected", 2, subprocessPool.getElements().size());
@@ -205,7 +228,8 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
     public void importProcess() throws IOException {
         ICondition newEditorCond = new OneMoreEditor(bot, bot.editors().size());
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "BoundaryProcess_1_0.bos", "Bonita 6.x", "BoundaryProcess", this.getClass(), false);
-        bot.waitUntil(newEditorCond);
+        bot.waitUntil(new EditorOpenCondition(store.getChild("BoundaryProcess-1.0.proc").getResource()));
+        bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));//to avoid Progress information dialog
     }
 
 }

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bonita Process Editor customization classes
 Bundle-SymbolicName: org.bonitasoft.studio.diagram.custom;singleton:=true
-Bundle-Version: 6.2.0.qualifier
+Bundle-Version: 6.3.0.qualifier
 Bundle-Localization: plugin
 Bundle-Activator: org.bonitasoft.studio.diagram.custom.Activator
 Bundle-Vendor: BonitaSoft S.A.
@@ -26,7 +26,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gmf.runtime.diagram.ui.actions,
  org.bonitasoft.studio.common.repository;bundle-version="1.0.0",
  org.eclipse.gmf.runtime.diagram.ui.resources.editor;bundle-version="1.4.1",
- org.bonitasoft.studio.examples;bundle-version="1.0.0",
  org.bonitasoft.studio.repository.themes;bundle-version="1.0.0",
  org.bonitasoft.studio.migration;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

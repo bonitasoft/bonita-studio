@@ -26,6 +26,7 @@ import org.bonitasoft.studio.common.DataTypeLabels;
 import org.bonitasoft.studio.common.DataUtil;
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.refactoring.BonitaGroovyRefactoringAction;
 import org.bonitasoft.studio.data.operation.RefactorDataOperation;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -40,9 +41,11 @@ import org.bonitasoft.studio.model.process.ProcessFactory;
 import org.bonitasoft.studio.model.process.util.ProcessAdapterFactory;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,6 +60,8 @@ public class TestDataRefactor {
     private Data localData;
     private RefactorDataOperation refactorDataOperation;
     private Pool process;
+	private CompoundCommand cc;
+	private EditingDomain editingDomain;
 
 
     @Test
@@ -120,7 +125,7 @@ public class TestDataRefactor {
         process.getElements().add(activity);
 
         refactorDataOperation.run(new NullProgressMonitor());
-
+        editingDomain.getCommandStack().execute(cc);
         assertEquals("There are too many datas. The old one migth not be removed.", 1, process.getData().size());
         assertEquals("Data name has not been updated correctly in expression", newDataName, ((Element) variableExpression.getReferencedElements().get(0)).getName());
         assertEquals("Data name has not been updated correctly in expression", newDataName, variableExpression.getName());
@@ -183,13 +188,16 @@ public class TestDataRefactor {
 
     private AbstractProcess initTestForDataRefactor(final String newDataName, final Data dataToRefactor) {
         final AbstractProcess process = createProcessWithData();
-        refactorDataOperation = new RefactorDataOperation();
+        refactorDataOperation = new RefactorDataOperation(BonitaGroovyRefactoringAction.REFACTOR_OPERATION);
+        cc = new CompoundCommand();
+        refactorDataOperation.setCompoundCommand(cc);
         refactorDataOperation.setContainer(process);
         refactorDataOperation.setOldData(dataToRefactor);
         final Data newProcessData = EcoreUtil.copy(dataToRefactor);
         newProcessData.setName(newDataName);
         refactorDataOperation.setNewData(newProcessData);
-        refactorDataOperation.setEditingDomain(createEditingDomain());
+        editingDomain = createEditingDomain();
+        refactorDataOperation.setEditingDomain(editingDomain);
         return process;
     }
 

@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2011 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2011-2013 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.application.contribution;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,40 +79,50 @@ public class UpdateRSSContribution implements IPreStartupContribution {
                         URLConnection connection = new URL(url).openConnection() ;
                         connection.setConnectTimeout(4000) ;
                         stream = connection.getInputStream() ;
-                        if(stream.available() > 0){
-                            out = new FileOutputStream(xmlFile);
-                            FileUtil.copy(stream, out);
-                            out.close();
-                            stream.close();
-                            BonitaStudioLog.debug("RSS feed:"+xmlFile.getName()+" updated successfuly!", ApplicationPlugin.PLUGIN_ID);
-                        }else{
-                            BonitaStudioLog.debug("RSS feed:"+xmlFile.getName()+" update has failed!", ApplicationPlugin.PLUGIN_ID);
-                        }
+                        out = copyStream(xmlFile, stream, out);
                     }catch (ConnectException e) {
                         BonitaStudioLog.error(e) ;
                     } catch (IOException e) {
                         BonitaStudioLog.error(e) ;
                     }finally{
-                        if(stream != null){
-                            try {
-                                stream.close();
-                            } catch (IOException e) {
-                                BonitaStudioLog.error(e) ;
-                            }
-                        }
-                        if(out != null){
-                            try {
-                                out.close();
-                            } catch (IOException e) {
-                                BonitaStudioLog.error(e) ;
-                            }
-                        }
+                        closeStreams(stream, out);
                     }
                 }
             } catch (Exception e) {
                 BonitaStudioLog.error(e) ;
             }
         }
+
+		private void closeStreams(InputStream stream, FileOutputStream out) {
+			if(stream != null){
+			    try {
+			        stream.close();
+			    } catch (IOException e) {
+			        BonitaStudioLog.error(e) ;
+			    }
+			}
+			if(out != null){
+			    try {
+			        out.close();
+			    } catch (IOException e) {
+			        BonitaStudioLog.error(e) ;
+			    }
+			}
+		}
+
+		private FileOutputStream copyStream(File xmlFile, InputStream stream,
+				FileOutputStream out) throws IOException, FileNotFoundException {
+			if(stream.available() > 0){
+			    out = new FileOutputStream(xmlFile);
+			    FileUtil.copy(stream, out);
+			    out.close();
+			    stream.close();
+			    BonitaStudioLog.debug("RSS feed:"+xmlFile.getName()+" updated successfuly!", ApplicationPlugin.PLUGIN_ID);
+			}else{
+			    BonitaStudioLog.debug("RSS feed:"+xmlFile.getName()+" update has failed!", ApplicationPlugin.PLUGIN_ID);
+			}
+			return out;
+		}
 
         public URL getRss(){
             return rssUrl ;

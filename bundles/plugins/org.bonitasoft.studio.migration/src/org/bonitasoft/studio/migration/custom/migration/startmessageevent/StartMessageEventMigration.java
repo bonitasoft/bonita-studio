@@ -20,18 +20,17 @@ public class StartMessageEventMigration extends CustomMigration {
 				model.delete(tableCorrelation);
 			}
 			Instance messageFlow = ste.get("incomingMessag");
-			Instance messageSource = null;
 			if(messageFlow != null){
-				messageSource = messageFlow.get("source");
-			}
-			if(messageSource != null){
-				List<Instance> events = new ArrayList<Instance>();
-				events = messageSource.get("events");
-				for (Instance event:events){
-					Instance catchMessageEventName = event.get("targetElementExpression");
-					if (catchMessageEventName.get("name").equals(ste.get("name"))){
-						Instance correlation = event.get("correlation");
-						correlation.set("correlationType",metamodel.getEEnumLiteral("process.CorrelationTypeActive.INACTIVE"));
+				Instance messageSource = messageFlow.get("source");
+				if(messageSource != null){
+					List<Instance> events = new ArrayList<Instance>();
+					events = messageSource.get("events");
+					for (Instance event:events){
+						Instance catchMessageEventName = event.get("targetElementExpression");
+						if (catchMessageEventName.get("name").equals(ste.get("name"))){
+							Instance correlation = event.get("correlation");
+							correlation.set("correlationType",metamodel.getEEnumLiteral("process.CorrelationTypeActive.INACTIVE"));
+						}
 					}
 				}
 			}

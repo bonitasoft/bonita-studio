@@ -21,6 +21,8 @@ package org.bonitasoft.studio.application;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.debug.DebugPlugin;
+import org.bonitasoft.studio.validation.ValidationPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -56,12 +58,13 @@ public class ApplicationPlugin extends AbstractUIPlugin {
 		init(context);
 	}
 
-	private void init(BundleContext context) {
+	private void init(BundleContext context) throws CoreException {
 		if(getDialogSettings().get(BAR_DEFAULT_PATH) == null){
 			getDialogSettings().put(BAR_DEFAULT_PATH, System.getProperty("user.home"));
 		}
 		try {
 			DebugPlugin.getDefault().getBundle().start();
+			ValidationPlugin.getDefault().getBundle().start();
 		} catch (BundleException e) {
 			BonitaStudioLog.error(e);
 		}

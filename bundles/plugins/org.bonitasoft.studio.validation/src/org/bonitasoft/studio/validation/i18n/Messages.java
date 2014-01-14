@@ -87,6 +87,8 @@ public class Messages extends NLS {
 	public static String outgoingTransitionNotSupported;
 	public static String Validation_StartMessageEventWithCorrelation;
 	public static String Validation_noConnectorDefFound;
+	public static String invalidParalellMergeConstraints;
+	public static String Validation_noActorFilterDefFound;
 
     
     static {

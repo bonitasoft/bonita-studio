@@ -28,6 +28,7 @@ import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.expression.Operator;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.bonitasoft.studio.model.process.XMLData;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -74,6 +75,7 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 		operatorTypeList.add(ExpressionConstants.JAVA_METHOD_OPERATOR) ;
 		operatorTypeList.add(ExpressionConstants.XPATH_UPDATE_OPERATOR) ;
 		operatorTypeList.add(ExpressionConstants.SET_DOCUMENT_OPERATOR) ;
+		operatorTypeList.add(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR) ;
 	}
 
 	protected OperatorSelectionDialog(Shell parentShell,Operation operation) {
@@ -129,7 +131,9 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 				Expression exp = operation.getLeftOperand() ;
 				if(exp != null && !exp.getReferencedElements().isEmpty() && ExpressionConstants.VARIABLE_TYPE.equals(exp.getType())){
 					EObject data = exp.getReferencedElements().get(0) ;
-					if(data instanceof JavaObjectData){
+					if(data instanceof BusinessObjectData){
+						return element.equals(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR) ||  element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
+					}else if(data instanceof JavaObjectData){
 						return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ||  element.equals(ExpressionConstants.JAVA_METHOD_OPERATOR);
 					}else if(data instanceof XMLData){
 						return element.equals(ExpressionConstants.ASSIGNMENT_OPERATOR) ||  element.equals(ExpressionConstants.XPATH_UPDATE_OPERATOR);
@@ -150,18 +154,14 @@ public class OperatorSelectionDialog extends Dialog implements ISelectionChanged
 		section.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create()) ;
 
 		Expression exp = operation.getLeftOperand() ;
-		boolean applies = false;
 		for(IOperatorEditor opEditor : operatorEditors){
-			if(opEditor.appliesTo(exp)){
-				applies = true;
+			if(!opEditor.appliesTo(exp) && opEditor.appliesTo(operator.getType())){
+				operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
 			}
 		}
-		if(!applies){
-			operator.setType(ExpressionConstants.ASSIGNMENT_OPERATOR);
-		}
 		createOperatorEditorFor(section, operator.getType(), operator, exp) ;
-		
-		
+
+
 		context.bindValue(ViewersObservables.observeSingleSelection(operatorViewer), EMFObservables.observeValue(operator, ExpressionPackage.Literals.OPERATOR__TYPE)) ;
 		operatorViewer.addSelectionChangedListener(this) ;
 

@@ -88,11 +88,10 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
         form.setDocumentation(formDesc);
         ((List) pageFlow.eGet(feature)).add(form);
         //remove data out of the scope
-        ModelHelper.removedReferencedEObjects(form);
+        ModelHelper.removedReferencedEObjects(form,pageFlow);
 
         FormsUtils.createDiagram(form, getEditingDomain(), pageFlow);
         FormsUtils.openDiagram(form,getEditingDomain());
         return CommandResult.newOKCommandResult(form);
     }
-
 }

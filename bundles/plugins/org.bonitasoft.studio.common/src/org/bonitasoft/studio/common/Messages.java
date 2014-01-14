@@ -327,4 +327,14 @@ public class Messages extends NLS {
 	public static String fieldIsTooShort;
 	public static String nonInterruptingTimerEvent_desc;
 	public static String nonInterruptingTimerEvent_title;
+	public static String currentScript;
+	public static String refactoredScript;
+	public static String refactorTitle;
+	public static String reviewChangesMessageRefactoring;
+	public static String reviewChangesMessageRemoving;
+	public static String deleteFormFieldDialogTitle;
+	public static String askConfirmationForDeleting;
+	public static String removingWidgetReferences;
+	public static String removeTitle;
+	public static String delete;
 }

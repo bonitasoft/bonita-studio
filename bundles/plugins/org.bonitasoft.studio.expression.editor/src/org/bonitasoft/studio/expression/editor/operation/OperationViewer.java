@@ -38,6 +38,8 @@ import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.observable.ChangeEvent;
 import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.edit.EMFEditObservables;
 import org.eclipse.emf.databinding.edit.EMFEditProperties;
@@ -182,9 +184,21 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
 					.value(editingDomain,
 							ExpressionPackage.Literals.OPERATION__RIGHT_OPERAND)
 							.observe(action);
+			IObservableValue returnTypeExpressionObservableValue = EMFEditProperties
+					.value(editingDomain,
+							ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE)
+							.observe(action.getRightOperand());
 			context.bindValue(
 					ViewerProperties.singleSelection().observe(actionExpression),
 					actionExpressionObservableValue);
+			
+			returnTypeExpressionObservableValue.addValueChangeListener(new IValueChangeListener() {
+				
+				@Override
+				public void handleValueChange(ValueChangeEvent event) {
+					actionExpression.validate();
+				}
+			});
 
 
 			operatorLink.setText("<A>"+labelProvider.getText(action.getOperator())+"</A>") ;
@@ -308,6 +322,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
 
 	protected ReadOnlyExpressionViewer createStorageViewer() {
 		final ReadOnlyExpressionViewer storageViewer = new ReadOnlyExpressionViewer(this,SWT.BORDER,widgetFactory,editingDomain,ExpressionPackage.Literals.OPERATION__LEFT_OPERAND) ;
+		storageViewer.setIsPageFlowContext(isPageFlowContext);
 		storageViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(230, SWT.DEFAULT).grab(false, false).create());
 		if(storageExpressionFilter != null){
 			storageViewer.addFilter(storageExpressionFilter) ;

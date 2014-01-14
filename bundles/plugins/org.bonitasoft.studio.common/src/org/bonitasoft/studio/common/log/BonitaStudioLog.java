@@ -63,6 +63,8 @@ public class BonitaStudioLog {
 		final ILog logger = getLogger();
 		if(logger != null){
 			logger.log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, exception.getMessage(),exception));
+		}else{
+			exception.printStackTrace();
 		}
 	}
 
@@ -75,6 +77,8 @@ public class BonitaStudioLog {
 		final ILog logger = getLogger();
 		if(logger != null){
 			logger.log(new Status(IStatus.ERROR, bundleId, exception.getMessage(),exception));
+		}else{
+			exception.printStackTrace();
 		}
 	}
 
@@ -95,6 +99,8 @@ public class BonitaStudioLog {
 		final ILog logger = getLogger();
 		if(logger != null){
 			logger.log(new Status(IStatus.ERROR, bundleId, message));
+		}else{
+			System.err.println(message);
 		}
 	}
 
