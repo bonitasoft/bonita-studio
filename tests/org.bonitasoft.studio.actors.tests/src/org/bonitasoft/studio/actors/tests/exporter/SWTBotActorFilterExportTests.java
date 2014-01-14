@@ -108,8 +108,8 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
             boolean hasSources) throws Exception {
         File zipFile = new File(path+File.separator+fileName);
         assertTrue("actor filter zip file was not created", zipFile.exists());
-        String dirName = path.substring(0, path.lastIndexOf("."));
-        File destDir = new File(dirName);
+      //  String dirName = path.substring(0, path.lastIndexOf("."));
+        File destDir = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
         IProgressMonitor monitor = new NullProgressMonitor();
         try{
         	PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);
