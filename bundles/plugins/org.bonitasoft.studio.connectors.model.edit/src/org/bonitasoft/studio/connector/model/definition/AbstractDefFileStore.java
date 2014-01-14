@@ -17,6 +17,7 @@ package org.bonitasoft.studio.connector.model.definition;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +28,8 @@ import org.bonitasoft.studio.common.repository.store.AbstractEMFRepositoryStore;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -93,13 +96,20 @@ public abstract class AbstractDefFileStore extends EMFFileStore {
 
   
   @Override
-public void delete() {
-	
-	super.delete();
-	if (store instanceof AbstractDefinitionRepositoryStore<?>){
-		((AbstractDefinitionRepositoryStore<?>)store).clearCachedFileStore();
-	}
-}
+  public void delete() {
+	  for (IResource localeResource : retrieveLocaleResources(getContent())) {
+		  try {
+			  localeResource.delete(true, new NullProgressMonitor());
+		  } catch (CoreException e) {
+			  BonitaStudioLog.error(e);
+		  }
+	  }
+	  super.delete();
+	  if (store instanceof AbstractDefinitionRepositoryStore<?>){
+		  ((AbstractDefinitionRepositoryStore<?>)store).clearCachedFileStore();
+	  }
+
+  }
 
     @Override
     public Image getIcon() {
@@ -129,6 +139,12 @@ public void delete() {
                 }
             }
         }
+        result.addAll(retrieveLocaleResources(def));
+        return result;
+    }
+
+	private Set<IResource> retrieveLocaleResources(final ConnectorDefinition def) {
+		final Set<IResource> localeResources = new HashSet<IResource>();
         final DefinitionResourceProvider resourceProvider = DefinitionResourceProvider.getInstance(getParentStore(), getBundle());
         final List<File> propertiesFile = resourceProvider.getExistingLocalesResource(def);
         for (final File propertyFile : propertiesFile) {
@@ -136,14 +152,13 @@ public void delete() {
             try {
                 final IFile f = getParentStore().getResource().getFile(newFilename);
                 if (f != null && f.exists()) {
-                    result.add(f);
+                	localeResources.add(f);
                 }
             } catch (final Exception e) {
                 BonitaStudioLog.error(e);
             }
         }
-
-        return result;
-    }
+		return localeResources;
+	}
 
 }

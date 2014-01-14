@@ -71,12 +71,11 @@ private org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer too
 				this, getDefaultPaletteContent());
 			paletteRoot = existingPaletteRoot;
 		}
-		new «getFactoryQualifiedClassName()».fillPalette(paletteRoot);//don't know why we need to add it, the left palette is empty if not.
+		new «getFactoryQualifiedClassName()»().fillPalette(paletteRoot);//don't know why we need to add it, the left palette is empty if not.
 		applyCustomizationsToPalette(paletteRoot);
 		root = paletteRoot;//required because root is used in configurePaletteViewer
 		return paletteRoot;
 	}
-}
 «ENDAROUND»
 
 «AROUND configureGraphicalViewer FOR gmfgen::GenEditorView-»
