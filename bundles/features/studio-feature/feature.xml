@@ -101,13 +101,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.bonitasoft.studio.presentation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bonitasoft.studio.diagram.form.properties"
          download-size="0"
          install-size="0"
@@ -452,7 +445,7 @@
          id="org.codehaus.groovy"
          download-size="0"
          install-size="0"
-         version="1.8.6.xx-20130703-1500-e37-RELEASE"/>
+         version="1.8.6.xx-20130703-1600-e43-RELEASE"/>
 
    <plugin
          id="org.eclipse.ui.views.properties.tabbed"
