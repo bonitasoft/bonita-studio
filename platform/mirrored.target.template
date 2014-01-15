@@ -55,6 +55,7 @@
 <unit id="org.eclipse.gef.sdk.feature.group" version="3.9.1.201308190730"/>
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.9.0.v20130828-0031"/>
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
+<unit id="org.eclipse.wst.web_ui.feature.feature.group" version="3.5.1.v201307171524-7O7QG2NEMkBS3C2az0gQwwALctEj3DZPgTEZceV4"/>
 </location>
 </locations>
 <targetJRE path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>

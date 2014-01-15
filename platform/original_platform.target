@@ -61,6 +61,7 @@
 <unit id="org.eclipse.xsd.sdk.feature.group" version="2.9.1.v20130902-0605"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.9.1.v20130902-0605"/>
 <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.5.1.v201307171524-7H7IFiwDxumVt0J7gijShVTqs4BePbKwUtS9PL"/>
+<unit id="org.eclipse.wst.web_ui.feature.feature.group" version="3.5.1.v201307171524-7O7QG2NEMkBS3C2az0gQwwALctEj3DZPgTEZceV4"/>
 <unit id="org.eclipse.gmf.runtime.sdk.feature.group" version="1.7.0.201306111432"/>
 <unit id="org.eclipse.ocl.all.sdk.feature.group" version="4.1.1.v20130916-1423"/>
 <unit id="org.eclipse.xtext.sdk.feature.group" version="2.4.3.v201309030823"/>
