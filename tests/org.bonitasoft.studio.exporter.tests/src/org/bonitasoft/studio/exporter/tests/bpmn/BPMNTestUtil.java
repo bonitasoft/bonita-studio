@@ -31,7 +31,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
 import org.eclipse.gmf.runtime.notation.Diagram;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Display;
 import org.omg.spec.bpmn.di.util.DiResourceFactoryImpl;
 import org.omg.spec.bpmn.model.DocumentRoot;
 
@@ -86,9 +86,9 @@ public class BPMNTestUtil {
         GMFEditingDomainFactory.getInstance().createEditingDomain(rSet) ;
         DiagramEditPart dep;
         try{
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, Display.getDefault().getActiveShell());
         } catch(Exception ex){
-            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
+            dep = OffscreenEditPartFactory.getInstance().createDiagramEditPart(diagramFor, Display.getDefault().getActiveShell());
         }
         MainProcessEditPart mped = (MainProcessEditPart) dep;
         IBonitaModelExporter exporter = new BonitaModelExporterImpl(mped);

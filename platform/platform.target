@@ -23,7 +23,6 @@
 <unit id="org.eclipse.emf.edapt.recorder.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.edapt.runtime.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="org.uguess.tribix.feature.group" version="2.5.2.201107181644"/>
-<unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="4.3.0.v20131123020001"/>
 <unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="4.3.0.v20131123020001"/>
 <unit id="org.eclipse.babel.nls_eclipse_pt.feature.group" version="4.3.0.v20131123020001"/>
 <unit id="org.eclipse.babel.nls_eclipse_fr.feature.group" version="4.3.0.v20131123020001"/>

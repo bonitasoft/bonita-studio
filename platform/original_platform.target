@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 
-<target name="remote_platform" sequenceNumber="69">
+<target name="remote_platform" sequenceNumber="86">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swtbot.forms.feature.group" version="2.1.1.201307101628"/>
 <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="2.1.1.201307101628"/>
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.1.1.201307101628"/>
@@ -11,38 +11,38 @@
 <unit id="org.eclipse.swtbot.eclipse.test.junit.feature.group" version="2.1.1.201307101628"/>
 <repository location="http://download.eclipse.org/technology/swtbot/releases/latest/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.polarion.eclipse.team.svn.connector.svnkit16.feature.group" version="3.0.2.I20130808-1700"/>
 <unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="3.0.4.I20131116-1700"/>
 <unit id="org.polarion.eclipse.team.svn.connector.svnkit17.feature.group" version="3.0.3.I20130920-1700"/>
 <repository location="http://community.polarion.com/projects/subversive/download/eclipse/3.0/kepler-site/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.codehaus.groovy.jdt.patch.feature.group" version="2.8.0.xx-20130703-1600-e43-RELEASE"/>
 <unit id="org.codehaus.groovy.eclipse.feature.feature.group" version="2.8.0.xx-20130703-1600-e43-RELEASE"/>
 <unit id="org.codehaus.groovy18.feature.feature.group" version="2.8.0.xx-20130703-1600-e43-RELEASE"/>
 <repository location="http://dist.springsource.org/release/GRECLIPSE/e4.3/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.texo.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.runtime.core.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/modeling/emft/texo/updates/milestones/0.1.0M1/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.compare.all.feature.group" version="1.2.2.v20120214-0915"/>
-<repository location="http://download.eclipse.org/modeling/emf/compare/updates/releases"/>
+<repository location="http://download.eclipse.org/modeling/emf/compare/updates/releases/1.2/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.edapt.recorder.sdk.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.edapt.runtime.sdk.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/edapt/update-site/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.uguess.tribix.feature.group" version="2.5.2.201107181644"/>
 <repository location="http://tribix.sourceforge.net/update"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="4.3.0.v20131123020001"/>
 <unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="4.3.0.v20131123020001"/>
 <unit id="org.eclipse.babel.nls_eclipse_pt.feature.group" version="4.3.0.v20131123020001"/>
@@ -52,12 +52,12 @@
 <unit id="org.eclipse.babel.nls_eclipse_ja.feature.group" version="4.3.0.v20131123020001"/>
 <repository location="http://download.eclipse.org/technology/babel/update-site/R0.11.1/kepler"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/nebula/snapshot"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.xsd.sdk.feature.group" version="2.9.1.v20130902-0605"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.9.1.v20130902-0605"/>
 <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.5.1.v201307171524-7H7IFiwDxumVt0J7gijShVTqs4BePbKwUtS9PL"/>
@@ -83,7 +83,7 @@
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.9.0.v20130828-0031"/>
 <repository location="http://download.eclipse.org/releases/kepler/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="com.sun.syndication" version="0.9.0.v200803061811"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/"/>
 </location>

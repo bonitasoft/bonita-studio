@@ -3,15 +3,32 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>platform</artifactId>
 	<version>6.3.0-SNAPSHOT</version>
 	<packaging>eclipse-target-definition</packaging>
 
+	<pluginRepositories>
+		<pluginRepository>
+			<layout>default</layout>
+			<id>JBoss Snapshots</id>
+			<name>JBoss Snapshots</name>
+			<url>http://snapshots.jboss.org/maven2/</url>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+
 	<build>
 		<plugins>
-			
+
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>target-platform-validation-plugin</artifactId>
@@ -49,22 +66,23 @@
 			<build>
 				<plugins>
 					<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>Generate target file</id>
-							<phase>initialize</phase>
-							<configuration>
-								<tasks>
-									<copy file="${basedir}/original_platform.target" tofile="${basedir}/platform.target" overwrite="true" />
-								</tasks>
-							</configuration>
-							<goals>
-								<goal>run</goal>
-							</goals>
-						</execution>
-					</executions>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>Generate target file</id>
+								<phase>initialize</phase>
+								<configuration>
+									<tasks>
+										<copy file="${basedir}/original_platform.target" tofile="${basedir}/platform.target"
+											overwrite="true" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
@@ -73,24 +91,25 @@
 			<id>mirrored</id>
 			<build>
 				<plugins>
-				<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>Generate target file</id>
-						<phase>initialize</phase>
-						<configuration>
-							<tasks>
-								<echo>P2 Mirror Repository = ${p2MirrorUrl}</echo>
-								<copy file="${basedir}/mirrored.target.template" tofile="${basedir}/platform.target" overwrite="true" />
-								<replace token="XXX_REPOSITORY_URL_XXX" value="${p2MirrorUrl}"
-									file="${basedir}/platform.target" />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>Generate target file</id>
+								<phase>initialize</phase>
+								<configuration>
+									<tasks>
+										<echo>P2 Mirror Repository = ${p2MirrorUrl}</echo>
+										<copy file="${basedir}/mirrored.target.template" tofile="${basedir}/platform.target"
+											overwrite="true" />
+										<replace token="XXX_REPOSITORY_URL_XXX" value="${p2MirrorUrl}"
+											file="${basedir}/platform.target" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
 							</execution>
 						</executions>
 					</plugin>
@@ -101,6 +120,27 @@
 			<id>mirror-tp</id>
 			<build>
 				<plugins>
+					<!-- <plugin> -->
+					<!-- <groupId>org.jboss.tools.tycho-plugins</groupId> -->
+					<!-- <artifactId>target-platform-utils</artifactId> -->
+					<!-- <version>0.19.0-SNAPSHOT</version> -->
+					<!-- <executions> -->
+					<!-- <execution> -->
+					<!-- <id>create-mirror-repo</id> -->
+					<!-- <phase>install</phase> -->
+					<!-- <goals> -->
+					<!-- <goal>mirror-target-to-repo</goal> -->
+					<!-- </goals> -->
+					<!-- <configuration> -->
+					<!-- <targetFile>original_platform.target</targetFile> -->
+					<!-- <includeSources>true</includeSources> -->
+					<!-- <sourceTargetFile>platform.target</sourceTargetFile> -->
+					<!-- <targetRepositoryUrl>http://repositories.rd.lan/p2/6.3</targetRepositoryUrl> -->
+					<!-- </configuration> -->
+					<!-- </execution> -->
+					<!-- </executions> -->
+					<!-- </plugin> -->
+
 					<plugin>
 						<groupId>org.eclipse.tycho.extras</groupId>
 						<artifactId>tycho-p2-extras-plugin</artifactId>
@@ -115,7 +155,6 @@
 						</executions>
 						<configuration>
 							<source>
-								<!--source repositories to mirror from -->
 								<repository>
 									<url>http://tribix.sourceforge.net/update</url>
 									<layout>p2</layout>
@@ -137,7 +176,7 @@
 									<layout>p2</layout>
 								</repository>
 								<repository>
-									<url>http://download.eclipse.org/modeling/emft/texo/updates/interim</url>
+									<url>http://download.eclipse.org/modeling/emft/texo/updates/milestones/0.1.0M1/</url>
 									<layout>p2</layout>
 								</repository>
 								<repository>
@@ -153,22 +192,15 @@
 									<layout>p2</layout>
 								</repository>
 								<repository>
-									<url>http://download.eclipse.org/technology/babel/update-site/R0.11.0/kepler</url>
+									<url>http://download.eclipse.org/technology/babel/update-site/R0.11.1/kepler</url>
 									<layout>p2</layout>
 								</repository>
 								<repository>
-									<url>http://download.eclipse.org/modeling/emf/compare/updates/releases/</url>
+									<url>http://download.eclipse.org/modeling/emf/compare/updates/releases/1.2/</url>
 									<layout>p2</layout>
 								</repository>
 							</source>
-
-							<!-- starting from here all configuration parameters are optional -->
-							<!-- they are only shown here with default values for documentation 
-								purpose -->
-
-							<!-- List of IUs to mirror. If omitted, allIUs will be mirrored. -->
-							<!-- Omitted IU version element means latest version of the IU -->
-							<ius>	
+							<ius>
 								<iu>
 									<id>org.eclipse.emf.compare.all.feature.group</id>
 									<version>1.2.2.v20120214-0915</version>
@@ -195,15 +227,15 @@
 								</iu>
 								<iu>
 									<id>org.polarion.eclipse.team.svn.connector.svnkit16.feature.group</id>
-									<version>3.0.1.I20130301-1700</version>
+									<version>3.0.2.I20130808-1700</version>
 								</iu>
 								<iu>
 									<id>org.polarion.eclipse.team.svn.connector.feature.group</id>
-									<version>3.0.1.I20130507-1700</version>
+									<version>3.0.4.I20131116-1700</version>
 								</iu>
 								<iu>
 									<id>org.polarion.eclipse.team.svn.connector.svnkit17.feature.group</id>
-									<version>3.0.1.I20130507-1700</version>
+									<version>3.0.3.I20130920-1700</version>
 								</iu>
 								<iu>
 									<id>org.codehaus.groovy.jdt.patch.feature.group</id>
@@ -238,52 +270,46 @@
 									<version>0.9.0.v200803061811</version>
 								</iu>
 								<iu>
-									<id>org.eclipse.babel.nls_eclipse_pt_BR.feature.group</id>
-									<version>4.3.0.v20130724043401</version>
-								</iu>
-								<iu>
 									<id>org.eclipse.babel.nls_eclipse_pt.feature.group</id>
-									<version>4.3.0.v20130724043401</version>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_it.feature.group</id>
-									<version>4.3.0.v20130724043401</version>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_fr.feature.group</id>
-									<version>4.3.0.v20130724043401</version>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_de.feature.group</id>
-									<version>4.3.0.v20130724043401</version>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_es.feature.group</id>
-									<version>4.3.0.v20130724043401</version>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_ja.feature.group</id>
-									<version>4.3.0.v20130724043401</version>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.nebula.widgets.gallery.feature.feature.group</id>
-									<version>1.0.0.201307092147</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.nebula.widgets.tablecombo.feature.feature.group</id>
-									<version>1.0.0.201307092147</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.xsd.sdk.feature.group</id>
-									<version>2.9.0.v20130610-0406</version>
+									<version>2.9.1.v20130902-0605</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.emf.sdk.feature.group</id>
-									<version>2.9.0.v20130610-0406</version>
+									<version>2.9.1.v20130902-0605</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.wst.xml_ui.feature.feature.group</id>
-									<version>3.5.0.v201301022000-7H7IFisDxumVt037ridXmVSgs8DdRZKtSyS6PL</version>
+									<version>3.5.1.v201307171524-7H7IFiwDxumVt0J7gijShVTqs4BePbKwUtS9PL</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.gmf.runtime.sdk.feature.group</id>
@@ -291,15 +317,20 @@
 								</iu>
 								<iu>
 									<id>org.eclipse.ocl.all.sdk.feature.group</id>
-									<version>4.1.0.v20130611-1511</version>
+									<version>4.1.1.v20130916-1423</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.xtext.sdk.feature.group</id>
-									<version>2.4.2.v201306120542</version>
+									<version>2.4.3.v201309030823</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.gmf.sdk.feature.group</id>
 									<version>3.1.0.201306121424</version>
+								</iu>
+								
+								<iu>
+									<id>org.eclipse.e4.rcp.feature.group</id>
+									<version>1.2.1.v20130910-2014</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.wst.server_adapters.feature.feature.group</id>
@@ -311,15 +342,15 @@
 								</iu>
 								<iu>
 									<id>org.eclipse.datatools.sdk.feature.feature.group</id>
-									<version>1.11.0.v201302211047-7PAi1FEpPZFKYstHw29WUuTdipv3</version>
+									<version>1.11.1.v201306041610-7PAi7MFEpPZFKkfVnxDcEbuYdosB</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.jst.server_adapters.ext.feature.feature.group</id>
-									<version>3.3.103.v20130403_1405-57CFGEAkF7BI7NDMLBJLO</version>
+									<version>3.3.104.v20130826_1426-57CFGFAkF7BI7RFJLBHKT</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.birt.feature.group</id>
-									<version>4.3.0.v201306051647-DTDN7DGjtEqcbHuY3YHRG7D26DT4</version>
+									<version>4.3.1.v201308301349-DTDN8fGjtEqcbZz0BQWLW07D_cfT</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.jst.ws.cxf.feature.feature.group</id>
@@ -327,7 +358,11 @@
 								</iu>
 								<iu>
 									<id>org.eclipse.team.svn.feature.group</id>
-									<version>1.1.0.I20130527-1700</version>
+									<version>1.1.1.I20130816-1700</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.platform.feature.group</id>
+									<version>4.3.1.v20130911-1000</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.jst.server_adapters.feature.feature.group</id>
@@ -335,7 +370,7 @@
 								</iu>
 								<iu>
 									<id>org.eclipse.datatools.enablement.sdk.feature.feature.group</id>
-									<version>1.11.0.v201302211047-7I9v-FE9JgQGiXyVBMyG1XWskAK0</version>
+									<version>1.11.1.v201306041610-7I9v7GFE9JgQNnB2SXR1TRYbUu1j</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.gmf.runtime.notation.sdk.feature.group</id>
@@ -343,55 +378,38 @@
 								</iu>
 								<iu>
 									<id>org.eclipse.jdt.feature.group</id>
-									<version>3.9.0.v20130605-2000</version>
+									<version>3.9.1.v20130911-1000</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.pde.feature.group</id>
-									<version>3.9.0.v20130605-2000</version>
+									<version>3.9.1.v20130911-1000</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.gef.sdk.feature.group</id>
-									<version>3.9.0.201305060205</version>
-								</iu>	
+									<version>3.9.1.201308190730</version>
+								</iu>
 								<iu>
 									<id>org.eclipse.equinox.sdk.feature.group</id>
-									<version>3.9.0.v20130604-2047</version>
+									<version>3.9.0.v20130828-0031</version>
 								</iu>
 							</ius>
-							<!-- The destination directory to mirror to. -->
 							<destination>${project.build.directory}/repository</destination>
-							<!-- Whether only strict dependencies should be followed. -->
-							<!-- "strict" means perfect version match -->
 							<followStrictOnly>false</followStrictOnly>
-							<!-- Whether or not to follow optional requirements. -->
 							<includeOptional>true</includeOptional>
-							<!-- Whether or not to follow non-greedy requirements. -->
 							<includeNonGreedy>true</includeNonGreedy>
 							<followOnlyFilteredRequirements>false</followOnlyFilteredRequirements>
-							<!-- Filter properties. E.g. filter only one platform -->
-							<!--<filter> -->
-							<!-- <osgi.os>linux</osgi.os> -->
-							<!-- <osgi.ws>gtk</osgi.ws> -->
-							<!-- <osgi.arch>x86_64</osgi.arch> -->
-							<!--</filter> -->
-							<!-- Whether to filter the resulting set of IUs to only -->
-							<!-- include the latest version of each IU -->
 							<latestVersionOnly>false</latestVersionOnly>
-							<!-- don't mirror artifacts, only metadata -->
 							<mirrorMetadataOnly>false</mirrorMetadataOnly>
-							<!-- whether to compress the content.xml/artifacts.xml -->
 							<compress>false</compress>
-							<!-- whether to append to the target repository content -->
 							<append>true</append>
-							<!-- whether to mirror pack200 artifacts also. Available since tycho-extras 
-								0.17.0 -->
 							<includePacked>true</includePacked>
 						</configuration>
 					</plugin>
 				</plugins>
 			</build>
+
 		</profile>
 	</profiles>
-	
+
 
 </project>
