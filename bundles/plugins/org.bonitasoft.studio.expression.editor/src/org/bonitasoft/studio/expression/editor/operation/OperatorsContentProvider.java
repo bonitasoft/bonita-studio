@@ -50,7 +50,7 @@ public class OperatorsContentProvider implements IStructuredContentProvider {
      */
     @Override
     public Object[] getElements(Object arg0) {
-        return new String[]{ExpressionConstants.ASSIGNMENT_OPERATOR,ExpressionConstants.JAVA_METHOD_OPERATOR,ExpressionConstants.XPATH_UPDATE_OPERATOR};
+        return new String[]{ExpressionConstants.ASSIGNMENT_OPERATOR,ExpressionConstants.JAVA_METHOD_OPERATOR,ExpressionConstants.XPATH_UPDATE_OPERATOR,ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR};
     }
 
 }

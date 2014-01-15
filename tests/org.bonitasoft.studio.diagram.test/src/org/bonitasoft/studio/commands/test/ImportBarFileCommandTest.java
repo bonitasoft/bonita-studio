@@ -19,7 +19,6 @@ package org.bonitasoft.studio.commands.test;
 
 import java.io.IOException;
 
-import org.bonitasoft.studio.application.actions.ImportFileCommand;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
@@ -28,8 +27,6 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -43,16 +40,6 @@ public class ImportBarFileCommandTest extends SWTBotGefTestCase {
 
 	private static boolean before;
 	
-	@BeforeClass
-	public static void setUpBeforeClass() {
-		before = ImportFileCommand.isTest;
-		ImportFileCommand.isTest = true;		
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() {
-		ImportFileCommand.isTest = before;
-	}
 	
 	/**
 	 * This test ensures that a import a bpmn file create a new process from this file

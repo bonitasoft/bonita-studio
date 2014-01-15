@@ -153,7 +153,6 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
             File zipFile = new File(target,artifact.getName()+".zip") ;
             zipFile.delete() ;
             artifact.export(zipFile.getAbsolutePath()) ;
-            //	store.exportRepositoryFileStore(target, artifact, new NullProgressMonitor()) ;
             try{
             	PlatformUtil.unzipZipFiles(zipFile, target, new NullProgressMonitor()) ;
             }catch(Exception e){
@@ -162,11 +161,6 @@ public class BonitaUserXpPreferencePage extends AbstractBonitaPreferencePage imp
             if(zipFile!=null){
             	zipFile.delete() ;
             }
-//            try {
-//                PropertiesFactory.getPlatformProperties().setProperty("currentTheme",artifact.getName()) ;
-//            } catch (IOException e) {
-//                BonitaStudioLog.error(e) ;
-//            }
         }
     }
 

@@ -75,7 +75,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 
 	private final NotificationListener poolListener = new PoolNotificationListener();
 	
-	public DiagramFileStore(String fileName, IRepositoryStore store) {
+	public DiagramFileStore(String fileName, IRepositoryStore<? extends EMFFileStore> store) {
 		super(fileName, store);
 	}
 
@@ -163,6 +163,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 			}
 			resource.getContents().add(1,(EObject) content) ;
 		}else if(content instanceof Collection){
+			@SuppressWarnings("unchecked")
 			Collection<EObject> collectionsOfContents = (Collection<EObject>)content;
 			resource.getContents().addAll(collectionsOfContents);
 		}else if(content instanceof DiagramDocumentEditor){

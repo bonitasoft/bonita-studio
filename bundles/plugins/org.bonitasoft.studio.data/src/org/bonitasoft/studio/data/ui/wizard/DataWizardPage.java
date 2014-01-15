@@ -53,6 +53,7 @@ import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.BooleanType;
+import org.bonitasoft.studio.model.process.BusinessObjectType;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.DataType;
@@ -192,6 +193,9 @@ public class DataWizardPage extends WizardPage implements IBonitaVariableContext
 				return false;
 			}
 			if (!allowEnum && element instanceof EnumType) {
+				return false;
+			}
+			if(element instanceof BusinessObjectType){
 				return false;
 			}
 			return true;

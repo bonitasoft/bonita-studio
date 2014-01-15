@@ -112,13 +112,6 @@ public class TestImportConnector{
             sourceFile.delete();
             impl.delete();
         }
-
     }
 
-
-    @Test
-    @Ignore
-    public void testImportConnectorWithSameIs() throws Exception {
-        fail("testImportConnectorWithSameIs not implemented") ;
-    }
 }

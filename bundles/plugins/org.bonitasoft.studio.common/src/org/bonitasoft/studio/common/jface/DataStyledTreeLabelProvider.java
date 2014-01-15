@@ -149,7 +149,7 @@ public class DataStyledTreeLabelProvider extends StyledCellLabelProvider impleme
         }
         if (element instanceof JavaObjectData) {
             builder.append(((JavaObjectData) element).getClassName());
-        } else if (element.getDataType() == null || element.getDataType().getName() == null) {
+        }else if (element.getDataType() == null || element.getDataType().getName() == null) {
             builder.append("?");
         } else {
             builder.append(ModelHelper.getDataTypeNLLabel(element.getDataType().getName()));

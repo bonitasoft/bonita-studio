@@ -63,7 +63,5 @@ public class OpenSpecificProcessAction implements IIntroAction {
 			store.open();
 		}
 	}
-	
-	
 
 }

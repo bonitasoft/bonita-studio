@@ -35,6 +35,7 @@ import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
@@ -74,6 +75,10 @@ public class TestUserFilterMatchingEngineVersion {
 		URL fileURL1 = FileLocator.toFileURL(TestUserFilterMatchingEngineVersion.class.getResource("DiagramToTestUserFIlter-1.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
 		op.run(Repository.NULL_PROGRESS_MONITOR);
+		
+		for(IRepositoryFileStore f : op.getFileStoresToOpen()){
+			f.open();
+		}
 		
 		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();

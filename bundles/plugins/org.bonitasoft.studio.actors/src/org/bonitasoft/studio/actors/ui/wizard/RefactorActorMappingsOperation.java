@@ -117,7 +117,6 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 					refactorGroup((org.bonitasoft.studio.actors.model.organization.Membership)oldElement,(org.bonitasoft.studio.actors.model.organization.Membership)newElement,actorMappings);
 				}
 			}
-
 			List<ModelElementChangeLeftTarget> newElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_LEFT_TARGET);
 			List<ModelElementChangeRightTarget> oldElementChange = ModelHelper.getAllItemsOfType(difference, DiffPackage.Literals.MODEL_ELEMENT_CHANGE_RIGHT_TARGET);
 			if(!newElementChange.isEmpty() && !oldElementChange.isEmpty()){
@@ -187,8 +186,8 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 				Membership membership = ac.getActorMapping().get(0).getMemberships();
 				if(membership != null){
 					for(MembershipType membershipType : membership.getMembership()){
-						if(membershipType.getGroup().equals(oldGroup.getParentPath()+"/"+oldGroup.getName())){
-							membershipType.setGroup(newGroup.getParentPath()+"/"+newGroup.getName());
+						if(membershipType.getGroup().equals(GroupContentProvider.getGroupPath(oldGroup))){
+							membershipType.setGroup(GroupContentProvider.getGroupPath(newGroup));
 							saveChange(ac);
 						}
 					}
@@ -232,8 +231,8 @@ public class RefactorActorMappingsOperation implements IRunnableWithProgress {
 			if(!ac.getActorMapping().isEmpty()){
 				Groups groups = ac.getActorMapping().get(0).getGroups();
 				if(groups != null){
-					if(groups.getGroup().remove(oldGroup.getParentPath()+"/"+oldGroup.getName())){
-						groups.getGroup().add((newGroup.getParentPath()+"/"+newGroup.getName()));
+					if(groups.getGroup().remove(GroupContentProvider.getGroupPath(oldGroup))){
+						groups.getGroup().add(GroupContentProvider.getGroupPath(newGroup));
 						saveChange(ac);
 					}
 				}

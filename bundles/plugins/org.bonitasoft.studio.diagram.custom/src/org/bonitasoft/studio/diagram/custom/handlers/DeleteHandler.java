@@ -40,6 +40,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -49,6 +50,7 @@ import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
 import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -93,9 +95,9 @@ public class DeleteHandler extends AbstractHandler {
 					if  (semanticElement instanceof MessageFlow) {
 						isMessageFlow = true;
 						flow = (MessageFlow)semanticElement;
-						
+
 						//removeMessageFlow(flow);
-						
+
 					}
 					if(item instanceof ShapeCompartmentEditPart){
 						newSelection.add((IGraphicalEditPart) ((IGraphicalEditPart) item).getParent()) ;
@@ -104,7 +106,7 @@ public class DeleteHandler extends AbstractHandler {
 					}
 				}
 				((DiagramEditor) part).getDiagramGraphicalViewer().setSelection(new StructuredSelection(newSelection)) ;
-				
+
 				if (containsPool) {
 					if (MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.deleteDialogTitle,
 							Messages.deleteDialogMessage)){
@@ -113,14 +115,14 @@ public class DeleteHandler extends AbstractHandler {
 					}
 				} else {
 					if (isMessageFlow){
-					
+
 						if (MessageDialog.openQuestion(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.deleteDialogTitle,
 								Messages.bind(Messages.deleteMessageFlow,flow.getName()))){
 							removeMessage(flow);
 							GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run();
 						}
 					} else {
-					GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run();
+						GlobalActionManager.getInstance().createActionHandler(part, GlobalActionId.DELETE).run();
 					}
 				}
 
@@ -139,23 +141,26 @@ public class DeleteHandler extends AbstractHandler {
 			domain.getCommandStack().execute(cc) ;
 		}
 	}
-	
+
 	private void closeFormsRelatedToDiagramElement(List<Form> forms){
 		for (Form form:forms){
-			List<IEditorPart> editors =(List<IEditorPart>)EditorService.getInstance().getRegisteredEditorParts();
+			IEditorPart[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors();
 			for (IEditorPart editor:editors){
 				if (editor instanceof FormDiagramEditor){
 					FormDiagramEditor formEditor = (FormDiagramEditor)editor;
-					Form availableform= (Form)formEditor.getDiagramEditPart().resolveSemanticElement();
-					if (availableform.equals(form)){
-						((FormDiagramEditor) editor).close(false);
+					DiagramEditPart diagramEditPart = formEditor.getDiagramEditPart();
+					if(diagramEditPart != null){
+						Form availableform= (Form) diagramEditPart.resolveSemanticElement();
+						if (EcoreUtil.equals(availableform,form)){
+							((FormDiagramEditor) editor).close(false);
+						}
 					}
 				}
 			}
 		}
 	}
 
-	
+
 	public void removeMessage(MessageFlow flow){
 		MainProcess diagram = ModelHelper.getMainProcess(flow);
 		Assert.isNotNull(diagram);

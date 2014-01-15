@@ -1133,7 +1133,6 @@
       <extension
             point="org.eclipse.ui.commands">
             <command
-            defaultHandler="org.bonitasoft.studio.validation.BatchValidationHandler"
             id="org.bonitasoft.studio.validation.batchValidation"
             name="%batchValidationAction_Label">
       </command>
@@ -1149,5 +1148,14 @@
                name="%ValidationView"
                restorable="true">
          </view>
+      </extension>
+      <extension
+            point="org.eclipse.ui.handlers">
+         <handler
+               commandId="org.bonitasoft.studio.validation.batchValidation">
+            <class
+                  class="org.bonitasoft.studio.validation.BatchValidationHandler">
+            </class>
+         </handler>
       </extension>
 </plugin>

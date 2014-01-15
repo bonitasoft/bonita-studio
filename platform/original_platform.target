@@ -44,7 +44,7 @@
 <unit id="org.eclipse.emf.texo.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.sdk.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.texo.runtime.core.feature.group" version="0.0.0"/>
-<repository location="http://download.eclipse.org/modeling/emft/texo/updates/interim"/>
+<repository location="http://download.eclipse.org/modeling/emft/texo/updates/milestones/0.1.0M1/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.polarion.eclipse.team.svn.connector.feature.group" version="2.2.2.I20110602-1700"/>
@@ -100,7 +100,7 @@
 <unit id="org.eclipse.babel.nls_eclipse_pt_BR.feature.group" version="3.7.0.v20130724081219"/>
 <unit id="org.eclipse.babel.nls_eclipse_pt.feature.group" version="3.7.0.v20130724081219"/>
 <unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="3.7.0.v20130724081219"/>
-<repository location="http://download.eclipse.org/technology/babel/update-site/R0.11.0/indigo"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.11.1/indigo"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.xtext.xbase.feature.group" version="2.3.1.v201208210947"/>
@@ -110,8 +110,8 @@
 <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="1.0.0.201306151117"/>
-<unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="1.0.0.201306151117"/>
+<unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.nebula.widgets.tablecombo.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/technology/nebula/snapshot"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">

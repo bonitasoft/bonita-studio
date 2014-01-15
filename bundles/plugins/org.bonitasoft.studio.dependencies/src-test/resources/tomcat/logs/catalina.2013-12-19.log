@@ -1,0 +1,504 @@
+19 déc. 2013 09:49:43 org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+19 déc. 2013 09:49:43 org.apache.coyote.http11.Http11Protocol init
+INFO: Initialisation de Coyote HTTP/1.1 sur http-8080
+19 déc. 2013 09:49:43 org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 1055 ms
+19 déc. 2013 09:49:43 bitronix.tm.integration.tomcat55.BTMLifecycleListener lifecycleEvent
+INFO: Starting Bitronix Transaction Manager
+19 déc. 2013 09:49:44 bitronix.tm.BitronixTransactionManager logVersion
+INFO: Bitronix Transaction Manager version 2.1.3
+19 déc. 2013 09:49:44 bitronix.tm.Configuration buildServerIdArray
+INFO: JVM unique ID: <bonita-tomcat-btm-node0>
+19 déc. 2013 09:49:45 bitronix.tm.resource.ResourceLoader init
+INFO: reading resources configuration from /Users/Romain/Documents/junit-workspace/tomcat/conf/bitronix-resources.properties
+19 déc. 2013 09:49:45 bitronix.tm.recovery.Recoverer run
+INFO: recovery committed 0 dangling transaction(s) and rolled back 0 aborted transaction(s) on 1 resource(s) [jdbc/bonitaDSXA] (restricted to serverId 'bonita-tomcat-btm-node0')
+19 déc. 2013 09:49:46 org.apache.catalina.core.StandardService start
+INFO: Démarrage du service Catalina
+19 déc. 2013 09:49:46 org.apache.catalina.core.StandardEngine start
+INFO: Starting Servlet Engine: Apache Tomcat/6.0.37
+19 déc. 2013 09:49:46 org.apache.catalina.startup.HostConfig deployDescriptor
+INFO: Déploiement du descripteur de configuration bonita.xml
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/sessionaccessor/cfg-bonita-sessionaccessor-threadlocal.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons
+INFO: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@338f7701: defining beans [sessionAccessor]; root of factory hierarchy
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-actor-mapping-impl-hibernate.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-actor-mapping-impl.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-archive-configuration.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-archive-impl.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-cache-configurations-ext.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-cache-configurations.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-cache.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-category-model-impl-hibernate.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-classloader-impl.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-command-model-impl-hibernate.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-data-definition-model-impl.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-data-instance-model-impl-hibernate.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-data-instance-model-impl.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-data-model-impl-hibernate.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-data-model-impl.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-delete-batch.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-dependency-impl.xml]
+19 déc. 2013 09:49:50 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-dependency-model-impl-hibernate.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-dependency-model-impl.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-dependency-platform-impl.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-dependency-platform-model-impl-hibernate.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-dependency-platform-model-impl.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-document-model-impl-hibernate.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-document-model-impl.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-ds.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-events-api-impl.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-events-model-impl.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-external-identity-mapping-impl-hibernate.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-external-identity-mapping-impl.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-identity-impl.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-identity-model-impl-hibernate.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-identity-model-impl.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-incident.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-lock.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-log-impl.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-log-model-impl-hibernate.xml]
+19 déc. 2013 09:49:51 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-log-model-impl.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-log-technical-slf4j.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-monitoring-api-impl.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-node-configuration.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-operation-model-impl.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-parameter-propertyfile.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-persistence-db.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-persistence-hibernate-cache.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-persistence-hibernate.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-platform-api-impl.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-platform-authentication-impl.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-platform-command-api-impl.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-platform-command-model-impl-hibernate.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-platform-command-model-impl.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-platform-login-impl.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-platform-model-impl-hibernate.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-platform-model-impl.xml]
+19 déc. 2013 09:49:52 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-platform-session-impl.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-platform-session-model-impl.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-platform-session-provider.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-comment-api-impl.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-comment-model-impl-hibernate.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-comment-model-impl.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-definition-model-impl-hibernate.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-definition-model-impl.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-document-impl.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-document-mapping-api-impl.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-document-mapping-model-impl-hibernate.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-document-mapping-model-impl.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-instance-model-impl-hibernate-ext.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-instance-model-impl-hibernate.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-process-instance-model-impl.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-profile-model-impl-hibernate.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-profile-model-impl.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-reporting-impl-hibernate.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-reporting-model-impl.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-scheduler-impl-hibernate.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-scheduler-quartz-factory.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-scheduler-quartz.xml]
+19 déc. 2013 09:49:53 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-sequence-impl.xml]
+19 déc. 2013 09:49:54 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-session-impl.xml]
+19 déc. 2013 09:49:54 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-session-model-impl.xml]
+19 déc. 2013 09:49:54 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-session-provider.xml]
+19 déc. 2013 09:49:54 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-supervisor-mapping-impl-hibernate.xml]
+19 déc. 2013 09:49:54 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-supervisor-mapping-impl.xml]
+19 déc. 2013 09:49:54 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-synchro.xml]
+19 déc. 2013 09:49:54 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-transaction-api-impl.xml]
+19 déc. 2013 09:49:54 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-work-factory.xml]
+19 déc. 2013 09:49:54 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/cfg-bonita-work-parallel.xml]
+19 déc. 2013 09:49:54 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/services/platform-cfg.xml]
+19 déc. 2013 09:49:55 org.springframework.core.io.support.PropertiesLoaderSupport loadProperties
+INFO: Loading properties file from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/bonita-platform.properties]
+19 déc. 2013 09:49:55 org.springframework.core.io.support.PropertiesLoaderSupport loadProperties
+INFO: Loading properties file from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/platform/conf/jdbc-h2.xml]
+19 déc. 2013 09:49:55 org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons
+INFO: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@412beeec: defining beans [hbm-bos-actor-mapping,actorMappingService,db-bos-actor-mapping,archivingStrategy,archiveService,definitiveArchiveDescriptor,parameterCacheConfig,cacheConfigurations,connectorCacheConfig,processDefCacheConfig,userFilterCacheConfig,migrationPlanCacheConfig,breakpointCacheConfig,groovyScriptCacheConfig,synchroServiceCacheConfig,transientDataCacheConfig,platformCacheConfig,cacheService,platformCacheService,db-bos-category-model,hbm-bos-category-model,parentClassLoaderResolver,classLoaderService,db-bos-command-model,hbm-bos-command-model,hbm-bos-data-instance-model,hbm-bos-data-instance-model-arch,db-bos-data-instance-model,db-bos-data-instance-model-arch,hbm-bonita-data-model,db-bonita-data-model,deleteRegister,deleteService,dependencyService,hbm-bonita-dependency-model,db-bonita-dependency-model,platformDependencyService,hbm-bonita-dependency-platform-model,db-bonita-dependency-platform-model,hbm-bonita-document-model,documentService,db-bonita-document-model,jndiTemplate,bonitaSequenceManagerDSJNDI,eventService,hbm-bos-external-identity-mapping,externalIdentityMappingService,db-bos-external-identity-mapping,identityService,hbm-bonita-identity-model,db-bonita-identity-model,incidentService,lockService,queriableLoggerStrategy,syncQueriableLoggerService,batchLogRegister,hbm-bonita-log-model,db-bonita-log,technicalLoggerService,jvmMXBean,platformMonitoringService,nodeConfiguration,parameterService,parameterExpressionExecutorStrategy,dbConfigurationsProvider,sequencecripts,hibernateCacheProperties,platformPersistenceService,persistenceService,journalConfigurationProvider,hbmResourcesConfigurationProvider,platformService,platformAuthenticationService,platformCommandService,hbm-bos-platform-command-model,db-bos-platform-command-model,platformLoginService,hbm-bonita-platform-model,platformProperties,db-bonita-platform-model,platformSessionService,platformSessionProvider,commentService,hbm-bos-process-comment-model,hbm-bos-process-comment-model-arch,db-bos-process-comment-model,db-bos-process-comment-model-arch,hbm-bonita-process-definition-model,db-bonita-process-definition-model,processDocumentService,documentURLProvider,documentMappingService,hbm-bos-process-document-mapping-model,hbm-bos-process-document-mapping-model-arch,db-bos-process-document-mapping-model,db-bos-process-document-mapping-model-arch,hbm-bonita-process-instance-model-ext,hbm-bonita-process-instance-model,hbm-bonita-process-instance-model-arch,db-bonita-process-instance-model,db-bonita-process-instance-model-arch,hbm-bos-profile-model,db-bos-profile-model,hbm-bos-reporting-model,db-bonita-reporting-model,hbm-bonita-scheduler,quartzSchedulerFactory,quartzProperties,loggerJobListener,jdbcJobListener,schedulerExecutor,jobService,scheduler,db-bonita-scheduler-quartz,db-bonita-scheduler,sequenceManager,sessionService,sessionProvider,hbm-bos-supervisor-mapping,supervisorMappingService,db-bos-supervisor-mapping,synchroService,transactionManager,transactionService,bonitaExecutorServiceFactory,workService,dbProperties,queriableLogSessionProvider,recorderSync,parserFactory,xmlValidatorFactory,xmlValidator,xmlWriter,searchPlatformEntitiesDescriptor,transactionExecutor,servicesToStart]; parent: org.springframework.beans.factory.support.DefaultListableBeanFactory@338f7701
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.data.instance.model.impl.SDataInstanceImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.instance.model.impl.SFlowNodeInstanceImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SUserImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.category.model.impl.SProcessCategoryMappingImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SProfileMetadataDefinitionImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.instance.model.impl.SConnectorInstanceImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.actor.mapping.model.impl.SActorMemberImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.platform.command.model.impl.SPlatformCommandImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SRoleImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.data.model.impl.SDataSourceImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.comment.model.impl.SCommentImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.platform.model.impl.SPlatformImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.actor.mapping.model.impl.SActorImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.supervisor.mapping.model.impl.SProcessSupervisorImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.dependency.model.impl.SPlatformDependency]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.data.instance.model.impl.SDataInstanceVisibilityMappingImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.document.mapping.model.impl.SDocumentMappingImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.external.identity.mapping.model.impl.SExternalIdentityMappingImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SProfileMetadataValueImpl]; using defaults.
+19 déc. 2013 09:50:00 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.profile.model.impl.SProfileEntryImpl]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.definition.model.impl.SProcessDefinitionDeployInfoImpl]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.dependency.model.impl.SPlatformDependencyMapping]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.platform.model.impl.STenantImpl]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.dependency.model.impl.SDependencyImpl]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.dependency.model.impl.SDependencyMappingImpl]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SGroupImpl]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.data.model.impl.SDataSourceParameterImpl]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.instance.model.impl.SProcessInstanceImpl]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SUserMembershipImpl]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.category.model.impl.SCategoryImpl]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.profile.model.impl.SProfileImpl]; using defaults.
+19 déc. 2013 09:50:01 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.command.model.SCommandImpl]; using defaults.
+19 déc. 2013 09:50:02 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.document.model.impl.SDocumentContentImpl]; using defaults.
+19 déc. 2013 09:50:02 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.profile.model.impl.SProfileMemberImpl]; using defaults.
+19 déc. 2013 09:50:02 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.hibernate.cache.StandardQueryCache]; using defaults.
+19 déc. 2013 09:50:06 org.hibernate.type.TypeFactory$TypeScopeImpl injectSessionFactory
+ATTENTION: Scoping types to session factory org.hibernate.impl.SessionFactoryImpl@66780515 after already scoped org.hibernate.impl.SessionFactoryImpl@5195da41
+19 déc. 2013 09:50:06 net.sf.ehcache.CacheManager detectAndFixDiskStorePathConflict
+ATTENTION: Creating a new instance of CacheManager using the diskStorePath "/var/folders/td/44qcsx4j5kbgh8s58p0wh79h0000gn/T/parent-child.cache" which is already used by an existing CacheManager.
+The source of the configuration was net.sf.ehcache.config.generator.ConfigurationSource$URLConfigurationSource@e28099.
+The diskStore path for this CacheManager will be set to /var/folders/td/44qcsx4j5kbgh8s58p0wh79h0000gn/T/parent-child.cache/ehcache_auto_created_1387443006379.
+To avoid this warning consider using the CacheManager factory methods to create a singleton CacheManager or specifying a separate ehcache configuration (ehcache.xml) for each CacheManager instance.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.data.instance.model.impl.SDataInstanceImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.instance.model.impl.SFlowNodeInstanceImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SUserImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.category.model.impl.SProcessCategoryMappingImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SProfileMetadataDefinitionImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.instance.model.impl.SConnectorInstanceImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.actor.mapping.model.impl.SActorMemberImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.platform.command.model.impl.SPlatformCommandImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SRoleImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.data.model.impl.SDataSourceImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.comment.model.impl.SCommentImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.platform.model.impl.SPlatformImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.actor.mapping.model.impl.SActorImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.supervisor.mapping.model.impl.SProcessSupervisorImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.dependency.model.impl.SPlatformDependency]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.data.instance.model.impl.SDataInstanceVisibilityMappingImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.document.mapping.model.impl.SDocumentMappingImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.external.identity.mapping.model.impl.SExternalIdentityMappingImpl]; using defaults.
+19 déc. 2013 09:50:06 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SProfileMetadataValueImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.profile.model.impl.SProfileEntryImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.definition.model.impl.SProcessDefinitionDeployInfoImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.dependency.model.impl.SPlatformDependencyMapping]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.platform.model.impl.STenantImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.dependency.model.impl.SDependencyImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.dependency.model.impl.SDependencyMappingImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SGroupImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.data.model.impl.SDataSourceParameterImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.process.instance.model.impl.SProcessInstanceImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.identity.model.impl.SUserMembershipImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.core.category.model.impl.SCategoryImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.profile.model.impl.SProfileImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.command.model.SCommandImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.document.model.impl.SDocumentContentImpl]; using defaults.
+19 déc. 2013 09:50:07 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.bonitasoft.engine.profile.model.impl.SProfileMemberImpl]; using defaults.
+19 déc. 2013 09:50:08 net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory getCache
+ATTENTION: Couldn't find a specific ehcache configuration for cache named [org.hibernate.cache.StandardQueryCache]; using defaults.
+19 déc. 2013 09:50:12 net.sf.ehcache.config.CacheConfiguration isEternalValueConflictingWithTTIOrTTL
+ATTENTION: Cache 'null' is set to eternal but also has TTI/TTL set.  To avoid this warning, clean up the config removing conflicting values of eternal, TTI and TTL. Effective configuration for Cache 'null' will be eternal='true', timeToIdleSeconds='0', timeToLiveSeconds='0'.
+19 déc. 2013 09:50:12 net.sf.ehcache.config.CacheConfiguration isEternalValueConflictingWithTTIOrTTL
+ATTENTION: Cache 'null' is set to eternal but also has TTI/TTL set.  To avoid this warning, clean up the config removing conflicting values of eternal, TTI and TTL. Effective configuration for Cache 'null' will be eternal='true', timeToIdleSeconds='0', timeToLiveSeconds='0'.
+19 déc. 2013 09:50:12 net.sf.ehcache.CacheManager detectAndFixDiskStorePathConflict
+ATTENTION: Creating a new instance of CacheManager using the diskStorePath "/var/folders/td/44qcsx4j5kbgh8s58p0wh79h0000gn/T/parent-child.cache" which is already used by an existing CacheManager.
+The source of the configuration was net.sf.ehcache.config.generator.ConfigurationSource$DefaultConfigurationSource@46e2b745.
+The diskStore path for this CacheManager will be set to /var/folders/td/44qcsx4j5kbgh8s58p0wh79h0000gn/T/parent-child.cache/ehcache_auto_created_1387443012653.
+To avoid this warning consider using the CacheManager factory methods to create a singleton CacheManager or specifying a separate ehcache configuration (ehcache.xml) for each CacheManager instance.
+19 déc. 2013 09:50:12 net.sf.ehcache.config.CacheConfiguration isEternalValueConflictingWithTTIOrTTL
+ATTENTION: Cache 'null' is set to eternal but also has TTI/TTL set.  To avoid this warning, clean up the config removing conflicting values of eternal, TTI and TTL. Effective configuration for Cache 'null' will be eternal='true', timeToIdleSeconds='0', timeToLiveSeconds='0'.
+19 déc. 2013 09:50:12 net.sf.ehcache.config.CacheConfiguration isEternalValueConflictingWithTTIOrTTL
+ATTENTION: Cache 'null' is set to eternal but also has TTI/TTL set.  To avoid this warning, clean up the config removing conflicting values of eternal, TTI and TTL. Effective configuration for Cache 'null' will be eternal='true', timeToIdleSeconds='0', timeToLiveSeconds='0'.
+19 déc. 2013 09:50:13 org.hibernate.util.JDBCExceptionReporter logExceptions
+ATTENTION: SQL Error: 42102, SQLState: 42S02
+19 déc. 2013 09:50:13 org.hibernate.util.JDBCExceptionReporter logExceptions
+GRAVE: Table "PLATFORM" not found; SQL statement:
+select splatformi0_.id as id20_, splatformi0_.created as created20_, splatformi0_.createdBy as createdBy20_, splatformi0_.initialVersion as initialV4_20_, splatformi0_.previousVersion as previous5_20_, splatformi0_.version as version20_ from platform splatformi0_ limit ? [42102-170]
+19 déc. 2013 09:50:15 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-authentication-impl.xml]
+19 déc. 2013 09:50:15 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-business-data-impl.xml]
+19 déc. 2013 09:50:15 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-category-impl.xml]
+19 déc. 2013 09:50:15 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-command-api-impl.xml]
+19 déc. 2013 09:50:15 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-connector-service-api-impl.xml]
+19 déc. 2013 09:50:15 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-connector-timedout.xml]
+19 déc. 2013 09:50:15 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-data-definition-model-impl.xml]
+19 déc. 2013 09:50:15 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-data-impl.xml]
+19 déc. 2013 09:50:15 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-data-instance-api-impl.xml]
+19 déc. 2013 09:50:15 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-events-api-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-events-model-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-expression-api-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-expression-control-api-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-expression-model-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-identity-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-log-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-log-model-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-log-technical-slf4j.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-login.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-monitoring-api-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-operation-model-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-process-definition-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-process-instance-impl-ext.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-process-instance-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-profile-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-reporting-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bonita-user-filter-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg-bos-operation-api-impl.xml]
+19 déc. 2013 09:50:16 org.springframework.beans.factory.xml.XmlBeanDefinitionReader loadBeanDefinitions
+INFO: Loading XML bean definitions from file [/Users/Romain/Documents/junit-workspace/tomcat/bonita/server/tenants/1/conf/services/cfg.xml]
+19 déc. 2013 09:50:17 org.springframework.beans.factory.support.DefaultListableBeanFactory preInstantiateSingletons
+INFO: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@564d158c: defining beans [authenticationService,businessDataRepository,categoryService,commandService,defaultCommandProvider,getActorIdsForUserIdIncludingTeam,importProfiles,isUserProcessSupervisor,createSupervisor,getSupervisor,deleteSupervisor,searchProcessSupervisors,executeActionsAndTerminate,executeActionsAndStartInstanceExt,executeActionsAndTerminateExt,isAllowedToStartProcess,isAllowedToSeeOverviewForm,isAllowedToSeeInstanciationForm,searchAssignedTasksSupervisedBy,searchArchivedTasksSupervisedBy,getUpdatedVariableValuesForProcessDefinition,getUpdatedVariableValuesForActivityInstance,getUpdatedVariableValuesForProcessInstance,searchProcessDefinitionsSupervisedBy,searchSCommentSupervisedBy,isAllowedToStartProcesses,addEntityMemberCommand,removeEntityMemberCommand,searchEntityMembersCommand,searchEntityMembersForUserCommand,deleteEntityMembersCommand,searchWaitingEventsCommand,addBreakpointCommand,removeBreakpointCommand,getBreakpointsCommand,connectorServiceSub,connectorService,connectorInstanceService,connectorExecutor,dataService,dataInstanceService,persistentDataInstanceDSConf,transientDataInstanceDSConf,dataExpressionExecutorStrategy,eventService,expressionService,expressionExecutorStrategyProvider,constantExpressionExecutorStrategy,groovyScriptExpressionExecutorStrategy,inputExpressionExecutorStrategy,patternExpressionExecutorStrategy,xPathReadExpressionExecutorStrategy,engineConstantExpressionExecutorStrategy,listExpressionExecutorStrategy,conditionExpressionExecutorStrategy,javaMethodCallExpressionExecutorStrategy,parameterExpressionExecutorStrategy,expressionResolverService,identityService,queriableLoggerStrategy,syncQueriableLoggerService,batchLogRegister,technicalLoggerService,loginService,monitoringService,jobHandler,jvmMXBean,processDefinitionManager,breakpointService,activityInstanceService,processInstanceService,tokenService,gatewayInstanceService,transitionService,eventInstanceService,profileService,reportingService,userFilterService,userFilterServiceSub,operationService,operationExecutorStrategyProvider,assignmentOperationExecutorStrategy,javaMethodOperationExecutorStrategy,xpathUpdateQueryOperationExecutorStrategy,stringIndexOperationExecutorStrategy,documentOperationExecutorStrategy,createBusinessDataOperationExecutorStrategy,QueriableLogSessionProvider,recorderSync,searchEntitiesDescriptor,flowNodeExecutor,containerRegistry,bpmInstancesCreator,flowNodeStateManager,eventsHandler,processExecutor,transactionalProcessInstanceInterruptor,documentReferenceExpressionExecutorStrategy,dependencyResolver]; parent: org.springframework.beans.factory.support.DefaultListableBeanFactory@412beeec
+19 déc. 2013 09:50:19 org.quartz.core.SchedulerSignalerImpl <init>
+INFO: Initialized Scheduler Signaller of type: class org.quartz.core.SchedulerSignalerImpl
+19 déc. 2013 09:50:19 org.quartz.core.QuartzScheduler <init>
+INFO: Quartz Scheduler v.2.2.0 created.
+19 déc. 2013 09:50:19 org.quartz.impl.jdbcjobstore.JobStoreSupport initialize
+INFO: Using db table-based data access locking (synchronization).
+19 déc. 2013 09:50:19 org.quartz.impl.jdbcjobstore.JobStoreCMT initialize
+INFO: JobStoreCMT initialized.
+19 déc. 2013 09:50:19 org.quartz.core.QuartzScheduler initialize
+INFO: Scheduler meta-data: Quartz Scheduler (v2.2.0) 'QuartzScheduler' with instanceId 'NON_CLUSTERED'
+  Scheduler class: 'org.quartz.core.QuartzScheduler' - running locally.
+  NOT STARTED.
+  Currently in standby mode.
+  Number of jobs executed: 0
+  Using thread pool 'org.quartz.simpl.SimpleThreadPool' - with 10 threads.
+  Using job-store 'org.quartz.impl.jdbcjobstore.JobStoreCMT' - which supports persistence. and is not clustered.
+
+19 déc. 2013 09:50:19 org.quartz.core.QuartzScheduler setJobFactory
+INFO: JobFactory set to: org.bonitasoft.engine.scheduler.impl.TransactionalSimpleJobFactory@4e0517dc
+19 déc. 2013 09:50:19 org.quartz.impl.jdbcjobstore.JobStoreSupport recoverJobs
+INFO: Freed 0 triggers from 'acquired' / 'blocked' state.
+19 déc. 2013 09:50:19 org.quartz.impl.jdbcjobstore.JobStoreSupport recoverJobs
+INFO: Recovering 0 jobs that were in-progress at the time of the last shut-down.
+19 déc. 2013 09:50:19 org.quartz.impl.jdbcjobstore.JobStoreSupport recoverJobs
+INFO: Recovery complete.
+19 déc. 2013 09:50:19 org.quartz.impl.jdbcjobstore.JobStoreSupport recoverJobs
+INFO: Removed 0 'complete' triggers.
+19 déc. 2013 09:50:19 org.quartz.impl.jdbcjobstore.JobStoreSupport recoverJobs
+INFO: Removed 0 stale fired job entries.
+19 déc. 2013 09:50:19 org.quartz.core.QuartzScheduler start
+INFO: Scheduler QuartzScheduler_$_NON_CLUSTERED started.
+19 déc. 2013 09:50:22 org.apache.catalina.startup.HostConfig deployWAR
+INFO: Déploiement de l'archive studio-watchdog-6.0.1.war de l'application web
+19 déc. 2013 09:50:22 org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Déploiement du répertoire docs de l'application web
+19 déc. 2013 09:50:22 org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Déploiement du répertoire host-manager de l'application web
+19 déc. 2013 09:50:23 org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Déploiement du répertoire manager de l'application web
+19 déc. 2013 09:50:24 org.apache.coyote.http11.Http11Protocol start
+INFO: Démarrage de Coyote HTTP/1.1 sur http-8080
+19 déc. 2013 09:50:25 org.apache.jk.common.ChannelSocket init
+INFO: JK: ajp13 listening on /0.0.0.0:8009
+19 déc. 2013 09:50:25 org.apache.jk.server.JkMain start
+INFO: Jk running ID=0 time=0/259  config=null
+19 déc. 2013 09:50:25 org.apache.catalina.startup.Catalina start
+INFO: Server startup in 41554 ms
+19 déc. 2013 09:50:38 org.apache.coyote.http11.Http11Protocol pause
+INFO: Suspension de Coyote HTTP/1.1 sur http-8080
+19 déc. 2013 09:50:39 org.apache.catalina.core.StandardService stop
+INFO: Arrêt du service Catalina
+19 déc. 2013 09:50:39 org.apache.catalina.loader.WebappClassLoader clearReferencesThreads
+GRAVE: The web application [/studio-watchdog-6.0.1] appears to have started a thread named [Thread-13] but has failed to stop it. This is very likely to create a memory leak.
+19 déc. 2013 09:50:39 org.quartz.core.QuartzScheduler shutdown
+INFO: Scheduler QuartzScheduler_$_NON_CLUSTERED shutting down.
+19 déc. 2013 09:50:39 org.quartz.core.QuartzScheduler standby
+INFO: Scheduler QuartzScheduler_$_NON_CLUSTERED paused.
+19 déc. 2013 09:50:40 org.quartz.core.QuartzScheduler shutdown
+INFO: Scheduler QuartzScheduler_$_NON_CLUSTERED shutdown complete.
+19 déc. 2013 09:50:40 org.springframework.beans.factory.support.DefaultSingletonBeanRegistry destroySingletons
+INFO: Destroying singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@564d158c: defining beans [authenticationService,businessDataRepository,categoryService,commandService,defaultCommandProvider,getActorIdsForUserIdIncludingTeam,importProfiles,isUserProcessSupervisor,createSupervisor,getSupervisor,deleteSupervisor,searchProcessSupervisors,executeActionsAndTerminate,executeActionsAndStartInstanceExt,executeActionsAndTerminateExt,isAllowedToStartProcess,isAllowedToSeeOverviewForm,isAllowedToSeeInstanciationForm,searchAssignedTasksSupervisedBy,searchArchivedTasksSupervisedBy,getUpdatedVariableValuesForProcessDefinition,getUpdatedVariableValuesForActivityInstance,getUpdatedVariableValuesForProcessInstance,searchProcessDefinitionsSupervisedBy,searchSCommentSupervisedBy,isAllowedToStartProcesses,addEntityMemberCommand,removeEntityMemberCommand,searchEntityMembersCommand,searchEntityMembersForUserCommand,deleteEntityMembersCommand,searchWaitingEventsCommand,addBreakpointCommand,removeBreakpointCommand,getBreakpointsCommand,connectorServiceSub,connectorService,connectorInstanceService,connectorExecutor,dataService,dataInstanceService,persistentDataInstanceDSConf,transientDataInstanceDSConf,dataExpressionExecutorStrategy,eventService,expressionService,expressionExecutorStrategyProvider,constantExpressionExecutorStrategy,groovyScriptExpressionExecutorStrategy,inputExpressionExecutorStrategy,patternExpressionExecutorStrategy,xPathReadExpressionExecutorStrategy,engineConstantExpressionExecutorStrategy,listExpressionExecutorStrategy,conditionExpressionExecutorStrategy,javaMethodCallExpressionExecutorStrategy,parameterExpressionExecutorStrategy,expressionResolverService,identityService,queriableLoggerStrategy,syncQueriableLoggerService,batchLogRegister,technicalLoggerService,loginService,monitoringService,jobHandler,jvmMXBean,processDefinitionManager,breakpointService,activityInstanceService,processInstanceService,tokenService,gatewayInstanceService,transitionService,eventInstanceService,profileService,reportingService,userFilterService,userFilterServiceSub,operationService,operationExecutorStrategyProvider,assignmentOperationExecutorStrategy,javaMethodOperationExecutorStrategy,xpathUpdateQueryOperationExecutorStrategy,stringIndexOperationExecutorStrategy,documentOperationExecutorStrategy,createBusinessDataOperationExecutorStrategy,QueriableLogSessionProvider,recorderSync,searchEntitiesDescriptor,flowNodeExecutor,containerRegistry,bpmInstancesCreator,flowNodeStateManager,eventsHandler,processExecutor,transactionalProcessInstanceInterruptor,documentReferenceExpressionExecutorStrategy,dependencyResolver]; parent: org.springframework.beans.factory.support.DefaultListableBeanFactory@412beeec
+19 déc. 2013 09:50:40 org.springframework.beans.factory.support.DefaultSingletonBeanRegistry destroySingletons
+INFO: Destroying singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@412beeec: defining beans [hbm-bos-actor-mapping,actorMappingService,db-bos-actor-mapping,archivingStrategy,archiveService,definitiveArchiveDescriptor,parameterCacheConfig,cacheConfigurations,connectorCacheConfig,processDefCacheConfig,userFilterCacheConfig,migrationPlanCacheConfig,breakpointCacheConfig,groovyScriptCacheConfig,synchroServiceCacheConfig,transientDataCacheConfig,platformCacheConfig,cacheService,platformCacheService,db-bos-category-model,hbm-bos-category-model,parentClassLoaderResolver,classLoaderService,db-bos-command-model,hbm-bos-command-model,hbm-bos-data-instance-model,hbm-bos-data-instance-model-arch,db-bos-data-instance-model,db-bos-data-instance-model-arch,hbm-bonita-data-model,db-bonita-data-model,deleteRegister,deleteService,dependencyService,hbm-bonita-dependency-model,db-bonita-dependency-model,platformDependencyService,hbm-bonita-dependency-platform-model,db-bonita-dependency-platform-model,hbm-bonita-document-model,documentService,db-bonita-document-model,jndiTemplate,bonitaSequenceManagerDSJNDI,eventService,hbm-bos-external-identity-mapping,externalIdentityMappingService,db-bos-external-identity-mapping,identityService,hbm-bonita-identity-model,db-bonita-identity-model,incidentService,lockService,queriableLoggerStrategy,syncQueriableLoggerService,batchLogRegister,hbm-bonita-log-model,db-bonita-log,technicalLoggerService,jvmMXBean,platformMonitoringService,nodeConfiguration,parameterService,parameterExpressionExecutorStrategy,dbConfigurationsProvider,sequencecripts,hibernateCacheProperties,platformPersistenceService,persistenceService,journalConfigurationProvider,hbmResourcesConfigurationProvider,platformService,platformAuthenticationService,platformCommandService,hbm-bos-platform-command-model,db-bos-platform-command-model,platformLoginService,hbm-bonita-platform-model,platformProperties,db-bonita-platform-model,platformSessionService,platformSessionProvider,commentService,hbm-bos-process-comment-model,hbm-bos-process-comment-model-arch,db-bos-process-comment-model,db-bos-process-comment-model-arch,hbm-bonita-process-definition-model,db-bonita-process-definition-model,processDocumentService,documentURLProvider,documentMappingService,hbm-bos-process-document-mapping-model,hbm-bos-process-document-mapping-model-arch,db-bos-process-document-mapping-model,db-bos-process-document-mapping-model-arch,hbm-bonita-process-instance-model-ext,hbm-bonita-process-instance-model,hbm-bonita-process-instance-model-arch,db-bonita-process-instance-model,db-bonita-process-instance-model-arch,hbm-bos-profile-model,db-bos-profile-model,hbm-bos-reporting-model,db-bonita-reporting-model,hbm-bonita-scheduler,quartzSchedulerFactory,quartzProperties,loggerJobListener,jdbcJobListener,schedulerExecutor,jobService,scheduler,db-bonita-scheduler-quartz,db-bonita-scheduler,sequenceManager,sessionService,sessionProvider,hbm-bos-supervisor-mapping,supervisorMappingService,db-bos-supervisor-mapping,synchroService,transactionManager,transactionService,bonitaExecutorServiceFactory,workService,dbProperties,queriableLogSessionProvider,recorderSync,parserFactory,xmlValidatorFactory,xmlValidator,xmlWriter,searchPlatformEntitiesDescriptor,transactionExecutor,servicesToStart]; parent: org.springframework.beans.factory.support.DefaultListableBeanFactory@338f7701
+19 déc. 2013 09:50:40 org.springframework.beans.factory.support.DefaultSingletonBeanRegistry destroySingletons
+INFO: Destroying singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@338f7701: defining beans [sessionAccessor]; root of factory hierarchy
+19 déc. 2013 09:50:40 org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+GRAVE: The web application [/bonita] created a ThreadLocal with key of type [java.lang.ThreadLocal] (value [java.lang.ThreadLocal@55433fd1]) and a value of type [org.bonitasoft.engine.session.model.impl.SSessionImpl] (value [org.bonitasoft.engine.session.model.impl.SSessionImpl@a17b689]) but failed to remove it when the web application was stopped. This is very likely to create a memory leak.
+19 déc. 2013 09:50:40 org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+GRAVE: The web application [/bonita] created a ThreadLocal with key of type [java.lang.ThreadLocal] (value [java.lang.ThreadLocal@55433fd1]) and a value of type [org.bonitasoft.engine.session.model.impl.SSessionImpl] (value [org.bonitasoft.engine.session.model.impl.SSessionImpl@18ba2477]) but failed to remove it when the web application was stopped. This is very likely to create a memory leak.
+19 déc. 2013 09:50:41 org.apache.coyote.http11.Http11Protocol destroy
+INFO: Arrêt de Coyote HTTP/1.1 sur http-8080
+19 déc. 2013 09:50:41 bitronix.tm.integration.tomcat55.BTMLifecycleListener lifecycleEvent
+INFO: Shutting down Bitronix Transaction Manager
+19 déc. 2013 09:50:41 bitronix.tm.BitronixTransactionManager shutdown
+INFO: shutting down Bitronix Transaction Manager

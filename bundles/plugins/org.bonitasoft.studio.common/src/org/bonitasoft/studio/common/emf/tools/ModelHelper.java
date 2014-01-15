@@ -678,6 +678,11 @@ public class ModelHelper {
 		DataType xmlDataType = ProcessFactory.eINSTANCE.createXMLType();
 		xmlDataType.setName(DataTypeLabels.xmlDataType);
 		proc.getDatatypes().add(xmlDataType);
+
+		// xml
+		DataType businessObjectType = ProcessFactory.eINSTANCE.createBusinessObjectType();
+		businessObjectType.setName(NamingUtils.convertToId(DataTypeLabels.businessObjectType));
+		proc.getDatatypes().add(businessObjectType);
 	}
 
 	public static DataType getDataTypeForID(EObject elem, String name) {
@@ -1000,16 +1005,6 @@ public class ModelHelper {
 			 container = container.eContainer();
 		 }
 		 return false;
-//			if(target != null){
-//				EObject current = target;
-//				EReference ref = current.eContainmentFeature();
-//				while (ref != null && !ref.equals(ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS)) {
-//					current = current.eContainer();
-//					ref = current.eContainmentFeature();
-//				}
-//				return ref != null;
-//			}
-//			return false;
 		}
 
 	public static Set<Form> getAllFormsContainedIn(EObject copiedElement) {

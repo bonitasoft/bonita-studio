@@ -887,4 +887,8 @@ public class NamingUtils {
 		return null;
 	}
 
+	public static String eClassToBusinessObjectId(EClass eClass) {
+		return eClass.getEPackage().getName()+"."+eClass.getName();
+	}
+
 }

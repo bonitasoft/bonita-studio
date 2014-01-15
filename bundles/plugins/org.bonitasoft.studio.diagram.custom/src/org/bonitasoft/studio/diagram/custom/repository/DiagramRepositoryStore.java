@@ -38,6 +38,7 @@ import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.ProductVersion;
 import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.CopyInputStream;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
@@ -58,6 +59,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLOptions;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -71,6 +73,7 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gmf.runtime.notation.util.NotationAdapterFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
@@ -200,10 +203,44 @@ public class DiagramRepositoryStore extends AbstractEMFRepositoryStore<DiagramFi
 
 		return null;
 	}
+	
+	private boolean processExistInList(AbstractProcess ip, List<AbstractProcess> processes) {
+		for (AbstractProcess p : processes) {
+			if (ip.getName().equals(p.getName()) && ip.getVersion().equals(p.getVersion()) && !EcoreUtil.equals(ip, p)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	@Override
 	protected DiagramFileStore doImportIResource(String fileName, IResource resource) {
+
 		DiagramFileStore fileStore = super.doImportIResource(fileName, resource);
+		if(!FileActionDialog.getDisablePopup()){
+			final List<AbstractProcess> importedProcess = ModelHelper.getAllProcesses(fileStore.getContent());
+			final List<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
+			final List<AbstractProcess> processes = getAllProcesses();
+			for (AbstractProcess p : importedProcess) {
+				if (processExistInList(p, processes)) {
+					duplicateProcess.add(p);
+				}
+			}
+			if (!duplicateProcess.isEmpty()) {
+				Display.getDefault().syncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						StringBuilder sb = new StringBuilder();
+						for (AbstractProcess p : duplicateProcess) {
+							sb.append(SWT.CR);
+							sb.append(p.getName()+" "+"("+p.getVersion()+")");
+						}
+						MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.warningDuplicateDialogTitle, Messages.bind(Messages.poolAlreadyExistWarningMessage,sb.toString()));
+					}
+				});
+			}
+		}
 		return fileStore;
 	}
 

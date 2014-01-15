@@ -17,21 +17,21 @@
  */
 package org.bonitasoft.studio.tests.perspectives;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
-import org.bonitasoft.studio.model.process.Element;
+import org.bonitasoft.studio.diagram.form.custom.commands.CreateFormCommand;
+import org.bonitasoft.studio.model.form.Form;
+import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.PageFlow;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
-import org.bonitasoft.studio.properties.sections.forms.FormsUtils.WidgetEnum;
 import org.bonitasoft.studio.util.test.async.TestAsyncThread;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -101,8 +101,11 @@ public class TestAutomaticSwitchPerspective extends TestCase {
         }
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         TransactionalEditingDomain editingDomain = ((ProcessDiagramEditor)editor).getEditingDomain();
-        Map<Element, WidgetEnum> m= Collections.emptyMap();
-        FormsUtils.addForm(pageflow, editingDomain,  ProcessPackage.Literals.PAGE_FLOW__FORM, "testForm", "form to test perspectives", m);
+        CreateFormCommand formCommand = new CreateFormCommand(pageflow,ProcessPackage.Literals.PAGE_FLOW__FORM,"testForm","form to test perspectives", new HashMap<EObject, Widget>(), editingDomain);
+        formCommand.execute(new NullProgressMonitor(), null);
+        Form createdForm = (Form) formCommand.getCommandResult().getReturnValue();
+		FormsUtils.createDiagram(createdForm, editingDomain, pageflow);
+        FormsUtils.openDiagram(createdForm, editingDomain);
 
         assertTrue("Wrong perspective when opening the form",new TestAsyncThread(10, 500) {
 

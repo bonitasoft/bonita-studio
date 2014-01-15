@@ -63,7 +63,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -374,7 +373,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 				}
 				contrib.execute();
 			}
-			buildWorkspace();
 			if (PlatformUI.isWorkbenchRunning()) {
 				IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				PlatformUI.getWorkbench().showPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID, activeWorkbenchWindow);
@@ -396,15 +394,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor {
 		}
 	}
 
-
-	private void buildWorkspace() {
-		try {
-			JavaCore.initializeAfterLoad(monitor);
-		} catch (CoreException e) {
-			BonitaStudioLog.error(e);
-		}
-		RepositoryManager.getInstance().getCurrentRepository().refresh(monitor);
-	}
 
 	private void openStartupDialog() {
 		String noRegister = System.getProperty("bonita.noregister"); //$NON-NLS-1$

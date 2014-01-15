@@ -221,7 +221,7 @@ public class BarExporter {
 		return null ;
 	}
 
-	private void cleanMapping(ActorMappingsType mapping) {
+	protected void cleanMapping(ActorMappingsType mapping) {
 		for(ActorMapping m : mapping.getActorMapping()){
 			final Groups groups = m.getGroups();
 			if(groups != null && groups.getGroup().isEmpty()){
@@ -288,7 +288,7 @@ public class BarExporter {
 		return result;
 	}
 
-	private BARResourcesProvider getBARApplicationResourcesProvider() {
+	protected BARResourcesProvider getBARApplicationResourcesProvider() {
 		BARResourcesProvider result = null ;
 		int maxPriority = -1 ;
 		IConfigurationElement[] extensions = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements(BAR_APPLICATION_RESOURCE_PROVIDERS_EXTENSION_POINT);
@@ -321,7 +321,7 @@ public class BarExporter {
 		return res;
 	}
 
-	private void addProcessImage(BusinessArchiveBuilder builder, final AbstractProcess process) throws CoreException {
+	protected void addProcessImage(BusinessArchiveBuilder builder, final AbstractProcess process) throws CoreException {
 		if(PlatformUI.isWorkbenchRunning()){
 			final String processName = process.getName()+"_"+process.getVersion();
 			final String path = processName +".png" ; //$NON-NLS-1$
@@ -364,7 +364,7 @@ public class BarExporter {
 	}
 
 
-	private boolean checkActorMappingGroup(ActorMapping mapping){
+	protected boolean checkActorMappingGroup(ActorMapping mapping){
 
 		List<String> list1 = mapping.getGroups().getGroup();
 		List<String> list2 = mapping.getGroups().getGroup();

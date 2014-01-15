@@ -23,10 +23,14 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.GMFTools;
+import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
+import org.bonitasoft.studio.test.swtbot.util.conditions.EditorOpenCondition;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
@@ -81,6 +85,9 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         }
 
     }
+    
+    private DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+    
 
     @Override
     @Before
@@ -162,6 +169,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         SWTBotGefEditPart error1Part = editor1.getEditPart("Error1").parent();
         editor1.select(step1Part, step2Part, error1Part);
         final SWTBotGefEditPart poolPart = step1Part.parent().parent();
+        bot.sleep(100);
         editor1.clickContextMenu("Extract subprocess");
 
         final Lane lane = (Lane) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
@@ -192,6 +200,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
         SWTBotGefEditPart step2Part = editor1.getEditPart("Step2").parent();
         editor1.select(step1Part, step2Part);
         final SWTBotGefEditPart poolPart = step1Part.parent().parent();
+        bot.sleep(100);
         editor1.clickContextMenu("Extract subprocess");
 
         final Lane lane = (Lane) ((IGraphicalEditPart)poolPart.part()).resolveSemanticElement();
@@ -219,7 +228,7 @@ public class ExtractAsSubprocessTest extends SWTBotGefTestCase {
     public void importProcess() throws IOException {
         ICondition newEditorCond = new OneMoreEditor(bot, bot.editors().size());
         SWTBotTestUtil.importProcessWIthPathFromClass(bot, "BoundaryProcess_1_0.bos", "Bonita 6.x", "BoundaryProcess", this.getClass(), false);
-        bot.waitUntil(newEditorCond);
+        bot.waitUntil(new EditorOpenCondition(store.getChild("BoundaryProcess-1.0.proc").getResource()));
         bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));//to avoid Progress information dialog
     }
 

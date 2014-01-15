@@ -57,7 +57,7 @@ public class BatchValidationHandler extends AbstractHandler {
 	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
+
 		if(PlatformUI.isWorkbenchRunning()){
 			Map<?,?> parameters = event.getParameters();
 			Set<Diagram> toValidate = new HashSet<Diagram>();
@@ -179,4 +179,14 @@ public class BatchValidationHandler extends AbstractHandler {
 		return false;
 	}
 
+
+	@Override
+	public boolean isEnabled() {
+		if(PlatformUI.isWorkbenchRunning()){
+			IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
+			return part instanceof DiagramEditor;
+		}
+		return false;
+	}
+	
 }
