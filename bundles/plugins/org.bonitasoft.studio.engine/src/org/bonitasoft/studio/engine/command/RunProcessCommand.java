@@ -105,7 +105,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 		selectedProcess = proc ;
 	}
 
-	
+
 	public RunProcessCommand(Set<EObject> excludedObject) {
 		new RunProcessCommand(excludedObject, false);
 	}
@@ -134,56 +134,58 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 			//Validate before run
 			final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 			Command cmd = cmdService.getCommand("org.bonitasoft.studio.validation.batchValidation");
-			final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class) ;
-			Set<String> procFiles = new HashSet<String>();
-			for(AbstractProcess p : executableProcesses){
-				Resource eResource = p.eResource();
-				if(eResource!=null){
-					procFiles.add(URI.decode(eResource.getURI().lastSegment()));
-						}
-					}
-			try {
-				Parameterization showReportParam = new Parameterization(cmd.getParameter("showReport"), Boolean.FALSE.toString());
-				Parameterization filesParam = new Parameterization(cmd.getParameter("diagrams"),procFiles.toString());
-				final IStatus status = (IStatus) handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[]{showReportParam,filesParam}), null);
-				if(statusContainsError(status)){
-					if(!FileActionDialog.getDisablePopup()){
-						String errorMessage = Messages.errorValidationMessage +PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle()+Messages.errorValidationContinueAnywayMessage ;
-						int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,errorMessage, ValidationDialog.YES_NO_SEEDETAILS).open();
-						if(result == ValidationDialog.NO){
-							return null;
-						}else if(result == ValidationDialog.SEE_DETAILS){
-							final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-							IEditorPart part = activePage.getActiveEditor();
-							if(part != null && part instanceof DiagramEditor){
-								MainProcess proc = ModelHelper.getMainProcess(((DiagramEditor)part).getDiagramEditPart().resolveSemanticElement());
-								String partName = proc.getName() +" ("+proc.getVersion()+")";
-								for(IEditorReference ref : activePage.getEditorReferences()){
-									if(partName.equals(ref.getPartName())){
-										activePage.activate(ref.getPart(true));
-										break;
-									}
-								}
-
-							}
-							Display.getDefault().asyncExec(new Runnable() {
-
-								@Override
-								public void run() {
-									try{
-										activePage.showView("org.bonitasoft.studio.validation.view");
-									} catch (PartInitException e) {
-										BonitaStudioLog.error(e);
-									}
-								}
-							});
-							return null;
-						}
-
+			if(cmd.isEnabled()){
+				final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class) ;
+				Set<String> procFiles = new HashSet<String>();
+				for(AbstractProcess p : executableProcesses){
+					Resource eResource = p.eResource();
+					if(eResource!=null){
+						procFiles.add(URI.decode(eResource.getURI().lastSegment()));
 					}
 				}
-			} catch (Exception e) {
-				BonitaStudioLog.error(e);
+				try {
+					Parameterization showReportParam = new Parameterization(cmd.getParameter("showReport"), Boolean.FALSE.toString());
+					Parameterization filesParam = new Parameterization(cmd.getParameter("diagrams"),procFiles.toString());
+					final IStatus status = (IStatus) handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[]{showReportParam,filesParam}), null);
+					if(statusContainsError(status)){
+						if(!FileActionDialog.getDisablePopup()){
+							String errorMessage = Messages.errorValidationMessage +PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle()+Messages.errorValidationContinueAnywayMessage ;
+							int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,errorMessage, ValidationDialog.YES_NO_SEEDETAILS).open();
+							if(result == ValidationDialog.NO){
+								return null;
+							}else if(result == ValidationDialog.SEE_DETAILS){
+								final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+								IEditorPart part = activePage.getActiveEditor();
+								if(part != null && part instanceof DiagramEditor){
+									MainProcess proc = ModelHelper.getMainProcess(((DiagramEditor)part).getDiagramEditPart().resolveSemanticElement());
+									String partName = proc.getName() +" ("+proc.getVersion()+")";
+									for(IEditorReference ref : activePage.getEditorReferences()){
+										if(partName.equals(ref.getPartName())){
+											activePage.activate(ref.getPart(true));
+											break;
+										}
+									}
+
+								}
+								Display.getDefault().asyncExec(new Runnable() {
+
+									@Override
+									public void run() {
+										try{
+											activePage.showView("org.bonitasoft.studio.validation.view");
+										} catch (PartInitException e) {
+											BonitaStudioLog.error(e);
+										}
+									}
+								});
+								return null;
+							}
+
+						}
+					}
+				} catch (Exception e) {
+					BonitaStudioLog.error(e);
+				}
 			}
 		}
 
@@ -266,16 +268,16 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
 			private Status openConsole() {
 				Status status=null;
-						ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
-						Command cmd = service.getCommand("org.bonitasoft.studio.application.openConsole") ;
-						try {
-							cmd.executeWithChecks(new ExecutionEvent());
-						} catch (Exception ex) {
-							status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,ex.getMessage(),ex);
-							BonitaStudioLog.error(ex);
-						}
+				ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService(ICommandService.class);
+				Command cmd = service.getCommand("org.bonitasoft.studio.application.openConsole") ;
+				try {
+					cmd.executeWithChecks(new ExecutionEvent());
+				} catch (Exception ex) {
+					status = new Status(IStatus.ERROR, EnginePlugin.PLUGIN_ID,ex.getMessage(),ex);
+					BonitaStudioLog.error(ex);
+				}
 				return status;
-					}
+			}
 
 		};
 
