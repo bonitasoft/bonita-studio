@@ -4,7 +4,7 @@
 <target includeMode="feature" name="mirrored" sequenceNumber="43">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<repository location="file://Users/Romain/Desktop/6.3"/>
+<repository location="http://repositories.rd.lan/p2/6.3"/>
 <unit id="org.eclipse.swtbot.forms.feature.group" version="2.1.1.201307101628"/>
 <unit id="org.eclipse.swtbot.eclipse.gef.feature.group" version="2.1.1.201307101628"/>
 <unit id="org.eclipse.swtbot.eclipse.feature.group" version="2.1.1.201307101628"/>
