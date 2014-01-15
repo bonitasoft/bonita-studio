@@ -76,15 +76,15 @@ public class ExportBosArchiveHandler extends AbstractHandler {
             if(diagram != null){
                 selectedFiles = getAllDiagramRelatedFiles(diagram);
             }else{
-                for(IRepositoryStore store : RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores()){
-                    List<IRepositoryFileStore> files = store.getChildren() ;
+                for(IRepositoryStore<? extends IRepositoryFileStore> store : RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores()){
+                    List<? extends IRepositoryFileStore> files = store.getChildren() ;
                     if( files != null){
-                        files.remove(null) ;
+                        files.removeAll(null) ;
                         selectedFiles.addAll(files) ;
                     }
                 }
             }
-
+            
             final ExportRepositoryWizard wizard = new ExportRepositoryWizard(RepositoryManager.getInstance().getCurrentRepository().getAllExportableStores(),true,selectedFiles,getDefaultName(),Messages.ExportButtonLabel) ;
             WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(),wizard){
             	protected void initializeBounds() {
