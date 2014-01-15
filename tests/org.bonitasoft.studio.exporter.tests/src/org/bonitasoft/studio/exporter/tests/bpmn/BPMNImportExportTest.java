@@ -299,7 +299,7 @@ public class BPMNImportExportTest extends TestCase {
 
 
 	protected void doTest(final String bpmnFileName, boolean checkActivities, boolean checkEvents, boolean checkMessageFlow) throws IOException,MalformedURLException, InterruptedException {
-		File destFile = BPMNTestUtil.importFileWithName(getClass(), bpmnFileName);
+		File destFile = BPMNTestUtil.importFileWithName(BPMNImportExportTest.class, bpmnFileName);
 		try{
 			ResourceSet resourceSet = new ResourceSetImpl();
 			GMFEditingDomainFactory.getInstance().createEditingDomain(resourceSet);
