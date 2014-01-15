@@ -18,15 +18,11 @@
 
 
 	<modules>
-		<module>org.eclipse.ui.workbench</module>
 		<module>ca.ecliptical.gmf.ant</module>
 		<module>org.eclipse.emf.edapt.migration</module>
-		<module>org.eclipse.ui.browser</module>
 		<module>org.eclipse.ui.views.properties.tabbed</module>
 		<module>org.eclipse.gmf.runtime.lite.svg</module>
 		<module>org.bonitasoft.studio-antTasks</module>
-		<module>org.eclipse.rcp</module>
-		<module>org.eclipse.platform</module>
 	</modules>
 
 
