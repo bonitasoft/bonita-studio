@@ -30,15 +30,11 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.swtbot.eclipse.test.junit4"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.swtbot.forms"
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.swtbot.ide"
+         id="org.eclipse.swtbot.eclipse.test.junit"
          version="0.0.0"/>
 
    <plugin
