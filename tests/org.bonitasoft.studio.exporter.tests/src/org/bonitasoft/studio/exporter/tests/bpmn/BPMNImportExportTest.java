@@ -343,7 +343,7 @@ public class BPMNImportExportTest extends TestCase {
 		final Map<String, Object> extensionToFactoryMap = resourceSet1.getResourceFactoryRegistry().getExtensionToFactoryMap();
 		final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
 		extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
-		URL bpmnResource = FileLocator.toFileURL(getClass().getResource(bpmnFileName));
+		URL bpmnResource = FileLocator.toFileURL(BPMNImportExportTest.class.getResource(bpmnFileName));
 		Resource resource1 = resourceSet1.createResource(URI.createFileURI(bpmnResource.getFile()));
 		resource1.load(Collections.emptyMap());
 		Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
@@ -549,7 +549,7 @@ public class BPMNImportExportTest extends TestCase {
 
 
 	protected void checkGraphic(String fileName, MainProcess mainProcess) throws IOException{
-		URL bpmnResource = FileLocator.toFileURL(getClass().getResource(fileName));
+		URL bpmnResource = FileLocator.toFileURL(BPMNImportExportTest.class.getResource(fileName));
 		ResourceSet resourceSet1 = new ResourceSetImpl();
 		Resource resource1 = resourceSet1.createResource(URI.createFileURI(bpmnResource.getFile()));
 		resource1.load(Collections.emptyMap());
