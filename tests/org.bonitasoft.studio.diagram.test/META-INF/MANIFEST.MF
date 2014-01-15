@@ -31,7 +31,7 @@ Require-Bundle: org.eclipse.swtbot.eclipse.core,
  org.eclipse.swtbot.forms.finder;bundle-version="2.0.5",
  org.bonitasoft.studio.test.swtbot.util;bundle-version="1.0.0",
  org.bonitasoft.studio.expression.editor;bundle-version="1.0.0",
- org.junit
+ org.junit;bundle-version="4.11.0"
 Export-Package: org.bonitasoft.studio.commands.test,
  org.bonitasoft.studio.data.test,
  org.bonitasoft.studio.diagram.test
@@ -40,3 +40,4 @@ Import-Package: org.bonitasoft.engine.api,
  org.bonitasoft.studio.data.i18n,
  org.bonitasoft.studio.form.properties.i18n,
  org.bonitasoft.studio.properties.i18n
+

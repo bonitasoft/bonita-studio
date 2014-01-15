@@ -81,5 +81,3 @@ Export-Package: org.bonitasoft.studio.application,
  org.bonitasoft.studio.application.views,
  org.bonitasoft.studio.application.views.form,
  org.bonitasoft.studio.application.views.process
-
-

@@ -32,8 +32,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bonitasoft.studio.validators.test;bundle-version="1.0.0",
  org.bonitasoft.studio.expressions.test;bundle-version="1.0.0",
  org.bonitasoft.studio.migration.tests;bundle-version="1.0.0",
- org.junit,
- org.bonitasoft.studio.common.diagram.test;bundle-version="1.0.0"
+ org.bonitasoft.studio.common.diagram.test;bundle-version="1.0.0",
+ org.junit;bundle-version="4.11.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.test.swtbot.suite

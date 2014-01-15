@@ -491,5 +491,4 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 	}
 
 
-
 }

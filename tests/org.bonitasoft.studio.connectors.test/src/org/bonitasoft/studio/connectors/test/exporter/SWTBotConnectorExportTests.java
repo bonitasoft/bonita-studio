@@ -72,7 +72,7 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 
 	private void exportConnector(String connector, String fileName,
 			boolean hasDependencies, boolean hasSources) throws Exception {
-		File f = new File(ProjectUtil.getBonitaStudioWorkFolder(), fileName);
+		File f = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
 		final String exportPath = f.getAbsolutePath();
 		SWTBotConnectorTestUtil.activateExportConnectorShell(bot);
 		bot.table().select(connector);
@@ -92,7 +92,7 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 		bot.waitUntil(Conditions.shellIsActive("Export result"));
 		bot.button(IDialogConstants.OK_LABEL).click();
-		checkExportedFile(exportPath, hasDependencies, hasSources);
+		checkExportedFile(exportPath,fileName, hasDependencies, hasSources);
 	}
 
 	@Test
@@ -166,8 +166,8 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 			}
 		}, 30000);
 		exportConnector(userConnector, fileName, false, true);
-		String dirName = fileName.substring(0, fileName.lastIndexOf("."));
-		File destDir =new File(ProjectUtil.getBonitaStudioWorkFolder(), dirName);
+		//String dirName = fileName.substring(0, fileName.lastIndexOf("."));
+		File destDir =new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
 		assertNotNull(" unzip exported connector dir does not exist",destDir);
 		assertTrue("dest dir doesn't exist", destDir.exists());
 		Set<String> fileNames = new HashSet<String>();
@@ -196,11 +196,11 @@ public class SWTBotConnectorExportTests extends SWTBotGefTestCase {
 		}
 	}
 
-	private void checkExportedFile(String fileName, boolean hasDependencies,
+	private void checkExportedFile(String path, String fileName, boolean hasDependencies,
 			boolean hasSources) throws Exception {
-		File zipFile = new File(fileName);
-		String dirName = fileName.substring(0, fileName.lastIndexOf("."));
-		File destDir = new File(dirName);
+		File zipFile = new File(path+File.separator+fileName);
+		//String dirName = fileName.substring(0, fileName.lastIndexOf("."));
+		File destDir = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
 		IProgressMonitor monitor = new NullProgressMonitor();
 		try{
 			PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);

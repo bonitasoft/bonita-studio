@@ -91,7 +91,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 			final DiagramEditPart diagramEditPart = editor.getDiagramEditPart();
 			if(diagramEditPart != null){
 				final EObject resolveSemanticElement = diagramEditPart.resolveSemanticElement();
-				if(resolveSemanticElement != null){
+				if(resolveSemanticElement != null && resolveSemanticElement.eResource() != null){
 					return resolveSemanticElement.eResource();
 				}
 			}
@@ -202,8 +202,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 							activePage.closeEditor(diagramEditor, false);
 						}
 					} else {
-						activePage.closeEditor(diagramEditor, false);
-						//BonitaStudioLog.log("The new Process is null. Name of currentDiagramFileStore is: " +getName());
+						BonitaStudioLog.log("The new Process is null. Name of currentDiagramFileStore is: " +getName());
 					}
 				}
 			}

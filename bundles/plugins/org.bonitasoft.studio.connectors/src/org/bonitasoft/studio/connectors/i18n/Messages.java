@@ -93,7 +93,6 @@ public class Messages extends NLS {
     public static String importingConnectorArchive;
     public static String exportSuccessfulMsg ;
     public static String connectors;
-    public static String connectorsTitle;
     public static String connectorsConfigurationDescription;
     public static String definition;
     public static String implementation;
@@ -166,13 +165,11 @@ public class Messages extends NLS {
 
 	public static String unresolvedPatternOrScriptExpression;
 	public static String unresolvedExpression;
-
 	public static String deleteConnectorDefinition;
 	public static String transientDataWarning;
 	public static String destFileNameLabel;
 	public static String notAZipFile;
 	public static String connectorOutput;
-
     /**
      * @param event
      * @return
