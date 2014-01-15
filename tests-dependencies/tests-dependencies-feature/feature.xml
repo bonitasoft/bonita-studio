@@ -38,13 +38,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.junit"
-         download-size="0"
-         install-size="0"
-         version="4.8.2.v4_8_2_v20110321-1705"
-         unpack="false"/>
-
-   <plugin
          id="org.fest-assert"
          download-size="0"
          install-size="0"
@@ -92,5 +85,11 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.junit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
