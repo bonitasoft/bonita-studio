@@ -23,6 +23,7 @@
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <!-- @generated process -->
+ 
       <factory
             uri="http://www.bonitasoft.org/ns/studio/configuration"
            class="org.bonitasoft.studio.model.configuration.provider.ConfigurationItemProviderAdapterFactory"

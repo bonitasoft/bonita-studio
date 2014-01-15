@@ -107,7 +107,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 	}
 
 	protected static final String PRIORITY = "priority";
-	private int workload;
 	private IProgressMonitor monitor;
 
 	@Override
@@ -150,7 +149,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 		}
 
 		monitor.beginTask(BOSSplashHandler.BONITA_TASK, 50) ;
-
 		monitor.subTask(Messages.initializingCurrentRepository);
 
 
@@ -268,11 +266,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 				}
 				repository.open() ;
 				repository.getAllStores();
-				monitor.worked(5) ;
 			}
 		};
 		try {
-			workspaceOperation.run(Repository.NULL_PROGRESS_MONITOR) ;
+			workspaceOperation.run(monitor) ;
 		} catch (CoreException e3) {
 			BonitaStudioLog.error(e3) ;
 		}
@@ -382,42 +379,6 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 		job.setUser(false);
 		job.schedule();
 	}
-
-
-//	@Override
-//	public void postStartup() {
-//		try {
-//			IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.common.poststartup"); //$NON-NLS-1$
-//			IPostStartupContribution contrib = null;
-//			for (IConfigurationElement elem : elements){
-//				try {
-//					contrib = (IPostStartupContribution) elem.createExecutableExtension("class"); //$NON-NLS-1$
-//				} catch (CoreException e) {
-//					BonitaStudioLog.error(e);
-//				}
-//				contrib.execute();
-//			}
-//			if (PlatformUI.isWorkbenchRunning()) {
-//				IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-//				PlatformUI.getWorkbench().showPerspective(PerspectiveIDRegistry.PROCESS_PERSPECTIVE_ID, activeWorkbenchWindow);
-//
-//				if(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective() != null) {
-//					PlatformUI.getWorkbench().getIntroManager().showIntro(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), false);
-//				}
-//			}
-//
-//			long startupDuration = System.currentTimeMillis() - BonitaStudioApplication.START_TIME ;
-//			BonitaStudioLog.info("Startup duration : "+DateUtil.getDisplayDuration(startupDuration),ApplicationPlugin.PLUGIN_ID) ;
-//
-//			if (PlatformUI.isWorkbenchRunning()) {
-//				sendUserInfo();
-//				openStartupDialog() ;
-//			}
-//		} catch (WorkbenchException ex) {
-//			BonitaStudioLog.error(ex);
-//		}
-//	}
-
 
 
 	private void openStartupDialog() {
