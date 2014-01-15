@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
+import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionPackage;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edapt.migration.Instance;
@@ -240,8 +242,7 @@ public class StringToExpressionConverter {
 	}
 	
 	private void resolveOutputDependencies(Instance expression, String name, String returnType) {
-		
-		final Instance instance = model.newInstance("expression.Expression" );
+		final Instance instance = model.newInstance(ConnectorDefinitionPackage.Literals.OUTPUT);
 		instance.set("name", name);
 		instance.set("type", returnType);
 		expression.add("referencedElements", instance);
