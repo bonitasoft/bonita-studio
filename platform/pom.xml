@@ -311,6 +311,11 @@
 									<id>org.eclipse.wst.xml_ui.feature.feature.group</id>
 									<version>3.5.1.v201307171524-7H7IFiwDxumVt0J7gijShVTqs4BePbKwUtS9PL</version>
 								</iu>
+								
+								<iu>
+									<id>org.eclipse.wst.web_ui.feature.feature.group</id>
+									<version>3.5.1.v201307171524-7O7QG2NEMkBS3C2az0gQwwALctEj3DZPgTEZceV4</version>
+								</iu>
 								<iu>
 									<id>org.eclipse.gmf.runtime.sdk.feature.group</id>
 									<version>1.7.0.201306111432</version>
