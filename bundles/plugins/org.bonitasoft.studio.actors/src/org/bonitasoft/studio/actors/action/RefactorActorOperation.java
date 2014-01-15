@@ -66,8 +66,12 @@ public class RefactorActorOperation extends AbstractRefactorOperation {
 		String fileName = id+".conf";
 		ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getCurrentRepository().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
 		ProcessConfigurationFileStore file = processConfStore.getChild(fileName);
-		Configuration localeConfiguration = file.getContent();
-		Configuration localConfigurationCopy=EcoreUtil.copy(localeConfiguration);
+		Configuration localeConfiguration=null;
+		Configuration localConfigurationCopy=null;
+		if (file!=null){
+			localeConfiguration = file.getContent();
+			localConfigurationCopy=EcoreUtil.copy(localeConfiguration);
+		}
 		List<Configuration> configurations = new ArrayList<Configuration>();
 		if (localeConfiguration!=null){
 			configurations.add(localeConfiguration);
