@@ -344,7 +344,7 @@ public class BPMNImportExportTest extends TestCase {
 		final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
 		extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
 		URL bpmnResource = FileLocator.toFileURL(BPMNImportExportTest.class.getResource(bpmnFileName));
-		Resource resource1 = resourceSet1.createResource(URI.createFileURI(bpmnResource.getFile()));
+		Resource resource1 = resourceSet1.createResource(URI.createFileURI(new File(bpmnResource.getFile()).getAbsolutePath()));
 		resource1.load(Collections.emptyMap());
 		Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
 		resource2.load(Collections.emptyMap());
