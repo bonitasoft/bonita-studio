@@ -103,6 +103,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 	public static void createNewDiagram(final SWTWorkbenchBot bot){
 		final long timebeforeCreatenewDiagram = System.currentTimeMillis();    	
 		final int nbEditorsBefore = bot.editors().size();
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")),40000);
 		SWTBotMenu menu = bot.menu("Diagram");
 		menu.menu("New").click();
 		bot.waitUntil(new ICondition() {

@@ -32,11 +32,11 @@ import org.osgi.service.event.EventHandler;
 public class OpenIntroAddon {
 
 	private EventHandler testHandler;
-	
+
 	@PostConstruct
 	public void pc(IEventBroker eventBroker){
 		testHandler = new EventHandler() {
-			
+
 			@Override
 			public void handleEvent(Event event) {
 				Object part = event.getProperty(UIEvents.EventTags.ELEMENT);
@@ -49,4 +49,5 @@ public class OpenIntroAddon {
 		};
 		eventBroker.subscribe(UIEvents.UIElement.TOPIC_TOBERENDERED, testHandler);
 	}
+
 }

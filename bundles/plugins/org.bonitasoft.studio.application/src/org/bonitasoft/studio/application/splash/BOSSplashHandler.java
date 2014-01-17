@@ -330,9 +330,9 @@ public class BOSSplashHandler extends AbstractSplashHandler {
         
         @Override
         public void subTask(String name) {
-        	if(Messages.initializingCurrentRepository.equals(name) || Messages.openingStudio.equals(name)){
+        	//if(Messages.initializingCurrentRepository.equals(name) || Messages.openingStudio.equals(name)){
         		super.subTask(name);
-        	}
+        	//}
         }
 
         /*

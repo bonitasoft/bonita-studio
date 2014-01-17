@@ -87,6 +87,14 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		if(statusBar != null){
 			statusBar.setVisible(false);
 		}
+		MUIElement leftTrimbar = modelService.find("org.eclipse.ui.trim.vertical1", model);
+		if(leftTrimbar != null){
+			leftTrimbar.setVisible(false);
+		}
+		MUIElement rightTrimbar = modelService.find("org.eclipse.ui.trim.vertical2", model);
+		if(rightTrimbar != null){
+			rightTrimbar.setVisible(false);
+		}
 	}
 
 	@SuppressWarnings("restriction")

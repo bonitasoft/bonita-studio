@@ -47,7 +47,6 @@ import org.bonitasoft.studio.common.repository.extension.IPostInitRepositoryJobC
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.bonitasoft.studio.engine.BOSEngineManager;
-import org.bonitasoft.studio.groovy.library.FunctionsRepositoryFactory;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
@@ -148,12 +147,11 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 			monitor = Repository.NULL_PROGRESS_MONITOR ;
 		}
 
-		monitor.beginTask(BOSSplashHandler.BONITA_TASK, 50) ;
+		monitor.beginTask(BOSSplashHandler.BONITA_TASK, 100) ;
 		monitor.subTask(Messages.initializingCurrentRepository);
 
 
 		disableInternalWebBrowser();
-
 		checkCurrentRepository();
 
 		List<IConfigurationElement> sortedConfigElems = retrievePreStartupContribution();
@@ -161,17 +159,10 @@ public class BonitaStudioWorkbenchAdvisor extends WorkbenchAdvisor implements IS
 		executeConfigurationElement(sortedConfigElems);
 
 		doStartEngine();
-//		ElementInitializers.getInstance().init_Pool_2007(ProcessFactory.eINSTANCE.createPool());
-//		BonitaPerspectivesUtils.initializePerspectives();
 
 		initializeBonitaRepositories();
-		monitor.subTask(org.bonitasoft.studio.common.repository.Messages.openingStudio) ;
 
-		/*Look if there are contribution to launch,
-		 * typically add repo team listener
-		 * */
 		executeContributions();
-		FunctionsRepositoryFactory.getFunctionCatgories();
 	}
 
 

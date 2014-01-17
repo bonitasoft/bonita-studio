@@ -18,7 +18,6 @@
  
 package org.bonitasoft.studio.common.editor;
 
-import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
@@ -61,12 +60,6 @@ public class BonitaJavaEditor extends CompilationUnitEditor {
 		return page;
 	}
 	
-	@Override
-	@SuppressWarnings("restriction")
-	public void dispose() {
-		super.dispose();
-		PlatformUtil.openIntroIfNoOtherEditorOpen();
-	}
 	
 	/**
 	 * @generated BonitaSoft

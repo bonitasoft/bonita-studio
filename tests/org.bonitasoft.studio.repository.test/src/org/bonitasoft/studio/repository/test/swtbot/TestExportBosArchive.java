@@ -38,6 +38,7 @@ public class TestExportBosArchive extends SWTBotGefTestCase {
     public void testExportDiagramBOSArchive() throws Exception {
         SWTBotTestUtil.createNewDiagram(bot);
         bot.saveAllEditors();
+
         bot.toolbarButton("Export").click();
         bot.waitUntil(Conditions.shellIsActive(Messages.ExportButtonLabel));
 
