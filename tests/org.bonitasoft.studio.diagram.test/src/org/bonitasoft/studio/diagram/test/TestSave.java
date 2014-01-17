@@ -2,17 +2,25 @@ package org.bonitasoft.studio.diagram.test;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withMnemonic;
 
+import java.util.List;
+
 import org.bonitasoft.studio.common.jface.FileActionDialog;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.Command;
+import org.eclipse.gef.EditPart;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
+import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
+import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.internal.commands.CommandService;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -36,7 +44,6 @@ public class TestSave extends SWTBotGefTestCase {
 
 	@AfterClass
 	public static void tearDownAfterClass() {
-
 		FileActionDialog.setDisablePopup(disablePopup);
 	}
 
@@ -98,6 +105,20 @@ public class TestSave extends SWTBotGefTestCase {
 
 		// When Creating a new Diagram
 		SWTBotTestUtil.createNewDiagram(bot);
+		SWTBotEditor botEditor = bot.activeEditor();
+		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
+		List<SWTBotGefEditPart> runnableEPs = gmfEditor.editParts(new BaseMatcher<EditPart>() {
+
+			public boolean matches(Object item) {
+				return item instanceof PoolEditPart;
+			}
+
+			public void describeTo(Description description) {
+
+			}
+		});
+		Assert.assertFalse(runnableEPs.isEmpty());
+		gmfEditor.select(runnableEPs.get(0));
 
 		// test button
 		isSaveButtonEnable=  bot.toolbarButton(SAVE_BUTTON_TEXT).isEnabled();
