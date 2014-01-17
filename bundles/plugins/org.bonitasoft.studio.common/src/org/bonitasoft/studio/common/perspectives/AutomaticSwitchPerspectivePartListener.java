@@ -31,8 +31,8 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 		if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
 			final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
 			if (id != null && !id.equals(lastPerspective)) {
-				BonitaPerspectivesUtils.switchToPerspective(id);
 				lastPerspective = id;
+				BonitaPerspectivesUtils.switchToPerspective(id);
 			}
 		}
 	}
@@ -59,7 +59,8 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 				PlatformUtil.closeIntro();
 			}
 			final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
-			if (id != null) {
+			if (id != null && !id.equals(lastPerspective)) {
+				lastPerspective = id;
 				BonitaPerspectivesUtils.switchToPerspective(id);
 			}
 		}
