@@ -178,9 +178,8 @@ public class SWTBotTestUtil implements SWTBotConstants{
 			@SuppressWarnings("restriction")
 			public void run() {
 				try {
-					List<? extends Widget> widgets = viewerBot.getFinder().findControls(
-							WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
-					Assert.assertTrue(widgets.size() > 0);
+					List<? extends Widget> widgets = viewerBot.getFinder().findControls(WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
+					Assert.assertTrue("No widget of type "+TabbedPropertyList.class.getName()+" has been found",widgets.size() > 0);
 					TabbedPropertyList tabbedPropertyList = (TabbedPropertyList) widgets.get(0);
 					int i = 0;
 					boolean found = false;
