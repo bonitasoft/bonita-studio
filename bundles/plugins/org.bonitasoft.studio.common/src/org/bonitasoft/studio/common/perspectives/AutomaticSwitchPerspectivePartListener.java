@@ -18,51 +18,82 @@
 package org.bonitasoft.studio.common.perspectives;
 
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspectiveStack;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.IPartListener;
 import org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor;
 
 public final class AutomaticSwitchPerspectivePartListener implements IPartListener {
 
-	private String lastPerspective;
+
+	private boolean isSwitching;
 
 	@Override
 	public void partActivated(MPart part) {
-		if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
-			final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
-			if (id != null && !id.equals(lastPerspective)) {
-				lastPerspective = id;
-				BonitaPerspectivesUtils.switchToPerspective(id);
+		if(!isSwitching){
+			isSwitching = true;
+			try{
+				if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
+					String activePerspective = getActivePerspectiveId(part);
+					final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
+					if (id != null && !id.equals(activePerspective)) {
+						BonitaPerspectivesUtils.switchToPerspective(id);
+					}
+				}
+			}finally{
+				isSwitching = false;
 			}
 		}
 	}
 
 	@Override
 	public void partBroughtToTop(MPart part) {
-		
+
 	}
 
 	@Override
 	public void partDeactivated(MPart part) {
-		
+
 	}
 
 	@Override
 	public void partHidden(MPart part) {
-		
+
 	}
 
 	@Override
 	public void partVisible(MPart part) {
-		if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
-			if(PlatformUtil.isIntroOpen()){
-				PlatformUtil.closeIntro();
-			}
-			final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
-			if (id != null && !id.equals(lastPerspective)) {
-				lastPerspective = id;
-				BonitaPerspectivesUtils.switchToPerspective(id);
+		if(!isSwitching){
+			isSwitching = true;
+			try{
+				if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
+					if(PlatformUtil.isIntroOpen()){
+						PlatformUtil.closeIntro();
+					}
+					String activePerspective = getActivePerspectiveId(part);
+					String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
+					if (id != null && !id.equals(activePerspective)) {
+						BonitaPerspectivesUtils.switchToPerspective(id);
+					}
+				}
+			}finally{
+				isSwitching = false;
 			}
 		}
+	}
+
+	protected String getActivePerspectiveId(MPart part) {
+		EModelService service =	part.getContext().get(EModelService.class);
+		MWindow window = service.getTopLevelWindowFor(part);
+		MPerspectiveStack pStack =  (MPerspectiveStack) service.find("PerspectiveStack", window);
+		MPerspective selectedElement = pStack.getSelectedElement();
+		String activePerspective =null;
+		if(selectedElement != null){
+			activePerspective = selectedElement.getElementId();
+		}
+		return activePerspective;
 	}
 }
