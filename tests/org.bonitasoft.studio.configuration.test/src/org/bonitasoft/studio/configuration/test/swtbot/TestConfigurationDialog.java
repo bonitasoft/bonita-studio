@@ -51,11 +51,7 @@ public class TestConfigurationDialog extends SWTBotGefTestCase {
         MainProcess model = (MainProcess)part.resolveSemanticElement();
         Pool pool = (Pool)model.getElements().get(0);
         String processLabel = pool.getName() +" ("+pool.getVersion()+")";
-        if(SWTBotTestUtil.testingBosSp()){
-            bot.toolbarDropDownButton("Configure").click();
-        }else{
-            bot.toolbarButton("Configure").click();
-        }
+        clickOnConfigure();
         bot.waitUntil(Conditions.shellIsActive("Local configuration for "+processLabel));
 
 
@@ -104,11 +100,7 @@ public class TestConfigurationDialog extends SWTBotGefTestCase {
         bot.button(IDialogConstants.FINISH_LABEL).click();
 
         //VALIDATE CHECKBOX STATE RESTORED
-        if(SWTBotTestUtil.testingBosSp()){
-            bot.toolbarDropDownButton("Configure").click();
-        }else{
-            bot.toolbarButton("Configure").click();
-        }
+        clickOnConfigure();
         bot.waitUntil(Conditions.shellIsActive("Local configuration for "+processLabel));
         assertTrue("Advanced checbox should be ckecked",bot.checkBox().isChecked());
         bot.button(IDialogConstants.FINISH_LABEL).click();
@@ -125,11 +117,7 @@ public class TestConfigurationDialog extends SWTBotGefTestCase {
         MainProcess model = (MainProcess)part.resolveSemanticElement();
         Pool pool = (Pool)model.getElements().get(0);
         String processLabel = pool.getName() +" ("+pool.getVersion()+")";
-        if(SWTBotTestUtil.testingBosSp()){
-            bot.toolbarDropDownButton("Configure").click();
-        }else{
-            bot.toolbarButton("Configure").click();
-        }
+        clickOnConfigure();
         bot.waitUntil(Conditions.shellIsActive("Local configuration for "+processLabel));
         bot.table().getTableItem("Actor mapping").select();
 
@@ -193,6 +181,16 @@ public class TestConfigurationDialog extends SWTBotGefTestCase {
 
         bot.button(IDialogConstants.FINISH_LABEL).click();
     }
+
+	protected void clickOnConfigure() {
+		if(SWTBotTestUtil.testingBosSp()){
+        	bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarDropDownButton("Configure")));
+            bot.toolbarDropDownButton("Configure").click();
+        }else{
+          	bot.waitUntil(Conditions.widgetIsEnabled(bot.toolbarButton("Configure")));
+            bot.toolbarButton("Configure").click();
+        }
+	}
 
 
 

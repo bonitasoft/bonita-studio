@@ -26,7 +26,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.inject.Singleton;
 
 import org.bonitasoft.studio.application.i18n.Messages;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
@@ -40,7 +39,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MTrimBar;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.UIEvents.UIElement;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.renderers.swt.TrimmedPartLayout;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -94,37 +96,51 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 
 	@PostConstruct
 	public void createControls(Composite parent,final IEclipseContext context,IWorkbenchActivitySupport activitySupport) {
-		initCoolBarPreferredSize() ;
-		Composite parentShell = parent.getParent();
-		TrimmedPartLayout layout = (TrimmedPartLayout) parentShell.getLayout();
-		toolbarContainer = new Composite(parentShell, SWT.INHERIT_FORCE) ;
-		toolbarContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create()) ;
-		toolbarContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).margins(0, 0).create()) ;
-		layout.top = toolbarContainer;
-		Composite leftTrim = layout.left;
-		if(leftTrim != null){
-			leftTrim.setVisible(false);
-			leftTrim.setSize(0, 0);
-			leftTrim.getLayoutData();
-		}
-		Composite rightTrim = layout.right;
-		if(rightTrim != null){
-			rightTrim.setVisible(false);
-			rightTrim.setSize(0, 0);
-		}
-		createToolbar(toolbarContainer);
-		activitySupport.getActivityManager().addActivityManagerListener(this);
-		IEventBroker eventBroker = context.get(IEventBroker.class);
-		eventBroker.subscribe(UIElement.TOPIC_ALL, new EventHandler() {
-			
-			@Override
-			public void handleEvent(Event arg0) {
-				IWorkbenchWindow window = context.get(IWorkbenchWindow.class);
-				if(window != null){
-					registerHandlers(((WorkbenchWindow)window));
-				}
+		if(isRendered(context)){
+			initCoolBarPreferredSize() ;
+			Composite parentShell = parent.getParent();
+			TrimmedPartLayout layout = (TrimmedPartLayout) parentShell.getLayout();
+			toolbarContainer = new Composite(parentShell, SWT.INHERIT_FORCE) ;
+			toolbarContainer.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).create()) ;
+			toolbarContainer.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).spacing(0, 0).margins(0, 0).create()) ;
+			layout.top = toolbarContainer;
+			Composite leftTrim = layout.left;
+			if(leftTrim != null){
+				leftTrim.setVisible(false);
+				leftTrim.setSize(0, 0);
+				leftTrim.getLayoutData();
 			}
-		});
+			Composite rightTrim = layout.right;
+			if(rightTrim != null){
+				rightTrim.setVisible(false);
+				rightTrim.setSize(0, 0);
+			}
+			createToolbar(toolbarContainer);
+			activitySupport.getActivityManager().addActivityManagerListener(this);
+			IEventBroker eventBroker = context.get(IEventBroker.class);
+			eventBroker.subscribe(UIElement.TOPIC_ALL, new EventHandler() {
+
+				@Override
+				public void handleEvent(Event arg0) {
+					IWorkbenchWindow window = context.get(IWorkbenchWindow.class);
+					if(window != null){
+						registerHandlers(((WorkbenchWindow)window));
+					}
+				}
+			});
+		}
+	}
+
+	protected boolean isRendered(final IEclipseContext context) {
+		MTrimBar topTrim =  getTrimBar(context,"org.eclipse.ui.main.toolbar");
+		return topTrim != null && topTrim.isToBeRendered();
+	}
+	
+	protected MTrimBar getTrimBar(final IEclipseContext context,String trimBarId) {
+		EModelService modelService = context.get(EModelService.class);
+		MWindow window = context.get(MWindow.class);
+		MTrimBar topTrim = (MTrimBar) modelService.find(trimBarId, window);
+		return topTrim ;
 	}
 
 	@PreDestroy
