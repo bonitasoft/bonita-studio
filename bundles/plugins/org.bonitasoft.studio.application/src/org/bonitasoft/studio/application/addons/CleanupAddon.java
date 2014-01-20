@@ -301,6 +301,8 @@ public class CleanupAddon {
 					}
 
 					if (makeInvisible) {
+						System.out.println("Cleanup trace for : "+changedObj);
+						System.out.println("Cleanup trace for parent : "+container);
 						container.setVisible(false);
 					}
 				}
