@@ -74,7 +74,6 @@ public class UpdatePoolSizeCommand extends AbstractTransactionalCommand {
 	 * @throws ExecutionException 
 	 */
 	private void executeChangingSpanFor(String typeChangeSpan1, IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-
 		if( typeChangeSpan1.equals(SwitchPoolSelectionEditPolicy.ADD_RIGHT)){
 			increaseWidth();
 		}else if(typeChangeSpan1.equals(SwitchPoolSelectionEditPolicy.REMOVE_RIGHT)){

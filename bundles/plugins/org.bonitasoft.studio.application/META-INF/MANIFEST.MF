@@ -60,7 +60,8 @@ Require-Bundle: org.bonitasoft.studio.diagram,
  org.eclipse.e4.core.commands;bundle-version="0.10.2",
  org.eclipse.e4.core.services;bundle-version="1.1.0",
  org.eclipse.e4.ui.di,
- org.bonitasoft.studio.validation;bundle-version="6.2.0"
+ org.bonitasoft.studio.validation;bundle-version="6.2.0",
+ org.eclipse.e4.ui.workbench.swt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: javax.annotation;version="1.1.0",
