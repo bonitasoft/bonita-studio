@@ -46,6 +46,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -236,14 +237,13 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 							if (hasInitiator){
 								new OpenBrowserCommand(url, BonitaPreferenceConstants.APPLICATION_BROWSER_ID, "Bonita Application").execute(null) ;
 							} else {
-								final AbstractProcess proc=p;
 								Display.getDefault().syncExec(new Runnable() {
 									@Override
 									public void run() {
 										IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
 										String pref =preferenceStore.getString(EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR);
 										if (MessageDialogWithToggle.NEVER.equals(pref)){
-											MessageDialogWithToggle mdwt = MessageDialogWithToggle.openWarning(Display.getDefault().getActiveShell(), Messages.noInitiatorDefinedTitle, Messages.bind(Messages.noInitiatorDefinedMessage,
+											MessageDialogWithToggle.openWarning(Display.getDefault().getActiveShell(), Messages.noInitiatorDefinedTitle, Messages.bind(Messages.noInitiatorDefinedMessage,
 													p.getName()), 
 													Messages.dontaskagain, 
 													false, preferenceStore, EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR);
@@ -344,6 +344,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 					EObject element = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
 					return ModelHelper.getParentProcess(element) ;
 				}
+			}else if(selectedProcess != null && selectedProcess instanceof Pool){
+				return selectedProcess ;
 			}
 		}
 		return null;
@@ -383,7 +385,10 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 				result.add(selectedProcess) ;
 			}
 		}else{
-			selectedProcess = getProcessInEditor() ;
+			MainProcess processInEditor = getProcessInEditor() ;
+			if(processInEditor != null){
+				selectedProcess = processInEditor;
+			}
 			if(selectedProcess instanceof MainProcess){
 				for(EObject p : ModelHelper.getAllItemsOfType(selectedProcess, ProcessPackage.Literals.POOL)){
 					result.add((AbstractProcess) p) ;
