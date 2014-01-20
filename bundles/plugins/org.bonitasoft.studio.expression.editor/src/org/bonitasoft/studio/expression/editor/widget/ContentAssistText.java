@@ -20,7 +20,6 @@ package org.bonitasoft.studio.expression.editor.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.autocompletion.AutoCompletionField;
 import org.bonitasoft.studio.expression.editor.autocompletion.IBonitaContentProposalListener2;
@@ -60,11 +59,9 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	private ToolBar tb;
 	private boolean isReadOnly = false;
 	private List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<IBonitaContentProposalListener2>();
-	private boolean proposalEnabled;
 	
 	public ContentAssistText(Composite parent, IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
 		super(parent, SWT.NONE);
-		proposalEnabled = true;
 		Point margins = new Point(3, 3);
 		if ((style & SWT.BORDER) == 0){
 			drawBorder = false;
@@ -97,11 +94,12 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 						public void run() {
 							if(!ContentAssistText.this.isDisposed()){
 								ContentAssistText.this.redraw();
-								if(!autoCompletion.getContentProposalAdapter().hasProposalPopupFocus()){
-									if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
-										autoCompletion.getContentProposalAdapter().closeProposalPopup();
-									}
-								}
+								//Useless after e4 migration ? Has an invalid behavior during swtbot tests
+//								if(!autoCompletion.getContentProposalAdapter().hasProposalPopupFocus()){
+//									if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
+//										autoCompletion.getContentProposalAdapter().closeProposalPopup();
+//									}
+//								}
 							}
 						}
 					});
@@ -164,7 +162,6 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	}
 	
 	public void setProposalEnabled(Boolean proposalEnabled){
-		this.proposalEnabled = proposalEnabled;
 		if(!proposalEnabled){
 			tb.setEnabled(false);
 		} else {
