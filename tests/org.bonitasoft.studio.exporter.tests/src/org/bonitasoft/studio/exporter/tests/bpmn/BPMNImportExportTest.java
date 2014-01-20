@@ -622,7 +622,7 @@ public class BPMNImportExportTest {
 	protected void checkGraphic(String fileName, MainProcess mainProcess) throws IOException{
 		URL bpmnResource = FileLocator.toFileURL(BPMNImportExportTest.class.getResource(fileName));
 		ResourceSet resourceSet1 = new ResourceSetImpl();
-		Resource resource1 = resourceSet1.createResource(URI.createFileURI(bpmnResource.getFile()));
+		Resource resource1 = resourceSet1.createResource(BPMNTestUtil.toEMFURI(new File(bpmnResource.getFile())));
 		resource1.load(Collections.emptyMap());
 		DocumentRoot model1 = (DocumentRoot) resource1.getContents().get(0);
 
