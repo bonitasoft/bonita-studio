@@ -204,7 +204,7 @@ public class BPMNImportExportTest {
 		final String bpmnFileName = "bpmn2sample/Incident Management/Incident Management(Process Engine Only).bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBPMN2SampleIncidentManagementWholeCollab() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "bpmn2sample/Incident Management/Incident Management(Whole Collab).bpmn";
@@ -228,25 +228,25 @@ public class BPMNImportExportTest {
 		final String bpmnFileName = "bpmn2sample/Models & Diagrams/Collapsed SubProcess.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBPMN2SamplModelsDiagramExpandedSubProcess() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "bpmn2sample/Models & Diagrams/Expanded SubProcess.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBPMN2SamplModelsDiagramLaneset() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "bpmn2sample/Models & Diagrams/Laneset.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBPMN2SamplModelsDiagramPool() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "bpmn2sample/Models & Diagrams/Pool.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBPMN2SamplModelsDiagramProcess() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "bpmn2sample/Models & Diagrams/Process.bpmn";
@@ -258,13 +258,13 @@ public class BPMNImportExportTest {
 		final String bpmnFileName = "bpmn2sample/Nobel Prize/Nobel Prize Process.bpmn";
 		doTest(bpmnFileName, true, true, false);
 	}
-	
+
 	@Test
 	public void testImportExportBPMN2SampleOrderFullFillment() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "bpmn2sample/Order Fulfillment/Procurement Processes with Error Handling - Stencil Trisotech 3 pages.bpmn";
 		doTest(bpmnFileName, false, false, true);
 	}
-	
+
 	@Test
 	public void testImportExportBPMN2SampleTravelBooking() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "bpmn2sample/Travel Booking/Tavel Booking.bpmn";
@@ -283,50 +283,50 @@ public class BPMNImportExportTest {
 		final String bpmnFileName = "brucesample/myTaskMyPool.bpmn";
 		doTest(bpmnFileName);
 	}
-	
-	
+
+
 	@Test
 	public void testImportExportBruceSampleMyTaskMyPoolCorrected() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "brucesample/myTaskMyPool-corrected.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBruceSampleOurProc() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "brucesample/ourProc.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBruceSampleOurProcNoPool() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "brucesample/ourProcNoPool.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBruceSampleOurProcNoPoolCorrected() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "brucesample/ourProcNoPool-corrected.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBruceSampleOurReusable() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "brucesample/ourReusable.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBruceSampleOurReusableCorrected() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "brucesample/ourReusable-corected.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBruceSampleOurSubs() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "brucesample/ourSubs.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBruceSampleOurSubsCorrected() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "brucesample/ourSubs-corrected.bpmn";
@@ -338,7 +338,7 @@ public class BPMNImportExportTest {
 		final String bpmnFileName = "brucesample/ourSubsNoPool.bpmn";
 		doTest(bpmnFileName);
 	}
-	
+
 	@Test
 	public void testImportExportBruceSampleOurSubsNoPoolCorrected() throws MalformedURLException, IOException, InterruptedException{
 		final String bpmnFileName = "brucesample/ourSubsNoPool-corrected.bpmn";
@@ -396,181 +396,195 @@ public class BPMNImportExportTest {
 		final DiResourceFactoryImpl diResourceFactoryImpl = new DiResourceFactoryImpl();
 		extensionToFactoryMap.put("bpmn", diResourceFactoryImpl);
 		URL bpmnResource = FileLocator.toFileURL(BPMNImportExportTest.class.getResource(bpmnFileName));
-		Resource resource1 = resourceSet1.createResource(URI.createFileURI(new File(bpmnResource.getFile()).getAbsolutePath()));
-		resource1.load(Collections.emptyMap());
-		Resource resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
-		resource2.load(Collections.emptyMap());
 
-		DocumentRoot model1 = (DocumentRoot) resource1.getContents().get(0);
-		DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
-		int nbProcess1 = 0;
-		Set<String> processNames = new HashSet<String>();
-		List<String> activityNames = new ArrayList<String>();
-		int nbActivity1 = 0;
-		int nbBoundaryEvent1 = 0;
-		int nbTsignal1 = 0;
-		int nbEvents1 = 0;
-		int nbTextannotation1 = 0;
-		int nbMessageFlow1 = 0;
-		int nbProcessItemeDefinition1 = 0;
-		int nbDataObject1 = 0;
-		int nbProperty1 = 0;
+		System.out.println("bpmnFileName = "+bpmnFileName);
+		System.out.println("bpmnResource = "+bpmnResource);
+		System.out.println("URI.createFileURI with : "+new File(bpmnResource.getFile()).getAbsolutePath());
+		Resource resource1 = null;
+		Resource resource2 = null;
+		try{
+			resource1 = resourceSet1.createResource(URI.createFileURI(new File(bpmnResource.getFile()).getAbsolutePath()));
+			resource1.load(Collections.emptyMap());
+			resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
+			resource2.load(Collections.emptyMap());
 
-		for(TRootElement rootElement : model1.getDefinitions().getRootElement()){
-			if(rootElement instanceof TProcess){
-				nbProcess1++;
-				final String processName = ((TProcess) rootElement).getName() != null ? ((TProcess) rootElement).getName() : ((TProcess) rootElement).getId();
-				processNames.add(processName);
-				for(TArtifact tArtifact :((TProcess) rootElement).getArtifact()){
-					if(tArtifact instanceof TTextAnnotation){
-						nbTextannotation1++;
-					}
-				}
-				for(TFlowElement tFlowElement : ((TProcess) rootElement).getFlowElement()){
-					if(tFlowElement instanceof TActivity){                   	
-						nbActivity1++;
-						String name  = getFlowElementName((TActivity) tFlowElement);
-						activityNames.add(name);
-						if(tFlowElement instanceof TSubProcess){
-							//for now we are creating new processses for each subprocess but we don't manage event
-							if(((TSubProcess) tFlowElement).isTriggeredByEvent()){
-								//event sub  process
-								nbActivity1 += findNbActivitiesInSubProc((TSubProcess)tFlowElement) ;
-								nbActivity1--;
-							} else {
-								//subprocess
-								nbProcess1++;
-								nbActivity1 += findNbActivitiesInSubProc((TSubProcess)tFlowElement);
-							}
+			DocumentRoot model1 = (DocumentRoot) resource1.getContents().get(0);
+			DocumentRoot model2 = (DocumentRoot) resource2.getContents().get(0);
+			int nbProcess1 = 0;
+			Set<String> processNames = new HashSet<String>();
+			List<String> activityNames = new ArrayList<String>();
+			int nbActivity1 = 0;
+			int nbBoundaryEvent1 = 0;
+			int nbTsignal1 = 0;
+			int nbEvents1 = 0;
+			int nbTextannotation1 = 0;
+			int nbMessageFlow1 = 0;
+			int nbProcessItemeDefinition1 = 0;
+			int nbDataObject1 = 0;
+			int nbProperty1 = 0;
+
+			for(TRootElement rootElement : model1.getDefinitions().getRootElement()){
+				if(rootElement instanceof TProcess){
+					nbProcess1++;
+					final String processName = ((TProcess) rootElement).getName() != null ? ((TProcess) rootElement).getName() : ((TProcess) rootElement).getId();
+					processNames.add(processName);
+					for(TArtifact tArtifact :((TProcess) rootElement).getArtifact()){
+						if(tArtifact instanceof TTextAnnotation){
+							nbTextannotation1++;
 						}
-						System.out.println("activity count for model 1 "+ nbActivity1 + tFlowElement.getId() +" ### "+ tFlowElement.getName());
-						nbProperty1 += ((TActivity) tFlowElement).getProperty().size();
-					} else if(tFlowElement instanceof TDataObject){
-						nbDataObject1++;
-					} else if(tFlowElement instanceof TIntermediateThrowEvent){
-						if((((TThrowEvent) tFlowElement).getEventDefinition() == null
-								|| ((TThrowEvent) tFlowElement).getEventDefinition().isEmpty())
-								&& (((TThrowEvent) tFlowElement).getEventDefinitionRef() == null
-								|| ((TThrowEvent) tFlowElement).getEventDefinitionRef().isEmpty())){
-							//empty event definitions are imported as abstract tasks
+					}
+					for(TFlowElement tFlowElement : ((TProcess) rootElement).getFlowElement()){
+						if(tFlowElement instanceof TActivity){                   	
 							nbActivity1++;
-						}
-					}
-				}
-			} else if(rootElement instanceof TBoundaryEvent){
-				nbBoundaryEvent1++;
-			} else if(rootElement instanceof TSignal){
-				nbTsignal1++;
-			} else if(rootElement instanceof TEvent){
-				nbEvents1++;
-			} else if(rootElement instanceof TCollaboration){
-				nbMessageFlow1+=((TCollaboration) rootElement).getMessageFlow().size();
-			} else if(rootElement instanceof TItemDefinition){
-				nbProcessItemeDefinition1++;
-			}
-		}
-
-		int nbProcess2 = 0;
-		int nbBoundaryEvent2 = 0;
-		int nbActivity2 = 0;
-		int nbTsignal2 = 0;
-		int nbEvents2 = 0;
-		int nbTextannotation2 = 0;
-		int nbMessageFlow2 =0;
-		int nbProcessItemeDefinition2 = 0;
-		int nbDataObject2 = 0;
-		int nbProperty2 = 0;
-
-		for(TRootElement rootElement : model2.getDefinitions().getRootElement()){
-			if(rootElement instanceof TProcess){
-				nbProcess2++;
-				final String processName = ((TProcess) rootElement).getName() != null ? ((TProcess) rootElement).getName() : ((TProcess) rootElement).getId();
-				if(!processNames.remove(processName)){
-					System.out.println(processName+ "  has appeared");
-				}
-				for(TArtifact tArtifact :((TProcess) rootElement).getArtifact()){
-					if(tArtifact instanceof TTextAnnotation){
-						nbTextannotation2++;
-					}
-				}
-				for(TFlowElement tFlowElement : ((TProcess) rootElement).getFlowElement()){
-					if(tFlowElement instanceof TActivity){
-						nbActivity2++;
-						String name  = getFlowElementName((TActivity) tFlowElement);
-						if(!activityNames.remove(name)){
-							System.out.println("The activity : "+name +" is missing ");
-						}
-						if(tFlowElement instanceof TSubProcess){
-							nbActivity2 += findNbActivitiesInSubProc((TSubProcess)tFlowElement);
-							if(((TSubProcess) tFlowElement).isTriggeredByEvent()){
-								nbActivity2--;
+							String name  = getFlowElementName((TActivity) tFlowElement);
+							activityNames.add(name);
+							if(tFlowElement instanceof TSubProcess){
+								//for now we are creating new processses for each subprocess but we don't manage event
+								if(((TSubProcess) tFlowElement).isTriggeredByEvent()){
+									//event sub  process
+									nbActivity1 += findNbActivitiesInSubProc((TSubProcess)tFlowElement) ;
+									nbActivity1--;
+								} else {
+									//subprocess
+									nbProcess1++;
+									nbActivity1 += findNbActivitiesInSubProc((TSubProcess)tFlowElement);
+								}
+							}
+							System.out.println("activity count for model 1 "+ nbActivity1 + tFlowElement.getId() +" ### "+ tFlowElement.getName());
+							nbProperty1 += ((TActivity) tFlowElement).getProperty().size();
+						} else if(tFlowElement instanceof TDataObject){
+							nbDataObject1++;
+						} else if(tFlowElement instanceof TIntermediateThrowEvent){
+							if((((TThrowEvent) tFlowElement).getEventDefinition() == null
+									|| ((TThrowEvent) tFlowElement).getEventDefinition().isEmpty())
+									&& (((TThrowEvent) tFlowElement).getEventDefinitionRef() == null
+									|| ((TThrowEvent) tFlowElement).getEventDefinitionRef().isEmpty())){
+								//empty event definitions are imported as abstract tasks
+								nbActivity1++;
 							}
 						}
-						System.out.println("activity count for model 2 "+ nbActivity2 + tFlowElement.getId() +" ### "+ tFlowElement.getName());
-						nbProperty2 += ((TActivity) tFlowElement).getProperty().size();
-					} else if(tFlowElement instanceof TDataObject){
-						nbDataObject2++;
 					}
+				} else if(rootElement instanceof TBoundaryEvent){
+					nbBoundaryEvent1++;
+				} else if(rootElement instanceof TSignal){
+					nbTsignal1++;
+				} else if(rootElement instanceof TEvent){
+					nbEvents1++;
+				} else if(rootElement instanceof TCollaboration){
+					nbMessageFlow1+=((TCollaboration) rootElement).getMessageFlow().size();
+				} else if(rootElement instanceof TItemDefinition){
+					nbProcessItemeDefinition1++;
 				}
+			}
 
-			} else if(rootElement instanceof TBoundaryEvent){
-				nbBoundaryEvent2++;
-			} else if(rootElement instanceof TSignal){
-				nbTsignal2++;
-			} else if(rootElement instanceof TEvent){
-				nbEvents2++;
-			}  else if(rootElement instanceof TCollaboration){
-				nbMessageFlow2 = ((TCollaboration) rootElement).getMessageFlow().size();
-			} else if(rootElement instanceof TItemDefinition){
-				nbProcessItemeDefinition2++;
+			int nbProcess2 = 0;
+			int nbBoundaryEvent2 = 0;
+			int nbActivity2 = 0;
+			int nbTsignal2 = 0;
+			int nbEvents2 = 0;
+			int nbTextannotation2 = 0;
+			int nbMessageFlow2 =0;
+			int nbProcessItemeDefinition2 = 0;
+			int nbDataObject2 = 0;
+			int nbProperty2 = 0;
+
+			for(TRootElement rootElement : model2.getDefinitions().getRootElement()){
+				if(rootElement instanceof TProcess){
+					nbProcess2++;
+					final String processName = ((TProcess) rootElement).getName() != null ? ((TProcess) rootElement).getName() : ((TProcess) rootElement).getId();
+					if(!processNames.remove(processName)){
+						System.out.println(processName+ "  has appeared");
+					}
+					for(TArtifact tArtifact :((TProcess) rootElement).getArtifact()){
+						if(tArtifact instanceof TTextAnnotation){
+							nbTextannotation2++;
+						}
+					}
+					for(TFlowElement tFlowElement : ((TProcess) rootElement).getFlowElement()){
+						if(tFlowElement instanceof TActivity){
+							nbActivity2++;
+							String name  = getFlowElementName((TActivity) tFlowElement);
+							if(!activityNames.remove(name)){
+								System.out.println("The activity : "+name +" is missing ");
+							}
+							if(tFlowElement instanceof TSubProcess){
+								nbActivity2 += findNbActivitiesInSubProc((TSubProcess)tFlowElement);
+								if(((TSubProcess) tFlowElement).isTriggeredByEvent()){
+									nbActivity2--;
+								}
+							}
+							System.out.println("activity count for model 2 "+ nbActivity2 + tFlowElement.getId() +" ### "+ tFlowElement.getName());
+							nbProperty2 += ((TActivity) tFlowElement).getProperty().size();
+						} else if(tFlowElement instanceof TDataObject){
+							nbDataObject2++;
+						}
+					}
+
+				} else if(rootElement instanceof TBoundaryEvent){
+					nbBoundaryEvent2++;
+				} else if(rootElement instanceof TSignal){
+					nbTsignal2++;
+				} else if(rootElement instanceof TEvent){
+					nbEvents2++;
+				}  else if(rootElement instanceof TCollaboration){
+					nbMessageFlow2 = ((TCollaboration) rootElement).getMessageFlow().size();
+				} else if(rootElement instanceof TItemDefinition){
+					nbProcessItemeDefinition2++;
+				}
+			}
+
+			/*Check id unicity*/
+			Collection<String> ids = new HashSet<String>();
+			Collection<String> duplicatedIds = new HashSet<String>();
+			Collection<EObject> noIds = new HashSet<EObject>();
+			for (Iterator<EObject> iterator = model2.eAllContents(); iterator.hasNext();) {
+				EObject object = iterator.next();
+				if(object instanceof TBaseElement){
+					String id = ((TBaseElement) object).getId();
+					if(id == null){
+						noIds.add(object);
+					}
+					if(ids.contains(id)){
+						//error
+						duplicatedIds.add(id);
+					}
+					ids.add(id);
+				}
+			}
+
+
+			if(!activityNames.isEmpty()){
+				System.out.println("Some activity have disappeared for diagram:" + bpmnFileName);
+				for (String activityName : activityNames) {
+					System.out.println(activityName+"\n");
+				}
+			}
+
+			assertEquals("We don't find the same number of process", nbProcess1, nbProcess2);
+			assertTrue("There are missing processes:"+processNames.toString(), processNames.isEmpty());
+			assertEquals("We don't find the same number of boundaries event", nbBoundaryEvent1, nbBoundaryEvent2);
+			if(checkActivities){
+				assertEquals("We don't find the same number of activities", nbActivity1, nbActivity2);
+			}
+			assertEquals("We don't find the same number of TSignal defined", nbTsignal1, nbTsignal2);
+			if(checkEvents){
+				assertEquals("We don't find the same number of TEvent defined", nbEvents1, nbEvents2);
+			}
+			if(checkMessageFlow){
+				assertEquals("We don't find the same number of TMessageFlow defined", nbMessageFlow1, nbMessageFlow2);
+			}
+			assertTrue("There are null ids: "+noIds, noIds.isEmpty());
+			assertTrue("There are duplicated ids: "+duplicatedIds, duplicatedIds.isEmpty());
+			assertEquals("Some data were lost", nbDataObject1, nbDataObject2);
+			assertEquals("Some property (transient data) were lost", nbProperty1, nbProperty2);
+		}finally{
+			if(resource1 != null){
+				resource1.unload();
+			}
+			if(resource2 != null){
+				resource2.unload();
 			}
 		}
-
-		/*Check id unicity*/
-		Collection<String> ids = new HashSet<String>();
-		Collection<String> duplicatedIds = new HashSet<String>();
-		Collection<EObject> noIds = new HashSet<EObject>();
-		for (Iterator<EObject> iterator = model2.eAllContents(); iterator.hasNext();) {
-			EObject object = iterator.next();
-			if(object instanceof TBaseElement){
-				String id = ((TBaseElement) object).getId();
-				if(id == null){
-					noIds.add(object);
-				}
-				if(ids.contains(id)){
-					//error
-					duplicatedIds.add(id);
-				}
-				ids.add(id);
-			}
-		}
-
-
-		if(!activityNames.isEmpty()){
-			System.out.println("Some activity have disappeared for diagram:" + bpmnFileName);
-			for (String activityName : activityNames) {
-				System.out.println(activityName+"\n");
-			}
-		}
-
-		assertEquals("We don't find the same number of process", nbProcess1, nbProcess2);
-		assertTrue("There are missing processes:"+processNames.toString(), processNames.isEmpty());
-		assertEquals("We don't find the same number of boundaries event", nbBoundaryEvent1, nbBoundaryEvent2);
-		if(checkActivities){
-			assertEquals("We don't find the same number of activities", nbActivity1, nbActivity2);
-		}
-		assertEquals("We don't find the same number of TSignal defined", nbTsignal1, nbTsignal2);
-		if(checkEvents){
-			assertEquals("We don't find the same number of TEvent defined", nbEvents1, nbEvents2);
-		}
-		if(checkMessageFlow){
-			assertEquals("We don't find the same number of TMessageFlow defined", nbMessageFlow1, nbMessageFlow2);
-		}
-		assertTrue("There are null ids: "+noIds, noIds.isEmpty());
-		assertTrue("There are duplicated ids: "+duplicatedIds, duplicatedIds.isEmpty());
-		assertEquals("Some data were lost", nbDataObject1, nbDataObject2);
-		assertEquals("Some property (transient data) were lost", nbProperty1, nbProperty2);
-
 		//	assertEquals("We don't find the same number of TTextAnnotation defined", nbTextannotation1, nbTextannotation2);
 
 		//TODO: check link between signal thrown and caught
