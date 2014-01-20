@@ -41,6 +41,7 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tychoVersion}</version>
 				<configuration>
+					<testRuntime>p2Installed</testRuntime>
 					<useUIThread>true</useUIThread>
 					<useUIHarness>true</useUIHarness>
 					<application>org.bonitasoft.studio.application.application</application>
@@ -69,6 +70,23 @@
 							<artifactId>studio-feature</artifactId>
 						</dependency>
 					</dependencies>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tychoVersion}</version>
+				<configuration>
+					<dependency-resolution>
+						<extraRequirements>
+							<!-- add dependency to product IU under test -->
+							<requirement>
+								<type>p2-installable-unit</type>
+								<id>org.bonitasoft.studio.product</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+						</extraRequirements>
+					</dependency-resolution>
 				</configuration>
 			</plugin>
 		</plugins>
