@@ -17,7 +17,10 @@
  */
 package org.bonitasoft.studio.exporter.tests.bpmn;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -399,11 +402,13 @@ public class BPMNImportExportTest {
 
 		System.out.println("bpmnFileName = "+bpmnFileName);
 		System.out.println("bpmnResource = "+bpmnResource);
-		System.out.println("URI.createFileURI with : "+new File(bpmnResource.getFile()).getAbsolutePath());
+		URI emfuri = BPMNTestUtil.toEMFURI(new File(bpmnResource.getFile()));
+		System.out.println("URI.createFileURI with : "+emfuri);
 		Resource resource1 = null;
 		Resource resource2 = null;
 		try{
-			resource1 = resourceSet1.createResource(URI.createFileURI(new File(bpmnResource.getFile()).getAbsolutePath()));
+	
+			resource1 = resourceSet1.createResource(emfuri);
 			resource1.load(Collections.emptyMap());
 			resource2 = resourceSet1.createResource(URI.createFileURI(bpmnFileExported.getAbsolutePath()));
 			resource2.load(Collections.emptyMap());
