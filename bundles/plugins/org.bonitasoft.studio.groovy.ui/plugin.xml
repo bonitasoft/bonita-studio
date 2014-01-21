@@ -46,7 +46,6 @@
          <command
                commandId="org.bonitasoft.studio.groovy.ui.editscripts"
                icon="icons/manage_groovy_scripts.png"
-               id="org.bonitasoft.studio.extensinonsMenu.editGroovyScriptMenu"
                label="%editGroovyScript_Label"
                style="push">
          </command>

@@ -172,7 +172,7 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
         activitySet.addAll(workingCopy.getEnabledActivityIds());
         workingCopy.setEnabledActivityIds(activitySet);
         PlatformUI.getWorkbench().getActivitySupport().setEnabledActivityIds(workingCopy.getEnabledActivityIds()) ;
-
+        PlatformUI.getWorkbench().getActivitySupport().setEnabledActivityIds(workingCopy.getEnabledActivityIds()) ;
     }
 
     private void startJetty() {

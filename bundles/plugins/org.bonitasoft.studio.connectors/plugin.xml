@@ -39,7 +39,7 @@
       </command>
       <command
             defaultHandler="org.bonitasoft.studio.connectors.handler.TestConnectorWizardHandler"
-            id="org.bonitasoft.studio.connector.testConnector"
+            id="org.bonitasoft.studio.connectors.testConnector"
             name="%testConnector">
       </command>
       <command
@@ -121,7 +121,7 @@
                   style="push">
             </command>
             <separator
-                  name="org.bonitasoft.studio.application.connectoSeparator1"
+                  name="org.bonitasoft.studio.connectors.connectoSeparator1"
                   visible="true">
             </separator>
             <command
@@ -135,16 +135,16 @@
                   style="push">
             </command>
             <separator
-                  name="org.bonitasoft.studio.application.connectorSeparator4"
+                  name="org.bonitasoft.studio.connectors.connectorSeparator4"
                   visible="true">
             </separator>
             <command
-                  commandId="org.bonitasoft.studio.connector.testConnector"
+                  commandId="org.bonitasoft.studio.connectors.testConnector"
                   icon="icons/test.png"
                   style="push">
             </command>
             <separator
-                  name="org.bonitasoft.studio.application.connectorSeparator3"
+                  name="org.bonitasoft.studio.connectors.connectorSeparator3"
                   visible="true">
             </separator>
             <command
@@ -158,7 +158,7 @@
                   style="push">
             </command>
             <separator
-                  name="org.bonitasoft.studio.application.connectorSeparator5"
+                  name="org.bonitasoft.studio.connectors.connectorSeparator5"
                   visible="true">
             </separator>
             <command
