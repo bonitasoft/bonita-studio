@@ -4,7 +4,7 @@
 <target includeMode="feature" name="mirrored" sequenceNumber="45">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="false" type="InstallableUnit">
-<repository location="http://192.168.4.5/6.2/repository/"/>
+<repository location="http://repositories.rd.lan/p2/6.2"/>
 <unit id="org.uguess.tribix.feature.group" version="2.5.2.201107181644"/>
 <unit id="org.eclipse.gmf.sdk.experimental.feature.group" version="1.2.0.201108160853"/>
 <unit id="org.eclipse.gmf.sdk.feature.group" version="2.4.0.201108160853"/>

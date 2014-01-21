@@ -51,7 +51,7 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
 
     private void exportActorFilter(String connector, String fileName,
             boolean hasDependencies, boolean hasSources) throws Exception {
-        File f = new File(ProjectUtil.getBonitaStudioWorkFolder(), fileName);
+        File f = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
         final String exportPath = f.getAbsolutePath();
         SWTBotActorFilterUtil.activateExportActorFilterShell(bot);
         bot.table().select(connector);
@@ -72,7 +72,7 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         bot.button(IDialogConstants.FINISH_LABEL).click();
         bot.waitUntil(Conditions.shellIsActive("Export result"));
         bot.button(IDialogConstants.OK_LABEL).click();
-        checkExportedFile(exportPath, hasDependencies, hasSources);
+        checkExportedFile(exportPath,fileName, hasDependencies, hasSources);
     }
 
     @Test
@@ -104,12 +104,13 @@ public class SWTBotActorFilterExportTests extends SWTBotGefTestCase {
         exportActorFilter(userActorFilter, fileName, false, true);
     }
 
-    private void checkExportedFile(String fileName, boolean hasDependencies,
+    private void checkExportedFile(String path,String fileName, boolean hasDependencies,
             boolean hasSources) throws Exception {
-        File zipFile = new File(fileName);
+        File zipFile = new File(path+File.separator+fileName);
         assertTrue("actor filter zip file was not created", zipFile.exists());
-        String dirName = fileName.substring(0, fileName.lastIndexOf("."));
-        File destDir = new File(dirName);
+      //  String dirName = path.substring(0, path.lastIndexOf("."));
+        File destDir = new File(ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath());
+        String dirName = path.substring(0, path.lastIndexOf("."));
         IProgressMonitor monitor = new NullProgressMonitor();
         try{
         	PlatformUtil.unzipZipFiles(zipFile, destDir, monitor);
