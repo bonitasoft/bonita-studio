@@ -146,7 +146,8 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
         return featuresByFamily.get(family);
     }
 
-    public void applyChanges()  {
+    @SuppressWarnings("unchecked")
+	public void applyChanges()  {
         String profileName =  ProfilePlugin.getDefault().getPreferenceStore().getString(PREF_ACTIVE_PROFILE) ;
         ICategory[] categories = WorkbenchActivityHelper.resolveCategories(workingCopy,getAllFeature()) ;
         Set activitySet = new HashSet() ;
@@ -166,8 +167,12 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
 
         activitySet.addAll(workingCopy.getEnabledActivityIds());
         workingCopy.setEnabledActivityIds(activitySet);
+      
+
         PlatformUI.getWorkbench().getActivitySupport().setEnabledActivityIds(workingCopy.getEnabledActivityIds()) ;
+   
     }
+
 
     private void startJetty() {
         IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.engine.preEngineAction"); //$NON-NLS-1$
