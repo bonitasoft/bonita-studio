@@ -115,7 +115,7 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
 
         bot.waitUntil(Conditions.widgetIsEnabled(bot.button(IDialogConstants.FINISH_LABEL)),10000);
         bot.button(IDialogConstants.FINISH_LABEL).click();
-
+       
         bot.waitUntil(Conditions.shellCloses(shell));
 
         OrganizationRepositoryStore store = (OrganizationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(OrganizationRepositoryStore.class);
@@ -132,8 +132,12 @@ public class OrganizationCreationTest extends SWTBotGefTestCase {
         for(User u : orga.getUsers().getUser()){
             assertNotNull(u.getMetaDatas());
         }
+
+
         synchronizeOrganization(organizationName,user1);
         synchronizeOrganization("ACME","walter.bates");
+
+
     }
 
     private void addNewUSer(String username,String firstName, String lastName,String manager,

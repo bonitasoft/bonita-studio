@@ -196,6 +196,7 @@ public class PasteCoolbarItem implements IBonitaContributionItem,ISelectionChang
 			item.setImage(Pics.getImage(PicsConstants.coolbar_paste_16)) ;
 			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_paste_disabled_16));
         }
+        item.setEnabled(false);
         item.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {

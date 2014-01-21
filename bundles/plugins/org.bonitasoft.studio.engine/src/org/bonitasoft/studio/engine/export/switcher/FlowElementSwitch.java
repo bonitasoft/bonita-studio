@@ -199,7 +199,7 @@ public class FlowElementSwitch extends AbstractSwitch {
 		final ReceiveTaskDefinitionBuilder taskBuilder = builder.addReceiveTask(receiveTask.getName(), messageName);
 		if(messageName != null){
 			for(Operation operation : receiveTask.getMessageContent()){
-				taskBuilder.addMessageOperation(EngineExpressionUtil.createOperationForMessageContent(operation)) ;
+				taskBuilder.addMessageOperation(EngineExpressionUtil.createOperationForMessageContent(operation));
 			}	
 			if(receiveTask.getCorrelation() != null){
 				for(ListExpression row : receiveTask.getCorrelation().getExpressions()){

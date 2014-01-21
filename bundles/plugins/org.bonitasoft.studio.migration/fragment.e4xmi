@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmi:id="_HhyScPhPEeKwyvgazXLRgA">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_HhyScfhPEeKwyvgazXLRgA" featurename="descriptors" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_HhyScvhPEeKwyvgazXLRgA" elementId="org.bonitasoft.studio.migration.view" label="%importStatusReport" iconURI="platform:/plugin/org.bonitasoft.studio.migration/icons/Report.png" closeable="true" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView">
+      <menus xmi:id="_HhySc_hPEeKwyvgazXLRgA" elementId="org.bonitasoft.studio.migration.view">
+        <tags>ViewMenu</tags>
+      </menus>
+      <toolbar xmi:id="_HhySdPhPEeKwyvgazXLRgA" elementId="org.bonitasoft.studio.migration.view"/>
+    </elements>
+  </fragments>
+</fragment:ModelFragments>

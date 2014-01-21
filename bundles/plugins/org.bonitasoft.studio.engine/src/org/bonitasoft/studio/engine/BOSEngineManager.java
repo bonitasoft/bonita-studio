@@ -48,6 +48,12 @@ import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.NotEnabledException;
+import org.eclipse.core.commands.NotHandledException;
+import org.eclipse.core.commands.Parameterization;
+import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -55,6 +61,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * @author Romain Bioteau
@@ -230,15 +237,14 @@ public class BOSEngineManager {
 		if(!isOrganizationLoaded()){
 			if(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.LOAD_ORGANIZATION)) {
 				ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
+				IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class) ;
 				Command cmd = service.getCommand(INSTALL_ORGANIZATION_CMD_ID) ;
-				Map<String, String> parameters = new HashMap<String, String>() ;
 				String artifactId = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.DEFAULT_ORGANIZATION) ;
-				parameters.put("artifact", artifactId+".organization") ;
-				ExecutionEvent ee = new ExecutionEvent(cmd,parameters,null,null);
 				try {
-					cmd.executeWithChecks(ee) ;
+					Parameterization p = new Parameterization(cmd.getParameter("artifact"), artifactId+".organization");
+					handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[]{p}), null);
 				} catch (Exception e) {
-					BonitaStudioLog.error(e) ;
+					BonitaStudioLog.error(e);
 				}
 			}
 			organizationLoaded = true;

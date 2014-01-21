@@ -27,8 +27,11 @@ import java.util.Properties;
 import org.bonitasoft.studio.common.editingdomain.BonitaOperationHistory;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.internal.resources.PreferenceInitializer;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.osgi.service.datalocation.Location;
@@ -61,7 +64,6 @@ public class BonitaStudioApplication implements IApplication {
      */
     @Override
     public Object start(IApplicationContext context) {
-
         START_TIME = System.currentTimeMillis() ;
 
         if (display == null) {

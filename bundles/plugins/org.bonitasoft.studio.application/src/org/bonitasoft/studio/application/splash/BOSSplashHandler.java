@@ -17,7 +17,7 @@
  */
 package org.bonitasoft.studio.application.splash;
 
-import org.bonitasoft.studio.common.repository.Messages;
+import org.bonitasoft.studio.application.i18n.Messages;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -327,6 +327,11 @@ public class BOSSplashHandler extends AbstractSplashHandler {
             });
 
         }
+        
+        @Override
+        public void subTask(String name) {
+        	super.subTask("");
+        }
 
         /*
          * (non-Javadoc)
@@ -343,8 +348,7 @@ public class BOSSplashHandler extends AbstractSplashHandler {
                     if (isDisposed()) {
                         return;
                     }
-                    CustomAbsolutePositionProgressMonitorPart.super
-                    .internalWorked(work);
+                    CustomAbsolutePositionProgressMonitorPart.super.internalWorked(work);
                 }
             });
 

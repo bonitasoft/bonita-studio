@@ -222,7 +222,7 @@ public class FormsUtils {
 
         /* open the form editor */
         FormDiagramEditor formEditor = (FormDiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, form.getName()));
-        // form.eAdapters().add(new EObjectAdapter(form))
+        formEditor.getDiagramGraphicalViewer().select(formEditor.getDiagramEditPart());
         EList<Adapter> eAdapters = form.eAdapters();
         boolean alreadyHere = false;
         for (Adapter adapter : eAdapters) {

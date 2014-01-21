@@ -70,10 +70,10 @@ public class Messages extends NLS {
 	public static String invalidWorkspace;
 	public static String failedToOpenLogTitle;
 	public static String failedToOpenLogMessage;
-
 	public static String doNotDisplayForOtherDiagrams;
-
+	public static Object openingStudio;
 	public static String noProcessAvailable;
+
 
 
 

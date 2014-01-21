@@ -63,7 +63,6 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Aurelien Pupier
@@ -96,6 +95,7 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 				getViewer().getEditDomain().getCommandStack().execute(command);
 				insertOnSequenceFlow(command,getTargetEditPart(),getViewer(),true);
 				selectAddedObject(getViewer(),DiagramCommandStack.getReturnValues(command));
+				getViewer().getEditDomain().loadDefaultTool();
 			} else {
 				getCurrentEvent().detail = DND.DROP_NONE;
 			}
@@ -144,8 +144,8 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 			Object object = i.next();
 			if (object instanceof IAdaptable) {
 				Object editPart =
-						viewer.getEditPartRegistry().get(
-								((IAdaptable)object).getAdapter(View.class));
+					viewer.getEditPartRegistry().get(
+						((IAdaptable)object).getAdapter(View.class));
 				if (editPart != null)
 					editparts.add(editPart);
 			}
@@ -159,15 +159,15 @@ public class PaletteToolTransferDropTargetListenerWithSelection extends	PaletteT
 					viewer.setSelection(new StructuredSelection(editPart));
 					if ( editPart.isActive() ) {
 						revealEditPart(editPart);
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().setFocus();
 						editPart.performRequest(new Request(RequestConstants.REQ_DIRECT_EDIT));
+						revealEditPart(editPart);
 					}
 				}
 			});
-
 		}
 	}
 
+	
 	/**
 	 * Reveals the newly created editpart
 	 * @param editPart

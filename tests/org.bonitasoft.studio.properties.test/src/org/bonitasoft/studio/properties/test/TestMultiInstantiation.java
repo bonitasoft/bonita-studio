@@ -35,6 +35,8 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;
@@ -50,6 +52,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -75,7 +78,15 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
     public static void tearDownAfterClass() {
         FileActionDialog.setDisablePopup(disablePopup);
     }
+    
+   
 
+    @Override
+    @Before
+    public void setUp() {
+    	 BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+    }
+    
     @Override
     @After
     public void tearDown() {
@@ -499,7 +510,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         // set name and type
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         if(widgetLabel!=null){
-            bot.text(2).setText(widgetLabel);
+            bot.text(3).setText(widgetLabel);
         }
 
         bot.comboBoxWithLabel(formFieldType).setSelection(widgetFieldType);

@@ -120,6 +120,7 @@ public class AssignableActorsPropertySection extends AbstractActorsPropertySecti
 		radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(3, 1).create()) ;
 		radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).create()) ;
 
+
 		taskActorButton = widgetFactory.createButton(radioComposite, Messages.useTaskActors, SWT.RADIO) ;
 		useLaneActorButton = widgetFactory.createButton(radioComposite, Messages.useActorsDefinedInLane, SWT.RADIO) ;
 		actorDefinedInLaneLabel = widgetFactory.createLabel(radioComposite, "");

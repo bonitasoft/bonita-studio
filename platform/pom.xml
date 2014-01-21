@@ -9,8 +9,26 @@
 	<version>6.3.0-SNAPSHOT</version>
 	<packaging>eclipse-target-definition</packaging>
 
+	<pluginRepositories>
+		<pluginRepository>
+			<layout>default</layout>
+			<id>JBoss Snapshots</id>
+			<name>JBoss Snapshots</name>
+			<url>http://snapshots.jboss.org/maven2/</url>
+			<snapshots>
+				<updatePolicy>always</updatePolicy>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.eclipse.tycho.extras</groupId>
 				<artifactId>target-platform-validation-plugin</artifactId>
@@ -32,6 +50,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>studio</artifactId>
@@ -101,6 +120,27 @@
 			<id>mirror-tp</id>
 			<build>
 				<plugins>
+					<!-- <plugin> -->
+					<!-- <groupId>org.jboss.tools.tycho-plugins</groupId> -->
+					<!-- <artifactId>target-platform-utils</artifactId> -->
+					<!-- <version>0.19.0-SNAPSHOT</version> -->
+					<!-- <executions> -->
+					<!-- <execution> -->
+					<!-- <id>create-mirror-repo</id> -->
+					<!-- <phase>install</phase> -->
+					<!-- <goals> -->
+					<!-- <goal>mirror-target-to-repo</goal> -->
+					<!-- </goals> -->
+					<!-- <configuration> -->
+					<!-- <targetFile>original_platform.target</targetFile> -->
+					<!-- <includeSources>true</includeSources> -->
+					<!-- <sourceTargetFile>platform.target</sourceTargetFile> -->
+					<!-- <targetRepositoryUrl>http://repositories.rd.lan/p2/6.3</targetRepositoryUrl> -->
+					<!-- </configuration> -->
+					<!-- </execution> -->
+					<!-- </executions> -->
+					<!-- </plugin> -->
+
 					<plugin>
 						<groupId>org.eclipse.tycho.extras</groupId>
 						<artifactId>tycho-p2-extras-plugin</artifactId>
@@ -115,25 +155,12 @@
 						</executions>
 						<configuration>
 							<source>
-								<!--source repositories to mirror from -->
 								<repository>
 									<url>http://tribix.sourceforge.net/update</url>
 									<layout>p2</layout>
 								</repository>
 								<repository>
-									<url>http://download.eclipse.org/modeling/gmp/gmf-tooling/updates/releases-2.4.0/</url>
-									<layout>p2</layout>
-								</repository>
-								<repository>
-									<url>http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/</url>
-									<layout>p2</layout>
-								</repository>
-								<repository>
-									<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</url>
-									<layout>p2</layout>
-								</repository>
-								<repository>
-									<url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</url>
+									<url>http://download.eclipse.org/technology/swtbot/releases/latest/</url>
 									<layout>p2</layout>
 								</repository>
 								<repository>
@@ -149,129 +176,78 @@
 									<layout>p2</layout>
 								</repository>
 								<repository>
-									<url>http://download.eclipse.org/modeling/emft/texo/updates/interim</url>
+									<url>http://download.eclipse.org/modeling/emft/texo/updates/milestones/0.1.0M1/</url>
 									<layout>p2</layout>
 								</repository>
 								<repository>
-									<url>http://community.polarion.com/projects/subversive/download/eclipse/2.0/indigo-site/</url>
+									<url>http://community.polarion.com/projects/subversive/download/eclipse/3.0/kepler-site/</url>
 									<layout>p2</layout>
 								</repository>
 								<repository>
-									<url>http://download.eclipse.org/releases/indigo</url>
+									<url>http://download.eclipse.org/releases/kepler/</url>
 									<layout>p2</layout>
 								</repository>
 								<repository>
-									<url>http://dist.springsource.org/release/GRECLIPSE/e3.7/</url>
+									<url>http://dist.springsource.org/release/GRECLIPSE/e4.3/</url>
 									<layout>p2</layout>
 								</repository>
 								<repository>
-									<url>http://download.eclipse.org/technology/babel/update-site/R0.11.0/indigo</url>
+									<url>http://download.eclipse.org/technology/babel/update-site/R0.11.1/kepler</url>
+									<layout>p2</layout>
+								</repository>
+								<repository>
+									<url>http://download.eclipse.org/modeling/emf/compare/updates/releases/1.2/</url>
 									<layout>p2</layout>
 								</repository>
 							</source>
-
-							<!-- starting from here all configuration parameters are optional -->
-							<!-- they are only shown here with default values for documentation 
-								purpose -->
-
-							<!-- List of IUs to mirror. If omitted, allIUs will be mirrored. -->
-							<!-- Omitted IU version element means latest version of the IU -->
 							<ius>
 								<iu>
-									<id>org.eclipse.rcp.feature.group</id>
-								</iu>
-								<iu>
-									<id>org.uguess.tribix.feature.group</id>
-									<version>2.5.2.201107181644</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.gmf.sdk.experimental.feature.group</id>
-									<version>1.2.0.201108160853</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.gmf.sdk.feature.group</id>
-									<version>2.4.0.201108160853</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.gmf.tooling.feature.group</id>
-									<version>2.4.0.201108160853</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.xtend.m2e.feature.group</id>
-									<version>2.3.1.v201208210947</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.xtend.sdk.feature.group</id>
-									<version>2.3.1.v201208210947</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.xtext.xbase.feature.group</id>
-									<version>2.3.1.v201208210947</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.xtext.runtime.feature.group</id>
-									<version>2.3.1.v201208210947</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.xtext.sdk.feature.group</id>
-									<version>2.3.1.v201208210947</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.xtext.ui.feature.group</id>
-									<version>2.3.1.v201208210947</version>
-								</iu>
-								<iu>
-									<id>org.apache.commons.logging</id>
-									<version>1.1.1.v201101211721</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.swtbot.eclipse.feature.group</id>
-									<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
+									<id>org.eclipse.emf.compare.all.feature.group</id>
+									<version>1.2.2.v20120214-0915</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.swtbot.eclipse.gef.feature.group</id>
-									<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.swtbot.ide.feature.group</id>
-									<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.swtbot.eclipse.test.junit4.feature.group</id>
-									<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
+									<version>2.1.1.201307101628</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.swtbot.forms.feature.group</id>
-									<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
+									<version>2.1.1.201307101628</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.swtbot.eclipse.feature.group</id>
+									<version>2.1.1.201307101628</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.swtbot.feature.group</id>
-									<version>2.0.5.20111003_1754-3676ac8-dev-e36</version>
+									<version>2.1.1.201307101628</version>
 								</iu>
 								<iu>
-									<id>org.eclipse.emf.edapt.recorder.feature.feature.group</id>
+									<id>org.eclipse.swtbot.eclipse.test.junit.feature.group</id>
+									<version>2.1.1.201307101628</version>
 								</iu>
 								<iu>
-									<id>org.eclipse.emf.edapt.recorder.sdk.feature.feature.group</id>
+									<id>org.polarion.eclipse.team.svn.connector.svnkit16.feature.group</id>
+									<version>3.0.2.I20130808-1700</version>
 								</iu>
 								<iu>
-									<id>org.eclipse.emf.edapt.runtime.feature.feature.group</id>
+									<id>org.polarion.eclipse.team.svn.connector.feature.group</id>
+									<version>3.0.4.I20131116-1700</version>
 								</iu>
 								<iu>
-									<id>org.eclipse.emf.edapt.runtime.sdk.feature.feature.group</id>
+									<id>org.polarion.eclipse.team.svn.connector.svnkit17.feature.group</id>
+									<version>3.0.3.I20130920-1700</version>
 								</iu>
 								<iu>
-									<id>com.sun.syndication</id>
-									<version>0.9.0.v200803061811</version>
+									<id>org.codehaus.groovy.jdt.patch.feature.group</id>
+									<version>2.8.0.xx-20130703-1600-e43-RELEASE</version>
 								</iu>
 								<iu>
-									<id>org.eclipse.nebula.widgets.gallery.feature.feature.group</id>
+									<id>org.codehaus.groovy.eclipse.feature.feature.group</id>
+									<version>2.8.0.xx-20130703-1600-e43-RELEASE</version>
 								</iu>
 								<iu>
-									<id>org.eclipse.nebula.widgets.tablecombo.feature.feature.group</id>
-								</iu>
-								<iu>
-									<id>org.eclipse.emf.texo.feature.group</id>
+									<id>org.codehaus.groovy18.feature.feature.group</id>
+									<version>2.8.0.xx-20130703-1600-e43-RELEASE</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.emf.texo.sdk.feature.group</id>
@@ -280,254 +256,169 @@
 									<id>org.eclipse.emf.texo.runtime.core.feature.group</id>
 								</iu>
 								<iu>
-									<id>org.polarion.eclipse.team.svn.connector.feature.group</id>
-									<version>2.2.2.I20110602-1700</version>
+									<id>org.eclipse.emf.edapt.recorder.sdk.feature.feature.group</id>
 								</iu>
 								<iu>
-									<id>org.polarion.eclipse.team.svn.connector.svnkit15.feature.group</id>
-									<version>2.2.2.I20110602-1700</version>
+									<id>org.eclipse.emf.edapt.runtime.sdk.feature.feature.group</id>
 								</iu>
 								<iu>
-									<id>org.polarion.eclipse.team.svn.connector.svnkit16.feature.group</id>
-									<version>2.2.2.I20110602-1700</version>
+									<id>org.uguess.tribix.feature.group</id>
+									<version>2.5.2.201107181644</version>
 								</iu>
 								<iu>
-									<id>org.polarion.eclipse.team.svn.connector.source.feature.group</id>
-									<version>2.2.2.I20110602-1700</version>
+									<id>com.sun.syndication</id>
+									<version>0.9.0.v200803061811</version>
 								</iu>
 								<iu>
-									<id>org.codehaus.groovy18.feature.feature.group</id>
-									<version>2.8.0.xx-20130703-1500-e37-RELEASE</version>
-								</iu>
-								<iu>
-									<id>org.codehaus.groovy20.feature.feature.group</id>
-									<version>2.8.0.xx-20130703-1500-e37-RELEASE</version>
-								</iu>
-								<iu>
-									<id>org.codehaus.groovy21.feature.feature.group</id>
-									<version>2.8.0.xx-20130703-1500-e37-RELEASE</version>
-								</iu>
-								<iu>
-									<id>org.codehaus.groovy.jdt.patch.feature.group</id>
-									<version>2.8.0.xx-20130703-1500-e37-RELEASE</version>
-								</iu>								
-								<iu>
-									<id>org.codehaus.groovy.eclipse.feature.feature.group</id>
-									<version>2.8.0.xx-20130703-1500-e37-RELEASE</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.birt.feature.group</id>
-									<version>3.7.2.v20120213-BDF9E9bGTzuHh03p2c0AWvmC3Ltk</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.team.svn.resource.ignore.rules.jdt.feature.group</id>
-									<version>0.7.9.I20110602-1700</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.team.svn.feature.group</id>
-									<version>0.7.9.I20110819-1700</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.datatools.enablement.sdk.feature.feature.group</id>
-									<version>1.9.2.v201109161655-7I9O7XFE9Jfxu0wIxMQtoLz0X-dE</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.datatools.sdk.feature.feature.group</id>
-									<version>1.9.2.v201109161655-7PA37eFEpPYv5_Ae3-6EjC5ZX4e5</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.rcp.source.feature.group</id>
-									<version>3.7.2.v20120120-1424-9DB5FmnFq5JCf1UA38R-kz0S0272</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.emf.sdk.feature.group</id>
-									<version>2.7.2.v20120130-0943</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.equinox.sdk.feature.group</id>
-									<version>3.7.1.R37x_v20110907-7M7W8i8eNV4WsRkue-4Vq4J6pCyW</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.pde.feature.group</id>
-									<version>3.7.2.v20120120-1420-7b7rFUOFEx2Xnqafnpz0E--0</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.emf.ecoretools.sdk.feature.group</id>
-									<version>1.0.0.v20110608-1633</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.emf.compare.feature.group</id>
-									<version>1.2.2.v20120214-0915</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.emf.compare.sdk.feature.group</id>
-									<version>1.2.2.v20120214-0915</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.emf.transaction.sdk.feature.group</id>
-									<version>1.5.1.v20110823-1800-777T19A_WsXmjNatPxcrPm1rOKlH</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.emf.oda.sdk.feature.group</id>
-									<version>1.0.2.v20120130-0943</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.emf.validation.sdk.feature.group</id>
-									<version>1.5.0.v20110502-1600-67O-96SGR55YJeZPedcQnghI6uFA</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.gef.sdk.feature.group</id>
-									<version>3.7.2.v20110927-2020-7G7W77A5WNgIRPdWXDIbNTSQPdQL</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.gmf.runtime.notation.sdk.feature.group</id>
-									<version>1.5.0.v20110426-2159-47D08xGD6ExNBM7CIJa3CIKK9t84</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.gmf.feature.group</id>
-									<version>1.5.0.v20110607-1200-7d9Q7HFYnmMEynz0X0qrbsDiK281</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.gmf.runtime.sdk.feature.group</id>
-									<version>1.5.0.v20110607-1200-67N09E9QnChoWswz-3wf_rz0kQ8Y</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.gmf.runtime.sdk.feature.group</id>
-									<version>1.5.0.v20110607-1200-67N09E9QnChoWswz-3wf_rz0kQ8Y</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.m2m.qvt.oml.sdk.feature.group</id>
-									<version>3.1.0.v20110314-1530-7U7A-CL5RuMpMxGs7uZhafWQlGUu</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.xsd.sdk.feature.group</id>
-									<version>2.7.1.v20120130-0943</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.jdt.feature.group</id>
-									<version>3.7.2.v20120120-1414-7z8gFcuFMP7BW5XTz0jLTnz0l9B1</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.wst.xml_ui.feature.feature.group</id>
-									<version>3.3.2.v201112072049-7H7EFZ7DxumTmce4khcSkIiqoD8eDMKlT8Oz011P</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.jst.ws.cxf.feature.feature.group</id>
-									<version>1.0.100.v201105171845-7H77DRFAKlZgjHCaHg65uE6I6I</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.wst.web_ui.feature.feature.group</id>
-									<version>3.3.2.v201111030500-7O7IFj6EMjB7yO1Xs_G1kMtQeOye6HTXFWve95_R</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.jst.server_adapters.feature.feature.group</id>
-									<version>3.2.100.v20110303-208Z7w31211419</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.jst.server_adapters.ext.feature.feature.group</id>
-									<version>3.3.2.v20111010_1242-777HFHzCcNBDjCbIUfEEE3</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.jst.server_ui.feature.feature.group</id>
-									<version>3.3.0.v201102200555-7A6FHr9xFcAVCFLZBBJLIR43A</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.jst.webpageeditor.feature.feature.group</id>
-									<version>2.3.6.v201201181342-46AB9oB5885D6R5D86</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.wst.server_adapters.feature.feature.group</id>
-									<version>3.2.100.v20110303-51EoAkF77g8HBSc</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.babel.nls_tools.gef_fr.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.babel.nls_eclipse_fr.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.babel.nls_eclipse_de.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.babel.nls_tools.gef_de.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.babel.nls_tools.gef_it.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.babel.nls_eclipse_it.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
+									<id>org.objectweb.asm</id>
+									<version>3.1.0.v200803061910</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_pt.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
-									<id>org.eclipse.babel.nls_tools.gef_pt.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
+									<id>org.eclipse.babel.nls_eclipse_it.feature.group</id>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
-									<id>org.eclipse.babel.nls_eclipse_pt_BR.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
+									<id>org.eclipse.babel.nls_eclipse_fr.feature.group</id>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
-									<id>org.eclipse.babel.nls_tools.gef_pt_BR.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
+									<id>org.eclipse.babel.nls_eclipse_de.feature.group</id>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_es.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
-								</iu>
-								<iu>
-									<id>org.eclipse.babel.nls_tools.gef_es.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
 									<id>org.eclipse.babel.nls_eclipse_ja.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
+									<version>4.3.0.v20131123020001</version>
 								</iu>
 								<iu>
-									<id>org.eclipse.babel.nls_tools.gef_ja.feature.group</id>
-									<version>3.7.0.v20130724081219</version>
+									<id>org.eclipse.nebula.widgets.gallery.feature.feature.group</id>
+								</iu>
+								<iu>
+									<id>org.eclipse.nebula.widgets.tablecombo.feature.feature.group</id>
+								</iu>
+								<iu>
+									<id>org.eclipse.xsd.sdk.feature.group</id>
+									<version>2.9.1.v20130902-0605</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.emf.sdk.feature.group</id>
+									<version>2.9.1.v20130902-0605</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.wst.xml_ui.feature.feature.group</id>
+									<version>3.5.1.v201307171524-7H7IFiwDxumVt0J7gijShVTqs4BePbKwUtS9PL</version>
+								</iu>
+								
+								<iu>
+									<id>org.eclipse.wst.web_ui.feature.feature.group</id>
+									<version>3.5.1.v201307171524-7O7QG2NEMkBS3C2az0gQwwALctEj3DZPgTEZceV4</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.gmf.runtime.sdk.feature.group</id>
+									<version>1.7.0.201306111432</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.ocl.all.sdk.feature.group</id>
+									<version>4.1.1.v20130916-1423</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.xtext.sdk.feature.group</id>
+									<version>2.4.3.v201309030823</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.gmf.sdk.feature.group</id>
+									<version>3.1.0.201306121424</version>
+								</iu>
+								
+								<iu>
+									<id>org.eclipse.e4.rcp.feature.group</id>
+									<version>1.2.1.v20130910-2014</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.wst.server_adapters.feature.feature.group</id>
+									<version>3.2.300.v20130502_0936-7L3FD9CcNBGWBgJUl7NCO</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.m2m.qvt.oml.sdk.feature.group</id>
+									<version>3.3.0.v20130611-0213</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.datatools.sdk.feature.feature.group</id>
+									<version>1.11.1.v201306041610-7PAi7MFEpPZFKkfVnxDcEbuYdosB</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.jst.server_adapters.ext.feature.feature.group</id>
+									<version>3.3.104.v20130826_1426-57CFGFAkF7BI7RFJLBHKT</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.birt.feature.group</id>
+									<version>4.3.1.v201308301349-DTDN8fGjtEqcbZz0BQWLW07D_cfT</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.jst.ws.cxf.feature.feature.group</id>
+									<version>1.1.100.v201302202059-7H79FMfFAKldNxGz0bPo0kz0D8798</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.team.svn.feature.group</id>
+									<version>1.1.1.I20130816-1700</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.platform.feature.group</id>
+									<version>4.3.1.v20130911-1000</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.jst.server_adapters.feature.feature.group</id>
+									<version>3.2.201.v20130123_1813-20A87w31241234a2924</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.datatools.enablement.sdk.feature.feature.group</id>
+									<version>1.11.1.v201306041610-7I9v7GFE9JgQNnB2SXR1TRYbUu1j</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.gmf.runtime.notation.sdk.feature.group</id>
+									<version>1.7.0.201306101425</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.jdt.feature.group</id>
+									<version>3.9.1.v20130911-1000</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.pde.feature.group</id>
+									<version>3.9.1.v20130911-1000</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.gef.sdk.feature.group</id>
+									<version>3.9.1.201308190730</version>
+								</iu>
+								<iu>
+									<id>org.eclipse.equinox.sdk.feature.group</id>
+									<version>3.9.0.v20130828-0031</version>
 								</iu>
 							</ius>
-							<!-- The destination directory to mirror to. -->
 							<destination>${project.build.directory}/repository</destination>
-							<!-- Whether only strict dependencies should be followed. -->
-							<!-- "strict" means perfect version match -->
 							<followStrictOnly>false</followStrictOnly>
-							<!-- Whether or not to follow optional requirements. -->
 							<includeOptional>true</includeOptional>
-							<!-- Whether or not to follow non-greedy requirements. -->
 							<includeNonGreedy>true</includeNonGreedy>
-							<!-- Filter properties. E.g. filter only one platform -->
-							<!-- <filter> -->
-							<!-- <osgi.os>linux</osgi.os> -->
-							<!-- <osgi.ws>gtk</osgi.ws> -->
-							<!-- <osgi.arch>x86_64</osgi.arch> -->
-							<!-- </filter> -->
-							<!-- Whether to filter the resulting set of IUs to only -->
-							<!-- include the latest version of each IU -->
+							<followOnlyFilteredRequirements>false</followOnlyFilteredRequirements>
 							<latestVersionOnly>false</latestVersionOnly>
-							<!-- don't mirror artifacts, only metadata -->
 							<mirrorMetadataOnly>false</mirrorMetadataOnly>
-							<!-- whether to compress the content.xml/artifacts.xml -->
 							<compress>false</compress>
-							<!-- whether to append to the target repository content -->
 							<append>true</append>
-							<!-- whether to mirror pack200 artifacts also. Available since tycho-extras 
-								0.17.0 -->
-							<!-- <includePacked>true</includePacked> -->
+							<includePacked>true</includePacked>
 						</configuration>
 					</plugin>
 				</plugins>
 			</build>
+
 		</profile>
 	</profiles>
+
 
 </project>

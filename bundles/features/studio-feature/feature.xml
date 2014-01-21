@@ -18,7 +18,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.rcp" version="3.7.1.r37x_v20110729-9DB5FmNFnFLSFCtLxnRfMqt15A4A" match="greaterOrEqual"/>
+      <import feature="org.eclipse.rcp" version="4.3.1.v20130911-1000" match="greaterOrEqual"/>
       <import feature="org.eclipse.wst.web_ui.feature"/>
       <import feature="platform-specific-feature" version="6.3.0" match="equivalent"/>
    </requires>
@@ -95,13 +95,6 @@
 
    <plugin
          id="org.bonitasoft.studio.engine"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.presentation"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -452,6 +445,20 @@
          id="org.codehaus.groovy"
          download-size="0"
          install-size="0"
-         version="1.8.6.xx-20130703-1500-e37-RELEASE"/>
+         version="1.8.6.xx-20130703-1600-e43-RELEASE"/>
+
+   <plugin
+         id="org.eclipse.ui.views.properties.tabbed"
+         download-size="0"
+         install-size="0"
+         version="3.6.0.v20130515-1900"
+         unpack="false"/>
+
+   <plugin
+         id="org.objectweb.asm"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

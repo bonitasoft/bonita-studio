@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.commands.test;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.diagram.custom.editPolicies.NextElementEditPolicy;
 import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
@@ -251,8 +252,7 @@ public class CopyPasteTests extends SWTBotGefTestCase {
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
         bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).setFocus();
 
-
-        bot.tree().select("Step1");
+        bot.treeWithId(SWTBotConstants.APPLICATION_SECTION_FORMS_SELECTION_TREE).getTreeItem("Step1").select();
         bot.button("Edit").click();
 
         assertTrue("Not form editor open", bot.activeEditor().getReference().getEditor(false) instanceof FormDiagramEditor);

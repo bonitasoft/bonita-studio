@@ -22,6 +22,7 @@
 	public void init(org.eclipse.ui.IActionBars bars, org.eclipse.ui.IWorkbenchPage page) {
 		super.init(bars, page);
 		bars.getMenuManager().removeAll();
+	    bars.getToolBarManager().removeAll();
 	}
 «ENDAROUND»
 

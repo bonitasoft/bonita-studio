@@ -104,52 +104,52 @@ public class SwitchPaletteMode extends AbstractHandler {
 	 * ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		String parameter = event.getParameter("org.bonitasoft.studio.application.switch.advanced");
-
-		IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		if (activeEditor instanceof ProcessDiagramEditor) {
-			String mode;
-			if (parameter != null) {
-				mode = parameter;
-			} else {
-				mode = SIMPLE;
-			}
-
-			ProcessDiagramEditor processEditor = (ProcessDiagramEditor) activeEditor;
-			PaletteRoot paletteRoot = processEditor.getPaletteRoot();
-			PaletteViewer paletteViewer = ((DiagramEditDomain) processEditor.getDiagramEditDomain()).getPaletteViewer();
-			if (mode.equals(SIMPLE)) {
-				paletteViewer.getPaletteViewerPreferences().setLayoutSetting(PaletteViewerPreferences.LAYOUT_LIST);
-				List<?> children = ((PaletteContainer) paletteRoot.getChildren().get(1)).getChildren();
-				for (int i = 0; i < children.size(); i++) {
-					Object item = children.get(i);
-					if (item instanceof PaletteEntry) {
-						PaletteEntry entry = (PaletteEntry) item;
-						storePaletteState(entry);
-						entry.setVisible(simplePaletteItems.contains(i));
-					}
-
-				}
-			} else {
-				if (mode.equals(ICONES)) {
-					paletteViewer.getPaletteViewerPreferences().setLayoutSetting(PaletteViewerPreferences.LAYOUT_ICONS);
-				} else {
-					paletteViewer.getPaletteViewerPreferences().setLayoutSetting(PaletteViewerPreferences.LAYOUT_LIST);
-				}
-				List<?> children = ((PaletteContainer) paletteRoot.getChildren().get(1)).getChildren();
-				for (int i = 0; i < children.size(); i++) {
-					Object item = children.get(i);
-					if (item instanceof PaletteEntry) {
-						PaletteEntry entry = (PaletteEntry) item;
-						storePaletteState(entry);
-						entry.setVisible(true);
-					}
-
-				}
-			}
-			save();
-			paletteViewer.getControl().getParent().layout();
-		}
+//		String parameter = event.getParameter("org.bonitasoft.studio.application.switch.advanced");
+//
+//		IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+//		if (activeEditor instanceof ProcessDiagramEditor) {
+//			String mode;
+//			if (parameter != null) {
+//				mode = parameter;
+//			} else {
+//				mode = SIMPLE;
+//			}
+//
+//			ProcessDiagramEditor processEditor = (ProcessDiagramEditor) activeEditor;
+//			PaletteRoot paletteRoot = processEditor.getPaletteRoot();
+//			PaletteViewer paletteViewer = ((DiagramEditDomain) processEditor.getDiagramEditDomain()).getPaletteViewer();
+//			if (mode.equals(SIMPLE)) {
+//				paletteViewer.getPaletteViewerPreferences().setLayoutSetting(PaletteViewerPreferences.LAYOUT_LIST);
+//				List<?> children = ((PaletteContainer) paletteRoot.getChildren().get(1)).getChildren();
+//				for (int i = 0; i < children.size(); i++) {
+//					Object item = children.get(i);
+//					if (item instanceof PaletteEntry) {
+//						PaletteEntry entry = (PaletteEntry) item;
+//						storePaletteState(entry);
+//						entry.setVisible(simplePaletteItems.contains(i));
+//					}
+//
+//				}
+//			} else {
+//				if (mode.equals(ICONES)) {
+//					paletteViewer.getPaletteViewerPreferences().setLayoutSetting(PaletteViewerPreferences.LAYOUT_ICONS);
+//				} else {
+//					paletteViewer.getPaletteViewerPreferences().setLayoutSetting(PaletteViewerPreferences.LAYOUT_LIST);
+//				}
+//				List<?> children = ((PaletteContainer) paletteRoot.getChildren().get(1)).getChildren();
+//				for (int i = 0; i < children.size(); i++) {
+//					Object item = children.get(i);
+//					if (item instanceof PaletteEntry) {
+//						PaletteEntry entry = (PaletteEntry) item;
+//						storePaletteState(entry);
+//						entry.setVisible(true);
+//					}
+//
+//				}
+//			}
+//			save();
+//			paletteViewer.getControl().getParent().layout();
+//		}
 
 		return null;
 	}

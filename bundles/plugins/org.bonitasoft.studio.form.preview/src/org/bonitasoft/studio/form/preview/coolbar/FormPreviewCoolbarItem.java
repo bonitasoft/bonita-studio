@@ -196,6 +196,7 @@ public class FormPreviewCoolbarItem implements IBonitaContributionItem {
 			item.setImage(Pics.getImage(PicsConstants.coolbar_preview_16)) ;
 			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_preview_disabled_16));
 		}
+		item.setEnabled(false);
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

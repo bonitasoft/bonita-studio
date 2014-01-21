@@ -25,7 +25,9 @@ import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.ui.IEditorInput;
@@ -40,94 +42,121 @@ import org.junit.runner.RunWith;
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class SharedEditingDomainTests extends SWTBotGefTestCase {
 
-    @Test
-    public void testOtherDiagramsAreDirty() throws ExecutionException {
-        SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
-        String editorName = botEditor.getTitle();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(editorName);
-        SWTBotEditor form1Editor = SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
-        botEditor.show();
-        SWTBotEditor form2Editor = SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
-        botEditor.show();
-        SWTBotEditor form3Editor = SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
-        botEditor.show();
+	@Test
+	public void testOtherDiagramsAreDirty() throws ExecutionException {
+		SWTBotTestUtil.createNewDiagram(bot);
+		SWTBotEditor botEditor = bot.activeEditor();
+		String editorName = botEditor.getTitle();
+		SWTBotGefEditor gmfEditor = bot.gefEditor(editorName);
+		SWTBotEditor form1Editor = SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
+		botEditor.show();
+		SWTBotEditor form2Editor = SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
+		botEditor.show();
+		SWTBotEditor form3Editor = SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
+		botEditor.show();
 
-        assertTrue("Process editor dirty", !botEditor.isDirty());
+		assertTrue("Process editor dirty", !botEditor.isDirty());
 
-        assertTrue("Form editor dirty", !form1Editor.isDirty());
-        assertTrue("Form editor dirty", !form2Editor.isDirty());
-        assertTrue("Form editor dirty", !form3Editor.isDirty());
+		assertTrue("Form editor dirty", !form1Editor.isDirty());
+		assertTrue("Form editor dirty", !form2Editor.isDirty());
+		assertTrue("Form editor dirty", !form3Editor.isDirty());
 
-        gmfEditor.activateTool(Messages.Step_title);
-        gmfEditor.click(200, 200);
+		gmfEditor.activateTool(Messages.Step_title);
+		gmfEditor.click(200, 200);
 
-        assertTrue("Process editor not dirty", botEditor.isDirty());
+		assertTrue("Process editor not dirty", botEditor.isDirty());
 
-        assertTrue("Form editor not dirty", form1Editor.isDirty());
-        assertTrue("Form editor not dirty", form2Editor.isDirty());
-        assertTrue("Form editor not dirty", form3Editor.isDirty());
+		assertTrue("Form editor not dirty", form1Editor.isDirty());
+		assertTrue("Form editor not dirty", form2Editor.isDirty());
+		assertTrue("Form editor not dirty", form3Editor.isDirty());
 
-        gmfEditor.save();
+		gmfEditor.save();
 
-        assertTrue("Process editor dirty", !botEditor.isDirty());
+		assertTrue("Process editor dirty", !botEditor.isDirty());
 
-        assertTrue("Form editor dirty", !form1Editor.isDirty());
-        assertTrue("Form editor dirty", !form2Editor.isDirty());
-        assertTrue("Form editor dirty", !form3Editor.isDirty());
-    }
+		assertTrue("Form editor dirty", !form1Editor.isDirty());
+		assertTrue("Form editor dirty", !form2Editor.isDirty());
+		assertTrue("Form editor dirty", !form3Editor.isDirty());
+	}
 
-    @Test
-    public void testChangeDiagramNameWithFormOpen() throws ExecutionException, PartInitException, InterruptedException {
-        SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
-        String editorName = botEditor.getTitle();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(editorName);
-        SWTBotEditor form1Editor = SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
-        botEditor.show();
+	@Test
+	public void testChangeDiagramNameWithFormOpen() throws ExecutionException, PartInitException, InterruptedException {
+		SWTBotTestUtil.createNewDiagram(bot);
+		SWTBotEditor botEditor = bot.activeEditor();
+		String editorName = botEditor.getTitle();
+		SWTBotGefEditor gmfEditor = bot.gefEditor(editorName);
+		SWTBotEditor form1Editor = SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
+		botEditor.show();
 
-        SWTBotGefEditPart rootEditPart = gmfEditor.rootEditPart();
-        rootEditPart.select();
-        gmfEditor.click(10, 10);
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        SWTBotButton editButton = bot.button();
-        editButton.click();
-        SWTBotText nameText = bot.text(0) ;
-        String text2 = nameText.getText() ;
-        nameText.setText(text2 + "modifiedName");
-        bot.button(IDialogConstants.OK_LABEL).click() ;
-        Thread.sleep(500);
+		SWTBotGefEditPart rootEditPart = gmfEditor.rootEditPart();
+		rootEditPart.select();
+		gmfEditor.click(10, 10);
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+		SWTBotButton editButton = bot.button();
+		editButton.click();
+		SWTBotText nameText = bot.text(0) ;
+		String text2 = nameText.getText() ;
+		nameText.setText(text2 + "modifiedName");
+		bot.button(IDialogConstants.OK_LABEL).click() ;
+		Thread.sleep(1500);
 
 
-        assertTrue("Process editor dirty", !bot.activeEditor().isDirty());
-        assertTrue("Process editor has not the correct title", bot.activeEditor().getTitle().contains("modifiedName"));
+		assertTrue("Process editor dirty", !bot.activeEditor().isDirty());
+		bot.waitUntil(new ICondition() {
 
-    }
+			public boolean test() throws Exception {
+				return bot.activeEditor().getTitle().contains("modifiedName");
+			}
 
-    @Test
-    public void testChangeDiagramNameWithFormOpenAndFocused() throws ExecutionException, PartInitException, InterruptedException {
-        SWTBotTestUtil.createNewDiagram(bot);
-        SWTBotEditor botEditor = bot.activeEditor();
-        String editorName = botEditor.getTitle();
-        SWTBotGefEditor gmfEditor = bot.gefEditor(editorName);
-        SWTBotEditor form1Editor = SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
-        botEditor.show();
+			public void init(SWTBot bot) {
 
-        SWTBotGefEditPart rootEditPart = gmfEditor.rootEditPart();
-        rootEditPart.select();
-        gmfEditor.click(10, 10);
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
-        SWTBotButton editButton = bot.button();
-        editButton.click();
-        SWTBotText nameText = bot.text(0) ;
-        String text2 = nameText.getText() ;
-        nameText.setText(text2 + "modifiedName2");
-        bot.button("OK").click() ;
-        Thread.sleep(500);
+			}
 
-        assertTrue("Process editor dirty", !botEditor.isDirty());
-        assertTrue("Form editor dirty", !form1Editor.isDirty());
-        IEditorInput editorInput = bot.activeEditor().getReference().getEditorInput();
-        assertTrue("Input of editor not changed", editorInput.getName().contains("modifiedName2"));
-    }
+			public String getFailureMessage() {
+				return "Process editor has not the correct title";
+			}
+		});
+
+	}
+
+	@Test
+	public void testChangeDiagramNameWithFormOpenAndFocused() throws ExecutionException, PartInitException, InterruptedException {
+		SWTBotTestUtil.createNewDiagram(bot);
+		SWTBotEditor botEditor = bot.activeEditor();
+		String editorName = botEditor.getTitle();
+		SWTBotGefEditor gmfEditor = bot.gefEditor(editorName);
+		SWTBotEditor form1Editor = SWTBotTestUtil.createFormWhenOnAProcessWithStep(bot, gmfEditor, "Step1");
+		botEditor.show();
+
+		SWTBotGefEditPart rootEditPart = gmfEditor.rootEditPart();
+		rootEditPart.select();
+		gmfEditor.click(10, 10);
+		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
+		SWTBotButton editButton = bot.button();
+		editButton.click();
+		SWTBotText nameText = bot.text(0) ;
+		String text2 = nameText.getText() ;
+		nameText.setText(text2 + "modifiedName2");
+		bot.button(IDialogConstants.OK_LABEL).click() ;
+		Thread.sleep(1500);
+
+		assertTrue("Process editor dirty", !botEditor.isDirty());
+		assertTrue("Form editor dirty", !form1Editor.isDirty());
+
+		bot.waitUntil(new ICondition() {
+
+			public boolean test() throws Exception {
+				IEditorInput editorInput = bot.activeEditor().getReference().getEditorInput();
+				return editorInput.getName().contains("modifiedName2");
+			}
+
+			public void init(SWTBot bot) {
+
+			}
+
+			public String getFailureMessage() {
+				return "Input of editor not changed";
+			}
+		});
+	}
 }

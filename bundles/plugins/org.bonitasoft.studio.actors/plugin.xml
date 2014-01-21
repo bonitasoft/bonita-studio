@@ -161,6 +161,11 @@
        		  defaultHandler="org.bonitasoft.studio.actors.ui.handler.InstallOrganizationHandler"
              id="org.bonitasoft.studio.engine.installOrganization"
              name="%installOrganization">
+            <commandParameter
+                  id="artifact"
+                  name="artifact"
+                  optional="false">
+            </commandParameter>
        </command>
        <command
              defaultHandler="org.bonitasoft.studio.actors.ui.handler.EditFilterImplementationHandler"

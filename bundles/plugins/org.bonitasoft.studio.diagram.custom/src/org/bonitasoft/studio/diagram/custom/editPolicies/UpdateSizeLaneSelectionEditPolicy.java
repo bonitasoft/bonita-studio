@@ -330,12 +330,9 @@ public class UpdateSizeLaneSelectionEditPolicy extends SelectionEditPolicy imple
 				IUndoableOperation c = new UpdatePoolSizeCommand(targetEp, type);
 				OperationHistoryFactory.getOperationHistory().execute(c,null,null);
 				me.consume();
-
-
 				laneEditPart.getViewer().setSelection(new StructuredSelection(targetEp));
 				refresh();
 				laneEditPart.getViewer().setSelection(new StructuredSelection(getHost()));
-
 				((Viewport)p).setVerticalLocation(y);
 
 

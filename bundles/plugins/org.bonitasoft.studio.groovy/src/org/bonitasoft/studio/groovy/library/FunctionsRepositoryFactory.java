@@ -54,7 +54,8 @@ public class FunctionsRepositoryFactory {
     private synchronized static void createFunctionCatgories(){
         try {
             IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;
-            IType defaultType = project.findType("org.codehaus.groovy.runtime.DefaultGroovyMethods");
+            IType defaultType = project.findType("org.codehaus.groovy.runtime.DefaultGroovyMethods"); //$NON-NLS-1$
+
             if(defaultType != null){
                 for(IMethod m :defaultType.getMethods()){
                     if(m.getFlags() == (Flags.AccStatic | Flags.AccPublic) ) {

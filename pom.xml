@@ -10,8 +10,8 @@
 	<name>Bonita Studio</name>
 	<properties>
 		<!--forceContextQualifier-->
-		<tychoVersion>0.18.0</tychoVersion>
-		<tychoExtrasVersion>0.18.0</tychoExtrasVersion>
+		<tychoVersion>0.19.0</tychoVersion>
+		<tychoExtrasVersion>0.19.0</tychoExtrasVersion>
 		<os-jvm-flags></os-jvm-flags>
 		<bundle.version>6.3.0-SNAPSHOT</bundle.version>
 		<engine.version>6.3.0-SNAPSHOT</engine.version>
@@ -20,7 +20,7 @@
 		<filters.version>6.3.0-SNAPSHOT</filters.version>
 		<theme.builder.version>6.1.0</theme.builder.version>
 		<watchdog.version>6.0.1</watchdog.version>
-		<p2MirrorUrl>http://repositories.rd.lan/p2/6.2</p2MirrorUrl>
+		<p2MirrorUrl>http://repositories.rd.lan/p2/6.3</p2MirrorUrl>
 		<tycho.testArgLine></tycho.testArgLine>
 		<sonar.jacoco.itReportPath>C:\jacoco.exec</sonar.jacoco.itReportPath>
 	</properties>
@@ -212,7 +212,6 @@
 							<id>org.bonitasoft.studioEx.console.libs</id>
 							<removeAll />
 						</filter>
-						
 					</filters>
 				</configuration>
 			</plugin>

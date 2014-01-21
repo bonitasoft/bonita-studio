@@ -60,6 +60,7 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
 			while(!(currentObject instanceof MainProcess)){
 				currentObject = currentObject.eContainer();
 			}			
+
 			MainProcess newProcess = (MainProcess) currentObject;			
 			EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(newProcess);
 			
@@ -80,7 +81,6 @@ public class RenameDiagramCommandHandler extends AbstractHandler {
 			}catch (Exception e) {
 				BonitaStudioLog.error(e) ;
 			}
-
 		}
 		return null;
 	}

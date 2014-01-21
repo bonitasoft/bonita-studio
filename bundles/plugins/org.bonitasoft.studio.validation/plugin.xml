@@ -899,8 +899,8 @@
                <target
                      class="Connector">
                       </target>
-                                 </constraint>
-                                   <constraint
+             </constraint>
+              <constraint
                   class="org.bonitasoft.studio.validation.constraints.process.ParalellMergeGatewayConstraint"
                   id="org.bonitasoft.studio.validation.constraints.paralellMerge"
                   lang="java"
@@ -1135,6 +1135,16 @@
             <command
             id="org.bonitasoft.studio.validation.batchValidation"
             name="%batchValidationAction_Label">
+               <commandParameter
+                     id="diagrams"
+                     name="diagrams"
+                     optional="true">
+               </commandParameter>
+               <commandParameter
+                     id="showReport"
+                     name="showReport"
+                     optional="true">
+               </commandParameter>
       </command>
       </extension>
       <extension

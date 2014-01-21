@@ -45,36 +45,36 @@ public class FindHandler extends AbstractHandler {
      */
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        IEditorPart editor = workbenchWindow.getActivePage().getActiveEditor() ;
-
-        BonitaContentOutlineTreeView view;
-        try {
-            view = (BonitaContentOutlineTreeView) workbenchWindow.getActivePage().showView(BonitaContentOutlineTreeView.VIEW_ID);
-            view.setFocus();
-            if (editor != null && editor instanceof ProcessDiagramEditor ) {
-                IAction action =((ProcessDiagramEditor)editor).getShowOutlineAction();
-                if(action != null){
-                    action.run();
-                }
-            }else if(editor != null && editor instanceof FormDiagramEditor){
-                IAction action =((FormDiagramEditor)editor).getShowOutlineAction();
-                if(action != null){
-                    action.run();
-                }
-            }
-            for (Control control : ((PageBook)view.getCurrentPage().getControl()).getTabList()) {
-                if (control instanceof FilteredTree) {
-                    final Text filterText = ((FilteredTree)control).getFilterControl();
-                    filterText.setFocus();
-                    if (filterText.getText() != null) {
-                        filterText.setSelection(0, filterText.getText().length());
-                    }
-                }
-            }
-        } catch (PartInitException e) {
-            BonitaStudioLog.error(e);
-        }
+//        final IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+//        IEditorPart editor = workbenchWindow.getActivePage().getActiveEditor() ;
+//
+//        BonitaContentOutlineTreeView view;
+//        try {
+//            view = (BonitaContentOutlineTreeView) workbenchWindow.getActivePage().showView(BonitaContentOutlineTreeView.VIEW_ID);
+//            view.setFocus();
+//            if (editor != null && editor instanceof ProcessDiagramEditor ) {
+//                IAction action =((ProcessDiagramEditor)editor).getShowOutlineAction();
+//                if(action != null){
+//                    action.run();
+//                }
+//            }else if(editor != null && editor instanceof FormDiagramEditor){
+//                IAction action =((FormDiagramEditor)editor).getShowOutlineAction();
+//                if(action != null){
+//                    action.run();
+//                }
+//            }
+//            for (Control control : ((PageBook)view.getCurrentPage().getControl()).getTabList()) {
+//                if (control instanceof FilteredTree) {
+//                    final Text filterText = ((FilteredTree)control).getFilterControl();
+//                    filterText.setFocus();
+//                    if (filterText.getText() != null) {
+//                        filterText.setSelection(0, filterText.getText().length());
+//                    }
+//                }
+//            }
+//        } catch (PartInitException e) {
+//            BonitaStudioLog.error(e);
+//        }
 
 
         return null;

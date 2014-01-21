@@ -24,6 +24,9 @@ import java.util.Set;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.ValidationDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.form.providers.ProcessMarkerNavigationProvider;
 import org.bonitasoft.studio.validation.i18n.Messages;
@@ -62,12 +65,28 @@ public class BatchValidationHandler extends AbstractHandler {
 			Map<?,?> parameters = event.getParameters();
 			Set<Diagram> toValidate = new HashSet<Diagram>();
 			if(parameters != null && !parameters.isEmpty()){
-				final Object diagramParameters = parameters.get("diagrams");
-				if(diagramParameters != null){
-					toValidate = (Set<Diagram>) diagramParameters;
+				String files = event.getParameter("diagrams");
+				if(files != null){
+					final DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+					files = files.substring(1,files.length()-1);
+					String[] allFiles = files.split(",");
+					for(String fileName : allFiles){
+						DiagramFileStore fileStore = store.getChild(fileName.trim());
+						if(fileStore != null){
+							Resource r = fileStore.getEMFResource();
+							for(EObject eObject : r.getContents() ){
+								if(eObject instanceof Diagram){
+									toValidate.add((Diagram) eObject);
+								}
+							}
+						}else{
+							BonitaStudioLog.debug("Proc file : "+fileName.trim()+" not found in repository!", ValidationPlugin.PLUGIN_ID);
+						}
+					}
 				}
 			}
-			if(toValidate.isEmpty()){
+			if(toValidate.isEmpty() && PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null 
+					&& PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null){
 				IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor() ;
 				if(part instanceof DiagramEditor){
 					Resource resource = ((DiagramEditor) part).getDiagramEditPart().resolveSemanticElement().eResource();

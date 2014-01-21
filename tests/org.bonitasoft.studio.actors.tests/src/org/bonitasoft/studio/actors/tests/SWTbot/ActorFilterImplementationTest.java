@@ -335,20 +335,17 @@ public class ActorFilterImplementationTest extends SWTBotGefTestCase implements 
 
 			@Override
 			public boolean test() throws Exception {
-				
 				return bot.editors().isEmpty();
 			}
 
 			@Override
 			public void init(SWTBot bot) {
-				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
 			public String getFailureMessage() {
-				// TODO Auto-generated method stub
-				return null;
+				return "Editors remaining after test";
 			}
         	
         });

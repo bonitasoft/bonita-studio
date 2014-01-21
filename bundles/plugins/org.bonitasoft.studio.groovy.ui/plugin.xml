@@ -46,7 +46,6 @@
          <command
                commandId="org.bonitasoft.studio.groovy.ui.editscripts"
                icon="icons/manage_groovy_scripts.png"
-               id="org.bonitasoft.studio.extensinonsMenu.editGroovyScriptMenu"
                label="%editGroovyScript_Label"
                style="push">
          </command>
@@ -141,12 +140,6 @@
       		<appliesTo projectNature="org.eclipse.jdt.groovy.core.groovyNature"/>
     	</lookup>
 	</extension>
-   <extension
-         point="org.bonitasoft.studio.common.repository.postinitrepository">
-      <contribution
-            class="org.bonitasoft.studio.groovy.ui.InitGroovyEditorPostStartup">
-      </contribution>
-   </extension>
 
 
 </plugin>

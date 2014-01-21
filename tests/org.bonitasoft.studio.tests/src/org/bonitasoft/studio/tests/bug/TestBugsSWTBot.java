@@ -30,23 +30,25 @@ import org.junit.Test;
  */
 public class TestBugsSWTBot extends SWTBotGefTestCase {
 
-    @Test
-    public void testOpenHtmlEditor() throws Exception {
-        SWTBotTestUtil.createNewDiagram(bot);
+	@Test
+	public void testOpenHtmlEditor() throws Exception {
+		SWTBotTestUtil.createNewDiagram(bot);
 
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
-        bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).setFocus();
-        SWTBotTestUtil.selectTabbedPropertyView(bot, "Look'n'feel");
+		SWTBotView botView =  bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
+		if(!botView.isActive()){
+			botView.show();
+		}
+		botView.setFocus();
+		SWTBotTestUtil.selectTabbedPropertyView(bot, "Look'n'feel");
 
-        SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
-        properties.bot().button("Edit",1).click();
-        SWTBotEditor activeEditor = bot.activeEditor();
-        assertEquals("org.eclipse.wst.html.core.htmlsource.source",activeEditor.getReference().getId());
-        activeEditor.close();
-    }
+		SWTBotView properties = bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION);
+		properties.bot().button("Edit",1).click();
+		SWTBotEditor activeEditor = bot.activeEditor();
+		assertEquals("org.eclipse.wst.html.core.htmlsource.source",activeEditor.getReference().getId());
+	}
 
-    @Override
-    protected void tearDown() throws Exception {
-        bot.closeAllEditors();
-    }
+	@Override
+	protected void tearDown() throws Exception {
+		bot.closeAllEditors();	
+	}
 }
