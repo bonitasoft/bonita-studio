@@ -22,9 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.bpm.flownode.HumanTaskInstance;
@@ -35,14 +33,15 @@ import org.bonitasoft.engine.search.SearchOptions;
 import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.util.test.EngineAPIUtil;
 import org.bonitasoft.studio.util.test.async.TestAsyncThread;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.PlatformUI;
 import org.junit.After;
@@ -75,15 +74,16 @@ public class TestUserFilterMatchingEngineVersion {
 		op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
 		op.run(Repository.NULL_PROGRESS_MONITOR);
 		
+		for(IRepositoryFileStore f : op.getFileStoresToOpen()){
+			f.open();
+		}
+		
 		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
 		assertEquals("DiagramToTestUserFIlter", mainProcess.getName());
 		
-		final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-		Map<String,Object> param = new HashMap<String, Object>();
-		param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-		ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
-		runProcessCommand.execute(ee);
+		final RunProcessCommand runProcessCommand = new RunProcessCommand((AbstractProcess) mainProcess.getElements().get(0),true);
+		runProcessCommand.execute(null);
 		
 		assertNotNull("The url is null:", runProcessCommand.getUrl());
         final String urlGivenToBrowser = runProcessCommand.getUrl().toString();

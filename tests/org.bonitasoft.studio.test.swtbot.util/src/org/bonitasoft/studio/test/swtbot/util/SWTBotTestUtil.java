@@ -103,6 +103,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 	public static void createNewDiagram(final SWTWorkbenchBot bot){
 		final long timebeforeCreatenewDiagram = System.currentTimeMillis();    	
 		final int nbEditorsBefore = bot.editors().size();
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")),40000);
 		SWTBotMenu menu = bot.menu("Diagram");
 		menu.menu("New").click();
 		bot.waitUntil(new ICondition() {
@@ -178,9 +179,8 @@ public class SWTBotTestUtil implements SWTBotConstants{
 			@SuppressWarnings("restriction")
 			public void run() {
 				try {
-					List<? extends Widget> widgets = viewerBot.getFinder().findControls(
-							WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
-					Assert.assertTrue(widgets.size() > 0);
+					List<? extends Widget> widgets = viewerBot.getFinder().findControls(WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
+					Assert.assertTrue("No widget of type "+TabbedPropertyList.class.getName()+" has been found",widgets.size() > 0);
 					TabbedPropertyList tabbedPropertyList = (TabbedPropertyList) widgets.get(0);
 					int i = 0;
 					boolean found = false;
@@ -223,7 +223,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		BonitaStudioLog.log("SWTBot begin to import "+ resourceNameInClasspath + " in mode " +importName);
 		boolean disable = FileActionDialog.getDisablePopup();
 		FileActionDialog.setDisablePopup(true);
-		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")),10000);
+		bot.waitUntil(Conditions.shellIsActive("Bonita BPM"));
 		SWTBotMenu menu = bot.menu("Diagram");
 		menu.menu("Import...").click();
 
@@ -233,7 +233,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 		File file = new File(url.getFile());
 		bot.text().setText(file.getAbsolutePath());
 		bot.table().select(importName);
-		bot.button(IDialogConstants.FINISH_LABEL).click();
+		bot.button("Import").click();
 		bot.waitUntil(new ICondition() {
 			@Override
 			public boolean test() throws Exception {
@@ -254,7 +254,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 			public String getFailureMessage() {
 				return "no active editor";
 			}
-		},35000);
+		},55000);
 		FileActionDialog.setDisablePopup(disable);
 		BonitaStudioLog.log("SWTBot has imported "+ resourceNameInClasspath + " in mode " +importName);
 	}

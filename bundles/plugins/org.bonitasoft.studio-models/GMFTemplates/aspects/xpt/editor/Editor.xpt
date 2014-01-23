@@ -60,44 +60,22 @@ private org.bonitasoft.studio.common.diagram.palette.CustomToolPaletteViewer too
 	/**
 	 * @generated BonitaSoft
 	 */
-protected org.eclipse.gef.palette.PaletteRoot createPaletteRoot(org.eclipse.gef.palette.PaletteRoot existingPaletteRoot) {
-	root = super.createPaletteRoot(existingPaletteRoot);
-	new «getFactoryQualifiedClassName()»().fillPalette(root);
-	org.eclipse.gef.palette.PaletteEntry pe = (org.eclipse.gef.palette.PaletteEntry)root.getChildren().get(0);
-	org.eclipse.gef.palette.PaletteContainer standard = (org.eclipse.gef.palette.PaletteContainer) pe;
-	org.eclipse.gef.palette.ToolEntry hSpace = new org.eclipse.gef.palette.ToolEntry(org.bonitasoft.studio.common.Messages.SpacingHorizontalTitle,	
-					org.bonitasoft.studio.common.Messages.SpacingHorizontalDesc, 
-					org.bonitasoft.studio.pics.Pics.getImageDescriptor(org.bonitasoft.studio.pics.PicsConstants.HorizontalSpacingTool16), 
-					org.bonitasoft.studio.pics.Pics.getImageDescriptor(org.bonitasoft.studio.pics.PicsConstants.HorizontalSpacingTool24),
-					org.bonitasoft.studio.common.gmf.tools.MultipleShapesHorizontalMoveTool.class){} ;
-			
-	org.eclipse.gef.palette.ToolEntry vSpave = new org.eclipse.gef.palette.ToolEntry(org.bonitasoft.studio.common.Messages.SpacingVerticalTitle, 
-					org.bonitasoft.studio.common.Messages.SpacingVerticalDesc,
-					org.bonitasoft.studio.pics.Pics.getImageDescriptor(org.bonitasoft.studio.pics.PicsConstants.VerticalSpacingTool16), 
-					org.bonitasoft.studio.pics.Pics.getImageDescriptor(org.bonitasoft.studio.pics.PicsConstants.VerticalSpacingTool24), 
-					org.bonitasoft.studio.common.gmf.tools.MultipleShapesVerticalMoveTool.class){} ;
-	
-	
-	boolean alreadyExists = false ; 
-		for(Object child : standard.getChildren()){
-			if(child instanceof org.eclipse.gef.palette.PaletteEntry && ((org.eclipse.gef.palette.PaletteEntry)child).getId().equals(hSpace.getId())){
-				alreadyExists = true ;
-				break ;
-			}
+	protected org.eclipse.gef.palette.PaletteRoot createPaletteRoot(org.eclipse.gef.palette.PaletteRoot existingPaletteRoot) {
+		//#### COPY-PASTED from parent
+		org.eclipse.gef.palette.PaletteRoot paletteRoot;
+		if (existingPaletteRoot == null) {
+			paletteRoot = org.bonitasoft.studio.common.gmf.CustomPaletteService.getInstance().createPalette(this,
+				getDefaultPaletteContent());
+		} else {
+			org.bonitasoft.studio.common.gmf.CustomPaletteService.getInstance().updatePalette(existingPaletteRoot,
+				this, getDefaultPaletteContent());
+			paletteRoot = existingPaletteRoot;
 		}
-	if(!alreadyExists){
-		standard.add(new org.eclipse.gef.palette.MarqueeToolEntry()) ;
-		standard.add(new org.bonitasoft.studio.common.gmf.tools.ZoomInToolEntry());
-	    standard.add(new org.bonitasoft.studio.common.gmf.tools.ZoomOutToolEntry());
-		standard.add(hSpace) ;
-		standard.add(vSpave) ;
-		standard.add(new org.bonitasoft.studio.common.gmf.tools.HorizontalAlignToolEntry());
-		standard.add(new org.bonitasoft.studio.common.gmf.tools.VerticalAlignToolEntry());
+		new «getFactoryQualifiedClassName()»().fillPalette(paletteRoot);//don't know why we need to add it, the left palette is empty if not.
+		applyCustomizationsToPalette(paletteRoot);
+		root = paletteRoot;//required because root is used in configurePaletteViewer
+		return paletteRoot;
 	}
-		
-	applyCustomizationsToPalette(root);
-	return root;
-}
 «ENDAROUND»
 
 «AROUND configureGraphicalViewer FOR gmfgen::GenEditorView-»
@@ -712,4 +690,3 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 		return super.getEditingDomain();
 	}
 «ENDAROUND»
-

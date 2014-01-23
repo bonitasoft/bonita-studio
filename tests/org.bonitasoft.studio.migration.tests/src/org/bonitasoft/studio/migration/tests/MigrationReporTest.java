@@ -21,7 +21,9 @@ import java.net.URL;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.migration.i18n.Messages;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.runtime.FileLocator;
@@ -40,6 +42,8 @@ import org.junit.Test;
  */
 public class MigrationReporTest extends SWTBotGefTestCase {
 	
+	private DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+	
 	@BeforeClass
 	public static void disablePopup(){
 		FileActionDialog.setDisablePopup(true);
@@ -52,7 +56,7 @@ public class MigrationReporTest extends SWTBotGefTestCase {
 		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
 		op.setArchiveFile(FileLocator.toFileURL(url).getFile());
 		op.run(Repository.NULL_PROGRESS_MONITOR);
-		
+		store.getChild("MonDiagramme1-1.0.proc").open();
 		assertEquals("Invalid perspective for process with migration report","org.bonitasoft.studio.migration.perspective.process",BonitaPerspectivesUtils.getPerspectiveId(bot.activeEditor().getReference().getEditor(false)));
 	}
 
@@ -63,7 +67,7 @@ public class MigrationReporTest extends SWTBotGefTestCase {
 		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
 		op.setArchiveFile(FileLocator.toFileURL(url).getFile());
 		op.run(Repository.NULL_PROGRESS_MONITOR);
-		
+		store.getChild("MonDiagramme1-1.0.proc").open();
 		bot.viewById("org.bonitasoft.studio.migration.view").bot().button(Messages.completeImport).click();
 		bot.waitUntil(Conditions.shellIsActive(Messages.completeImport));
 		bot.checkBox().deselect();
@@ -81,7 +85,7 @@ public class MigrationReporTest extends SWTBotGefTestCase {
 		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
 		op.setArchiveFile(FileLocator.toFileURL(url).getFile());
 		op.run(Repository.NULL_PROGRESS_MONITOR);
-		
+		store.getChild("MonDiagramme1-1.0.proc").open();
 		bot.viewById("org.bonitasoft.studio.migration.view").toolbarToggleButton("Link with Editor").select();
 		bot.table().select(1);
 		SWTBotGefEditPart part = bot.gefEditor(bot.activeEditor().getTitle()).selectedEditParts().get(0);

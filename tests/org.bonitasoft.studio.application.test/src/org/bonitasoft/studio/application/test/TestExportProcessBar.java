@@ -29,9 +29,11 @@ import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
+import org.bonitasoft.studio.diagram.custom.repository.DiagramFileStore;
 import org.bonitasoft.studio.diagram.custom.repository.DiagramRepositoryStore;
 import org.bonitasoft.studio.engine.operation.ExportBarOperation;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -42,115 +44,125 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 public class TestExportProcessBar extends TestCase {
 
 
-    public void testExportProcessBarWithAttachmentAndSeveralPool() throws Exception{
-        /*Import the processus*/
-        URL url = getClass().getResource("TestExportProcessBarWithDocument-1.0.bos");
-        url = FileLocator.toFileURL(url);
-        File barToImport = new File(url.getFile());
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        op.setArchiveFile(barToImport.getAbsolutePath());
-        op.run(Repository.NULL_PROGRESS_MONITOR);
-        /*Retrieve the AbstractProcess*/
-        DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final AbstractProcess proc = (AbstractProcess) store.getDiagram("TestExportProcessBarWithDocument","1.0").getContent().getElements().get(0);
+	public void testExportProcessBarWithAttachmentAndSeveralPool() throws Exception{
+		/*Import the processus*/
+		URL url = getClass().getResource("TestExportProcessBarWithDocument-1.0.bos");
+		url = FileLocator.toFileURL(url);
+		File barToImport = new File(url.getFile());
+		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+		op.setArchiveFile(barToImport.getAbsolutePath());
+		op.run(Repository.NULL_PROGRESS_MONITOR);
+		/*Retrieve the AbstractProcess*/
+		DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+		DiagramFileStore diagram = store.getDiagram("TestExportProcessBarWithDocument","1.0");
+		assertNotNull(diagram);
+		MainProcess diagramElement = diagram.getContent();
+		assertNotNull(diagramElement);
+		final AbstractProcess proc = (AbstractProcess) diagramElement.getElements().get(0);
 
-        /*Export to the specified folder*/
-        File targetFolder = new File(System.getProperty("java.io.tmpdir")+File.separator+"testExportBar");
-        PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
-        targetFolder.mkdirs();
-        ExportBarOperation ebo = new ExportBarOperation();
-        ebo.addProcessToDeploy(proc);
-        ebo.setTargetFolder(targetFolder.getAbsolutePath());
-        ebo.setConfigurationId("Local");
-        IStatus exportStatus = ebo.run(new NullProgressMonitor());
-        assertTrue("Export in bar has failed.", exportStatus.isOK());
-        
-        File generatedBarFile = ebo.getGeneratedBars().get(0);
+		/*Export to the specified folder*/
+		File targetFolder = new File(System.getProperty("java.io.tmpdir")+File.separator+"testExportBar");
+		PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
+		targetFolder.mkdirs();
+		ExportBarOperation ebo = new ExportBarOperation();
+		ebo.addProcessToDeploy(proc);
+		ebo.setTargetFolder(targetFolder.getAbsolutePath());
+		ebo.setConfigurationId("Local");
+		IStatus exportStatus = ebo.run(new NullProgressMonitor());
+		assertTrue("Export in bar has failed.", exportStatus.isOK());
 
-        /*Check that attachment is in the bar*/
-        ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));
-        ZipEntry barEntry;
-        while((barEntry = generatedBarStream.getNextEntry()) != null){
-            if(barEntry.getName().contains("documents")){
-                return;
-            }
-        }
+		File generatedBarFile = ebo.getGeneratedBars().get(0);
 
-        fail("There is no attachment in the genrated bar.");
+		/*Check that attachment is in the bar*/
+		ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));
+		ZipEntry barEntry;
+		while((barEntry = generatedBarStream.getNextEntry()) != null){
+			if(barEntry.getName().contains("documents")){
+				generatedBarStream.close();
+				return;
+			}
+		}
+		generatedBarStream.close();
+		fail("There is no attachment in the genrated bar.");
 
-    }
+	}
 
-    public void testExportProcessBarApplicationResources() throws Exception{
-        /*Import the processus*/
-        URL url = getClass().getResource("TestExportBarWithApplicationResources-1.0.bos");
-        url = FileLocator.toFileURL(url);
-        File barToImport = new File(url.getFile());
+	public void testExportProcessBarApplicationResources() throws Exception{
+		/*Import the processus*/
+		URL url = getClass().getResource("TestExportBarWithApplicationResources-1.0.bos");
+		url = FileLocator.toFileURL(url);
+		File barToImport = new File(url.getFile());
 
-        ImportBosArchiveOperation op = new ImportBosArchiveOperation();
-        op.setArchiveFile(barToImport.getAbsolutePath());
-        op.run(Repository.NULL_PROGRESS_MONITOR);
-        /*Retrieve the AbstractProcess*/
-        DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
-        final AbstractProcess proc = (AbstractProcess) store.getDiagram("TestExportBarWithApplicationResources","1.0").getContent().getElements().get(0);
+		ImportBosArchiveOperation op = new ImportBosArchiveOperation();
+		op.setArchiveFile(barToImport.getAbsolutePath());
+		op.run(Repository.NULL_PROGRESS_MONITOR);
+		assertTrue(op.getStatus().isOK());
+		/*Retrieve the AbstractProcess*/
+		DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
+		DiagramFileStore diagram = store.getDiagram("TestExportBarWithApplicationResources","1.0");
+		assertNotNull(diagram);
+		MainProcess diagramElement = diagram.getContent();
+		assertNotNull(diagramElement);
+		final AbstractProcess proc = (AbstractProcess) diagramElement.getElements().get(0);
 
-        /*Export to the specified folder*/
-        File targetFolder = new File(System.getProperty("java.io.tmpdir")+File.separator+"testExportBar");
-        PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
-        targetFolder.mkdirs();
-        
-        ExportBarOperation ebo = new ExportBarOperation();
-        ebo.addProcessToDeploy(proc);
-        ebo.setTargetFolder(targetFolder.getAbsolutePath());
-        ebo.setConfigurationId("Local");
-        IStatus exportStatus = ebo.run(new NullProgressMonitor());
-        assertTrue("Export in bar has failed.", exportStatus.isOK());
-        
-        File generatedBarFile = ebo.getGeneratedBars().get(0);
+		/*Export to the specified folder*/
+		File targetFolder = new File(System.getProperty("java.io.tmpdir")+File.separator+"testExportBar");
+		PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
+		targetFolder.mkdirs();
 
-        /*Check that attachment is in the bar*/
-        ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));
-        ZipEntry barEntry;
-        boolean formsFolderExists = false ;
-        boolean formsXmlExists = false ;
-        boolean resourcesExists = false ;
-        boolean templateExists = false ;
-        boolean dependenciesExists = false ;
-        boolean validatorExists = false ;
-        while((barEntry = generatedBarStream.getNextEntry()) != null){
-            if(barEntry.getName().contains("resources/forms/")){
-                formsFolderExists = true ;
-            }
-            if(barEntry.getName().contains("resources/forms/forms.xml")){
-                formsXmlExists = true ;
-            }
-            if(barEntry.getName().contains("resources/forms/html")){
-                templateExists = true ;
-            }
-            if(barEntry.getName().contains("resources/forms/resources/application/css")){
-                resourcesExists = true ;
-            }
-            if(barEntry.getName().contains("resources/forms/validators")){
-                validatorExists = true ;
-            }
-            if(barEntry.getName().contains("resources/forms/lib")){
-                dependenciesExists = true ;
-            }
+		ExportBarOperation ebo = new ExportBarOperation();
+		ebo.addProcessToDeploy(proc);
+		ebo.setTargetFolder(targetFolder.getAbsolutePath());
+		ebo.setConfigurationId("Local");
+		IStatus exportStatus = ebo.run(new NullProgressMonitor());
+		assertTrue("Export in bar has failed.", exportStatus.isOK());
 
-        }
+		File generatedBarFile = ebo.getGeneratedBars().get(0);
 
-        assertTrue("forms folder not found in BAR",formsFolderExists) ;
-        assertTrue("forms.xml folder not found in BAR",formsXmlExists) ;
-        assertTrue("resources not found in BAR",resourcesExists) ;
-        assertTrue("template folder not found in BAR",templateExists) ;
-        assertTrue("validator folder not found in BAR",validatorExists) ;
-        assertTrue("dependencies folder not found in BAR",dependenciesExists) ;
-    }
+		/*Check that attachment is in the bar*/
+		ZipInputStream generatedBarStream = new ZipInputStream(new FileInputStream(generatedBarFile));
+		ZipEntry barEntry;
+		boolean formsFolderExists = false ;
+		boolean formsXmlExists = false ;
+		boolean resourcesExists = false ;
+		boolean templateExists = false ;
+		boolean dependenciesExists = false ;
+		boolean validatorExists = false ;
+		while((barEntry = generatedBarStream.getNextEntry()) != null){
+			if(barEntry.getName().contains("resources/forms/")){
+				formsFolderExists = true ;
+			}
+			if(barEntry.getName().contains("resources/forms/forms.xml")){
+				formsXmlExists = true ;
+			}
+			if(barEntry.getName().contains("resources/forms/html")){
+				templateExists = true ;
+			}
+			if(barEntry.getName().contains("resources/forms/resources/application/css")){
+				resourcesExists = true ;
+			}
+			if(barEntry.getName().contains("resources/forms/validators")){
+				validatorExists = true ;
+			}
+			if(barEntry.getName().contains("resources/forms/lib")){
+				dependenciesExists = true ;
+			}
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        File targetFolder = new File(System.getProperty("java.io.tmpdir")+File.separator+"testExportBar");
-        PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
-    }
+		}
+		generatedBarStream.close();
+		assertTrue("forms folder not found in BAR",formsFolderExists) ;
+		assertTrue("forms.xml folder not found in BAR",formsXmlExists) ;
+		assertTrue("resources not found in BAR",resourcesExists) ;
+		assertTrue("template folder not found in BAR",templateExists) ;
+		assertTrue("validator folder not found in BAR",validatorExists) ;
+		assertTrue("dependencies folder not found in BAR",dependenciesExists) ;
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		File targetFolder = new File(System.getProperty("java.io.tmpdir")+File.separator+"testExportBar");
+		PlatformUtil.delete(targetFolder, Repository.NULL_PROGRESS_MONITOR);
+	}
 
 }

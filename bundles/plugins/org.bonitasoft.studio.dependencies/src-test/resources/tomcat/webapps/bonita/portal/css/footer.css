@@ -1,0 +1,35 @@
+/* ------------------------------------------------------------------------- */
+/* Footer
+/* ------------------------------------------------------------------------- */
+html,body {
+	height: 100%;
+}
+
+* {margin:0;padding:0;}
+
+#wrap {min-height: 100%;}
+
+#main {overflow:auto;
+	padding-bottom: 35px;}  /* must be same height as the footer */
+
+#footer{
+  position: relative;
+  margin-top: -35px;/* negative value of footer height */
+  height: 11px;
+  clear: both;
+  font-size: 84.61538461538461%;
+  text-align: center;
+  color: #ffffff;
+  background: #313433;
+  z-index: 999;
+  padding: 12px 0;
+}
+
+/*Opera Fix*/
+body:before {/* thanks to Maleika (Kohoutec)*/
+content:"";
+height:100%;
+float:left;
+width:0;
+margin-top:-32767px;/* thank you Erik J - negate effect of float*/
+}

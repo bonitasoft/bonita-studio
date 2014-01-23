@@ -27,7 +27,6 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.connectors.test.TestProvidedDefinitionAndImplementation;
-import org.bonitasoft.studio.diagram.form.custom.tests.TestCommands;
 import org.bonitasoft.studio.engine.test.TestUserFilterMatchingEngineVersion;
 import org.bonitasoft.studio.exporter.tests.application.TestHtmlTemplateGenerator;
 import org.bonitasoft.studio.exporter.tests.bpmn.BPMNDataExportImportTest;
@@ -47,6 +46,7 @@ import org.bonitasoft.studio.tests.api.TestBonitaAPI;
 import org.bonitasoft.studio.tests.bug.TestBugs;
 import org.bonitasoft.studio.tests.connectors.TestDatabaseConnectorResulset;
 import org.bonitasoft.studio.tests.data.TestDataRefactor;
+import org.bonitasoft.studio.tests.form.TestCommands;
 import org.bonitasoft.studio.tests.perspectives.TestAutomaticSwitchPerspective;
 import org.bonitasoft.studio.tests.processzoo.TestProcessZoo;
 import org.bonitasoft.studio.tests.timer.TestNonInterruptingBoundaryTimerEvent;

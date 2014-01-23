@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2009 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2009-2014 BonitaSoft S.A.
+ * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,6 @@
 package org.bonitasoft.studio.diagram.custom.editPolicies;
 
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.bonitasoft.studio.common.diagram.tools.FiguresHelper;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
@@ -26,7 +25,6 @@ import org.bonitasoft.studio.model.process.diagram.providers.ProcessElementTypes
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
@@ -34,7 +32,6 @@ import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.gef.DragTracker;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.commands.Command;
@@ -42,6 +39,8 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.DeferredCreateConnectionViewAndElementCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
@@ -65,7 +64,6 @@ import org.eclipse.gmf.runtime.notation.Connector;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
-import org.eclipse.gmf.runtime.notation.Size;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
@@ -102,10 +100,18 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
 		this.figure = createImage();
 
 		// Remove cursor
-		image = new Image(PlatformUI.getWorkbench().getDisplay(), 1, 1);
-		cursor = new Cursor(PlatformUI.getWorkbench().getDisplay(), image.getImageData(), 0, 0);
-		setDefaultCursor(cursor);
+		initCursor();
 		setUnloadWhenFinished(true);
+	}
+
+	private void initCursor() {
+		if(image== null || image.isDisposed()){
+			image = new Image(PlatformUI.getWorkbench().getDisplay(), 1, 1);
+		}
+		if(cursor == null || cursor.isDisposed()){
+			cursor = new Cursor(PlatformUI.getWorkbench().getDisplay(), image.getImageData(), 0, 0);
+			setDefaultCursor(cursor);
+		}
 	}
 
 	/**
@@ -302,20 +308,23 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
 			IAdaptable targetAdapter = null;
 			if(command instanceof ICommandProxy){
 				editPart.getDiagramEditDomain().getDiagramCommandStack().execute(command);
-				if(((ICommandProxy)command).getICommand().getCommandResult() != null
-						&& ((ICommandProxy)command).getICommand().getCommandResult().getReturnValue() != null 
-						&& !((List)((ICommandProxy)command).getICommand().getCommandResult().getReturnValue()).isEmpty())
-					targetAdapter = (IAdaptable) ((List)((ICommandProxy)command).getICommand().getCommandResult().getReturnValue()).get(0) ;
+				final ICommand iCommand = ((ICommandProxy)command).getICommand();
+				final CommandResult commandResult = iCommand.getCommandResult();
+				if(commandResult != null
+						&& commandResult.getReturnValue() != null 
+						&& !((List<?>)commandResult.getReturnValue()).isEmpty())
+					targetAdapter = (IAdaptable) ((List<?>)commandResult.getReturnValue()).get(0) ;
 			}else if(command instanceof CompoundCommand){
 				CompoundCommand cmd = (CompoundCommand) command ;
 				editPart.getDiagramEditDomain().getDiagramCommandStack().execute(cmd);
 				if(cmd != null){
 					for(Object c : cmd.getCommands()){
 						if(c instanceof ICommandProxy){
-							if(((ICommandProxy)c).getICommand().getCommandResult() != null 
-									&& ((ICommandProxy)c).getICommand().getCommandResult().getReturnValue() != null 
-									&& !((List)((ICommandProxy)c).getICommand().getCommandResult().getReturnValue()).isEmpty())
-								targetAdapter = (IAdaptable) ((List)((ICommandProxy)c).getICommand().getCommandResult().getReturnValue()).get(0) ;
+							final CommandResult commandResult = ((ICommandProxy)c).getICommand().getCommandResult();
+							if(commandResult != null 
+									&& commandResult.getReturnValue() != null 
+									&& !((List<?>)commandResult.getReturnValue()).isEmpty())
+								targetAdapter = (IAdaptable) ((List<?>)commandResult.getReturnValue()).get(0) ;
 						}
 					}
 				}
@@ -327,7 +336,7 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
 				for (Object item : nodeRequest.getElementTypes()) {
 					IElementType type = (IElementType)item;
 					CreateRequest subReq = nodeRequest.getRequestForType(type);
-					List newObject = (List) subReq.getNewObject();
+					List<?> newObject = (List<?>) subReq.getNewObject();
 					if (newObject != null &&
 							! newObject.isEmpty()) {
 						IAdaptable adaptable = (IAdaptable)newObject.get(0);
@@ -413,21 +422,6 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
 		super.eraseTargetFeedback();
 	}
 
-
-	/**
-	 * @param targetEditPart
-	 * @return
-	 */
-	private IFigure getFigure(EditPart targetEditPart) {
-		for (Object item : targetEditPart.getViewer().getVisualPartMap().entrySet()) {
-			Entry entry = (Entry)item;
-			if (entry.getValue().equals(targetEditPart)) {
-				return (IFigure)entry.getKey();
-			}
-		}
-		return null;
-	}
-
 	/**
 	 * 
 	 */
@@ -454,6 +448,12 @@ public class DraggableElementCreationTool extends CreationTool implements DragTr
 		if(image != null && !image.isDisposed()){
 			image.dispose();
 		}
+	}
+	
+	@Override
+	public void activate() {
+		super.activate();
+		initCursor();
 	}
 
 }

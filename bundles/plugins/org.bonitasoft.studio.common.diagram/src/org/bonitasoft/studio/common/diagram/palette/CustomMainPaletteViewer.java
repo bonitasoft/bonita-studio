@@ -62,11 +62,12 @@ public class CustomMainPaletteViewer extends PaletteViewerEx {
 		});
 	}
 
-	@Override
+
 	protected LightweightSystem createLightweightSystem() {
 		return new AsyncLightweightSystem();
 	}
-	
+
+
 	public void hidePaletteEntry(String id){
 		filters.add(id);
 	}

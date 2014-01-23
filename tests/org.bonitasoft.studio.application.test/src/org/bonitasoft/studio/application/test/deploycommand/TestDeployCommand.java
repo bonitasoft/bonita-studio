@@ -23,9 +23,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bonitasoft.engine.api.ProcessAPI;
 import org.bonitasoft.engine.api.ProcessManagementAPI;
@@ -34,15 +32,16 @@ import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfo;
 import org.bonitasoft.engine.bpm.process.ProcessDeploymentInfoCriterion;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.CompoundCommand;
@@ -69,20 +68,23 @@ public class TestDeployCommand {
 		URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource("ProcessForSubProcessLoopTest-1-1.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
 		op.run(new NullProgressMonitor());
+		for(IRepositoryFileStore f : op.getFileStoresToOpen()){
+			f.open();
+		}
 		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		MainProcess mainProcess=(MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
 
 		URL fileURL2 = FileLocator.toFileURL(TestDeployCommand.class.getResource("ProcessForSubProcessLoopTest-2-1.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL2).getFile());
 		op.run(new NullProgressMonitor());
-
+		for(IRepositoryFileStore f : op.getFileStoresToOpen()){
+			f.open();
+		}
+		
 		/*And deploy it twice*/
-		final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-		Map<String,Object> param = new HashMap<String, Object>();
-		param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-		ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
-		runProcessCommand.execute(ee);
-		runProcessCommand.execute(ee);
+		final RunProcessCommand runProcessCommand = new RunProcessCommand( (AbstractProcess) mainProcess.getElements().get(0), true);
+		runProcessCommand.execute(null);
+		runProcessCommand.execute(null);
 	}
 
 	/**
@@ -97,11 +99,8 @@ public class TestDeployCommand {
 		MainProcess mainProcess=(MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
 
 		/*Run a first time*/
-		final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-		Map<String,Object> param = new HashMap<String, Object>();
-		param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-		ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
-		runProcessCommand.execute(ee);
+		final RunProcessCommand runProcessCommand = new RunProcessCommand( (AbstractProcess) mainProcess.getElements().get(0), true);
+		runProcessCommand.execute(null);
 
 		/*Rename the parent*/
 		final Pool parentProcess = (Pool) mainProcess.getElements().get(0);
@@ -117,7 +116,7 @@ public class TestDeployCommand {
 		domain.getCommandStack().execute(cc) ;
 		processEditor.doSave(Repository.NULL_PROGRESS_MONITOR);
 		/*Retry to deploy*/
-		runProcessCommand.execute(ee);
+		runProcessCommand.execute(null);
 
 		APISession session = null ;
 		try{
@@ -147,6 +146,9 @@ public class TestDeployCommand {
 		URL fileURL = FileLocator.toFileURL(TestDeployCommand.class.getResource(processResourceName)); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL).getFile());
 		op.run(new NullProgressMonitor());
+		for(IRepositoryFileStore f : op.getFileStoresToOpen()){
+			f.open();
+		}
 		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		return processEditor;
 	}
@@ -163,17 +165,15 @@ public class TestDeployCommand {
 	}
 
 	protected void runAndStartProcess(MainProcess mainProcess,String processName,String processVersion) throws  Exception {
-		final RunProcessCommand runProcessCommand1 = new RunProcessCommand(true);
-		Map<String,Object> param1 = new HashMap<String, Object>();
 		Pool toDeploy = null;
 		for(Element e : mainProcess.getElements()){
 			if(e instanceof Pool && e.getName().equals(processName) && ((Pool) e).getVersion().equals(processVersion)){
 				toDeploy = (Pool) e;
 			}
 		}
-		param1.put(RunProcessCommand.PROCESS, toDeploy);
-		ExecutionEvent ee1 = new ExecutionEvent(null,param1,null,null);
-		runProcessCommand1.execute(ee1);
+		final RunProcessCommand runProcessCommand1 = new RunProcessCommand(toDeploy,true);
+
+		runProcessCommand1.execute(null);
 		
 		APISession session = BOSEngineManager.getInstance().loginDefaultTenant(Repository.NULL_PROGRESS_MONITOR);
 		final ProcessAPI processApi = BOSEngineManager.getInstance().getProcessAPI(session);

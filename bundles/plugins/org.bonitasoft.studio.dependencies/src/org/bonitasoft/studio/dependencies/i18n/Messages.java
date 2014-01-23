@@ -43,6 +43,8 @@ public class Messages extends NLS {
 	public static String popUpMessage;
 	public static String selectMissingJarTitle;
 	public static String zipFileIsCorrupted;
+	public static String dependencyExistsInRuntimeContainer;
+	public static String dependencyExistsInRuntimeContainerWithAnotherVersion;
 
 
 }

@@ -222,12 +222,6 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 	protected void createDefaultActorMapping(Configuration conf) {
 		ActorMappingsType amType = ActorMappingFactory.eINSTANCE.createActorMappingsType();
 		amType.getActorMapping().add(createGroupActorMapping("Employee actor","/acme"));
-		//        amType.getActorMapping().add(createGroupActorMapping("Finance","/acme/finance"));
-		//        amType.getActorMapping().add(createGroupActorMapping("Marketing","/acme/marketing"));
-		//        amType.getActorMapping().add(createGroupActorMapping("Human resource","/acme/hr"));
-		//        amType.getActorMapping().add(createGroupActorMapping("Production","/acme/production"));
-		//        amType.getActorMapping().add(createGroupActorMapping("Infrastructure","/acme/it"));
-		//        amType.getActorMapping().add(createGroupActorMapping("Sales","/acme/sales"));
 		conf.setActorMappings(amType) ;
 	}
 
@@ -512,9 +506,6 @@ public class NewDiagramCommandHandler extends AbstractHandler {
 					"Unable to set charset for file " + file.getFullPath(), e); //$NON-NLS-1$
 		}
 	}
-
-
-
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.commands.AbstractHandler#isEnabled()

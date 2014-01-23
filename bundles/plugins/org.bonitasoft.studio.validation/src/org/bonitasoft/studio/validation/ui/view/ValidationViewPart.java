@@ -53,6 +53,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
@@ -92,7 +93,7 @@ public class ValidationViewPart extends ViewPart implements ISelectionListener,
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults()
 				.extendedMargins(5, 0, 3, 1).create());
-
+		mainComposite.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		createValidateButton(mainComposite);
 		createTableComposite(mainComposite);
 

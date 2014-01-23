@@ -25,6 +25,8 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.Operation;
 import org.bonitasoft.studio.model.form.Info;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
+import org.bonitasoft.studio.model.process.JavaObjectData;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -48,33 +50,18 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 	 */
 	@Override
 	public IStatus validate(Object value) {
-		Expression expression = null;
-		if(value instanceof Expression){
-			expression = (Expression) value;
-		}else if( inputExpression != null){
-			expression = inputExpression;
-		}
+		Expression expression = getExpression(value);
 		if(expression != null){
-			String expressionContent = expression.getContent();
-			if(value instanceof String){//Expression content to validate
-				expressionContent = value.toString();
-			}
-			EObject container = ((Expression) expression).eContainer() ;
-			String expressionName = ((Expression) expression).getName();
-			if(expressionName == null || expressionName.isEmpty()){
-				expressionName = value.toString();
-			}
-			if(container instanceof Operation){
-				final Operation operation = (Operation) container;
-				EObject parent = operation.eContainer();
-				if(parent instanceof Info){
-					return ValidationStatus.ok();
-				}
-
-				final String operatorType = operation.getOperator().getType();
-				if(dataExpression != null &&  dataExpression.getContent() != null 
-						&& !dataExpression.getContent().isEmpty() && expressionContent != null 
-						&& !expressionContent.isEmpty()){
+			String expressionContent = getExpressionContent(value, expression);
+			String expressionName = getExpressionName(value, expression);
+			if(dataExpression != null 
+					&&  dataExpression.getContent() != null 
+					&& !dataExpression.getContent().isEmpty() 
+					&& expressionContent != null 
+					&& !expressionContent.isEmpty()){
+				final Operation operation = getOperation(expression);
+				if(operation != null && needValidation(operation)){
+					final String operatorType = operation.getOperator().getType();
 					if(ExpressionConstants.JAVA_METHOD_OPERATOR.equals(operatorType)){
 						return validateJavaMethodOperation(expression,
 								expressionName, operation);
@@ -87,9 +74,19 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 						if(status != null){
 							return status;
 						}
+					}else if(ExpressionConstants.CREATE_BUSINESS_DATA_OPERATOR.equals(operatorType)){
+						IStatus status = validateCreateBusinessDataOperation(expression,
+								expressionName, operation);
+						if(status != null){
+							return status;
+						}
 					}else if(ExpressionConstants.ASSIGNMENT_OPERATOR.equals(operatorType)){
 						if(ExpressionConstants.DOCUMENT_REF_TYPE.equals(dataExpression.getType())){
 							return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,typeLabelProvider.getText(dataExpression.getType()),operatorLabelProvider.getText(operation.getOperator())));
+						}
+						if(ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType())
+								&&  (!dataExpression.getReferencedElements().isEmpty() && dataExpression.getReferencedElements().get(0) instanceof BusinessObjectData)){
+							return ValidationStatus.error(Messages.bind(Messages.businessDataNotCompatibleForOperator,operatorLabelProvider.getText(operation.getOperator())));
 						}
 					}
 					if(ExpressionConstants.MESSAGE_ID_TYPE.equals(operation.getRightOperand().getType())){
@@ -99,11 +96,8 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 					if(ModelHelper.isAnExpressionCopy((Expression) expression)){
 						return ValidationStatus.ok();
 					}
-
 				}
-			}
 
-			if(dataExpression != null && dataExpression.getContent() != null && !dataExpression.getContent().isEmpty() && expressionContent != null && !expressionContent.isEmpty()){
 				try{
 					Class<?> dataReturnTypeClass = Class.forName(dataExpression.getReturnType());
 					Class<?> expressionReturnTypeClass = Class.forName(((Expression) expression).getReturnType());
@@ -119,7 +113,7 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 								expressionName));
 					}
 				}
-				
+
 				if(ExpressionConstants.CONSTANT_TYPE.equals(expression.getType())){
 					String returnType = expression.getReturnType();
 					if(expressionContent != null && !expressionContent.isEmpty()){
@@ -151,10 +145,57 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 					}
 
 				}
-				
+
 			}
 		}
 		return ValidationStatus.ok();
+	}
+
+	protected IStatus validateCreateBusinessDataOperation(Expression expression,
+			String expressionName, Operation operation) {
+		if(!ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType()) 
+				&& !(dataExpression.getReferencedElements().get(0) instanceof BusinessObjectData)){
+			return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,typeLabelProvider.getText(dataExpression.getType()),operatorLabelProvider.getText(operation.getOperator())));
+		}
+		return null;
+	}
+
+	protected boolean needValidation(Operation operation) {
+		return !(operation.eContainer() instanceof Info);
+	}
+
+	protected Operation getOperation(Expression expression) {
+		EObject container = expression.eContainer() ;
+		if(container instanceof Operation){
+			return (Operation) container;
+		}
+		return null;
+	}
+
+	protected Expression getExpression(Object value) {
+		Expression expression = null;
+		if(value instanceof Expression){
+			expression = (Expression) value;
+		}else if( inputExpression != null){
+			expression = inputExpression;
+		}
+		return expression;
+	}
+
+	protected String getExpressionContent(Object value, Expression expression) {
+		String expressionContent = expression.getContent();
+		if(value instanceof String){//Expression content to validate
+			expressionContent = value.toString();
+		}
+		return expressionContent;
+	}
+
+	protected String getExpressionName(Object value, Expression expression) {
+		String expressionName = ((Expression) expression).getName();
+		if(expressionName == null || expressionName.isEmpty()){
+			expressionName = value.toString();
+		}
+		return expressionName;
 	}
 
 	protected IStatus validateSetDocumentOperation(Expression expression,
@@ -206,7 +247,8 @@ public class OperationReturnTypesValidator implements IExpressionValidator {
 
 	protected IStatus validateJavaMethodOperation(Expression expression,
 			String expressionName, final Operation operation) {
-		if(!ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType())){
+		if(!ExpressionConstants.VARIABLE_TYPE.equals(dataExpression.getType())
+				|| !(!dataExpression.getReferencedElements().isEmpty() && dataExpression.getReferencedElements().get(0) instanceof JavaObjectData)){
 			return ValidationStatus.error(Messages.bind(Messages.incompatibleExpressionTypeForOperator,typeLabelProvider.getText(dataExpression.getType()),operatorLabelProvider.getText(operation.getOperator())));
 		}
 		if(!operation.getOperator().getInputTypes().isEmpty()){

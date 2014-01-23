@@ -17,16 +17,13 @@
  */
 package org.bonitasoft.studio.application.actions.coolbar;
 
-import java.lang.reflect.Field;
-
-import org.bonitasoft.studio.application.BonitaStudioWorkbenchWindowAdvisor;
-import org.bonitasoft.studio.common.jface.BonitaSashForm;
+import org.bonitasoft.studio.application.coolbar.CoolbarToolControl;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.model.application.ui.menu.MToolControl;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.WorkbenchWindow;
 
@@ -37,16 +34,14 @@ import org.eclipse.ui.internal.WorkbenchWindow;
 public class SmallCoolBarHandler extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow() ;
-		try {
-			Field f = WorkbenchWindow.class.getDeclaredField("windowAdvisor") ;
-			f.setAccessible(true) ;
-			BonitaStudioWorkbenchWindowAdvisor windowAdvisor = (BonitaStudioWorkbenchWindowAdvisor) f.get(window) ;
-			windowAdvisor.minimizeCoolbar() ;
-		} catch (Exception e) {
-			
+		MWindow model = ((WorkbenchWindow) PlatformUI.getWorkbench().getActiveWorkbenchWindow()).getModel();
+		EModelService modelService = model.getContext().get(EModelService.class);
+		MToolControl bonitaCoolBar = (MToolControl) modelService.find(
+				"BonitaCoolbar", model);
+		if(bonitaCoolBar != null){
+			CoolbarToolControl coolbarControl = (CoolbarToolControl) bonitaCoolBar.getObject();
+			coolbarControl.minimizeCoolbar();
 		}
-		
 		return null;
 	}
 

@@ -33,6 +33,7 @@ import org.bonitasoft.studio.model.process.Container;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
+import org.bonitasoft.studio.model.process.diagram.edit.parts.PoolEditPart;
 import org.bonitasoft.studio.model.process.diagram.edit.parts.SubProcessEvent2EditPart;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
@@ -42,6 +43,7 @@ import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
@@ -163,8 +165,7 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 			rect.height = max.height;
 
 		if(request.getType().equals(REQ_RESIZE)){
-			if(!isReizeValid(request)){
-				feedback.getBounds().setLocation(rect.x, rect.y) ;
+			if(!isResizeValid(request)){
 				if(feedback instanceof CustomSVGFigure){
 					((CustomSVGFigure) feedback).setColor(FigureUtilities.lighter(ColorConstants.red), 
 							ColorRegistry.getInstance().getColor(((FillStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor())) ;
@@ -182,15 +183,60 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 					feedback.setForegroundColor(foreground) ;
 				}
 			}
+		}else if(request.getType().equals(REQ_MOVE)){
+			if(!isMoveValid(request)){
+				if(feedback instanceof CustomSVGFigure){
+					((CustomSVGFigure) feedback).setColor(FigureUtilities.lighter(ColorConstants.red), 
+							ColorRegistry.getInstance().getColor(((FillStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor())) ;
+				}else{
+					feedback.setForegroundColor(FigureUtilities.lighter(ColorConstants.red)) ;
+				}
+			}else{
+				Color foreground = ColorRegistry.getInstance().getColor(((LineStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getLineStyle())).getLineColor()) ; 
+				if(feedback instanceof CustomSVGFigure){
+					((CustomSVGFigure) feedback).setColor(foreground, 
+							ColorRegistry.getInstance().getColor(((FillStyle) ((IGraphicalEditPart)getHost()).getNotationView().getStyle(NotationPackage.eINSTANCE.getFillStyle())).getFillColor())) ;
+				}else{
+					feedback.setForegroundColor(foreground) ;
+				}
+			}
 		}
 
 		feedback.translateToRelative(rect);
-	
 		feedback.setBounds(rect);
-
-
 	}
 
+
+	private boolean isMoveValid(ChangeBoundsRequest request) {
+		if(request.getEditParts() != null && !request.getEditParts().isEmpty()){
+			getHost().getParent().refresh();
+			PoolEditPart pe = getPoolEditPart(getHost());
+			if(pe instanceof IGraphicalEditPart){
+				Rectangle transformedRectangle = request.getTransformedRectangle(getHostFigure().getBounds());
+				Rectangle poolBounds = ((IGraphicalEditPart) pe).getFigure().getBounds();
+				FiguresHelper.translateToAbsolute(getHostFigure(), transformedRectangle);
+				FiguresHelper.translateToAbsolute(((IGraphicalEditPart) pe).getFigure(), poolBounds);
+				if(poolBounds.x > transformedRectangle.x){
+					return false ;
+				}
+				if(poolBounds.y > transformedRectangle.y){
+					return false ;
+				}
+			}
+		}
+		return true ;
+	}
+
+	private PoolEditPart getPoolEditPart(EditPart host) {
+		if(host instanceof PoolEditPart){
+			return (PoolEditPart) host;
+		}
+		EditPart current = host;
+		while (current != null && !(current instanceof PoolEditPart)) {
+			current = current.getParent();
+		}
+		return (PoolEditPart) current;
+	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
@@ -204,10 +250,9 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 				ResizableHandleKit.addHandle((GraphicalEditPart) getHost(),
 						list, PositionConstants.EAST);
 				Container container = (Container) (((IGraphicalEditPart) getHost()).resolveSemanticElement()) ; 
-				if(container.getElements().isEmpty() || !(container.getElements().get(0) instanceof Lane)){
-					ResizableHandleKit.addHandle((GraphicalEditPart) getHost(),
-							list, PositionConstants.SOUTH);
-				}
+				//if(container.getElements().isEmpty() || !(container.getElements().get(0) instanceof Lane)){
+				list.add(new CustomPoolResizeHandle((GraphicalEditPart)getHost(),PositionConstants.SOUTH ));
+				//	ResizableHandleKit.addHandle((GraphicalEditPart) getHost(),list, PositionConstants.SOUTH);
 			}else{
 				ResizableHandleKit.addHandle((GraphicalEditPart) getHost(),
 						list, PositionConstants.SOUTH);
@@ -241,14 +286,14 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 
 	@Override
 	protected Command getResizeCommand(ChangeBoundsRequest request) {	
-		if(isReizeValid(request)){
+		if(isResizeValid(request)){
 			return super.getResizeCommand(request);
 		}
 		return null;
 	}
 
 
-	protected boolean isReizeValid(ChangeBoundsRequest request){
+	protected boolean isResizeValid(ChangeBoundsRequest request){
 		if(request.getEditParts() != null && !request.getEditParts().isEmpty()){
 			IGraphicalEditPart ep = (IGraphicalEditPart) request.getEditParts().get(0) ;
 			if( request.getSizeDelta().height <= 0 &&  request.getSizeDelta().width <= 0 && ep.resolveSemanticElement() instanceof SubProcessEvent){
@@ -401,7 +446,7 @@ public class CustomResizableEditPolicyEx extends ResizableEditPolicyEx implement
 		if(!request.getEditParts().isEmpty() && request.getEditParts().get(0) instanceof CustomSubProcessEvent2EditPart && checkOverlapOtherFigures(request) && request.getEditParts() != null ){
 			return null ; // DON'T MOVE A SUBPROCESS EVENT IF LOCATION NOT VALID
 		}
-		
+
 		CompoundCommand cc = new CompoundCommand("Move");
 		cc.add(super.getMoveCommand(request)) ;
 		if(request.getEditParts() != null && !request.getEditParts().isEmpty()){

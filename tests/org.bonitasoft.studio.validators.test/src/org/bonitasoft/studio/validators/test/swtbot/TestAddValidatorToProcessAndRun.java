@@ -92,23 +92,15 @@ public class TestAddValidatorToProcessAndRun extends SWTBotGefTestCase{
         runProcess();
     }
 
-
-
-
     private static boolean testingBosSp() {
         return Platform.getBundle("org.bonitasoft.studioEx.console.libs") != null;
     }
 
 
-
-
     @After
     public void closeEditors(){
-
-        bot.closeAllShells();
         bot.saveAllEditors();
         bot.closeAllEditors();
-
     }
 
     private void runProcess() throws ExecutionException{

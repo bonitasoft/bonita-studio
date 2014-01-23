@@ -17,8 +17,6 @@
 package org.bonitasoft.studio.actors.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
 import org.bonitasoft.studio.actors.model.organization.Organization;
@@ -32,7 +30,8 @@ import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.Parameterization;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -42,6 +41,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 
 /**
  * @author Romain Bioteau
@@ -111,19 +111,16 @@ public class SynchronizeOrganizationWizard extends Wizard {
 
                     IRepositoryFileStore artifact = getFileStore() ;
                     ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
-                    Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization") ;
-                    Map<String, Object> parameters = new HashMap<String, Object>() ;
-                    parameters.put("artifact", artifact.getName()) ;
+                    IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class) ;
+    				Command cmd = service.getCommand("org.bonitasoft.studio.engine.installOrganization") ;
+    				try {
+    					Parameterization p = new Parameterization(cmd.getParameter("artifact"), artifact.getName());
+    					handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[]{p}), null);
+    					 prefStore.setValue(ActorsPreferenceConstants.DEFAULT_ORGANIZATION, artifact.getDisplayName()) ;
+    				} catch (Exception e) {
+    					BonitaStudioLog.error(e);
+    				}
                     
-                    ExecutionEvent ee = new ExecutionEvent(cmd, parameters, null, null) ;
-
-                    try {
-                        cmd.executeWithChecks(ee) ;
-                        prefStore.setValue(ActorsPreferenceConstants.DEFAULT_ORGANIZATION, artifact.getDisplayName()) ;
-                    } catch (Exception e) {
-                        BonitaStudioLog.error(e) ;
-                        return  ;
-                    }
                     final String organizationName = artifact.getDisplayName();
                     Display.getDefault().syncExec( new Runnable() {
 						public void run() {

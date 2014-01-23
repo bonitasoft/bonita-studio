@@ -7,6 +7,11 @@
             defaultHandler="org.bonitasoft.studio.debug.command.DebugProcessCommand"
             id="org.bonitasoft.studio.debug.debugProcess"
             name="%debugLabel">
+         <commandParameter
+               id="configuration"
+               name="configuration"
+               optional="true">
+         </commandParameter>
       </command>
    </extension>
    <extension

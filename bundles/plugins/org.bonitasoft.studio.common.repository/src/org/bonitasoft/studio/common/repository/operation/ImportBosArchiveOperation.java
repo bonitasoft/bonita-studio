@@ -34,7 +34,6 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.Pair;
 import org.bonitasoft.studio.common.ProductVersion;
-import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -47,8 +46,6 @@ import org.bonitasoft.studio.common.repository.filestore.FileStoreChangeEvent.Ev
 import org.bonitasoft.studio.common.repository.model.IRepository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.MainProcess;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -63,7 +60,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -76,84 +72,62 @@ public class ImportBosArchiveOperation {
 	private IStatus status;
 	private String archiveFile;
 	private Set<String> resourceToOpen;
+	private List<IRepositoryFileStore> fileStoresToOpen = new ArrayList<IRepositoryFileStore>();
 
 	public IStatus run(IProgressMonitor monitor) {
 		status = Status.OK_STATUS;
-
 		Assert.isNotNull(archiveFile);
 		final File archive = new File(archiveFile);
 		Assert.isTrue(archive.exists());
-
+		fileStoresToOpen.clear();
 		try {
 			IContainer container = createTempProject(archive, monitor);
 			final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap = new HashMap<String, IRepositoryStore<? extends IRepositoryFileStore>>();
+		
 			IRepository currentRepository = RepositoryManager.getInstance().getCurrentRepository();
 			currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.PRE_IMPORT, null));
 			final List<IRepositoryStore<? extends IRepositoryFileStore>> allRepositories = currentRepository.getAllStores();
+			
 			FileActionDialog.activateYesNoToAll();
+		
 			for (IRepositoryStore<? extends IRepositoryFileStore> repository : allRepositories) {
 				repositoryMap.put(repository.getName(), repository);
 			}
-			boolean isValid = false;
-			while (container != null && !isValid) {
-				IResource lastVisited = null;
-				for (IResource r : container.members(IResource.FOLDER)) {
-					if (repositoryMap.get(r.getName()) != null) {
-						isValid = true;
-						break;
-					}
-					lastVisited = r;
-				}
-				if (isValid) {
-					break;
-				}
-				if (lastVisited instanceof IFolder) {
-					container = (IFolder) lastVisited;
-				} else {
-					container = null;
-				}
-			}
-
-			if (!isValid) {
+			
+			IContainer rootContainer = getRootContainer(container, repositoryMap);
+			if (rootContainer == null) {
 				return new Status(IStatus.ERROR, CommonRepositoryPlugin.PLUGIN_ID, Messages.bind(Messages.invalidArchive,new Object[] { bosProductName }));
 			}
-
-			updateResourcesToOpenList(container);
+			
+			updateResourcesToOpenList(rootContainer);
 			FileActionDialog.activateYesNoToAll();
-			final IResource[] folders = container.members(IContainer.FOLDER);
+			final IResource[] folders = rootContainer.members(IContainer.FOLDER);
 			final List<IResource> folderSortedList = new ArrayList<IResource>(Arrays.asList(folders));
 			final Comparator<IResource> importFolderComparator = new ImportFolderComparator<IResource>();
 			Collections.sort(folderSortedList, importFolderComparator);
 			for (final IResource folder : folderSortedList) {
-				Display.getDefault().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						try {
-							if (folder instanceof IFolder) {
-								Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair = findRepository(
-										repositoryMap, (IFolder) folder);
-								if (pair == null) {
-									for (final IResource subFolder : ((IContainer) folder).members(IContainer.FOLDER)) {
-										if (subFolder instanceof IFolder) {
-											pair = findRepository(repositoryMap, (IFolder) subFolder);
-											if (pair != null) {
-												importRepositoryStore(pair);
-											}
-										}
+				try {
+					if (folder instanceof IFolder) {
+						Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair = findRepository(
+								repositoryMap, (IFolder) folder);
+						if (pair == null) {
+							for (final IResource subFolder : ((IContainer) folder).members(IContainer.FOLDER)) {
+								if (subFolder instanceof IFolder) {
+									pair = findRepository(repositoryMap, (IFolder) subFolder);
+									if (pair != null) {
+										importRepositoryStore(pair,monitor);
 									}
-								} else if (pair != null) {
-									importRepositoryStore(pair);
 								}
 							}
-						} catch (Exception e) {
-							BonitaStudioLog.error(e);
+						} else if (pair != null) {
+							importRepositoryStore(pair,monitor);
 						}
 					}
-				});
+				} catch (Exception e) {
+					BonitaStudioLog.error(e);
+				}
 			}
 			FileActionDialog.deactivateYesNoToAll();
-			currentRepository.refresh(monitor);
 			currentRepository.notifyFileStoreEvent(new FileStoreChangeEvent(EventType.POST_IMPORT, null));
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
@@ -163,16 +137,50 @@ public class ImportBosArchiveOperation {
 		return status;
 	}
 
-	private Boolean processExistInList(AbstractProcess ip, ArrayList<AbstractProcess> processes) {
-		for (AbstractProcess p : processes) {
-			if (ip.getName().equals(p.getName()) && ip.getVersion().equals(p.getVersion())) {
-				return true;
+
+	protected IContainer getRootContainer(
+			IContainer container,
+			final Map<String, IRepositoryStore<? extends IRepositoryFileStore>> repositoryMap)
+			throws CoreException {
+		boolean isValid = false;
+		while (container != null && !isValid) {
+			IResource lastVisited = null;
+			for (IResource r : container.members(IResource.FOLDER)) {
+				if (repositoryMap.get(r.getName()) != null) {
+					isValid = true;
+					break;
+				}
+				lastVisited = r;
+			}
+			if (isValid) {
+				break;
+			}
+			if (lastVisited instanceof IFolder) {
+				container = (IFolder) lastVisited;
+			} else {
+				container = null;
 			}
 		}
-		return false;
+		if(!isValid){
+			return null;
+		}
+		return container;
 	}
-	
-	protected void importRepositoryStore(Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair)
+
+
+	public void openFilesToOpen() {
+		for(IRepositoryFileStore f : fileStoresToOpen){
+			f.open();
+		}
+	}
+
+
+	public List<IRepositoryFileStore> getFileStoresToOpen() {
+		return fileStoresToOpen;
+	}
+
+
+	protected void importRepositoryStore(Pair<IRepositoryStore<? extends IRepositoryFileStore>, IFolder> pair,IProgressMonitor monitor)
 			throws CoreException {
 		IFolder storeFolder = pair.getSecond();
 		IRepositoryStore<? extends IRepositoryFileStore> repository = pair.getFirst();
@@ -181,56 +189,10 @@ public class ImportBosArchiveOperation {
 			final boolean openAfterImport = (resourceToOpen != null && resourceToOpen.contains(filename))
 					|| resourceToOpen == null;
 			final IRepositoryFileStore fileStore = repository.importIResource(filename, child);
-			if(fileStore != null){
-				if(!FileActionDialog.getDisablePopup()){
-					final ArrayList<AbstractProcess> processes = getAllProcesseRepository(fileStore.getParentStore().getChildren(), fileStore.getName());
-					final ArrayList<AbstractProcess> importedProcess = getProcess(fileStore);
-					final ArrayList<AbstractProcess> duplicateProcess = new ArrayList<AbstractProcess>();
-					for (AbstractProcess p : importedProcess) {
-						if (processExistInList(p, processes)) {
-							duplicateProcess.add(p);
-						}
-					}
-					if (!duplicateProcess.isEmpty()) {
-						Display.getDefault().syncExec(new Runnable() {
-
-							@Override
-							public void run() {
-								StringBuilder sb = new StringBuilder();
-								for (AbstractProcess p : duplicateProcess) {
-									sb.append(SWT.CR);
-									sb.append(p.getName()+" "+"("+p.getVersion()+")");
-								}
-								MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.warningDuplicateDialogTitle, Messages.bind(Messages.poolAlreadyExistWarningMessage,sb.toString()));
-							}
-						});
-					}
-				}
-				if (fileStore != null && openAfterImport) {
-					fileStore.open();
-				}
+			if(fileStore != null && openAfterImport) {
+				fileStoresToOpen.add(fileStore);
 			}
 		}
-	}
-
-	private ArrayList<AbstractProcess> getAllProcesseRepository(List<IRepositoryFileStore> l, String fileStoreName) {
-		final ArrayList<AbstractProcess> processes = new ArrayList<AbstractProcess>();
-		for (IRepositoryFileStore irepStore : l) {
-			if (!irepStore.getName().equals(fileStoreName) && irepStore.getContent() instanceof MainProcess) {
-				processes.addAll(getProcess(irepStore));
-			}
-		}
-		return processes;
-	}
-
-	private ArrayList<AbstractProcess> getProcess(IRepositoryFileStore fileStore) {
-		ArrayList<AbstractProcess> newprocesses = new ArrayList<AbstractProcess>();
-		final Object o = fileStore.getContent();
-		if (o != null && o instanceof MainProcess) {
-			final MainProcess currentProcess = (MainProcess) o;
-			newprocesses.addAll(ModelHelper.getAllProcesses(currentProcess));
-		}
-		return newprocesses;
 	}
 
 	private void updateResourcesToOpenList(IContainer container) {
@@ -278,7 +240,7 @@ public class ImportBosArchiveOperation {
 		container.create(Repository.NULL_PROGRESS_MONITOR);
 		container.open(Repository.NULL_PROGRESS_MONITOR);
 		try {
-			PlatformUtil.unzipZipFiles(archive, container.getLocation().toFile(), monitor);
+			PlatformUtil.unzipZipFiles(archive, container.getLocation().toFile(), Repository.NULL_PROGRESS_MONITOR);
 		} catch (Exception e) {
 			BonitaStudioLog.error(e);
 			MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.importBonita6xTitle,

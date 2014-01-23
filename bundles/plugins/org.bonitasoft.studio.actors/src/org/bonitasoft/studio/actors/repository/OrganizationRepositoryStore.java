@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 
 import org.bonitasoft.studio.actors.ActorsPlugin;
 import org.bonitasoft.studio.actors.i18n.Messages;
@@ -138,6 +139,9 @@ public class OrganizationRepositoryStore extends AbstractEMFRepositoryStore<Orga
 				}
 			}
 		}catch(Exception e){
+			if(e instanceof CancellationException){
+				throw (CancellationException)e;
+			}
 			BonitaStudioLog.error(e) ;
 			return null;
 		}

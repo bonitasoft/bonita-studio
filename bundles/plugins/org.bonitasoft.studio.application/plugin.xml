@@ -430,11 +430,6 @@
             id="org.bonitasoft.studio.application.refreshconnectorcommand"
             name="%refreshConnectors_commandLabel">
       </command>
-           <command
-            defaultHandler="org.bonitasoft.studio.application.actions.ImportFileCommand"
-            id="org.bonitasoft.studio.application.importCommand"
-            name="%importLabel">
-      </command>
       <command
             defaultHandler="org.bonitasoft.studio.application.actions.SwitchPaletteMode"
             id="org.bonitasoft.studio.application.switchPalette"
@@ -863,11 +858,6 @@
             toolbarPosition="3">
       </coolbarItem>
       <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.ImportBarCoolbarItem"
-            priority="0"
-            toolbarPosition="4">
-      </coolbarItem>
-      <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.CopyCoolbarItem"
             priority="0"
             toolbarPosition="6">
@@ -902,6 +892,12 @@
             priority="0"
             toolbarPosition="14">
       </coolbarItem>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.bonitasoft.studio.application.BonitaStudioWorkbenchAdvisor">
+      </startup>
    </extension>
 
 </plugin>

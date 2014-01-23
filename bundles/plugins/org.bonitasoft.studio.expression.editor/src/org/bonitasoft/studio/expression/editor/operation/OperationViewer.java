@@ -322,6 +322,7 @@ public class OperationViewer extends Composite implements IBonitaVariableContext
 
 	protected ReadOnlyExpressionViewer createStorageViewer() {
 		final ReadOnlyExpressionViewer storageViewer = new ReadOnlyExpressionViewer(this,SWT.BORDER,widgetFactory,editingDomain,ExpressionPackage.Literals.OPERATION__LEFT_OPERAND) ;
+		storageViewer.setIsPageFlowContext(isPageFlowContext);
 		storageViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().hint(230, SWT.DEFAULT).grab(false, false).create());
 		if(storageExpressionFilter != null){
 			storageViewer.addFilter(storageExpressionFilter) ;

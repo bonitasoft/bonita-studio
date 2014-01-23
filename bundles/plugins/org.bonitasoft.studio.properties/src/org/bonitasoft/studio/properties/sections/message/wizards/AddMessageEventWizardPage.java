@@ -31,6 +31,7 @@ import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFil
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionCollectionViewer;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
+import org.bonitasoft.studio.expression.editor.viewer.LineTableCreator;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.expression.ListExpression;
@@ -51,6 +52,7 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -206,22 +208,25 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		captions.add(Messages.messageContentID);
 		captions.add(Messages.expressionName);
 
-		final ExpressionCollectionViewer ecv = new ExpressionCollectionViewer(
-				composite, 0, false, 2, true, captions, false, false);
-		ecv.setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
-				.create());
+		final ExpressionCollectionViewer ecv = new ExpressionCollectionViewer(composite, 0, false, 2, true, captions, false, false);
+		ecv.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 		ecv.setAddRowLabel(Messages.addMessageContentButton);
 		ecv.setRemoveRowLabel(Messages.removeMessageContent);
-
-		final List<ViewerFilter> filters = new ArrayList<ViewerFilter>(2);
-		filters.add(new AvailableExpressionTypeFilter(
-				new String[] { ExpressionConstants.CONSTANT_TYPE }));
-		filters.add(new AvailableExpressionTypeFilter(new String[] {
-				ExpressionConstants.CONSTANT_TYPE,
-				ExpressionConstants.SCRIPT_TYPE,
-				ExpressionConstants.PARAMETER_TYPE,
-				ExpressionConstants.VARIABLE_TYPE }));
-		ecv.setViewerFilters(filters);
+		ecv.setLineTableCreator(new LineTableCreator(){
+			public ListExpression createListExpressionForNewLineInTable(int size) {
+				ListExpression rowExp = ExpressionFactory.eINSTANCE.createListExpression();
+				EList<Expression> expressions = rowExp.getExpressions();
+				for (int i = 0; i < size; i++) {
+					final Expression cellExpression = ExpressionFactory.eINSTANCE.createExpression();
+					if(i==0){
+						cellExpression.setReturnTypeFixed(true);
+					}
+					expressions.add(cellExpression);
+				}
+				return rowExp;
+			}
+		});
+		addMessageContentFilters(ecv);
 		ecv.setInput(element);
 
 		final TableExpression messageContent = getMessageContentTable();
@@ -238,6 +243,20 @@ public class AddMessageEventWizardPage extends WizardPage implements
 		});
 		ecv.setLayoutData(GridDataFactory.fillDefaults().grab(true, true)
 				.create());
+	}
+
+	private void addMessageContentFilters(final ExpressionCollectionViewer ecv) {
+		final List<ViewerFilter> filters = new ArrayList<ViewerFilter>(2);
+		filters.add(new AvailableExpressionTypeFilter(
+				new String[] { ExpressionConstants.CONSTANT_TYPE }){
+			
+		});
+		filters.add(new AvailableExpressionTypeFilter(new String[] {
+				ExpressionConstants.CONSTANT_TYPE,
+				ExpressionConstants.SCRIPT_TYPE,
+				ExpressionConstants.PARAMETER_TYPE,
+				ExpressionConstants.VARIABLE_TYPE }));
+		ecv.setViewerFilters(filters);
 	}
 
 	private void createcorrelationComposite(Composite composite) {

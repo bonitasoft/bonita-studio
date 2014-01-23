@@ -3,22 +3,19 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>studio</artifactId>
 		<version>6.3.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<groupId>org.bonitasoft.studio.tests</groupId>
 	<artifactId>tests</artifactId>
 	<version>6.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>org.eclipse.swtbot.finder.nebula</module>
-		<module>org.eclipse.swtbot.finder.nebula.gallery</module>
-		<module>org.eclipse.swtbot.finder.nebula.tableCombo</module>
 		<module>org.bonitasoft.studio.jre.extension</module>
 		<module>org.bonitasoft.studio.actors.tests</module>
 		<module>org.bonitasoft.studio.application.test</module>
@@ -26,7 +23,6 @@
 		<module>org.bonitasoft.studio.configuration.test</module>
 		<module>org.bonitasoft.studio.connectors.test</module>
 		<module>org.bonitasoft.studio.decision.core.test</module>
-		<module>org.bonitasoft.studio.diagram.form.custom.tests</module>
 		<module>org.bonitasoft.studio.diagram.test</module>
 		<module>org.bonitasoft.studio.engine.test</module>
 		<module>org.bonitasoft.studio.exporter.tests</module>
@@ -59,10 +55,9 @@
 	</modules>
 
 
-	
-		<properties>
-			<tests.log.level>INFO</tests.log.level>
-   			<sonar.jacoco.itReportPath>../../target/jacoco.exec</sonar.jacoco.itReportPath>
-  		</properties>
+
+	<properties>
+		<sonar.jacoco.itReportPath>../../target/jacoco.exec</sonar.jacoco.itReportPath>
+	</properties>
 
 </project>

@@ -20,11 +20,9 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -41,7 +39,8 @@ import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.Pool;
 import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.Parameterization;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.PojoObservables;
@@ -52,11 +51,11 @@ import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
@@ -85,10 +84,9 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 
 
 /**
@@ -417,22 +415,18 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
 		//Validate before run
 		final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command cmd = cmdService.getCommand("org.bonitasoft.studio.validation.batchValidation");
-		Map<String, Object> parameters = new HashMap<String,Object>();
-		parameters.put("showReport", false);
-		Set<Diagram> diagrams = new HashSet<Diagram>();
+		final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class) ;
+		Set<String> procFiles = new HashSet<String>();
 		for(AbstractProcess p : selectedList){
 			Resource eResource = p.eResource();
 			if(eResource!=null){
-				for(EObject e : eResource.getContents()){
-					if(e instanceof Diagram){
-						diagrams.add((Diagram) e);
-					}
-				}
+				procFiles.add(URI.decode(eResource.getURI().lastSegment()));
 			}
 		}
-		parameters.put("diagrams", diagrams);
 		try {
-			final IStatus status = (IStatus) cmd.executeWithChecks(new ExecutionEvent(cmd,parameters,null,null));
+			Parameterization showReportParam = new Parameterization(cmd.getParameter("showReport"), Boolean.FALSE.toString());
+			Parameterization filesParam = new Parameterization(cmd.getParameter("diagrams"),procFiles.toString());
+			final IStatus status = (IStatus) handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[]{showReportParam,filesParam}), null);
 			if(statusContainsError(status)){
 				StringBuilder report = new StringBuilder("");
 				List<String> alreadyInReport = new ArrayList<String>(selectedList.size());

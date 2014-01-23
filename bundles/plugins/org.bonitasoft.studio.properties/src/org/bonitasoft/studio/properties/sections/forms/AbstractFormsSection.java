@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bonitasoft.studio.common.jface.EMFListFeatureTreeContentProvider;
+import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.common.widgets.MagicComposite;
@@ -211,6 +212,7 @@ public abstract class AbstractFormsSection extends AbstractBonitaDescriptionSect
 
     protected FilteredTree createFilteredTree(Composite mainComposite) {
         tree = new FilteredTree(mainComposite, SWT.BORDER | SWT.MULTI, new PatternFilter(), true);
+        tree.getViewer().getTree().setData(SWTBotConstants.SWTBOT_WIDGET_ID_KEY,SWTBotConstants.APPLICATION_SECTION_FORMS_SELECTION_TREE);
         getWidgetFactory().adapt(tree, false, false) ;
         tree.setLayoutData(createPageFlowTreeGridData());
 

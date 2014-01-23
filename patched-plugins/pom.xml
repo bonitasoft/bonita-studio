@@ -13,12 +13,12 @@
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>patched-plugins</artifactId>
 	<version>6.3.0-SNAPSHOT</version>
+
 	<packaging>pom</packaging>
 
 
 	<modules>
 		<module>ca.ecliptical.gmf.ant</module>
-		<module>org.eclipse.jdt.core</module>
 		<module>org.eclipse.emf.edapt.migration</module>
 		<module>org.eclipse.ui.views.properties.tabbed</module>
 		<module>org.eclipse.gmf.runtime.lite.svg</module>

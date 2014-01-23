@@ -25,11 +25,12 @@ import java.util.Set;
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.configuration.ConfigurationPlugin;
 import org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage;
 import org.bonitasoft.studio.configuration.i18n.Messages;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.dependencies.ui.MissingDependenciesDecorator;
 import org.bonitasoft.studio.dependencies.ui.dialog.SelectJarsDialog;
 import org.bonitasoft.studio.model.configuration.Configuration;
@@ -39,8 +40,6 @@ import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.pics.Pics;
-import org.eclipse.core.commands.Command;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.dialogs.Dialog;
@@ -78,8 +77,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.views.properties.tabbed.ITabDescriptor;
 
 /**
@@ -258,9 +255,9 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
 
         treeViewer = new CheckboxTreeViewer(mainComposite, SWT.BORDER | SWT.FULL_SELECTION) ;
         treeViewer.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create()) ;
-        ILabelDecorator missingDespDecorator = new MissingDependenciesDecorator() ;
+        ILabelDecorator missingDependenciesDecorator = new MissingDependenciesDecorator(getDependencyRepositoryStore()) ;
         treeViewer.getTree().setLinesVisible(true) ;
-        treeViewer.setLabelProvider(new DecoratingLabelProvider(new DependenciesTreeLabelProvider(),missingDespDecorator)) ;
+        treeViewer.setLabelProvider(new DecoratingLabelProvider(new DependenciesTreeLabelProvider(),missingDependenciesDecorator)) ;
         treeViewer.setCheckStateProvider(this) ;
         treeViewer.addCheckStateListener(this) ;
         treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -276,7 +273,7 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
         buttonComposite.setLayout(GridLayoutFactory.fillDefaults().margins(0,0).spacing(0,3).create()) ;
 
         addJarButton = new Button(buttonComposite, SWT.FLAT) ;
-        addJarButton.setLayoutData(GridDataFactory.fillDefaults().create()) ;
+        addJarButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
         addJarButton.setText(Messages.add) ;
         addJarButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -314,7 +311,7 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
         }) ;
 
         removeJarButton = new Button(buttonComposite, SWT.FLAT) ;
-        removeJarButton.setLayoutData(GridDataFactory.fillDefaults().create()) ;
+        removeJarButton.setLayoutData(GridDataFactory.fillDefaults().hint(85, SWT.DEFAULT).create()) ;
         removeJarButton.setText(Messages.remove) ;
         removeJarButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -326,26 +323,14 @@ public abstract class AbstractDependenciesConfigurationWizardPage extends Wizard
             }
         }) ;
 
-//        final Button manageJarButton = new Button(buttonComposite, SWT.FLAT) ;
-//        manageJarButton.setLayoutData(GridDataFactory.fillDefaults().create()) ;
-//        manageJarButton.setText(Messages.manageJars) ;
-//        manageJarButton.addSelectionListener(new SelectionAdapter() {
-//            @Override
-//            public void widgetSelected(SelectionEvent e) {
-//                final ICommandService commandService =  (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class) ;
-//                Command cmd =  commandService.getCommand("org.bonitasoft.studio.dependencies.manageJars") ;
-//                try {
-//                    cmd.executeWithChecks(new ExecutionEvent()) ;
-//                } catch (Exception e1){
-//                    BonitaStudioLog.error(e1) ;
-//                }
-//                treeViewer.refresh() ;
-//            }
-//        }) ;
         return mainComposite ;
     }
 
-    /* (non-Javadoc)
+    protected DependencyRepositoryStore getDependencyRepositoryStore() {
+		return (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
+	}
+
+	/* (non-Javadoc)
      * @see org.bonitasoft.studio.configuration.extension.IProcessConfigurationWizardPage#updatePage(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration)
      */
     @Override

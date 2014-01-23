@@ -28,21 +28,16 @@ public class Messages extends NLS {
     private static String BUNDLE_NAME = "messages"; //$NON-NLS-1$
 
     public static String openProcessWizardPage_title;
-    public static String browseButton_label;
     public static String NewProcessButtonLabel;
     public static String OpenProcessButtonLabel;
     public static String SaveProcessButtonLabel;
     public static String PrintProcessButtonLabel;
-    public static String ImportProcessButtonLabel;
     public static String CopyButtonLabel;
     public static String PasteButtonLabel;
     public static String HelpButtonLabel;
     public static String WelcomeButtonLabel;
-    public static String importProcessTitle;
-    public static String PreviewFormLabel;
 
 
-    public static String importProcessProgressDialog;
     public static String unableTofindLogTitle;
     public static String unableTofindLogMessage;
     public static String confirmContributionInstall_message;
@@ -52,11 +47,6 @@ public class Messages extends NLS {
     public static String success;
     public static String notLoggedIn;
     public static String errorWhileDownloadingContrib;
-    public static String importFileTitle;
-    public static String importFileDescription;
-    public static String selectImportLabel;
-    public static String importDescriptionLabel;
-    public static String selectFileToImport;
     public static String installingFromContribution;
     public static String downloading;
     public static String installingContribution;
@@ -67,8 +57,6 @@ public class Messages extends NLS {
     public static String aboutText;
     public static String reduceCoolbarTooltip;
     public static String maximizeCoolbarTooltip;
-    public static String errorWhileImporting_message;
-    public static String errorWhileImporting_title;
     public static String initializingCurrentRepository;
     public static String shuttingDown;
 
@@ -78,18 +66,14 @@ public class Messages extends NLS {
 
 	public static String jreNotFoundMessage;
 
-	public static String previewButton;
-	public static String advancedPreviewButton;
-	public static String lnfForPreview;
-	public static String browserForPreview;
 	public static String invalidWorkspaceTitle;
 	public static String invalidWorkspace;
 	public static String failedToOpenLogTitle;
 	public static String failedToOpenLogMessage;
-
 	public static String doNotDisplayForOtherDiagrams;
-
+	public static Object openingStudio;
 	public static String noProcessAvailable;
+
 
 
 

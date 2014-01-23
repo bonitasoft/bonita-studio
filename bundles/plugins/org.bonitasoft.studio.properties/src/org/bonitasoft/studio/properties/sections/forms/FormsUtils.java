@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
@@ -45,7 +44,6 @@ import org.bonitasoft.studio.model.process.diagram.form.edit.parts.FormEditPart;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditor;
 import org.bonitasoft.studio.model.process.diagram.form.part.FormDiagramEditorPlugin;
 import org.bonitasoft.studio.properties.i18n.Messages;
-import org.bonitasoft.studio.properties.sections.forms.commands.AddFormCommand;
 import org.bonitasoft.studio.properties.sections.forms.commands.DuplicateFormCommand;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
@@ -156,25 +154,6 @@ public class FormsUtils {
         TEXT, TEXT_AREA, COMBO, CHECKBOX,CHECKBOX_LIST, DATE, LIST, PASSWORD, RADIO, SELECT, FILE
     };
 
-    /**
-     * add a form to the current PageFlow
-     * 
-     * @param feature
-     * 
-     * @param string
-     * 
-     * @param form
-     *            the form to add to the current pageFlow
-     */
-    public static void addForm(Element pageFlow, TransactionalEditingDomain editingDomain, EStructuralFeature feature, String formName, String description,
-            Map<Element, WidgetEnum> vars) {
-        try {
-            OperationHistoryFactory.getOperationHistory().execute(new AddFormCommand(pageFlow, feature, formName, description, vars, editingDomain),
-                    new NullProgressMonitor(), null);
-        } catch (ExecutionException e) {
-            BonitaStudioLog.error(e);
-        }
-    }
 
     public static void duplicateForm(Element pageFlow, TransactionalEditingDomain editingDomain, EStructuralFeature feature, Form baseForm, String formName,
             String id, String formDesc) {
@@ -243,7 +222,7 @@ public class FormsUtils {
 
         /* open the form editor */
         FormDiagramEditor formEditor = (FormDiagramEditor) EditorService.getInstance().openEditor(new URIEditorInput(uri, form.getName()));
-        // form.eAdapters().add(new EObjectAdapter(form))
+        formEditor.getDiagramGraphicalViewer().select(formEditor.getDiagramEditPart());
         EList<Adapter> eAdapters = form.eAdapters();
         boolean alreadyHere = false;
         for (Adapter adapter : eAdapters) {

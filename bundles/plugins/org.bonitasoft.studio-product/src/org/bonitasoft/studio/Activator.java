@@ -17,7 +17,6 @@
  */
 package org.bonitasoft.studio;
 
-import org.bonitasoft.studio.presentation.PresentationActivator;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -33,6 +32,6 @@ public class Activator extends AbstractUIPlugin {
 		PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.LINK_NAVIGATOR_TO_EDITOR, true);
 		PlatformUI.getPreferenceStore().setValue(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS, false);
 		super.start(bundleContext);
-		PresentationActivator.getDefault().start(bundleContext);
+//		PresentationActivator.getDefault().start(bundleContext);
 	}
 }

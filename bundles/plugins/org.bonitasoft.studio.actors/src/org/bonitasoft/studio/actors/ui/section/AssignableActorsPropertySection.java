@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2012 BonitaSoft S.A.
- * BonitaSoft, 31 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2012-2014 BonitaSoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -17,6 +17,9 @@
 package org.bonitasoft.studio.actors.ui.section;
 
 import org.bonitasoft.studio.actors.i18n.Messages;
+import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.jface.BonitaStudioFontRegistry;
+import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.Assignable;
 import org.bonitasoft.studio.model.process.Lane;
 import org.bonitasoft.studio.model.process.ProcessPackage;
@@ -32,6 +35,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 
 /**
@@ -43,21 +47,22 @@ public class AssignableActorsPropertySection extends AbstractActorsPropertySecti
 	private Button useLaneActorButton;
 	private Button taskActorButton;
 	private Composite radioComposite;
-
+	private Label actorDefinedInLaneLabel;
 
 	@Override
 	protected void updateDatabinding() {
 		super.updateDatabinding();
-		Assignable assignable = (Assignable) getEObject() ;
+		actorDefinedInLaneLabel.setText("");
+		final Assignable assignable = (Assignable) getEObject() ;
 		if(assignable != null){
-			
+
 			EObject current = assignable ;
 			while (current != null && !(current instanceof Lane)) {
 				current = current.eContainer() ;
 			}
 
 			useLaneActorButton.setEnabled(current instanceof Lane) ;
-			IObservableValue value = EMFEditObservables.observeValue(getEditingDomain(), assignable, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE) ;
+			final IObservableValue value = EMFEditObservables.observeValue(getEditingDomain(), assignable, ProcessPackage.Literals.TASK__OVERRIDE_ACTORS_OF_THE_LANE) ;
 			emfDatabindingContext.bindValue(SWTObservables.observeSelection(taskActorButton), value) ;
 			emfDatabindingContext.bindValue(SWTObservables.observeSelection(useLaneActorButton), value,new UpdateValueStrategy(),new UpdateValueStrategy().setConverter(new Converter(Boolean.class,Boolean.class){
 
@@ -67,7 +72,7 @@ public class AssignableActorsPropertySection extends AbstractActorsPropertySecti
 				}
 
 			})) ;
-			UpdateValueStrategy updateValueStrategy = new UpdateValueStrategy().setConverter(new Converter(Boolean.class,Boolean.class){
+			final UpdateValueStrategy updateValueStrategy = new UpdateValueStrategy().setConverter(new Converter(Boolean.class,Boolean.class){
 
 				@Override
 				public Object convert(Object from) {
@@ -76,6 +81,36 @@ public class AssignableActorsPropertySection extends AbstractActorsPropertySecti
 
 			});
 			emfDatabindingContext.bindValue(SWTObservables.observeEnabled(actorComboViewer.getControl()), SWTObservables.observeSelection(useLaneActorButton),new UpdateValueStrategy(),updateValueStrategy);			
+
+			databindactorDefinedInLaneLabel(assignable);
+
+		}
+	}
+
+	private void databindactorDefinedInLaneLabel(Assignable assignable) {
+		final Lane parentLane = ModelHelper.getParentLane(assignable);
+		if(parentLane != null){
+
+			final IObservableValue observeActorDefinedInLane =
+					EMFEditObservables.observeValue(getEditingDomain(),
+							parentLane,
+							ProcessPackage.Literals.ASSIGNABLE__ACTOR);
+			emfDatabindingContext.bindValue(
+					SWTObservables.observeText(actorDefinedInLaneLabel),
+					observeActorDefinedInLane,
+					new UpdateValueStrategy(),
+					new UpdateValueStrategy().setConverter(new Converter(Object.class, String.class) {
+
+						@Override
+						public String convert(Object fromObject) {
+							if(fromObject != null){
+								return "("+((Actor)fromObject).getName()+")";
+							} else {
+								return Messages.noActorDefinedAtLaneLevel;
+							}
+						}
+					}));
+			actorDefinedInLaneLabel.pack(true);
 		}
 	}
 
@@ -83,13 +118,13 @@ public class AssignableActorsPropertySection extends AbstractActorsPropertySecti
 	protected void createRadioComposite(TabbedPropertySheetWidgetFactory widgetFactory,Composite mainComposite) {
 		radioComposite = widgetFactory.createComposite(mainComposite, SWT.NONE) ;
 		radioComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true,false).span(3, 1).create()) ;
-		radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).margins(0, 0).create()) ;
+		radioComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(0, 0).create()) ;
+
 
 		taskActorButton = widgetFactory.createButton(radioComposite, Messages.useTaskActors, SWT.RADIO) ;
 		useLaneActorButton = widgetFactory.createButton(radioComposite, Messages.useActorsDefinedInLane, SWT.RADIO) ;
-
+		actorDefinedInLaneLabel = widgetFactory.createLabel(radioComposite, "");
+		actorDefinedInLaneLabel.setFont(BonitaStudioFontRegistry.getCommentsFont());
 	}
-
-	
 
 }

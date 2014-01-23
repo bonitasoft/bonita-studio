@@ -44,6 +44,10 @@
 			name="cssTheme"
 			value="org.eclipse.e4.minimal.theme.standard">
 		 </property>
+         <property
+               name="applicationXMI"
+               value="org.bonitasoft.studio.application/LegacyIDE.e4xmi">
+         </property>
          
       </product>
    </extension> 

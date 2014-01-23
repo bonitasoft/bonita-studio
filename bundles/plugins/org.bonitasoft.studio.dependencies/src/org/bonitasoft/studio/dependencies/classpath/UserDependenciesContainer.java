@@ -16,16 +16,14 @@
  */
 package org.bonitasoft.studio.dependencies.classpath;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.dependencies.i18n.Messages;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -39,35 +37,39 @@ public class UserDependenciesContainer implements IClasspathContainer {
 
 	private IJavaProject project;
 	private IPath containerPath;
-	
+
 	public UserDependenciesContainer(IPath containerPath,IJavaProject project){
 		this.project = project;
 		this.containerPath = containerPath;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getClasspathEntries()
 	 */
 	@Override
 	public IClasspathEntry[] getClasspathEntries() {
 		Set<IClasspathEntry> entries = new HashSet<IClasspathEntry>() ;
-		if(project != null && project.exists() && project.isOpen()){
-			try {
-				final IFolder libFolder = project.getProject().getFolder("lib");
-				if(libFolder.exists()){
-					for(IResource f : libFolder.members()){
-						if(f instanceof IFile && ((IFile)f).getFileExtension() != null && ((IFile)f).getFileExtension().equalsIgnoreCase("jar")){
-							entries.add(JavaCore.newLibraryEntry(f.getLocation(), null, null, true));
-						}
+		if(project != null && project.exists()){
+			File projectFolder = project.getProject().getLocation().toFile();
+			File libFolder = new File(projectFolder,"lib");
+			if(libFolder.exists()){
+				File[] listFiles = libFolder.listFiles(new FileFilter() {
+
+					@Override
+					public boolean accept(File file) {
+						return file.getName().endsWith(".jar");
+					}
+				});
+				if(listFiles != null){
+					for(File f :  listFiles){
+						entries.add(JavaCore.newLibraryEntry(Path.fromOSString(f.getAbsolutePath()), null, null, true));
 					}
 				}
-			} catch (CoreException e) {
-				BonitaStudioLog.error(e);
 			}
 		}
 		return entries.toArray(new IClasspathEntry[entries.size()]);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
 	 */

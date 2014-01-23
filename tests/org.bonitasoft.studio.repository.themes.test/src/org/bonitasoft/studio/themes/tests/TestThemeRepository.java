@@ -17,13 +17,18 @@
  */
 package org.bonitasoft.studio.themes.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-
-import junit.framework.TestCase;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
@@ -47,17 +52,20 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Romain Bioteau
  * @author Baptiste Mesta
  * 
  */
-public class TestThemeRepository extends TestCase{
+public class TestThemeRepository {
 
     private static final String DEFAULT_APPLICATION_LNF_ID = "Default Application";
 
-
+    @Test
 	public void testDuplicateLookNFeelFileStore() throws Exception {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
@@ -72,6 +80,7 @@ public class TestThemeRepository extends TestCase{
         duplicateTheme.delete();
     }
 
+    @Test
     public void testDuplicateLookNFeelFileStoreWithNullDesc() throws Exception {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final LookNFeelFileStore artifact = repository.getChild(DEFAULT_APPLICATION_LNF_ID);
@@ -87,6 +96,7 @@ public class TestThemeRepository extends TestCase{
 
     }
 
+    @Test
     public void testDuplicateLookNFeelFileStoreWithNoName() throws ThemeAlreadyExistsException {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final int size = repository.getApplicationLookNFeels().size();
@@ -102,6 +112,7 @@ public class TestThemeRepository extends TestCase{
         }
     }
 
+    @Test
     public void testDuplicateLookNFeelFileStoreWithNullName() throws ThemeAlreadyExistsException {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final int size = repository.getApplicationLookNFeels().size();
@@ -117,6 +128,7 @@ public class TestThemeRepository extends TestCase{
         }
     }
 
+    @Test
     public void testDuplicateLookNFeelFileStoreWithSameName() throws ThemeAlreadyExistsException {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final int size = repository.getApplicationLookNFeels().size();
@@ -126,7 +138,7 @@ public class TestThemeRepository extends TestCase{
         assertEquals(size, repository.getApplicationLookNFeels().size());
     }
 
-
+    @Test
     public void testCantRemoveProvidedTheme() throws Exception {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         try {
@@ -140,6 +152,7 @@ public class TestThemeRepository extends TestCase{
         }
     }
 
+    @Test
     public void testImportLookNFeelFileStore() throws Exception {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         InputStream stream = this.getClass().getResourceAsStream("myTheme.zip");
@@ -155,6 +168,7 @@ public class TestThemeRepository extends TestCase{
 
     }
 
+    @Test
     public void testReplaceUrlsOfLookNFeelFileStore() throws Exception {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final LookNFeelFileStore createArtifact = repository.duplicateFrom("testgetContentsWithUrl", "", repository.getUserXPLookNFeels().get(0));
@@ -243,7 +257,7 @@ public class TestThemeRepository extends TestCase{
     }
 
 
-
+    @Test
     public void testReplaceUrlsOfLookNFeelFileStoreWithUnexistingFile() throws Exception {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         final LookNFeelFileStore createArtifact = repository.duplicateFrom("testgetContentsWithnonExistingResources","",repository.getUserXPLookNFeels().get(0));
@@ -292,7 +306,7 @@ public class TestThemeRepository extends TestCase{
         createArtifact.delete();
     }
 
-
+    @Test
     public void testChangeArtifactName() throws Exception {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         InputStream stream = this.getClass().getResourceAsStream("myTheme.zip");
@@ -308,7 +322,8 @@ public class TestThemeRepository extends TestCase{
         assertTrue(repository.getResource().getFolder("myTheme2").exists());
         artifact.delete();
     }
-
+    
+    @Test
     public void testChangeArtifactNameIntoExsitingName() throws Exception {
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         InputStream stream = this.getClass().getResourceAsStream("myTheme.zip");
@@ -326,6 +341,7 @@ public class TestThemeRepository extends TestCase{
         assertNull(repository.getChild("myTheme"));
     }
 
+    @Test
     public void testDuplicateUserXpFileStore(){
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         LookNFeelFileStore artifact = repository.getUserXPLookNFeels().get(0);
@@ -333,7 +349,7 @@ public class TestThemeRepository extends TestCase{
         assertTrue(duplicateTheme instanceof UserXpFileStore);
     }
 
-
+    @Test
     public void testDuplicateApplicationLookNFeelFileStore() throws ThemeAlreadyExistsException{
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         LookNFeelFileStore artifact = repository.getChild( DEFAULT_APPLICATION_LNF_ID);
@@ -341,6 +357,7 @@ public class TestThemeRepository extends TestCase{
         assertTrue(duplicateTheme instanceof ApplicationLookNFeelFileStore);
     }
 
+    @Test
     public void testApplyApplicationTheme() throws Exception{
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         InputStream stream = this.getClass().getResourceAsStream("themewithpreview.zip");
@@ -366,7 +383,7 @@ public class TestThemeRepository extends TestCase{
         artifactToApply.delete();
     }
 
-
+    @Test
     public void testSaveAsLookNFeel() throws Exception{
         LookNFeelRepositoryStore repository = (LookNFeelRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(LookNFeelRepositoryStore.class);
         InputStream resourceIS = this.getClass().getResourceAsStream("previewImage.png");
@@ -394,10 +411,12 @@ public class TestThemeRepository extends TestCase{
         PlatformUtil.delete(tmpFolder.getLocation().toFile(),new NullProgressMonitor());
     }
     
-    @Override
-    protected void tearDown() throws Exception {
+    @Before
+    @After
+    public void closeEditors() throws Exception {
+    	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveAllEditors(false);
     	PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(false);
-    	super.tearDown();
     }
+    
 
 }

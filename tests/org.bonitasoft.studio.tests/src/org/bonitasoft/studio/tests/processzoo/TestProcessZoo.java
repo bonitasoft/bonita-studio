@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.bonitasoft.studio.engine.BOSEngineManager;
@@ -45,7 +47,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ErrorEditorPart;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -77,16 +78,18 @@ public class TestProcessZoo  {
         assertNotSame("No process was tested", 0, foundProcesses);
     }
 
-    /**
-     * @param url
-     */
+
     protected void applyTestsOnProcess(URL url) throws Throwable {
         int beforeImport = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences().length;
         File file  = new File(FileLocator.toFileURL(url).getFile());
         ImportBosArchiveOperation ibao = new ImportBosArchiveOperation();
         ibao.setArchiveFile(file.getAbsolutePath());
-        ibao.run(null);
+        ibao.run(Repository.NULL_PROGRESS_MONITOR);
 
+       for( IRepositoryFileStore f : ibao.getFileStoresToOpen()){
+    	   f.open();
+       }
+        
         IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (editor instanceof ErrorEditorPart) {
             ErrorEditorPart errorEditor = (ErrorEditorPart)editor;

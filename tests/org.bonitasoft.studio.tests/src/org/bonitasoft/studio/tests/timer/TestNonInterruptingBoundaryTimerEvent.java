@@ -22,8 +22,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.bonitasoft.engine.api.IdentityAPI;
 import org.bonitasoft.engine.api.ProcessAPI;
@@ -38,13 +36,14 @@ import org.bonitasoft.engine.search.SearchOptionsBuilder;
 import org.bonitasoft.engine.search.SearchResult;
 import org.bonitasoft.engine.session.APISession;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.operation.ImportBosArchiveOperation;
 import org.bonitasoft.studio.engine.BOSEngineManager;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.bonitasoft.studio.util.test.async.TestAsyncThread;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.PlatformUI;
@@ -77,16 +76,17 @@ public class TestNonInterruptingBoundaryTimerEvent {
 		URL fileURL1 = FileLocator.toFileURL(TestNonInterruptingBoundaryTimerEvent.class.getResource("TestNonInterruptingTimerEvent-1.0.bos")); //$NON-NLS-1$
 		op.setArchiveFile(FileLocator.toFileURL(fileURL1).getFile());
 		op.run(new NullProgressMonitor());
+		for(IRepositoryFileStore f : op.getFileStoresToOpen()){
+			f.open();
+		}
+		
 		ProcessDiagramEditor processEditor = (ProcessDiagramEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		MainProcess mainProcess = (MainProcess)processEditor.getDiagramEditPart().resolveSemanticElement();
 		assertEquals("TestNonInterruptingTimerEvent", mainProcess.getName());
 		final SearchOptions searchOptions = new SearchOptionsBuilder(0, 10).done();
 
-		final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-		Map<String,Object> param = new HashMap<String, Object>();
-		param.put(RunProcessCommand.PROCESS, mainProcess.getElements().get(0));
-		ExecutionEvent ee = new ExecutionEvent(null,param,null,null);
-		runProcessCommand.execute(ee);
+		final RunProcessCommand runProcessCommand = new RunProcessCommand((AbstractProcess) mainProcess.getElements().get(0),true);
+		runProcessCommand.execute(null);
 		final String urlGivenToBrowser = runProcessCommand.getUrl().toString();
 		assertFalse("The url contains null:"+urlGivenToBrowser, urlGivenToBrowser.contains("null"));
 		long processId=processApi.getProcessDefinitionId("TestNonInterruptingTimerEvent", "1.0");

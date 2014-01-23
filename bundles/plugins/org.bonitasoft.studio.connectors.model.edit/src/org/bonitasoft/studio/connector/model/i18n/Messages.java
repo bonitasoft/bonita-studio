@@ -353,6 +353,7 @@ public class Messages extends NLS {
 	public static String all;
 	public static String inputMandatoryError;
 	public static String inputMandatoryErrorTitle;
+	public static String inputAlreadyUseInAnotherWidget;
 
 
     /**

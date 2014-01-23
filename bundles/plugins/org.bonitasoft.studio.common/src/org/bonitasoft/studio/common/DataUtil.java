@@ -29,7 +29,6 @@ import org.bonitasoft.studio.model.process.EnumType;
 import org.bonitasoft.studio.model.process.FloatType;
 import org.bonitasoft.studio.model.process.IntegerType;
 import org.bonitasoft.studio.model.process.JavaObjectData;
-import org.bonitasoft.studio.model.process.JavaType;
 import org.bonitasoft.studio.model.process.LongType;
 import org.bonitasoft.studio.model.process.StringType;
 import org.bonitasoft.studio.model.process.XMLType;
@@ -40,33 +39,32 @@ import org.bonitasoft.studio.model.process.XMLType;
  */
 public class DataUtil {
 
-    public static String getTechnicalTypeFor(Data data) {
-        DataType type = data.getDataType() ;
-        if(data.isMultiple()){
-            return List.class.getName() ;
-        }
-
-        if (type instanceof DateType) {
-            return Date.class.getName();
-        } else if (type instanceof StringType) {
-            return String.class.getName();
-        } else if (type instanceof IntegerType) {
-            return Integer.class.getName();
-        } else if (type instanceof FloatType) {
-            return Float.class.getName();
-        } else if (type instanceof LongType) {
-            return Long.class.getName();
-        } else if (type instanceof DoubleType) {
-            return Double.class.getName();
-        } else if (type instanceof BooleanType) {
-            return  Boolean.class.getName();
-        } else if (type instanceof JavaType) {
-            return ((JavaObjectData) data).getClassName() ;
-        } else if (type instanceof EnumType) {
-            return String.class.getName() ;
-        } else if (type instanceof XMLType) {
-            return String.class.getName();
-        }
-        return null;
-    }
+	public static String getTechnicalTypeFor(Data data) {
+		DataType type = data.getDataType() ;
+		if(data.isMultiple()){
+			return List.class.getName() ;
+		}
+		if (data instanceof JavaObjectData) {
+			return ((JavaObjectData) data).getClassName() ;
+		}else   if (type instanceof DateType) {
+			return Date.class.getName();
+		} else if (type instanceof StringType) {
+			return String.class.getName();
+		} else if (type instanceof IntegerType) {
+			return Integer.class.getName();
+		} else if (type instanceof FloatType) {
+			return Float.class.getName();
+		} else if (type instanceof LongType) {
+			return Long.class.getName();
+		} else if (type instanceof DoubleType) {
+			return Double.class.getName();
+		} else if (type instanceof BooleanType) {
+			return  Boolean.class.getName();
+		}  else if (type instanceof EnumType) {
+			return String.class.getName() ;
+		} else if (type instanceof XMLType) {
+			return String.class.getName();
+		}
+		return null;
+	}
 }

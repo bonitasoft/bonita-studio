@@ -899,8 +899,8 @@
                <target
                      class="Connector">
                       </target>
-                                 </constraint>
-                                   <constraint
+             </constraint>
+              <constraint
                   class="org.bonitasoft.studio.validation.constraints.process.ParalellMergeGatewayConstraint"
                   id="org.bonitasoft.studio.validation.constraints.paralellMerge"
                   lang="java"
@@ -1133,9 +1133,18 @@
       <extension
             point="org.eclipse.ui.commands">
             <command
-            defaultHandler="org.bonitasoft.studio.validation.BatchValidationHandler"
             id="org.bonitasoft.studio.validation.batchValidation"
             name="%batchValidationAction_Label">
+               <commandParameter
+                     id="diagrams"
+                     name="diagrams"
+                     optional="true">
+               </commandParameter>
+               <commandParameter
+                     id="showReport"
+                     name="showReport"
+                     optional="true">
+               </commandParameter>
       </command>
       </extension>
       <extension
@@ -1149,5 +1158,14 @@
                name="%ValidationView"
                restorable="true">
          </view>
+      </extension>
+      <extension
+            point="org.eclipse.ui.handlers">
+         <handler
+               commandId="org.bonitasoft.studio.validation.batchValidation">
+            <class
+                  class="org.bonitasoft.studio.validation.BatchValidationHandler">
+            </class>
+         </handler>
       </extension>
 </plugin>

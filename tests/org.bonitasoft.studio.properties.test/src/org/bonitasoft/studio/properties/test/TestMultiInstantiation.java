@@ -35,6 +35,8 @@ import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Task;
+import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
+import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.bonitasoft.studio.properties.i18n.Messages;
 import org.bonitasoft.studio.test.swtbot.util.SWTBotTestUtil;
 import org.eclipse.core.commands.ExecutionException;
@@ -50,6 +52,7 @@ import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -75,7 +78,15 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
     public static void tearDownAfterClass() {
         FileActionDialog.setDisablePopup(disablePopup);
     }
+    
+   
 
+    @Override
+    @Before
+    public void setUp() {
+    	 BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+    }
+    
     @Override
     @After
     public void tearDown() {
@@ -155,13 +166,13 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         gmfEditor = bot.gefEditor("Step1");
 
         // configure the nbTicketsAvailable widget to a Message field
-        setWidgetProperties(gmfEditor,  "nbTicketsAvailable1",  null, "Message", null,0,  null,null);
+        setWidgetProperties(gmfEditor,  "Nb Tickets Available",  null, "Message", null,0,  null,null);
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 0).click();
         SWTBotTestUtil.setScriptExpression( bot, "nbTicketsAvailable",  "\"Only \"+nbTicketsAvailable+\" tickets available.\"",  "java.lang.String" );
 
 
         // configure the nbTickets widget to a text field
-        setWidgetProperties(gmfEditor,  "nbTickets1",  "Nbr de Tickets à reserver", "Text field", "0",  1, "nbTickets","java.lang.Integer");
+        setWidgetProperties(gmfEditor,  "Nb Tickets",  "Nbr de Tickets à reserver", "Text field", "0",  1, "nbTickets","java.lang.Integer");
         bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
         SWTBotTestUtil.setScriptExpression( bot, "nbTickets",  "Integer.valueOf(field_nbTickets1)",  "java.lang.Integer" );
 
@@ -499,7 +510,7 @@ public class TestMultiInstantiation extends SWTBotGefTestCase implements SWTBotC
         // set name and type
         SWTBotTestUtil.selectTabbedPropertyView(bot, "General");
         if(widgetLabel!=null){
-            bot.text(2).setText(widgetLabel);
+            bot.text(3).setText(widgetLabel);
         }
 
         bot.comboBoxWithLabel(formFieldType).setSelection(widgetFieldType);

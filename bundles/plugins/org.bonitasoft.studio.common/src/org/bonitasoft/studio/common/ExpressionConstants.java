@@ -52,6 +52,7 @@ public interface ExpressionConstants {
     String SEARCH_INDEX_OPERATOR = OperatorType.STRING_INDEX.name();
     String JAVA_METHOD_OPERATOR = OperatorType.JAVA_METHOD.name() ;
     String XPATH_UPDATE_OPERATOR = OperatorType.XPATH_UPDATE_QUERY.name() ;
+    String CREATE_BUSINESS_DATA_OPERATOR = "CREATE_BUSINESS_DATA" ;
     
     String GROOVY = ExpressionInterpreter.GROOVY.name();
     String SIMULATION_VARIABLE_TYPE = "SIMULATION_VARIABLE_TYPE";

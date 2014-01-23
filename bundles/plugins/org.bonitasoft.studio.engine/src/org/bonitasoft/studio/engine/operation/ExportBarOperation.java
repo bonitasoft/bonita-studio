@@ -115,7 +115,7 @@ public class ExportBarOperation  {
 
     protected IStatus exportBar( final AbstractProcess process, final File outputFile,IProgressMonitor monitor) {
         try {
-            final BusinessArchive bar = BarExporter.getInstance().createBusinessArchive(process,configurationId,Collections.<EObject> emptySet());
+            final BusinessArchive bar = getBarExporter().createBusinessArchive(process,configurationId,Collections.<EObject> emptySet());
             writeBusinessArchiveToFile(outputFile, bar);
             generatedBars.add(outputFile);
         } catch (final Exception ex) {
@@ -128,7 +128,12 @@ public class ExportBarOperation  {
     }
 
 
-	protected void writeBusinessArchiveToFile(final File outputFile, final BusinessArchive bar) throws IOException {
+	public BarExporter getBarExporter() {
+		return BarExporter.getInstance();
+	}
+
+
+	public void writeBusinessArchiveToFile(final File outputFile, final BusinessArchive bar) throws IOException {
 		BusinessArchiveFactory.writeBusinessArchiveToFile(bar,outputFile);
 	}
 

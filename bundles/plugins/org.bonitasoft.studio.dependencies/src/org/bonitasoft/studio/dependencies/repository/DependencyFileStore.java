@@ -17,11 +17,13 @@
 package org.bonitasoft.studio.dependencies.repository;
 
 import java.io.InputStream;
+import java.util.Map;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.dependencies.DependenciesPlugin;
 import org.bonitasoft.studio.pics.Pics;
@@ -38,7 +40,7 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public class DependencyFileStore extends AbstractFileStore {
 
-	public DependencyFileStore(String fileName,IRepositoryStore parentStore) {
+	public DependencyFileStore(String fileName,IRepositoryStore<? extends IRepositoryFileStore> parentStore) {
 		super(fileName, parentStore) ;
 	}
 
@@ -94,10 +96,9 @@ public class DependencyFileStore extends AbstractFileStore {
 	 */
 	@Override
 	protected void doClose() {
-		
 
 	}
-	
+
 	protected void doDelete() {
 		try {
 			IResource r = getResource() ;
@@ -112,6 +113,33 @@ public class DependencyFileStore extends AbstractFileStore {
 
 	public IFile getResource() {
 		return getParentStore().getResource().getFile(getName());
+	}
+
+	@Override
+	public DependencyRepositoryStore getParentStore() {
+		return (DependencyRepositoryStore) super.getParentStore();
+	}
+
+	public boolean existsInRuntimeContainer(){
+		DependencyRepositoryStore depRepositoryStore = getParentStore();
+		Map<String, String> runtimeDependencies = depRepositoryStore.getRuntimeDependencies();
+		String libName = depRepositoryStore.getLibName(getName());
+		String libVersion = depRepositoryStore.getLibVersion(getName());
+		if(runtimeDependencies.containsKey(libName)){
+			return runtimeDependencies.get(libName).equals(libVersion) ; //same libname & same version
+		}
+		return false;
+	}
+
+	public boolean existsInRuntimeContainerWithAnotherVersion(){
+		DependencyRepositoryStore depRepositoryStore = getParentStore();
+		Map<String, String> runtimeDependencies = depRepositoryStore.getRuntimeDependencies();
+		String libName = depRepositoryStore.getLibName(getName());
+		String libVersion = depRepositoryStore.getLibVersion(getName());
+		if(runtimeDependencies.containsKey(libName)){
+			return !runtimeDependencies.get(libName).equals(libVersion) ; //same libname & !same version
+		}
+		return false;
 	}
 
 }

@@ -234,7 +234,6 @@ public class ManageOrganizationWizard extends Wizard {
 			public void run(IProgressMonitor maonitor) throws InvocationTargetException,InterruptedException {
 				maonitor.beginTask(Messages.synchronizingOrganization, IProgressMonitor.UNKNOWN) ;
 				userName = preferenceStore.getString(BonitaPreferenceConstants.USER_NAME);
-				String password =  preferenceStore.getString(BonitaPreferenceConstants.USER_PASSWORD);
 
 				if (isUserExist(activeOrganization.getUsers().getUser(), userName)){
 

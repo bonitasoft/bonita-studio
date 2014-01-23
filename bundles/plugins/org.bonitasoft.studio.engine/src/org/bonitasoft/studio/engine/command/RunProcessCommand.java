@@ -20,10 +20,8 @@ package org.bonitasoft.studio.engine.command;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -48,6 +46,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Actor;
 import org.bonitasoft.studio.model.process.CallActivity;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
@@ -56,14 +55,16 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.Parameterization;
+import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -74,6 +75,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.progress.IProgressService;
 
 public class RunProcessCommand extends AbstractHandler implements IHandler {
@@ -93,7 +95,6 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 	public RunProcessCommand() {
 		this(false);
 	}
-
 
 	public RunProcessCommand(boolean runSynchronously) {
 		this.runSynchronously = runSynchronously;
@@ -130,65 +131,62 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 		}
 
 		final Set<AbstractProcess> executableProcesses = getProcessesToDeploy(event) ;
-
 		if(BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getBoolean(BonitaPreferenceConstants.VALIDATION_BEFORE_RUN)){
 			//Validate before run
 			final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 			Command cmd = cmdService.getCommand("org.bonitasoft.studio.validation.batchValidation");
-			Map<String, Object> parameters = new HashMap<String,Object>();
-			parameters.put("showReport", false);
-			Set<Diagram> diagrams = new HashSet<Diagram>();
-			for(AbstractProcess p : executableProcesses){
-				Resource eResource = p.eResource();
-				if(eResource!=null){
-					for(EObject e : eResource.getContents()){
-						if(e instanceof Diagram){
-							diagrams.add((Diagram) e);
-						}
+			if(cmd.isEnabled()){
+				final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class) ;
+				Set<String> procFiles = new HashSet<String>();
+				for(AbstractProcess p : executableProcesses){
+					Resource eResource = p.eResource();
+					if(eResource!=null){
+						procFiles.add(URI.decode(eResource.getURI().lastSegment()));
 					}
 				}
-			}
-			parameters.put("diagrams", diagrams);
-			try {
-				final IStatus status = (IStatus) cmd.executeWithChecks(new ExecutionEvent(cmd,parameters,null,null));
-				if(statusContainsError(status)){
-					if(!FileActionDialog.getDisablePopup()){
-						String errorMessage = Messages.errorValidationMessage +PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle()+Messages.errorValidationContinueAnywayMessage ;
-						int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,errorMessage, ValidationDialog.YES_NO_SEEDETAILS).open();
-						if(result == ValidationDialog.NO){
-							return null;
-						}else if(result == ValidationDialog.SEE_DETAILS){
-							final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-							IEditorPart part = activePage.getActiveEditor();
-							if(part != null && part instanceof DiagramEditor){
-								MainProcess proc = ModelHelper.getMainProcess(((DiagramEditor)part).getDiagramEditPart().resolveSemanticElement());
-								String partName = proc.getName() +" ("+proc.getVersion()+")";
-								for(IEditorReference ref : activePage.getEditorReferences()){
-									if(partName.equals(ref.getPartName())){
-										activePage.activate(ref.getPart(true));
-										break;
+				try {
+					Parameterization showReportParam = new Parameterization(cmd.getParameter("showReport"), Boolean.FALSE.toString());
+					Parameterization filesParam = new Parameterization(cmd.getParameter("diagrams"),procFiles.toString());
+					final IStatus status = (IStatus) handlerService.executeCommand(new ParameterizedCommand(cmd, new Parameterization[]{showReportParam,filesParam}), null);
+					if(statusContainsError(status)){
+						if(!FileActionDialog.getDisablePopup()){
+							String errorMessage = Messages.errorValidationMessage +PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getTitle()+Messages.errorValidationContinueAnywayMessage ;
+							int result = new ValidationDialog(Display.getDefault().getActiveShell(), Messages.validationFailedTitle,errorMessage, ValidationDialog.YES_NO_SEEDETAILS).open();
+							if(result == ValidationDialog.NO){
+								return null;
+							}else if(result == ValidationDialog.SEE_DETAILS){
+								final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+								IEditorPart part = activePage.getActiveEditor();
+								if(part != null && part instanceof DiagramEditor){
+									MainProcess proc = ModelHelper.getMainProcess(((DiagramEditor)part).getDiagramEditPart().resolveSemanticElement());
+									String partName = proc.getName() +" ("+proc.getVersion()+")";
+									for(IEditorReference ref : activePage.getEditorReferences()){
+										if(partName.equals(ref.getPartName())){
+											activePage.activate(ref.getPart(true));
+											break;
+										}
 									}
-								}
 
+								}
+								Display.getDefault().asyncExec(new Runnable() {
+
+									@Override
+									public void run() {
+										try{
+											activePage.showView("org.bonitasoft.studio.validation.view");
+										} catch (PartInitException e) {
+											BonitaStudioLog.error(e);
+										}
+									}
+								});
+								return null;
 							}
-							Display.getDefault().asyncExec(new Runnable() {
 
-								@Override
-								public void run() {
-									try{
-										activePage.showView("org.bonitasoft.studio.validation.view");
-									} catch (PartInitException e) {
-										BonitaStudioLog.error(e);
-									}
-								}
-							});
-							return null;
 						}
-
 					}
+				} catch (Exception e) {
+					BonitaStudioLog.error(e);
 				}
-			} catch (Exception e) {
-				BonitaStudioLog.error(e);
 			}
 		}
 
@@ -230,6 +228,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 				final AbstractProcess p = getProcessToRun(event) ;
 				hasInitiator= hasInitiator(p);
 
+
 				if(p!= null){
 					try{
 						url = operation.getUrlFor(p,monitor) ;
@@ -244,7 +243,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 										IPreferenceStore preferenceStore = EnginePlugin.getDefault().getPreferenceStore();
 										String pref =preferenceStore.getString(EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR);
 										if (MessageDialogWithToggle.NEVER.equals(pref)){
-											MessageDialogWithToggle mdwt = MessageDialogWithToggle.openWarning(Display.getDefault().getActiveShell(), Messages.noInitiatorDefinedTitle, Messages.bind(Messages.noInitiatorDefinedMessage,
+											MessageDialogWithToggle.openWarning(Display.getDefault().getActiveShell(), Messages.noInitiatorDefinedTitle, Messages.bind(Messages.noInitiatorDefinedMessage,
 													p.getName()), 
 													Messages.dontaskagain, 
 													false, preferenceStore, EnginePreferenceConstants.TOGGLE_STATE_FOR_NO_INITIATOR);
@@ -345,6 +344,8 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 					EObject element = ((DiagramEditor) editor).getDiagramEditPart().resolveSemanticElement();
 					return ModelHelper.getParentProcess(element) ;
 				}
+			}else if(selectedProcess != null && selectedProcess instanceof Pool){
+				return selectedProcess ;
 			}
 		}
 		return null;
@@ -384,7 +385,10 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 				result.add(selectedProcess) ;
 			}
 		}else{
-			selectedProcess = getProcessInEditor() ;
+			MainProcess processInEditor = getProcessInEditor() ;
+			if(processInEditor != null){
+				selectedProcess = processInEditor;
+			}
 			if(selectedProcess instanceof MainProcess){
 				for(EObject p : ModelHelper.getAllItemsOfType(selectedProcess, ProcessPackage.Literals.POOL)){
 					result.add((AbstractProcess) p) ;

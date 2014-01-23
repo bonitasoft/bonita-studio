@@ -1,3 +1,4 @@
+
 /**
  * Copyright (C) 2012 BonitaSoft S.A.
  * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
@@ -58,11 +59,9 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	private ToolBar tb;
 	private boolean isReadOnly = false;
 	private List<IBonitaContentProposalListener2> contentAssistListerners = new ArrayList<IBonitaContentProposalListener2>();
-	private boolean proposalEnabled;
 	
 	public ContentAssistText(Composite parent, IExpressionProposalLabelProvider contentProposalLabelProvider, int style) {
 		super(parent, SWT.NONE);
-		proposalEnabled = true;
 		Point margins = new Point(3, 3);
 		if ((style & SWT.BORDER) == 0){
 			drawBorder = false;
@@ -95,11 +94,12 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 						public void run() {
 							if(!ContentAssistText.this.isDisposed()){
 								ContentAssistText.this.redraw();
-								if(!autoCompletion.getContentProposalAdapter().hasProposalPopupFocus()){
-									if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
-										autoCompletion.getContentProposalAdapter().closeProposalPopup();
-									}
-								}
+								//Useless after e4 migration ? Has an invalid behavior during swtbot tests
+//								if(!autoCompletion.getContentProposalAdapter().hasProposalPopupFocus()){
+//									if(autoCompletion.getContentProposalAdapter().isProposalPopupOpen()){
+//										autoCompletion.getContentProposalAdapter().closeProposalPopup();
+//									}
+//								}
 							}
 						}
 					});
@@ -162,7 +162,6 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	}
 	
 	public void setProposalEnabled(Boolean proposalEnabled){
-		this.proposalEnabled = proposalEnabled;
 		if(!proposalEnabled){
 			tb.setEnabled(false);
 		} else {
@@ -209,5 +208,7 @@ public class ContentAssistText extends Composite implements SWTBotConstants {
 	public void addContentAssistListener(IBonitaContentProposalListener2 listener) {
 		contentAssistListerners.add(listener);
 	}
+
+	
 
 }

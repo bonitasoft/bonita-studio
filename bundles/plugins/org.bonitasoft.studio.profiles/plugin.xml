@@ -37,7 +37,7 @@
             id="org.bonitasoft.studio.profiles.datamanagement"
             name="Data Management">
       </category>
-      <category
+       <category
             id="org.bonitasoft.studio.profiles.looknfeels"
             name="Look&apos;n&apos;Feels">
       </category>
@@ -65,10 +65,6 @@
             pattern="org.bonitasoft.studio.application/org.bonitasoft.studio.views.properties.application">
       </activityPatternBinding>
       <activity
-            id="org.bonitasoft.studio.profiles.connector.menu"
-            name="Connector Menu">
-      </activity>
-      <activity
             id="org.bonitasoft.studio.profiles.genral.view"
             name="General View">
       </activity>
@@ -87,6 +83,39 @@
             pattern="org.bonitasoft.studio.application/org.bonitasoft.studio.views.properties.process.appearance">
       </activityPatternBinding>
       <activity
+            id="org.bonitasoft.studio.profiles.connector.menu"
+            name="Connector Menu">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.connector.menu"
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.connectors/org.bonitasoft.studio.connectors.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.connector.menu"
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.actors/org.bonitasoft.studio.actors.*">
+      </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.dependencies.menu"
+            name="Dependencies Menu">
+      </activity>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.dependencies.menu"
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.dependencies/org.bonitasoft.studio.dependencies.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.dependencies.menu"
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.dependencies/org.bonitasoft.studio.application.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.dependencies.menu"
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.groovy.ui/org.bonitasoft.studio.groovy.ui.*">
+      </activityPatternBinding>
+      <activity
             id="org.bonitasoft.studio.profiles.simulation.view"
             name="Simulation View">
       </activity>
@@ -95,19 +124,14 @@
             isEqualityPattern="true"
             pattern="org.bonitasoft.studio.simulation/org.bonitasoft.studio.views.properties.simulation">
       </activityPatternBinding>
-      <activityPatternBinding
-            activityId="org.bonitasoft.studio.profiles.connector.menu"
-            isEqualityPattern="true"
-            pattern="org.bonitasoft.studio.connectors/org.bonitasoft.studio.menu.connector">
-      </activityPatternBinding>
       <activity
             id="org.bonitasoft.studio.profiles.simulation.menu"
             name="Simulation Menu">
       </activity>
       <activityPatternBinding
             activityId="org.bonitasoft.studio.profiles.simulation.menu"
-            isEqualityPattern="true"
-            pattern="org.bonitasoft.studio.simulation/org.bonitasoft.studio.menu.simulation">
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.simulation/org.bonitasoft.studio.simulation.*">
       </activityPatternBinding>
       <activity
             id="org.bonitasoft.studio.profiles.run.menu"
@@ -115,40 +139,23 @@
       </activity>
       <activityPatternBinding
             activityId="org.bonitasoft.studio.profiles.run.menu"
-            isEqualityPattern="true"
-            pattern="org.bonitasoft.studio.engine/org.bonitasoft.studio.menu.run">
-      </activityPatternBinding>
-      <activity
-            id="org.bonitasoft.studio.profiles.dependencies.menu"
-            name="Dependencies Menu">
-      </activity>
-      <activityPatternBinding
-            activityId="org.bonitasoft.studio.profiles.dependencies.menu"
-            isEqualityPattern="true"
-            pattern="org.bonitasoft.studio.application/org.bonitasoft.studio.context.manageJars">
-      </activityPatternBinding>
-      <activity
-            id="org.bonitasoft.studio.profiles.looknfeel.menu"
-            name="Look&apos;n&apos;Feel Menu">
-      </activity>
-      <activity
-            id="org.bonitasoft.studio.profiles.forms.menu"
-            name="Forms Menu">
-      </activity>
-      <activityPatternBinding
-            activityId="org.bonitasoft.studio.profiles.forms.menu"
-            isEqualityPattern="true"
-            pattern="org.bonitasoft.studio.diagram.form.custom.ex/org.bonitasoft.studio.menu.templates">
-      </activityPatternBinding>
-      <activityPatternBinding
-            activityId="org.bonitasoft.studio.profiles.forms.menu"
             isEqualityPattern="false"
-            pattern="org.bonitasoft.studio.diagram.form.custom.ex/org.bonitasoft.studio.repository.widget.*">
+            pattern="org.bonitasoft.studio.engine/org.bonitasoft.studio.engine.*">
       </activityPatternBinding>
       <activityPatternBinding
-            activityId="org.bonitasoft.studio.profiles.forms.menu"
+            activityId="org.bonitasoft.studio.profiles.run.menu"
             isEqualityPattern="false"
-            pattern="org.bonitasoft.studio.diagram.form.custom.ex/org.bonitasoft.studio.repository.form.*">
+            pattern="org.bonitasoft.studio.engine/org.bonitasoft.studio.application.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.run.menu"
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.configuration/org.bonitasoft.studio.configuration.*">
+      </activityPatternBinding>
+      <activityPatternBinding
+            activityId="org.bonitasoft.studio.profiles.run.menu"
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.debug/org.bonitasoft.studio.debug.*">
       </activityPatternBinding>
       <activity
             id="org.bonitasoft.studio.profiles.validation.activity"
@@ -167,28 +174,18 @@
             name="Data Tab">
       </activity>
       <activity
-            id="org.bonitasoft.studio.profiles.menu.looknfeel"
-            name="Look&apos;n&apos;Feel Menu">
-      </activity>
-      <activityPatternBinding
-            activityId="org.bonitasoft.studio.profiles.looknfeel.menu"
-            isEqualityPattern="true"
-            pattern="org.bonitasoft.studio.themes/org.bonitasoft.studio.menu.themes">
-      </activityPatternBinding>
-      <activityPatternBinding
-            activityId="org.bonitasoft.studio.profiles.connector.menu"
-            isEqualityPattern="true"
-            pattern="org.bonitasoft.studio.actors/org.bonitasoft.studio.menu.filter">
-      </activityPatternBinding>
-      <activity
             id="org.bonitasoft.studio.profiles.validators.menu"
             name="Validators Menu">
       </activity>
       <activityPatternBinding
             activityId="org.bonitasoft.studio.profiles.validators.menu"
-            isEqualityPattern="true"
-            pattern="org.bonitasoft.studio.validators/org.bonitasoft.studio.validator.menu">
+            isEqualityPattern="false"
+            pattern="org.bonitasoft.studio.validators/org.bonitasoft.studio.validators.*">
       </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.looknfeel.tab"
+            name="Look&apos;n&apos;Feel tab">
+      </activity>
    </extension>
    <extension
          name="Activities Binding"
@@ -214,36 +211,12 @@
             categoryId="org.bonitasoft.studio.profiles.simulation">
       </categoryActivityBinding>
       <categoryActivityBinding
-            activityId="org.bonitasoft.studio.profiles.datatypes.menu"
-            categoryId="org.bonitasoft.studio.profiles.datamanagement">
-      </categoryActivityBinding>
-      <categoryActivityBinding
-            activityId="org.bonitasoft.studio.profiles.simulation.menu"
-            categoryId="org.bonitasoft.studio.profiles.simulation">
-      </categoryActivityBinding>
-      <categoryActivityBinding
-            activityId="org.bonitasoft.studio.profiles.language.menu"
-            categoryId="org.bonitasoft.studio.profiles.language">
-      </categoryActivityBinding>
-      <categoryActivityBinding
             activityId="org.bonitasoft.studio.profiles.run.menu"
             categoryId="org.bonitasoft.studio.profiles.execution">
       </categoryActivityBinding>
       <categoryActivityBinding
-            activityId="org.bonitasoft.studio.profiles.kpi.menu"
-            categoryId="org.bonitasoft.studio.profiles.kpi">
-      </categoryActivityBinding>
-      <categoryActivityBinding
             activityId="org.bonitasoft.studio.profiles.dependencies.menu"
             categoryId="org.bonitasoft.studio.profiles.dependencies">
-      </categoryActivityBinding>
-      <categoryActivityBinding
-            activityId="org.bonitasoft.studio.profiles.forms.menu"
-            categoryId="org.bonitasoft.studio.profiles.formstemplates">
-      </categoryActivityBinding>
-      <categoryActivityBinding
-            activityId="org.bonitasoft.studio.profiles.looknfeel.menu"
-            categoryId="org.bonitasoft.studio.profiles.looknfeels">
       </categoryActivityBinding>
       <categoryActivityBinding
             activityId="org.bonitasoft.studio.profiles.validation.activity"
@@ -261,6 +234,14 @@
             activityId="org.bonitasoft.studio.profiles.validators.menu"
             categoryId="org.bonitasoft.studio.profiles.validators">
       </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.simulation.menu"
+            categoryId="org.bonitasoft.studio.profiles.simulation">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.looknfeel.tab"
+            categoryId="org.bonitasoft.studio.profiles.looknfeels">
+      </categoryActivityBinding>
    </extension>
      <extension
          point="org.eclipse.core.runtime.preferences">
@@ -273,6 +254,16 @@
         <repositoryStore
               class="org.bonitasoft.studio.profiles.repository.ProfileRepositoryStore">
         </repositoryStore>
+     </extension>
+     <extension
+           point="org.eclipse.core.expressions.propertyTesters">
+        <propertyTester
+              class="org.bonitasoft.studio.profiles.manager.ActivityPropertyTester"
+              id="org.eclipse.ui.activityPropertyTester"
+              namespace="org.bonitasoft"
+              properties="isActivityEnabled,isCategoryEnabled"
+              type="org.eclipse.ui.IWorkbenchWindow">
+        </propertyTester>
      </extension>
 
 </plugin>

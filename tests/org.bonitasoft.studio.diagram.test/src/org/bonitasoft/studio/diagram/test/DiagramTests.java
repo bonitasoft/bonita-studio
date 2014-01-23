@@ -27,6 +27,7 @@ import static org.bonitasoft.studio.properties.i18n.Messages.addForm;
 import static org.bonitasoft.studio.properties.i18n.Messages.addFormTitle;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 import org.bonitasoft.studio.common.Messages;
@@ -47,15 +48,20 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTBotGefTestCase;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditPart;
 import org.eclipse.swtbot.eclipse.gef.finder.widgets.SWTBotGefEditor;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
-import org.eclipse.swtbot.swt.finder.waits.DefaultCondition;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,7 +72,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class DiagramTests extends SWTBotGefTestCase {
-	
+
 	private static final String DATA_NAME_LABEL = name +" *";
 	private static final String PAGEFLOW_LABEL = "Pageflow";
 
@@ -79,7 +85,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 		part.select();
 		Assert.assertTrue(bot.menu("Edit").menu("Copy").isEnabled());
 	}
-	
+
 	@Test
 	public void testDiagramTest() throws ExecutionException {
 		SWTBotTestUtil.createNewDiagram(bot);
@@ -96,7 +102,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 		Lane lane = (Lane)pool.getElements().get(0);
 		Assert.assertEquals("Lane should contain 3 nodes", 3, lane.getElements().size());
 	}
-	
+
 	@Test
 	public void testConvert() throws Exception {
 		SWTBotTestUtil.createNewDiagram(bot);
@@ -123,7 +129,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 		Assert.assertEquals("Step1", newModelElement.getName());
 		Assert.assertNotSame(beforeClass, newModelElement.getClass());
 	}
-	
+
 	/** Create & run a 4 tasks process
 	 * @author Florine Boudin
 	 * @throws Exception
@@ -133,24 +139,24 @@ public class DiagramTests extends SWTBotGefTestCase {
 
 		// create a new process
 		SWTBotTestUtil.createNewDiagram(bot);
-		
+
 		//Create 3 variables
 		SWTBotEditor botEditor = bot.activeEditor();
 		SWTBotGefEditor gmfEditor = bot.gefEditor(botEditor.getTitle());
 		gmfEditor.click(200, 200);
-		
+
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
-		
+
 		// Create 3 new variables
 		setNewVariable("varText"   , "Text"   , false);
 		setNewVariable("varBoolean", "Boolean", false);
 		setNewVariable("varInteger", "Integer", false);
-		
+
 		// check 3 variables where created
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_PROCESS_GENERAL).show();
 		SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
-		
+
 		// check the table has 3 variables
 		SWTBotTable table = bot.table(0);
 		Assert.assertEquals("Error: wrong number of variable created", 3, table.rowCount());
@@ -177,14 +183,14 @@ public class DiagramTests extends SWTBotGefTestCase {
 		IGraphicalEditPart ig = (IGraphicalEditPart) gmfEditor.mainEditPart().part();
 		MainProcess mp = (MainProcess) ig.resolveSemanticElement();
 
-		
+
 		int nbHumanTasks = ModelHelper.getAllItemsOfType(mp, ProcessPackage.Literals.TASK).size();
 		Assert.assertEquals("Error: wrong number of tasks in the process.", 4, nbHumanTasks);
 
 
 		int nbTransistions = ModelHelper.getAllItemsOfType(mp, ProcessPackage.Literals.CONNECTION).size();
 		Assert.assertEquals("Error: wrong number of connections in the process.", 4, nbTransistions);
-		
+
 		// For the 3 first tasks, add a form
 		int itmp=0;
 		// create a form
@@ -203,7 +209,26 @@ public class DiagramTests extends SWTBotGefTestCase {
 
 				if (SWTBotTestUtil.testingBosSp()) {
 					//second shell "Add form..."
-					bot.button(IDialogConstants.NEXT_LABEL).click();
+					List<Button> buttons = bot.getFinder().findControls(new BaseMatcher<Button>(){
+
+						public void describeTo(Description description) {
+
+						}
+
+						public boolean matches(Object item) {
+							if( item instanceof Button){
+								return IDialogConstants.NEXT_LABEL.equals(((Button)item).getText());
+							}
+							return false;
+						}
+
+					});
+					if(!buttons.isEmpty()){
+						SWTBotButton nextButton = bot.button(IDialogConstants.NEXT_LABEL);
+						if(nextButton != null){
+							nextButton.click();
+						}
+					}
 				}
 
 				// remove 2 of 3 variables in the form
@@ -214,45 +239,49 @@ public class DiagramTests extends SWTBotGefTestCase {
 				}
 				// last shell "Add form..."
 				bot.button(IDialogConstants.FINISH_LABEL).click();
-				
+
 				// add script to conver to an integer on "Step3"
 				if(nametask.equals("Step2")){
 					SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
-					formEditor.getEditPart("varInteger1").click();
+					formEditor.getEditPart("Var Integer").click();
 					bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_FORM_GENERAL).show();
 					SWTBotTestUtil.selectTabbedPropertyView(bot, "Data");
 					bot.toolbarButtonWithId(ExpressionViewer.SWTBOT_ID_EDITBUTTON, 1).click();
 					String valueOf = "Integer.valueOf(field_varInteger1)";
 					SWTBotTestUtil.setScriptExpression(bot, "theInteger", valueOf, Integer.class.getName());
-					bot.waitUntil(new DefaultCondition() {
-						
+					bot.waitUntil(new ICondition() {
+
 						public boolean test() throws Exception {
 							return bot.textWithId(ExpressionViewer.SWTBOT_ID_EXPRESSIONVIEWER_TEXT,2).getText().equals("theInteger");
 						}
-						
+
+						public void init(SWTBot bot) {
+
+						}
+
 						public String getFailureMessage() {
 							return "Expression not set properly";
 						}
 					});
 				}
-				
-				
+
+
 				bot.activeEditor().saveAndClose();
 				itmp++;
 			}
 		}
-		
-		
-		
-		
+
+
+
+
 		// Create the form for the 4th task
 		gmfEditor.getEditPart("Step4").click();
-		
+
 		bot.viewById(SWTBotTestUtil.VIEWS_PROPERTIES_APPLICATION).show();
 		SWTBotTestUtil.selectTabbedPropertyView(bot, PAGEFLOW_LABEL);
-		
+
 		bot.button(addForm,0).click();
-		
+
 		// first shell "Add form..."
 		bot.waitUntil(Conditions.shellIsActive(addFormTitle));
 
@@ -260,13 +289,13 @@ public class DiagramTests extends SWTBotGefTestCase {
 			//second shell "Add form..."
 			bot.button(IDialogConstants.NEXT_LABEL).click();
 		}
-		
+
 		// last shell "Add form..."
 		bot.button(IDialogConstants.FINISH_LABEL).click();
-		
+
 		SWTBotGefEditor formEditor = bot.gefEditor(bot.activeEditor().getTitle());
-		
-		final String[] varTab = new String[]{"varText1", "varBoolean1", "varInteger1"};
+
+		final String[] varTab = new String[]{"Var Text", "Var Boolean", "Var Integer"};
 		for(String s : varTab){
 
 			formEditor.getEditPart(s).click();
@@ -277,7 +306,7 @@ public class DiagramTests extends SWTBotGefTestCase {
 			bot.comboBoxWithLabel(formFieldType).setSelection("Text");
 			bot.activeEditor().save();
 		}
-		
+
 		bot.activeEditor().saveAndClose();
 		IStatus status = SWTBotTestUtil.selectAndRunFirstPoolFound(bot);
 		assertTrue(status.getMessage(),status.isOK());
@@ -306,16 +335,16 @@ public class DiagramTests extends SWTBotGefTestCase {
 	 */
 	private void setNewVariable(String varName, String varType, boolean autoGenerateForm ) {
 		bot.button("Add...").click();
-		
+
 		// open shell "New variable"
 		bot.waitUntil(Conditions.shellIsActive(newVariable));
-		
+
 		// "Name"
 		bot.textWithLabel(DATA_NAME_LABEL).setText(varName);
-		
+
 		// "Data type"
 		bot.comboBoxWithLabel(datatypeLabel).setSelection(varType);
-		
+
 		if(SWTBotTestUtil.testingBosSp()){
 			SWTBotCheckBox cb = bot.checkBox("Auto-generate form");
 			if(cb.isChecked() && !autoGenerateForm){
@@ -324,10 +353,10 @@ public class DiagramTests extends SWTBotGefTestCase {
 				cb.select();
 			}
 		}
-	
+
 		bot.button(IDialogConstants.FINISH_LABEL).click();
 	}
-	
+
 	public SWTBotGefEditPart getPartRecursively(SWTBotGefEditPart from, String label) {
 		for (SWTBotGefEditPart child : from.children()) {
 			Element model = (Element) ((IGraphicalEditPart)child.part()).resolveSemanticElement();

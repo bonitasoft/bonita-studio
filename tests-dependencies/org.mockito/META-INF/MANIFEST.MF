@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mockito Plugin
+Bundle-SymbolicName: org.mockito
+Bundle-Version: 1.9.5
+Bundle-ClassPath: mockito-all-1.9.5.jar
+Bundle-Vendor: BonitaSoft S.A.
+Export-Package: org.mockito,
+ org.mockito.asm,
+ org.mockito.asm.signature,
+ org.mockito.asm.tree,
+ org.mockito.asm.tree.analysis,
+ org.mockito.asm.util,
+ org.mockito.cglib.beans,
+ org.mockito.cglib.core,
+ org.mockito.cglib.proxy,
+ org.mockito.cglib.reflect,
+ org.mockito.cglib.transform,
+ org.mockito.cglib.transform.impl,
+ org.mockito.cglib.util,
+ org.mockito.configuration,
+ org.mockito.exceptions,
+ org.mockito.exceptions.base,
+ org.mockito.exceptions.misusing,
+ org.mockito.exceptions.stacktrace,
+ org.mockito.exceptions.verification,
+ org.mockito.exceptions.verification.junit,
+ org.mockito.invocation,
+ org.mockito.listeners,
+ org.mockito.mock,
+ org.mockito.plugins,
+ org.mockito.runners,
+ org.mockito.stubbing,
+ org.mockito.stubbing.answers,
+ org.mockito.verification
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

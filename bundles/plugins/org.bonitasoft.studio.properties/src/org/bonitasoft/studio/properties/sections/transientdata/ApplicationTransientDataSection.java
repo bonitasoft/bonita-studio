@@ -36,11 +36,10 @@ public class ApplicationTransientDataSection extends AbstractDataSection {
 	 * @see org.bonitasoft.studio.properties.sections.data.DataSection#createPromoteDataButton(org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
-	protected Button createPromoteDataButton(Composite parent) {
-		// no promote data button
+	protected Button createMoveDataButton(Composite parent) {
 		return null;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.bonitasoft.studio.properties.sections.data.DataSection#createLabel(org.eclipse.swt.widgets.Composite)
 	 */
@@ -49,28 +48,27 @@ public class ApplicationTransientDataSection extends AbstractDataSection {
 		Label label = getWidgetFactory().createLabel(dataComposite, Messages.pageFlowTransientData);
 		label.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).create());
 	}
-	
+
 	@Override
 	protected Set<EStructuralFeature> getDataFeatureToCheckUniqueID() {
 		Set<EStructuralFeature> dataFeatureToCheckUniqueID = super.getDataFeatureToCheckUniqueID();
 		dataFeatureToCheckUniqueID.add(getDataFeature());
 		return dataFeatureToCheckUniqueID;
 	}
-	
+
 	protected boolean getShowAutoGenerateForm() {
 		return false;
 	}
 
 	@Override
 	public String getSectionDescription() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
- @Override
-public boolean isPageFlowContext() {
-	return true;
-}
+	@Override
+	public boolean isPageFlowContext() {
+		return true;
+	}
 
-	
+
 }
