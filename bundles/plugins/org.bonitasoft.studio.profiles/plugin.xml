@@ -37,6 +37,10 @@
             id="org.bonitasoft.studio.profiles.datamanagement"
             name="Data Management">
       </category>
+       <category
+            id="org.bonitasoft.studio.profiles.looknfeels"
+            name="Look&apos;n&apos;Feels">
+      </category>
       <category
             id="org.bonitasoft.studio.profiles.simulation"
             name="Simulation">
@@ -178,6 +182,10 @@
             isEqualityPattern="false"
             pattern="org.bonitasoft.studio.validators/org.bonitasoft.studio.validators.*">
       </activityPatternBinding>
+      <activity
+            id="org.bonitasoft.studio.profiles.looknfeel.tab"
+            name="Look&apos;n&apos;Feel tab">
+      </activity>
    </extension>
    <extension
          name="Activities Binding"
@@ -229,6 +237,10 @@
       <categoryActivityBinding
             activityId="org.bonitasoft.studio.profiles.simulation.menu"
             categoryId="org.bonitasoft.studio.profiles.simulation">
+      </categoryActivityBinding>
+      <categoryActivityBinding
+            activityId="org.bonitasoft.studio.profiles.looknfeel.tab"
+            categoryId="org.bonitasoft.studio.profiles.looknfeels">
       </categoryActivityBinding>
    </extension>
      <extension
