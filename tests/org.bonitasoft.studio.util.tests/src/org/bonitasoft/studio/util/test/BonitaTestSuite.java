@@ -22,8 +22,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.results.BoolResult;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.ui.PlatformUI;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunListener;
@@ -58,10 +62,7 @@ public class BonitaTestSuite extends Suite {
 			BonitaStudioLog.log("|====================================================");
 			BonitaStudioLog.log("| Try to clean shells after test : "+description.getMethodName());
 			try{
-				SWTBotShell shell = bot.activeShell();
-				if(shell.getText() == null || !shell.getText().startsWith("Bonita BP")){
-					shell.close();
-				}
+				closeAllShells(bot);
 				bot.saveAllEditors();
 				bot.closeAllEditors();
 			}catch (Exception e) {
@@ -72,10 +73,27 @@ public class BonitaTestSuite extends Suite {
 
 			BonitaStudioLog.log("| Shells cleaned after test : "+description.getMethodName());
 			BonitaStudioLog.log("|====================================================");
-
-
 		}
 	};
+	
+	private void closeAllShells(SWTWorkbenchBot bot) {
+		SWTBotShell[] shells = bot.shells();
+		for (SWTBotShell shell : shells) {
+			if (shell.isOpen() && !isEclipseShell(shell)) {
+				shell.close();
+			}
+		}
+	}
+
+	@SuppressWarnings("boxing")
+	public static boolean isEclipseShell(final SWTBotShell shell) {
+		return UIThreadRunnable.syncExec(new BoolResult() {
+			public Boolean run() {
+				return PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getShell() == shell.widget;
+			}
+		});
+	}
 
 	/**
 	 * @param klass
