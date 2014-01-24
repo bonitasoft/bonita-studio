@@ -62,7 +62,7 @@ public class BonitaTestSuite extends Suite {
 			BonitaStudioLog.log("|====================================================");
 			BonitaStudioLog.log("| Try to clean shells after test : "+description.getMethodName());
 			try{
-				closeAllShells(bot);
+			//	closeAllShells(bot);
 				bot.saveAllEditors();
 				bot.closeAllEditors();
 			}catch (Exception e) {
