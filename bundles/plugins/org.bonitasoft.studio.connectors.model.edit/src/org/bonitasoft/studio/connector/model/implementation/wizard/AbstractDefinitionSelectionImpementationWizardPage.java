@@ -234,9 +234,9 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 
 			@Override
 			public IStatus validate(Object value) {
-				if(value == null || value.toString().isEmpty()){
-					return ValidationStatus.error(Messages.missingDefinition) ;
-				}
+//				if(value == null || value.toString().isEmpty()){
+//					return ValidationStatus.error(Messages.missingDefinition) ;
+//				}
 				return Status.OK_STATUS;
 			}
 		}) ;
@@ -254,9 +254,9 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 			}
 
 		}) ;
-
-		bindValue();
 		updateOnlyCustomCheckbox();
+		bindValue();
+	
 
 		setControl(mainComposite);
 	}

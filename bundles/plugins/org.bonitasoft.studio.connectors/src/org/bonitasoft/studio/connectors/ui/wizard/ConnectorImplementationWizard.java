@@ -156,10 +156,6 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 			@Override
 			protected void bindValue() {
 				final IViewerObservableValue observeSingleSelection = ViewersObservables.observeSingleSelection(explorer.getRightTableViewer());
-				ConnectorDefinition def= getConnectorDefinitionFromId(implementation.getDefinitionId());
-				if(def != null){
-					explorer.getRightTableViewer().setSelection(new StructuredSelection(def));
-				}
 				context.bindValue(observeSingleSelection, EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_ID),defIdStrategy,defModelStrategy) ;
 				context.bindValue(ViewersObservables.observeSingleSelection(versionCombo), EMFObservables.observeValue(implementation, ConnectorImplementationPackage.Literals.CONNECTOR_IMPLEMENTATION__DEFINITION_VERSION));
 			}
