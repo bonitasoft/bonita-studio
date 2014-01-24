@@ -34,6 +34,7 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.preferences.BonitaCoolBarPreferenceConstant;
 import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
+import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -262,6 +263,7 @@ public class CoolbarToolControl implements INullSelectionListener,IActivityManag
 	}
 
 	private void initCoolBarPreferredSize() {
+		BonitaProfilesManager.getInstance().setActiveProfile(BonitaProfilesManager.getInstance().getActiveProfile(),false) ;
 		String value = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaCoolBarPreferenceConstant.COOLBAR_DEFAULT_SIZE) ;
 		if (value.equals(BonitaCoolBarPreferenceConstant.SMALL)){
 			size = CoolbarSize.SMALL;
