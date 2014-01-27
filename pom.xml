@@ -31,7 +31,6 @@
 		<!-- Skip generated code -->
 		<sonar.skippedModules>org.bonitasoft.studio.model,org.bonitasoft.studio.model.edit,org.bonitasoft.studio.diagram,org.bonitasoft.studio.diagram.form</sonar.skippedModules>
 		<sonar.exclusions>org/w3/**/*,org/omg/**/*,org/wfmc/**/*,org/jbpm/**/*</sonar.exclusions>
-		<sonar.projectName>Bonita BPM Community Studio</sonar.projectName>
 		<sonar.skipDesign>true</sonar.skipDesign><!-- Takes too much time -->
 	</properties>
 
