@@ -49,15 +49,32 @@
 		<module>tests-feature</module>
 		<module>tests-common-feature</module>
 		<module>org.bonitasoft.studio.test.suite</module>
-		<module>org.bonitasoft.studio.test.suite2</module>
+        <module>org.bonitasoft.studio.test.suite2</module>
 		<module>org.bonitasoft.studio.test.swtbot.suite</module>
 		<module>bos-tests-p2</module>
 	</modules>
 
-
-
-	<properties>
-		<sonar.jacoco.itReportPath>../../target/jacoco.exec</sonar.jacoco.itReportPath>
-	</properties>
-
+	<build>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+        <!-- The destination file for the code coverage report has to be set to the same value
+             in the parent pom and in each module pom. Then JaCoCo will add up information in
+             the same report, so that, it will give the cross-module code coverage. -->
+          <destFile>${project.basedir}/../../target/jacoco-it.exec</destFile>
+        </configuration>
+        <executions>
+          <execution>
+            <id>post-test</id>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+	
 </project>
