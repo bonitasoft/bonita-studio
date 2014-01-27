@@ -95,6 +95,7 @@ import org.eclipse.jdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.osgi.framework.adaptor.BundleClassLoader;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
 import org.xml.sax.InputSource;
 
 /**
@@ -253,13 +254,14 @@ public class Repository implements IRepository {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceDescription desc = workspace.getDescription();
 		if(!desc.isAutoBuilding()){
-			desc.setAutoBuilding(true);
+			boolean enableAutobuild = PlatformUI.isWorkbenchRunning();
+			desc.setAutoBuilding(enableAutobuild);
 			try {
 				workspace.setDescription(desc);
 			} catch (CoreException e) {
 				BonitaStudioLog.error(e, CommonRepositoryPlugin.PLUGIN_ID);
 			}
-			RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,true);
+			RepositoryManager.getInstance().getPreferenceStore().setValue(RepositoryPreferenceConstant.BUILD_ENABLE,enableAutobuild);
 		}
 	}
 
