@@ -34,13 +34,13 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 	@Override
 	public void partActivated(MPart part) {
 		if(!isSwitching){
-			isSwitching = false;
+			isSwitching = true;
 			try{
 				if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
 					String activePerspective = getActivePerspectiveId(part);
 					final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
 					if (id != null && !id.equals(activePerspective)) {
-						//						BonitaPerspectivesUtils.switchToPerspective(id);
+						BonitaPerspectivesUtils.switchToPerspective(id);
 					}
 				}
 			}finally{
@@ -66,14 +66,21 @@ public final class AutomaticSwitchPerspectivePartListener implements IPartListen
 
 	@Override
 	public void partVisible(MPart part) {
-		if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
-			if(PlatformUtil.isIntroOpen()){
-				PlatformUtil.closeIntro();
-			}
-			String activePerspective = getActivePerspectiveId(part);
-			String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
-			if (id != null && !id.equals(activePerspective)) {
-				BonitaPerspectivesUtils.switchToPerspective(id);
+		if(!isSwitching){
+			isSwitching = true;
+			try{
+				if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
+					if(PlatformUtil.isIntroOpen()){
+						PlatformUtil.closeIntro();
+					}
+					String activePerspective = getActivePerspectiveId(part);
+					String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
+					if (id != null && !id.equals(activePerspective)) {
+						BonitaPerspectivesUtils.switchToPerspective(id);
+					}
+				}
+			}finally{
+				isSwitching = false;
 			}
 		}
 	}
