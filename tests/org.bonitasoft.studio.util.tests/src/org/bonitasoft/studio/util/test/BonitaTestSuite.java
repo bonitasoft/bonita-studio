@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
-import org.eclipse.swtbot.eclipse.gef.finder.SWTGefBot;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.BoolResult;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -43,44 +42,14 @@ import org.junit.runners.model.RunnerBuilder;
 public class BonitaTestSuite extends Suite {
 
 	private final SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss");
-	private final RunListener runListener = new RunListener(){
-		/* (non-Javadoc)
-		 * @see org.junit.runner.notification.RunListener#testStarted(org.junit.runner.Description)
-		 */
-		@Override
-		public void testStarted(Description description) throws Exception {
-			printBeforeTest(description);
-		}
-		/* (non-Javadoc)
-		 * @see org.junit.runner.notification.RunListener#testFinished(org.junit.runner.Description)
-		 */
-		@Override
-		public void testFinished(Description description) throws Exception {
-			printAfterTest(description);
-			SWTGefBot bot = new SWTGefBot();
-
-			BonitaStudioLog.log("|====================================================");
-			BonitaStudioLog.log("| Try to clean shells after test : "+description.getMethodName());
-			try{
-			//	closeAllShells(bot);
-				bot.saveAllEditors();
-				bot.closeAllEditors();
-			}catch (Exception e) {
-				BonitaStudioLog.log("| Fails to clean shells after test : "+description.getMethodName());
-				BonitaStudioLog.log("|====================================================");
-				return;
-			}
-
-			BonitaStudioLog.log("| Shells cleaned after test : "+description.getMethodName());
-			BonitaStudioLog.log("|====================================================");
-		}
-	};
+	private RunListener runListener;
 	
 	private void closeAllShells(SWTWorkbenchBot bot) {
 		SWTBotShell[] shells = bot.shells();
 		for (SWTBotShell shell : shells) {
 			if (shell.isOpen() && !isEclipseShell(shell)) {
 				shell.close();
+				BonitaStudioLog.log("/!\\ Shell "+shell+" has been closed automatically, please fix the corresponding test to close it in @After");
 			}
 		}
 	}
@@ -160,8 +129,48 @@ public class BonitaTestSuite extends Suite {
 	}
 
 	protected void addRunListener(RunNotifier runNotifier){
-		runNotifier.addListener(runListener);
+		RunListener listener = getRunListener();
+		runNotifier.removeListener(listener);
+		runNotifier.addListener(listener);
 	}
+	protected RunListener getRunListener() {
+		if(runListener == null){
+			runListener = new RunListener(){
+				/* (non-Javadoc)
+				 * @see org.junit.runner.notification.RunListener#testStarted(org.junit.runner.Description)
+				 */
+				@Override
+				public void testStarted(Description description) throws Exception {
+					printBeforeTest(description);
+				}
+				/* (non-Javadoc)
+				 * @see org.junit.runner.notification.RunListener#testFinished(org.junit.runner.Description)
+				 */
+				@Override
+				public void testFinished(Description description) throws Exception {
+					printAfterTest(description);
+					SWTWorkbenchBot bot = new SWTWorkbenchBot();
+
+					BonitaStudioLog.log("|====================================================");
+					BonitaStudioLog.log("| Try to clean shells after test : "+description.getMethodName());
+					try{
+						closeAllShells(bot);
+						bot.saveAllEditors();
+						bot.closeAllEditors();
+					}catch (Exception e) {
+						BonitaStudioLog.log("| Fails to clean shells after test : "+description.getMethodName());
+						BonitaStudioLog.log("|====================================================");
+						return;
+					}
+
+					BonitaStudioLog.log("| Shells cleaned after test : "+description.getMethodName());
+					BonitaStudioLog.log("|====================================================");
+				}
+			};
+		}
+		return runListener;
+	}
+
 	/**
 	 * @param runner
 	 */
