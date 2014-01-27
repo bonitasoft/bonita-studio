@@ -151,7 +151,7 @@ public class TestPatternExpressionViewer extends SWTBotGefTestCase implements SW
 	}
 	
 	private void fillGroovyExpression() {
-		bot.link(Messages.switchEditor).click();
+		bot.link(Messages.switchEditor).click("Switch editor");
 		bot.button(IDialogConstants.YES_LABEL).click();
 		editGroovyEditor(0, "Request", String.class.getName(), "sqlQuery", GROOVY_SQL_QUERY);
 		bot.sleep(1000);
