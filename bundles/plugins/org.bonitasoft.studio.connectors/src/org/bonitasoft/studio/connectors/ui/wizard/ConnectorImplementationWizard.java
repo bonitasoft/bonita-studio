@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.bonitasoft.engine.connector.AbstractConnector;
 import org.bonitasoft.studio.common.NamingUtils;
-import org.bonitasoft.studio.common.editor.BonitaJavaEditor;
 import org.bonitasoft.studio.common.jface.ExtensibleWizard;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
@@ -55,7 +54,6 @@ import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Display;
@@ -261,7 +259,7 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 					//need to get the acive page from the UI shell
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					try {
-						IEditorPart part = IDE.openEditor(page, new FileEditorInput(fileToOpen), BonitaJavaEditor.ID);
+						IEditorPart part = IDE.openEditor(page, new FileEditorInput(fileToOpen), "org.eclipse.jdt.ui.CompilationUnitEditor");
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveEditor(part, false);
 					} catch (PartInitException e) {
 					}
