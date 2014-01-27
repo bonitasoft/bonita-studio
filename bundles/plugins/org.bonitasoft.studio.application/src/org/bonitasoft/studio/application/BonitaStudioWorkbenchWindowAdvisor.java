@@ -21,7 +21,6 @@ import org.bonitasoft.studio.common.perspectives.AutomaticSwitchPerspectivePartL
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
 import org.bonitasoft.studio.common.perspectives.PerspectiveIDRegistry;
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.bonitasoft.studio.profiles.manager.BonitaProfilesManager;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
@@ -71,12 +70,6 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				register(ActionFactory.ABOUT.create(window));
 			}
 		};
-	}
-
-
-	@Override
-	public void preWindowOpen() {
-		BonitaProfilesManager.getInstance().setActiveProfile(BonitaProfilesManager.getInstance().getActiveProfile(),false) ;
 	}
 
 	@Override
