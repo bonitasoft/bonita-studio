@@ -48,7 +48,7 @@ public class BonitaTestSuite extends Suite {
 		SWTBotShell[] shells = bot.shells();
 		for (SWTBotShell shell : shells) {
 			if (shell.isOpen() && !isEclipseShell(shell)) {
-				bot.captureScreenshot("ShellOpenedAfter"+description.getMethodName()+".jpg");
+				bot.captureScreenshot("screenshots/ShellOpenedAfter"+description.getMethodName()+".jpg");
 				shell.close();
 				BonitaStudioLog.log("/!\\ Shell "+shell+" has been closed automatically, please fix the corresponding test to close it in @After (see screenshots)");
 			}
