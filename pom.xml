@@ -27,7 +27,7 @@
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.junit.reportsPath>target/surefire-reports/</sonar.junit.reportsPath>
-		<sonar.jacoco.itReportPath>target/jacoco-it.exec</sonar.jacoco.itReportPath>
+		<sonar.jacoco.itReportPath>${project.basedir}/../../../target/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<!-- Skip generated code -->
 		<sonar.skippedModules>org.bonitasoft.studio.model,org.bonitasoft.studio.model.edit,org.bonitasoft.studio.diagram,org.bonitasoft.studio.diagram.form</sonar.skippedModules>
 		<sonar.exclusions>org/w3/**/*,org/omg/**/*,org/wfmc/**/*,org/jbpm/**/*</sonar.exclusions>
