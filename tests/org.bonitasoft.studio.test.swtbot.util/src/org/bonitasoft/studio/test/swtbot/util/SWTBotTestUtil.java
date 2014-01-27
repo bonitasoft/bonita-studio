@@ -254,7 +254,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 			public String getFailureMessage() {
 				return "no active editor";
 			}
-		},55000);
+		},65000);
 		FileActionDialog.setDisablePopup(disable);
 		BonitaStudioLog.log("SWTBot has imported "+ resourceNameInClasspath + " in mode " +importName);
 	}
