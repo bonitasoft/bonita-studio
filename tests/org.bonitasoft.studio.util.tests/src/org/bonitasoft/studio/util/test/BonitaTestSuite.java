@@ -42,6 +42,7 @@ import org.junit.runners.model.RunnerBuilder;
 public class BonitaTestSuite extends Suite {
 
 	private final SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss");
+	private RunListener runListener;
 	
 	private void closeAllShells(SWTWorkbenchBot bot) {
 		SWTBotShell[] shells = bot.shells();
@@ -133,38 +134,41 @@ public class BonitaTestSuite extends Suite {
 		runNotifier.addListener(listener);
 	}
 	protected RunListener getRunListener() {
-		return new RunListener(){
-			/* (non-Javadoc)
-			 * @see org.junit.runner.notification.RunListener#testStarted(org.junit.runner.Description)
-			 */
-			@Override
-			public void testStarted(Description description) throws Exception {
-				printBeforeTest(description);
-			}
-			/* (non-Javadoc)
-			 * @see org.junit.runner.notification.RunListener#testFinished(org.junit.runner.Description)
-			 */
-			@Override
-			public void testFinished(Description description) throws Exception {
-				printAfterTest(description);
-				SWTWorkbenchBot bot = new SWTWorkbenchBot();
-
-				BonitaStudioLog.log("|====================================================");
-				BonitaStudioLog.log("| Try to clean shells after test : "+description.getMethodName());
-				try{
-					closeAllShells(bot);
-					bot.saveAllEditors();
-					bot.closeAllEditors();
-				}catch (Exception e) {
-					BonitaStudioLog.log("| Fails to clean shells after test : "+description.getMethodName());
-					BonitaStudioLog.log("|====================================================");
-					return;
+		if(runListener == null){
+			runListener = new RunListener(){
+				/* (non-Javadoc)
+				 * @see org.junit.runner.notification.RunListener#testStarted(org.junit.runner.Description)
+				 */
+				@Override
+				public void testStarted(Description description) throws Exception {
+					printBeforeTest(description);
 				}
+				/* (non-Javadoc)
+				 * @see org.junit.runner.notification.RunListener#testFinished(org.junit.runner.Description)
+				 */
+				@Override
+				public void testFinished(Description description) throws Exception {
+					printAfterTest(description);
+					SWTWorkbenchBot bot = new SWTWorkbenchBot();
 
-				BonitaStudioLog.log("| Shells cleaned after test : "+description.getMethodName());
-				BonitaStudioLog.log("|====================================================");
-			}
-		};
+					BonitaStudioLog.log("|====================================================");
+					BonitaStudioLog.log("| Try to clean shells after test : "+description.getMethodName());
+					try{
+						closeAllShells(bot);
+						bot.saveAllEditors();
+						bot.closeAllEditors();
+					}catch (Exception e) {
+						BonitaStudioLog.log("| Fails to clean shells after test : "+description.getMethodName());
+						BonitaStudioLog.log("|====================================================");
+						return;
+					}
+
+					BonitaStudioLog.log("| Shells cleaned after test : "+description.getMethodName());
+					BonitaStudioLog.log("|====================================================");
+				}
+			};
+		}
+		return runListener;
 	}
 
 	/**
