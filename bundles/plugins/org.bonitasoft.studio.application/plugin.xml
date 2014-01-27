@@ -430,11 +430,6 @@
             id="org.bonitasoft.studio.application.refreshconnectorcommand"
             name="%refreshConnectors_commandLabel">
       </command>
-           <command
-            defaultHandler="org.bonitasoft.studio.application.actions.ImportFileCommand"
-            id="org.bonitasoft.studio.application.importCommand"
-            name="%importLabel">
-      </command>
       <command
             defaultHandler="org.bonitasoft.studio.application.actions.SwitchPaletteMode"
             id="org.bonitasoft.studio.application.switchPalette"
