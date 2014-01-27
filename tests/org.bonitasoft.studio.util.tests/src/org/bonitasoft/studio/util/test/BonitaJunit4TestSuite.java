@@ -26,7 +26,6 @@ import org.eclipse.ui.PlatformUI;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunListener;
-import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 
@@ -36,30 +35,9 @@ import org.junit.runners.model.RunnerBuilder;
  */
 public final class BonitaJunit4TestSuite extends BonitaTestSuite {
 
-    private final RunListener runListener = new RunListener(){
-        /* (non-Javadoc)
-         * @see org.junit.runner.notification.RunListener#testStarted(org.junit.runner.Description)
-         */
-        @Override
-        public void testStarted(Description description) throws Exception {
-            printBeforeTest(description);
-        }
-        /* (non-Javadoc)
-         * @see org.junit.runner.notification.RunListener#testFinished(org.junit.runner.Description)
-         */
-        @Override
-        public void testFinished(Description description) throws Exception {
-            final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            if(activePage != null){
-                for(IEditorPart part : activePage.getDirtyEditors()){
-                    BonitaStudioLog.log("| Editor with input : "+ part.getEditorInput().getName()+" is dirty after test "+ description.getMethodName());
-                }
-            }
-            printAfterTest(description);
-        }
-    };
+    private RunListener runListener;
 
-    public BonitaJunit4TestSuite(Class<?> klass, Class<?>[] suiteClasses) throws InitializationError {
+	public BonitaJunit4TestSuite(Class<?> klass, Class<?>[] suiteClasses) throws InitializationError {
         super(klass, suiteClasses);
     }
 
@@ -101,9 +79,32 @@ public final class BonitaJunit4TestSuite extends BonitaTestSuite {
     }
 
     @Override
-    protected void addRunListener(RunNotifier runNotifier) {
-        runNotifier.addFirstListener(runListener);
+    protected RunListener getRunListener() {
+    	if(runListener == null){
+    		runListener = new RunListener(){
+                /* (non-Javadoc)
+                 * @see org.junit.runner.notification.RunListener#testStarted(org.junit.runner.Description)
+                 */
+                @Override
+                public void testStarted(Description description) throws Exception {
+                    printBeforeTest(description);
+                }
+                /* (non-Javadoc)
+                 * @see org.junit.runner.notification.RunListener#testFinished(org.junit.runner.Description)
+                 */
+                @Override
+                public void testFinished(Description description) throws Exception {
+                    final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                    if(activePage != null){
+                        for(IEditorPart part : activePage.getDirtyEditors()){
+                            BonitaStudioLog.log("| Editor with input : "+ part.getEditorInput().getName()+" is dirty after test "+ description.getMethodName());
+                        }
+                    }
+                    printAfterTest(description);
+                }
+            };
+		}
+		return runListener;
+		
     }
-
-
 }
