@@ -277,9 +277,6 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
         if (getControl() == null) {
             return;
         }
-        if(treeViewer != null){
-            treeViewer.dispose();
-        }
         if(adapterFactoryContentProvider != null){
             adapterFactoryContentProvider.dispose();
         }

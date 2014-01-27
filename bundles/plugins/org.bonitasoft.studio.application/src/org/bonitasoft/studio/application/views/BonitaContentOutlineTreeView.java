@@ -3,9 +3,6 @@ package org.bonitasoft.studio.application.views;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.DiagramRootTreeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.views.ViewsPlugin;
 import org.eclipse.ui.part.IPageBookViewPage;
@@ -31,8 +28,14 @@ public class BonitaContentOutlineTreeView extends ContentOutline{
             page.createControl(getPageBook());
             return new PageRec(part, page);
         }
-        // There is no content outline
         return null;
+    }
+    
+    @Override
+    public void partClosed(IWorkbenchPart part) {
+    	if(part instanceof DiagramEditor){
+    		super.partClosed(part);
+    	}
     }
    
 }
