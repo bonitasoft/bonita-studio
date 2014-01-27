@@ -198,6 +198,7 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase implements
 	@After
 	public void tearDown() {
 		bot.saveAllEditors();
+		bot.closeAllEditors();
 	}
 
 	@Test
@@ -221,7 +222,6 @@ public class TestThrowCatchMessage extends SWTBotGefTestCase implements
 					"The message throw from the same pool should not be available in the combo.",
 					s.equals("theMessage"));
 		}
-
 	}
 
 }

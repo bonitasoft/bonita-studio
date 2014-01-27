@@ -44,12 +44,13 @@ public class BonitaTestSuite extends Suite {
 	private final SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss");
 	private RunListener runListener;
 	
-	private void closeAllShells(SWTWorkbenchBot bot) {
+	private void closeAllShells(SWTWorkbenchBot bot, Description description) {
 		SWTBotShell[] shells = bot.shells();
 		for (SWTBotShell shell : shells) {
 			if (shell.isOpen() && !isEclipseShell(shell)) {
+				bot.captureScreenshot("ShellOpenedAfter"+description.getMethodName()+".jpg");
 				shell.close();
-				BonitaStudioLog.log("/!\\ Shell "+shell+" has been closed automatically, please fix the corresponding test to close it in @After");
+				BonitaStudioLog.log("/!\\ Shell "+shell+" has been closed automatically, please fix the corresponding test to close it in @After (see screenshots)");
 			}
 		}
 	}
@@ -154,7 +155,7 @@ public class BonitaTestSuite extends Suite {
 					BonitaStudioLog.log("|====================================================");
 					BonitaStudioLog.log("| Try to clean shells after test : "+description.getMethodName());
 					try{
-						closeAllShells(bot);
+						closeAllShells(bot,description);
 						bot.saveAllEditors();
 						bot.closeAllEditors();
 					}catch (Exception e) {
