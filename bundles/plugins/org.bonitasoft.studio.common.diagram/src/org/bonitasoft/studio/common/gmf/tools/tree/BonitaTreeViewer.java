@@ -48,8 +48,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -161,17 +159,7 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
             }
 
         });
-        
-//        treeViewer.addDisposeListener(new DisposeListener() {
-//			
-//			@Override
-//			public void widgetDisposed(DisposeEvent e) {
-//				System.out.println(e.widget);
-//				System.out.println("Overview tree is disposed");
-//				new Exception().printStackTrace();
-//			}
-//		});
-
+      
         setControl(mainComposite);
         return mainComposite;
     }
