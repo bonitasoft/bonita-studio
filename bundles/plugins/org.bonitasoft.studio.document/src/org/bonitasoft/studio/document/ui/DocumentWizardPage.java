@@ -1,6 +1,7 @@
 package org.bonitasoft.studio.document.ui;
 
 import static org.bonitasoft.studio.common.Messages.bosProductName;
+import static org.bonitasoft.studio.properties.i18n.Messages.explanationMimeTypeDocument;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.jface.databinding.validator.GroovyReferenceValidator;
@@ -142,7 +143,7 @@ public class DocumentWizardPage extends WizardPage {
 		documentMimeTypeViewer.setExample(Messages.hintMimeTypeDocument);
 		ControlDecoration cd = new ControlDecoration(mimeTypeLabel, SWT.RIGHT);
 		cd.setImage(Pics.getImage(PicsConstants.hint));
-		cd.setDescriptionText(Messages.explanationMimeTypeDocument);
+		cd.setDescriptionText(explanationMimeTypeDocument);
 	}
 
 	private void createDocumentTypeCheckbox(Composite detailsComposite) {

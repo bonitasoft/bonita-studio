@@ -14,7 +14,6 @@ public class Messages extends NLS {
 	public static String description;
 	public static String mimeType;
 	public static String hintMimeTypeDocument;
-	public static String explanationMimeTypeDocument;
 	public static String External;
 	public static String explanationExternalDocument;
 	public static String Internal;
