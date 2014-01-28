@@ -40,6 +40,7 @@ public interface ExpressionConstants {
     String CONNECTOR_OUTPUT_TYPE = "CONNECTOR_OUTPUT_TYPE";
     String MESSAGE_ID_TYPE = "MESSAGE_ID_TYPE";
     String SEARCH_INDEX_TYPE="SEARCH_INDEX_TYPE";
+    String BUSINESS_DATA_TYPE = ExpressionType.TYPE_BUSINESS_DATA.name();
     
     String URL_ATTRIBUTE_TYPE="URL_ATTRIBUTE_TYPE";
 
@@ -53,7 +54,7 @@ public interface ExpressionConstants {
     String JAVA_METHOD_OPERATOR = OperatorType.JAVA_METHOD.name() ;
     String XPATH_UPDATE_OPERATOR = OperatorType.XPATH_UPDATE_QUERY.name() ;
     String CREATE_BUSINESS_DATA_OPERATOR = OperatorType.CREATE_BUSINESS_DATA.name() ;
-    String BUSINESS_DATA_TYPE = "TYPE_BUSINESS_DATA";
+
     
     
     String GROOVY = ExpressionInterpreter.GROOVY.name();
