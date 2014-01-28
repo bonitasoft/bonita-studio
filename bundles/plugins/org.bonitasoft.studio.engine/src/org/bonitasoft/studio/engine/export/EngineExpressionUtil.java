@@ -53,6 +53,7 @@ import org.bonitasoft.studio.model.form.TextFormField;
 import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.parameter.Parameter;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.BusinessObjectData;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Document;
 import org.eclipse.emf.common.util.EList;
@@ -477,8 +478,12 @@ public class EngineExpressionUtil {
 			final Data data = (Data) expression.getReferencedElements().get(0);
 			final String ds = data.getDatasourceId();
 			if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(ds)) {
-				type = ExpressionConstants.FORM_FIELD_TYPE;
+				return ExpressionConstants.FORM_FIELD_TYPE;
 			}
+			if(data instanceof BusinessObjectData){
+				return ExpressionConstants.BUSINESS_DATA_TYPE;
+			}
+			
 		}
 		return type;
 	}
@@ -512,6 +517,9 @@ public class EngineExpressionUtil {
 	public static Expression createVariableExpression(final Data element) {
 		final String datasourceId = element.getDatasourceId();
 		String type = ExpressionConstants.VARIABLE_TYPE;
+		if(element instanceof BusinessObjectData){
+			type = ExpressionConstants.BUSINESS_DATA_TYPE;
+		}
 		if (DatasourceConstants.PAGEFLOW_DATASOURCE.equals(datasourceId)) {
 			type = ExpressionConstants.FORM_FIELD_TYPE;
 		}
