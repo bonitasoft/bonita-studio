@@ -87,9 +87,11 @@
 								</delete>
 
 								<copy todir="${connectors.deps.target}">
-									<fileset dir="${connectors.tmp.dir}/classpath" includes="*.jar" />
+									<fileset dir="${connectors.tmp.dir}/classpath"
+										includes="*.jar" />
 								</copy>
-								<delete dir="${connectors.tmp.dir}/classpath" failonerror="false" />
+								<delete dir="${connectors.tmp.dir}/classpath"
+									failonerror="false" />
 
 								<copy todir="${connectors.def.target}">
 									<fileset dir="${connectors.tmp.dir}" excludes="*.impl" />

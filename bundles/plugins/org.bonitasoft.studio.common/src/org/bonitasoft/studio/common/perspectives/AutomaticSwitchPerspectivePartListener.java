@@ -18,70 +18,82 @@
 package org.bonitasoft.studio.common.perspectives;
 
 import org.bonitasoft.studio.common.platform.tools.PlatformUtil;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.internal.ViewIntroAdapterPart;
-import org.eclipse.ui.intro.IIntroPart;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspective;
+import org.eclipse.e4.ui.model.application.ui.advanced.MPerspectiveStack;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.IPartListener;
+import org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor;
 
-public final class AutomaticSwitchPerspectivePartListener implements IPartListener2 {
+public final class AutomaticSwitchPerspectivePartListener implements IPartListener {
+
+
+	private boolean isSwitching;
 
 	@Override
-	public void partActivated(IWorkbenchPartReference partRef) {
-		IWorkbenchPart part = partRef.getPart(false);
-		if (part instanceof IEditorPart) {
-			final String id = BonitaPerspectivesUtils.getPerspectiveId((IEditorPart) part);
-			if (id != null) {
-				BonitaPerspectivesUtils.switchToPerspective(id);
+	public void partActivated(MPart part) {
+//		if(!isSwitching){
+//			isSwitching = true;
+//			try{
+//				if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
+//					String activePerspective = getActivePerspectiveId(part);
+//					final String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
+//					if (id != null && !id.equals(activePerspective)) {
+//						BonitaPerspectivesUtils.switchToPerspective(id);
+//					}
+//				}
+//			}finally{
+//				isSwitching = false;
+//			}
+//		}
+	}
+
+	@Override
+	public void partBroughtToTop(MPart part) {
+
+	}
+
+	@Override
+	public void partDeactivated(MPart part) {
+
+	}
+
+	@Override
+	public void partHidden(MPart part) {
+
+	}
+
+	@Override
+	public void partVisible(MPart part) {
+		if(!isSwitching){
+			isSwitching = true;
+			try{
+				if (part.getElementId().equals("org.eclipse.e4.ui.compatibility.editor")) {
+					if(PlatformUtil.isIntroOpen()){
+						PlatformUtil.closeIntro();
+					}
+					String activePerspective = getActivePerspectiveId(part);
+					String id = BonitaPerspectivesUtils.getPerspectiveId(((CompatibilityEditor) part.getObject()).getEditor());
+					if (id != null && !id.equals(activePerspective)) {
+						BonitaPerspectivesUtils.switchToPerspective(id);
+					}
+				}
+			}finally{
+				isSwitching = false;
 			}
 		}
 	}
 
-	@Override
-	public void partBroughtToTop(IWorkbenchPartReference partRef) {
-
-	}
-
-	@Override
-	public void partClosed(IWorkbenchPartReference partRef) {
-		IWorkbenchPart part = partRef.getPart(false);
-		if (part instanceof IEditorPart) {
-			PlatformUtil.openIntroIfNoOtherEditorOpen();
+	protected String getActivePerspectiveId(MPart part) {
+		EModelService service =	part.getContext().get(EModelService.class);
+		MWindow window = service.getTopLevelWindowFor(part);
+		MPerspectiveStack pStack =  (MPerspectiveStack) service.find("PerspectiveStack", window);
+		MPerspective selectedElement = pStack.getSelectedElement();
+		String activePerspective =null;
+		if(selectedElement != null){
+			activePerspective = selectedElement.getElementId();
 		}
-	}
-
-	@Override
-	public void partDeactivated(IWorkbenchPartReference partRef) {
-
-	}
-
-	@Override
-	public void partOpened(IWorkbenchPartReference partRef) {
-		IWorkbenchPart part = partRef.getPart(false);
-		if (part instanceof IEditorPart) {
-			if(PlatformUtil.isIntroOpen()){
-				PlatformUtil.closeIntro();
-			}
-			final String id = BonitaPerspectivesUtils.getPerspectiveId((IEditorPart) part);
-			if (id != null) {
-				BonitaPerspectivesUtils.switchToPerspective(id);
-			}
-		}
-	}
-
-	@Override
-	public void partHidden(IWorkbenchPartReference partRef) {
-		
-	}
-
-	@Override
-	public void partVisible(IWorkbenchPartReference partRef) {
-		
-	}
-
-	@Override
-	public void partInputChanged(IWorkbenchPartReference partRef) {
-
+		return activePerspective;
 	}
 }

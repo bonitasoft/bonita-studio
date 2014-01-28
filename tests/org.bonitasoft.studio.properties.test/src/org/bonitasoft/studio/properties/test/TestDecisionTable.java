@@ -64,7 +64,7 @@ public class TestDecisionTable extends SWTBotGefTestCase {
 		bot.waitUntil(Conditions.shellIsActive(Messages.wizardPageTitle));
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.link("<A>" + Messages.addRow + "</A>")));
 
-		bot.link("<A>" + Messages.addRow + "</A>").click();
+		bot.link("<A>" + Messages.addRow + "</A>").click(Messages.addRow);
 
 		bot.waitUntil(Conditions.widgetIsEnabled(bot.link("<A>" + Messages.addCondition + "</A>")));
 		addTrueCondition(0, "true");
@@ -91,7 +91,7 @@ public class TestDecisionTable extends SWTBotGefTestCase {
 	}
 
 	private void addTrueCondition(int idx, String condition){
-		bot.link("<A>" + Messages.addCondition + "</A>").click();
+		bot.link("<A>" + Messages.addCondition + "</A>").click(Messages.addCondition);
 
 		testUpdateLineButtonNotEnabled();
 		changeCondition(idx, condition);
@@ -99,7 +99,7 @@ public class TestDecisionTable extends SWTBotGefTestCase {
 	}
 
 	private void addFalseCondition(int idx, String condition){
-		bot.link("<A>" + Messages.addCondition + "</A>").click();
+		bot.link("<A>" + Messages.addCondition + "</A>").click(Messages.addCondition);
 
 		testUpdateLineButtonNotEnabled();
 		changeCondition(idx, condition);

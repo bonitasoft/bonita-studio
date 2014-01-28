@@ -32,7 +32,6 @@ import org.eclipse.swtbot.swt.finder.keyboard.Keystrokes;
 import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,8 +48,7 @@ public class ActorFilterDefinitionTest extends SWTBotGefTestCase {
     @Before
     public void activateActorFilterDefinitonShell() {
         SWTBotActorFilterUtil.activateActorFilterDefinitionShell(bot);
-        SWTBotShell shell = bot.shell("New actor filter definition");
-        shell.activate();
+        bot.waitUntil(Conditions.shellIsActive("New actor filter definition"));
     }
 
     @Test

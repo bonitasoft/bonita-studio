@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 public interface IProposalListener extends IBonitaVariableContext {
 
 	public String handleEvent(EObject context, String fixedReturnType);
-	
+
 	public void setEStructuralFeature(EStructuralFeature feature);
 }
+

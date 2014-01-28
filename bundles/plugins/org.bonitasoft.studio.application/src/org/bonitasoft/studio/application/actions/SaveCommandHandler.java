@@ -91,9 +91,7 @@ public class SaveCommandHandler extends SaveHandler {
 			boolean changed = false;
 			if(editorPart instanceof DiagramEditor){
 				DiagramRepositoryStore diagramStore = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class) ;
-
 				MainProcess proc = findProc(editorPart);
-
 				DiagramFileStore oldArtifact = null;
 				List<DiagramDocumentEditor> editorsWithSameResourceSet = new ArrayList<DiagramDocumentEditor>();
 				if (nameOrVersionChanged(proc)) {
@@ -124,9 +122,11 @@ public class SaveCommandHandler extends SaveHandler {
 						}
 						oldArtifact.rename(NamingUtils.toDiagramFilename(proc)) ;
 						IWorkbenchPart newEditorOfDiagram = oldArtifact.open();
+
 						List<EObject> forms = openDiagramsForFormsId(oldArtifact, formIds);
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(newEditorOfDiagram);
 						openFormDiagramWithNameIfInList(formName, forms);
+
 					}else{
 						EObject root = ((DiagramEditor)editorPart).getDiagramEditPart().resolveSemanticElement();
 						Resource res = root.eResource();

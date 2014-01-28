@@ -893,5 +893,11 @@
             toolbarPosition="14">
       </coolbarItem>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.bonitasoft.studio.application.BonitaStudioWorkbenchAdvisor">
+      </startup>
+   </extension>
 
 </plugin>

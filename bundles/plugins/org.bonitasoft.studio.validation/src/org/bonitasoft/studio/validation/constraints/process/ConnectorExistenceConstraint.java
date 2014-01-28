@@ -14,10 +14,7 @@ import org.eclipse.emf.validation.IValidationContext;
 
 public class ConnectorExistenceConstraint extends AbstractLiveValidationMarkerConstraint {
 
-
-
 	public static final String ID = "org.bonitasoft.studio.validation.constraints.connectorexistence";
-
 
 	@Override
 	protected IStatus performLiveValidation(IValidationContext context) {

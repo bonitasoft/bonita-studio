@@ -11,6 +11,11 @@
             defaultHandler="org.bonitasoft.studio.configuration.ui.handler.ConfigureHandler"
             id="org.bonitasoft.studio.configuration.configure"
             name="%Configure">
+         <commandParameter
+               id="configuration"
+               name="configuration"
+               optional="true">
+         </commandParameter>
       </command>
    </extension>
    <extension

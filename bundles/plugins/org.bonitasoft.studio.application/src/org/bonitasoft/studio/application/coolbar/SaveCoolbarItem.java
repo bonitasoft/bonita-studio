@@ -203,6 +203,7 @@ public class SaveCoolbarItem implements IBonitaContributionItem {
 			item.setImage(Pics.getImage(PicsConstants.coolbar_save_16)) ;
 			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_save_disabled_16));
 		}
+		 item.setEnabled(false);
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

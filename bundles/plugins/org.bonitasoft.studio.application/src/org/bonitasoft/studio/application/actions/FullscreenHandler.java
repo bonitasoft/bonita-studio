@@ -67,20 +67,20 @@ public class FullscreenHandler extends AbstractHandler implements IHandler {
 				}
 			}
 			new SmallCoolBarHandler().execute(null) ;
-			if(part instanceof DiagramEditor){
-				FlyoutPaletteComposite paletteComposite = (FlyoutPaletteComposite) ((FigureCanvas) ((DiagramEditor)part).getDiagramGraphicalViewer().getControl()).getParent().getParent() ;
-
-				for(Method m : FlyoutPaletteComposite.class.getDeclaredMethods()){
-					if(m.getName().equals("setState")){
-						m.setAccessible(true) ;
-						try {
-							m.invoke(paletteComposite, new Integer(PaletteViewerPreferences.COLLAPSE_ALWAYS)) ;
-						} catch (Exception e) {
-							BonitaStudioLog.error(e) ;
-						}
-					}
-				}
-			}
+//			if(part instanceof DiagramEditor){
+////				FlyoutPaletteComposite paletteComposite = (FlyoutPaletteComposite) ((FigureCanvas) ((DiagramEditor)part).getDiagramGraphicalViewer().getControl()).getParent().getParent() ;
+////
+////				for(Method m : FlyoutPaletteComposite.class.getDeclaredMethods()){
+////					if(m.getName().equals("setState")){
+////						m.setAccessible(true) ;
+////						try {
+////							m.invoke(paletteComposite, new Integer(PaletteViewerPreferences.COLLAPSE_ALWAYS)) ;
+////						} catch (Exception e) {
+////							BonitaStudioLog.error(e) ;
+////						}
+////					}
+////				}
+//			}
 			if(part != null && part.getSite() != null){
 				PlatformUtil.maximizeWindow(part.getEditorSite().getPage(),part.getEditorSite().getPage().getReference(part)) ;
 			}

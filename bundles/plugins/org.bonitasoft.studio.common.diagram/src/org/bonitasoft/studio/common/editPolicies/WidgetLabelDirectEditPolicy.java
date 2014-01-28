@@ -93,12 +93,12 @@ public class WidgetLabelDirectEditPolicy extends LabelDirectEditPolicy {
         EObjectAdapter elementAdapter = null ;
         if (model instanceof View) {
             View view = (View)model;
-            Widget resolveSemanticElement = (Widget) ViewUtil.resolveSemanticElement(view);
-           if(!(resolveSemanticElement instanceof MessageInfo)
+            EObject resolveSemanticElement = ViewUtil.resolveSemanticElement(view);
+           if(resolveSemanticElement instanceof Widget && !(resolveSemanticElement instanceof MessageInfo)
         		   && !(resolveSemanticElement instanceof IFrameWidget)
         		   && !(resolveSemanticElement instanceof HiddenWidget)
         		   && !(resolveSemanticElement instanceof HtmlWidget)){
-        	   elementAdapter = new EObjectAdapterEx(resolveSemanticElement.getDisplayLabel(),
+        	   elementAdapter = new EObjectAdapterEx(((Widget) resolveSemanticElement).getDisplayLabel(),
                        view);
            }else{
         	   elementAdapter = new EObjectAdapterEx(resolveSemanticElement,

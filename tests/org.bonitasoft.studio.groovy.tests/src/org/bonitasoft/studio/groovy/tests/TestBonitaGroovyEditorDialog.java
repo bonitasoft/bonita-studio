@@ -43,11 +43,11 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
     @Override
     @Before
     public void setUp() throws Exception {
-
         super.setUp();
         //WORKAROUND : we need to load bonitasoft groovy ui plugin before start of the test.
         // There are issues with access to PreferenceStore of Groovy plugin in Activator of BonitaSoft Grooy UI plugin.
         System.out.println(Messages.add);
+        FileActionDialog.setDisablePopup(true);
     }
 
     @Test
@@ -76,12 +76,16 @@ public class TestBonitaGroovyEditorDialog extends SWTBotGefTestCase {
         if(!FileActionDialog.getDisablePopup()){
             bot.button(IDialogConstants.OK_LABEL).click();
         }
-        
+        bot.button(IDialogConstants.CANCEL_LABEL);
     }
     
     @After
     public void closeDialog() throws Exception{
     	SWTBotButton button = bot.button(IDialogConstants.CANCEL_LABEL);
+		if(button.isEnabled()){
+    		button.click();
+    	}
+		button = bot.button(IDialogConstants.CANCEL_LABEL);
 		if(button.isEnabled()){
     		button.click();
     	}

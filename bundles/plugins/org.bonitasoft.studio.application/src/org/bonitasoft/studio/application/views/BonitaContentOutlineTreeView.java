@@ -28,7 +28,14 @@ public class BonitaContentOutlineTreeView extends ContentOutline{
             page.createControl(getPageBook());
             return new PageRec(part, page);
         }
-        // There is no content outline
         return null;
     }
+    
+    @Override
+    public void partClosed(IWorkbenchPart part) {
+    	if(part instanceof DiagramEditor){
+    		super.partClosed(part);
+    	}
+    }
+   
 }

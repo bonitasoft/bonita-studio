@@ -133,7 +133,7 @@ public class ValidatorWizard extends Wizard {
 				fileStore.save(validator) ;
 
 				//refactor validator reference in model
-				if(orginalValidator != null && orginalValidator.getClassName() != null && validator != null &&  !orginalValidator.getClassName().equals(validator.getClassName())){
+				if(orginalValidator != null && orginalValidator.getClassName() != null && validator != null && !orginalValidator.getClassName().equals(validator.getClassName())){
 					DiagramRepositoryStore store = (DiagramRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DiagramRepositoryStore.class);
 					for(AbstractProcess p :  store.getAllProcesses()){
 						List<Validator> validators = ModelHelper.getAllItemsOfType(p, FormPackage.Literals.VALIDATOR);

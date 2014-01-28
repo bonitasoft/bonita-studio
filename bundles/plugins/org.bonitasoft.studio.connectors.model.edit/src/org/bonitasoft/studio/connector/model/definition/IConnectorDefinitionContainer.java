@@ -26,5 +26,6 @@ public interface IConnectorDefinitionContainer {
     ConnectorDefinition getDefinition() ;
 
     void recreateConnectorConfigurationPages(ConnectorDefinition definition,boolean clearConfiguration);
+    
 
 }

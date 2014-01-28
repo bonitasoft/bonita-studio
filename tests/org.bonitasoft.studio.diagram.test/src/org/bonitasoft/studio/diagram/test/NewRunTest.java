@@ -61,7 +61,6 @@ public class NewRunTest extends SWTBotGefTestCase {
 
     @After
     public void closeEditors(){
-        bot.closeAllShells();
         bot.closeAllEditors();
     }
 

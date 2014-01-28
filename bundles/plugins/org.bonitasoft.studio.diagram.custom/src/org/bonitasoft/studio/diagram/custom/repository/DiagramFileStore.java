@@ -209,7 +209,7 @@ public class DiagramFileStore extends EMFFileStore implements IRepositoryFileSto
 		}
 		IEditorPart part = null;
 		try {
-			part = IDE.openEditor(activePage,getParentStore().getResource().getFile(getName()));
+			part = IDE.openEditor(activePage,getParentStore().getResource().getFile(getName()),true);
 			if(part instanceof DiagramEditor){
 				final DiagramEditor editor = (DiagramEditor) part;
 				MainProcess diagram = (MainProcess) editor.getDiagramEditPart().resolveSemanticElement() ;

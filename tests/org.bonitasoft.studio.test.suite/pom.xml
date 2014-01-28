@@ -71,11 +71,14 @@
 					</dependencies>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<configuration>
+					<append>false</append><!-- It works because we have a single test suite in this module and it is the first one to be executed everytime.-->
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-	
-	<properties>
-   			<sonar.jacoco.itReportPath>../../../target/jacoco.exec</sonar.jacoco.itReportPath>
-  		</properties>
-	
 </project>

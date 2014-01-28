@@ -90,7 +90,6 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
                     categoryId.equals(CONNECTORS) ||
                     categoryId.equals(DATA_MANAGEMENT) ||
                     categoryId.equals(DEPENDENCIES_MANAGEMENT) ||
-//                    categoryId.equals(CONTEXTS) ||
                     categoryId.equals(KPI)){
                 extensionFeatures.add(categoryId) ;
             }
@@ -99,7 +98,6 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
                     categoryId.equals(FORMS_MODELING) ||
                     categoryId.equals(FORMS_TEMPLATES) ||
                     categoryId.equals(VALIDATORS) 
-             //       categoryId.equals(LANGUAGES_SUPPORT)
                     ){
                 applicationFeatures.add(categoryId) ;
             }
@@ -148,7 +146,8 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
         return featuresByFamily.get(family);
     }
 
-    public void applyChanges()  {
+    @SuppressWarnings("unchecked")
+	public void applyChanges()  {
         String profileName =  ProfilePlugin.getDefault().getPreferenceStore().getString(PREF_ACTIVE_PROFILE) ;
         ICategory[] categories = WorkbenchActivityHelper.resolveCategories(workingCopy,getAllFeature()) ;
         Set activitySet = new HashSet() ;
@@ -156,12 +155,9 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
             activitySet.addAll(WorkbenchActivityHelper.getActivityIdsForCategory(category));
         }
 
-
-
         HashSet newSet = new HashSet(workingCopy.getEnabledActivityIds());
         newSet.removeAll(activitySet);
         workingCopy.setEnabledActivityIds(newSet);
-        PlatformUI.getWorkbench().getActivitySupport().setEnabledActivityIds(newSet) ;
 
         categories = WorkbenchActivityHelper.resolveCategories(workingCopy,getFeatureByProfile(profileName)) ;
         activitySet.clear();
@@ -171,9 +167,12 @@ public class BonitaProfilesManager implements IBonitaActivitiesCategory {
 
         activitySet.addAll(workingCopy.getEnabledActivityIds());
         workingCopy.setEnabledActivityIds(activitySet);
-        PlatformUI.getWorkbench().getActivitySupport().setEnabledActivityIds(workingCopy.getEnabledActivityIds()) ;
+      
 
+        PlatformUI.getWorkbench().getActivitySupport().setEnabledActivityIds(workingCopy.getEnabledActivityIds()) ;
+   
     }
+
 
     private void startJetty() {
         IConfigurationElement[] elements = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.engine.preEngineAction"); //$NON-NLS-1$

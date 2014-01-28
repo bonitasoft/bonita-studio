@@ -21,16 +21,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.bonitasoft.studio.application.actions.OpenConsoleCommand;
 import org.bonitasoft.studio.diagram.custom.commands.NewDiagramCommandHandler;
 import org.bonitasoft.studio.engine.command.RunProcessCommand;
+import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.MainProcess;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.ui.PlatformUI;
 
@@ -44,11 +42,8 @@ public class TestURLs extends TestCase {
         NewDiagramCommandHandler cmd =  new NewDiagramCommandHandler();
         cmd.execute(null);
         MainProcess diagram = cmd.getNewDiagramFileStore().getContent();
-        final RunProcessCommand runProcessCommand = new RunProcessCommand(true);
-        Map<String,Object> parameters = new HashMap<String, Object>();
-        parameters.put(RunProcessCommand.PROCESS, diagram.getElements().get(0));
-        ExecutionEvent ee = new ExecutionEvent(null,parameters,null,null);
-        runProcessCommand.execute(ee);
+        final RunProcessCommand runProcessCommand = new RunProcessCommand((AbstractProcess) diagram.getElements().get(0),true);
+        runProcessCommand.execute(null);
         URL url = runProcessCommand.getUrl();
         assertNotNull("Timeout exceeded while retrieveing run url",url);
         final String stringURL = url.toString();

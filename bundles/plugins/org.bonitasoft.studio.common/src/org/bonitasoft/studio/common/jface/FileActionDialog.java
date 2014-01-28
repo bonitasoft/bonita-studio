@@ -19,7 +19,6 @@ package org.bonitasoft.studio.common.jface;
 import java.util.concurrent.CancellationException;
 
 import org.bonitasoft.studio.common.Messages;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 
@@ -114,7 +113,6 @@ public class FileActionDialog {
 								Messages.bind(Messages.deleteConfirmationMsg, fileName)).open();
 					}
 				});
-
 
 				if (returnCode == YesNoToAllDialog.YES_TO_ALL) {
 					YES_TO_ALL = true;

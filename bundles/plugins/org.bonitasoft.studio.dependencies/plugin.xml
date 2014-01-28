@@ -42,6 +42,17 @@
                  icon="icons/refresh_connector_repositor.png"
                  style="push">
            </command>
+           <visibleWhen
+                 checkEnabled="false">
+              <with
+                    variable="activeWorkbenchWindow">
+                 <test
+                       args="org.bonitasoft.studio.profiles.dependencies.menu"
+                       forcePluginActivation="true"
+                       property="org.bonitasoft.isActivityEnabled">
+                 </test>
+              </with>
+           </visibleWhen>
         </menu>
    </menuContribution>
 </extension>

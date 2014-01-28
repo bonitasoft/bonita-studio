@@ -49,4 +49,7 @@ public interface SWTBotConstants {
     public static final String SWTBOT_ID_EXPLORER_RIGHT_TABLE = "org.bonitasoft.studio.treeexplorer.right";
     
     public static final String SQLBUILDER_CRITERIA_TREE_ID = "sqlBuilderCriteriaTreeId";
+
+
+	public static final String APPLICATION_SECTION_FORMS_SELECTION_TREE = "org.bonitasoft.studio.application.formTree";;
 }

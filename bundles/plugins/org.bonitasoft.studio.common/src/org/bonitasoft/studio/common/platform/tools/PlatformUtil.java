@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -91,32 +92,36 @@ public class PlatformUtil {
 	}
 
 	public static void closeIntro() {
-		Display.getDefault().syncExec(new Runnable() {
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+		if(workbench != null){
+			Display display = workbench.getDisplay();
+			display.syncExec(new Runnable() {
 
-			@Override
-			public void run() {
-				final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				if(window != null){
-					final IWorkbenchPage activePage = window.getActivePage();
-					if(activePage != null){
-						final IWorkbenchPart part = activePage.getActivePart() ;
-						if(part != null){
-							final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
-							if(introManager != null){
-								if(introManager.getIntro()!=null){
-									introManager.closeIntro(introManager.getIntro());
-								}else{
-									final IViewPart view = activePage.findView("org.eclipse.ui.internal.introview");
-									if(view != null){
-										PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(view);
+				@Override
+				public void run() {
+					final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+					if(window != null){
+						final IWorkbenchPage activePage = window.getActivePage();
+						if(activePage != null){
+							final IWorkbenchPart part = activePage.getActivePart() ;
+							if(part != null){
+								final IIntroManager introManager = workbench.getIntroManager();
+								if(introManager != null){
+									if(introManager.getIntro()!=null){
+										introManager.closeIntro(introManager.getIntro());
+									}else{
+										final IViewPart view = activePage.findView("org.eclipse.ui.internal.introview");
+										if(view != null){
+											activePage.hideView(view);
+										}
 									}
 								}
 							}
 						}
 					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	/**
@@ -125,11 +130,13 @@ public class PlatformUtil {
 	 * open the intro
 	 */
 	public static void openIntroIfNoOtherEditorOpen(){
-		Display.getDefault().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				if(PlatformUI.isWorkbenchRunning()){
-					final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+		if(workbench != null){
+			Display display = workbench.getDisplay();
+			display.syncExec(new Runnable() {
+				@Override
+				public void run() {
+					final IWorkbenchPage activePage = workbench.getActiveWorkbenchWindow().getActivePage();
 					if(activePage != null){
 						/*Open intro if there is no other editor opened*/
 						final IEditorReference[] editors = activePage.getEditorReferences();
@@ -143,35 +150,40 @@ public class PlatformUtil {
 						}
 					}
 				}
-			}
-		});
-	
+			});
+		}
 	}
 
 	/**
 	 * Open the intro
 	 */
 	public static void openIntro(){
-		Display.getDefault().syncExec(new Runnable() {
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+		if(workbench != null){
+			Display display = workbench.getDisplay();
+			display.syncExec(new Runnable() {
 
-			@Override
-			public void run() {
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();
-				final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
-				if(model != null &&  introManager.getIntro() != null && ((CustomizableIntroPart)introManager.getIntro()).getControl() != null) {
-					model.getPresentation().navigateHome();
+				@SuppressWarnings("restriction")
+				@Override
+				public void run() {
+					IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+					final IIntroManager introManager = workbench.getIntroManager();
+					final IntroModelRoot model = IntroPlugin.getDefault().getIntroModelRoot();
+					if(model != null 
+							&&  introManager.getIntro() != null 
+							&& ((CustomizableIntroPart)introManager.getIntro()).getControl() != null) {
+						model.getPresentation().navigateHome();
+					}
+					introManager.showIntro(
+							window,
+							false);
+					if(window != null){
+						PlatformUtil.maximizeWindow(window.getActivePage());
+					}
 				}
-				introManager.showIntro(
-						window,
-						false);
-				window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				if(window != null){
-					PlatformUtil.maximizeWindow(window.getActivePage());
-				}
-			}
 
-		});
+			});
+		}
 	}
 
 
@@ -508,7 +520,7 @@ public class PlatformUtil {
 		}
 		return false;
 	}
-	
+
 	public static IEditorReference getOpenEditor(String editorName){
 		IEditorReference openEditor = null;
 		if(PlatformUI.isWorkbenchRunning()){

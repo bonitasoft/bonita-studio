@@ -314,6 +314,7 @@ public abstract class OperationsComposite extends Composite implements IBonitaVa
 
 	public abstract void refresh() ;
 
+
 	protected EReference getActionTargetFeature() {
 		return operationContainmentFeature;
 	}

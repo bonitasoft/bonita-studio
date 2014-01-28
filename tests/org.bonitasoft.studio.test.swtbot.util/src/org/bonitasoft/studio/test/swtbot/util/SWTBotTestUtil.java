@@ -103,6 +103,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 	public static void createNewDiagram(final SWTWorkbenchBot bot){
 		final long timebeforeCreatenewDiagram = System.currentTimeMillis();    	
 		final int nbEditorsBefore = bot.editors().size();
+		bot.waitUntil(Conditions.widgetIsEnabled(bot.menu("Diagram")),40000);
 		SWTBotMenu menu = bot.menu("Diagram");
 		menu.menu("New").click();
 		bot.waitUntil(new ICondition() {
@@ -178,9 +179,8 @@ public class SWTBotTestUtil implements SWTBotConstants{
 			@SuppressWarnings("restriction")
 			public void run() {
 				try {
-					List<? extends Widget> widgets = viewerBot.getFinder().findControls(
-							WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
-					Assert.assertTrue(widgets.size() > 0);
+					List<? extends Widget> widgets = viewerBot.getFinder().findControls(WidgetMatcherFactory.widgetOfType(TabbedPropertyList.class));
+					Assert.assertTrue("No widget of type "+TabbedPropertyList.class.getName()+" has been found",widgets.size() > 0);
 					TabbedPropertyList tabbedPropertyList = (TabbedPropertyList) widgets.get(0);
 					int i = 0;
 					boolean found = false;
@@ -254,7 +254,7 @@ public class SWTBotTestUtil implements SWTBotConstants{
 			public String getFailureMessage() {
 				return "no active editor";
 			}
-		},55000);
+		},65000);
 		FileActionDialog.setDisablePopup(disable);
 		BonitaStudioLog.log("SWTBot has imported "+ resourceNameInClasspath + " in mode " +importName);
 	}

@@ -42,7 +42,6 @@ public class PerspectiveJavaFactory extends AbstractPerspectiveFactory {
                "rightView", IPageLayout.RIGHT, 0.75f,//$NON-NLS-1$
                editorArea);//$NON-NLS-1$
        rightView.addView(IPageLayout.ID_OUTLINE);
-       rightView.setProperty(VIEW_KIND, BONITA_VIEWS_NO_TOOLBAR);
        layout.setFixed(true);
 	}
 

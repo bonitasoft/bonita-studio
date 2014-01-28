@@ -45,9 +45,6 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 		bottomLeft.addView("org.bonitasoft.studio.views.overview.tree");
 		bottomLeft.addView("org.bonitasoft.studio.views.overview");
 
-		
-		bottomLeft.setProperty(VIEW_KIND, BONITA_OVERVIEW);
-
 		// Bottom right.
 		IFolderLayout bottomRight = layout.createFolder(
 				"bottomRight", IPageLayout.RIGHT, (float) 0.3,//$NON-NLS-1$
@@ -60,9 +57,6 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 		for (String viewId : BonitaPerspectivesUtils.getContributedPropertiesViews(PROCESS_PERSPECTIVE_ID)) {
 			bottomRight.addView(viewId);
 		}
-
-		//bottomRight.setProperty("viewProperty", "true");
-		bottomRight.setProperty(VIEW_KIND, BONITA_TABS);
 
 		createLeftViewFolder(layout, editorArea);
 		bottomRight.addView("org.bonitasoft.studio.validation.view");
@@ -80,8 +74,6 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 				(float) 0.1,
 				editorArea);
 		left.addView(PaletteView.ID);
-		layout.getViewLayout(PaletteView.ID).setCloseable(false);
-		layout.getViewLayout(PaletteView.ID).setMoveable(false);
 		left.addPlaceholder("org.bonitasoft.studio.migration.view");
 	}
 

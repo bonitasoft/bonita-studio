@@ -610,6 +610,7 @@ public class ValidatorsPropertySection extends AbstractBonitaDescriptionSection 
 					if (descriptior.getName().equals(GROOVY_TYPE) && !currentValidator.getParameter().getReturnType().equals(Boolean.class.getName())){
 						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE, Boolean.class.getName()));
 						getEditingDomain().getCommandStack().execute(SetCommand.create(getEditingDomain(), currentValidator.getParameter(), ExpressionPackage.Literals.EXPRESSION__RETURN_TYPE_FIXED, true));
+
 					}
 					else {
 						if (descriptior.getName().equals(REGULAR_TYPE)){

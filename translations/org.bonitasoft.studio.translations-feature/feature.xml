@@ -39,30 +39,6 @@
     <includes
          id="org.eclipse.babel.nls_eclipse_ja"
          version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_tools.gef_de"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_tools.gef_es"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_tools.gef_fr"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_tools.gef_it"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.babel.nls_tools.gef_pt"
-         version="0.0.0"/>
-         
-    <includes
-         id="org.eclipse.babel.nls_tools.gef_ja"
-         version="0.0.0"/>
          
 
    <plugin
@@ -308,21 +284,6 @@
          fragment="true"
          unpack="false"/>
 
-   <plugin
-         id="org.bonitasoft.studio.presentation.nl_es"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bonitasoft.studio.presentation.nl_fr"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio.properties.nl_es"
@@ -620,13 +581,6 @@
          fragment="true"
          unpack="false"/>
 
-   <plugin
-         id="org.bonitasoft.studio.presentation.nl_pt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio.properties.nl_pt"
@@ -804,13 +758,6 @@
          fragment="true"
          unpack="false"/>
 
-   <plugin
-         id="org.bonitasoft.studio.presentation.nl_it"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio.properties.nl_it"
@@ -988,13 +935,6 @@
          fragment="true"
          unpack="false"/>
 
-   <plugin
-         id="org.bonitasoft.studio.presentation.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio.properties.nl_de"
@@ -2085,13 +2025,6 @@
          fragment="true"
          unpack="false"/>
 
-   <plugin
-         id="org.bonitasoft.studio.presentation.nl_ja"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.bonitasoft.studio.profiles.nl_ja"

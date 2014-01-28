@@ -192,6 +192,7 @@ public class OpenDiagramCoolbarItem implements IBonitaContributionItem {
 			item.setImage(Pics.getImage(PicsConstants.coolbar_open_16)) ;
 			item.setDisabledImage(Pics.getImage(PicsConstants.coolbar_open_disabled_16));
 		}
+		item.setEnabled(isEnabled());
 		item.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

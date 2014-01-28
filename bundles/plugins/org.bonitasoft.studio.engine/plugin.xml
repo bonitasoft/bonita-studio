@@ -12,6 +12,11 @@
             defaultHandler="org.bonitasoft.studio.engine.command.RunProcessCommand"
             id="org.bonitasoft.studio.engine.runCommand"
             name="%runProcessCommand">
+           <commandParameter
+                 id="configuration"
+                 name="configuration"
+                 optional="true">
+           </commandParameter>
       </command>
       <command
             defaultHandler="org.bonitasoft.studio.engine.command.ResetServerCommand"
@@ -27,6 +32,10 @@
             id="org.bonitasoft.studio.engine.exportAsBarCommand"
             name="%buildBarLabel">
       </command>
+       <commandParameterType
+             id="org.bonitasoft.studio.commandParameterType.abstractProcess"
+             type="org.bonitasoft.studio.model.process.AbstractProcess">
+       </commandParameterType>
   </extension>
   <extension
         point="org.bonitasoft.studio.coolbarContributionItem">

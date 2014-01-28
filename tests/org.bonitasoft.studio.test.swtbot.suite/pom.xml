@@ -65,7 +65,4 @@
   			</plugin>
 		</plugins>
 	</build>
-	<properties>
-   			<sonar.jacoco.itReportPath>../../../../bos-studio/target/jacoco.exec</sonar.jacoco.itReportPath>
-  		</properties>
 </project>

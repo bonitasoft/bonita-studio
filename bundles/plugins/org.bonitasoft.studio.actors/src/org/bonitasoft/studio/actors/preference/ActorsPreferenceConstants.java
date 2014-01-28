@@ -29,4 +29,5 @@ public interface ActorsPreferenceConstants {
     public static final String TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION = BonitaPreferenceConstants.TOGGLE_STATE_FOR_PUBLISH_ORGANIZATION;
     public static final String PUBLISH_ORGANIZATION = BonitaPreferenceConstants.PUBLISH_ORGANIZATION;
 
+
 }

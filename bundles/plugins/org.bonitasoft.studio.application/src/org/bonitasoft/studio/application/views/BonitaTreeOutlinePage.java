@@ -45,6 +45,7 @@ import org.eclipse.gmf.runtime.diagram.ui.internal.DiagramUIStatusCodes;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
@@ -60,7 +61,6 @@ public class BonitaTreeOutlinePage extends ContentOutlinePage implements IAdapta
 	private EditPartViewer viewer;
 	private PageBook pageBook;
 	private Control outline;
-	private boolean overviewInitialized;
 	private DisposeListener disposeListener;
 	private DiagramEditor diagramEditor;
 	private SelectionSynchronizer selectionSynchronizer;
@@ -80,6 +80,7 @@ public class BonitaTreeOutlinePage extends ContentOutlinePage implements IAdapta
 	protected void configureOutlineViewer() {
 		getViewer().setEditPartFactory(getOutlineViewEditPartFactory());
 		getViewer().setKeyHandler(getKeyHandler());
+		getViewer().setContextMenu(new MenuManager());
 		pageBook.showPage(outline);
 	}
 
@@ -122,7 +123,6 @@ public class BonitaTreeOutlinePage extends ContentOutlinePage implements IAdapta
 
 	public void dispose() {
 		unhookOutlineViewer();
-		this.overviewInitialized = false;
 		super.dispose();
 	}
 

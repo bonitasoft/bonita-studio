@@ -68,5 +68,5 @@ public class CMISDeleteFolderConnectorMapper extends
 		}
 		return super.transformParameterValue(parameterKeyFor, value, otherInputs);
 	}
-
+	
 }

@@ -71,16 +71,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.update.core.linux"
-         os="linux"
-         arch="x86"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.gmf.runtime.common.ui.printing.win32"
          os="win32"
          download-size="0"

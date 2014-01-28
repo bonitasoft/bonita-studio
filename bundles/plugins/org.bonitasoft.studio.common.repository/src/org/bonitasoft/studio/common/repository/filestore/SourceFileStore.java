@@ -19,7 +19,6 @@ package org.bonitasoft.studio.common.repository.filestore;
 import java.io.InputStream;
 import java.util.Collections;
 
-import org.bonitasoft.studio.common.editor.BonitaJavaEditor;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.CommonRepositoryPlugin;
 import org.bonitasoft.studio.common.repository.Repository;
@@ -142,7 +141,7 @@ public class SourceFileStore extends AbstractFileStore {
             public void run() {
                 IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 try {
-                    editorPart = IDE.openEditor(page, new FileEditorInput(getResource()), BonitaJavaEditor.ID);
+                    editorPart = IDE.openEditor(page, new FileEditorInput(getResource()), "org.eclipse.jdt.ui.CompilationUnitEditor");
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().saveEditor(editorPart, false);
                 } catch (PartInitException e) {
                 }

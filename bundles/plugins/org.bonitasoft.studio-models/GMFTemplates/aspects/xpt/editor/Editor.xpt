@@ -690,4 +690,3 @@ TODO: get it fixed in GMF-Runtime«ENDREM»
 		return super.getEditingDomain();
 	}
 «ENDAROUND»
-
