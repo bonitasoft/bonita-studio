@@ -45,7 +45,6 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 				editorArea);//$NON-NLS-1$
 		bottomLeft.addView("org.bonitasoft.studio.views.overview.tree");
 		bottomLeft.addView("org.bonitasoft.studio.views.overview");
-		bottomLeft.setProperty(VIEW_KIND, BONITA_OVERVIEW);
 		// Bottom right.
 		IFolderLayout bottomRight = layout.createFolder(
 				"bottomRight", IPageLayout.RIGHT, (float) 0.3,//$NON-NLS-1$
@@ -58,7 +57,6 @@ public class PerspectiveFormsFactory extends AbstractPerspectiveFactory {
 		for (String viewId : BonitaPerspectivesUtils.getContributedPropertiesViews(FORM_PERSPECTIVE_ID)) {
 			bottomRight.addView(viewId);
 		}
-		bottomRight.setProperty(VIEW_KIND, BONITA_TABS);
 
 		createLeftViewFolder(layout, editorArea);
 
