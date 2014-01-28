@@ -2,3 +2,5 @@ target
 bin
 /.project
 screenshots
+.pmd
+*.hprof

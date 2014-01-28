@@ -158,9 +158,8 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
                 handlTreeDoubleClick();
             }
 
-
         });
-
+      
         setControl(mainComposite);
         return mainComposite;
     }
@@ -276,9 +275,6 @@ public abstract class BonitaTreeViewer extends AbstractEditPartViewer implements
     protected void unhookControl() {
         if (getControl() == null) {
             return;
-        }
-        if(treeViewer != null){
-            treeViewer.dispose();
         }
         if(adapterFactoryContentProvider != null){
             adapterFactoryContentProvider.dispose();

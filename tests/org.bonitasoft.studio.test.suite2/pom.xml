@@ -52,7 +52,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<properties>
-   			<sonar.jacoco.itReportPath>../../../target/jacoco.exec</sonar.jacoco.itReportPath>
-  		</properties>
 </project>
