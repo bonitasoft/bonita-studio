@@ -80,14 +80,14 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		if(statusBar != null){
 			statusBar.setVisible(false);
 		}
-		MUIElement leftTrimbar = modelService.find("org.eclipse.ui.trim.vertical1", model);
-		if(leftTrimbar != null){
-			leftTrimbar.setVisible(false);
-		}
-		MUIElement rightTrimbar = modelService.find("org.eclipse.ui.trim.vertical2", model);
-		if(rightTrimbar != null){
-			rightTrimbar.setVisible(false);
-		}
+//		MUIElement leftTrimbar = modelService.find("org.eclipse.ui.trim.vertical1", model);
+//		if(leftTrimbar != null){
+//			leftTrimbar.setVisible(false);
+//		}
+//		MUIElement rightTrimbar = modelService.find("org.eclipse.ui.trim.vertical2", model);
+//		if(rightTrimbar != null){
+//			rightTrimbar.setVisible(false);
+//		}
 	}
 
 	@SuppressWarnings("restriction")
@@ -110,14 +110,14 @@ public class BonitaStudioWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	 */
 	@Override
 	public void postWindowOpen() {
-		if(window.getShell().getShells().length > 0){
-			Shell shell = window.getShell().getShells()[0];
-			shell.removeListener(SWT.Activate, shell.getListeners(SWT.Activate)[0]);
-			shell.removeListener(SWT.Close,shell.getListeners(SWT.Close)[0]);
-			shell.removeListener(SWT.Deactivate,shell.getListeners(SWT.Deactivate)[0]);
-			shell.removeListener(SWT.Iconify,shell.getListeners(SWT.Iconify)[0]);
-			shell.removeListener(SWT.Deiconify,shell.getListeners(SWT.Deiconify)[0]);
-		}
+//		if(window.getShell().getShells().length > 0){
+//			Shell shell = window.getShell().getShells()[0];
+//			shell.removeListener(SWT.Activate, shell.getListeners(SWT.Activate)[0]);
+//			shell.removeListener(SWT.Close,shell.getListeners(SWT.Close)[0]);
+//			shell.removeListener(SWT.Deactivate,shell.getListeners(SWT.Deactivate)[0]);
+//			shell.removeListener(SWT.Iconify,shell.getListeners(SWT.Iconify)[0]);
+//			shell.removeListener(SWT.Deiconify,shell.getListeners(SWT.Deiconify)[0]);
+//		}
 		final MWindow model = ((WorkbenchPage)window.getActivePage()).getWindowModel();
 		model.getContext().get(EPartService.class).addPartListener(new AutomaticSwitchPerspectivePartListener());
 	}
