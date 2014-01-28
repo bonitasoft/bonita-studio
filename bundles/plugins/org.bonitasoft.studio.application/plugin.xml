@@ -858,11 +858,6 @@
             toolbarPosition="3">
       </coolbarItem>
       <coolbarItem
-            class="org.bonitasoft.studio.application.coolbar.ImportBarCoolbarItem"
-            priority="0"
-            toolbarPosition="4">
-      </coolbarItem>
-      <coolbarItem
             class="org.bonitasoft.studio.application.coolbar.CopyCoolbarItem"
             priority="0"
             toolbarPosition="6">
