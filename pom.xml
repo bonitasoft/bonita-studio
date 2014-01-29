@@ -27,10 +27,11 @@
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.junit.reportsPath>target/surefire-reports/</sonar.junit.reportsPath>
+		<sonar.jacoco.reportPath>target/jacoco.exec</sonar.jacoco.reportPath>
 		<sonar.jacoco.itReportPath>${project.basedir}/../../../target/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<!-- Skip generated code -->
 		<sonar.skippedModules>org.bonitasoft.studio.model,org.bonitasoft.studio.model.edit,org.bonitasoft.studio.diagram,org.bonitasoft.studio.diagram.form</sonar.skippedModules>
-		<sonar.exclusions>org/w3/**/*,org/omg/**/*,org/wfmc/**/*,org/jbpm/**/*</sonar.exclusions>
+		<sonar.exclusions>org/w3/**/*,org/omg/**/*,org/wfmc/**/*,org/jbpm/**/*,file:**/src-gen/**/*</sonar.exclusions>
 		<sonar.skipDesign>true</sonar.skipDesign><!-- Takes too much time -->
 	</properties>
 
@@ -124,27 +125,6 @@
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
 					<version>${jacoco.version}</version>
-					<configuration>
-						<includes>
-							<include>org.bonitasoft.studio.*</include>
-						</includes>
-						<append>true</append>
-					</configuration>
-					<executions>
-						<execution>
-							<id>pre-test</id>
-							<goals>
-								<goal>prepare-agent</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>post-test</id>
-							<phase>test</phase>
-							<goals>
-								<goal>report</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
 				<plugin>
@@ -177,9 +157,33 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-
-
 		<plugins>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>org.bonitasoft.studio.*</include>
+					</includes>
+					<append>true</append>
+				</configuration>
+				<executions>
+					<execution>
+						<id>pre-test</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>post-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+							</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-versions-plugin</artifactId>

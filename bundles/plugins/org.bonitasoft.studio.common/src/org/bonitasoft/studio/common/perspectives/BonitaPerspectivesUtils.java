@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.gef.ui.views.palette.PaletteView;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -109,7 +108,8 @@ public class BonitaPerspectivesUtils {
 			allPropertiesViews.add("org.bonitasoft.studio.views.properties.form.general");
 			allPropertiesViews.add("org.bonitasoft.studio.views.properties.form.appearance");
 			allPropertiesViews.add("org.bonitasoft.studio.views.properties.process.appearance");
-			allPropertiesViews.add(PaletteView.ID);
+			allPropertiesViews.add("org.bonitasoft.studio.bpmn.palette_view");
+			allPropertiesViews.add("org.bonitasoft.studio.form.palette_view");
 		}
 		return allPropertiesViews;
 	}
