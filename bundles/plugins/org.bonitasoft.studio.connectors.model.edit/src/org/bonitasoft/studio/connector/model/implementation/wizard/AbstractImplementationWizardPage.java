@@ -121,7 +121,10 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
 	public void createControl(Composite parent) {
 
 		context = new EMFDataBindingContext() ;
-
+		if(pageSupport == null){
+			pageSupport =  WizardPageSupport.create(this, context) ;
+		}
+		
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).create());
 
@@ -277,9 +280,8 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
 			if(!implementation.getImplementationClassname().contains(".")){
 				observePackageText.setValue("org.mycompany.connector");
 			}
-			
-			if(pageSupport == null){
-				pageSupport =  WizardPageSupport.create(this, context) ;
+			if(context != null){
+				context.updateTargets();
 			}
 		}
 	}
