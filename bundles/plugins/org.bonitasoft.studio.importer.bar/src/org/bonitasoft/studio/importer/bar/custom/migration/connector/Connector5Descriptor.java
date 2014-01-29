@@ -201,8 +201,18 @@ public class Connector5Descriptor {
 			StringToExpressionConverter converter, final String variableToSet,
 			final String varValue) {
 		Instance operationContainerInstance = connectorInstance.getContainer();
-		Instance leftOperand = StringToExpressionConverter.createExpressionInstance(model, variableToSet, variableToSet, "java.lang.Object", ExpressionConstants.VARIABLE_TYPE, true);
-		Instance rightOperand = converter.parse(varValue, "java.lang.Object", false);
+		Instance originalVariable = getOriginalVariable(model, variableToSet);
+		
+		// set variable dependency of left operand
+		String returnType=Object.class.getName();
+		Instance leftOperand=null;
+		if(originalVariable!=null){
+			returnType=StringToExpressionConverter.getDataReturnType(originalVariable);
+			leftOperand = StringToExpressionConverter.createExpressionInstanceWithDependency(model, variableToSet, variableToSet, returnType, ExpressionConstants.VARIABLE_TYPE, true, originalVariable );
+		}else{
+			leftOperand = StringToExpressionConverter.createExpressionInstance(model, variableToSet, variableToSet, returnType, ExpressionConstants.VARIABLE_TYPE, true);
+		}
+		Instance rightOperand = converter.parse(varValue, returnType, false);
 		Instance operatorInstance = model.newInstance("expression.Operator");
 		operatorInstance.set("type", ExpressionConstants.ASSIGNMENT_OPERATOR);
 		Instance operationInstance = model.newInstance("expression.Operation");
@@ -210,6 +220,17 @@ public class Connector5Descriptor {
 		operationInstance.set("rightOperand", rightOperand);
 		operationInstance.set("operator", operatorInstance);
 		operationContainerInstance.add("operations", operationInstance);
+	}
+	
+	private Instance getOriginalVariable(final Model model, final String variableToSet) {
+		for(Instance variable : model.getAllInstances("process.Data")){
+			String varName = (String) variable.get("name");
+			if(varName!=null && varName.equals(variableToSet)){
+				System.out.println("toto");
+				return variable;
+			}
+		}
+		return null;
 	}
 
 	public boolean isBonitaSetVarConnector() {
