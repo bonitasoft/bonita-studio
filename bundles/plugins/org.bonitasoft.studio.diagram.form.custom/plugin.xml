@@ -319,4 +319,14 @@
         </and>
      </definition>
   </extension>
+  <extension
+        point="org.eclipse.ui.views">
+     <view
+           class="org.bonitasoft.studio.diagram.form.custom.views.FormPaletteView"
+           icon="icons/FormDiagramFile.gif"
+           id="org.bonitasoft.studio.form.palette_view"
+           name="%formPalette"
+           restorable="true">
+     </view>
+  </extension>
 </plugin>

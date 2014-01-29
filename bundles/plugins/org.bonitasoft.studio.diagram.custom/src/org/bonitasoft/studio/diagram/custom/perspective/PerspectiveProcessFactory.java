@@ -19,11 +19,11 @@ package org.bonitasoft.studio.diagram.custom.perspective;
 
 import org.bonitasoft.studio.common.perspectives.AbstractPerspectiveFactory;
 import org.bonitasoft.studio.common.perspectives.BonitaPerspectivesUtils;
+import org.bonitasoft.studio.diagram.custom.views.BPMNPaletteView;
 import org.bonitasoft.studio.migration.model.report.Report;
 import org.bonitasoft.studio.model.process.diagram.part.ProcessDiagramEditor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.gef.ui.views.palette.PaletteView;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -73,7 +73,9 @@ public class PerspectiveProcessFactory extends AbstractPerspectiveFactory {
 				IPageLayout.LEFT,
 				(float) 0.1,
 				editorArea);
-		left.addView(PaletteView.ID);
+		left.addView(BPMNPaletteView.ID);
+		layout.getViewLayout(BPMNPaletteView.ID).setCloseable(false);
+		layout.getViewLayout(BPMNPaletteView.ID).setMoveable(false);
 		left.addPlaceholder("org.bonitasoft.studio.migration.view");
 	}
 
