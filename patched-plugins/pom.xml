@@ -7,12 +7,12 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>studio</artifactId>
-		<version>6.2.2.rc-02</version>
+		<version>CITestTagToRemove</version>
 	</parent>
 
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>patched-plugins</artifactId>
-	<version>6.2.2.rc-02</version>
+	<version>CITestTagToRemove</version>
 	<packaging>pom</packaging>
 
 

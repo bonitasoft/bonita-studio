@@ -6,11 +6,11 @@
 	<parent>
 		<artifactId>translations</artifactId>
 		<groupId>org.bonitasoft.studio</groupId>
-		<version>6.2.2.rc-02</version>
+		<version>CITestTagToRemove</version>
 	</parent>
 	<groupId>org.bonitasoft.studio.translations</groupId>
 	<artifactId>ja</artifactId>
-	<version>6.2.2.rc-02</version>
+	<version>CITestTagToRemove</version>
 	<packaging>pom</packaging>
 
 
