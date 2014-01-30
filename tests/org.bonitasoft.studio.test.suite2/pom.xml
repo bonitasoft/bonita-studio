@@ -6,11 +6,11 @@
 	<parent>
 		<groupId>org.bonitasoft.studio.tests</groupId>
 		<artifactId>tests</artifactId>
-		<version>CITestTagToRemove</version>
+		<version>6.2.2.rc-02</version>
 	</parent>
 	<groupId>org.bonitasoft.studio.tests</groupId>
 	<artifactId>org.bonitasoft.studio.test.suite2</artifactId>
-	<version>CITestTagToRemove</version>
+	<version>6.2.2.rc-02</version>
 	<packaging>eclipse-test-plugin</packaging>
 
 	<build>

@@ -5,10 +5,10 @@
   <parent>
     <groupId>org.bonitasoft.studio.bundles</groupId>
     <artifactId>features</artifactId>
-    <version>CITestTagToRemove</version>
+    <version>6.2.2.rc-02</version>
   </parent>
   <groupId>org.bonitasoft.studio.bundles.feature</groupId>
   <artifactId>bos-branding-feature</artifactId>
-  <version>CITestTagToRemove</version>
+  <version>6.2.2.rc-02</version>
   <packaging>eclipse-feature</packaging>
 </project>
