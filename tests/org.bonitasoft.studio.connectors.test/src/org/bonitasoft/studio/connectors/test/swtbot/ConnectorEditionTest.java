@@ -150,7 +150,7 @@ public class ConnectorEditionTest extends SWTBotGefTestCase {
 				.getInstance().getRepositoryStore(
 						ConnectorDefRepositoryStore.class);
 		ConnectorDefinition connectorDef = store.getDefinition(id, version);
-		assertEquals("category size should be equal to 1", connectorDef.getCategory().size(), 1);
+		assertEquals("category size should be equal to 1", 1,connectorDef.getCategory().size());
 		DefinitionResourceProvider messageProvider = DefinitionResourceProvider
 				.getInstance(store, ConnectorPlugin.getDefault().getBundle());
 		SWTBotConnectorTestUtil.activateConnectorDefEditionShell( bot);

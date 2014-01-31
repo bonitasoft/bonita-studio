@@ -32,7 +32,7 @@ public class ConnectorDefinitionFactoryImpl extends EFactoryImpl implements Conn
 	 */
     public static ConnectorDefinitionFactory init() {
 		try {
-			ConnectorDefinitionFactory theConnectorDefinitionFactory = (ConnectorDefinitionFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.bonitasoft.org/ns/connector/definition/6.1"); 
+			ConnectorDefinitionFactory theConnectorDefinitionFactory = (ConnectorDefinitionFactory)EPackage.Registry.INSTANCE.getEFactory(ConnectorDefinitionPackage.eNS_URI);
 			if (theConnectorDefinitionFactory != null) {
 				return theConnectorDefinitionFactory;
 			}
