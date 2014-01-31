@@ -313,7 +313,10 @@ public class ImportConnectorArchiveOperation {
         if(classpathDir.exists()){
             DependencyRepositoryStore depStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
             for(String jarName : impl.getJarDependencies().getJarDependency()){
-                final File jarFile = new File(classpathDir,jarName) ;
+            	if(isImplementationJar(jarName,impl) && impl.isHasSources()){
+            		continue;
+            	}
+            	final File jarFile = new File(classpathDir,jarName) ;
                 if(jarFile.exists()){
                     try{
                         FileInputStream fis = new FileInputStream(jarFile) ;
@@ -326,4 +329,9 @@ public class ImportConnectorArchiveOperation {
             }
         }
     }
+    
+	protected boolean isImplementationJar(String jarName,
+			ConnectorImplementation impl) {
+		return (NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)+".jar").equals(jarName);
+	}
 }
