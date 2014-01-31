@@ -131,13 +131,13 @@ public class BarExporter {
 		}
 
 		for (BARResourcesProvider resourceProvider : getBARResourcesProvider()) {
-			resourceProvider.addResourcesForConfiguration(builder,process,configuration);
+			resourceProvider.addResourcesForConfiguration(builder,process,configuration,excludedObject);
 		}
 
 		//Add forms resources
 		BARResourcesProvider provider = getBARApplicationResourcesProvider();
 		if(provider != null){
-			provider.addResourcesForConfiguration(builder,process,configuration);
+			provider.addResourcesForConfiguration(builder,process,configuration,excludedObject);
 
 		}
 

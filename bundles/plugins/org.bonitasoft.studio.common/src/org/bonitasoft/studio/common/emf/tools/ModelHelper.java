@@ -842,6 +842,12 @@ public class ModelHelper {
 				connectors.add(c);
 			}
 		}
+		
+		if (element instanceof PageFlow) {
+			for (Connector c : ((PageFlow) element).getPageFlowConnectors()) {
+				connectors.add(c);
+			}
+		}
 
 		if (element instanceof Container) {
 			for (Element e : ((Container) element).getElements()) {

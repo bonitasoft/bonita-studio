@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -38,6 +39,7 @@ import org.bonitasoft.studio.model.configuration.ConfigurationPackage;
 import org.bonitasoft.studio.model.configuration.Fragment;
 import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
@@ -46,7 +48,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 public class JarBarResourceProvider implements BARResourcesProvider {
 
     @Override
-    public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder,AbstractProcess process, Configuration configuration) {
+    public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder,AbstractProcess process, Configuration configuration,Set<EObject> excludedObjects) {
         final List<BarResource> resources = new ArrayList<BarResource>() ;
         if(configuration == null){
             return resources ;

@@ -132,10 +132,12 @@ public class FormsExporter {
 	private final String EMPTY_EXPRESSION_CONTENT = "";
 	private final String EMPTY_EXPRESSION_TYPE = ExpressionConstants.CONSTANT_TYPE;
 	private final String EMPTY_EXPRESSION_RETURN_TYPE = String.class.getName();
+	protected Set<EObject> excludedObject;
 
-	public File createXmlForms(final AbstractProcess studioProcess, final boolean isAllInBarExport) throws Exception {
+	public File createXmlForms(final AbstractProcess studioProcess, final boolean isAllInBarExport, Set<EObject> excludedObject) throws Exception {
 		timestamp = System.currentTimeMillis();
 		procDefid = studioProcess.getName() + "--" + studioProcess.getVersion();
+		this.excludedObject = excludedObject;
 		final IFormBuilder builder = createBuilder();
 		// need to initialize
 		builder.createFormDefinition();
@@ -185,6 +187,14 @@ public class FormsExporter {
 		addActivities(studioProcess, builder);
 
 		return builder.done();
+	}
+
+	public Set<EObject> getExcludedObject() {
+		return excludedObject;
+	}
+
+	public void setExcludedObject(Set<EObject> excludedObject) {
+		this.excludedObject = excludedObject;
 	}
 
 	/**

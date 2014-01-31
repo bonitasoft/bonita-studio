@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -37,6 +38,7 @@ import org.bonitasoft.studio.validators.descriptor.validator.ValidatorDescriptor
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorFileStore;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
 import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
@@ -46,7 +48,7 @@ public class ValidatorBarResourceProvider implements BARResourcesProvider {
 
 
     @Override
-    public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process, Configuration configuration) {
+    public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process, Configuration configuration,Set<EObject> exludedObject) {
         final List<BarResource> resources = new ArrayList<BarResource>() ;
         if(configuration == null){
             return resources ;

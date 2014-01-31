@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.bonitasoft.engine.bpm.bar.BarResource;
 import org.bonitasoft.engine.bpm.bar.BusinessArchiveBuilder;
@@ -46,6 +47,7 @@ import org.bonitasoft.studio.model.configuration.FragmentContainer;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
@@ -54,12 +56,12 @@ import org.eclipse.emf.common.util.URI;
 public class ActorFilterBarResourceProvider implements BARResourcesProvider {
 
 
-    @Override
-    public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process, Configuration configuration) {
-        final List<BarResource> resources = new ArrayList<BarResource>() ;
-        if(configuration == null){
-            return resources ;
-        }
+	@Override
+	public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process, Configuration configuration,Set<EObject> excludedObjects) {
+		final List<BarResource> resources = new ArrayList<BarResource>() ;
+		if(configuration == null){
+			return resources ;
+		}
 
         final DependencyRepositoryStore libStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class) ;
         final ActorFilterImplRepositoryStore implStore = (ActorFilterImplRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class) ;
