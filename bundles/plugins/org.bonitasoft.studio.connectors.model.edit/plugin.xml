@@ -2,18 +2,14 @@
 <?eclipse version="3.0"?>
 
 <!--
- <copyright>
- </copyright>
-
- $Id$
 -->
 
 <plugin>
-   <extension-point id="testConfigurationListener" name="org.bonitasoft.studio.testConfigurationListener" schema="schema/testConfigurationListener.exsd"/>
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+      <!-- @generated connector -->
       <factory
-            uri="http://www.bonitasoft.org/ns/connector/definition/6.0"
+            uri="http://www.bonitasoft.org/ns/connector/definition/6.1"
             class="org.bonitasoft.studio.connector.model.definition.provider.ConnectorDefinitionItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
@@ -24,6 +20,7 @@
    </extension>
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
+      <!-- @generated connector -->
       <factory
             uri="http://www.bonitasoft.org/ns/connector/implementation/6.0"
             class="org.bonitasoft.studio.connector.model.implementation.provider.ConnectorImplementationItemProviderAdapterFactory"

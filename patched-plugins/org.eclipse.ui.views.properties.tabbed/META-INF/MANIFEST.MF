@@ -4,8 +4,8 @@ Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.ui.views.properties.tabbed;singleton:=true
 Bundle-Version: 3.6.0.v20130515-1900
 Bundle-Activator: org.eclipse.ui.internal.views.properties.tabbed.TabbedPropertyViewPlugin
-Bundle-Localization: plugin
 Bundle-Vendor: %Plugin.providerName
+Bundle-Localization: plugin
 Export-Package: org.eclipse.ui.internal.views.properties.tabbed;x-internal:=true,
  org.eclipse.ui.internal.views.properties.tabbed.l10n;x-internal:=true,
  org.eclipse.ui.internal.views.properties.tabbed.view;x-internal:=true,

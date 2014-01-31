@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.importer.bar.custom.migration.connector;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -83,7 +84,6 @@ public class Connector5Descriptor {
 	private Map<String, Object> outputs = new HashMap<String,Object>();
 	private IConnectorDefinitionMapper definitionMapper;
 	private EClass containerType;
-
 
 	public Connector5Descriptor(Instance connectorInstance) {
 		this.uuid = connectorInstance.getUuid();
@@ -226,7 +226,6 @@ public class Connector5Descriptor {
 		for(Instance variable : model.getAllInstances("process.Data")){
 			String varName = (String) variable.get("name");
 			if(varName!=null && varName.equals(variableToSet)){
-				System.out.println("toto");
 				return variable;
 			}
 		}
@@ -239,11 +238,22 @@ public class Connector5Descriptor {
 
 	private void addOutputs(Model model, Instance connectorInstance, StringToExpressionConverter converter) {
 		for(Entry<String, Object> output : outputs.entrySet()){
-			final Instance operation = converter.parseOperation(String.class.getName(), false, (String) output.getValue(), output.getKey());
+			
+			final String outputValue = output.getValue().toString();
+			final String outputType = isAnOutputConnector(outputValue)? ExpressionConstants.CONNECTOR_OUTPUT_TYPE : ExpressionConstants.SCRIPT_TYPE;
+			final String returnType = definitionMapper.getOutputReturnType(outputValue);
+			
+			final Instance operation = converter.parseOperation(returnType, false, (String) output.getValue(), output.getKey(), outputType);
 			connectorInstance.add(OUTPUTS, operation);
 		}
 	}
 
+	private boolean isAnOutputConnector(String outputVAlueTmp){
+			if(definitionMapper.getOutputReturnType(outputVAlueTmp)!=null){
+				return true;
+			}
+		return false;
+	}
 
 	private String getDefinitionVersion() {
 		return definitionMapper.getDefinitionVersion();
@@ -280,6 +290,7 @@ public class Connector5Descriptor {
 	private String getReturnType(String inputName) {
 		return definitionMapper.getInputReturnType(inputName);
 	}
+	
 
 	private Instance getParameterExpressionFor(Model model,String input,StringToExpressionConverter converter, Object value, String returnType) {
 		if(value instanceof String || value instanceof Boolean || value instanceof Number){
