@@ -84,6 +84,8 @@ public class BonitaStudioApplication implements IApplication {
 
 
     public static void preStartupStudio() {
+        //avoid the execution of AutoBuild job during startup
+        Job.getJobManager().sleep(ResourcesPlugin.FAMILY_AUTO_BUILD);
         Location instanceLoc = Platform.getInstanceLocation();
         //if workspace is set via -Data, can't reset it
         if(!instanceLoc.isSet()){
@@ -120,8 +122,8 @@ public class BonitaStudioApplication implements IApplication {
                     BonitaStudioLog.error(e);
                 }
             }
-            //avoid the execution of AutoBuild job during startup
-            Job.getJobManager().sleep(ResourcesPlugin.FAMILY_AUTO_BUILD);
+       
+        
            // ResourcesPlugin.getPlugin().getPluginPreferences().setValue(ResourcesPlugin.PREF_AUTO_BUILDING, false);
         }
        
