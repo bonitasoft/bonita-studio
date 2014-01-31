@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Set;
 
 import org.bonitasoft.forms.server.exception.InvalidFormDefinitionException;
 import org.bonitasoft.studio.common.FileUtil;
@@ -30,6 +31,7 @@ import org.bonitasoft.studio.exporter.application.service.CssGeneratorService;
 import org.bonitasoft.studio.exporter.form.FormsExporterService;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * 
@@ -47,6 +49,7 @@ public class FormsXMLExporter {
      * 
      * @param process
      *            from which resources are exported
+     * @param excludedObject 
      * @param processDefinitionUUID
      * @param warFile
      *            were to put resources
@@ -56,7 +59,7 @@ public class FormsXMLExporter {
      * @throws IOException
      * @throws InvalidFormDefinitionException
      */
-    public static boolean exportFormsXML(AbstractProcess process, File destFolderFile, boolean isAllInBarExport, IProgressMonitor monitor) throws Exception {
+    public static boolean exportFormsXML(AbstractProcess process, File destFolderFile, boolean isAllInBarExport, Set<EObject> excludedObject, IProgressMonitor monitor) throws Exception {
         boolean succes = true;
         FileInputStream fis = null;
         FileOutputStream fos = null;
@@ -64,7 +67,7 @@ public class FormsXMLExporter {
         File formXml = null ;
         try {
 
-            formXml = FormsExporterService.getInstance().getFormsExporter().createXmlForms(process,isAllInBarExport);
+            formXml = FormsExporterService.getInstance().getFormsExporter().createXmlForms(process,isAllInBarExport,excludedObject);
             formsXmlNew = new File(formXml.getParent() + File.separatorChar + "forms.xml"); //$NON-NLS-1$
             fis = new FileInputStream(formXml);
             fos = new FileOutputStream(formsXmlNew);

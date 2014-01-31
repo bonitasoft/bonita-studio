@@ -251,6 +251,7 @@ public class Repository implements IRepository {
 	}
 
 	public void enableBuild() {
+		Job.getJobManager().wakeUp(ResourcesPlugin.FAMILY_AUTO_BUILD);
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceDescription desc = workspace.getDescription();
 		if(!desc.isAutoBuilding()){

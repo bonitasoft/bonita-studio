@@ -20,6 +20,7 @@ package org.bonitasoft.studio.exporter.tests.form;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collections;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,6 +37,7 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.model.process.EntryPageFlowType;
 import org.bonitasoft.studio.model.process.MainProcess;
+import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -57,7 +59,7 @@ public class TestFormsExporter extends TestCase {
     @Test
     public void testCreateXmlForms() throws Exception {
         MainProcess mainProc = ProcessRegistry.createBasicProcess() ;
-        File file = FormsExporterService.getInstance().getFormsExporter().createXmlForms(mainProc,false);
+        File file = FormsExporterService.getInstance().getFormsExporter().createXmlForms(mainProc,false,Collections.<EObject>emptySet());
         assertNotNull(file);
     }
 
@@ -73,7 +75,7 @@ public class TestFormsExporter extends TestCase {
     @Test
     public void testCreateXmlFormsFromFull() throws Exception {
         AbstractProcess mainProc = ProcessRegistry.getTestExampleProcess("BaseTestForForm_1_1.proc") ;
-        File file = FormsExporterService.getInstance().getFormsExporter().createXmlForms(mainProc,false);
+        File file = FormsExporterService.getInstance().getFormsExporter().createXmlForms(mainProc,false,Collections.<EObject>emptySet());
         assertNotNull(file);
     }
 
@@ -97,7 +99,7 @@ public class TestFormsExporter extends TestCase {
             }
         }
         assertNotNull(pool);
-        File file = FormsExporterService.getInstance().getFormsExporter().createXmlForms(pool,false);
+        File file = FormsExporterService.getInstance().getFormsExporter().createXmlForms(pool,false,Collections.<EObject>emptySet());
         assertNotNull("forms.xml for TestProcessForActions_1_0.proc was null",file);
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         FileInputStream is = new FileInputStream(file);
@@ -140,7 +142,7 @@ public class TestFormsExporter extends TestCase {
             }
         }
         assertNotNull(pool);
-        File file = FormsExporterService.getInstance().getFormsExporter().createXmlForms(pool,false);
+        File file = FormsExporterService.getInstance().getFormsExporter().createXmlForms(pool,false,Collections.<EObject>emptySet());
         assertNotNull("forms.xml for TestProcessForActions_1.0.proc was null",file);
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         FileInputStream is = new FileInputStream(file);
@@ -171,7 +173,7 @@ public class TestFormsExporter extends TestCase {
         }
         assertNotNull(pool);
         assertEquals(EntryPageFlowType.SKIP, pool.getEntryPageFlowType());
-        File file = FormsExporterService.getInstance().getFormsExporter().createXmlForms(pool,false);
+        File file = FormsExporterService.getInstance().getFormsExporter().createXmlForms(pool,false,Collections.<EObject>emptySet());
         assertNotNull("forms.xml for TestSkipForms_1.0.proc was null",file);
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         FileInputStream is = new FileInputStream(file);
