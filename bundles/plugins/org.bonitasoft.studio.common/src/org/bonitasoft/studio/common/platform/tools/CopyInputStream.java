@@ -44,11 +44,9 @@ public class CopyInputStream{
 			file.createNewFile();
 			_copy = new FileOutputStream(file);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			BonitaStudioLog.error(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			BonitaStudioLog.error(e);
 		}
         try{
             copy();
@@ -72,8 +70,7 @@ public class CopyInputStream{
         try {
 			return new FileInputStream(file);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			BonitaStudioLog.error(e);
 		}
 		return _is;
     }
@@ -85,6 +82,9 @@ public class CopyInputStream{
 			} catch (IOException e) {
 				BonitaStudioLog.error(e);
 			}
+    	}
+    	if(file != null && file.exists()){
+    		file.delete();
     	}
     }
 }
