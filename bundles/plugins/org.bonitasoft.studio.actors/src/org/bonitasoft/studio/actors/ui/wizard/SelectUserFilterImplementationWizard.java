@@ -22,6 +22,8 @@ import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.actors.repository.ActorFilterImplRepositoryStore;
 import org.bonitasoft.studio.actors.repository.ActorFilterSourceRepositoryStore;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositoryStore;
@@ -45,12 +47,12 @@ public class SelectUserFilterImplementationWizard extends AbstractSelectImplemen
     }
 
     @Override
-    protected SourceRepositoryStore<?> getSourceStore() {
-        return (SourceRepositoryStore<?>) RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
+    protected SourceRepositoryStore<AbstractFileStore> getSourceStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
     }
 
     @Override
-    protected IRepositoryStore<?> getImplementationStore() {
+    protected IRepositoryStore<? extends IRepositoryFileStore> getImplementationStore() {
         return  RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
     }
 
@@ -59,9 +61,10 @@ public class SelectUserFilterImplementationWizard extends AbstractSelectImplemen
         return new ConnectorImplementationLabelProvider((IDefinitionRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class), ActorsPlugin.getDefault().getBundle());
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected IContentProvider getContentProvider() {
-        return new ConnectorImplementationContentProvider(getImplementationStore(), true);
+        return new ConnectorImplementationContentProvider((IRepositoryStore<IRepositoryFileStore>) getImplementationStore(), true);
     }
 
     @Override

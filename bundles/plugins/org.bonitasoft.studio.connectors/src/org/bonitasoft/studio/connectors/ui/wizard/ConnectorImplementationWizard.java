@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.jface.ExtensibleWizard;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -77,9 +78,9 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 	protected final ConnectorImplementation implWorkingCopy;
 	protected ConnectorImplementation originalImpl;
 	private IFile fileToOpen;
-	protected  IRepositoryStore implStore;
-	protected SourceRepositoryStore sourceStore;
-	protected IRepositoryStore defStore;
+	protected IRepositoryStore<? extends IRepositoryFileStore> implStore;
+	protected SourceRepositoryStore<AbstractFileStore> sourceStore;
+	protected IRepositoryStore<? extends IRepositoryFileStore> defStore;
 	protected DefinitionResourceProvider messageProvider;
 
 	public ConnectorImplementationWizard(){
@@ -107,13 +108,14 @@ public class ConnectorImplementationWizard extends ExtensibleWizard {
 		initialize() ;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void initialize() {
 		implStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorImplRepositoryStore.class) ;
 		if(originalImpl != null){
 			fileStore = implStore.getChild(NamingUtils.getEResourceFileName(originalImpl,true)) ;
 		}
 		defStore =  RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class) ;
-		sourceStore = (ConnectorSourceRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class) ;
+		sourceStore = RepositoryManager.getInstance().getRepositoryStore(ConnectorSourceRepositoryStore.class) ;
 		messageProvider = DefinitionResourceProvider.getInstance(defStore, ConnectorPlugin.getDefault().getBundle()) ;
 	}
 

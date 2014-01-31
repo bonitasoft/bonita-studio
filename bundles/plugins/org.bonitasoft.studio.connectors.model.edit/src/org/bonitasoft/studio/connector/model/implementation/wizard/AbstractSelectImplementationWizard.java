@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.connector.model.implementation.wizard;
 
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
@@ -44,9 +46,9 @@ public abstract class AbstractSelectImplementationWizard extends Wizard {
         addPage(page) ;
     }
 
-    protected abstract SourceRepositoryStore getSourceStore() ;
+    protected abstract SourceRepositoryStore<? extends AbstractFileStore> getSourceStore() ;
 
-    protected abstract IRepositoryStore getImplementationStore() ;
+    protected abstract IRepositoryStore<? extends IRepositoryFileStore> getImplementationStore() ;
 
     protected abstract LabelProvider getLabelProvider() ;
 

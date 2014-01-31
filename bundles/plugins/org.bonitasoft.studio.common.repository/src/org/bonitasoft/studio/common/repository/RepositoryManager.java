@@ -24,7 +24,6 @@ import java.util.List;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.model.IRepository;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.preferences.RepositoryPreferenceConstant;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -120,8 +119,9 @@ public class RepositoryManager {
 		return repository ;
 	}
 
-	public IRepositoryStore<?> getRepositoryStore(Class<?> storeClass) {
-		return getCurrentRepository().getRepositoryStore(storeClass);
+
+	public <T> T getRepositoryStore(Class<T> storeClass) {
+		return storeClass.cast(getCurrentRepository().getRepositoryStore(storeClass));
 	}
 
 	public IRepository getRepository(String repositoryName) {

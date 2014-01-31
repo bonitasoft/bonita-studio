@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -97,7 +98,7 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
 
 	private ISWTObservableValue observePackageText;
 
-	public AbstractImplementationWizardPage(ConnectorImplementation implementation,List<ConnectorImplementation> existingImpl,List<ConnectorDefinition> definitions,SourceRepositoryStore sourceStore,String pageTitle,String pageDescription,DefinitionResourceProvider messageProvider) {
+	public AbstractImplementationWizardPage(ConnectorImplementation implementation,List<ConnectorImplementation> existingImpl,List<ConnectorDefinition> definitions,SourceRepositoryStore<AbstractFileStore> sourceStore,String pageTitle,String pageDescription,DefinitionResourceProvider messageProvider) {
 		super(true,AbstractImplementationWizardPage.class.getName());
 		setTitle(pageTitle);
 		setDescription(pageDescription);

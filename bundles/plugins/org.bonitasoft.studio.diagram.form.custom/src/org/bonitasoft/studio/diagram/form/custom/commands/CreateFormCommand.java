@@ -192,7 +192,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		inputExpression.setContent(data.getName()) ;
 		inputExpression.setName(data.getName()) ;
 		inputExpression.setType(ExpressionConstants.VARIABLE_TYPE) ;
-		inputExpression.getReferencedElements().add(EcoreUtil.copy(data)) ;
+		inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data)) ;
 		inputExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data)) ;
 
 		if(widget instanceof CheckBoxSingleFormField){
@@ -238,7 +238,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		Expression inputExpression = ExpressionFactory.eINSTANCE.createExpression();
 		inputExpression.setContent(key.getName()) ;
 		inputExpression.setName(key.getName()) ;
-		inputExpression.getReferencedElements().add(EcoreUtil.copy(key)) ;
+		inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(key));
 		inputExpression.setReturnType(String.class.getName()) ;
 		inputExpression.setType(ExpressionConstants.DOCUMENT_REF_TYPE);
 		if(!(feature.equals(ProcessPackage.Literals.PAGE_FLOW__FORM) && pageFlow instanceof Pool)){ //Do not set input expression if we are in an instantiation form
@@ -335,7 +335,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		storageExpression.setName(doc.getName()) ;
 		storageExpression.setType(ExpressionConstants.DOCUMENT_REF_TYPE) ;
 		storageExpression.setReturnType(String.class.getName()) ;
-		storageExpression.getReferencedElements().add(EcoreUtil.copy(doc)) ;
+		storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(doc)) ;
 		action.setLeftOperand(storageExpression) ;
 
 		Expression actionExpression = ExpressionFactory.eINSTANCE.createExpression();
@@ -368,7 +368,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		}else{
 			actionExpression.setReturnType(widget.getAssociatedReturnType()) ;
 		}
-		actionExpression.getReferencedElements().add(EcoreUtil.copy(widget)) ;
+		actionExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(widget)) ;
 		return actionExpression;
 	}
 
@@ -378,7 +378,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		storageExpression.setName(data.getName()) ;
 		storageExpression.setType(ExpressionConstants.VARIABLE_TYPE) ;
 		storageExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data)) ;
-		storageExpression.getReferencedElements().add(EcoreUtil.copy(data)) ;
+		storageExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data)) ;
 		return storageExpression;
 	}
 

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
 import org.bonitasoft.studio.groovy.GroovyUtil;
@@ -96,7 +97,7 @@ public class ComputeScriptDependenciesJob extends Job {
 				if(provider.isRelevantFor(context)){
 					for(Expression exp : provider.getExpressions(context)){
 						if(exp.getName().equals(name) && !exp.getReferencedElements().isEmpty()){
-							deps.add(EcoreUtil.copy(exp.getReferencedElements().get(0)));
+							deps.add(ExpressionHelper.createDependencyFromEObject(exp.getReferencedElements().get(0)));
 							continue variablesloop;
 						}
 					}

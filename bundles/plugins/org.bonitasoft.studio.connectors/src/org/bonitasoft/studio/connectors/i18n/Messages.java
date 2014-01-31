@@ -170,6 +170,7 @@ public class Messages extends NLS {
 	public static String destFileNameLabel;
 	public static String notAZipFile;
 	public static String connectorOutput;
+
     /**
      * @param event
      * @return

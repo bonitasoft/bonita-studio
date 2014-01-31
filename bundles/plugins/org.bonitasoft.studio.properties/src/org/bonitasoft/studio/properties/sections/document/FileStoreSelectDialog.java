@@ -145,7 +145,7 @@ public abstract class FileStoreSelectDialog extends Dialog {
         fileStoreListViewer.getList().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 300).create());
         fileStoreListViewer.setContentProvider(new ArrayContentProvider());
         fileStoreListViewer.setLabelProvider(new FileStoreLabelProvider());
-        IRepositoryStore<?> ars = RepositoryManager.getInstance().getRepositoryStore(getRepositoryStoreClass());
+        IRepositoryStore<?> ars = (IRepositoryStore<?>) RepositoryManager.getInstance().getRepositoryStore(getRepositoryStoreClass());
         fileStoreListViewer.setInput(ars.getChildren());
         fileStoreListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 

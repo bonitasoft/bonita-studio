@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.parameter.Parameter;
@@ -30,7 +31,6 @@ import org.bonitasoft.studio.model.process.decision.DecisionTableAction;
 import org.bonitasoft.studio.model.process.decision.DecisionTableLine;
 import org.bonitasoft.studio.model.process.decision.transitions.TakeTransitionAction;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
  * @author Mickael Istria
@@ -55,7 +55,9 @@ public class DecisionTableUtil {
                 builder.append(toGroovyCondition(condition));
                 builder.append(")");
                 builder.append(CONDITION_SEPARATOR);
-                listReferencedElements.addAll(EcoreUtil.copyAll(condition.getReferencedElements()));
+                for(EObject dep : condition.getReferencedElements()){
+                	listReferencedElements.add(ExpressionHelper.createDependencyFromEObject(dep));
+                }
             }
             builder.delete(builder.length() - CONDITION_SEPARATOR.length(), builder.length());
             builder.append(") { ");

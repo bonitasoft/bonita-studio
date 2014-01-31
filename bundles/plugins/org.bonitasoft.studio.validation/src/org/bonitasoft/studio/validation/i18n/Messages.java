@@ -89,6 +89,10 @@ public class Messages extends NLS {
 	public static String Validation_noConnectorDefFound;
 	public static String invalidParalellMergeConstraints;
 	public static String Validation_noActorFilterDefFound;
+	public static String Validation_InconsistentConnectorDefAndConfigurationInput;
+	public static String Validation_InconsistentActorDefAndConfigurationInput;
+	public static String Validation_InconsistentConnectorDefAndConfigurationOutput;
+	public static String Validation_InconsistentActorDefAndConfigurationOutput;
 
     
     static {
