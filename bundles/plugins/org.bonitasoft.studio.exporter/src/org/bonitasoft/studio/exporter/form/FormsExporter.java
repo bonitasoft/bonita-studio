@@ -139,11 +139,6 @@ public class FormsExporter {
 		final IFormBuilder builder = createBuilder();
 		// need to initialize
 		builder.createFormDefinition();
-
-		final AssociatedFile hostPage = studioProcess.getHostPage();
-//		if (hostPage != null && hostPage.getPath() != null) {
-//			builder.addHomePage(ExporterTools.getTemplateWarPath(studioProcess, TemplateType.HOST_PAGE));
-//		}
 		final String version = studioProcess.getVersion();
 		if (version != null && version.length() > 0) {
 			builder.addApplication(studioProcess.getName(), version);
@@ -209,13 +204,13 @@ public class FormsExporter {
 	 * @throws InvalidFormDefinitionException
 	 */
 	protected void exportViewPageFlow(final ViewPageFlow viewPageFlow, final IFormBuilder builder) throws InvalidFormDefinitionException {
-//		if (viewPageFlow.getViewPageFlowType() == ConsultationPageFlowType.PAGEFLOW) {
-//			if (viewPageFlow instanceof AbstractProcess) {
-//				addProcessConsultationPageFlow(viewPageFlow, builder);
-//			} else {
-//				addConsultationPageFlow(viewPageFlow, builder);
-//			}
-//		}
+		//		if (viewPageFlow.getViewPageFlowType() == ConsultationPageFlowType.PAGEFLOW) {
+		//			if (viewPageFlow instanceof AbstractProcess) {
+		//				addProcessConsultationPageFlow(viewPageFlow, builder);
+		//			} else {
+		//				addConsultationPageFlow(viewPageFlow, builder);
+		//			}
+		//		}
 	}
 
 	/**
@@ -232,6 +227,7 @@ public class FormsExporter {
 			builder.addEntryForm(buildEntryFormID(pageFlow));
 			builder.addPermissions(buildPermission(pageFlow));
 			break;
+		case REDIRECT:break;
 		}
 	}
 
@@ -459,8 +455,8 @@ public class FormsExporter {
 
 	protected void addSubmitButtonActions(final IFormBuilder builder, final SubmitFormButton w) throws InvalidFormDefinitionException {
 		for (final Operation action : w.getActions()) {
-			if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && action.getLeftOperand() != null
-					&& action.getLeftOperand().getContent() != null) {
+			if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty() && action.getLeftOperand() != null
+					&& action.getLeftOperand().getContent() != null && !action.getLeftOperand().getContent().isEmpty()) {
 				addAction(builder, action);
 			}
 		}
@@ -471,7 +467,7 @@ public class FormsExporter {
 			if(w instanceof FileWidget && ((FileWidget) w).isDownloadOnly()){
 				return;
 			}
-				
+
 			final Operation action = ((FormField) w).getAction();
 			if (action != null) {
 				if (action.getRightOperand() != null && action.getRightOperand().getContent() != null && !action.getRightOperand().getContent().isEmpty()
@@ -570,41 +566,41 @@ public class FormsExporter {
 				engineExpression.getReturnType(), engineExpression.getInterpreter().isEmpty() ? null : engineExpression.getInterpreter()  );
 		addExpressionDependency(builder, engineExpression);
 	}
-//
-//	/**
-//	 * @param theData
-//	 * @return the class of the data as string
-//	 */
-//	public String getReturnTypeClassFor(final Data data) {
-//		final DataType dataType = data.getDataType();
-//		if (data.isMultiple()) {
-//			return List.class.getName();
-//		} else if (data.getDataType() instanceof EnumType) {
-//			// TODO no enum
-//		} else if (dataType instanceof DateType) { // To be tested before
-//			// StringType
-//			return Date.class.getName();
-//		} else if (dataType instanceof StringType) {
-//			return String.class.getName();
-//		} else if (dataType instanceof BooleanType) {
-//			return Boolean.class.getName();
-//		} else if (dataType instanceof IntegerType) {
-//			return Long.class.getName();
-//		} else if (dataType instanceof FloatType) {
-//			return Double.class.getName();
-//		} else if (dataType instanceof JavaType) {
-//			final JavaObjectData javaObjectData = (JavaObjectData) data;
-//			if (javaObjectData.getClassName() != null) {
-//				return javaObjectData.getClassName();
-//			} else {
-//				return Object.class.getName();
-//			}
-//		} else if (dataType instanceof XMLType) {
-//			// TODO no xml
-//		}
-//
-//		return String.class.getName();
-//	}
+	//
+	//	/**
+	//	 * @param theData
+	//	 * @return the class of the data as string
+	//	 */
+	//	public String getReturnTypeClassFor(final Data data) {
+	//		final DataType dataType = data.getDataType();
+	//		if (data.isMultiple()) {
+	//			return List.class.getName();
+	//		} else if (data.getDataType() instanceof EnumType) {
+	//			// TODO no enum
+	//		} else if (dataType instanceof DateType) { // To be tested before
+	//			// StringType
+	//			return Date.class.getName();
+	//		} else if (dataType instanceof StringType) {
+	//			return String.class.getName();
+	//		} else if (dataType instanceof BooleanType) {
+	//			return Boolean.class.getName();
+	//		} else if (dataType instanceof IntegerType) {
+	//			return Long.class.getName();
+	//		} else if (dataType instanceof FloatType) {
+	//			return Double.class.getName();
+	//		} else if (dataType instanceof JavaType) {
+	//			final JavaObjectData javaObjectData = (JavaObjectData) data;
+	//			if (javaObjectData.getClassName() != null) {
+	//				return javaObjectData.getClassName();
+	//			} else {
+	//				return Object.class.getName();
+	//			}
+	//		} else if (dataType instanceof XMLType) {
+	//			// TODO no xml
+	//		}
+	//
+	//		return String.class.getName();
+	//	}
 
 	/**
 	 * @param task
