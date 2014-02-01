@@ -319,7 +319,10 @@ public class SelectPageWidgetDialog extends Dialog {
 
                 @Override
                 public Object convert(Object from) {
-                    return ((Input) from).getName();
+                	if(from instanceof Input){
+                		return ((Input) from).getName();
+                	}
+                	return null;
                 }
             });
 
