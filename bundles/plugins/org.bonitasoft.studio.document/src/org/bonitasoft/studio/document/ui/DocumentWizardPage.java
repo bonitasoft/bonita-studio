@@ -122,10 +122,10 @@ public class DocumentWizardPage extends WizardPage {
 		Label description = new Label(detailsComposite,SWT.NONE);
 		description.setText(Messages.description);
 		documentDescriptionText = new Text(
-				detailsComposite, SWT.BORDER);
+				detailsComposite, SWT.BORDER | SWT.V_SCROLL);
 		documentDescriptionText.setText("");
 		documentDescriptionText.setLayoutData(GridDataFactory.fillDefaults()
-				.grab(true, false).create());
+				.grab(true, false).hint(SWT.DEFAULT, 60).create());
 	}
 
 	private void createDocumentMimeTypeField(Composite detailsComposite) {
@@ -233,7 +233,6 @@ public class DocumentWizardPage extends WizardPage {
 		emfDataBindingContext.bindValue(ViewerProperties.singleSelection()
 				.observe(documentMimeTypeViewer), mimeTypeObserved);
 		documentMimeTypeViewer.setInput(document);
-
 		final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
 
 		targetToModel.setAfterGetValidator(new InputLengthValidator(

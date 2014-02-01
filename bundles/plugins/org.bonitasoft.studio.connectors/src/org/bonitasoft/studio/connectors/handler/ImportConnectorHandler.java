@@ -61,7 +61,6 @@ public class ImportConnectorHandler extends AbstractHandler {
                         if (fileName != null) {
                             monitor.beginTask(Messages.importingConnectorArchive,IProgressMonitor.UNKNOWN) ;
                             File zipFile = new File(fileName);
-
                             ImportConnectorArchiveOperation importOp = new ImportConnectorArchiveOperation() ;
                             importOp.setFile(zipFile) ;
                             final IStatus status = importOp.run(monitor) ;
