@@ -20,6 +20,7 @@ package org.bonitasoft.studio.properties.sections.general;
 
 import org.bonitasoft.studio.expression.editor.provider.IExpressionValidator;
 import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.properties.i18n.Messages;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -33,36 +34,34 @@ import org.eclipse.emf.edit.domain.EditingDomain;
  */
 public class ExpressionNotEmptyValidator implements IExpressionValidator {
 
-	private Expression inputExpression;
-	
+
 	public ExpressionNotEmptyValidator(){
-		
+
 	}
-	
+
 	@Override
 	public IStatus validate(Object value) {
-			if (((String)value).length()<1){
-				return ValidationStatus.error("This expression can't be empty");
-			}
-	return Status.OK_STATUS;
-	
+		if (value != null && value.toString().isEmpty()){
+			return ValidationStatus.error(Messages.expressionCantBeEmpty);
+		}
+		return Status.OK_STATUS;
+
 	}
 
 	@Override
 	public void setInputExpression(Expression inputExpression) {
-		this.inputExpression = inputExpression;
 
 	}
 
 	@Override
 	public void setDomain(EditingDomain domain) {
-		
+
 
 	}
 
 	@Override
 	public void setContext(EObject context) {
-		
+
 
 	}
 
