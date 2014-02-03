@@ -23,6 +23,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinitionFactory;
@@ -125,7 +128,8 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 		def.setId("myDef");
 		def.setVersion("1.0.0");
 		def.getInput().add(createInput("input1",String.class.getName()));
-		assertThat(constraintUnderTest.checkInputConsistency(config, def, context).isOK()).isFalse();
+		IStatus checkInputConsistencyStatus = constraintUnderTest.checkInputConsistency(config, def, context);
+		assertThat(checkInputConsistencyStatus.isOK()).isFalse();
 	}
 	
 	@Test
@@ -282,6 +286,73 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraintTest {
 		when(context.getTarget()).thenReturn(connector);
 		constraintUnderTest.performBatchValidation(context);
 		verify(constraintUnderTest).getActorFilterDefinitionStore();
+	}
+	
+	@Test
+	public void shouldCheckNewMandatoryInputs_ReturnAStringContainingNewMandatoryInputOnly() throws Exception {
+		Set<String> connectorParamKey = new HashSet<String>();
+		connectorParamKey.add("input2");
+		connectorParamKey.add("input3");
+		
+		ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+		def.setId("myDef");
+		def.setVersion("1.0.0");
+		def.getInput().add(createInput("input1",String.class.getName(),true));
+		def.getInput().add(createInput("input2",Boolean.class.getName()));
+		def.getInput().add(createInput("input3",String.class.getName()));
+		
+		assertThat(constraintUnderTest.checkNewMandatoryInputs(def.getInput(), connectorParamKey).toString()).contains("input1").doesNotContain("input2").doesNotContain("input3");
+	}
+	
+	@Test
+	public void shouldCheckNewMandatoryInputs_ReturnAnEmptyString() throws Exception {
+		Set<String> connectorParamKey = new HashSet<String>();
+		connectorParamKey.add("input2");
+		connectorParamKey.add("input3");
+		
+		ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+		def.setId("myDef");
+		def.setVersion("1.0.0");
+		def.getInput().add(createInput("input1",String.class.getName()));
+		def.getInput().add(createInput("input2",Boolean.class.getName(),true));
+		def.getInput().add(createInput("input3",String.class.getName()));
+		
+		assertThat(constraintUnderTest.checkNewMandatoryInputs(def.getInput(), connectorParamKey).toString()).isEmpty();
+	}
+	
+	@Test
+	public void shouldCheckRemovedInputs_ReturnAnEmptyString() throws Exception {
+		Set<String> connectorParamKey = new HashSet<String>();
+		connectorParamKey.add("input1");
+		connectorParamKey.add("input2");
+		connectorParamKey.add("input3");
+		
+		ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+		def.setId("myDef");
+		def.setVersion("1.0.0");
+		def.getInput().add(createInput("input1",String.class.getName()));
+		def.getInput().add(createInput("input2",Boolean.class.getName(),true));
+		def.getInput().add(createInput("input3",String.class.getName()));
+		def.getInput().add(createInput("input4",String.class.getName()));
+		
+		assertThat(constraintUnderTest.checkRemovedInputs(def.getInput(), connectorParamKey).toString()).isEmpty();
+	}
+	
+	@Test
+	public void shouldCheckRemovedInputs_ReturnAStringContainingRemovedInputs() throws Exception {
+		Set<String> connectorParamKey = new HashSet<String>();
+		connectorParamKey.add("input1");
+		connectorParamKey.add("input2");
+		connectorParamKey.add("input3");
+		
+		ConnectorDefinition def = connectorDefFactory.createConnectorDefinition();
+		def.setId("myDef");
+		def.setVersion("1.0.0");
+		def.getInput().add(createInput("input1",String.class.getName()));
+		def.getInput().add(createInput("input3",String.class.getName()));
+		def.getInput().add(createInput("input4",String.class.getName()));
+		
+		assertThat(constraintUnderTest.checkRemovedInputs(def.getInput(), connectorParamKey).toString()).contains("input2");
 	}
 	
 }

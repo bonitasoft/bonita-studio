@@ -171,6 +171,9 @@ public class Messages extends NLS {
 	public static String notAZipFile;
 	public static String connectorOutput;
 
+	public static String configurationChangedTitle;
+	public static String configurationChangedMsg;
+
     /**
      * @param event
      * @return
