@@ -38,10 +38,10 @@ import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.DateFormField;
-import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.Widget;
+import org.bonitasoft.studio.model.process.AbstractProcess;
+import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
-import org.bonitasoft.studio.model.process.DataAware;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -180,8 +180,8 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 			ViewerFilter[] filters) {
 		EObject container = context;
 
-		while (!(container instanceof DataAware) || container instanceof Form) {
-			container = container.eContainer();
+		while (!(context instanceof AbstractProcess || context instanceof Activity))  {
+			context = context.eContainer();
 		}
 		EStructuralFeature feat = ProcessPackage.Literals.DATA_AWARE__DATA;
 
@@ -245,6 +245,7 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 			EObject context, Expression inputExpression, ViewerFilter[] filters,ExpressionViewer expressionViewer) {
 		
 		final EObject finalContext = context;
+		
 		if (context instanceof Widget){
 			if (ModelHelper.getPageFlow((Widget)context) instanceof Pool){
 				addExpressionButton.setEnabled(false);
