@@ -1,6 +1,7 @@
 package org.bonitasoft.studio.validation.constraints.process;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.actors.repository.ActorFilterDefRepositoryStore;
@@ -16,7 +17,6 @@ import org.bonitasoft.studio.model.process.Connector;
 import org.bonitasoft.studio.validation.constraints.AbstractLiveValidationMarkerConstraint;
 import org.bonitasoft.studio.validation.i18n.Messages;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.validation.IValidationContext;
 
 public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint extends AbstractLiveValidationMarkerConstraint {
@@ -58,7 +58,7 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint exten
 	}
 
 	protected IStatus checkInputConsistency(ConnectorConfiguration configuration,ConnectorDefinition def, IValidationContext context) {
-		EList<Input> inputs = def.getInput();
+		List<Input> inputs = def.getInput();
 		Set<String> inputNames = new HashSet<String>(); 
 		for(Input in : inputs){
 			inputNames.add(in.getName());
@@ -67,37 +67,55 @@ public class ConnectorDefinitionAndConfigurationInputConsistencyConstraint exten
 		for(ConnectorParameter parameter : configuration.getParameters()){
 			connectorParamKey.add(parameter.getKey());
 		}
-
-		StringBuilder sb = new StringBuilder();
 		if(inputNames.equals(connectorParamKey)){
 			return context.createSuccessStatus();
-		}else if(inputNames.size() > connectorParamKey.size()){
-			inputNames.removeAll(connectorParamKey);
-			for(Input in : inputs){
-				if(inputNames.contains(in.getName())
-						&& !in.isMandatory()){
-					inputNames.remove(in.getName());
-				}
-			}
-			if(inputNames.isEmpty()){//No new mandatory input
-				return context.createSuccessStatus();
-			}else{
-				for(String name : inputNames){
-					sb.append(name);
-					sb.append(", ");
-				}
-			}
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(checkNewMandatoryInputs(inputs, connectorParamKey).toString());
+		sb.append(checkRemovedInputs(inputs, connectorParamKey).toString());
+
+		if(sb.length() > 1 ){
+			sb = sb.delete(sb.length()-2, sb.length());
+		}
+		if(sb.length() == 0){
+			return context.createSuccessStatus();
+		}
+		return context.createFailureStatus(sb.toString());
+	}
+
+	protected StringBuilder checkRemovedInputs(List<Input> inputs,Set<String> connectorParamKey) {
+		StringBuilder sb = new StringBuilder();
+		Set<String> inputNames = new HashSet<String>(); 
+		for(Input in : inputs){
+			inputNames.add(in.getName());
 		}
 		for(String key : connectorParamKey){
 			if(!inputNames.contains(key)){
 				sb.append(key);
-				sb.append(", ");
+				sb.append("("+Messages.removed+"), ");
 			}
 		}
-		if(sb.length() > 1 ){
-			sb = sb.delete(sb.length()-2, sb.length());
+		return sb;
+	}
+
+	protected StringBuilder checkNewMandatoryInputs(List<Input> inputs, Set<String> connectorParamKey) {
+		StringBuilder sb = new StringBuilder();
+		Set<String> inputNames = new HashSet<String>(); 
+		for(Input in : inputs){
+			inputNames.add(in.getName());
 		}
-		return context.createFailureStatus(sb.toString());
+		inputNames.removeAll(connectorParamKey);
+		for(Input in : inputs){
+			if(inputNames.contains(in.getName())
+					&& !in.isMandatory()){
+				inputNames.remove(in.getName());
+			}
+		}
+		for(String name : inputNames){
+			sb.append(name);
+			sb.append("("+Messages.mandatory+"), ");
+		}
+		return sb;
 	}
 
 	protected AbstractDefinitionRepositoryStore<?> getActorFilterDefinitionStore() {

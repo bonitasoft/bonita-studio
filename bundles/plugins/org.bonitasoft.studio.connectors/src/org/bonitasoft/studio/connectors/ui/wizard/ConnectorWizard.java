@@ -96,8 +96,10 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -163,7 +165,11 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		initialize() ;
 		ConnectorDefinition def = getDefinition();
 		DefinitionResourceProvider resourceProvider = initMessageProvider();
-		setWindowTitle(resourceProvider.getConnectorDefinitionLabel(def) +" ("+def.getVersion()+")");
+		String connectorDefinitionLabel = resourceProvider.getConnectorDefinitionLabel(def);
+		if(connectorDefinitionLabel == null){
+			connectorDefinitionLabel = def.getId();
+		}
+		setWindowTitle(connectorDefinitionLabel +" ("+def.getVersion()+")");
 	}
 
 
@@ -224,11 +230,12 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		if(editMode){
 			final IDefinitionRepositoryStore definitionStore = getDefinitionStore();
 			final ConnectorDefinition definition =  definitionStore.getDefinition(connectorWorkingCopy.getDefinitionId(),connectorWorkingCopy.getDefinitionVersion(),definitions) ;
-			cleanConfiguration(definition);
+			if(cleanConfiguration(definition)){
+				MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.configurationChangedTitle, Messages.configurationChangedMsg);
+			}
 			extension = findCustomWizardExtension(definition) ;
 			List<IWizardPage> pages = getPagesFor(definition) ;
 			for(IWizardPage p : pages){
-
 				addAdditionalPage(p) ;
 			}
 			addOuputPage(definition) ;
@@ -236,8 +243,14 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	}
 
-	protected void cleanConfiguration(ConnectorDefinition definition) {
+	/**
+	 * 
+	 * @param definition
+	 * @return true if configuration has been modified
+	 */
+	protected boolean cleanConfiguration(ConnectorDefinition definition) {
 		ConnectorConfiguration configuration = connectorWorkingCopy.getConfiguration();
+		boolean changed = false;
 		if(configuration != null){
 			EList<Input> inputs = definition.getInput();
 			Set<String> inputNames = new HashSet<String>(); 
@@ -257,9 +270,12 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 						toRemove.add(parameter);
 					}
 				}
-				configuration.getParameters().removeAll(toRemove);
+				if(!toRemove.isEmpty()){
+					changed = configuration.getParameters().removeAll(toRemove);
+				}
 			}
 		}
+		return changed;
 	}
 
 	protected AbstractDefinitionSelectionImpementationWizardPage getSelectionPage(final Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
