@@ -61,7 +61,6 @@ import org.eclipse.emf.codegen.util.CodeGenUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -343,7 +342,7 @@ public class CreateFormCommand extends AbstractTransactionalCommand {
 		actionExpression.setName("field_"+widget.getName()) ;
 		actionExpression.setType(ExpressionConstants.FORM_FIELD_TYPE) ;
 		actionExpression.setReturnType(DocumentValue.class.getName()) ;
-		actionExpression.getReferencedElements().add(EcoreUtil.copy(widget)) ;
+		actionExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(widget)) ;
 		action.setRightOperand(actionExpression) ;
 		return action;
 	}
