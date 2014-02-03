@@ -207,8 +207,15 @@
 						<configuration>
 							<artifactItems>
 								<artifactItem>
-									<groupId>com.bonitasoft.engine</groupId>
-									<artifactId>bonita-global-javadoc</artifactId>
+									<groupId>org.bonitasoft.engine</groupId>
+									<artifactId>bonita-common</artifactId>
+									<version>${engine.version}</version>
+									<classifier>javadoc</classifier>
+									<type>jar</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.bonitasoft.engine</groupId>
+									<artifactId>bonita-client</artifactId>
 									<version>${engine.version}</version>
 									<classifier>javadoc</classifier>
 									<type>jar</type>
