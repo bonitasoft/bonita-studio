@@ -34,7 +34,8 @@ Require-Bundle: org.eclipse.ui,
  org.bonitasoft.studio.engine;bundle-version="1.0.0",
  org.bonitasoft.studio.groovy.ui;bundle-version="1.0.0",
  org.bonitasoft.studio.preferences;bundle-version="1.0.0",
- org.eclipse.emf.databinding.edit
+ org.eclipse.emf.databinding.edit,
+ org.bonitasoft.studio.diagram.custom
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.bonitasoft.studio.connectors,

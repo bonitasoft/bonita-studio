@@ -248,12 +248,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 			@Override
 			public Object convert(Object from) {
 				if(from instanceof String){
-					List<Object> definitions = (List<Object>) explorer.getRightTableViewer().getInput();
-					for(Object c : definitions){
-						if(c instanceof ConnectorDefinition && ((ConnectorDefinition)c).getId().equals(from.toString())){
-							return c;
-						}
-					}
+					return getConnectorDefinitionFromId(from.toString());
 				}
 				return null;
 			}
@@ -264,6 +259,18 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		updateOnlyCustomCheckbox();
 
 		setControl(mainComposite);
+
+	}
+
+	@SuppressWarnings("unchecked")
+	protected ConnectorDefinition getConnectorDefinitionFromId(String definitionId) {
+		List<Object> definitions = (List<Object>) explorer.getRightTableViewer().getInput();
+		for(Object c : definitions){
+			if(c instanceof ConnectorDefinition && ((ConnectorDefinition)c).getId().equals(definitionId)){
+				return (ConnectorDefinition) c;
+			}
+		}
+		return null;
 	}
 
 	protected TreeExplorer createTreeExplorer(Composite mainComposite) {
