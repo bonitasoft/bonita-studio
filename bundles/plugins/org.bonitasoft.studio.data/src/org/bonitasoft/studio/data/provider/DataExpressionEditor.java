@@ -25,38 +25,36 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
+import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.DataStyledTreeLabelProvider;
 import org.bonitasoft.studio.common.jface.TableColumnSorter;
+import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.data.i18n.Messages;
-import org.bonitasoft.studio.data.ui.wizard.DataWizard;
-import org.bonitasoft.studio.data.ui.wizard.DataWizardDialog;
 import org.bonitasoft.studio.expression.editor.ExpressionEditorService;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
+import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
 import org.bonitasoft.studio.expression.editor.provider.SelectionAwareExpressionEditor;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionPackage;
 import org.bonitasoft.studio.model.form.DateFormField;
 import org.bonitasoft.studio.model.form.Widget;
-import org.bonitasoft.studio.model.process.AbstractProcess;
-import org.bonitasoft.studio.model.process.Activity;
 import org.bonitasoft.studio.model.process.Data;
 import org.bonitasoft.studio.model.process.Pool;
-import org.bonitasoft.studio.model.process.ProcessPackage;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -74,7 +72,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -176,36 +173,16 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 
 	}
 
-	private void expressionButtonListener(EObject context,
-			ViewerFilter[] filters) {
-		EObject container = context;
-
-		while (!(context instanceof AbstractProcess || context instanceof Activity))  {
-			context = context.eContainer();
-		}
-		EStructuralFeature feat = ProcessPackage.Literals.DATA_AWARE__DATA;
-
-		Set<EStructuralFeature> res = new HashSet<EStructuralFeature>();
-		res.add(ProcessPackage.Literals.DATA_AWARE__DATA);
-
-		DataWizardDialog wizardDialog = null;
-		if (editorInputExpression.isReturnTypeFixed()) {
-			DataWizard wizard = new DataWizard(container, feat,
-					res, true, editorInputExpression.getReturnType());
-			wizard.setIsPageFlowContext(isPageFlowContext);
-		wizardDialog = new DataWizardDialog(Display
-				.getCurrent().getActiveShell(),wizard , null);
-		} else {
-			DataWizard wizard = new DataWizard(container, feat,
-					res, true);
-			wizard.setIsPageFlowContext(isPageFlowContext);
-			wizardDialog = new DataWizardDialog(Display
-					.getCurrent().getActiveShell(),wizard, null);
-		}
-		
-		if (wizardDialog.open() == Dialog.OK) {
-			
-			fillViewerData(context, filters);
+	private void expressionButtonListener(EObject context, ExpressionViewer expressionViewer,
+			ViewerFilter[] filters) throws CoreException {
+		for (IConfigurationElement element : BonitaStudioExtensionRegistryManager.getInstance()
+				.getConfigurationElements("org.bonitasoft.studio.expression.proposalListener")) {
+			final String expressionTypeLink = element.getAttribute("type");
+			if(expressionTypeLink.equals(ExpressionConstants.VARIABLE_TYPE)){
+				final IProposalListener proposalListener = (IProposalListener) element.createExecutableExtension("providerClass");
+				expressionViewer.getContentProposal().addNewData(proposalListener);
+				fillViewerData(context, filters);
+			}
 		}
 	}
 
@@ -242,10 +219,9 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 
 	@Override
 	public void bindExpression(EMFDataBindingContext dataBindingContext,
-			EObject context, Expression inputExpression, ViewerFilter[] filters,ExpressionViewer expressionViewer) {
+			EObject context, Expression inputExpression, ViewerFilter[] filters,final ExpressionViewer expressionViewer) {
 		
 		final EObject finalContext = context;
-		
 		if (context instanceof Widget){
 			if (ModelHelper.getPageFlow((Widget)context) instanceof Pool){
 				addExpressionButton.setEnabled(false);
@@ -255,8 +231,11 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 		addExpressionButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				super.widgetSelected(e);
-				expressionButtonListener(finalContext, finalFilters);
+				try {
+					expressionButtonListener(finalContext,expressionViewer, finalFilters);
+				} catch (CoreException e1) {
+					BonitaStudioLog.error(e1);
+				}
 			}
 		});
 
@@ -290,19 +269,6 @@ public class DataExpressionEditor extends SelectionAwareExpressionEditor
 
 			@Override
 			public Object convert(Object data) {
-				// if(((Data)data).isMultiple()){
-				// if(editorInputExpression.getContent() != null){
-				// return editorInputExpression.getContent() ;
-				// }
-				// }else if(data instanceof XMLData){
-				// if(editorInputExpression.getContent() != null){
-				// return editorInputExpression.getContent() ;
-				// }
-				// }else if(data instanceof JavaObjectData){
-				// if(editorInputExpression.getContent() != null){
-				// return editorInputExpression.getContent() ;
-				// }
-				// }
 				return ((Data) data).getName();
 			}
 
