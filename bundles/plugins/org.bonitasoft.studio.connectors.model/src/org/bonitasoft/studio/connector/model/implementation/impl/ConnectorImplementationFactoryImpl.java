@@ -31,7 +31,7 @@ public class ConnectorImplementationFactoryImpl extends EFactoryImpl implements 
 	 */
     public static ConnectorImplementationFactory init() {
 		try {
-			ConnectorImplementationFactory theConnectorImplementationFactory = (ConnectorImplementationFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.bonitasoft.org/ns/connector/implementation/6.0"); 
+			ConnectorImplementationFactory theConnectorImplementationFactory = (ConnectorImplementationFactory)EPackage.Registry.INSTANCE.getEFactory(ConnectorImplementationPackage.eNS_URI);
 			if (theConnectorImplementationFactory != null) {
 				return theConnectorImplementationFactory;
 			}
