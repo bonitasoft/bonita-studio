@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.AbstractRefactorOperation;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.refactoring.BonitaGroovyRefactoringAction;
@@ -89,7 +90,7 @@ public class RefactorWidgetOperation extends AbstractRefactorOperation  {
 					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__NAME,"field_"+newName));
 					cc.append(SetCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__CONTENT, "field_"+newName));
 					cc.append(RemoveCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS  , exp.getReferencedElements()));
-					cc.append(AddCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,EcoreUtil.copy(widgetCopy)));
+					cc.append(AddCommand.create(editingDomain, exp, ExpressionPackage.Literals.EXPRESSION__REFERENCED_ELEMENTS,ExpressionHelper.createDependencyFromEObject(widgetCopy)));
 				}
 			}
 			editingDomain.getCommandStack().execute(cc);

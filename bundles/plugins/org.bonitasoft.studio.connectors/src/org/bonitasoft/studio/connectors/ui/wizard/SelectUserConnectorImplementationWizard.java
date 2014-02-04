@@ -49,7 +49,8 @@ public class SelectUserConnectorImplementationWizard extends AbstractSelectImple
         return new ConnectorImplementationLabelProvider((IDefinitionRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class), ConnectorPlugin.getDefault().getBundle());
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected IContentProvider getContentProvider() {
         return new ConnectorImplementationContentProvider(getImplementationStore(), true);
     }

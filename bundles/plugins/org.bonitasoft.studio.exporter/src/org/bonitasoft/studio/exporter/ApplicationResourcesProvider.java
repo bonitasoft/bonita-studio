@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,6 +61,7 @@ import org.bonitasoft.studio.model.form.FormPackage;
 import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.model.process.SubProcessEvent;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * @author Romain Bioteau
@@ -84,11 +86,11 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 	 * )
 	 */
 	@Override
-	public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder,AbstractProcess process,Configuration configuration) throws Exception {
+	public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder,AbstractProcess process,Configuration configuration,Set<EObject> excludedObject) throws Exception {
 		final List<BarResource> res = new ArrayList<BarResource>();
 		addHTMLTemplates(res, process);
 		addApplicationResources(res, process);
-		addFormsXML(res, process);
+		addFormsXML(res, process,excludedObject);
 		addApplicationDependencies(res, process,configuration);
 		addAutologin(res, process, configuration) ;
 		for(BarResource barResource : res){
@@ -304,10 +306,10 @@ public class ApplicationResourcesProvider implements BARResourcesProvider {
 		}
 	}
 
-	protected void addFormsXML(List<BarResource> res, AbstractProcess process ) throws Exception {
+	protected void addFormsXML(List<BarResource> res, AbstractProcess process, Set<EObject> excludedObject ) throws Exception {
 		File formsXmlFile = new File(tmpDir, "forms.xml");
 		formsXmlFile.delete();
-		FormsXMLExporter.exportFormsXML(process, tmpDir, true, Repository.NULL_PROGRESS_MONITOR);
+		FormsXMLExporter.exportFormsXML(process, tmpDir, true,excludedObject, Repository.NULL_PROGRESS_MONITOR);
 		if (formsXmlFile.exists()) {
 			FileInputStream is = new FileInputStream(formsXmlFile);
 			byte[] fileBytes = new byte[(int) formsXmlFile.length()];

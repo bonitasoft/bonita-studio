@@ -36,7 +36,14 @@ public class GroovyReferenceValidator implements IValidator {
 		BonitaConstants.PROCESS_DEFINITION_ID, BonitaConstants.ROOT_PROCESS_INSTANCE_ID, BonitaConstants.PARENT_PROCESS_INSTANCE_ID };
 	private String fieldName;
 	private boolean checkEmptyField;
+	private boolean forceLowerCaseFirst = true;
 
+	public GroovyReferenceValidator(String fieldName,boolean checkEmptyField,boolean forceLowerCaseFirst){
+		this.fieldName = fieldName;
+		this.checkEmptyField = checkEmptyField;
+		this.forceLowerCaseFirst  = forceLowerCaseFirst;
+	}
+	
 	public GroovyReferenceValidator(String fieldName,boolean checkEmptyField){
 		this.fieldName = fieldName;
 		this.checkEmptyField = checkEmptyField;
@@ -61,9 +68,14 @@ public class GroovyReferenceValidator implements IValidator {
 				return ValidationStatus.ok();
 			}
 		}
-		if (!value.toString().isEmpty()) {
+		if (forceLowerCaseFirst && !value.toString().isEmpty()) {
 			if (Character.isUpperCase(value.toString().charAt(0))) {
 				return ValidationStatus.error(Messages.nameMustStartWithLowerCase);
+			}
+		}
+		if (!value.toString().isEmpty()) {
+			if (value.toString().contains(" ")) {
+				return ValidationStatus.error(Messages.bind(Messages.nameCantHaveAWhitespace,value.toString()));
 			}
 		}
 
@@ -74,9 +86,6 @@ public class GroovyReferenceValidator implements IValidator {
 		final IStatus javaConventionNameStatus = JavaConventions.validateFieldName(value.toString(), JavaCore.VERSION_1_6, JavaCore.VERSION_1_6);
 		if(!javaConventionNameStatus.isOK()){
 			return ValidationStatus.error(javaConventionNameStatus.getMessage());
-		}
-		if(!javaConventionNameStatus.isOK()){
-			return javaConventionNameStatus;
 		}
 		return ValidationStatus.ok();
 	}

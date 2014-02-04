@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
@@ -136,7 +137,7 @@ IExpressionNatureProvider {
 		}else{
 			exp.setReturnType(w.getAssociatedReturnType()) ;
 		}
-		exp.getReferencedElements().add(EcoreUtil.copy(w)) ;
+		exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(w)) ;
 		return exp;
 	}
 

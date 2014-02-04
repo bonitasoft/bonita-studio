@@ -14,6 +14,8 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.test.swtbot.TestConfigurationDialog;
+import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
+import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.connectors.test.database.TestDatabaseConnectorOutputMode;
 import org.bonitasoft.studio.connectors.test.exporter.SWTBotConnectorExportTests;
 import org.bonitasoft.studio.connectors.test.swtbot.ConnectorDefinitionTranslationsTest;
@@ -89,12 +91,12 @@ import org.junit.runners.Suite;
     SWTBotActorFilterExportTests.class,
     ConnectorEditionTest.class,
     ConnectorDefinitionWizardPageTest.class,
-    ConnectorImplementationTest.class,
+	  ConnectorImplementationTest.class,
     TestTextAreaInConnectorWizard.class,
     SWTBotConnectorExportTests.class,
     SWTBotConnectorDefinitionTest.class,
     TestDecisionTable.class,
-    TestThrowCatchMessage.class,
+	  TestThrowCatchMessage.class,
     TestWebPurchase.class,
     TestAddValidatorToProcessAndRun.class,
     FormsDiagramTests.class,
@@ -116,6 +118,7 @@ public class AllSWTBotTests {
     public static void setUp() {
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
+        ConnectorEditPlugin.getPlugin().getPreferenceStore().setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
         WebBrowserUIPlugin.getInstance().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);
     }
