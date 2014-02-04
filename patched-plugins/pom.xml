@@ -7,12 +7,12 @@
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>studio</artifactId>
-		<version>6.2.2</version>
+		<version>6.2.2-SNAPSHOT</version>
 	</parent>
 
 	<groupId>org.bonitasoft.studio</groupId>
 	<artifactId>patched-plugins</artifactId>
-	<version>6.2.2</version>
+	<version>6.2.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 

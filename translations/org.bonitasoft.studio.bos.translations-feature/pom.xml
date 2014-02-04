@@ -5,10 +5,10 @@
   <parent>
   <groupId>org.bonitasoft.studio</groupId>
   <artifactId>translations</artifactId>
-    <version>6.2.2</version>
+    <version>6.2.2-SNAPSHOT</version>
   </parent>
   <groupId>org.bonitasoft.studio.translations</groupId>
   <artifactId>org.bonitasoft.studio.bos.translations</artifactId>
-  <version>6.2.2</version>
+  <version>6.2.2-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>

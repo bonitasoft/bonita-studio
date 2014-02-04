@@ -5,13 +5,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.bonitasoft.studio.translations</groupId>
 	<artifactId>pt</artifactId>
-	<version>6.2.2</version>
+	<version>6.2.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<parent>
 		<groupId>org.bonitasoft.studio</groupId>
 		<artifactId>translations</artifactId>
-		<version>6.2.2</version>
+		<version>6.2.2-SNAPSHOT</version>
 	</parent>
 
 	<modules>

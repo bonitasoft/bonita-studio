@@ -5,7 +5,7 @@
     <parent>
     <groupId>org.bonitasoft.studio</groupId>
     <artifactId>patched-plugins</artifactId>
-    <version>6.2.2</version>
+    <version>6.2.2-SNAPSHOT</version>
     </parent>
   <groupId>org.bonitasoft.studio.patched-plugins</groupId>
   <artifactId>org.eclipse.ui.browser</artifactId>
