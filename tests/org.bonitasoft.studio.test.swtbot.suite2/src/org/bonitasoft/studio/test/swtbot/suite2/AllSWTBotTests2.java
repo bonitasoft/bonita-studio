@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.test.swtbot.suite;
+package org.bonitasoft.studio.test.swtbot.suite2;
 
 import org.bonitasoft.expressions.test.TestConnectorExpression;
 import org.bonitasoft.studio.commands.test.CopyPasteTests;
@@ -8,8 +8,6 @@ import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManag
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.configuration.test.swtbot.TestProcessDependencies;
-import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
-import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.data.test.DataSWTBotTests;
 import org.bonitasoft.studio.diagram.test.NewRunTest;
 import org.bonitasoft.studio.diagram.test.SharedEditingDomainTests;
@@ -98,8 +96,8 @@ import org.junit.runners.Suite;
     TestSave.class,
     TestMoveBetweenLane.class,
     MigrationReporTest.class,
-    TestTimer.class,
-    TestBonitaGroovyEditorDialog.class,
+	TestTimer.class,
+	TestBonitaGroovyEditorDialog.class,
     TestProcessDependencies.class
 })
 public class AllSWTBotTests2 {
@@ -109,7 +107,6 @@ public class AllSWTBotTests2 {
     public static void setUp() {
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().setValue(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, false);
-        ConnectorEditPlugin.getPlugin().getPreferenceStore().setValue(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, true);
         WebBrowserUIPlugin.getInstance().getPreferenceStore().setValue(BonitaPreferenceConstants.CONSOLE_BROWSER_CHOICE, BonitaPreferenceConstants.INTERNAL_BROWSER);
         FileActionDialog.setDisablePopup(true);
     }
