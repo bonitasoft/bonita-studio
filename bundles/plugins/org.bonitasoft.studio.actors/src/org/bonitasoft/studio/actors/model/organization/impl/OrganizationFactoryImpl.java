@@ -42,7 +42,7 @@ public class OrganizationFactoryImpl extends EFactoryImpl implements Organizatio
 	 */
 	public static OrganizationFactory init() {
 		try {
-			OrganizationFactory theOrganizationFactory = (OrganizationFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.bonitasoft.org/ns/organization/6.0.0-beta-016"); 
+			OrganizationFactory theOrganizationFactory = (OrganizationFactory)EPackage.Registry.INSTANCE.getEFactory(OrganizationPackage.eNS_URI);
 			if (theOrganizationFactory != null) {
 				return theOrganizationFactory;
 			}
