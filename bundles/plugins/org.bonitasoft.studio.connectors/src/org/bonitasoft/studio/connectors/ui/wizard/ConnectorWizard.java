@@ -275,6 +275,20 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 				}
 			}
 		}
+		EList<Output> outputs = definition.getOutput();
+		Set<String> outputNames = new HashSet<String>(); 
+		for(Output out : outputs){
+			outputNames.add(out.getName());
+		}
+		for(Operation op : connectorWorkingCopy.getOutputs()){
+			if( ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(op.getRightOperand().getType()) 
+					&& op.getRightOperand() != null 
+					&& op.getRightOperand().getContent() != null 
+					&& !outputNames.contains(op.getRightOperand().getContent())){
+				op.setRightOperand(ExpressionHelper.createConstantExpression("", String.class.getName()));
+				changed = true;
+			}
+		}
 		return changed;
 	}
 
