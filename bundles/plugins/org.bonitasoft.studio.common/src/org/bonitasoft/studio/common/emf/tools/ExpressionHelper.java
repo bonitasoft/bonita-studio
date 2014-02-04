@@ -128,7 +128,7 @@ public class ExpressionHelper {
 			Data dataDependency = (Data) ProcessFactory.eINSTANCE.create(dependency.eClass());
 			dataDependency.setName(((Data) dependency).getName());
 			dataDependency.setDatasourceId(((Data) dependency).getDatasourceId());
-			dataDependency.setDataType(EcoreUtil.copy(((Data) dependency).getDataType()));
+			dataDependency.setDataType(((Data) dependency).getDataType());
 			return dataDependency;
 		}
 		if(dependency instanceof Document){
