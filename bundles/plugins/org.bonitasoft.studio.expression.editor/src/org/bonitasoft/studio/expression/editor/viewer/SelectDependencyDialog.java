@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -75,7 +76,7 @@ public class SelectDependencyDialog extends Dialog {
 			EList<EObject> referencedElements = e.getReferencedElements();
 			if(!referencedElements.isEmpty()){
 				EObject element = referencedElements.get(0);
-				input.add(EcoreUtil.copy(element)) ;
+				input.add(ExpressionHelper.createDependencyFromEObject(element)) ;
 			}
 		}
 

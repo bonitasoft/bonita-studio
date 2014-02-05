@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Output;
@@ -32,7 +33,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.databinding.EMFDataBindingContext;
 import org.eclipse.emf.databinding.EMFObservables;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -264,7 +264,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 		rightOperand.setReturnType(Object.class.getName()) ;
 		rightOperand.setType(ExpressionConstants.SCRIPT_TYPE) ;
 		rightOperand.setInterpreter(ExpressionConstants.GROOVY);
-		rightOperand.getReferencedElements().add(EcoreUtil.copy(connectorOutput)) ;
+		rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(connectorOutput)) ;
 		operation.setRightOperand(rightOperand) ;
 
 		final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression() ;
@@ -566,7 +566,7 @@ public class DatabaseConnectorOutputWizardPage extends AbstractConnectorOutputWi
 				rightOperand.setContent(output.getName()) ;
 				rightOperand.setReturnType(output.getType()) ;
 				rightOperand.setType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE) ;
-				rightOperand.getReferencedElements().add(EcoreUtil.copy(output)) ;
+				rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(output)) ;
 				operation.setRightOperand(rightOperand) ;
 
 				final Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression() ;

@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -31,10 +32,11 @@ import javax.imageio.ImageIO;
 import org.bonitasoft.studio.common.FileUtil;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.jface.ExtensibleWizard;
+import org.bonitasoft.studio.common.jface.MessageDialogWithPrompt;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
-import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
+import org.bonitasoft.studio.connector.model.definition.AbstractDefinitionRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.Category;
 import org.bonitasoft.studio.connector.model.definition.Component;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -43,6 +45,7 @@ import org.bonitasoft.studio.connector.model.definition.IDefinitionRepositorySto
 import org.bonitasoft.studio.connector.model.definition.Input;
 import org.bonitasoft.studio.connector.model.definition.Page;
 import org.bonitasoft.studio.connector.model.definition.WidgetComponent;
+import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
 import org.bonitasoft.studio.connector.model.i18n.DefinitionResourceProvider;
 import org.bonitasoft.studio.connector.model.i18n.Messages;
 import org.bonitasoft.studio.pics.Pics;
@@ -52,8 +55,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -67,17 +74,19 @@ import org.eclipse.ui.ide.IDE;
 public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
 	private static final String DEF_EXT = "def";
+	public static final String HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING = "HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING";
 	private boolean editMode = false;
 	private IRepositoryFileStore fileStore;
 	private final ConnectorDefinition definitionWorkingCopy;
 	private DefinitionInformationWizardPage infoPage;
 	private final Properties messages ;
-	private ConnectorDefinition originalDefinition;
+	protected ConnectorDefinition originalDefinition;
 	private DefinitionI18NWizardPage i18nPage;
 	private final DefinitionResourceProvider messageProvider;
-	private final IRepositoryStore defStore;
-
-	public AbstractDefinitionWizard(String windowTitle,IRepositoryStore defStore,DefinitionResourceProvider messageProvider){
+	private final AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore;
+	private boolean editAnyway = true;
+	
+	public AbstractDefinitionWizard(String windowTitle,AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore,DefinitionResourceProvider messageProvider){
 		Assert.isTrue(defStore instanceof IDefinitionRepositoryStore) ;
 		setWindowTitle(windowTitle) ;
 		setDefaultPageImageDescriptor(Pics.getWizban()) ;
@@ -88,7 +97,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 		messages = new Properties() ;
 	}
 
-	public AbstractDefinitionWizard(String windowTitle,ConnectorDefinition definition,IRepositoryStore defStore,DefinitionResourceProvider messageProvider){
+	public AbstractDefinitionWizard(String windowTitle,ConnectorDefinition definition,AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore,DefinitionResourceProvider messageProvider){
 		Assert.isTrue(defStore instanceof IDefinitionRepositoryStore) ;
 		setWindowTitle(windowTitle) ;
 		setDefaultPageImageDescriptor(Pics.getWizban()) ;
@@ -99,6 +108,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 		definitionWorkingCopy = EcoreUtil.copy(definition) ;
 		this.messageProvider = messageProvider ;
 		messages = messageProvider.getDefaultMessageProperties(definition) ;
+		setNeedsProgressMonitor(true);
 	}
 
 	@Override
@@ -143,7 +153,11 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 		} else {
 			String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false) ;
 			String defFileName = defId+"."+ DEF_EXT;
-
+			if(editMode){
+				if(!editConnectorDefinition()){
+					return false;
+				}
+			}
 			File imageFile = infoPage.getIconImageFile() ;
 			if(imageFile != null){
 				IFolder targetFoler = defStore.getResource() ;
@@ -163,44 +177,6 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 						BonitaStudioLog.error(e) ;
 					}
 				}
-			}
-			if(editMode){
-				String oldDefId =  NamingUtils.toConnectorDefinitionFilename(originalDefinition.getId(),originalDefinition.getVersion(),false) ;
-				if(!oldDefId.equals(defId)){
-					String oldId = oldDefId+".properties" ;
-					try {
-						defStore.getResource().getFile(oldId).delete(true, Repository.NULL_PROGRESS_MONITOR) ;
-					} catch (CoreException e) {
-						BonitaStudioLog.error(e) ;
-					}
-				}
-				Set<Locale> existingLocales = messageProvider.getExistingLocale(originalDefinition) ;
-				for(Locale l : existingLocales){
-					try {
-						for(IResource r : defStore.getResource().members()){
-							if(r.getFileExtension() != null && r.getFileExtension().equals("properties")){
-								String resourceName = r.getName() ;
-
-								if(!oldDefId.equals(defId)){
-									String oldLocaleFile = oldDefId+"_"+l.toString()+".properties" ;
-									if(resourceName.equals(oldLocaleFile)){
-										String newLocaleFile = defId+"_"+l.toString()+".properties" ;
-										IPath tarhetPath =  r.getFullPath().removeLastSegments(1) ;
-										tarhetPath = tarhetPath.append(newLocaleFile) ;
-										r.move(tarhetPath, true, Repository.NULL_PROGRESS_MONITOR) ;
-									}
-								}
-							}
-						}
-					} catch (CoreException e) {
-						BonitaStudioLog.error(e) ;
-					}
-				}
-
-				if(!fileStore.getName().equals(defFileName)){
-					fileStore.delete() ;
-				}
-
 			}
 			messageProvider.setConnectorDefinitionLabel(messages, infoPage.getDisplayName());
 			messageProvider.setConnectorDefinitionDescription(messages, infoPage.getDefinitionDescription()) ;
@@ -228,6 +204,84 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 
 			return true;
 		}
+	}
+
+	protected boolean editConnectorDefinition() {
+		try {
+			getContainer().run(true, false, new IRunnableWithProgress() {
+				
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException,
+						InterruptedException {
+					final IPreferenceStore preferenceStore = ConnectorEditPlugin.getPlugin().getPreferenceStore();
+					if(!preferenceStore.getBoolean(HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING)){
+						Display.getDefault().syncExec(new Runnable() {
+							
+							@Override
+							public void run() {
+								MessageDialogWithPrompt dialog = MessageDialogWithPrompt.openOkCancelConfirm(Display.getDefault().getActiveShell(),
+										Messages.confirmConnectorDefEditionTitle, 
+										Messages.confirmConnectorDefEditionMsg,
+										Messages.doNotDisplayAgain,
+										false,
+										preferenceStore,
+										HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING);
+								editAnyway = dialog.getReturnCode() == Dialog.OK;
+							}
+						});
+					}else{
+						editAnyway = true;
+					}
+				}
+			});
+		} catch (InvocationTargetException e) {
+			return false;
+		} catch (InterruptedException e) {
+			return false;
+		}
+		if(!editAnyway){
+			getContainer().showPage(getPages()[0]);
+			return false;
+		}
+		
+		String oldDefId =  NamingUtils.toConnectorDefinitionFilename(originalDefinition.getId(),originalDefinition.getVersion(),false) ;
+		String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false) ;
+		String defFileName = defId+"."+ DEF_EXT;
+		if(!oldDefId.equals(defId)){
+			String oldId = oldDefId+".properties" ;
+			try {
+				defStore.getResource().getFile(oldId).delete(true, Repository.NULL_PROGRESS_MONITOR) ;
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e) ;
+			}
+		}
+		Set<Locale> existingLocales = messageProvider.getExistingLocale(originalDefinition) ;
+		for(Locale l : existingLocales){
+			try {
+				for(IResource r : defStore.getResource().members()){
+					if(r.getFileExtension() != null && r.getFileExtension().equals("properties")){
+						String resourceName = r.getName() ;
+
+						if(!oldDefId.equals(defId)){
+							String oldLocaleFile = oldDefId+"_"+l.toString()+".properties" ;
+							if(resourceName.equals(oldLocaleFile)){
+								String newLocaleFile = defId+"_"+l.toString()+".properties" ;
+								IPath tarhetPath =  r.getFullPath().removeLastSegments(1) ;
+								tarhetPath = tarhetPath.append(newLocaleFile) ;
+								r.move(tarhetPath, true, Repository.NULL_PROGRESS_MONITOR) ;
+							}
+						}
+					}
+				}
+			} catch (CoreException e) {
+				BonitaStudioLog.error(e) ;
+			}
+		}
+
+		if(!fileStore.getName().equals(defFileName)){
+			fileStore.delete() ;
+		}
+		return true;
 	}
 
 	private void reloadCategories() {

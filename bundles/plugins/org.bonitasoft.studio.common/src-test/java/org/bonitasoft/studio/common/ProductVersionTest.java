@@ -21,6 +21,8 @@ import static org.fest.assertions.Assertions.assertThat;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.ivy.plugins.parser.m2.PomReader;
 import org.apache.ivy.plugins.repository.url.URLResource;
@@ -86,5 +88,11 @@ public class ProductVersionTest {
 		assertThat(current.getMajor()).isEqualTo(osgiPomVersion.getMajor());
 		assertThat(current.getMinor()).isEqualTo(osgiPomVersion.getMinor());
 		assertThat(current.getMicro()).isEqualTo(osgiPomVersion.getMicro());
+	}
+	
+	@Test
+	public void shouldCurrentYearEquals_EffectiveCurrentYear() throws Exception {
+		String currentYear = new SimpleDateFormat("yyyy").format(new Date());
+		assertThat(ProductVersion.CURRENT_YEAR).isEqualTo(currentYear);
 	}
 }

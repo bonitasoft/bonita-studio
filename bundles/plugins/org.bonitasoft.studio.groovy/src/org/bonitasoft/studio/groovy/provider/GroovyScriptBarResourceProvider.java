@@ -61,7 +61,7 @@ public class GroovyScriptBarResourceProvider implements BARResourcesProvider {
 	 * @see org.bonitasoft.studio.common.extension.BARResourcesProvider#getResourcesForConfiguration(org.bonitasoft.studio.model.process.AbstractProcess, org.bonitasoft.studio.model.configuration.Configuration, org.bonitasoft.engine.bpm.model.DesignProcessDefinition, java.util.Map)
 	 */
 	@Override
-	public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process, Configuration configuration) throws Exception {
+	public List<BarResource> addResourcesForConfiguration(BusinessArchiveBuilder builder, AbstractProcess process, Configuration configuration,Set<EObject> exludedObject) throws Exception {
 
 		final List<BarResource>  classpathResources = new ArrayList<BarResource>() ;
 		final List<BarResource>  resources = new ArrayList<BarResource>() ;
