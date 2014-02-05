@@ -39,7 +39,8 @@ public class ConnectorImplementationLabelProvider extends LabelProvider {
     private final DefinitionResourceProvider messageProvider;
     private final List<ConnectorDefinition> definitions;
 
-    public ConnectorImplementationLabelProvider(IDefinitionRepositoryStore store,Bundle bundle){
+    @SuppressWarnings("unchecked")
+	public ConnectorImplementationLabelProvider(IDefinitionRepositoryStore store,Bundle bundle){
         this.store = store ;
         messageProvider = DefinitionResourceProvider.getInstance((IRepositoryStore<? extends IRepositoryFileStore>) store, bundle) ;
         definitions = store.getDefinitions() ;

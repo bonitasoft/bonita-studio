@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.bonitasoft.engine.bpm.document.DocumentValue;
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
@@ -204,7 +205,7 @@ public class FormFieldExpressionProvider implements IExpressionProvider {
 				}
 			}
 		}
-		Widget copy = EcoreUtil.copy(w);
+		Widget copy = (Widget) ExpressionHelper.createDependencyFromEObject(w);
 		copy.getDependOn().clear();
 		exp.getReferencedElements().add(copy) ;
 		return exp;

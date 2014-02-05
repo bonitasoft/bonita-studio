@@ -30,12 +30,12 @@ import org.bonitasoft.studio.connectors.repository.ConnectorDefRepositoryStore;
  */
 public class ConnectorDefinitionWizard extends AbstractDefinitionWizard {
 
-    public ConnectorDefinitionWizard(DefinitionResourceProvider messageProvider){
-        super(Messages.newConnectorDefinition,RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class),messageProvider) ;
-    }
+	public ConnectorDefinitionWizard(DefinitionResourceProvider messageProvider){
+		super(Messages.newConnectorDefinition,RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class),messageProvider) ;
+	}
 
-    public ConnectorDefinitionWizard(ConnectorDefinition definition,DefinitionResourceProvider messageProvider){
-        super(Messages.editConnectorDefinition,definition,RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class),messageProvider) ;
-    }
+	public ConnectorDefinitionWizard(ConnectorDefinition definition,DefinitionResourceProvider messageProvider){
+		super(Messages.editConnectorDefinition,definition,RepositoryManager.getInstance().getRepositoryStore(ConnectorDefRepositoryStore.class),messageProvider) ;
+	}
 
 }

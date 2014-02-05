@@ -13,7 +13,6 @@ package org.bonitasoft.studio.expression.editor.autocompletion;
 
 import java.util.ArrayList;
 
-import org.bonitasoft.studio.common.IBonitaVariableContext;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.SWTBotConstants;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -22,7 +21,6 @@ import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvide
 import org.bonitasoft.studio.expression.editor.provider.IProposalListener;
 import org.bonitasoft.studio.expression.editor.viewer.ExpressionViewer;
 import org.bonitasoft.studio.model.expression.Expression;
-import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.SearchIndex;
 import org.bonitasoft.studio.model.process.SequenceFlow;
 import org.eclipse.core.runtime.Assert;
@@ -725,39 +723,11 @@ public class BonitaContentProposalAdapter implements SWTBotConstants{
 								@Override
 								public void widgetSelected(SelectionEvent e) {
 									linkClicked = true;
-									String fixedReturnType = null;
-									EStructuralFeature dataFeature=null;
-									final Object[] listenerArray = proposalListeners.getListeners();
-									for (int i = 0; i < listenerArray.length; i++) {
-										IContentProposalListener listener = (IContentProposalListener) listenerArray[i];
-										if (listener instanceof ExpressionViewer) {
-											ExpressionViewer expViewer = (ExpressionViewer) listener;
-											isPageFlowContext = expViewer.isPageFlowContext();
-											IExpressionNatureProvider expressionNatureProvider=expViewer.getExpressionNatureProvider();
-											if (expressionNatureProvider instanceof DataExpressionNatureProvider){
-												dataFeature = ((DataExpressionNatureProvider) expressionNatureProvider).getDataFeature();
-											}
-											Expression exp = null;
-											if(expViewer.getInput() instanceof Expression){
-												exp = (Expression) expViewer.getInput();
-											} else if(expViewer.getInput() instanceof SearchIndex){
-												exp = ((SearchIndex)expViewer.getInput()).getValue();
-											} else if(expViewer.getInput() instanceof SequenceFlow){
-												exp = ((SequenceFlow)expViewer.getInput()).getCondition();
-											}
-											if(exp !=null && exp.isReturnTypeFixed()){
-												fixedReturnType = exp.getReturnType();
-											}
-										}
-									}
-									listener.setIsPageFlowContext(isPageFlowContext);
-									if (dataFeature!=null){
-										listener.setEStructuralFeature(dataFeature);
-									}
-									final String newObjectLabel = listener.handleEvent(context, fixedReturnType);
-									updateExpressionField(newObjectLabel);
+									updateExpressionField(addNewData(listener));
 									linkClicked=false;
 								}
+
+								
 							});
 						} catch (CoreException e) {
 							BonitaStudioLog.error(e);
@@ -769,6 +739,8 @@ public class BonitaContentProposalAdapter implements SWTBotConstants{
 			}
 		}
 
+		
+		
 		private void updateExpressionField(String newObjectLabel) {
 			if (newObjectLabel != null) {
 				final Object[] listenerArray = proposalListeners.getListeners();
@@ -2340,6 +2312,39 @@ public class BonitaContentProposalAdapter implements SWTBotConstants{
 
 	public void setFilteredExpressionType(ArrayList<String> filteredExpressionType) {
 		this.filteredExpressionType = filteredExpressionType;
+	}
+	
+	public String addNewData(final IProposalListener proposalListener) {
+		String fixedReturnType = null;
+		EStructuralFeature dataFeature=null;
+		final Object[] listenerArray = proposalListeners.getListeners();
+		for (int i = 0; i < listenerArray.length; i++) {
+			IContentProposalListener listener = (IContentProposalListener) listenerArray[i];
+			if (listener instanceof ExpressionViewer) {
+				ExpressionViewer expViewer = (ExpressionViewer) listener;
+				isPageFlowContext = expViewer.isPageFlowContext();
+				IExpressionNatureProvider expressionNatureProvider=expViewer.getExpressionNatureProvider();
+				if (expressionNatureProvider instanceof DataExpressionNatureProvider){
+					dataFeature = ((DataExpressionNatureProvider) expressionNatureProvider).getDataFeature();
+				}
+				Expression exp = null;
+				if(expViewer.getInput() instanceof Expression){
+					exp = (Expression) expViewer.getInput();
+				} else if(expViewer.getInput() instanceof SearchIndex){
+					exp = ((SearchIndex)expViewer.getInput()).getValue();
+				} else if(expViewer.getInput() instanceof SequenceFlow){
+					exp = ((SequenceFlow)expViewer.getInput()).getCondition();
+				}
+				if(exp !=null && exp.isReturnTypeFixed()){
+					fixedReturnType = exp.getReturnType();
+				}
+			}
+		}
+		proposalListener.setIsPageFlowContext(isPageFlowContext);
+		if (dataFeature!=null){
+			proposalListener.setEStructuralFeature(dataFeature);
+		}
+		return proposalListener.handleEvent(context, fixedReturnType);
 	}
 
 

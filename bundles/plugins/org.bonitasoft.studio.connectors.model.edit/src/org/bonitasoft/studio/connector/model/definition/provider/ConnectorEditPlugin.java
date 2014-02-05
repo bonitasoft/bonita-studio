@@ -6,9 +6,12 @@
  */
 package org.bonitasoft.studio.connector.model.definition.provider;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.common.EMFPlugin;
-
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.osgi.framework.BundleContext;
 
 /**
  * This is the central singleton for the Connector edit plugin.
@@ -33,6 +36,7 @@ public final class ConnectorEditPlugin extends EMFPlugin {
 	 */
     private static Implementation plugin;
 
+
     /**
 	 * Create the instance.
 	 * <!-- begin-user-doc -->
@@ -56,7 +60,9 @@ public final class ConnectorEditPlugin extends EMFPlugin {
     public ResourceLocator getPluginResourceLocator() {
 		return plugin;
 	}
-
+    
+   
+    
     /**
 	 * Returns the singleton instance of the Eclipse plugin.
 	 * <!-- begin-user-doc -->
@@ -75,7 +81,11 @@ public final class ConnectorEditPlugin extends EMFPlugin {
 	 * @generated
 	 */
     public static class Implementation extends EclipsePlugin {
-        /**
+      
+    	private ScopedPreferenceStore preferenceStore;
+
+
+		/**
 		 * Creates an instance.
 		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -88,6 +98,22 @@ public final class ConnectorEditPlugin extends EMFPlugin {
 			//
 			plugin = this;
 		}
+        
+        public IPreferenceStore getPreferenceStore() {
+            // Create the preference store lazily.
+            if (preferenceStore == null) {
+                preferenceStore = new ScopedPreferenceStore(new InstanceScope(),getSymbolicName());
+
+            }
+            return preferenceStore;
+        }
+        
+        
+        @Override
+        public void stop(BundleContext context) throws Exception {
+        	super.stop(context);
+        	preferenceStore = null;
+        }
     }
 
 }

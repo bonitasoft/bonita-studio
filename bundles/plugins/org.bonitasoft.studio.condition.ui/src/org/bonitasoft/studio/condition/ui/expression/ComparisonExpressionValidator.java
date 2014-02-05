@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -143,7 +144,7 @@ public class ComparisonExpressionValidator implements IExpressionValidator {
 				List<Expression_ProcessRef> references = ModelHelper.getAllItemsOfType(compareOp, ConditionModelPackage.Literals.EXPRESSION_PROCESS_REF);
 				for(Expression_ProcessRef ref : references){
 					EObject dep = getResolvedDependency(ref);
-					inputExpression.getReferencedElements().add(EcoreUtil.copy(dep));
+					inputExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(dep));
 				}
 			}
 		}

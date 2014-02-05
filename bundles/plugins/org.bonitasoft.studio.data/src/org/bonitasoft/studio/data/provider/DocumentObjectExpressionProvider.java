@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.data.i18n.Messages;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
@@ -34,7 +35,6 @@ import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -87,7 +87,7 @@ public class DocumentObjectExpressionProvider implements IExpressionProvider {
 		exp.setContent(d.getName()) ;
 		exp.setName(d.getName()) ;
 		exp.setReturnType(org.bonitasoft.engine.bpm.document.Document.class.getName()) ;
-		exp.getReferencedElements().add(EcoreUtil.copy(d)) ;
+		exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d)) ;
 		return exp;
 	}
 
@@ -110,7 +110,5 @@ public class DocumentObjectExpressionProvider implements IExpressionProvider {
 	public IExpressionEditor getExpressionEditor(Expression expression,EObject context) {
 		return null;
 	}
-
-
 
 }

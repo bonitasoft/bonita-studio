@@ -25,6 +25,7 @@ import org.bonitasoft.studio.common.jface.databinding.validator.EmptyInputValida
 import org.bonitasoft.studio.common.jface.databinding.validator.InputLengthValidator;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
@@ -97,7 +98,7 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
 
 	private ISWTObservableValue observePackageText;
 
-	public AbstractImplementationWizardPage(ConnectorImplementation implementation,List<ConnectorImplementation> existingImpl,List<ConnectorDefinition> definitions,SourceRepositoryStore sourceStore,String pageTitle,String pageDescription,DefinitionResourceProvider messageProvider) {
+	public AbstractImplementationWizardPage(ConnectorImplementation implementation,List<ConnectorImplementation> existingImpl,List<ConnectorDefinition> definitions,SourceRepositoryStore<AbstractFileStore> sourceStore,String pageTitle,String pageDescription,DefinitionResourceProvider messageProvider) {
 		super(true,AbstractImplementationWizardPage.class.getName());
 		setTitle(pageTitle);
 		setDescription(pageDescription);
@@ -121,7 +122,10 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
 	public void createControl(Composite parent) {
 
 		context = new EMFDataBindingContext() ;
-
+		if(pageSupport == null){
+			pageSupport =  WizardPageSupport.create(this, context) ;
+		}
+		
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).create());
 
@@ -277,9 +281,8 @@ public abstract class AbstractImplementationWizardPage extends NewTypeWizardPage
 			if(!implementation.getImplementationClassname().contains(".")){
 				observePackageText.setValue("org.mycompany.connector");
 			}
-			
-			if(pageSupport == null){
-				pageSupport =  WizardPageSupport.create(this, context) ;
+			if(context != null){
+				context.updateTargets();
 			}
 		}
 	}

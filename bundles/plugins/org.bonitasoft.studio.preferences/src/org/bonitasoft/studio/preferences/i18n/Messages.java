@@ -71,5 +71,6 @@ public class Messages extends NLS {
     public static String validateBeforeRun;
 	public static String BonitaPreferenceDialog_DBConnectors;
 	public static String askRenameDiagram;
+	public static String doNotDisplayConnectorDefConfirmationMessage;
 	
 }

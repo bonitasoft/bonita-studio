@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
 import org.bonitasoft.studio.common.IBonitaVariableContext;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.jface.ExtensibleWizard;
@@ -87,6 +88,7 @@ import org.bonitasoft.studio.preferences.BonitaStudioPreferencesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -94,8 +96,10 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -161,7 +165,11 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		initialize() ;
 		ConnectorDefinition def = getDefinition();
 		DefinitionResourceProvider resourceProvider = initMessageProvider();
-		setWindowTitle(resourceProvider.getConnectorDefinitionLabel(def) +" ("+def.getVersion()+")");
+		String connectorDefinitionLabel = resourceProvider.getConnectorDefinitionLabel(def);
+		if(connectorDefinitionLabel == null){
+			connectorDefinitionLabel = def.getId();
+		}
+		setWindowTitle(connectorDefinitionLabel +" ("+def.getVersion()+")");
 	}
 
 
@@ -222,10 +230,12 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 		if(editMode){
 			final IDefinitionRepositoryStore definitionStore = getDefinitionStore();
 			final ConnectorDefinition definition =  definitionStore.getDefinition(connectorWorkingCopy.getDefinitionId(),connectorWorkingCopy.getDefinitionVersion(),definitions) ;
+			if(cleanConfiguration(definition)){
+				MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.configurationChangedTitle, Messages.configurationChangedMsg);
+			}
 			extension = findCustomWizardExtension(definition) ;
 			List<IWizardPage> pages = getPagesFor(definition) ;
 			for(IWizardPage p : pages){
-				
 				addAdditionalPage(p) ;
 			}
 			addOuputPage(definition) ;
@@ -233,10 +243,59 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 
 	}
 
+	/**
+	 * 
+	 * @param definition
+	 * @return true if configuration has been modified
+	 */
+	protected boolean cleanConfiguration(ConnectorDefinition definition) {
+		ConnectorConfiguration configuration = connectorWorkingCopy.getConfiguration();
+		boolean changed = false;
+		if(configuration != null){
+			EList<Input> inputs = definition.getInput();
+			Set<String> inputNames = new HashSet<String>(); 
+			for(Input in : inputs){
+				inputNames.add(in.getName());
+			}
+			Set<String> connectorParamKey = new HashSet<String>(); 
+			for(ConnectorParameter parameter : configuration.getParameters()){
+				connectorParamKey.add(parameter.getKey());
+			}
+
+			if(!inputNames.equals(connectorParamKey)){
+				connectorParamKey.removeAll(inputNames);
+				List<ConnectorParameter> toRemove = new ArrayList<ConnectorParameter>();
+				for(ConnectorParameter parameter : configuration.getParameters()){
+					if(connectorParamKey.contains(parameter.getKey())){
+						toRemove.add(parameter);
+					}
+				}
+				if(!toRemove.isEmpty()){
+					changed = configuration.getParameters().removeAll(toRemove);
+				}
+			}
+		}
+		EList<Output> outputs = definition.getOutput();
+		Set<String> outputNames = new HashSet<String>(); 
+		for(Output out : outputs){
+			outputNames.add(out.getName());
+		}
+		for(Operation op : connectorWorkingCopy.getOutputs()){
+			if( ExpressionConstants.CONNECTOR_OUTPUT_TYPE.equals(op.getRightOperand().getType()) 
+					&& op.getRightOperand() != null 
+					&& op.getRightOperand().getContent() != null 
+					&& !outputNames.contains(op.getRightOperand().getContent())){
+				op.setRightOperand(ExpressionHelper.createConstantExpression("", String.class.getName()));
+				changed = true;
+			}
+		}
+		return changed;
+	}
+
 	protected AbstractDefinitionSelectionImpementationWizardPage getSelectionPage(final Connector connectorWorkingCopy, DefinitionResourceProvider resourceProvider) {
 		return new SelectAdvancedConnectorDefinitionWizardPage(connectorWorkingCopy, Collections.<ConnectorImplementation>emptyList(), definitions,  Messages.selectConnectorDefinitionTitle, Messages.selectConnectorDefinitionDesc, resourceProvider);
 	}
-	
+
 	protected void addNameAndDescriptionPage() {
 		if(useEvents ){
 			namePage = new SelectEventConnectorNameAndDescWizardPage(container, connectorWorkingCopy,originalConnector, featureToCheckForUniqueID) ;
@@ -307,7 +366,7 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 			rightOperand.setContent(output.getName()) ;
 			rightOperand.setReturnType(output.getType()) ;
 			rightOperand.setType(ExpressionConstants.CONNECTOR_OUTPUT_TYPE) ;
-			rightOperand.getReferencedElements().add(EcoreUtil.copy(output)) ;
+			rightOperand.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(output)) ;
 			operation.setRightOperand(rightOperand) ;
 
 			Expression leftOperand = ExpressionFactory.eINSTANCE.createExpression() ;
@@ -675,6 +734,6 @@ public class ConnectorWizard extends ExtensibleWizard implements IConnectorDefin
 	@Override
 	public void setIsPageFlowContext(boolean isPageFlowContext) {
 		this.isPageFlowContext=isPageFlowContext;
-		
+
 	}
 }
