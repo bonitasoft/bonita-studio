@@ -138,9 +138,12 @@ public class ExpressionHelper {
 		}
 		if(dependency instanceof SearchIndex){
 			SearchIndex searchIndexDependency = (SearchIndex) ProcessFactory.eINSTANCE.create(dependency.eClass());
-			Expression nameExpression = EcoreUtil.copy(((SearchIndex) dependency).getName());
-			nameExpression.getReferencedElements().clear();
-			searchIndexDependency.setName(nameExpression);
+			Expression name = ((SearchIndex) dependency).getName();
+			if(name != null){
+				Expression nameExpression = EcoreUtil.copy(name);
+				nameExpression.getReferencedElements().clear();
+				searchIndexDependency.setName(nameExpression);
+			}
 			return searchIndexDependency;
 		}
 		return EcoreUtil.copy(dependency);
