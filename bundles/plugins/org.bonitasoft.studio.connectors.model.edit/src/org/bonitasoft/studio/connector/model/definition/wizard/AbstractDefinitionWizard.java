@@ -20,7 +20,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -55,11 +54,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
@@ -84,8 +81,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 	private DefinitionI18NWizardPage i18nPage;
 	private final DefinitionResourceProvider messageProvider;
 	private final AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore;
-	private boolean editAnyway = true;
-	
+
 	public AbstractDefinitionWizard(String windowTitle,AbstractDefinitionRepositoryStore<? extends IRepositoryFileStore> defStore,DefinitionResourceProvider messageProvider){
 		Assert.isTrue(defStore instanceof IDefinitionRepositoryStore) ;
 		setWindowTitle(windowTitle) ;
@@ -207,43 +203,24 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 	}
 
 	protected boolean editConnectorDefinition() {
-		try {
-			getContainer().run(true, false, new IRunnableWithProgress() {
-				
-				@Override
-				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-						InterruptedException {
-					final IPreferenceStore preferenceStore = ConnectorEditPlugin.getPlugin().getPreferenceStore();
-					if(!preferenceStore.getBoolean(HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING)){
-						Display.getDefault().syncExec(new Runnable() {
-							
-							@Override
-							public void run() {
-								MessageDialogWithPrompt dialog = MessageDialogWithPrompt.openOkCancelConfirm(Display.getDefault().getActiveShell(),
-										Messages.confirmConnectorDefEditionTitle, 
-										Messages.confirmConnectorDefEditionMsg,
-										Messages.doNotDisplayAgain,
-										false,
-										preferenceStore,
-										HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING);
-								editAnyway = dialog.getReturnCode() == Dialog.OK;
-							}
-						});
-					}else{
-						editAnyway = true;
-					}
-				}
-			});
-		} catch (InvocationTargetException e) {
-			return false;
-		} catch (InterruptedException e) {
-			return false;
+		final IPreferenceStore preferenceStore = ConnectorEditPlugin.getPlugin().getPreferenceStore();
+		boolean editAnyway = true;
+		if(!preferenceStore.getBoolean(HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING)){
+			MessageDialogWithPrompt dialog = MessageDialogWithPrompt.openOkCancelConfirm(Display.getDefault().getActiveShell(),
+					Messages.confirmConnectorDefEditionTitle, 
+					Messages.confirmConnectorDefEditionMsg,
+					Messages.doNotDisplayAgain,
+					false,
+					preferenceStore,
+					HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING);
+			editAnyway = dialog.getReturnCode() == Dialog.OK;
 		}
+
 		if(!editAnyway){
 			getContainer().showPage(getPages()[0]);
 			return false;
 		}
-		
+
 		String oldDefId =  NamingUtils.toConnectorDefinitionFilename(originalDefinition.getId(),originalDefinition.getVersion(),false) ;
 		String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false) ;
 		String defFileName = defId+"."+ DEF_EXT;
