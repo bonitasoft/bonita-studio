@@ -154,7 +154,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 			String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false) ;
 			String defFileName = defId+"."+ DEF_EXT;
 			if(editMode){
-				if(!editConnectorDefinition(definitionWorkingCopy, defFileName)){
+				if(!editConnectorDefinition()){
 					return false;
 				}
 			}
@@ -206,7 +206,7 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 		}
 	}
 
-	protected boolean editConnectorDefinition(ConnectorDefinition definition, String defFileName) {
+	protected boolean editConnectorDefinition() {
 		try {
 			getContainer().run(true, false, new IRunnableWithProgress() {
 				
@@ -245,8 +245,9 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 		}
 		
 		String oldDefId =  NamingUtils.toConnectorDefinitionFilename(originalDefinition.getId(),originalDefinition.getVersion(),false) ;
-		String newDefinitionId = definition.getId();
-		if(!oldDefId.equals(newDefinitionId)){
+		String defId = NamingUtils.toConnectorDefinitionFilename(definitionWorkingCopy.getId(), definitionWorkingCopy.getVersion(), false) ;
+		String defFileName = defId+"."+ DEF_EXT;
+		if(!oldDefId.equals(defId)){
 			String oldId = oldDefId+".properties" ;
 			try {
 				defStore.getResource().getFile(oldId).delete(true, Repository.NULL_PROGRESS_MONITOR) ;
@@ -261,10 +262,10 @@ public abstract class AbstractDefinitionWizard extends ExtensibleWizard {
 					if(r.getFileExtension() != null && r.getFileExtension().equals("properties")){
 						String resourceName = r.getName() ;
 
-						if(!oldDefId.equals(newDefinitionId)){
+						if(!oldDefId.equals(defId)){
 							String oldLocaleFile = oldDefId+"_"+l.toString()+".properties" ;
 							if(resourceName.equals(oldLocaleFile)){
-								String newLocaleFile = newDefinitionId+"_"+l.toString()+".properties" ;
+								String newLocaleFile = defId+"_"+l.toString()+".properties" ;
 								IPath tarhetPath =  r.getFullPath().removeLastSegments(1) ;
 								tarhetPath = tarhetPath.append(newLocaleFile) ;
 								r.move(tarhetPath, true, Repository.NULL_PROGRESS_MONITOR) ;
