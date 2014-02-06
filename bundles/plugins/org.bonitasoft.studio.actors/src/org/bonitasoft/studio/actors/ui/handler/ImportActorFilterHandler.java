@@ -63,20 +63,19 @@ public class ImportActorFilterHandler extends AbstractHandler {
                             File zipFile = new File(fileName);
                             ImportActorFilterArchiveOperation importOp = new ImportActorFilterArchiveOperation() ;
                             importOp.setFile(zipFile) ;
-                            importOp.run(monitor) ;
-                            final IStatus status = importOp.run(monitor) ;
+                            final IStatus status =  importOp.run(monitor) ;
                             if(IStatus.OK  == status.getSeverity()){
                                 Display.getDefault().syncExec(new Runnable() {
                                     @Override
                                     public void run() {
-                                        MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.exportSuccessfulTitle, Messages.exportSuccessfulMsg) ;
+                                        MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.importSuccessfulTitle, Messages.importSuccessfulMsg) ;
                                     }
                                 }) ;
                             }else{
                                 Display.getDefault().syncExec(new Runnable() {
                                     @Override
                                     public void run() {
-                                        MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailedTitle,Messages.bind(Messages.exportFailedMsg,status.getMessage())) ;
+                                        MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.importFailedTitle,Messages.bind(Messages.importFailedMsg,status.getMessage())) ;
                                     }
                                 }) ;
                             }

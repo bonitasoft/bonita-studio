@@ -18,6 +18,7 @@ package org.bonitasoft.studio.connector.model.implementation.wizard;
 
 import org.bonitasoft.studio.common.jface.FileActionDialog;
 import org.bonitasoft.studio.common.repository.ClassGenerator;
+import org.bonitasoft.studio.common.repository.filestore.AbstractFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
@@ -62,18 +63,18 @@ public class SelectConnectorImplementationWizardPage extends WizardPage implemen
     private Button removeButton;
     private final IContentProvider contentProvider;
     private final LabelProvider labelProvider;
-    private final IRepositoryStore implStore;
-    private final SourceRepositoryStore sourceStore;
+    private final IRepositoryStore<? extends IRepositoryFileStore> implStore;
+    private final SourceRepositoryStore<? extends AbstractFileStore> sourceStore;
 
 
-    public SelectConnectorImplementationWizardPage(String pageTitle,String pageDescription, IContentProvider contentProvider,LabelProvider labelProvider,IRepositoryStore implStore,SourceRepositoryStore sourceStore) {
+    public SelectConnectorImplementationWizardPage(String pageTitle,String pageDescription, IContentProvider contentProvider,LabelProvider labelProvider,IRepositoryStore<? extends IRepositoryFileStore> iRepositoryStore,SourceRepositoryStore<? extends AbstractFileStore> sourceRepositoryStore) {
         super(SelectConnectorImplementationWizardPage.class.getName());
         setTitle(pageTitle);
         setDescription(pageDescription);
         this.contentProvider = contentProvider ;
         this.labelProvider = labelProvider ;
-        this.implStore = implStore ;
-        this.sourceStore = sourceStore ;
+        this.implStore = iRepositoryStore ;
+        this.sourceStore = sourceRepositoryStore ;
     }
 
 

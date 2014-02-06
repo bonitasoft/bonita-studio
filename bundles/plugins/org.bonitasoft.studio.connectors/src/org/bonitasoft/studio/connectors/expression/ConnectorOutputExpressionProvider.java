@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.definition.Output;
@@ -91,7 +92,7 @@ public class ConnectorOutputExpressionProvider implements IExpressionProvider {
         exp.setContent(output.getName()) ;
         exp.setName(output.getName()) ;
         exp.setReturnType(output.getType()) ;
-        exp.getReferencedElements().add(EcoreUtil.copy(output)) ;
+        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(output)) ;
         return exp;
     }
 

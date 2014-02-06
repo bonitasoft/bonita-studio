@@ -80,17 +80,19 @@ public class GroovyCompilationOnScriptExpressionConstraint  extends AbstractLive
 		IJavaProject javaProject = RepositoryManager.getInstance().getCurrentRepository().getJavaProject();
 		final GroovySnippetCompiler compiler = new GroovySnippetCompiler(new GroovyProjectFacade(javaProject));
 		final CompilationResult result = compiler.compileForErrors(scriptText, null);
-		CategorizedProblem[] problems =  result.getAllProblems();
+		CategorizedProblem[] problems =  result.getErrors();
 		if(problems != null && problems.length > 0){
 			StringBuilder sb = new StringBuilder();
 			for(CategorizedProblem problem : problems){
 				sb.append(problem.getMessage());
 				sb.append(", ");
 			}
-			sb.delete(sb.length()-2, sb.length());
-			return context.createFailureStatus(new Object[] { Messages.bind(Messages.groovyCompilationProblem,expression.getName(),sb.toString())});
+			if(sb.length() > 1){
+				sb.delete(sb.length()-2, sb.length());
+				return context.createFailureStatus(new Object[] { Messages.bind(Messages.groovyCompilationProblem,expression.getName(),sb.toString())});
+			}
 		}
-		
+
 		return context.createSuccessStatus();
 	}
 

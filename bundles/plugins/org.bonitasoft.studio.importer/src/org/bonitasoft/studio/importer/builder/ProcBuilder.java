@@ -1359,7 +1359,7 @@ public class ProcBuilder implements IProcBuilder {
             exp.setType(ExpressionConstants.VARIABLE_TYPE);
             final Data originalData = dataByName.get(defaultValueContent);
             if(originalData != null){
-                final Data copiedData = EcoreUtil.copy(originalData);
+                final Data copiedData = (Data) ExpressionHelper.createDependencyFromEObject(originalData);
                 if(copiedData != null){
                     exp.getReferencedElements().add(copiedData);
                 }

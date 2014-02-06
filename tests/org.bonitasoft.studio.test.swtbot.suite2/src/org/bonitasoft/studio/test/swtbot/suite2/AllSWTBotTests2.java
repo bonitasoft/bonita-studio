@@ -1,4 +1,4 @@
-package org.bonitasoft.studio.test.swtbot.suite;
+package org.bonitasoft.studio.test.swtbot.suite2;
 
 import org.bonitasoft.expressions.test.TestConnectorExpression;
 import org.bonitasoft.studio.commands.test.CopyPasteTests;
@@ -96,8 +96,8 @@ import org.junit.runners.Suite;
     TestSave.class,
     TestMoveBetweenLane.class,
     MigrationReporTest.class,
-    TestTimer.class,
-    TestBonitaGroovyEditorDialog.class,
+	TestTimer.class,
+	TestBonitaGroovyEditorDialog.class,
     TestProcessDependencies.class
 })
 public class AllSWTBotTests2 {
