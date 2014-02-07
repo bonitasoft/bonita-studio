@@ -18,12 +18,12 @@ package org.bonitasoft.studio.common.repository.filestore;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import java.io.File;
 
+import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.eclipse.core.runtime.Path;
@@ -31,19 +31,25 @@ import org.eclipse.jdt.ui.jarpackager.JarPackageData;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Romain Bioteau
  *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class SourceFileStoreTest {
 
-	private IRepositoryStore parentStore;
+	@Mock
+	private IRepositoryStore<IRepositoryFileStore> parentStore;
 	
 	private SourceFileStore fileStoreUnderTest;
 	
 	private File tmpJarFile;
 	
+	@Mock
 	private JarPackageData packageData;
 	
 
@@ -52,10 +58,8 @@ public class SourceFileStoreTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		parentStore = mock(IRepositoryStore.class);
 		fileStoreUnderTest = spy(new SourceFileStore("org.bonita.test.Test", parentStore));
 		tmpJarFile = File.createTempFile("tmpJar",".jar",new File(System.getProperty("java.io.tmpdir")));
-		packageData = mock(JarPackageData.class);
 		doReturn(packageData).when(fileStoreUnderTest).createJarPackageData();
 		doReturn(null).when(fileStoreUnderTest).getResource();
 	}

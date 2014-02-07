@@ -16,6 +16,7 @@
  */
 package org.bonitasoft.studio.common.repository.model;
 
+import java.io.IOException;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
@@ -62,6 +63,6 @@ public interface IRepositoryFileStore {
 
     boolean canBeExported();
 
-    void export(String targetAbsoluteFilePath) ;
+    void export(String targetAbsoluteFilePath) throws IOException ;
 
 }

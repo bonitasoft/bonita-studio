@@ -19,6 +19,7 @@ package org.bonitasoft.studio.actors.repository;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,7 +98,8 @@ public class OrganizationFileStore extends EMFFileStore {
 	}
 
 	@Override
-	public void export(String targetAbsoluteFilePath) {
+	public void export(String targetAbsoluteFilePath) throws IOException {
+		checkWritePermission(new File(targetAbsoluteFilePath));
 		Organization organization = getContent() ;
 		DocumentRoot root = OrganizationFactory.eINSTANCE.createDocumentRoot() ;
 		Organization exportedCopy = EcoreUtil.copy(organization)  ;
