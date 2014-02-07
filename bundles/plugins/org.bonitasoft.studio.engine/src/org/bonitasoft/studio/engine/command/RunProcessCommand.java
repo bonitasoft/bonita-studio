@@ -334,7 +334,7 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 			IEditorPart editor = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getActivePage().getActiveEditor() ;
 			boolean isADiagram = editor != null && editor instanceof DiagramEditor;
 			if(isADiagram){
-				List selectedEditParts = ((DiagramEditor)editor).getDiagramGraphicalViewer().getSelectedEditParts();
+				List<?> selectedEditParts = ((DiagramEditor)editor).getDiagramGraphicalViewer().getSelectedEditParts();
 				if(selectedEditParts != null && !selectedEditParts.isEmpty()){
 					Object selectedEp = selectedEditParts.iterator().next() ;
 					if(selectedEp != null){
@@ -460,8 +460,11 @@ public class RunProcessCommand extends AbstractHandler implements IHandler {
 
 	@Override
 	public boolean isEnabled() {
-		MainProcess process =  getProcessInEditor() ;
-		return process != null && process.isEnableValidation() ;
+		if(PlatformUI.isWorkbenchRunning() &&  PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null){
+			MainProcess process =  getProcessInEditor() ;
+			return process != null && process.isEnableValidation() ;
+		}
+		return false ;
 	}
 
 
