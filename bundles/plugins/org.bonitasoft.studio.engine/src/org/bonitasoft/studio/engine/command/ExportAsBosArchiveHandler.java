@@ -19,6 +19,7 @@ package org.bonitasoft.studio.engine.command;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.zip.ZipOutputStream;
 
@@ -67,14 +68,13 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ExportAsBosArchiveHandler extends AbstractHandler {
 
-
     private static final String TMP_DIR = ProjectUtil.getBonitaStudioWorkFolder().getAbsolutePath();
     public static final String CONFIGURATION_PARAMETER_NAME = "__PROCESS_CONFIGURATION__";
     public static String DEST_FILE_PARAMETER_NAME = "__EXPORT_DEST_FILE__"; //$NON-NLS-1$
     private String configurationId;
 
-    private IRepositoryStore processConfStore;
-    private IRepositoryStore diagramStore;
+    private IRepositoryStore<? extends IRepositoryFileStore>  processConfStore;
+    private IRepositoryStore<? extends IRepositoryFileStore> diagramStore;
 
     /**
      * @return a List<File> of the all the created bar or proc
@@ -130,7 +130,11 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
         PlatformUtil.delete(tmpDir, Repository.NULL_PROGRESS_MONITOR) ;
         tmpDir.mkdirs() ;
 
-        diagramFile.export(tmpDir.getAbsolutePath()) ;
+        try {
+			diagramFile.export(tmpDir.getAbsolutePath()) ;
+		} catch (IOException e1) {
+			throw new ExecutionException(e1.getMessage());
+		}
         if(mainProcess.isEnableValidation()){
             for (final AbstractProcess process : diagramFile.getProcesses()) {
                 try {
@@ -140,7 +144,7 @@ public class ExportAsBosArchiveHandler extends AbstractHandler {
 
                     final File targetBarFile = new File(tmpDir, process.getName()+"--"+process.getVersion()+".bar") ;
                     targetBarFile.delete() ;
-                    BusinessArchive bar =  BarExporter.getInstance().createBusinessArchive(process, configurationId, Collections.EMPTY_SET) ;
+                    BusinessArchive bar =  BarExporter.getInstance().createBusinessArchive(process, configurationId, Collections.<EObject>emptySet()) ;
                     BusinessArchiveFactory.writeBusinessArchiveToFile(bar, targetBarFile) ;
                 } catch (Exception e) {
                     BonitaStudioLog.error(e) ;

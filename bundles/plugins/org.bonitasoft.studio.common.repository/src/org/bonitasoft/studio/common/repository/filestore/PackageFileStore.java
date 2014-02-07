@@ -16,6 +16,8 @@
  */
 package org.bonitasoft.studio.common.repository.filestore;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +97,11 @@ public class PackageFileStore extends AbstractFileStore {
 	}
 
 	public void exportAsJar(String absoluteTargetFilePath, boolean includeSources) throws InvocationTargetException, InterruptedException {
+		try {
+			checkWritePermission(new File(absoluteTargetFilePath));
+		} catch (IOException e) {
+			throw new InvocationTargetException(e);
+		}
 		final JarPackageData jarPackakeData = new JarPackageData() ;
 		final IPackageFragment packageFragment = getPackageFragment() ;
 		if(packageFragment==null){
@@ -122,15 +129,8 @@ public class PackageFileStore extends AbstractFileStore {
 		jarPackakeData.setGenerateManifest(true) ;
 		jarPackakeData.setOverwrite(true) ;
 		final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null) ;
-		try {
-			runnable.run(Repository.NULL_PROGRESS_MONITOR) ;
-		} catch (Exception e){
-			BonitaStudioLog.error(e) ;
-		}
-
+		runnable.run(Repository.NULL_PROGRESS_MONITOR) ;
 	}
-
-
 
 	public IPackageFragment getPackageFragment() {
 		IJavaProject project = RepositoryManager.getInstance().getCurrentRepository().getJavaProject() ;

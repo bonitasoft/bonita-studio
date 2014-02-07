@@ -16,7 +16,10 @@
  */
 package org.bonitasoft.studio.common.repository.filestore;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
@@ -159,8 +162,13 @@ public class SourceFileStore extends AbstractFileStore {
 
     }
 
-    public void exportAsJar(String absoluteTargetFilePath, boolean includeSources) {
-        final JarPackageData jarPackakeData = createJarPackageData() ;
+    public void exportAsJar(String absoluteTargetFilePath, boolean includeSources) throws InvocationTargetException, InterruptedException {
+    	try {
+			checkWritePermission(new File(absoluteTargetFilePath));
+		} catch (IOException e) {
+			throw new InvocationTargetException(e);
+		}
+    	final JarPackageData jarPackakeData = createJarPackageData() ;
         IFile[] elements = Collections.singletonList(getResource()).toArray(new IFile[1]) ;
         jarPackakeData.setJarLocation(new Path(absoluteTargetFilePath)) ;
         jarPackakeData.setBuildIfNeeded(true);
@@ -174,11 +182,7 @@ public class SourceFileStore extends AbstractFileStore {
         jarPackakeData.setOverwrite(true) ;
         jarPackakeData.setUseSourceFolderHierarchy(includeSources) ;
         final IJarExportRunnable runnable = jarPackakeData.createJarExportRunnable(null) ;
-        try {
-            runnable.run(Repository.NULL_PROGRESS_MONITOR) ;
-        } catch (Exception e){
-            BonitaStudioLog.error(e) ;
-        }
+        runnable.run(Repository.NULL_PROGRESS_MONITOR) ;
     }
 
 	protected JarPackageData createJarPackageData() {
