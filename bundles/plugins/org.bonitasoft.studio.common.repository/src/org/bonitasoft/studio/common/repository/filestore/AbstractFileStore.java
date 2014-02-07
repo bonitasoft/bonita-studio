@@ -261,12 +261,14 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
 	}
 
 	protected boolean checkWritePermission(File file) throws IOException{
+		String path = file.getAbsolutePath();
+		if(!file.isDirectory()){
+			file = file.getParentFile();
+		}
 		if(file.canWrite()){
+			file = new File(path);
 			return true;
 		}else{
-			if(!file.isDirectory() && file.getParentFile() != null){
-				file = file.getParentFile();
-			}
 			throw new IOException(Messages.bind(Messages.writePermission,file.getAbsolutePath()));
 		}
 	}
