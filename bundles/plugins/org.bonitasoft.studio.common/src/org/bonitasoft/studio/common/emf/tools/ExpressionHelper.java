@@ -125,10 +125,8 @@ public class ExpressionHelper {
 			return widgetDependency;
 		}
 		if(dependency instanceof Data){
-			Data dataDependency = (Data) ProcessFactory.eINSTANCE.create(dependency.eClass());
-			dataDependency.setName(((Data) dependency).getName());
-			dataDependency.setDatasourceId(((Data) dependency).getDatasourceId());
-			dataDependency.setDataType(((Data) dependency).getDataType());
+			Data dataDependency = (Data) EcoreUtil.copy(dependency);
+			dataDependency.setDefaultValue(null);
 			return dataDependency;
 		}
 		if(dependency instanceof Document){
