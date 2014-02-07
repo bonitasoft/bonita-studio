@@ -27,7 +27,9 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
 import org.bonitasoft.studio.common.repository.store.SourceRepositoryStore;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.ui.jarpackager.IJarExportRunnable;
 import org.eclipse.jdt.ui.jarpackager.JarPackageData;
+import org.eclipse.swt.widgets.Shell;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +53,9 @@ public class SourceFileStoreTest {
 	
 	@Mock
 	private JarPackageData packageData;
+
+	@Mock
+	private IJarExportRunnable jarRunnable;
 	
 
 	/**
@@ -61,6 +66,7 @@ public class SourceFileStoreTest {
 		fileStoreUnderTest = spy(new SourceFileStore("org.bonita.test.Test", parentStore));
 		tmpJarFile = File.createTempFile("tmpJar",".jar",new File(System.getProperty("java.io.tmpdir")));
 		doReturn(packageData).when(fileStoreUnderTest).createJarPackageData();
+		doReturn(jarRunnable).when(packageData).createJarExportRunnable(any(Shell.class));
 		doReturn(null).when(fileStoreUnderTest).getResource();
 	}
 
