@@ -64,4 +64,5 @@ public class Messages extends NLS {
     public static String selectValidatorDesc;
     public static String validatorSource;
 	public static String missingPackageName;
+	public static String exportFailedTitle;
 }

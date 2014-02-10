@@ -78,5 +78,6 @@ public class Messages extends NLS {
 	public static String anonymousUserMessage;
 	public static String anonymousUserNameMissingMessage;
 	public static String synchronizingConfiguration;
+	public static String exportFailedTitle;
 
 }
