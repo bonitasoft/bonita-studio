@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionNatureProvider;
@@ -213,15 +214,10 @@ AbstractBonitaDescriptionSection {
                                 .createExpression();
                         correlationValueToAdd.setContent(data.getName());
                         correlationValueToAdd.setName(data.getName());
-                        correlationValueToAdd
-                        .setReturnType(org.bonitasoft.studio.common.DataUtil
-                                .getTechnicalTypeFor(data));
-                        correlationValueToAdd
-                        .setType(ExpressionConstants.VARIABLE_TYPE);
-                        correlationValueToAdd.getReferencedElements().add(
-                                EcoreUtil.copy(data));
-                        keyValueCorrelationExpressionToAdd.getExpressions()
-                        .add(correlationValueToAdd);
+                        correlationValueToAdd .setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data));
+                        correlationValueToAdd .setType(ExpressionConstants.VARIABLE_TYPE);
+                        correlationValueToAdd.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data));
+                        keyValueCorrelationExpressionToAdd.getExpressions() .add(correlationValueToAdd);
                     }
                 }
                 Command addCommand = AddCommand

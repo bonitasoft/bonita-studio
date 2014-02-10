@@ -18,6 +18,7 @@
 package org.bonitasoft.studio.connector.model.definition.wizard;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryStore;
@@ -76,7 +77,7 @@ public class SelectConnectorConfigurationWizard extends Wizard  {
 				if(ExpressionConstants.VARIABLE_TYPE.equals(expression.getType())){
 					for(Data d : ModelHelper.getAccessibleData(currentConfiguraiton)){
 						if(d.getName().equals(expression.getContent())){
-							expression.getReferencedElements().add(EcoreUtil.copy(d));
+							expression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d));
 							break;
 						}
 					}
@@ -86,7 +87,7 @@ public class SelectConnectorConfigurationWizard extends Wizard  {
 				}else if(ExpressionConstants.PARAMETER_TYPE.equals(expression.getType())){
 					for(Parameter p : ModelHelper.getParentProcess(currentConfiguraiton).getParameters()){
 						if(p.getName().equals(expression.getContent())){
-							expression.getReferencedElements().add(EcoreUtil.copy(p));
+							expression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(p));
 							break;
 						}
 					}
@@ -98,7 +99,7 @@ public class SelectConnectorConfigurationWizard extends Wizard  {
 					if(parentForm != null){
 						for(Widget w : ModelHelper.getAllAccessibleWidgetInsideForm(parentForm)){
 							if(("field_"+w.getName()).equals(expression.getContent())){
-								expression.getReferencedElements().add(EcoreUtil.copy(w));
+								expression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(w));
 								break;
 							}
 						}

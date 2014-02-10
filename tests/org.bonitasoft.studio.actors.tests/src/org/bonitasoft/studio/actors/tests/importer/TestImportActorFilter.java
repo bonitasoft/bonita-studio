@@ -32,6 +32,8 @@ import org.bonitasoft.studio.common.repository.filestore.SourceFileStore;
 import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.connector.model.definition.ConnectorDefinition;
 import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementation;
+import org.bonitasoft.studio.dependencies.repository.DependencyFileStore;
+import org.bonitasoft.studio.dependencies.repository.DependencyRepositoryStore;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
@@ -46,6 +48,7 @@ public class TestImportActorFilter extends TestCase {
     private ActorFilterDefRepositoryStore cdrs;
     private ActorFilterImplRepositoryStore cirs;
     private ActorFilterSourceRepositoryStore csrs;
+    private DependencyRepositoryStore depStore;
 
     @Override
     protected void setUp() throws Exception {
@@ -53,6 +56,7 @@ public class TestImportActorFilter extends TestCase {
         cdrs = (ActorFilterDefRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ActorFilterDefRepositoryStore.class);
         cirs = (ActorFilterImplRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ActorFilterImplRepositoryStore.class);
         csrs = (ActorFilterSourceRepositoryStore)RepositoryManager.getInstance().getRepositoryStore(ActorFilterSourceRepositoryStore.class);
+        depStore = (DependencyRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(DependencyRepositoryStore.class);
     }
 
     public void testImportConnector() throws Exception {
@@ -72,6 +76,9 @@ public class TestImportActorFilter extends TestCase {
 
         SourceFileStore sourceFile = (SourceFileStore) csrs.getChild(impl.getImplementationClassname());
         assertNotNull("Source file not found after import",sourceFile);
+        
+        DependencyFileStore depFile = depStore.getChild(NamingUtils.toConnectorImplementationFilename(impl.getImplementationId(), impl.getImplementationVersion(), false)+".jar");
+        assertNull("Jar file should not be found after import with sources",depFile);
     }
 
     @Override

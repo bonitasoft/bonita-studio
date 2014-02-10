@@ -25,7 +25,6 @@ import org.bonitasoft.studio.common.repository.model.IRepositoryFileStore;
 import org.bonitasoft.studio.model.simulation.SimulationAbstractProcess;
 import org.bonitasoft.studio.model.simulation.SimulationPackage;
 import org.bonitasoft.studio.simulation.i18n.Messages;
-import org.bonitasoft.studio.simulation.repository.SimulationLoadProfileFileStore;
 import org.bonitasoft.studio.simulation.repository.SimulationLoadProfileRepositoryStore;
 import org.bonitasoft.studio.simulation.wizards.EditSimulationLoadProfileWizard;
 import org.eclipse.core.databinding.UpdateValueStrategy;
@@ -83,7 +82,7 @@ public class LoadProfileContribution extends AbstractPropertySectionContribution
 		
 		cCombo = widgetFactory.createCCombo(composite, SWT.BORDER);
 		cCombo.setLayoutData(GridDataFactory.swtDefaults().hint(200, SWT.DEFAULT).create());
-		final SimulationLoadProfileRepositoryStore profileStore = (SimulationLoadProfileRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(SimulationLoadProfileFileStore.class) ;
+		final SimulationLoadProfileRepositoryStore profileStore = RepositoryManager.getInstance().getRepositoryStore(SimulationLoadProfileRepositoryStore.class) ;
 		for ( IRepositoryFileStore artifact: profileStore.getChildren()) {
 			cCombo.add(artifact.getDisplayName());
 		}

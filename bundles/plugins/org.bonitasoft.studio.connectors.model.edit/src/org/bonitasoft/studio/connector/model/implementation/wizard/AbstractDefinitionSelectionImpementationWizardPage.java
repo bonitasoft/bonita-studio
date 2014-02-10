@@ -32,7 +32,6 @@ import org.bonitasoft.studio.connector.model.implementation.ConnectorImplementat
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.Converter;
 import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -261,6 +260,7 @@ public abstract class AbstractDefinitionSelectionImpementationWizardPage extends
 		setControl(mainComposite);
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected ConnectorDefinition getConnectorDefinitionFromId(String definitionId) {
 		List<Object> definitions = (List<Object>) explorer.getRightTableViewer().getInput();
 		for(Object c : definitions){

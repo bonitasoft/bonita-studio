@@ -22,6 +22,8 @@ import java.util.List;
 
 import org.bonitasoft.studio.common.extension.BonitaStudioExtensionRegistryManager;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
+import org.bonitasoft.studio.connector.model.definition.provider.ConnectorEditPlugin;
+import org.bonitasoft.studio.connector.model.definition.wizard.AbstractDefinitionWizard;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.preferences.BonitaPreferenceConstants;
@@ -38,8 +40,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import static org.bonitasoft.studio.common.Messages.bonitaStudioModuleName;
-
 /**
  * @author Romain Bioteau 
  *
@@ -50,6 +50,7 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage i
 
 	private BooleanFieldEditor askSaveDiagramAfterFirstSave;
 	private List<IPreferenceFieldEditorContribution> contributions;
+	private BooleanFieldEditor showConnectorEditionConfirmation;
 
 	public BonitaAdvancedPreferencePage() {
 		super(GRID);
@@ -68,6 +69,9 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage i
 
 		askSaveDiagramAfterFirstSave = new BooleanFieldEditor(BonitaPreferenceConstants.ASK_RENAME_ON_FIRST_SAVE, Messages.askRenameDiagram, getFieldEditorParent());
 		addField(askSaveDiagramAfterFirstSave);
+		
+		showConnectorEditionConfirmation = new BooleanFieldEditor(AbstractDefinitionWizard.HIDE_CONNECTOR_DEFINITION_CHANGE_WARNING, Messages.doNotDisplayConnectorDefConfirmationMessage, getFieldEditorParent());
+		addField(showConnectorEditionConfirmation);
 
 		IConfigurationElement[] elems = BonitaStudioExtensionRegistryManager.getInstance().getConfigurationElements("org.bonitasoft.studio.preferences.prefrenceFieldEditorContribution"); //$NON-NLS-1$
 		IPreferenceFieldEditorContribution prefEditorContrib = null;
@@ -118,6 +122,15 @@ public class BonitaAdvancedPreferencePage extends AbstractBonitaPreferencePage i
 	public void init(IWorkbench workbench) {
 		for(IPreferenceFieldEditorContribution contrib : contributions){
 			contrib.init(workbench) ;
+		}
+	}
+	
+	@Override
+	protected void initialize() {
+		super.initialize();
+		if(showConnectorEditionConfirmation != null){
+			showConnectorEditionConfirmation.setPreferenceStore(ConnectorEditPlugin.getPlugin().getPreferenceStore());
+			showConnectorEditionConfirmation.load();
 		}
 	}
 

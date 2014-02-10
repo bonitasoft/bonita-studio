@@ -15,11 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.bonitasoft.studio.common.platform.tools;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.bonitasoft.studio.common.ProjectUtil;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 
 /**
@@ -29,11 +32,22 @@ import org.bonitasoft.studio.common.log.BonitaStudioLog;
 public class CopyInputStream{
 
     private final InputStream _is;
-    private final ByteArrayOutputStream _copy = new ByteArrayOutputStream();
+    private FileOutputStream _copy ;
+	private File file;
 
 
     public CopyInputStream(InputStream is){
         _is = is;
+        try {
+			file = new File(ProjectUtil.getBonitaStudioWorkFolder(),"importTmp"+System.currentTimeMillis());
+			file.delete();
+			file.createNewFile();
+			_copy = new FileOutputStream(file);
+		} catch (FileNotFoundException e) {
+			BonitaStudioLog.error(e);
+		} catch (IOException e) {
+			BonitaStudioLog.error(e);
+		}
         try{
             copy();
         }catch(IOException ex){
@@ -44,17 +58,21 @@ public class CopyInputStream{
     private int copy() throws IOException {
         int read = 0;
         int chunk = 0;
-        byte[] data = new byte[256];
-
-        while(-1 != (chunk = _is.read(data))){
-            read += data.length;
-            _copy.write(data, 0, chunk);
+        byte[] buffer = new byte[256];
+        while (-1 != (chunk = _is.read(buffer))) {
+        	_copy.write(buffer, 0, chunk);
+        	read += chunk;
         }
         return read;
     }
 
     public InputStream getCopy() {
-        return new ByteArrayInputStream(_copy.toByteArray());
+        try {
+			return new FileInputStream(file);
+		} catch (IOException e) {
+			BonitaStudioLog.error(e);
+		}
+		return _is;
     }
     
     public void close(){
@@ -64,6 +82,9 @@ public class CopyInputStream{
 			} catch (IOException e) {
 				BonitaStudioLog.error(e);
 			}
+    	}
+    	if(file != null && file.exists()){
+    		file.delete();
     	}
     }
 }

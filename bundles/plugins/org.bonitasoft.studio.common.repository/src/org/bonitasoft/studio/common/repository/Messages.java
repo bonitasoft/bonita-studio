@@ -64,6 +64,9 @@ public final class Messages extends NLS {
 	public static String creatingStore;
 	public static String initializingProjectClasspath;
 
+	public static String writePermission;
+	public static String exportFailed;
+
     private Messages() {
         // Do not instantiate
     }

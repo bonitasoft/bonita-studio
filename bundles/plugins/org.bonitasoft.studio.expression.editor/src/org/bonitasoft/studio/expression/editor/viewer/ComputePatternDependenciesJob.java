@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
@@ -67,7 +67,7 @@ public class ComputePatternDependenciesJob extends Job {
 					index = finder.find(0,exp.getName(), true, true, true, false);
 					while (index != null) {
 						if(!addedExp.contains(exp.getName())){
-							deps.add(EcoreUtil.copy(exp.getReferencedElements().get(0)));
+							deps.add(ExpressionHelper.createDependencyFromEObject(exp.getReferencedElements().get(0)));
 							addedExp.add(exp.getName());
 						}
 						i = i + index.getLength();

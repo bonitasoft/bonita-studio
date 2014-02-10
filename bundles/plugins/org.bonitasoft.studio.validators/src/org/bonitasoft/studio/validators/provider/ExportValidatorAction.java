@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.validators.provider;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 import org.bonitasoft.studio.common.FragmentTypes;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
@@ -32,6 +33,8 @@ import org.bonitasoft.studio.validators.repository.ValidatorDescriptorFileStore;
 import org.bonitasoft.studio.validators.repository.ValidatorDescriptorRepositoryStore;
 import org.bonitasoft.studio.validators.repository.ValidatorSourceRepositorySotre;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -81,7 +84,13 @@ public class ExportValidatorAction extends Action implements IConfigurationExpor
                     SourceFileStore sourceFile = (SourceFileStore) sourceStore.getChild(className) ;
                     if(sourceFile != null){
                         File targetFile = new File(destDir,sourceFile.getName() + ".jar");
-                        sourceFile.exportAsJar(targetFile.getAbsolutePath(),true) ;
+                        try {
+							sourceFile.exportAsJar(targetFile.getAbsolutePath(),true) ;
+						} catch (InvocationTargetException e) {
+							MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailedTitle, e.getMessage());
+						} catch (InterruptedException e) {
+							MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailedTitle, e.getMessage());
+						}
                     }
                 }
             }

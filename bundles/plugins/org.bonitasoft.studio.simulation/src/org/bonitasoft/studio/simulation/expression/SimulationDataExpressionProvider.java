@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionEditor;
 import org.bonitasoft.studio.expression.editor.provider.IExpressionProvider;
@@ -36,7 +37,6 @@ import org.bonitasoft.studio.pics.PicsConstants;
 import org.bonitasoft.studio.simulation.SimulationDataUtil;
 import org.bonitasoft.studio.simulation.i18n.Messages;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -94,7 +94,7 @@ public class SimulationDataExpressionProvider implements IExpressionProvider {
         exp.setContent(d.getName()) ;
         exp.setName(d.getName()) ;
         exp.setReturnType(SimulationDataUtil.getTechnicalTypeFor(d)) ;
-        exp.getReferencedElements().add(EcoreUtil.copy(d)) ;
+        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d)) ;
         return exp;
     }
 

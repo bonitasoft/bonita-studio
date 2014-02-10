@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.configuration.action;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.bonitasoft.studio.common.FragmentTypes;
@@ -34,6 +35,8 @@ import org.bonitasoft.studio.model.process.AbstractProcess;
 import org.bonitasoft.studio.pics.Pics;
 import org.bonitasoft.studio.pics.PicsConstants;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * @author Romain Bioteau
@@ -75,7 +78,11 @@ public class ExportProcessDependenciesAction extends Action implements IConfigur
                     if(f.isExported() && f.getType().equals(FragmentTypes.JAR)){
                         IRepositoryFileStore fileStore = depStore.getChild(f.getValue()) ;
                         if(fileStore != null){
-                            fileStore.export(destDir.getAbsolutePath()) ;
+                            try {
+								fileStore.export(destDir.getAbsolutePath()) ;
+							} catch (IOException e) {
+								MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailedTitle, e.getMessage());
+							}
                         }
                     }
                 }

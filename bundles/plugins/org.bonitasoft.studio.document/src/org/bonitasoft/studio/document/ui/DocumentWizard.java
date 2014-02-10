@@ -3,11 +3,14 @@ package org.bonitasoft.studio.document.ui;
 
 import java.util.Collections;
 
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.document.DocumentPlugin;
 import org.bonitasoft.studio.document.i18n.Messages;
+import org.bonitasoft.studio.model.expression.Expression;
+import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Document;
 import org.bonitasoft.studio.model.process.Pool;
 import org.bonitasoft.studio.model.process.ProcessFactory;
@@ -32,6 +35,12 @@ public class DocumentWizard extends Wizard {
 		this.setWindowTitle(Messages.newDocument);
 		setDefaultPageImageDescriptor(Pics.getWizban());
 		document = ProcessFactory.eINSTANCE.createDocument();
+		Expression mimeTypeExpression = ExpressionHelper.createConstantExpression("", String.class.getName());
+		mimeTypeExpression.setReturnTypeFixed(true);
+		document.setMimeType(mimeTypeExpression);
+		Expression urlExpression = ExpressionHelper.createConstantExpression("", String.class.getName());
+		urlExpression.setReturnTypeFixed(true);
+		document.setUrl(urlExpression);
 	}
 	
 	

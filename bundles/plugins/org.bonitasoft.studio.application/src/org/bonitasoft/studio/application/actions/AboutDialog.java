@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.bonitasoft.studio.application.i18n.Messages;
+import org.bonitasoft.studio.common.ProductVersion;
 import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.eclipse.core.runtime.IProduct;
@@ -55,6 +56,7 @@ import org.eclipse.ui.internal.about.InstallationDialog;
 import org.eclipse.ui.internal.dialogs.AboutFeaturesDialog;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
+
 import static org.bonitasoft.studio.common.Messages.bonitaBPMCommunity;
 import static org.bonitasoft.studio.common.Messages.corporateName;
 /**
@@ -68,7 +70,7 @@ public class AboutDialog extends TrayDialog {
 
     private String productName;
 
-    private IProduct product;
+    protected IProduct product;
 
     private AboutBundleGroupData[] bundleGroupInfos;
 
@@ -86,7 +88,6 @@ public class AboutDialog extends TrayDialog {
      */
     public AboutDialog(Shell parentShell) {
         super(parentShell);
-
         product = Platform.getProduct();
         if (product != null) {
 			productName = product.getName();
@@ -198,12 +199,7 @@ public class AboutDialog extends TrayDialog {
             // if the about image is small enough, then show the text
             if (aboutImage == null
                     || aboutImage.getBounds().width <= MAX_IMAGE_WIDTH_FOR_TEXT) {
-            	
-            	String buildId = System.getProperty("eclipse.buildId", null) ; 
-            	String productVersion = System.getProperty("product.version", null) ; 
-                String aboutText = Messages.bind(Messages.aboutText,new Object[]{productVersion,buildId, bonitaBPMCommunity,corporateName }) ;
-               
-                
+            	String aboutText = getAboutText();
                 if (aboutText != null) {
 					item = AboutTextManager.scan(aboutText);
 				}
@@ -394,6 +390,13 @@ public class AboutDialog extends TrayDialog {
 
         return workArea;
     }
+
+	protected String getAboutText() {
+		String buildId = System.getProperty("eclipse.buildId", null) ; 
+		String productVersion = System.getProperty("product.version", null) ; 
+		String aboutText = Messages.bind(Messages.aboutText,new Object[]{productVersion,buildId, bonitaBPMCommunity,corporateName,ProductVersion.CURRENT_YEAR}) ;
+		return aboutText;
+	}
 
     /**
 	 * Create the context menu for the text widget.

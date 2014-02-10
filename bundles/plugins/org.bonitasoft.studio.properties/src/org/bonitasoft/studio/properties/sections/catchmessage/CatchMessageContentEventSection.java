@@ -20,6 +20,7 @@ package org.bonitasoft.studio.properties.sections.catchmessage;
 import java.util.List;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.properties.AbstractBonitaDescriptionSection;
 import org.bonitasoft.studio.expression.editor.filter.AvailableExpressionTypeFilter;
@@ -157,7 +158,7 @@ public class CatchMessageContentEventSection extends AbstractBonitaDescriptionSe
 						dataExpression.setContent(data.getName());
 						dataExpression.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(data));
 						dataExpression.setType(ExpressionConstants.VARIABLE_TYPE);
-						dataExpression.getReferencedElements().add(EcoreUtil.copy(data));
+						dataExpression.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(data));
 						newActionMessageContent.setLeftOperand(dataExpression);
 					}
 				}

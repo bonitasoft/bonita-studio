@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bonitasoft.studio.common.ExpressionConstants;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.model.expression.Expression;
 import org.bonitasoft.studio.model.expression.ExpressionFactory;
 import org.bonitasoft.studio.model.process.Data;
@@ -77,7 +78,7 @@ public class DataExpressionNatureProvider extends ExpressionContentProvider impl
         exp.setContent(d.getName()) ;
         exp.setName(d.getName()) ;
         exp.setReturnType(org.bonitasoft.studio.common.DataUtil.getTechnicalTypeFor(d)) ;
-        exp.getReferencedElements().add(EcoreUtil.copy(d)) ;
+        exp.getReferencedElements().add(ExpressionHelper.createDependencyFromEObject(d)) ;
         return exp;
     }
 
