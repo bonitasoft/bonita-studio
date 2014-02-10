@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.common.repository.ui.wizard;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -345,7 +346,11 @@ public class ExportRepositoryWizardPage extends WizardPage {
 						}
 						for(IRepositoryFileStore file : getArtifacts()){
 							if(file.getResource() != null && file.getResource().exists()){
-								file.export(dest.getAbsolutePath()) ;
+								try {
+									file.export(dest.getAbsolutePath()) ;
+								} catch (IOException e) {
+									throw new InvocationTargetException(e);
+								}
 								monitor.worked(1) ;
 							}
 						}
@@ -353,7 +358,8 @@ public class ExportRepositoryWizardPage extends WizardPage {
 					}
 				}) ;
 			} catch (Exception e){
-				BonitaStudioLog.error(e) ;
+				MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.exportFailed, e.getCause().getMessage());
+				return false;
 			}
 
 			return true ;

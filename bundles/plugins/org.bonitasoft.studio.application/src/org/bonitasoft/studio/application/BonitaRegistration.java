@@ -41,6 +41,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Baptiste Mesta
@@ -75,14 +76,17 @@ public class BonitaRegistration {
 		infos2.put("proc.number", String.valueOf(Runtime.getRuntime().availableProcessors()));
 		infos2.put("mem.total", String.valueOf(Runtime.getRuntime().totalMemory() / 1048576) + "mo");
 		infos2.put("mem.max", String.valueOf(Runtime.getRuntime().maxMemory() / 1048576) + "mo");
-		infos2.put("screen.number", String.valueOf(Display.getCurrent().getMonitors().length));
-		Rectangle b = Display.getCurrent().getMonitors()[0].getBounds();
-		String rez = b.width + "x" + b.height;
-		infos2.put("screen.main.size", rez);
-		if (Display.getCurrent().getMonitors().length == 2) {
-			b = Display.getCurrent().getMonitors()[1].getBounds();
-			rez = b.width + "x" + b.height;
-			infos2.put("screen.sec.size", rez);
+		Display display = PlatformUI.getWorkbench().getDisplay();
+		if(display != null){
+			infos2.put("screen.number", String.valueOf(display.getMonitors().length));
+			Rectangle b = display.getMonitors()[0].getBounds();
+			String rez = b.width + "x" + b.height;
+			infos2.put("screen.main.size", rez);
+			if (display.getMonitors().length == 2) {
+				b = display.getMonitors()[1].getBounds();
+				rez = b.width + "x" + b.height;
+				infos2.put("screen.sec.size", rez);
+			}
 		}
 		// get ip adresses
 		Enumeration<NetworkInterface> e;
@@ -125,7 +129,7 @@ public class BonitaRegistration {
 	public static void sendUserInfo(final IPreferenceStore prefStore, final String email1, final HashMap<String, String> infos2) {
 		// send info to bonitasoft
 		String data = "";
-		
+
 		try {
 
 			// create email
@@ -197,7 +201,7 @@ public class BonitaRegistration {
 						// may not be online saving info for sending it later
 						prefStore.setValue(BonitaRegistration.BONITA_USER_INFOS, data);
 						prefStore.setValue(BonitaRegistration.BONITA_INFO_SENT, 0);
-						 return Status.CANCEL_STATUS;
+						return Status.CANCEL_STATUS;
 					}
 					return Status.OK_STATUS;
 				}

@@ -125,10 +125,8 @@ public class ExpressionHelper {
 			return widgetDependency;
 		}
 		if(dependency instanceof Data){
-			Data dataDependency = (Data) ProcessFactory.eINSTANCE.create(dependency.eClass());
-			dataDependency.setName(((Data) dependency).getName());
-			dataDependency.setDatasourceId(((Data) dependency).getDatasourceId());
-			dataDependency.setDataType(((Data) dependency).getDataType());
+			Data dataDependency = (Data) EcoreUtil.copy(dependency);
+			dataDependency.setDefaultValue(null);
 			return dataDependency;
 		}
 		if(dependency instanceof Document){
@@ -138,9 +136,12 @@ public class ExpressionHelper {
 		}
 		if(dependency instanceof SearchIndex){
 			SearchIndex searchIndexDependency = (SearchIndex) ProcessFactory.eINSTANCE.create(dependency.eClass());
-			Expression nameExpression = EcoreUtil.copy(((SearchIndex) dependency).getName());
-			nameExpression.getReferencedElements().clear();
-			searchIndexDependency.setName(nameExpression);
+			Expression name = ((SearchIndex) dependency).getName();
+			if(name != null){
+				Expression nameExpression = EcoreUtil.copy(name);
+				nameExpression.getReferencedElements().clear();
+				searchIndexDependency.setName(nameExpression);
+			}
 			return searchIndexDependency;
 		}
 		return EcoreUtil.copy(dependency);

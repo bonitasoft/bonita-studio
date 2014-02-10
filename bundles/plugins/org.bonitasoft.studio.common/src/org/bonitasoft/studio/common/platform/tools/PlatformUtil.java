@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -503,6 +504,11 @@ public class PlatformUtil {
 		if(window != null){
 			final IWorkbenchPage activePage = window.getActivePage();
 			if(activePage != null){
+				for(IViewReference vr : activePage.getViewReferences()){
+					if(vr.getId().equals("org.eclipse.ui.internal.introview")){
+						return true;
+					}
+				}
 				final IWorkbenchPart part = activePage.getActivePart() ;
 				if(part != null){
 					final IIntroManager introManager = PlatformUI.getWorkbench().getIntroManager();

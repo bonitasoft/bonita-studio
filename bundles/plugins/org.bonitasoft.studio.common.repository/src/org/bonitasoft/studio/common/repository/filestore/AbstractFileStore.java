@@ -17,6 +17,7 @@
 package org.bonitasoft.studio.common.repository.filestore;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -211,7 +212,8 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
 	}
 
 	@Override
-	public void export(String targetAbsoluteFilePath) {
+	public void export(String targetAbsoluteFilePath) throws IOException {
+		checkWritePermission(new File(targetAbsoluteFilePath));
 		IResource file = getResource() ;
 		if(file != null){
 			File to = new File(targetAbsoluteFilePath) ;
@@ -258,7 +260,19 @@ public abstract class AbstractFileStore implements IRepositoryFileStore, IFileSt
 		}
 	}
 
-
+	protected boolean checkWritePermission(File file) throws IOException{
+		String path = file.getAbsolutePath();
+		if(!file.isDirectory()){
+			file = file.getParentFile();
+		}
+		if(file.canWrite()){
+			file = new File(path);
+			return true;
+		}else{
+			throw new IOException(Messages.bind(Messages.writePermission,file.getAbsolutePath()));
+		}
+	}
+	
 	@Override
 	public void partOpened(IWorkbenchPart part) {}
 
