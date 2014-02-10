@@ -69,13 +69,13 @@ public class AbstractFileStoreTest {
 	 */
 	@Test
 	public void shouldHaveWritePermission_ReturnsTrue() throws Exception {
-		when(exportFile.canWrite()).thenReturn(true);
+		when(parentExportFile.canWrite()).thenReturn(true);
 		assertThat(fileStore.checkWritePermission(exportFile)).isTrue();
 	}
 	
 	@Test(expected=IOException.class)
 	public void shouldHaveWritePermission_ThrowsAnIOException() throws Exception {
-		when(exportFile.canWrite()).thenReturn(false);
+		when(parentExportFile.canWrite()).thenReturn(false);
 		fileStore.checkWritePermission(exportFile);
 	}
 
