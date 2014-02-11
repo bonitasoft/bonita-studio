@@ -415,6 +415,9 @@ public class ExportBarWizardPage extends WizardPage implements ICheckStateListen
 		//Validate before run
 		final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
 		Command cmd = cmdService.getCommand("org.bonitasoft.studio.validation.batchValidation");
+		if(!cmd.isEnabled()){
+			return true;
+		}
 		final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class) ;
 		Set<String> procFiles = new HashSet<String>();
 		for(AbstractProcess p : selectedList){
