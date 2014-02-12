@@ -19,12 +19,15 @@ package org.bonitasoft.studio.properties.sections.forms.commands;
 import java.util.List;
 
 import org.bonitasoft.studio.common.NamingUtils;
+import org.bonitasoft.studio.common.emf.tools.ExpressionHelper;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.gmf.tools.CopyEObjectFeaturesCommand;
 import org.bonitasoft.studio.model.form.Form;
 import org.bonitasoft.studio.model.form.FormFactory;
 import org.bonitasoft.studio.model.form.FormPackage;
+import org.bonitasoft.studio.model.form.MultipleValuatedFormField;
 import org.bonitasoft.studio.model.form.ViewForm;
+import org.bonitasoft.studio.model.form.Widget;
 import org.bonitasoft.studio.model.process.Element;
 import org.bonitasoft.studio.properties.sections.forms.FormsUtils;
 import org.eclipse.core.commands.ExecutionException;
@@ -51,7 +54,7 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
     private final String formDesc;
     private final EStructuralFeature feature;
 
-    public DuplicateFormCommand(Element pageFlow2, EStructuralFeature feature, Form baseForm,String formName, String id, String formDesc, TransactionalEditingDomain editingDomain) {
+	public DuplicateFormCommand(Element pageFlow2, EStructuralFeature feature, Form baseForm, String id, String formDesc, TransactionalEditingDomain editingDomain) {
         super(editingDomain, "Duplicate form", getWorkspaceFiles(pageFlow2));
         pageFlow = pageFlow2;
         this.baseForm = baseForm;
@@ -81,6 +84,10 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
             }else{
                 form = FormFactory.eINSTANCE.createViewForm();
                 CopyEObjectFeaturesCommand.copyFeatures(EcoreUtil.copy(baseForm), form);
+
+
+				cleanWidgetsContingenciesPropertiesOfForm(form);
+                
             }
         }
 
@@ -94,5 +101,26 @@ public class DuplicateFormCommand  extends AbstractTransactionalCommand {
         FormsUtils.openDiagram(form,getEditingDomain());
         return CommandResult.newOKCommandResult(form);
     }
+
+
+	protected void cleanWidgetsContingenciesPropertiesOfForm(Form form){
+		List<Widget> widgets = form.getWidgets();
+		for(Widget widget : widgets){
+			if( widget.getDependOn() != null ){
+				widget.getDependOn().clear();
+			}
+			ExpressionHelper.clearExpression(widget.getDisplayAfterEventDependsOnConditionScript());
+
+			ExpressionHelper.clearExpression(widget.getDisplayDependentWidgetOnlyAfterFirstEventTriggeredAndCondition());
+
+			ExpressionHelper.clearExpression(widget.getAfterEventExpression());
+			if(widget instanceof MultipleValuatedFormField){
+				ExpressionHelper.clearExpression(((MultipleValuatedFormField)widget).getDefaultExpressionAfterEvent());
+			}
+		
+
+		}
+	}
+
 
 }
