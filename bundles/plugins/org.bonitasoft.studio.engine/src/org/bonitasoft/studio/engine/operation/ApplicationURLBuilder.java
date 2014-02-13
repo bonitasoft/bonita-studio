@@ -49,7 +49,6 @@ public class ApplicationURLBuilder {
     public static final String MODE_APP ="app";
     public static final String MODE_FORM="form";
 
-    private static final String LOCALE_PARAM = "locale";
     private final AbstractProcess process;
     private final Long processId;
     private final String configurationId;
@@ -72,8 +71,6 @@ public class ApplicationURLBuilder {
         Configuration conf = getConfiguration(process, configurationId) ;
         IPreferenceStore store =  BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore() ;
         String locale = store.getString(BonitaPreferenceConstants.CURRENT_UXP_LOCALE) ;
-        String port = store.getString(BonitaPreferenceConstants.CONSOLE_PORT);
-        String host = store.getString(BonitaPreferenceConstants.CONSOLE_HOST) ;
         String token = "" ;
         String userName = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_NAME) ;
         String password = BonitaStudioPreferencesPlugin.getDefault().getPreferenceStore().getString(BonitaPreferenceConstants.USER_PASSWORD) ;
@@ -83,12 +80,10 @@ public class ApplicationURLBuilder {
         }
 
         final String loginURL = BOSWebServerManager.getInstance().generateLoginURL(userName, password) ;
-        final String runUrl = "http://"+ host+":"+ port + APPLI_PATH + token +"ui=form&locale="+locale+"#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion(), "UTF-8")+"$entry&process="+processId+"&mode="+mode;
+        final String runUrl = APPLI_PATH + token +"ui=form&locale="+locale+"#form="+URLEncoder.encode(process.getName()+"--"+process.getVersion(), "UTF-8")+"$entry&process="+processId+"&mode="+mode;
         return new URL(loginURL+"&redirectUrl="+URLEncoder.encode(runUrl, "UTF-8"));
     }
     
-   
-
     private Configuration getConfiguration(final AbstractProcess process,String configurationId) {
         Configuration configuration = null ;
         final ProcessConfigurationRepositoryStore processConfStore = (ProcessConfigurationRepositoryStore) RepositoryManager.getInstance().getRepositoryStore(ProcessConfigurationRepositoryStore.class) ;
