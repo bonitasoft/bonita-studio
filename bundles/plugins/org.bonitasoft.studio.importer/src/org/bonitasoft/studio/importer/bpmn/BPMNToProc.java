@@ -1686,8 +1686,25 @@ public class BPMNToProc extends ToProcProcessor {
 		}
 	}
 
-	private void populateTimerEvent(TFlowNode flowNode)
-			throws ProcBuilderException {
+	private void populateTimerEvent(TFlowNode flowNode) throws ProcBuilderException {
+		TTimerEventDefinition timerEventDefinition = getTimerEventDefinition(flowNode);
+		final TExpression timeDate = timerEventDefinition.getTimeDate();
+		if (timeDate != null) {
+			addTimerEventConditionIfProvided(timeDate);
+		} else {
+			final TExpression timeDuration = timerEventDefinition.getTimeDuration();
+			if (timeDuration != null) {
+				addTimerEventConditionIfProvided(timeDuration);
+			} else {
+				final TExpression timeCycle = timerEventDefinition.getTimeCycle();
+				if (timeCycle != null) {
+					addTimerEventConditionIfProvided(timeCycle);
+				}
+			}
+		}
+	}
+
+	private TTimerEventDefinition getTimerEventDefinition(TFlowNode flowNode) {
 		TTimerEventDefinition timerEventDefinition;
 		if (flowNode instanceof TCatchEvent) {
 			timerEventDefinition = ((TTimerEventDefinition) ((TCatchEvent) flowNode)
@@ -1696,39 +1713,16 @@ public class BPMNToProc extends ToProcProcessor {
 			timerEventDefinition = ((TTimerEventDefinition) ((TThrowEvent) flowNode)
 					.getEventDefinition().get(0));
 		}
-		final TExpression timeDate = timerEventDefinition.getTimeDate();
-		if (timeDate != null) {
-			FeatureMap mixedTimedate = timeDate.getMixed();
-			if (mixedTimedate != null && mixedTimedate.size() != 0
-					&& mixedTimedate.getValue(0) != null) {
-				builder.addTimerEventCondition(mixedTimedate.getValue(0)
-						.toString());
-			}
-		} else {
-			final TExpression timeDuration = timerEventDefinition
-					.getTimeDuration();
-			if (timeDuration != null) {
-				final FeatureMap mixedTimeDuration = timeDuration
-						.getMixed();
-				if (mixedTimeDuration != null
-						&& mixedTimeDuration.size() != 0
-						&& mixedTimeDuration.getValue(0) != null) {
-					builder.addTimerEventCondition(mixedTimeDuration
-							.getValue(0).toString());
-				}
-			} else {
-				final TExpression timeCycle = timerEventDefinition
-						.getTimeCycle();
-				if (timeCycle != null) {
-					final FeatureMap mixedTimeCycle = timeCycle.getMixed();
-					if (mixedTimeCycle != null
-							&& mixedTimeCycle.size() != 0
-							&& mixedTimeCycle.getValue(0) != null) {
-						builder.addTimerEventCondition(mixedTimeCycle
-								.getValue(0).toString());
-					}
-				}
-			}
+		return timerEventDefinition;
+	}
+
+	private void addTimerEventConditionIfProvided(final TExpression timeDate)
+			throws ProcBuilderException {
+		FeatureMap mixedTimedate = timeDate.getMixed();
+		if (mixedTimedate != null && !mixedTimedate.isEmpty()
+				&& mixedTimedate.getValue(0) != null) {
+			builder.addTimerEventCondition(mixedTimedate.getValue(0)
+					.toString());
 		}
 	}
 
@@ -1914,22 +1908,16 @@ public class BPMNToProc extends ToProcProcessor {
 		return null;
 	}
 
-	private final String[] toStringTable = { "string", "Name", "NCName",
-			"QName", "normalizedString" };
-	private final Set<String> toString = new HashSet<String>(
-			Arrays.asList(toStringTable));
-	private final String[] toIntegerTable = { "byte", "int", "integer",
+	private final static String[] toStringTable = { "string", "Name", "NCName", "QName", "normalizedString" };
+	private final static Set<String> toString = new HashSet<String>(Arrays.asList(toStringTable));
+	private final static String[] toIntegerTable = { "byte", "int", "integer",
 			"nonPositiveInteger", "nonNegativeInteger", "positiveInteger",
 			"short", "unsignedByte", "unsignedInt", "unsignedShort" };
-	private final Set<String> toInteger = new HashSet<String>(
-			Arrays.asList(toIntegerTable));
-	private final String[] toDecimalTable = { "decimal", "double", "float",
-	"unsignedLong" };
-	private final Set<String> toDecimal = new HashSet<String>(
-			Arrays.asList(toDecimalTable));
-	private final String[] toDateTable = { "date", "dateTime" };
-	private final Set<String> toDate = new HashSet<String>(
-			Arrays.asList(toDateTable));
+	private final static Set<String> toInteger = new HashSet<String>(Arrays.asList(toIntegerTable));
+	private final static String[] toDecimalTable = { "decimal", "double", "float", "unsignedLong" };
+	private final static Set<String> toDecimal = new HashSet<String>(Arrays.asList(toDecimalTable));
+	private final static String[] toDateTable = { "date", "dateTime" };
+	private final static Set<String> toDate = new HashSet<String>(Arrays.asList(toDateTable));
 	private boolean isInSubProcEventContainerSearch;
 
 	/**
@@ -2143,7 +2131,7 @@ public class BPMNToProc extends ToProcProcessor {
 
 		if (flowNode instanceof TCatchEvent) {
 			if (flowNode instanceof TStartEvent) {
-				if (((TStartEvent) flowNode).getEventDefinition().size() > 0) {
+				if (!((TStartEvent) flowNode).getEventDefinition().isEmpty()) {
 					for (TEventDefinition e : ((TStartEvent) flowNode)
 							.getEventDefinition()) {
 						if (e instanceof TMessageEventDefinition) {
@@ -2160,7 +2148,7 @@ public class BPMNToProc extends ToProcProcessor {
 				return EventType.START;
 			}
 			if (flowNode instanceof TBoundaryEvent) {
-				if (((TBoundaryEvent) flowNode).getEventDefinition().size() > 0) {
+				if (!((TBoundaryEvent) flowNode).getEventDefinition().isEmpty()) {
 					for (TEventDefinition e : ((TBoundaryEvent) flowNode)
 							.getEventDefinition()) {
 						if (e instanceof TMessageEventDefinition) {
@@ -2178,7 +2166,7 @@ public class BPMNToProc extends ToProcProcessor {
 				}
 
 			} else {
-				if (((TCatchEvent) flowNode).getEventDefinition().size() > 0) {
+				if (!((TCatchEvent) flowNode).getEventDefinition().isEmpty()) {
 					for (TEventDefinition e : ((TCatchEvent) flowNode)
 							.getEventDefinition()) {
 						EventType res = getCorrespondingIntermediateEventType(e);
@@ -2188,7 +2176,7 @@ public class BPMNToProc extends ToProcProcessor {
 					}
 				} else {
 					EList<QName> eventDefinitionRef = ((TCatchEvent) flowNode).getEventDefinitionRef();
-					if(eventDefinitionRef.size() > 0){
+					if(!eventDefinitionRef.isEmpty()){
 						for (QName qNameEventDefRef : eventDefinitionRef) {
 							TEventDefinition eventDefinition = findCorrespondingEventDefinition(qNameEventDefRef);
 							EventType res = getCorrespondingIntermediateEventType(eventDefinition);
@@ -2202,7 +2190,7 @@ public class BPMNToProc extends ToProcProcessor {
 		}
 		if (flowNode instanceof TThrowEvent) {
 			if (flowNode instanceof TEndEvent) {
-				if (((TEndEvent) flowNode).getEventDefinition().size() > 0) {
+				if (!((TEndEvent) flowNode).getEventDefinition().isEmpty()) {
 					for (TEventDefinition e : ((TEndEvent) flowNode)
 							.getEventDefinition()) {
 						if (e instanceof TMessageEventDefinition) {
@@ -2219,7 +2207,7 @@ public class BPMNToProc extends ToProcProcessor {
 				return EventType.END;
 			}
 			if (flowNode instanceof TThrowEvent) {
-				if (((TThrowEvent) flowNode).getEventDefinition().size() > 0) {
+				if (!((TThrowEvent) flowNode).getEventDefinition().isEmpty()) {
 					for (TEventDefinition e : ((TThrowEvent) flowNode)
 							.getEventDefinition()) {
 						if (e instanceof TMessageEventDefinition) {
