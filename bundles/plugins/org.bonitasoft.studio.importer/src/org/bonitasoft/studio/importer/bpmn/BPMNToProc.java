@@ -602,29 +602,11 @@ public class BPMNToProc extends ToProcProcessor {
 //						}
 						builder.setCurrentStep(idOfParent);
 
-						String name;
-						if (flowNode.getName() != null
-								&& flowNode.getName().length() > 0) {
-							name = flowNode.getName();
-						} else {
-							name = flowNode.getId();
-						}
+						String name = computeBoundaryName(flowNode);
 						builder.addEvent(flowNode.getId(), name, null, null,
 								eventType);
 
-						// Documentation
-						StringBuilder sb = new StringBuilder();
-						for (TDocumentation doc : flowNode.getDocumentation()) {
-							final Iterator<org.eclipse.emf.ecore.util.FeatureMap.Entry> iterator = doc
-									.getMixed().iterator();
-							while (iterator.hasNext()) {
-								FeatureMap.Entry entry = iterator.next();
-								if (FeatureMapUtil.isText(entry)) {
-									sb.append(entry.getValue()).append("\n");
-								}
-							}
-						}
-						builder.addDescription(sb.toString());
+						builder.addDescription(retrieveDocumentation(flowNode));
 						populateEvent(flowNode, eventType);
 
 					} else if (flowNode instanceof TBoundaryEvent) {
@@ -634,6 +616,17 @@ public class BPMNToProc extends ToProcProcessor {
 				}
 			}
 		}
+	}
+
+	private String computeBoundaryName(TEvent flowNode) {
+		String name;
+		if (flowNode.getName() != null
+				&& flowNode.getName().length() > 0) {
+			name = flowNode.getName();
+		} else {
+			name = flowNode.getId();
+		}
+		return name;
 	}
 
 	/**
@@ -1018,57 +1011,13 @@ public class BPMNToProc extends ToProcProcessor {
 
 				/* Search the graphical BPMNEdge */
 				final String sequenceFlowID = sequenceFlow.getId();
-				BPMNEdge edge = getBPMNEdgeFor(sequenceFlowID);
-				PointList bendpoints = new PointList();
-				if (edge != null) {
-					/* Convert WayPoints to PointList */
-					EList<org.omg.spec.dd.dc.Point> wayPoints = edge
-							.getWaypoint();
-					Point containerLocation = getContainerLocationFor(
-							sequenceFlowID).getNegated();
-					for (int i = 0; i < wayPoints.size(); i++) {
-						org.omg.spec.dd.dc.Point ddp = wayPoints.get(i);
-						bendpoints.insertPoint(new Point((int) ddp.getX(),
-								(int) ddp.getY()).translate(containerLocation),
-								i);
-					}
-				}
+				final PointList bendpoints = computeBendpoints(sequenceFlowID);
 
 				/*
 				 * Search the incoming element and look if we are a defaultFlow
 				 * for him
 				 */
-				boolean isDefault = false;
-				final String sourceRef = sequenceFlow.getSourceRef();
-				if (sourceRef != null && sourceRef.length() != 0) {
-					for (TProcess tProcess : bpmnProcess) {
-						for (TFlowElement tFlowElement : tProcess
-								.getFlowElement()) {
-							if (sourceRef.equals(tFlowElement.getId())) {
-								if (tFlowElement instanceof TInclusiveGateway) {
-									if (sequenceFlowID.equals(
-											((TInclusiveGateway) tFlowElement)
-											.getDefault())) {
-										isDefault = true;
-									}
-								} else if (tFlowElement instanceof TExclusiveGateway) {
-									if (sequenceFlowID.equals(
-											((TExclusiveGateway) tFlowElement)
-											.getDefault())) {
-										isDefault = true;
-									}
-								} else if (tFlowElement instanceof TComplexGateway) {
-									if (sequenceFlowID.equals(
-											((TComplexGateway) tFlowElement)
-											.getDefault())) {
-										isDefault = true;
-									}
-								}
-								break;
-							}
-						}
-					}
-				}
+				boolean isDefault = isSequenceFlowDefault(sequenceFlow,	sequenceFlowID);
 
 				String sourceId = sequenceFlow.getSourceRef();
 				String targetId = sequenceFlow.getTargetRef();
@@ -1085,6 +1034,61 @@ public class BPMNToProc extends ToProcProcessor {
 				}
 			}
 		}
+	}
+
+	private boolean isSequenceFlowDefault(TSequenceFlow sequenceFlow,
+			final String sequenceFlowID) {
+		boolean isDefault = false;
+		final String sourceRef = sequenceFlow.getSourceRef();
+		if (sourceRef != null && sourceRef.length() != 0) {
+			for (TProcess tProcess : bpmnProcess) {
+				for (TFlowElement tFlowElement : tProcess
+						.getFlowElement()) {
+					if (sourceRef.equals(tFlowElement.getId())) {
+						if (tFlowElement instanceof TInclusiveGateway) {
+							if (sequenceFlowID.equals(
+									((TInclusiveGateway) tFlowElement)
+									.getDefault())) {
+								isDefault = true;
+							}
+						} else if (tFlowElement instanceof TExclusiveGateway) {
+							if (sequenceFlowID.equals(
+									((TExclusiveGateway) tFlowElement)
+									.getDefault())) {
+								isDefault = true;
+							}
+						} else if (tFlowElement instanceof TComplexGateway) {
+							if (sequenceFlowID.equals(
+									((TComplexGateway) tFlowElement)
+									.getDefault())) {
+								isDefault = true;
+							}
+						}
+						break;
+					}
+				}
+			}
+		}
+		return isDefault;
+	}
+
+	private PointList computeBendpoints(final String sequenceFlowID) {
+		BPMNEdge edge = getBPMNEdgeFor(sequenceFlowID);
+		PointList bendpoints = new PointList();
+		if (edge != null) {
+			/* Convert WayPoints to PointList */
+			EList<org.omg.spec.dd.dc.Point> wayPoints = edge
+					.getWaypoint();
+			Point containerLocation = getContainerLocationFor(
+					sequenceFlowID).getNegated();
+			for (int i = 0; i < wayPoints.size(); i++) {
+				org.omg.spec.dd.dc.Point ddp = wayPoints.get(i);
+				bendpoints.insertPoint(new Point((int) ddp.getX(),
+						(int) ddp.getY()).translate(containerLocation),
+						i);
+			}
+		}
+		return bendpoints;
 	}
 
 	/**
@@ -1152,21 +1156,7 @@ public class BPMNToProc extends ToProcProcessor {
 									location, null, gateType);
 							builder.addDescription(documentation);
 						} else if (isSubprocessEvent) {
-							TSubProcess bpmnSubProcess = ((TSubProcess) flowNode);
-							Dimension sizeOFEventSubProc = getSizeFor(bpmnSubProcess
-									.getId());
-							BPMNShape bpmnShape = getBPMNShapeForBpmnID(flowNode
-									.getId());
-							builder.addEventSubprocess(flowNode.getId(), name,
-									location, sizeOFEventSubProc,
-									!bpmnShape.isIsExpanded());
-							builder.addDescription(documentation);
-							subprocEvent = bpmnSubProcess;
-							processActivities(bpmnSubProcess.getFlowElement(),
-									fromSubProcess);
-							processTransitions(bpmnSubProcess.getFlowElement());
-							builder.switchToParentContainer();
-							subprocEvent = null;
+							processSubProcessEvent(fromSubProcess, flowNode, location, name, documentation);
 						} else {
 							String id = flowNode.getId();
 							if (flowNode instanceof TSubProcess) {
@@ -1219,6 +1209,26 @@ public class BPMNToProc extends ToProcProcessor {
 			}
 		}
 		return activityNumber;
+	}
+
+	private void processSubProcessEvent(boolean fromSubProcess,
+			TFlowNode flowNode, Point location, String name,
+			final String documentation) throws ProcBuilderException {
+		TSubProcess bpmnSubProcess = ((TSubProcess) flowNode);
+		Dimension sizeOFEventSubProc = getSizeFor(bpmnSubProcess
+				.getId());
+		BPMNShape bpmnShape = getBPMNShapeForBpmnID(flowNode
+				.getId());
+		builder.addEventSubprocess(flowNode.getId(), name,
+				location, sizeOFEventSubProc,
+				!bpmnShape.isIsExpanded());
+		builder.addDescription(documentation);
+		subprocEvent = bpmnSubProcess;
+		processActivities(bpmnSubProcess.getFlowElement(),
+				fromSubProcess);
+		processTransitions(bpmnSubProcess.getFlowElement());
+		builder.switchToParentContainer();
+		subprocEvent = null;
 	}
 
 	private String computeBonitaNameOf(TFlowNode flowNode) {
@@ -1814,24 +1824,13 @@ public class BPMNToProc extends ToProcProcessor {
 			dataType = DataType.STRING;
 		}
 
-		String name = id;
-		if (flowElement.getName() == null) {
-			if (flowElement.getId() == null) {
-				name = "data" + dataNameByItemDefinition.size();
-			} else {
-				name = flowElement.getId();
-			}
-		} else {
-			name = flowElement.getName();
-		}
+		String name = createBonitaDataName(flowElement, id);
 		String defaultValueContent = "";
 		String defaultValueReturnType = "";
 		String defaultValueInterpreter = "";
 		if (flowElement instanceof TActivity) {
-			for (TDataInputAssociation dataInputAssociation : ((TActivity) flowElement)
-					.getDataInputAssociation()) {
-				for (TAssignment assignment : dataInputAssociation
-						.getAssignment()) {
+			for (TDataInputAssociation dataInputAssociation : ((TActivity) flowElement).getDataInputAssociation()) {
+				for (TAssignment assignment : dataInputAssociation.getAssignment()) {
 					TExpression to = assignment.getTo();
 					if (to != null) {
 						FeatureMap toMixed = to.getMixed();
@@ -1841,39 +1840,19 @@ public class BPMNToProc extends ToProcProcessor {
 								String entryValue = ((String) entry.getValue());// .replaceFirst(Matcher.quoteReplacement("getDataInput('"),
 								// "").replace(Matcher.quoteReplacement("\')"),
 								// "");
-								TDataInput dataInput = getDataInputById(
-										(TActivity) flowElement, entryValue);
+								TDataInput dataInput = getDataInputById((TActivity) flowElement, entryValue);
 								if (dataInput != null) {
-									TProperty property = getPropertyByItemSubjectRef(
-											((TActivity) flowElement),
-											dataInput.getItemSubjectRef());
+									TProperty property = getPropertyByItemSubjectRef(((TActivity) flowElement),	dataInput.getItemSubjectRef());
 									if (property != null) {
-										TExpression fromExpression = assignment
-												.getFrom();
-										FeatureMap fromMixed = fromExpression
-												.getMixed();
-										if (fromMixed != null && !fromMixed.isEmpty()) {
-											Entry fromEntry = fromMixed.get(0);
-											if (fromEntry != null) {
-												defaultValueContent = (String) fromEntry
-														.getValue();
-											}
-										}
+										TExpression fromExpression = assignment.getFrom();
+										defaultValueContent = retrieveDefaultValueContent(fromExpression);
 
 										if (fromExpression instanceof TFormalExpression) {
 											TFormalExpression fromFormalExpression = (TFormalExpression) fromExpression;
-											String language = fromFormalExpression
-													.getLanguage();
-											if (language == null) {
-												language = definitions
-														.getExpressionLanguage();
-											}
-											defaultValueInterpreter = language;
-											QName evaluatesToTypeRef = fromFormalExpression
-													.getEvaluatesToTypeRef();
+											defaultValueInterpreter = retrieveDefaultValueInterpreter(fromFormalExpression);
+											QName evaluatesToTypeRef = fromFormalExpression.getEvaluatesToTypeRef();
 											if (evaluatesToTypeRef != null) {
-												defaultValueReturnType = evaluatesToTypeRef
-														.getLocalPart();
+												defaultValueReturnType = evaluatesToTypeRef.getLocalPart();
 											}
 										}
 									}
@@ -1900,8 +1879,7 @@ public class BPMNToProc extends ToProcProcessor {
 			String defaultValueExpressionType = null;
 			if ("http://groovy.codehaus.org/".equals(defaultValueInterpreter)) {
 				defaultValueExpressionType = ExpressionConstants.SCRIPT_TYPE;
-			} else if ("http://www.w3.org/1999/XPath"
-					.equals(defaultValueInterpreter)) {
+			} else if ("http://www.w3.org/1999/XPath".equals(defaultValueInterpreter)) {
 				defaultValueExpressionType = ExpressionConstants.CONSTANT_TYPE;
 			}
 			builder.addData(id, name, defaultValueContent,
@@ -1913,6 +1891,45 @@ public class BPMNToProc extends ToProcProcessor {
 		if (itemDefinition != null) {
 			dataNameByItemDefinition.put(itemDefinition.getId(), name);
 		}
+	}
+
+	private String createBonitaDataName(TFlowElement flowElement, String id) {
+		String name = id;
+		if (flowElement.getName() == null) {
+			if (flowElement.getId() == null) {
+				name = "data" + dataNameByItemDefinition.size();
+			} else {
+				name = flowElement.getId();
+			}
+		} else {
+			name = flowElement.getName();
+		}
+		return name;
+	}
+
+	private String retrieveDefaultValueInterpreter(
+			TFormalExpression fromFormalExpression) {
+		String defaultValueInterpreter;
+		String language = fromFormalExpression.getLanguage();
+		if (language == null) {
+			language = definitions.getExpressionLanguage();
+		}
+		defaultValueInterpreter = language;
+		return defaultValueInterpreter;
+	}
+
+	private String retrieveDefaultValueContent(TExpression fromExpression) {
+		String defaultValueContent = "";
+		FeatureMap fromMixed = fromExpression
+				.getMixed();
+		if (fromMixed != null && !fromMixed.isEmpty()) {
+			Entry fromEntry = fromMixed.get(0);
+			if (fromEntry != null) {
+				defaultValueContent = (String) fromEntry
+						.getValue();
+			}
+		}
+		return defaultValueContent;
 	}
 
 	private TProperty getPropertyByItemSubjectRef(TActivity tActivity,
@@ -2426,28 +2443,7 @@ public class BPMNToProc extends ToProcProcessor {
 						if (id.equals(artifact.getId())) {
 							// need to find the top container that has a
 							// BMPNShape associated with, again thanks BPMN2!!!
-							Point containerLocationOfTArtifact = null;
-							/* ... in all LaneSets... */
-							for (TLaneSet laneSet : ((TProcess) rootElement)
-									.getLaneSet()) {
-								/* ... in all Lanes ... */
-								for (TLane lane : laneSet.getLane()) {
-									Point tempContainerLocationOfTArtifact = getLocationFor(lane
-											.getId());
-									if (containerLocationOfTArtifact != null) {
-										containerLocationOfTArtifact.x = Math
-												.min(containerLocationOfTArtifact.x,
-														tempContainerLocationOfTArtifact.x);
-										containerLocationOfTArtifact.y = Math
-												.min(containerLocationOfTArtifact.y,
-														tempContainerLocationOfTArtifact.y);
-									} else {
-										containerLocationOfTArtifact = new Point();
-										containerLocationOfTArtifact.x = tempContainerLocationOfTArtifact.x;
-										containerLocationOfTArtifact.y = tempContainerLocationOfTArtifact.y;
-									}
-								}
-							}
+							Point containerLocationOfTArtifact = computeContainerLocationOfTArtifact(rootElement);
 							if (containerLocationOfTArtifact != null) {
 								return containerLocationOfTArtifact.getCopy()
 										.translate(-25, -25);
@@ -2480,6 +2476,32 @@ public class BPMNToProc extends ToProcProcessor {
 			}
 		}
 		return containerLocation;
+	}
+
+	private Point computeContainerLocationOfTArtifact(TRootElement rootElement) {
+		Point containerLocationOfTArtifact = null;
+		/* ... in all LaneSets... */
+		for (TLaneSet laneSet : ((TProcess) rootElement)
+				.getLaneSet()) {
+			/* ... in all Lanes ... */
+			for (TLane lane : laneSet.getLane()) {
+				Point tempContainerLocationOfTArtifact = getLocationFor(lane
+						.getId());
+				if (containerLocationOfTArtifact != null) {
+					containerLocationOfTArtifact.x = Math
+							.min(containerLocationOfTArtifact.x,
+									tempContainerLocationOfTArtifact.x);
+					containerLocationOfTArtifact.y = Math
+							.min(containerLocationOfTArtifact.y,
+									tempContainerLocationOfTArtifact.y);
+				} else {
+					containerLocationOfTArtifact = new Point();
+					containerLocationOfTArtifact.x = tempContainerLocationOfTArtifact.x;
+					containerLocationOfTArtifact.y = tempContainerLocationOfTArtifact.y;
+				}
+			}
+		}
+		return containerLocationOfTArtifact;
 	}
 
 	private String findContainerId(String id) {
